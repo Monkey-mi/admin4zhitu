@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.userinfo.mapper.UserInfoMapper">
+
+	<resultMap id="UserInfoMap" type="com.imzhitu.admin.common.pojo.UserInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="platform_code" property="platformCode" jdbcType="INTEGER" />
+		<result column="platform_token" property="platformToken" jdbcType="VARCHAR" />
+		<result column="platform_token_expires" property="platformTokenExpires" jdbcType="BIGINT" />
+		<result column="platform_sign" property="platformSign" jdbcType="VARCHAR" />
+		<result column="platform_verify" property="platformVerify" jdbcType="INTEGER" />
+		<result column="login_code" property="loginCode" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+		<result column="concern_count" property="concernCount" jdbcType="INTEGER" />
+		<result column="follow_count" property="followCount" jdbcType="INTEGER" />
+		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
+		<result column="liked_count" property="likedCount" jdbcType="INTEGER" />
+		<result column="keep_count" property="keepCount" jdbcType="INTEGER" />
+		<result column="push_token" property="pushToken" jdbcType="VARCHAR" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
+		<result column="phone_ver" property="phoneVer" jdbcType="REAL" />
+		<result column="online" property="online" jdbcType="INTEGER" />
+		<result column="accept_sys_push" property="acceptSysPush" jdbcType="INTEGER" />
+		<result column="accept_comment_push" property="acceptCommentPush" jdbcType="INTEGER" />
+		<result column="accept_reply_push" property="acceptReplyPush" jdbcType="INTEGER" />
+		<result column="accept_liked_push" property="acceptLikedPush" jdbcType="INTEGER" />
+		<result column="accept_keep_push" property="acceptKeepPush" jdbcType="INTEGER" />
+		<result column="accept_concern_push" property="acceptConcernPush" jdbcType="INTEGER" />
+		<result column="accept_msg_push" property="acceptMsgPush" jdbcType="INTEGER" />
+		<result column="accept_umsg_push" property="acceptUmsgPush" jdbcType="INTEGER" />
+		<result column="ver" property="ver" jdbcType="REAL" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		<result column="trust" property="trust" jdbcType="INTEGER" />
+		<result column="shield" property="shield" jdbcType="INTEGER" />
+		<result column="activity" property="activity" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="UserInfoMapWithPass" type="com.imzhitu.admin.common.pojo.UserInfo" extends="UserInfoMap">
+		<result column="password" property="password" jdbcType="BLOB" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, platform_code, platform_token, platform_token_expires, platform_sign,
+		platform_verify, login_code, user_name, user_avatar, user_avatar_l, sex, email, address, birthday,
+		signature, user_label, province, city, longitude, latitude, register_date, concern_count,
+		follow_count, world_count, liked_count, keep_count, push_token, phone_code,
+		phone_sys, phone_ver, online, accept_sys_push, accept_comment_push, accept_reply_push,
+		accept_liked_push, accept_keep_push, accept_concern_push, accept_msg_push, accept_umsg_push, ver, star,
+		trust, shield, activity
+	</sql>
+	
+	<sql id="Password_Column_List">
+    	password
+  	</sql>
+	
+	<!-- 根据id选择用户 -->
+	<select id="selectById" resultMap="UserInfoMapWithPass"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Password_Column_List" />
+		from hts.user_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据ids查询用户 -->
+	<select id="selectByIds" resultMap="UserInfoMapWithPass">
+		select 
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Password_Column_List" />
+		from hts.user_info where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	
+	</select>
+
+	<!-- 根据id删除用户 -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from hts.user_info
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 保存用户 -->
+	<insert id="insertSelective" parameterType="com.imzhitu.admin.common.pojo.UserInfo">
+		insert into hts.user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="platformCode != null">
+				platform_code,
+			</if>
+			<if test="platformToken != null">
+				platform_token,
+			</if>
+			<if test="platformTokenExpires != null">
+				platform_token_expires,
+			</if>
+			<if test="platformSign != null">
+				platform_sign,
+			</if>
+			<if test="platformVerify != null">
+				platform_verify,
+			</if>
+			<if test="loginCode != null">
+				login_code,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="userAvatar != null">
+				user_avatar,
+			</if>
+			<if test="userAvatarL != null">
+				user_avatar_l,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="signature != null">
+				signature,
+			</if>
+			<if test="userLabel != null">
+				user_label,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="longitude != null">
+				longitude,
+			</if>
+			<if test="latitude != null">
+				latitude,
+			</if>
+			<if test="registerDate != null">
+				register_date,
+			</if>
+			<if test="concernCount != null">
+				concern_count,
+			</if>
+			<if test="followCount != null">
+				follow_count,
+			</if>
+			<if test="worldCount != null">
+				world_count,
+			</if>
+			<if test="likedCount != null">
+				liked_count,
+			</if>
+			<if test="keepCount != null">
+				keep_count,
+			</if>
+			<if test="pushToken != null">
+				push_token,
+			</if>
+			<if test="phoneCode != null">
+				phone_code,
+			</if>
+			<if test="phoneSys != null">
+				phone_sys,
+			</if>
+			<if test="phoneVer != null">
+				phone_ver,
+			</if>
+			<if test="online != null">
+				online,
+			</if>
+			<if test="acceptSysPush != null">
+				accept_sys_push,
+			</if>
+			<if test="acceptCommentPush != null">
+				accept_comment_push,
+			</if>
+			<if test="acceptReplyPush != null">
+				accept_reply_push,
+			</if>
+			<if test="acceptLikedPush != null">
+				accept_liked_push,
+			</if>
+			<if test="acceptKeepPush != null">
+				accept_keep_push,
+			</if>
+			<if test="acceptConcernPush != null">
+				accept_concern_push,
+			</if>
+			<if test="acceptMsgPush != null">
+				accept_msg_push,
+			</if>
+			<if test="acceptUmsgPush != null">
+				accept_umsg_push,
+			</if>
+			<if test="ver != null">
+				ver,
+			</if>
+			<if test="star != null">
+				star,
+			</if>
+			<if test="trust != null">
+				trust,
+			</if>
+			<if test="shield != null">
+				shield,
+			</if>
+			<if test="activity != null">
+				activity,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="platformCode != null">
+				#{platformCode,jdbcType=INTEGER},
+			</if>
+			<if test="platformToken != null">
+				#{platformToken,jdbcType=VARCHAR},
+			</if>
+			<if test="platformTokenExpires != null">
+				#{platformTokenExpires,jdbcType=BIGINT},
+			</if>
+			<if test="platformSign != null">
+				#{platformSign,jdbcType=VARCHAR},
+			</if>
+			<if test="platformVerify != null">
+				#{platformVerify,jdbcType=INTEGER},
+			</if>
+			<if test="loginCode != null">
+				#{loginCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userAvatar != null">
+				#{userAvatar,jdbcType=VARCHAR},
+			</if>
+			<if test="userAvatarL != null">
+				#{userAvatarL,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=INTEGER},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="signature != null">
+				#{signature,jdbcType=VARCHAR},
+			</if>
+			<if test="userLabel != null">
+				#{userLabel,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				#{longitude,jdbcType=DOUBLE},
+			</if>
+			<if test="latitude != null">
+				#{latitude,jdbcType=DOUBLE},
+			</if>
+			<if test="registerDate != null">
+				#{registerDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="concernCount != null">
+				#{concernCount,jdbcType=INTEGER},
+			</if>
+			<if test="followCount != null">
+				#{followCount,jdbcType=INTEGER},
+			</if>
+			<if test="worldCount != null">
+				#{worldCount,jdbcType=INTEGER},
+			</if>
+			<if test="likedCount != null">
+				#{likedCount,jdbcType=INTEGER},
+			</if>
+			<if test="keepCount != null">
+				#{keepCount,jdbcType=INTEGER},
+			</if>
+			<if test="pushToken != null">
+				#{pushToken,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneCode != null">
+				#{phoneCode,jdbcType=INTEGER},
+			</if>
+			<if test="phoneSys != null">
+				#{phoneSys,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneVer != null">
+				#{phoneVer,jdbcType=REAL},
+			</if>
+			<if test="online != null">
+				#{online,jdbcType=INTEGER},
+			</if>
+			<if test="acceptSysPush != null">
+				#{acceptSysPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptCommentPush != null">
+				#{acceptCommentPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptReplyPush != null">
+				#{acceptReplyPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptLikedPush != null">
+				#{acceptLikedPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptKeepPush != null">
+				#{acceptKeepPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptConcernPush != null">
+				#{acceptConcernPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptMsgPush != null">
+				#{acceptMsgPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptUmsgPush != null">
+				#{acceptUmsgPush,jdbcType=INTEGER},
+			</if>
+			<if test="ver != null">
+				#{ver,jdbcType=REAL},
+			</if>
+			<if test="star != null">
+				#{star,jdbcType=INTEGER},
+			</if>
+			<if test="trust != null">
+				#{trust,jdbcType=INTEGER},
+			</if>
+			<if test="shield != null">
+				#{shield,jdbcType=INTEGER},
+			</if>
+			<if test="activity != null">
+				#{activity,jdbcType=INTEGER},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=BLOB},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 更新用户信息 -->
+	<update id="updateByIdSelective" parameterType="com.imzhitu.admin.common.pojo.UserInfo">
+		update hts.user_info
+		<set>
+			<if test="platformCode != null">
+				platform_code = #{platformCode,jdbcType=INTEGER},
+			</if>
+			<if test="platformToken != null">
+				platform_token = #{platformToken,jdbcType=VARCHAR},
+			</if>
+			<if test="platformTokenExpires != null">
+				platform_token_expires = #{platformTokenExpires,jdbcType=BIGINT},
+			</if>
+			<if test="platformSign != null">
+				platform_sign = #{platformSign,jdbcType=VARCHAR},
+			</if>
+			<if test="platformVerify != null">
+				platform_verify = #{platformVerify,jdbcType=INTEGER},
+			</if>
+			<if test="loginCode != null">
+				login_code = #{loginCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userAvatar != null">
+				user_avatar = #{userAvatar,jdbcType=VARCHAR},
+			</if>
+			<if test="userAvatarL != null">
+				user_avatar_l = #{userAvatarL,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=INTEGER},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="signature != null">
+				signature = #{signature,jdbcType=VARCHAR},
+			</if>
+			<if test="userLabel != null">
+				user_label = #{userLabel,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				longitude = #{longitude,jdbcType=DOUBLE},
+			</if>
+			<if test="latitude != null">
+				latitude = #{latitude,jdbcType=DOUBLE},
+			</if>
+			<if test="registerDate != null">
+				register_date = #{registerDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="concernCount != null">
+				concern_count = #{concernCount,jdbcType=INTEGER},
+			</if>
+			<if test="followCount != null">
+				follow_count = #{followCount,jdbcType=INTEGER},
+			</if>
+			<if test="worldCount != null">
+				world_count = #{worldCount,jdbcType=INTEGER},
+			</if>
+			<if test="likedCount != null">
+				liked_count = #{likedCount,jdbcType=INTEGER},
+			</if>
+			<if test="keepCount != null">
+				keep_count = #{keepCount,jdbcType=INTEGER},
+			</if>
+			<if test="pushToken != null">
+				push_token = #{pushToken,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneCode != null">
+				phone_code = #{phoneCode,jdbcType=INTEGER},
+			</if>
+			<if test="phoneSys != null">
+				phone_sys = #{phoneSys,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneVer != null">
+				phone_ver = #{phoneVer,jdbcType=REAL},
+			</if>
+			<if test="online != null">
+				online = #{online,jdbcType=INTEGER},
+			</if>
+			<if test="acceptSysPush != null">
+				accept_sys_push = #{acceptSysPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptCommentPush != null">
+				accept_comment_push = #{acceptCommentPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptReplyPush != null">
+				accept_reply_push = #{acceptReplyPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptLikedPush != null">
+				accept_liked_push = #{acceptLikedPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptKeepPush != null">
+				accept_keep_push = #{acceptKeepPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptConcernPush != null">
+				accept_concern_push = #{acceptConcernPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptMsgPush != null">
+				accept_msg_push = #{acceptMsgPush,jdbcType=INTEGER},
+			</if>
+			<if test="acceptUmsgPush != null">
+				accept_umsg_push = #{acceptUmsgPush,jdbcType=INTEGER},
+			</if>
+			<if test="ver != null">
+				ver = #{ver,jdbcType=REAL},
+			</if>
+			<if test="star != null">
+				star = #{star,jdbcType=INTEGER},
+			</if>
+			<if test="trust != null">
+				trust = #{trust,jdbcType=INTEGER},
+			</if>
+			<if test="shield != null">
+				shield = #{shield,jdbcType=INTEGER},
+			</if>
+			<if test="activity != null">
+				activity = #{activity,jdbcType=INTEGER},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=BLOB},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateLoginInfoById" parameterType="com.imzhitu.admin.common.pojo.UserInfo">
+	    update hts.user_info
+	    set platform_code = #{platformCode,jdbcType=INTEGER},
+	      platform_token = #{platformToken,jdbcType=VARCHAR},
+	      platform_token_expires = #{platformTokenExpires,jdbcType=BIGINT},
+	      platform_sign = #{platformSign,jdbcType=VARCHAR},
+	      platform_verify = #{platformVerify,jdbcType=INTEGER},
+	      login_code = #{loginCode,jdbcType=VARCHAR},
+	      password = #{password, jdbcType=BLOB},
+	      push_token = #{pushToken,jdbcType=VARCHAR},
+	      phone_code = #{phoneCode,jdbcType=INTEGER}
+	    where id = #{id,jdbcType=INTEGER}
+	  </update>
+	  
+	  <select id="selectMaxId" resultType="int">
+	  	select max(id) from hts.user_info;
+	  </select>
+	  
+	  <update id="updateTrust">
+	  	update hts.user_info set trust=#{trust} where id=#{id}
+	  </update>	
+</mapper>

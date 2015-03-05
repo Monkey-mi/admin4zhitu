@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" 
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="admin_interact" namespace="/admin_interact" extends="admin-package">
+	
+		<action name="interact_*" class="com.imzhitu.admin.interact.InteractAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="comment_*" class="com.imzhitu.admin.interact.InteractCommentAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="userlevel_*" class="com.imzhitu.admin.interact.InteractUserlevelAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="userlevelList_*" class="com.imzhitu.admin.interact.InteractUserlevelListAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="worldlevel_*" class="com.imzhitu.admin.interact.InteractWorldlevelAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="worldlabelcommentlabel_*" class="com.imzhitu.admin.interact.InteractWorldLabelCommentLabelAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="worldlevelList_*" class="com.imzhitu.admin.interact.InteractWorldlevelListAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="autoResponse_*" class="com.imzhitu.admin.interact.InteractAutoResponseAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="planComment_*" class="com.imzhitu.admin.interact.InteractPlanCommentAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="planCommentLabel_*" class="com.imzhitu.admin.interact.InteractPlanCommentLabelAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="refreshZombieHtworld_*" class="com.imzhitu.admin.interact.InteractRefreshZombieHtworldAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="worldLevelUserLevel_*" class="com.imzhitu.admin.interact.InteractWorldLevelUserLevelAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="typeOptionWorld_*" class="com.imzhitu.admin.interact.InteractTypeOptionWorldAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="interactZombieWorld_*" class="com.imzhitu.admin.interact.InteractZombieWorldAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="autoResponseSchedula_*" class="com.imzhitu.admin.interact.InteractAutoResponseSchedulaAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+	</package>
+
+</struts>
+
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractPlanCommentMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractPlanComment" id="PlanComment">
+		<result column="id" property="id" jdbcType="NUMERIC"/>
+		<result column="group_id" property="groupId" jdbcType="NUMERIC"/>
+		<result column="description" property="groupName" jdbcType="VARCHAR"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
+		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+		<result column="operator_id" property="operatorId" jdbcType="NUMERIC"/>
+		<result column="operatorName" property="operatorName" jdbcType="VARCHAR"/>
+		<result column="valid" property="valid" jdbcType="NUMERIC"/>
+		<result column="interact_comment_id" property="interactCommentId" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<insert id="addPlanComment" >
+		insert into hts_admin.interact_plan_comment (group_id,content,date_add,date_modify,operator_id,valid,interact_comment_id) 
+		values (#{groupId},#{content},#{addDate},#{modifyDate},#{operatorId},#{valid},#{interactCommentId})
+	</insert>
+	
+	<delete id="delPlanCommentByIds">
+		delete from hts_admin.interact_plan_comment ipc where ipc.id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 分页查询 -->
+	<select id="queryInteractPlanComment" resultMap="PlanComment">
+		select ipc.*,aui.user_name as operatorName,ipcl.description 
+		from hts_admin.interact_plan_comment ipc
+			 left join hts_admin.admin_user_info aui on ipc.operator_id = aui.id 
+			 left join hts_admin.interact_plan_comment_label ipcl on ipc.group_id=ipcl.id 
+		where ipcl.valid=1 and ipc.valid=1 
+		<if test="id != null">
+			<![CDATA[
+				and ipc.id<=#{id}
+			]]>
+		</if>
+		<if test="groupId != null">
+			and ipc.group_id=#{groupId}
+		</if>
+		<if test="content != null">
+			and ipc.content=#{content}
+		</if>
+		order by ipc.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询，获取总数 -->
+	<select id="queryInteractPlanCommentTotalCount" resultType="long">
+		select count(*) 
+		from hts_admin.interact_plan_comment ipc
+			 left join hts_admin.admin_user_info aui on ipc.operator_id = aui.id 
+			 left join hts_admin.interact_plan_comment_label ipcl on ipc.group_id=ipcl.id 
+		where ipcl.valid=1 and ipc.valid=1 
+		<if test="id != null">
+			<![CDATA[
+				and ipc.id<=#{id}
+			]]>
+		</if>
+		<if test="groupId != null">
+			and ipc.group_id=#{groupId}
+		</if>
+	</select>
+	
+	<!-- 根据组id来查询计划评论总数 -->
+	<select id="queryInteractPlanCommentCountByGroupId" resultType="long">
+		select count(1) from hts_admin.interact_plan_comment ipc where ipc.group_id=#{groupId} and ipc.valid=1 
+	</select>
+	
+	<!-- 更新计划评论 -->
+	<update id="updateCommentContentById">
+		update hts_admin.interact_plan_comment ipc set ipc.content=#{content} , ipc.group_id=#{groupId} , ipc.valid=#{valid} , ipc.date_modify=#{modifyDate},ipc.operator_id=#{operatorId} 
+		where ipc.id=#{id}
+	</update>
+	
+	<!-- 更新有效性 -->
+	<update id="updateCommentContentValid">
+		update  hts_admin.interact_plan_comment ipc set ipc.valid=#{valid}, ipc.date_modify=#{modifyDate},ipc.operator_id=#{operatorId} where ipc.id=#{id}
+	</update>
+	
+	
+</mapper>

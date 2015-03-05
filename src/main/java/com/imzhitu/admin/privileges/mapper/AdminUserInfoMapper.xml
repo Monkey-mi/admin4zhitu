@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.privileges.mapper.AdminUserInfoMapper">
+	
+	<resultMap id="AdminUserMap" type="com.imzhitu.admin.common.pojo.AdminUser">
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="login_code" property="loginCode" jdbcType="VARCHAR" />
+	    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+	    <result column="password" property="passwordEncrypt" jdbcType="BLOB" />
+	    <result column="valid" property="valid" jdbcType="INTEGER" />
+  	</resultMap>
+
+	<resultMap id="AdminUserDtoMap" type="com.imzhitu.admin.common.pojo.AdminUserDto">
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="login_code" property="loginCode" jdbcType="VARCHAR" />
+	    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+	    <result column="password" property="password" jdbcType="BLOB" />
+	    <result column="valid" property="valid" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.AdminUser" id="UserNameAndId">
+		<result column="id" property="id"  jdbcType="NUMERIC"/>
+		<result column="user_name" property="userName"  jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="queryAdminUserById" resultMap="AdminUserMap">
+		select * from hts_admin.admin_user_info where id=#{id}
+	</select>
+  	
+	<!-- 保存用户  -->
+	<insert id="saveUser" useGeneratedKeys="true" keyProperty="id">
+		insert into hts_admin.admin_user_info (login_code,user_name,password,valid)
+	 		values (#{loginCode}, #{userName}, #{passwordEncrypt}, #{valid})
+	</insert>
+	 
+	<!-- 更新用户 -->
+	<update id="updateUser">
+		update hts_admin.admin_user_info
+		<set>
+	      <if test="loginCode != null">login_code=#{loginCode},</if>
+	      <if test="userName != null">user_name=#{userName},</if>
+	      <if test="passwordEncrypt != null">password=#{passwordEncrypt},</if>
+	      <if test="valid != null">valid=#{valid}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
+	<!-- 批量删除用户 -->
+	<delete id="deleteByIds">
+		delete from hts_admin.admin_user_info where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<!-- 查询用户总数 -->
+	<select id="queryCount" resultType="long">
+		select count(1) from hts_admin.admin_user_info
+		<where>
+			<if test="loginCode != null and loginCode != ''">login_code=#{loginCode}</if>
+	      	<if test="userName != null and userName != ''"> AND user_name=#{userName}</if>
+	      	<if test="valid != null"> AND valid=#{valid}</if>
+		</where>
+	</select>
+	
+	<!-- 查询用户列表 -->
+	<select id="queryUsers" resultMap="AdminUserMap">
+		
+		select * from hts_admin.admin_user_info
+		<where>
+			<if test="loginCode != null and loginCode != ''">login_code=#{loginCode}</if>
+	      	<if test="userName != null and userName != ''"> AND user_name=#{userName}</if>
+	      	<if test="valid != null"> AND valid=#{valid}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		
+	</select>
+	
+	<!-- 查询所有用户的id和名字 -->
+	<select id="queryUserNameAndId" resultMap="UserNameAndId">
+		select aui.id,aui.user_name
+			from hts_admin.admin_user_info aui
+	</select>
+	
+	<!-- 查询非超级管理员和op管理员的用户id和名字 -->
+	<select id="queryAllNotSuperAdminOrOpAdminUserInfo" resultMap="UserNameAndId">
+		SELECT
+			aui.id,aui.user_name
+		FROM
+			hts_admin.admin_user_info aui
+		LEFT JOIN (
+			SELECT
+				auir.user_id,
+				auir.role_id,
+				COUNT(*)
+			FROM
+				hts_admin.admin_user_info_role auir
+			WHERE
+				auir.role_id = (
+					SELECT
+						id
+					FROM
+						hts_admin.admin_role
+					WHERE
+						role_name = 'super_admin'
+				) OR auir.role_id = (
+					SELECT
+						id
+					FROM
+						admin_role
+					WHERE
+						role_name = 'op_admin'
+				)
+			GROUP BY
+				auir.user_id,
+				auir.role_id
+			HAVING
+				COUNT(*) > 0
+		) AS auirt ON aui.id = auirt.user_id
+		WHERE
+			ISNULL(auirt.user_id) and aui.valid=1
+	</select>
+
+	
+		
+</mapper>

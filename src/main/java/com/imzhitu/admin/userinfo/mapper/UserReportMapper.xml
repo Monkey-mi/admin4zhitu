@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.userinfo.mapper.UserReportMapper">
+
+	<resultMap id="UserReportDtoMap" type="com.imzhitu.admin.common.pojo.UserReportDto">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="report_id" property="reportId" jdbcType="INTEGER" />
+		<result column="report_name" property="reportName" jdbcType="VARCHAR" />
+		<result column="report_date" property="reportDate" jdbcType="TIMESTAMP" />
+		<result column="valid" property="valid" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 查询举报列表 -->
+	<select id="queryReport" resultMap="UserReportDtoMap">
+		select ur.*,u.user_name user_name, r.user_name report_name
+		from (select * from hts.user_report
+		<where>
+			<if test="valid != null and valid != 0">valid=#{valid}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ and id<=#{maxId}]]></if>
+		</where>
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		) as ur, hts.user_info as u, hts.user_info as r
+		where ur.user_id=u.id and ur.report_id=r.id 
+	</select>
+	
+	<!-- 查询用户总数 -->
+	<select id="queryTotal" resultType="long">
+		select count(*) from hts.user_report
+		<where>
+			<if test="valid != null and valid != 0">valid=#{valid}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ and id<=#{maxId}]]></if>
+		</where>
+	</select>
+
+	<!-- 批量处理举报 -->
+	<update id="updateValidByIds">
+		update hts.user_report set valid=0 where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+</mapper>

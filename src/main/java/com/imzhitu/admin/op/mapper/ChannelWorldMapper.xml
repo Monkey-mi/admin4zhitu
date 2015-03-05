@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.ChannelWorldMapper">
+	
+	<resultMap id="OpChannelWorldMap" type="com.imzhitu.admin.common.pojo.OpChannelWorld">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="world_id" property="worldId" jdbcType="INTEGER"/>
+		<result column="author_id" property="authorId" jdbcType="INTEGER" />
+		<result column="date_added" property="dateAdded" jdbcType="TIMESTAMP"/>
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		<result column="notified" property="notified" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	
+	<resultMap id="OpChannelWorldDtoMap" type="com.imzhitu.admin.common.pojo.OpChannelWorldDto">
+		<id column="channel_world_id" property="channelWorldId" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="world_id" property="worldId" jdbcType="INTEGER"/>
+		<result column="author_id" property="authorId" jdbcType="INTEGER" />
+		<result column="channel_world_date_added" property="channelWorldDateAdded" jdbcType="TIMESTAMP"/>
+		<result column="channel_world_valid" property="channelWorldValid" jdbcType="INTEGER"/>
+		<result column="notified" property="notified" jdbcType="INTEGER"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR" />
+		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR" />
+		<result column="beSchedula" property="beSchedula" jdbcType="INTEGER"/>
+		<result column="schedulaComplete" property="schedulaComplete" jdbcType="INTEGER"/>
+		<result column="is_cover" property="isCover" jdbcType="INTEGER" />
+		
+		<result property="id" column="id" jdbcType="NUMERIC"/>
+		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
+		<result property="authorId" column="author_id" jdbcType="NUMERIC"/>
+		<result property="authorName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="authorAvatar" column="user_avatar" jdbcType="VARCHAR"/>
+		<result property="star" column="star" jdbcType="NUMERIC"/>
+		<result property="trust" column="trust" jdbcType="NUMERIC"/>
+		<result property="appVer" column="app_ver" jdbcType="FLOAT"/>
+		<result property="phoneSys" column="phone_sys" jdbcType="VARCHAR"/>
+		<result property="phoneVer" column="phone_ver" jdbcType="VARCHAR"/>
+		<result property="worldName" column="world_name" jdbcType="VARCHAR"/>
+		<result property="worldDesc" column="world_desc" jdbcType="VARCHAR"/>
+		<result property="worldLabel" column="world_label" jdbcType="VARCHAR"/>
+		<result property="worldType" column="world_type" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id" jdbcType="NUMERIC"/>
+		<result property="dateAdded" column="date_added" jdbcType="TIMESTAMP"/>
+		<result property="dateModified" column="date_modified" jdbcType="TIMESTAMP"/>
+		<result property="clickCount" column="click_count" jdbcType="NUMERIC"/>
+		<result property="likeCount" column="like_count" jdbcType="NUMERIC"/>
+		<result property="commentCount" column="comment_count" jdbcType="NUMERIC"/>
+		<result property="keepCount" column="keep_count" jdbcType="NUMERIC"/>
+		<result property="coverPath" column="cover_path" jdbcType="VARCHAR"/>
+		<result property="titlePath" column="title_path" jdbcType="VARCHAR"/>
+		<result property="titleThumbPath" column="title_thumb_path" jdbcType="VARCHAR"/>
+		<result property="longitude" column="longitude" jdbcType="DOUBLE"/>
+		<result property="latitude" column="latitude" jdbcType="DOUBLE"/>
+		<result property="locationDesc" column="location_desc" jdbcType="VARCHAR"/>
+		<result property="locationAddr" column="location_addr" jdbcType="VARCHAR"/>
+		<result property="phoneCode" column="phone_code" jdbcType="NUMERIC"/>
+		<result property="province" column="province" jdbcType="VARCHAR"/>
+		<result property="city" column="city" jdbcType="VARCHAR"/>
+		<result property="size" column="size" jdbcType="NUMERIC"/>
+		<result property="valid" column="valid" jdbcType="NUMERIC"/>
+		<result property="latestValid" column="latest_valid" jdbcType="NUMERIC"/>
+		<result property="shield" column="shield" jdbcType="NUMERIC"/>
+		
+	</resultMap>
+	
+	<!-- 用以根据id来查询的频道织图 -->
+	<resultMap id="ChannelWorldMapForWorldId" type="com.imzhitu.admin.common.pojo.OpChannelWorld">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="world_id" property="worldId" jdbcType="INTEGER"/>
+		<result column="author_id" property="authorId" jdbcType="INTEGER" />
+		<result column="date_added" property="dateAdded" jdbcType="TIMESTAMP"/>
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		<result column="notified" property="notified" jdbcType="INTEGER"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- 根据织图id来查询频道织图 -->
+	<select id="queryChannelWorldByWorldId" resultMap="ChannelWorldMapForWorldId">
+		select ocw.*,oc.channel_name 
+			FROM hts.operations_channel_world ocw LEFT JOIN hts.operations_channel oc ON ocw.channel_id=oc.id
+			WHERE ocw.world_id=#{worldId} and ocw.valid=1
+	</select>
+	
+	<select id="queryChannelWorlds" resultMap="OpChannelWorldDtoMap">
+		select cw.id as channel_world_id,cw.channel_id,cw.world_id,cw.valid as channel_world_valid,cw.notified,
+		c.channel_name, c.channel_title,c.channel_icon, h.*,u.user_name,u.user_avatar,u.star,u.trust
+		,ISNULL(ocws.finish) as beSchedula ,IFNULL(ocws.finish,0) as schedulaComplete, IFNULL(oct.id, 0) as is_cover
+		from 
+		(select ocw.* from hts.operations_channel_world ocw
+			
+		<where>
+			<if test="channelId != null"> ocw.channel_id=#{channelId}</if>
+			<if test="worldId != null"> AND ocw.world_id=#{worldId}</if>
+			<if test="authorId != null"> AND ocw.author_id=#{authorId}</if>
+			<if test="valid != null"> AND ocw.valid=#{valid}</if>
+			<if test="notified != null"> AND ocw.notified=#{notified}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ AND ocw.id<=#{maxId}]]></if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		) as cw left join hts_admin.op_channel_world_schedula ocws
+			on cw.world_id = ocws.world_id
+			left join hts_admin.op_channel_thumbnail oct 
+			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id,
+			hts.htworld_htworld as h, hts.user_info as u, hts.operations_channel as c
+		 where cw.world_id=h.id and cw.author_id=u.id and cw.channel_id = c.id
+	</select>
+	
+	<select id="queryChannelWorldCount" resultType="long">
+		select count(*) from hts.operations_channel_world 
+		<where>
+			<if test="channelId != null"> channel_id=#{channelId}</if>
+			<if test="worldId != null"> AND world_id=#{worldId}</if>
+			<if test="authorId != null"> AND author_id=#{authorId}</if>
+			<if test="valid != null"> AND valid=#{valid}</if>
+			<if test="notified != null"> AND notified=#{notified}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<update id="update">
+		update hts.operations_channel_world
+		<set>
+	      <if test="channelId != null">channel_id=#{channelId},</if>
+	      <if test="worldId != null">world_id=#{worldId},</if>
+	      <if test="authorId != null">author_id=#{authorId},</if>
+	      <if test="valid != null">valid=#{valid},</if>
+	      <if test="notified != null">notified=#{notified}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
+	<insert id="save">
+		insert into hts.operations_channel_world (id,channel_id,world_id,author_id,date_added,valid,notified)
+	 		values (#{id}, #{channelId}, #{worldId}, #{authorId}, #{dateAdded}, #{valid}, #{notified})
+	</insert>
+	
+	<update id="updateId">
+		update hts.operations_channel_world set id=#{id} where channel_id=#{channelId} and world_id=#{worldId}
+	</update>
+	
+	<update id="updateValidByIds">
+		update hts.operations_channel_world set valid=#{valid} where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+	<update id="updateValidByWIds">
+		update hts.operations_channel_world set valid=#{valid} where world_id in
+		<foreach item="item" index="index" collection="wids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+	<delete id="deleteByIds">
+		delete from hts.operations_channel_world where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<select id="queryChannelWorldById" resultMap="OpChannelWorldMap">
+		select * from hts.operations_channel_world where id=#{id}
+	</select>
+	
+	<select id="querySumChildCountByChannelId" resultType="int">
+		select sum(child_count) from hts.htworld_htworld h, hts.operations_channel_world as cw
+		where h.id=cw.world_id and cw.channel_id=#{channelId}
+	</select>
+	
+	<select id="queryWorldByChannelId" resultMap="OpChannelWorldMap">
+		select * from hts.operations_channel_world where channel_id=#{channelId} and world_id=#{worldId}
+	</select>
+	
+	<!-- 根据织图id查询其频道名称 -->
+	<select id="queryChannelNameByWorldId" resultType="String">
+		select oc.channel_name 
+			FROM hts.operations_channel_world ocw LEFT JOIN hts.operations_channel oc ON ocw.channel_id=oc.id
+			WHERE ocw.world_id=#{worldId} 
+	</select>
+	
+	<update id="updateIdById">
+		update hts.operations_channel_world set id=#{newId} where id=#{id}
+	</update>
+</mapper>

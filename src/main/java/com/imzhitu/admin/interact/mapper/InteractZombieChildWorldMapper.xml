@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractZombieChildWorldMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.ZombieChildWorld" id="ZombieWorldMapper">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="child_world_desc" property="childWorldDesc" jdbcType="VARCHAR"/>
+		<result column="zombie_world_id" property="zombieWorldId" jdbcType="INTEGER"/>
+		<result column="path" property="path" jdbcType="VARCHAR"/>
+		<result column="width" property="width" jdbcType="INTEGER"/>
+		<result column="height" property="height" jdbcType="INTEGER"/>
+		<result column="is_title" property="isTitle" jdbcType="INTEGER"/>
+		<result column="coordinate_x" property="coordinatex" jdbcType="INTEGER"/>
+		<result column="coordinate_y" property="coordinatey" jdbcType="INTEGER"/>
+		<result column="at_id" property="atId" jdbcType="INTEGER"/>
+		<result column="thumb_path" property="thumbPath" jdbcType="VARCHAR"/>
+		<result column="angle" property="angle" jdbcType="INTEGER"/>
+		<result column="type" property="type" jdbcType="INTEGER"/>
+		<result column="type_path" property="typePath" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- 插入 -->
+	<insert id="insertZombieChildWorld">
+		insert into hts_admin.zombie_child_world
+		(id,child_world_desc,zombie_world_id,path,width,height,is_title,coordinate_x,coordinate_y,at_id,thumb_path,angle,type,type_path)
+		 values
+		(#{id},#{childWorldDesc},#{zombieWorldId},#{path},#{width},#{height},#{isTitle},#{coordinatex},#{coordinatey},#{atId},#{thumbPath},#{angle},#{type},#{typePath})
+	</insert>
+	
+	<!-- 查询 -->
+	<select id="queryZombieChildWorld" resultMap="ZombieWorldMapper">
+		select * from hts_admin.zombie_child_world
+		where zombie_world_id = #{zombieWorldId}
+		order by id asc
+	</select>
+	
+	<!-- 查询path -->
+	<select id="queryZombieChildWorldPath" resultType="String">
+		select path from hts_admin.zombie_child_world
+		where zombie_world_id = #{zombieWorldId}
+	</select>
+</mapper>

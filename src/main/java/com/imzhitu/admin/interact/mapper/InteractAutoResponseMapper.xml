@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractAutoResponseMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractAutoResponseDto" id="AutoResponseMapper">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="responseId" column="response_id" jdbcType="INTEGER"/>
+		<result property="commentId" column="comment_id" jdbcType="INTEGER"/>
+		<result property="complete" column="complete" jdbcType="INTEGER"/>
+		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
+		<result property="author" column="author" jdbcType="INTEGER"/>
+		<result property="authorName" column="authorName" jdbcType="VARCHAR"/>
+		<result property="reAuthor" column="re_author" jdbcType="INTEGER"/>
+		<result property="reAuthorName" column="reAuthorName" jdbcType="VARCHAR"/>
+		<result property="context" column="content" jdbcType="VARCHAR"/>
+		<result property="reContext" column="reContext" jdbcType="VARCHAR"/>
+		<result property="commentDate" column="commentDate" jdbcType="TIMESTAMP"/>
+		<result property="preReId" column="re_id" jdbcType="INTEGER"/>
+		<result property="worldAuthorId" column="world_author_id" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- 检查是否是马甲 -->
+	<select id="checkIsZoombie" resultType="long">
+		select count(1) from hts_admin.interact_auto_response where user_id=#{userId}
+	</select>
+	
+	<!-- 增加回复 -->
+	<insert id="addResponse">
+		insert into 
+			hts_admin.interact_auto_response 
+				(response_id,comment_id,complete,world_id,author,re_author) 
+			values 
+				(#{responseId},#{commentId},#{complete},#{worldId},#{author},#{reAuthor})
+	</insert>
+	
+	<!-- 查询上上次回复内容 -->
+	<select id="queryPreComment" resultType="string">
+		SELECT hc.content 
+		FROM
+			hts.htworld_comment hc
+		WHERE
+			hc.id = #{id}
+	</select>
+	
+	<!-- 分页查询未回复的回复 -->
+	<select id="queryUncompleteResponse" resultMap="AutoResponseMapper">
+		SELECT ar.*, hh.short_link,
+			  hc2.content as content,
+			  hc1.content as reContext,
+			  ui.user_name as reAuthorName,
+			  uz.user_name as authorName,
+			  hc1.comment_date as commentDate,
+			  hc1.re_id
+		from  hts_admin.interact_auto_response as ar left join hts_admin.interact_user_level_list iull on iull.user_id=ar.re_author,
+		      hts.user_info as uz,
+			  hts.user_info as ui,
+		      hts.htworld_comment as hc1,
+		      hts.htworld_comment as hc2,
+			  hts.htworld_htworld as hh		
+		where hc1.id = ar.comment_id
+		  and hc2.id = ar.response_id
+		  and uz.id = ar.author
+		  and ui.id = ar.re_author
+		  and ar.complete = 0
+	    and hh.id = ar.world_id
+	    and hh.valid = 1
+	    <if test="userLevelId != null">
+	    	and iull.user_level_id = #{userLevelId}
+	    </if>
+	    <if test="maxId != null and maxId != 0"> 
+	    	<![CDATA[and ar.id<=#{maxId}]]>
+	    </if>
+		ORDER BY ar.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询未回复的回复总数 -->
+	<select id="getUnCompleteResponseCountByMaxId" resultType="long">
+		select count(1) 
+		from 
+			(
+				select ar.* 
+				from hts_admin.interact_auto_response as ar left join hts_admin.interact_user_level_list iull on iull.user_id=ar.re_author
+				where 
+					ar.complete=0 
+					<if test="userLevelId != null">
+				    	and iull.user_level_id = #{userLevelId}
+				    </if>
+					<if test="maxId != null and maxId != 0"> 
+				    	<![CDATA[and ar.id<=#{maxId}]]>
+				    </if>
+			) as ar1 left join hts.htworld_htworld hh on ar1.world_id=hh.id  
+		where hh.valid=1
+	</select>
+	
+	<!-- 根据id查询回复组 -->
+	<select id="queryResponseById" resultMap="AutoResponseMapper">
+		SELECT ar.id,hc.id as response_id,ui.user_name as authorName,hc.content as content,hc.comment_date as commentDate 
+			 FROM hts_admin.interact_auto_response ar,hts.htworld_comment as hc , hts.user_info as ui 
+			 WHERE ar.id = #{id}
+			 AND hc.world_id=ar.world_id and hc.author_id=ui.id 
+			 AND 
+			 	(((hc.author_id=ar.author or hc.author_id=ar.re_author) 
+			 AND 
+			 	(hc.re_author_id =ar.author or hc.re_author_id=ar.re_author)) 
+			 OR
+			 	(hc.author_id=ar.author AND hc.re_author_id=0))
+			 order by hc.comment_date desc
+	</select>
+	
+	<!-- 根据id查询数据 -->
+	<select id="queryRespnse" resultMap="AutoResponseMapper">
+		select ar.*
+		from hts_admin.interact_auto_response ar
+		where ar.id=#{id}
+	</select>
+	
+	<!-- 更新回复完成情况 -->
+	<update id="updateResponseCompleteByIds">
+		update hts_admin.interact_auto_response set complete=1 where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 查询马甲的未回复的被用户回复 -->
+	<select id="queryUnCkResponse" resultMap="AutoResponseMapper">
+		SELECT 
+			hc.id as response_id,hc.author_id as author,hc.content,hc.world_id,hc.world_author_id as world_author_id,
+			hc.re_author_id as re_author , ui.user_name as authorName
+		FROM
+			(
+				SELECT
+					*
+				FROM
+					hts.htworld_comment
+				WHERE
+					ck = 0
+				AND valid = 1
+		    	<![CDATA[ AND comment_date > #{commentDate}]]>
+			) hc
+				INNER JOIN hts.operations_user_zombie uz ON hc.re_author_id = uz.user_id
+				LEFT JOIN hts.user_info ui ON hc.author_id = ui.id
+	</select>
+	
+	
+	<!-- 删除 -->
+	<delete id="delAutoResponseByIds">
+		delete from hts_admin.interact_auto_response where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+</mapper>

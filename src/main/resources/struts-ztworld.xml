@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" 
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="admin_ztworld" namespace="/admin_ztworld" extends="admin-package">
+	
+		<action name="ztworld_*" class="com.imzhitu.admin.ztworld.ZTWorldAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="interact_*" class="com.imzhitu.admin.ztworld.ZTWorldInteractAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="type_*" class="com.imzhitu.admin.ztworld.ZTWorldTypeAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="typeSchedula_*" class="com.imzhitu.admin.ztworld.ZTWorldTypeWorldSchedulaAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="label_*" class="com.imzhitu.admin.ztworld.ZTWorldLabelAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="zhituxiaomishu_*" class="com.imzhitu.admin.ztworld.ZHITUXiaoMiShuAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="child_*" class="com.imzhitu.admin.ztworld.ZTWorldChildAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="sticker_*" class="com.imzhitu.admin.ztworld.ZTWorldStickerAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+	</package>
+
+</struts>
+
+
+
+

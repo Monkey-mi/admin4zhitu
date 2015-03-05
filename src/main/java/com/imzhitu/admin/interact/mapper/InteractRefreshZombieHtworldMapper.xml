@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractRefreshZombieHtworldMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.UserZombieHtworld" id="zombieHtworld">
+		<result column="id" property="worldId" jdbcType="NUMERIC" />
+		<result column="author_id" property="userId" jdbcType="NUMERIC" />
+		<result column="date_added" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+		<result column="short_link" property="shortLink" jdbcType="VARCHAR" />
+		<result column="title_thumb_path" property="titlePath" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.UserZombieHtworld" id="zombieHtworldComment">
+		<result column="id" property="commentId" jdbcType="NUMERIC" />
+		<result column="comment_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+	</resultMap>
+
+	<update id="refreshWorldCreateDate" parameterType="com.imzhitu.admin.common.pojo.InteractRefreshZombieHtworld">
+		update hts.htworld_htworld 
+			set date_added=#{refreshDate,jdbcType=TIMESTAMP},date_modified=#{refreshDate,jdbcType=TIMESTAMP}
+			where id=${wid}
+	</update>
+	
+	<update id="refreshCommentCreateDate" parameterType="com.imzhitu.admin.common.pojo.InteractRefreshZombieHtworld">
+		update hts.htworld_comment
+			set comment_date=#{refreshDate,jdbcType=TIMESTAMP}
+			where id=#{cid}
+	</update>
+	
+	<select id="queryZombieHtworldTotalByMaxDate" resultType="LONG">
+		select count(*) 
+			from hts.htworld_htworld hh inner join hts.operations_user_zombie zb on hh.author_id=zb.user_id 
+			where zb.shield = 0
+			<if test="afterDate != null">
+				<![CDATA[
+				  and	hh.date_added >= #{afterDate,jdbcType=DATE}
+				]]>
+			</if>
+	</select>
+	
+	
+	<select id="queryZombieHtworld" resultMap="zombieHtworld">
+		select hh.id,hh.author_id,hh.date_added,hh.short_link,hh.title_thumb_path
+			from hts.htworld_htworld hh inner join hts.operations_user_zombie zb on hh.author_id=zb.user_id
+			where zb.shield = 0
+			<if test="afterDate != null">
+				<![CDATA[
+				  and	hh.date_added >= #{afterDate,jdbcType=DATE}
+				]]>
+			</if>
+			
+			order by hh.date_added asc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryZombieComment" resultMap="zombieHtworldComment" >
+		select hc.id,hc.comment_date
+			from hts.htworld_comment hc 
+		where  hc.world_id=#{wid}
+	</select>
+	
+	<select id="queryZombieHtworldByWid" resultMap="zombieHtworld">
+		select hh.id,hh.author_id,hh.date_added,hh.short_link,hh.title_thumb_path
+			from hts.htworld_htworld hh
+			where hh.id=${wid}
+	</select>
+	
+	<select id="queryWidByUid" resultType="Integer">
+		select hh.id 
+			from hts.htworld_htworld hh
+			where hh.author_id=#{uid}
+			order by hh.id desc
+	</select>
+	
+</mapper>

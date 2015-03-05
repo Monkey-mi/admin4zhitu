@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- 
+	<bean id="interactCommentDao" class="com.imzhitu.admin.interact.dao.impl.InteractCommentDaoImpl" parent="baseDao" />
+	<bean id="interactCommentLabelDao" class="com.imzhitu.admin.interact.dao.impl.InteractCommentLabelDaoImpl" parent="baseDao" />
+	<bean id="interactWorldClickDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldClickDaoImpl" parent="baseDao" />
+	<bean id="interactWorldCommentDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldCommentDaoImpl" parent="baseDao" />
+	<bean id="interactWorldDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldDaoImpl" parent="baseDao" />
+	<bean id="interactWorldLikedDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldLikedDaoImpl" parent="baseDao" />
+	<bean id="interactUserDao" class="com.imzhitu.admin.interact.dao.impl.InteractUserDaoImpl" parent="baseDao" />
+	<bean id="interactUserFollowDao" class="com.imzhitu.admin.interact.dao.impl.InteractUserFollowDaoImpl" parent="baseDao" />
+	<bean id="interactTrackerDao" class="com.imzhitu.admin.interact.dao.impl.InteractTrackerDaoImpl" parent="baseDao" />
+	<bean id="interactUserlevelDao" class="com.imzhitu.admin.interact.dao.impl.InteractUserlevelDaoImpl" parent="baseDao"/>
+	<bean id="interactUserlevelListDao" class="com.imzhitu.admin.interact.dao.impl.InteractUserlevelListDaoImpl" parent="baseDao"/>
+	<bean id="interactWorldlevelDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldlevelDaoImpl" parent="baseDao"/>
+	<bean id="interactWorldLabelCommentLabelDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldLabelCommentLabelDaoImpl"  parent="baseDao"/>	
+	<bean id="interactWorldlevelListDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldlevelListDaoImpl" parent="baseDao"/>
+	<bean id="interactActiveOperatedDao" class="com.imzhitu.admin.interact.dao.impl.InteractActiveOperatedDaoImpl" parent="baseDao"/>
+	<bean id="interactAutoResponseDao" class="com.imzhitu.admin.interact.dao.impl.InteractAutoResponseDaoImpl" parent="baseDao">
+		<property name="urlPrefix" value="${urlPrefix}"/>
+	</bean>
+	 
+	
+	<bean id="interactWorldlevelWorldLabelDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldlevelWorldLabelDaoImpl" parent="baseDao"/>
+	<bean id="interactWorldlevelWorldCommentDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldlevelWorldCommentDaoImpl" parent="baseDao"/>
+	
+	<bean id="interactPlanCommentDao" class="com.imzhitu.admin.interact.dao.impl.InteractPlanCommentDaoImpl"  parent="baseDao"/>
+	<bean id="interactPlanCommentLabelDao" class="com.imzhitu.admin.interact.dao.impl.InteractPlanCommentLabelDaoImpl"  parent="baseDao"/>
+	
+	
+	
+	<bean id="interactParseResponseService" class="com.imzhitu.admin.interact.service.impl.InteractParseResponseServiceImpl" />
+	
+	<bean id="interactAutoResponseService" class="com.imzhitu.admin.interact.service.impl.InteractAutoResponseServiceImpl"
+		p:interactAutoResponseDao-ref="interactAutoResponseDao"
+		p:webKeyGenService-ref="webKeyGenService"
+		p:webWorldCommentDao-ref="webWorldCommentDao"
+		p:interactRobotService-ref="interactRobotService"
+		p:interactParseResponseService-ref="interactParseResponseService"/>
+	
+	<bean id="interactActiveOperatedService" class="com.imzhitu.admin.interact.service.impl.InteractActiveOperatedServiceImpl"
+		p:interactActiveOperatedDao-ref="interactActiveOperatedDao"
+	/>
+	
+	<bean id="interactRobotService" class="com.imzhitu.admin.interact.service.impl.InteractRobotServiceImpl">
+		<property name="robotAppKey" value="${robot.app.key}"/>
+		<property name="robotAppSecret" value="${robot.app.secret}"/>
+		<property name="userName" value="${robot.userName}"/>
+		<property name="tulingKey" value="${robot.tulingKey}"/>
+	</bean>
+		
+	<bean id="interactWorldlevelListService" class="com.imzhitu.admin.interact.service.impl.InteractWorldlevelListServiceImpl"
+		p:interactWorldlevelListDao-ref="interactWorldlevelListDao"
+		p:interactWorldlevelDao-ref="interactWorldlevelDao"
+		p:interactWorldlevelWorldLabelDao-ref="interactWorldlevelWorldLabelDao"
+		p:interactWorldlevelWorldCommentDao-ref="interactWorldlevelWorldCommentDao"
+		/>
+	
+	<bean id="interactCommentService" class="com.imzhitu.admin.interact.service.impl.InteractCommentServiceImpl"
+		p:interactCommentDao-ref="interactCommentDao"
+		p:interactCommentLabelDao-ref="interactCommentLabelDao" 
+		p:keyGenService-ref="keyGenService"
+		p:interactWorldCommentDao-ref="interactWorldCommentDao"/>
+	
+	<bean id="interactUserlevelService" class="com.imzhitu.admin.interact.service.impl.InteractUserlevelServiceImpl"
+		p:interactUserlevelDao-ref="interactUserlevelDao"
+		/>
+	
+	<bean id="interactUserlevelListService" class="com.imzhitu.admin.interact.service.impl.InteractUserlevelListServiceImpl"
+		p:interactWorldLabelCommentLabelDao-ref="interactWorldLabelCommentLabelDao"
+		p:interactCommentService-ref="interactCommentService"
+		p:interactUserlevelDao-ref="interactUserlevelDao"
+		p:interactWorldService-ref="interactWorldService"
+		p:worldLabelWorldDao-ref="worldLabelWorldDao"
+		p:interactUserlevelListDao-ref="interactUserlevelListDao" 
+		p:interactPlanCommentService-ref="interactPlanCommentService"
+		p:interactPlanCommentLabelService-ref="interactPlanCommentLabelService">
+		<property name="commonUserLevelId" value="${plan.comment.common.userlevel.id}"/>
+	</bean>
+	
+	<bean id="interactWorldlevelService" class="com.imzhitu.admin.interact.service.impl.InteractWorldlevelServiceImpl"
+		p:interactCommentService-ref="interactCommentService"
+		p:interactWorldService-ref="interactWorldService"
+		p:interactWorldlevelDao-ref="interactWorldlevelDao" />
+		
+	<bean id="interactWorldLabelCommentLabelService" class="com.imzhitu.admin.interact.service.impl.InteractWorldLabelCommentLabelServiceImpl"
+		p:interactCommentLabelDao-ref="interactCommentLabelDao"
+		p:interactWorldLabelCommentLabelDao-ref="interactWorldLabelCommentLabelDao"/>
+	
+		
+	<bean id="interactWorldService" class="com.imzhitu.admin.interact.service.impl.InteractWorldServiceImpl" parent="webBaseService"
+		p:keyGenService-ref="keyGenService"
+		p:opUserService-ref="opUserService" 
+		p:interactWorldLikedDao-ref="interactWorldLikedDao"
+		p:interactWorldCommentDao-ref="interactWorldCommentDao"
+		p:interactWorldClickDao-ref="interactWorldClickDao" 
+		p:interactWorldDao-ref="interactWorldDao" 
+		p:interactCommentService-ref="interactCommentService"
+		p:interactCommentDao-ref="interactCommentDao" 
+		p:webWorldService-ref="webWorldService"
+		p:webWorldInteractService-ref="webWorldInteractService" 
+		p:interactUserDao-ref="interactUserDao"
+		p:interactUserFollowDao-ref="interactUserFollowDao"
+		p:webUserInteractService-ref="webUserInteractService"
+		p:interactTrackerDao-ref="interactTrackerDao" 
+		p:webUserInfoDao-ref="webUserInfoDao"
+		p:pushService-ref="pushService"
+		p:webUserMsgService-ref="webUserMsgService"
+		p:worldDao-ref="worldDao"
+		p:userZombieDao-ref="userZombieDao">
+		<property name="adminId" value="${admin.adminId}" />
+		<property name="likeToFollowRate" value="${admin.interact.likedToFollowRate}" />
+		<property name="likeFromFollowRate" value="${admin.interact.likedFromFollowRate}" />
+		<property name="commentFromFollowRate" value="${admin.interact.commentFromFollowRate}" />
+	</bean>
+	
+	<bean id="interactPlanCommentService" class="com.imzhitu.admin.interact.service.impl.InteractPlanCommentServiceImpl" parent="webBaseService"
+		p:interactPlanCommentDao-ref="interactPlanCommentDao"
+		p:interactCommentDao-ref="interactCommentDao"
+		p:keyGenService-ref="keyGenService"
+	/>
+	
+	<bean id="interactPlanCommentLabelService" class="com.imzhitu.admin.interact.service.impl.InteractPlanCommentLabelServiceImpl" parent="webBaseService"
+		p:interactPlanCommentLabelDao-ref="interactPlanCommentLabelDao"
+	/>
+	-->
+	
+	<bean id="interactAutoResponseService" class="com.imzhitu.admin.interact.service.impl.InteractAutoResponseServiceImpl" />
+	<bean id="interactWorldService" class="com.imzhitu.admin.interact.service.impl.InteractWorldServiceImpl" />
+	<bean id="interactUserlevelListService" class="com.imzhitu.admin.interact.service.impl.InteractUserlevelListServiceImpl" />
+	<bean id="worldService" class="com.imzhitu.admin.ztworld.service.impl.ZTWorldServiceImpl" />
+	<bean id="worldTypeService" class="com.imzhitu.admin.ztworld.service.impl.ZTWorldTypeServiceImpl" />
+	<bean id="channelService" class="com.imzhitu.admin.op.service.impl.ChannelServiceImpl"/>
+	<bean id="channelWorldSchedulaService" class="com.imzhitu.admin.op.service.impl.OpChannelWorldSchedulaServiceImpl"/>
+	<bean id="interactTypeOptionWorldService" class="com.imzhitu.admin.interact.service.impl.InteractTypeOptionWorldServiceImpl"/>
+	<bean id="interactAutoResponseSchedulaService" class="com.imzhitu.admin.interact.service.impl.InteractAutoResponseSchedulaServiceImpl"/>
+		
+	<!-- 互动播放定时任务 -->
+    <bean id="interactClickJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="interactWorldService"/>
+        </property>
+        <property name="targetMethod">
+            <value>commitClick</value>
+        </property>
+        <property name="concurrent"> 
+			<value>true</value>
+		</property> 
+    </bean>
+
+	<!-- 互动播放定时任务周期 -->
+    <bean id="interactClickJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="interactClickJobDetail" />
+        </property>
+        <property name="cronExpression">
+        	<!-- <value>*/5 * 0,9-23 * * ?</value> -->
+            <value>0 0/5 * * * ?</value><!-- 每隔5分钟 -->
+        </property>
+    </bean>
+		
+	<!-- 互动评论定时任务 -->
+    <bean id="interactCommentJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="interactWorldService" />
+        </property>
+        <property name="targetMethod">
+            <value>commitComment</value>
+        </property>
+        <property name="concurrent"> 
+			<value>true</value>
+		</property> 
+    </bean>
+	
+	<!-- 互动评论定时任务周期 -->
+    <bean id="interactCommentJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="interactCommentJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <!--<value>*/5 * 0,9-23 * * ?</value>--> 
+            <value>0 0/5 * * * ?</value><!-- 每隔5分钟 -->
+        </property>
+    </bean>
+    
+    <!-- 互动喜欢定时任务 -->
+    <bean id="interactLikedJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="interactWorldService" />
+        </property>
+        <property name="targetMethod">
+            <value>commitLiked</value>
+        </property>
+        <property name="concurrent"> 
+			<value>true</value>
+		</property> 
+    </bean>
+
+	<!-- 互动喜欢定时任务周期 -->
+    <bean id="interactLikedJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="interactLikedJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <!-- <value>*/5 * 0,9-23 * * ?</value> -->
+            <value>0 0/5 * * * ?</value><!-- 9点到12点每隔5分钟 -->
+        </property>
+    </bean>
+    
+    <!-- 互动粉丝定时任务 -->
+    <bean id="interactFollowJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="interactWorldService" />
+        </property>
+        <property name="targetMethod">
+            <value>commitFollow</value>
+        </property>
+        <property name="concurrent"> 
+			<value>true</value>
+		</property> 
+    </bean>
+
+	<!-- 互动粉丝定时任务周期-->
+    <bean id="interactFollowJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="interactFollowJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <!-- <value>*/5 * 0,9-23 * * ?</value> -->
+            <value>0 0/10 * * * ?</value><!-- 9点到12点每隔10分钟 -->
+        </property>
+    </bean>
+    
+    
+    <!-- 互动跟踪定时任务 -->
+    <bean id="trackInteractJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="interactWorldService" />
+        </property>
+        <property name="targetMethod">
+            <value>trackInteract</value>
+        </property>
+        <property name="concurrent"> 
+			<value>true</value>
+		</property> 
+    </bean>
+
+	<!-- 互动跟踪定时任务周期 -->
+    <bean id="trackInteractJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="trackInteractJobDetail" />
+        </property>
+        <property name="cronExpression">
+        	<!-- <value>*/5 * 0,9-23 * * ?</value> -->
+            <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
+        </property>
+    </bean>
+    
+    <!-- 更新未完成互动定时任务 -->
+    <bean id="updateInteractScheduleJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="interactWorldService" />
+        </property>
+        <property name="targetMethod">
+            <value>updateUnFinishedInteractSchedule</value>
+        </property>
+        <property name="concurrent"> 
+			<value>false</value>
+		</property> 
+    </bean>
+    
+    <bean id="updateInteractScheduleJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="updateInteractScheduleJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 2 * * ?</value><!-- 每天凌晨2点更新 -->
+        </property>
+    </bean>
+    
+    
+     <!-- 删除最新织图多余缓存定时任务 -->
+    <bean id="deleteOverFlowLatestCacheScheduleJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="worldService" />
+        </property>
+        <property name="targetMethod">
+            <value>deleteOverFlowLatestCache</value>
+        </property>
+        <property name="concurrent"> 
+			<value>false</value>
+		</property> 
+    </bean>
+    
+    <bean id="deleteOverFlowLatestCacheScheduleJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="deleteOverFlowLatestCacheScheduleJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0 0/1 * * ?</value><!-- 8点到24点每隔一个钟 -->
+        </property>
+    </bean>
+    
+      <!-- 每两小时扫描最近两小时发布的织图，并根据用户等级设置互动 -->
+    <bean id="ScanNewWorldAndJoinIntoInteractDetail" 
+    	class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject">
+    		<ref bean="interactUserlevelListService"/>
+    	</property>
+    	<property name="targetMethod">
+    		<value>ScanNewWorldAndJoinIntoInteract</value>
+    	</property>
+    </bean>
+    
+    <!-- 根据用户等级，自动互动定时任务周期 :每半时扫描最近两小时发布的织图，并根据用户等级设置互动-->
+    <bean id="interactByUserLevelJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	<property name="jobDetail">
+    		<ref bean="ScanNewWorldAndJoinIntoInteractDetail"/>
+    	</property>
+    	<property name="cronExpression">
+    		<value>0 0/10 * * * ?</value><!-- 每半时 -->
+    	</property>
+    </bean>
+    
+    <!-- 每10分钟扫描分类织图计划更新表，并执行符合条件的计划 -->
+  	<bean id="performTypeWorldSchedula" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+  		<property name="targetObject">
+  			<ref bean="worldTypeService" />
+  		</property>
+  		<property name="targetMethod">
+  			<value>performTypeWorldSchedula</value>
+  		</property>
+  	</bean>
+  	<!-- 定时更新织图分类排列顺序任务 -->
+  	<bean id="updateTypeWorldSchedulaTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+  		<property name="jobDetail">
+  			<ref bean="performTypeWorldSchedula"/>
+  		</property>
+  		<property name="cronExpression">
+  			<value>0 0/10 * * * ?</value><!-- 10分钟 -->
+  		</property>
+  	</bean>
+
+	<!-- 扫描马甲对应的需要回复的回复，并获取回复 -->
+	<bean id="scanResponseAndGetAnswer" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="interactAutoResponseService"/>
+		</property>
+		<property name="targetMethod">
+			<value>scanResponseAndGetAnswer</value>
+		</property>
+	</bean>
+	<!-- 定时扫描马甲及需要回复的回复 -->
+	<bean id="scanResponseAndGetAnswerTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scanResponseAndGetAnswer"/>
+		</property>
+		<property name="cronExpression">
+  			<value>0 0/15 * * * ?</value><!-- 每15分钟 -->
+  		</property>
+	</bean>
+	
+	<!-- 频道top one定时更新任务 -->
+	<bean id="updateTopOneJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="channelService"/>
+		</property>
+		<property name="targetMethod">
+			<value>updateTopOne</value>
+		</property>
+	</bean>
+	<bean id="updateTopOneTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updateTopOneJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>13 12 4 * * ?</value><!-- 每三天的凌晨4:12:13执行 -->
+  		</property>
+	</bean>
+	
+	<!-- 频道红人 定时更新任务 -->
+	<bean id="updateChannelStarJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="channelService"/>
+		</property>
+		<property name="targetMethod">
+			<value>updateChannelStar</value>
+		</property>
+	</bean>
+	<bean id="updateChannelStarTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updateChannelStarJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>13 12 5 1/2 * ?</value><!-- 每三天的凌晨4:12:13执行 -->
+  		</property>
+	</bean>
+	
+	<!-- 频道织图定时更新 -->
+	<bean id="updateChannelWorldSchedulaJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="channelWorldSchedulaService"/>
+		</property>
+		<property name="targetMethod">
+			<value>channelWorldSchedula</value>
+		</property>
+	</bean>
+	<bean id="updateChannelWorldSchedulaTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updateChannelWorldSchedulaJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>0 0/30 * * * ?</value><!-- 每半个钟执行 -->
+  		</property>
+	</bean>
+	
+	<!-- 自动添加明星所发的织图到广场备选列表 -->
+	<bean id="autoAddStarWorldJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="interactTypeOptionWorldService"/>
+		</property>
+		<property name="targetMethod">
+			<value>autoAddStarWorld</value>
+		</property>
+	</bean>
+	
+	<bean id="autoAddStarWorldTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoAddStarWorldJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>0 0/30 * * * ?</value><!-- 每半个钟执行 -->
+  		</property>
+	</bean>
+	
+	<!-- 自动回复评论计划 -->
+	<bean id="autoResponseSchedulaJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="interactAutoResponseSchedulaService"/>
+		</property>
+		<property name="targetMethod">
+			<value>doAutoResponseSchedulaJob</value>
+		</property>
+	</bean>
+	
+	<bean id="autoResponseSchedulaTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="autoResponseSchedulaJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>0 0/10 * * * ?</value><!-- 每10分钟执行 -->
+  		</property>
+	</bean>
+	
+
+	<!-- 
+    <bean name="startQuertz" lazy-init="false"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list> 
+                <ref bean="interactCommentJobTrigger" />
+                <ref bean="interactClickJobTrigger"/>
+                <ref bean="interactLikedJobTrigger" />
+                <ref bean="interactFollowJobTrigger" />
+                <ref bean="trackInteractJobTrigger" />
+                <ref bean="updateInteractScheduleJobTrigger" />
+                <ref bean="deleteOverFlowLatestCacheScheduleJobTrigger" />
+                <ref bean="interactByUserLevelJobTrigger" />
+                <ref bean="updateTypeWorldSchedulaTrigger" /> 
+                <ref bean="scanResponseAndGetAnswerTrigger" />
+                <ref bean="updateTopOneTrigger"/>
+                <ref bean="updateChannelStarTrigger"/>
+                <ref bean="updateChannelWorldSchedulaTrigger"/>
+                <ref bean="autoAddStarWorldTrigger"/>
+                <ref bean="autoResponseSchedulaTrigger"/>
+            </list>
+        </property>
+    </bean>
+	 -->
+</beans>

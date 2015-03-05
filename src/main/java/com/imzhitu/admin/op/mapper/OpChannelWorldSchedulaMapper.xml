@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpChannelWorldSchedulaMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto" id="ChannelWorldSchedulaMapper">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="userId" column="user_id" jdbcType="INTEGER"/>
+		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="operatorId" column="operator_id" jdbcType="INTEGER"/>
+		<result property="userName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+		<result property="operatorName" column="operator_name" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
+		<result property="schedulaDate" column="date_schedula" jdbcType="TIMESTAMP"/>
+		<result property="worldLink" column="short_link" jdbcType="VARCHAR"/>
+		<result property="finish" column="finish" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto" id="SchedulaMapper">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="finish" column="finish" jdbcType="INTEGER"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
+		<result property="schedulaDate" column="date_schedula" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- 增加 -->
+	<insert id="insertChannelWorldSchedula">
+		insert into hts_admin.op_channel_world_schedula 
+		(world_id,channel_id,valid,operator_id,date_add,date_modify,date_schedula,finish)
+		values
+		(#{worldId},#{channelId},#{valid},#{operatorId},
+			#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{schedulaDate},#{finish})
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delChannelWorldSchedula">
+		delete from hts_admin.op_channel_world_schedula
+		<where>
+			id in
+			<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</where>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateChannelWorldSchedula">
+		update hts_admin.op_channel_world_schedula
+		set 
+			<if test="schedulaDate != null">
+				date_schedula = #{schedulaDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatorId != null">
+				operator_id = #{operatorId},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="finish != null">
+				finish = #{finish},
+			</if>
+			date_modify=#{modifyDate,jdbcType=TIMESTAMP}
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="worldId != null">
+				and world_id=#{worldId}
+			</if>
+		</where>
+	</update>
+	
+	<!-- 分页查询 -->
+	<select id="queryChannelWorldSchedulaForList" resultMap="ChannelWorldSchedulaMapper">
+		select ocws.*,aui.user_name as operator_name,hh.short_link,hh.author_id as user_id,oc.channel_name,ui.user_name from
+		hts_admin.op_channel_world_schedula ocws
+		
+		left join 
+		hts_admin.admin_user_info aui
+		on ocws.operator_id = aui.id
+		left join
+		hts.operations_channel oc
+		on ocws.channel_id=oc.id
+		left join 
+		hts.htworld_htworld hh
+		on ocws.world_id = hh.id
+		left join
+		hts.user_info ui
+		on hh.author_id = ui.id
+		<where>
+			<if test="id != null">
+				ocws.id = #{id}
+			</if>
+			<if test="worldId != null">
+				ocws.world_id = #{worldId}
+			</if>
+			<if test="channelId != null">
+				and ocws.channel_id = #{channelId}
+			</if>
+			<if test="finish != null">
+				and ocws.finish = #{finish}
+			</if>
+			<if test="valid != null">
+				and ocws.valid = #{valid}
+			</if>
+			<if test="addDate != null">
+				<![CDATA[ and ocws.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="modifyDate != null">
+				<![CDATA[ and ocws.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and ocws.id <= #{maxId}]]>
+			</if>
+		</where>
+		order by ocws.id
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryChannelWorldSchedulaCount" resultType="long">
+		select count(ocws.id)
+		from hts_admin.op_channel_world_schedula ocws
+		<where>
+			<if test="id != null">
+				ocws.id = #{id}
+			</if>
+			<if test="worldId != null">
+				ocws.world_id = #{worldId}
+			</if>
+			<if test="channelId != null">
+				and ocws.channel_id = #{channelId}
+			</if>
+			<if test="finish != null">
+				and ocws.finish = #{finish}
+			</if>
+			<if test="valid != null">
+				and ocws.valid = #{valid}
+			</if>
+			<if test="addDate != null">
+				<![CDATA[ and ocws.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="modifyDate != null">
+				<![CDATA[ and ocws.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and ocws.id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询 -->
+	<select id="queryChannelWorldSchedula" resultMap="SchedulaMapper">
+		select * from hts_admin.op_channel_world_schedula ocws
+		<where>
+			<if test="id != null">
+				ocws.id = #{id}
+			</if>
+			<if test="worldId != null">
+				ocws.world_id = #{worldId}
+			</if>
+			<if test="channelId != null">
+				and ocws.channel_id = #{channelId}
+			</if>
+			<if test="finish != null">
+				and ocws.finish = #{finish}
+			</if>
+			<if test="valid != null">
+				and ocws.valid = #{valid}
+			</if>
+			<if test="addDate != null">
+				<![CDATA[ and ocws.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="modifyDate != null">
+				<![CDATA[ and ocws.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+		</where>
+	</select>
+	
+</mapper>

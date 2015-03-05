@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- 
+	<bean id="userInfoDao" class="com.imzhitu.admin.userinfo.dao.impl.UserInfoDaoImpl" parent="webBaseDao" />
+	<bean id="userConcernDao" class="com.imzhitu.admin.userinfo.dao.impl.UserConcernDaoImpl" parent="webBaseDao" />
+	<bean id="userLabelDao" class="com.imzhitu.admin.userinfo.dao.impl.UserLabelDaoImpl" parent="webBaseDao" />
+	<bean id="userMsgDao" class="com.imzhitu.admin.userinfo.dao.impl.UserMsgDaoImpl" parent="webBaseDao" />
+	<bean id="userVerifyDao" class="com.imzhitu.admin.userinfo.dao.impl.UserVerifyDaoImpl" parent="webBaseDao" />
+	<bean id="userVerifyCacheDao" class="com.imzhitu.admin.userinfo.dao.impl.UserVerifyCacheDaoImpl" parent="baseCacheDao" 
+		p:userVerifyDao-ref="userVerifyDao" />
+		
+	<bean id="userTrustDao" class="com.imzhitu.admin.userinfo.dao.impl.UserTrustDaoImpl" parent="webBaseDao"/>
+	
+	<bean id="userInfoService" class="com.imzhitu.admin.userinfo.service.impl.UserInfoServiceImpl" parent="webBaseService"
+		p:webKeyGenService-ref="webKeyGenService"
+		p:userInfoDao-ref="userInfoDao"
+		p:webUserInfoDao-ref="webUserInfoDao"
+		p:interactUserDao-ref="interactUserDao"
+		p:webUserInfoService-ref="webUserInfoService" 
+		p:userTrustDao-ref="userTrustDao"/>
+	 
+	
+	<bean id="userInteractService" class="com.imzhitu.admin.userinfo.service.impl.UserInteractServiceImpl" parent="webBaseService"
+		p:userZombieDao-ref="userZombieDao"
+		p:userConcernDao-ref="userConcernDao"
+		p:webUserInteractService-ref="webUserInteractService"
+		p:webUserInfoService-ref="webUserInfoService" />
+	
+		
+	<bean id="userLabelService" class="com.imzhitu.admin.userinfo.service.impl.UserLabelServiceImpl" parent="webBaseService"
+		p:webKeyGenService-ref="webKeyGenService"
+		p:userLabelDao-ref="userLabelDao"
+		p:userInfoDao-ref="userInfoDao" />
+		
+	<bean id="userMsgService" class="com.imzhitu.admin.userinfo.service.impl.UserMsgServiceImpl" parent="webBaseService"
+		p:webUserInfoDao-ref="webUserInfoDao"
+		p:pushService-ref="pushService" 
+		p:webUserMsgService-ref="webUserMsgService"
+		p:userMsgDao-ref="userMsgDao"
+		p:webUserMsgDao-ref="webUserMsgDao" 
+		p:webUserMsgRecipientBoxDao-ref="webUserMsgRecipientBoxDao" />
+		
+	<bean id="userVerifyService" class="com.imzhitu.admin.userinfo.service.impl.UserVerifyServiceImpl" parent="webBaseService"
+		p:webKeyGenService-ref="webKeyGenService"
+		p:userVerifyDao-ref="userVerifyDao"
+		p:opUserVerifyDtoCacheDao-ref="opUserVerifyDtoCacheDao"
+		p:userVerifyCacheDao-ref="userVerifyCacheDao" />
+		
+	-->
+		
+</beans>

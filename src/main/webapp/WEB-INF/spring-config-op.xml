@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- 
+	<bean id="userZombieDao" class="com.imzhitu.admin.op.dao.impl.UserZombieDaoImpl" parent="webBaseDao" />
+	<bean id="sysMsgDao" class="com.hts.web.operations.dao.impl.SysMsgDaoImpl" parent="webBaseDao" />
+	<bean id="userRecommendDao" class="com.imzhitu.admin.op.dao.impl.UserRecommendDaoImpl" parent="webBaseDao" />
+	<bean id="squarePushTopicDao" class="com.imzhitu.admin.op.dao.impl.SquarePushTopicDaoImpl" parent="webBaseDao" />
+	
+	<bean id="appLinkDao" class="com.imzhitu.admin.op.dao.impl.AppLinkDaoImpl" parent="webBaseDao"
+		p:urlPrefix="${appUrlPrefix}" />
+	<bean id="appLinkRecordDao" class="com.imzhitu.admin.op.dao.impl.AppLinkRecordDaoImpl" parent="webBaseDao" />
+	
+	<bean id="activityDao" class="com.imzhitu.admin.op.dao.impl.ActivityDaoImpl" parent="webBaseDao"  />
+	<bean id="activityCacheDao" class="com.imzhitu.admin.op.dao.impl.ActivityCacheDaoImpl" parent="baseCacheDao" 
+		p:activityDao-ref="activityDao"
+		p:activitySponsorDao-ref="activitySponsorDao"
+		p:activityAwardDao-ref="activityAwardDao"/>
+	<bean id="activityWorldDao" class="com.imzhitu.admin.op.dao.impl.ActivityWorldDaoImpl" parent="webBaseDao" />
+	<bean id="activitySponsorDao" class="com.imzhitu.admin.op.dao.impl.ActivitySponsorDaoImpl" parent="webBaseDao" />
+	<bean id="activityLogoDao" class="com.imzhitu.admin.op.dao.impl.ActivityLogoDaoImpl" parent="webBaseDao" />
+	<bean id="activityLogoCacheDao" class="com.imzhitu.admin.op.dao.impl.ActivityLogoCacheDaoImpl" parent="baseCacheDao" 
+		p:activityLogoDao-ref="activityLogoDao"/>
+	<bean id="activityAwardDao" class="com.imzhitu.admin.op.dao.impl.ActivityAwardDaoImpl" parent="webBaseDao" 
+		p:webActivityAwardDao-ref="webActivityAwardDao" />
+	<bean id="activityWinnerDao" class="com.imzhitu.admin.op.dao.impl.ActivityWinnerDaoImpl" parent="webBaseDao" 
+		p:activityWorldDao-ref="activityWorldDao"/>
+	
+	<bean id="opWorldTypeDao" class="com.imzhitu.admin.op.dao.impl.OpWorldTypeDaoImpl" parent="webBaseDao" />
+	<bean id="opWorldTypeCacheDao" class="com.imzhitu.admin.op.dao.impl.OpWorldTypeCacheDaoImpl" parent="baseCacheDao"
+		p:opWorldTypeDao-ref="opWorldTypeDao" />
+	<bean id="opWorldTypeDto2CacheDao" class="com.imzhitu.admin.op.dao.impl.OpWorldTypeDto2CacheDaoImpl" parent="baseCacheDao" 
+		p:webSquarePushDao-ref="webSquarePushDao" />
+		
+	<bean id="opUserVerifyDtoCacheDao" class="com.imzhitu.admin.op.dao.impl.OpUserVerifyDtoCacheDaoImpl" parent="baseCacheDao"
+		p:userVerifyDao-ref="userVerifyDao" />
+		
+	<bean id="noticeCacheDao" class="com.imzhitu.admin.op.dao.impl.NoticeCacheDaoImpl" parent="baseCacheDao" />
+	
+	
+	<bean id="opService" class="com.imzhitu.admin.op.service.impl.OpServiceImpl" parent="webBaseService"
+		p:webKeyGenService-ref="webKeyGenService"
+		p:pushService-ref="pushService"
+		p:webUserMsgService-ref="webUserMsgService"
+		p:webWorldDao-ref="webWorldDao"
+		p:webUserInfoDao-ref="webUserInfoDao"
+		p:squarePushTopicDao-ref="squarePushTopicDao"
+		p:activityDao-ref="activityDao"
+		p:activityCacheDao-ref="activityCacheDao"
+		p:activityWorldDao-ref="activityWorldDao"
+		p:webActivityCacheDao-ref="webActivityCacheDao"
+		p:webUserInfoService-ref="webUserInfoService"
+		p:worldService-ref="worldService"
+		p:worldDao-ref="worldDao"
+		p:activitySponsorDao-ref="activitySponsorDao" 
+		p:activityLogoDao-ref="activityLogoDao"
+		p:activityLogoCacheDao-ref="activityLogoCacheDao"
+		p:activityAwardDao-ref="activityAwardDao"
+		p:opWorldTypeCacheDao-ref="opWorldTypeCacheDao"
+		p:worldLabelDao-ref="worldLabelDao"
+		p:worldLabelWorldDao-ref="worldLabelWorldDao" 
+		p:webWorldLabelDao-ref="webWorldLabelDao"
+		p:activityWinnerDao-ref="activityWinnerDao"
+		p:interactActiveOperatedService-ref="interactActiveOperatedService"/>
+	
+	<bean id="opAdService" class="com.imzhitu.admin.op.service.impl.OpAdServiceImpl" parent="webBaseService"
+		p:webKeyGenService-ref="webKeyGenService"
+		p:appLinkDao-ref="appLinkDao"
+		p:appLinkRecordDao-ref="appLinkRecordDao" />
+		
+	<bean id="opUserService" class="com.imzhitu.admin.op.service.impl.OpUserServiceImpl" parent="webBaseService"
+		p:webKeyGenService-ref="webKeyGenService"
+		p:pushService-ref="pushService"
+		p:webUserMsgService-ref="webUserMsgService"
+		p:userZombieDao-ref="userZombieDao"
+		p:webUserLoginPersistentDao-ref="webUserLoginPersistentDao"
+		p:webUserLoginPersistentService-ref="webUserLoginPersistentService"
+		p:webUserInfoDao-ref="webUserInfoDao"
+		p:webUserRecommendDao-ref="webUserRecommendDao"
+		p:userRecommendDao-ref="userRecommendDao"
+		p:userInfoDao-ref="userInfoDao"
+		p:userInfoService-ref="userInfoService" 
+		p:webUserInfoService-ref="webUserInfoService" />
+		
+	<bean id="opMsgService" class="com.imzhitu.admin.op.service.impl.OpMsgServiceImpl" parent="webBaseService" 
+		p:webKeyGenService-ref="webKeyGenService"
+		p:noticeCacheDao-ref="noticeCacheDao"
+	/>
+	 -->
+		
+</beans>

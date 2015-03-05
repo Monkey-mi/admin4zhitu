@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractZombieWorldMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.ZombieWorld" id="ZombieWorldMapper">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="world_name" property="worldName" jdbcType="VARCHAR"/>
+		<result column="world_desc" property="worldDesc" jdbcType="VARCHAR"/>
+		<result column="world_label" property="worldLabel" jdbcType="VARCHAR"/>
+		<result column="world_label_ids" property="worldLabelIds" jdbcType="VARCHAR"/>
+		<result column="author_id" property="authorId" jdbcType="INTEGER"/>
+		<result column="cover_path" property="coverPath" jdbcType="VARCHAR"/>
+		<result column="title_path" property="titlePath" jdbcType="VARCHAR"/>
+		<result column="title_thumb_path" property="thumbTitlePath" jdbcType="VARCHAR"/>
+		<result column="longitude" property="longitude" jdbcType="DOUBLE"/>
+		<result column="latitude" property="latitude" jdbcType="DOUBLE"/>
+		<result column="location_addr" property="locationAddr" jdbcType="VARCHAR"/>
+		<result column="size" property="size" jdbcType="INTEGER"/>
+		<result column="complete" property="complete" jdbcType="INTEGER"/>
+		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
+		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- 插入 -->
+	<insert id="insertZombieWorld">
+		insert into hts_admin.zombie_world 
+		(id,world_name,world_desc,world_label,world_label_ids,author_id,cover_path,title_path,
+		 title_thumb_path,longitude,location_addr,size,complete,date_add,date_modify)
+		 values
+		 (#{id},#{worldName},#{worldDesc},#{worldLabel},#{worldLabelIds},#{authorId},#{coverPath},#{titlePath},
+		  #{thumbTitlePath},#{longitude},#{locationAddr},#{size},#{complete},#{addDate},#{modifyDate})
+	</insert>
+	
+	<!-- 更新完成情况 -->
+	<update id="updateComplete">
+		update hts_admin.zombie_world set complete=1,date_modify = #{modifyDate}
+		where id=#{id}
+	</update>
+	
+	<!-- 查询 id-->
+	<select id="queryZombieWorldId" resultType="Integer">
+		select id from hts_admin.zombie_world zw
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="complete != null">
+				and complete = #{complete}
+			</if>
+		</where>
+		<if test="limit != null">
+			limit 0,#{limit}
+		</if>
+	</select>
+	
+	<!-- 查询 -->
+	<select id="queryZombieWorld" resultMap="ZombieWorldMapper">
+		select * from hts_admin.zombie_world zw
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="complete != null">
+				and complete = #{complete}
+			</if>
+		</where>
+		<if test="limit != null">
+			limit 0,#{limit}
+		</if>
+	</select>
+	
+	<!-- 查询总数 -->
+	<select id="queryZombieWorldTotalCount" resultType="long">
+		select count(*) from hts_admin.zombie_world zw
+		where complete = 0
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="queryZombieWorldForTable" resultMap="ZombieWorldMapper">
+		select * from hts_admin.zombie_world zw
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="complete != null">
+				and complete = #{complete}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[id <= #{maxId}]]>
+			</if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryZombieWorldTotalCountForTable" resultType="long">
+		select count(*) from hts_admin.zombie_world zw
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="complete != null">
+				and complete = #{complete}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+</mapper>

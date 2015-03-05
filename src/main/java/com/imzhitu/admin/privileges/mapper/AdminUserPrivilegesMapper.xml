@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.privileges.mapper.AdminUserPrivilegesMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.AdminUserPrivileges" id="UserPrivilege">
+		<result column="id" property="id" jdbcType="NUMERIC"/>
+		<result column="user_id" property="userId" jdbcType="NUMERIC"/>
+		<result column="operator_id" property="operatorId" jdbcType="NUMERIC"/>
+		<result column="valid" property="valid" jdbcType="NUMERIC"/>
+		<result column="privilege_id" property="privilegeId" jdbcType="NUMERIC"/>
+		<result column="privileges_name" property="privilegeName" jdbcType="VARCHAR"/>
+		<result column="operatorName" property="operatorName" jdbcType="VARCHAR"/>
+		<result column="privileges_url" property="privilegeUrl" jdbcType="VARCHAR"/>
+		<result column="icon" property="icon" jdbcType="VARCHAR"/>
+		<result column="group_id" property="privilegeGroupId" jdbcType="NUMERIC"/>
+		<result column="serial" property="serial" jdbcType="NUMERIC"/>
+		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
+		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.AdminPrivilegesGroup" id="PrivilegeGroup">
+		<result column="id" property="id" jdbcType="NUMERIC"/>
+		<result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+		<result column="icon" property="icon" jdbcType="VARCHAR"/>
+		<result column="serial" property="serial" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.AdminPrivileges" id="PrivilegesList">
+		<result column="privilege_id" property="id" jdbcType="NUMERIC"/>
+		<result column="privileges_name" property="privilegesName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- 根据用户id查询用户所拥有的全部权限 -->
+	<select id="queryUserPrivilegesByUID" resultMap="UserPrivilege">
+		select  aup.id,
+			aup.user_id,
+			aup.operator_id,
+			aup.valid,
+			aup.privilege_id,
+			aup.date_add,
+			aup.date_modify,
+			ap.privileges_name,
+			ap.privileges_url,
+			ap.icon,
+			ap.group_id,
+			ap.serial,
+			aui.user_name as operatorName
+		from hts_admin.admin_user_privileges aup 
+			left join hts_admin.admin_privileges ap on aup.privilege_id=ap.id 
+			left join hts_admin.admin_user_info aui on aup.operator_id=aui.id
+		where aup.user_id=#{userId} and aup.valid=1
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 根据用户id查询用户所有权的id -->
+	<select id="queryUserPrivilegeIdListByUID" resultType="Integer">
+		select  aup.privilege_id
+			from hts_admin.admin_user_privileges aup
+			where aup.user_id=#{userId} and aup.valid=1
+	</select>
+	
+	<!-- 查询用户所有权限总数 -->
+	<select id="queryUserPrivilegeCountByUID" resultType="long">
+		select  count(aup.privilege_id)
+			from hts_admin.admin_user_privileges aup
+			where aup.user_id=#{userId} and aup.valid=1
+	</select>
+	
+	<!-- 给用户增加权限 -->
+	<insert id="addUserPrivilege">
+		insert into admin_user_privileges (user_id,operator_id,valid,privilege_id,date_add,date_modify)
+			values (#{userId},#{operatorId},#{valid},#{privilegeId},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<!-- 查询用户是否具有该权限 -->
+	<select id="queryCountByPrivilegeId" resultType="long">
+		select count(*) 
+			from hts_admin.admin_user_privileges  aup
+			where aup.user_id=#{userId} and aup.privilege_id=#{privilegeId}
+	</select>
+	
+
+	
+	<!-- 查询所有的权限组 -->
+	<select id="queryPrivilegesGroupList" resultMap="PrivilegeGroup">
+		select apg.id,
+			   apg.group_name,
+			   apg.icon,
+			   apg.serial
+		from hts_admin.admin_privileges_group apg
+		where 1=1 order by apg.serial asc
+	</select>
+	
+	<!-- 查询所有的权限 -->
+	<select id="queryAllPrivileges" resultMap="PrivilegesList">
+		select ap.id ,
+			   ap.privileges_name
+			from admin_privileges ap
+	</select>
+	
+	<!-- 查询所有权限总数 -->
+	<select id="queryAllPrivilegesCount" resultType="long">
+		select count(1)
+			from admin_privileges ap
+	</select>
+	
+	<!-- 查询用户权限列表 -->
+	<select id="queryUserPrivilegesForTable" resultMap="PrivilegesList">
+		select  
+			aup.privilege_id as id,
+			ap.privileges_name
+		from hts_admin.admin_user_privileges aup 
+			left join hts_admin.admin_privileges ap on aup.privilege_id=ap.id 
+		where aup.user_id=#{userId} and aup.valid=1
+	</select>
+	
+	<!-- 查询用户权限列表总数 -->
+	<select id="queryUserPrivilegesCountForTable" resultType="long">
+		select count(*)
+		from hts_admin.admin_user_privileges aup 
+		where aup.user_id=#{userId} and aup.valid=1
+	</select>
+	
+	<!-- 更新用户某权限 -->
+	<update id="updateValid" >
+		update hts_admin.admin_user_privileges 
+		set valid=#{valid},date_modify = #{modifyDate,jdbcType=TIMESTAMP},operator_id=#{operatorId}
+		where user_id=#{userId} and privilege_id=#{privilegeId}
+	</update>
+	
+</mapper>

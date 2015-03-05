@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractAutoResponseSchedulaMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractAutoResponseSchedula" id="autoResponseSchedula">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="auto_response_id" property="autoResponseId" jdbcType="INTEGER"/>
+		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
+		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+		<result column="operator_id" property="operatorId" jdbcType="INTEGER"/>
+		<result column="operatorName" property="operatorName" jdbcType="VARCHAR"/>
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		<result column="complete" property="complete" jdbcType="INTEGER"/>
+		<result column="world_id" property="worldId" jdbcType="INTEGER"/>
+		<result column="content" property="currentComment" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- 分页查询 -->
+	<select id="queryAutoResponseSchedula" resultMap="autoResponseSchedula">
+		select iars.*,aui.user_name as operatorName,iar.world_id,hc.content from hts_admin.interact_auto_response_schedula iars 
+		left join hts_admin.admin_user_info aui on iars.operator_id=aui.id
+		left join hts_admin.interact_auto_response iar on iars.auto_response_id = iar.id
+		left join hts.htworld_comment hc on hc.id=iar.response_id
+		<where>
+			<if test="id != null and id != 0">
+				iars.id = #{id}
+			</if>
+			<if test="autoResponseId != null and autoResponseId != 0">
+				iars.auto_response_id = #{autoResponseId}
+			</if>
+			<if test="addDate != null">
+				<![CDATA[and iars.date_add>=#{addDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="modifyDate != null">
+				<![CDATA[and iars.date_add<=#{modifyDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="valid != null">
+				and iars.valid=#{valid}
+			</if>
+			<if test="complete != null">
+				and iars.complete=#{complete}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and iars.id <= #{maxId}]]>
+			</if>
+		</where>
+		ORDER BY  id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryAutoResponseSchedulaCount" resultType="long">
+		select count(*) from hts_admin.interact_auto_response_schedula iars 
+		<where>
+			<if test="addDate != null">
+				<![CDATA[ iars.date_add>=#{addDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="modifyDate != null">
+				<![CDATA[and iars.date_add<=#{modifyDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="valid != null">
+				and iars.valid=#{valid}
+			</if>
+			<if test="complete != null">
+				and iars.complete=#{complete}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and iars.id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 增加 -->
+	<insert id="addAutoResponseSchedula">
+		insert into hts_admin.interact_auto_response_schedula 
+		( auto_response_id,date_add,date_modify,schedula,valid,complete,operator_id) 
+		values( #{autoResponseId},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{schedula,jdbcType=TIMESTAMP},#{valid},#{complete},#{operatorId})
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="updateAutoResponseSchedula">
+		update hts_admin.interact_auto_response_schedula 
+		<set>
+			<if test="modifyDate != null">date_modify=#{modifyDate,jdbcType=TIMESTAMP},</if>
+			<if test="operatorId != null">operator_id=#{operatorId},</if>
+			<if test="valid != null">valid=#{valid},</if>
+			<if test="complete != null">complete=#{complete}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<update id="updateAutoResponseSchedulaComplete">
+		update hts_admin.interact_auto_response_schedula 
+		set complete=1
+		<where>
+			id in
+			<foreach collection="array" open="(" close=")" separator="," index="index" item="item" >
+				#{item}
+			</foreach>
+		</where>
+	</update>
+	
+	<!-- 批量删除 -->
+	<delete id="delInteractAutoResponseSchedula">
+		delete from hts_admin.interact_auto_response_schedula  where id in 
+		<foreach item="item" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询 -->
+	<select id="queryUnCompleteSchedula" resultMap="autoResponseSchedula">
+		select iars.* from hts_admin.interact_auto_response_schedula iars 
+		<where>
+			<if test="addDate != null">
+				<![CDATA[ iars.schedula>=#{addDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="modifyDate != null">
+				<![CDATA[and iars.schedula<=#{modifyDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="valid != null">
+				and iars.valid=#{valid}
+			</if>
+			<if test="complete != null">
+				and iars.complete=#{complete}
+			</if>
+		</where>
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,1 @@
+userIdColumn = {field : uidKey,title : '用户ID',align : 'center', sortable: true, width : 60};

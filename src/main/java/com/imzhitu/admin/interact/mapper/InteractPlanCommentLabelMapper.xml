@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractPlanCommentLabelMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractPlanCommentLabel" id="PlanCommentLabel">
+		<result column="id" property="id" jdbcType="NUMERIC"/>
+		<result column="description" property="description" jdbcType="VARCHAR"/>
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+		<result column="deadline" property="deadline" jdbcType="TIMESTAMP"/>
+		<result column="work_start_time" property="workStartTime" jdbcType="TIMESTAMP"/>
+		<result column="work_end_time" property="workEndTime" jdbcType="TIMESTAMP"/>
+		<result column="valid" property="valid" jdbcType="NUMERIC"/>
+		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
+		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+		<result column="operator_id" property="operatorId" jdbcType="NUMERIC"/>
+		<result column="operatorName" property="operatorName" jdbcType="VARCHAR"/>
+		<result column="group_id" property="groupId" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<!-- 增加计划评论标签 -->
+	<insert id="addPlanCommentLabel">
+		insert into hts_admin.interact_plan_comment_label 
+			(description,start_time,deadline,work_start_time,work_end_time,valid,date_add,date_modify,operator_id,group_id) 
+			values 
+			(#{description},#{startTime,jdbcType=TIMESTAMP},#{deadline,jdbcType=TIMESTAMP},#{workStartTime,jdbcType=TIMESTAMP},
+			  #{workEndTime,jdbcType=TIMESTAMP},#{valid},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{operatorId},#{groupId})
+	</insert>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryInteractPlanCommentLabelCount" resultType="long">
+			select count(1) from hts_admin.interact_plan_comment_label ipcl
+			 where    ipcl.valid=1
+			 <if test="maxId != null and maxId != 0">
+			 	<![CDATA[ and ipcl.id<= #{maxId}]]>
+			 </if>
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="queryInteractPlanCommentLabel" resultMap="PlanCommentLabel">
+		select ipcl.*,aui.user_name as operatorName 
+			from hts_admin.interact_plan_comment_label ipcl left join hts_admin.admin_user_info aui on ipcl.operator_id=aui.id 
+			where ipcl.valid=1 
+				<if test="maxId != null and maxId != 0"> 
+					<![CDATA[and ipcl.id <= #{maxId} ]]>
+				</if>
+			order by ipcl.id desc
+			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 查询所有列表  -->
+	<select id="queryInteractPlanCommentLabelList" resultMap="PlanCommentLabel">
+		select ipcl.*,aui.user_name as operatorName 
+			from hts_admin.interact_plan_comment_label ipcl left join hts_admin.admin_user_info aui on ipcl.operator_id=aui.id 
+			where ipcl.valid=1 
+			order by ipcl.id desc
+	</select>
+	
+	<!-- 更新 -->
+	<update id="updatePlanCommentValidById">
+		update hts_admin.interact_plan_comment_label ipcl set valid=#{valid} ,operator_id=#{operatorId},date_modify=#{modifyDate} 
+		where id=#{id}
+	</update>
+	
+	<!-- 根据时间来查询 -->
+	<select id="queryInteractPlanCommentLabelByDateAndTime" resultMap="PlanCommentLabel">
+		select ipcl.*,aui.user_name as operatorName 
+		from hts_admin.interact_plan_comment_label ipcl left join  hts_admin.admin_user_info aui on ipcl.operator_id=aui.id 
+		<![CDATA[
+			where ipcl.start_time<=#{deadline} 
+				and ipcl.deadline>=#{deadline}
+				and ipcl.work_start_time<=#{startTime}
+				and ipcl.work_end_time>=#{startTime} 
+				and ipcl.valid=1
+		]]>
+	</select>
+	
+</mapper>

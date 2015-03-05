@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpXiaoMiShuResponseMapper">
+
+	<resultMap type="com.imzhitu.admin.common.pojo.OpXiaoMiShuResponse" id="OpXiaoMiShuResponseMap">
+		<result column="responseId" property="responseId" jdbcType="INTEGER"/>
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+		<result column="keyId" property="keyId" jdbcType="INTEGER"/>
+		<result column="module" property="module" jdbcType="VARCHAR"/>
+		<result column="key" property="key" jdbcType="VARCHAR"/>
+		<result column="keyLength" property="keyLength" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- 插入回复内容 -->
+	<insert id="insertResponse">
+		insert into op_xiaomishu_response
+			(id,content)
+		values
+			(#{responseId},#{content})
+	</insert>
+	
+	<!-- 插入key -->
+	<insert id="insertResponseKey">
+		insert into op_xiaomishu_response_key
+			(id,module,key,key_length,response_id)
+		values
+			(#{keyId},#{module},#{key},#{keyLength},#{responseId})
+	</insert>
+	
+	<!-- 删除回复内容-->
+	<delete id="deleteResponse">
+		delete from op_xiaomishu_response
+		where id=#{responseId}
+	</delete>
+	
+	<!-- 删除key -->
+	<delete id="deleteResponseKey">
+		delete from op_xiaomishu_response_key
+		where id=#{keyId}
+	</delete>
+	
+	<!-- 修改回复内容 -->
+	<update id="updateResponse">
+		update op_xiaomishu_response
+		set content=#{content}
+		where id=#{responseId}
+	</update>
+	
+	<!-- 查询 -->
+	<select id="queryResponseAndKey" resultMap="OpXiaoMiShuResponseMap">
+		select rk.id as keyId, rk.module,rk.key,rk.key_length as keyLength,xr.id as responseId,xr.content
+		from op_xiaomishu_response_key as rk left join op_xiaomishu_response as xr
+		on rk.response_id = xr.id
+		<where>
+			<if test="keyId != null and keyId != 0">
+				rk.id = #{keyId}
+			</if>
+			<if test="responseId != null">
+				and rk.response_id = #{responseId}
+			</if>
+			<if test="module != null ">
+				and rk.module = #{module}
+			</if>
+			<if test="key != null">
+				and rk.key = #{key}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

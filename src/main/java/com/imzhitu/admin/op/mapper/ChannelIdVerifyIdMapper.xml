@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.ChannelIdVerifyIdMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelIdVerifyIdDto" id="ChannelIdVerifyId">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+		<result property="verifyId" column="verify_id" jdbcType="INTEGER"/>
+		<result property="channelName" column="channelName" jdbcType="VARCHAR"/>
+		<result property="verifyName" column="verifyName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!--增加  -->
+	<insert id="insertChannelIdVerifyId">
+		insert hts_admin.op_channel_id_verify_id
+		(channel_id,verify_id) values ( #{channelId},#{verifyId})
+	</insert>
+	
+	<!-- 检查是否存在 -->
+	<select id="checkIsExistByVerifyId" resultType="long">
+		select count(id)
+		from hts_admin.op_channel_id_verify_id
+		where verify_id=#{verifyId}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="batchDeleteChannelIdVerifyId">
+		delete from hts_admin.op_channel_id_verify_id
+		where id in 
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询 -->
+	<select id="queryChannelIdByVerifyId" resultType="Integer">
+		select channel_id
+		from hts_admin.op_channel_id_verify_id
+		where verify_id=#{verifyId}
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="queryChannelIdVerifyIdForList" resultMap="ChannelIdVerifyId">
+		select cv.id,cv.channel_id,cv.verify_id,uv.verify_name as verifyName,oc.channel_name as channelName
+		from hts_admin.op_channel_id_verify_id cv 
+		left join hts.user_verify uv on cv.verify_id=uv.id
+		left join hts.operations_channel oc on cv.channel_id=oc.id
+		<where>
+			1=1
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ id <= #{maxId}]]>
+			</if>
+		</where>
+		order by cv.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryChannelIdVerifyIdCount" resultType="long">
+		select count(id)
+		from hts_admin.op_channel_id_verify_id
+		<where>
+			1=1
+			<if test="maxId !=null and maxId != 0">
+				<![CDATA[ id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+	
+</mapper>

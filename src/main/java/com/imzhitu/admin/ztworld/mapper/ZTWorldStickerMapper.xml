@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.ZTWorldStickerMapper">
+
+	<resultMap type="com.hts.web.common.pojo.HTWorldStickerDto" id="HTSWorldStickerDtoMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="type_id" property="typeId" jdbcType="INTEGER"/>
+		<result column="sticker_path" property="stickerPath" jdbcType="VARCHAR"/>
+		<result column="sticker_thumb_path" property="stickerThumbPath" jdbcType="VARCHAR"/>
+		<result column="sticker_demo_path" property="stickerDemoPath" jdbcType="VARCHAR" />
+		<result column="sticker_name" property="stickerName" jdbcType="VARCHAR" />
+		<result column="serial" property="recommendId" jdbcType="INTEGER"/>
+		<result column="has_lock" property="hasLock" jdbcType="INTEGER"/>
+		<result column="label_id" property="labelId" jdbcType="INTEGER"/>
+		
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldSticker" id="WorldStickerMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="type_id" property="typeId" jdbcType="INTEGER"/>
+		<result column="sticker_path" property="stickerPath" jdbcType="VARCHAR"/>
+		<result column="sticker_thumb_path" property="stickerThumbPath" jdbcType="VARCHAR"/>
+		<result column="sticker_demo_path" property="stickerDemoPath" jdbcType="VARCHAR"/>
+		<result column="sticker_name" property="stickerName" jdbcType="VARCHAR" />
+		<result column="sticker_desc" property="stickerDesc" jdbcType="VARCHAR" />
+		<result column="top_weight" property="topWeight" jdbcType="INTEGER" />
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="valid" property="valid" jdbcType="INTEGER" />
+		<result column="has_lock" property="hasLock" jdbcType="INTEGER"/>
+		<result column="label_id" property="labelId" jdbcType="INTEGER"/>
+		<result column="type_name" property="typeName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryCacheTopStickerDto" resultMap="HTSWorldStickerDtoMap">
+		select * from hts.htworld_sticker where valid=1 and top_weight>0 order by serial desc
+	</select>
+	
+	<select id="queryCacheRecommendStickerDto" resultMap="HTSWorldStickerDtoMap">
+		select * from hts.htworld_sticker where type_id=#{typeId} 
+		and valid=1 and weight>0 order by serial desc limit #{limit}
+	</select>
+	
+	<select id="queryStickers" resultMap="WorldStickerMap">
+		select s.*,t.type_name from (
+		select * from hts.htworld_sticker
+		<where>
+			<if test="typeId != null and typeId != 0"> type_id=#{typeId}</if>
+			<if test="topWeight == 0"> and topWeight=#{topWeight}</if>
+			<if test="topWeight > 0"> and topWeight>=#{topWeight}</if>
+			<if test="weight == 0"> and weight=#{weight}</if>
+			<if test="weight > 0"> and weight>=#{weight}</if>
+			<if test="valid != null"> and valid=#{valid}</if>
+			<if test="hasLock != null"> and has_lock=#{hasLock}</if>
+			<if test="labelId != null"> and label_id=#{labelId}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
+		</where>
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		) as s, hts.htworld_sticker_type as t where s.type_id=t.id
+	</select>
+	
+	<select id="queryTotal" resultType="long">
+		select count(*) from hts.htworld_sticker 
+		<where>
+			<if test="typeId != null and typeId != 0"> type_id=#{typeId}</if>
+			<if test="topWeight == 0"> and topWeight=#{topWeight}</if>
+			<if test="topWeight > 0"> and topWeight>=#{topWeight}</if>
+			<if test="weight == 0"> and weight=#{weight}</if>
+			<if test="weight > 0"> and weight>=#{weight}</if>
+			<if test="valid != null"> and valid=#{valid}</if>
+			<if test="hasLock != null"> and has_lock=#{hasLock}</if>
+			<if test="labelId != null"> and label_id=#{labelId}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<insert id="save">
+		insert into hts.htworld_sticker 
+		(type_id,sticker_path,sticker_thumb_path,sticker_demo_path,sticker_name,sticker_desc,
+			top_weight,weight,serial,valid,has_lock,label_id) values (#{typeId},#{stickerPath},
+			#{stickerThumbPath},#{stickerDemoPath},#{stickerName},#{stickerDesc},#{topWeight},#{weight},
+		 	#{serial}, #{valid}, #{hasLock},#{labelId})
+	</insert>
+	
+	<update id="update">
+		update hts.htworld_sticker
+		<set>
+	      <if test="typeId != null">type_id=#{typeId},</if>
+	      <if test="stickerPath != null">sticker_path=#{stickerPath},</if>
+	      <if test="stickerThumbPath != null">sticker_thumb_path=#{stickerThumbPath},</if>
+	      <if test="stickerDemoPath != null">sticker_demo_path=#{stickerDemoPath},</if>
+	      <if test="stickerName != null">sticker_name=#{stickerName},</if>
+	      <if test="stickerDesc != null">sticker_desc=#{stickerDesc},</if>
+	      <if test="topWeight != null">top_weight=#{topWeight},</if>
+	      <if test="weight != null">weight=#{weight},</if>
+	      <if test="serial != null">serial=#{serial},</if>
+	      <if test="valid != null">valid=#{valid},</if>
+	      <if test="hasLock != null">has_lock=#{hasLock},</if>
+	      <if test="labelId != null">label_id=#{labelId}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+
+	<delete id="deleteByIds">
+		delete from hts.htworld_sticker where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+
+	<update id="updateValidByIds">
+		update hts.htworld_sticker set valid=#{valid} where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+	<update id="updateSerialById">
+		update hts.htworld_sticker set serial=#{serial} where id=#{id}
+	</update>
+	
+	<select id="queryById" resultMap="WorldStickerMap">
+		select * from hts.htworld_sticker where id=#{id}
+	</select>
+
+</mapper>

@@ -1,0 +1,65 @@
+@IMPORT url("../../base/css/reset.css");
+html body {
+	background: #e9e9e9;
+}
+
+a{
+   color: #f2f2f2;
+   text-decoration: none;
+}
+a:hover{
+    color: #2bb7d6;
+}
+ul {
+	margin: 0;
+	padding:0;	
+}
+li {
+	list-style: none;
+}
+
+.h1_nob {
+	display:block;
+	font-size: 20px;
+	margin:10px 0 10px 0;	
+}
+
+.h2_nob,.h2_no_margin {
+	display:block;
+	font-size: 14px;
+	
+}
+.h2_nob {
+	margin:10px 0 0 0;	
+}
+
+.h2_no_margin {
+	margin: 0;
+}
+
+.blue {
+	color: #2bb7d6;
+}
+
+.dark_gray {
+	color:#707070;	
+}
+.light_gray { 
+	color:#a0a0a0;	
+}
+.mid_size {
+	font-size: 14px;
+}
+
+.small_size {
+	font-size: 12px;
+}
+
+
+.no_scrollbar {
+	overflow-y: hidden !important;	
+}
+
+.highlight {
+	color: #2bb7d6 !important;
+}

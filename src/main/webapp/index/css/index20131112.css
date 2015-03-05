@@ -1,0 +1,430 @@
+@IMPORT url("reset.css");
+.main_box{
+    margin: 0 auto;
+    width: 100%;
+}
+.content{
+    margin: 0 auto;
+    height: 600px;
+    width: 950px;
+}
+.foot{
+    margin: 0 auto;
+    width:950px;
+    vertical-align:middle;
+	text-align:center;
+}
+
+.foot img{
+	vertical-align:middle;
+}
+.bg_content_box {
+	position:absolute;
+	width: 100%;
+	height:600px;	
+	z-index: -1;
+}
+.title{
+    height: 102px;
+}
+.title #icon_logo{
+	width:182px;
+	height:68px;
+	display:inline-block;
+	margin-top:30px;
+	background: url("../images/logo.png");
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/logo.png' );
+}
+.title_text{
+    margin: 50px 0 0 0;
+    float: right;
+    height: 20px;
+    cursor: pointer;
+}
+.title_text li{
+    margin: 0;
+    padding: 0;
+    *display: inline;
+    *zoom:1;
+    display: inline-block;
+    height: 20px;
+    color: #f2f2f2;
+    text-align: right;
+	float:left;
+	font-size: 16px;
+}
+.title_text li:hover{
+    color: #2bb7d6;
+}
+
+.clearfix:after {
+    content: ".";
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+}
+.content_left{
+    float: left;
+    width: 526px;
+}
+.content_left img{
+    padding: 0;
+    margin: 0;
+}
+.content_middle{
+    float: left;
+    width: 526px;
+}
+
+.content_left #text_slogan {
+	position:absolute;
+	margin-top:80px;
+	margin-left:75px;
+	width: 392px;
+	height:120px;
+	_margin-top:32px;
+	background: url("../images/slogan20131112.png");
+	
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/slogan.png' );
+}
+
+.content_left #btn_video {
+	margin-top:170px;
+	width: 156px;
+	height:110px;
+	cursor:pointer;
+	
+	background: url("../images/btn_video_normal.png");
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/btn_video_normal.png' );
+}
+
+.content_left #btn_video:hover {
+	background: url("../images/btn_video_press.png");
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/btn_video_press.png' );
+}
+
+.content_left #btn_download {
+	margin-top:18px;
+	width: 308px;
+	height:94px;
+	cursor:pointer;
+	
+	background: url("../images/btn_download_normal.png");
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/btn_download_normal.png' );
+}
+
+.content_left #btn_download:hover {
+	margin-top:18px;
+	
+	background: url("../images/btn_download_press.png");
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/btn_download_press.png' );
+}
+
+#div_concern {
+	margin-left:24px;
+	margin-top:18px;
+	height:24px;
+	line-height:24px;
+	font-size:14px;
+	color: #f2f2f2;
+}
+
+#text_concern {
+	height:24px;
+	line-height:24px;
+	vertical-align:middle;
+}
+
+.icon_divider {
+	display:inline-block;
+	vertical-align:middle;
+	width:1px;
+	height:16px;
+	background: url("../images/icon_divider.png");
+	margin-left: 12px;
+	margin-right: 12px;
+}
+
+.icon_concern {
+	display:inline-block;
+	vertical-align:middle;
+	cursor:pointer;
+	width: 28px;
+	height:24px;
+}
+
+#icon_sina {
+	background: url("../images/icon_sina.png");
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/icon_sina.png' );
+}
+#icon_wechat {
+	background: url("../images/icon_wechat.png");
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/icon_wechat.png' );
+}
+
+#content_right{
+	display:inline-block;
+    float: left;
+    width: 418px;
+	height:546px;
+	overflow: hidden;
+	background: url("../images/android_iphone2013102501.png");
+	
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/android_iphone2013102501.png' );	
+	
+}
+
+.logo{
+    height: 100px;
+	width:100px;
+	background:url("../images/icon.png") no-repeat;
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/icon.png' );
+}
+.zhitu{
+	margin:45px 0 10px 0 ;
+    width: 118px;
+	height:54px;
+	background:url("../images/zhitu.png") no-repeat;
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/zhitu.png' );
+}
+.introduce_text{
+    color: #fff;
+    line-height: 21px;
+    font-size: 16px;
+}
+.add_friend_zhitu{
+    font-size: 12px;
+    color: #fff;
+    margin-top: 10px;
+	height:18px;
+	line-height:18px;
+	vertical-align:middle;
+}
+
+#weibo_sina {
+	vertical-align:text-bottom;
+	display:inline-block;
+	width:18px;
+	height:18px;
+	cursor:pointer;
+	background:url("../images/sina_icon.png") no-repeat;
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/sina_icon.png' );
+}
+.download{
+   margin-top: 60px;
+}
+
+.iphone{
+    display: inline-block;
+    *display: inline;
+    *zoom:1;
+    cursor: pointer;
+	width:167px;
+	height:67px;
+	background:url("../images/iPhone_button1.png") no-repeat;
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/iPhone_button1.png' );
+}
+
+.iphone:hover {
+	background:url("../images/iPhone_button2.png") no-repeat;
+}
+.andriod{
+    display: inline-block;
+    *display: inline;
+    *zoom:1;
+    margin-left: 20px;
+    cursor: pointer;
+	width:167px;
+	height:67px;
+	background:url("../images/android_button1.png") no-repeat;
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/android_button1.png' );
+}
+.andriod:hover {
+	background:url("../images/android_button2.png") no-repeat;
+}
+.foot_title_left{
+    width: 420px;
+    display: inline-block;
+    *display: inline;
+    *zoom:1;
+    height: 25px;
+    border-bottom: solid 1px #E1E0DC;
+}
+.foot_title_middle{
+    width: 120px;
+    display: inline-block;
+    *display: inline;
+    *zoom:1;
+    font-weight: bold;
+    color: #8C8C8C;
+    text-align: center;
+    line-height: 50px;
+    vertical-align: top;
+    letter-spacing:3px;
+    font-size: 15px;
+}
+.foot_title_right{
+    width: 420px;
+    display: inline-block;
+    *display: inline;
+    *zoom:1;
+    height: 25px;
+    border-bottom: solid 1px #E1E0DC;
+}
+.foot_content {
+	display:inline-block;
+	text-align:center;
+}
+.foot_content ul{
+    padding: 0;
+    margin: 0;
+}
+.foot_content li{
+    height: 126px;
+    box-shadow: 0px 2px 3px #ccc;
+    border: 1px #eee solid;
+    margin: 0;
+    width: 184px;
+    display: inline-block;
+    *display: inline;
+    *zoom:1;
+    background-color: #fff;
+    cursor: pointer;
+}
+.world_pic{
+    width: 184px;
+    margin:auto;
+    height: 126px;
+    text-align:center;
+    padding:5px 0 0 0;
+    overflow: hidden;
+}
+.world_pic img {
+	width: 174px;
+	height:116px;	
+}
+.world_title{
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    color: #8C8C8C;
+}
+ul{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+#foot_function{
+    width: 950px;
+    height: 138px;
+    background:url("../images/pic_function.png") no-repeat;
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/pic_function.png' );
+}
+
+.copyright_box {
+	height:50px;
+	background: #e9e9e9;
+	padding-top: 10px;
+	
+}
+.copyright_box a {
+	color: #adb0b2;
+}
+.copyright_box a:hover {
+	color: #2bb7d6;
+}
+.copyright_info{
+    text-align: center;
+    font-size: 14px;
+    color: #aaa;
+}
+.copyright_div{
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+}
+
+#world_tip {
+	width:240px;
+	z-index:2;
+}
+#tip_table{
+	width:240px;
+	color:#a7a7a7;
+	font-size:14px;
+	border-spacing:0px;
+	display: none;
+	position: absolute;
+}
+#tip_content_tr {
+	
+}
+#tip_table td {
+	margin:0px;
+	border-spacing:0px;
+	vertical-align:top;
+}
+.author_img_td,.author_img_td img {
+	width:40px;
+	height:40px;
+}
+.author_img_td img {
+	border-radius:5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+.author_img_td, .author_name_td {
+	padding:5px;
+	background:url("../images/world_tip_bg.png");
+}
+#author_name {
+	color:#fff;
+	font-size:14px;
+}
+.author_name_td {
+	width:180px;
+	word-break:break-all;
+}
+
+#share_platform_wrap {
+	margin-left:25px;
+}
+.tip_arrow_td{
+	height:9px;
+	text-align: center;
+}
+.arrow_down {
+	width:12px;
+	height:5px;
+	display:inline-block;
+	background: url("../images/arrow_down.png");
+	_background: none;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=noscale,src='./index/images/arrow_down.png' );
+}
+
+.slides_container {
+	margin-top: 96px;
+	margin-left: 18px;
+}
+
+.slides_container img{
+	display: none;
+}
+.slides_container .slide1 {
+	display: inline;
+}

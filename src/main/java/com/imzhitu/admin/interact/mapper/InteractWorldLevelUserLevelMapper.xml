@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractWorldLevelUserLevelMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractWorldLevelUserLevel" id="WLUL">
+		<result column="id" property="id" jdbcType="NUMERIC" />
+		<result column="world_level_id" property="worldLevelId" jdbcType="NUMERIC"/>
+		<result column="user_level_id" property="userLevelId" jdbcType="NUMERIC"/>
+		<result column="worldLevelWeight" property="worldLevelWeight" jdbcType="NUMERIC"/>
+		<result column="userLevelWeight" property="userLevelWeight" jdbcType="NUMERIC"/>
+		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
+		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+		<result column="valid" property="valid" jdbcType="NUMERIC"/>
+		<result column="operator_id" property="operatorId" jdbcType="NUMERIC"/>
+		<result column="operatorName" property="operatorName" jdbcType="VARCHAR"/>
+		<result column="worldLevelDesc" property="worldLevelDesc" jdbcType="VARCHAR"/>
+		<result column="userLevelDesc" property="userLevelDesc" jdbcType="VARCHAR"/> 
+	</resultMap>
+	
+	
+	<!-- 分页查询，查询 -->
+	<select id="queryWorldLevelUserLevel" resultMap="WLUL">
+		select wlul.id,
+			   wlul.world_level_id,
+			   wlul.user_level_id,
+			   wlul.valid,
+			   wlul.operator_id,
+			   wlul.date_add,
+			   wlul.date_modify,
+			   wl.weight as worldLevelWeight,
+			   wl.level_description as worldLevelDesc,
+			   ul.weight as userLevelWeight,
+			   ul.level_description as userLevelDesc,
+			   aui.user_name as operatorName
+			from 
+				interact_world_level_user_level wlul 
+				left join interact_world_level  wl on wlul.world_level_id = wl.id
+				left join interact_user_level ul on wlul.user_level_id=ul.id
+				left join admin_user_info aui on wlul.operator_id=aui.id
+				<if test="maxId != null and maxId>0">
+					<where>
+							<![CDATA[ wlul.id <= #{maxId} ]]>
+					</where>
+				</if>
+			order by wlul.id desc
+			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryWorldLevelUserLevelTotal" resultType="long">
+		select count(*) 
+			from interact_world_level_user_level wlul
+			<if test="maxId != null and maxId>0"> 
+				<where>
+						<![CDATA[ wlul.id <= #{maxId} ]]>
+				</where>
+			</if>
+	</select>
+	
+	<!-- 根据用户id，查询 -->
+	<select id="queryWorldLevelUserLevelByUid" resultMap="WLUL">
+		select wlul.id,
+			   wlul.world_level_id,
+			   wlul.user_level_id,
+			   wlul.valid,
+			   wlul.operator_id,
+			   wlul.date_add,
+			   wlul.date_modify,
+			   wl.weight as worldLevelWeight,
+			   wl.level_description as worldLevelDesc,
+			   ul.weight as userLevelWeight,
+			   ul.level_description as userLevelDesc,
+			   aui.user_name as operatorName
+			from 
+				interact_user_level_list ull
+				left join interact_world_level_user_level wlul on ull.user_level_id=wlul.user_level_id
+				left join interact_world_level  wl on wlul.world_level_id = wl.id
+				left join interact_user_level ul on wlul.user_level_id=ul.id
+				left join admin_user_info aui on wlul.operator_id=aui.id
+			where ull.user_id = #{userId}
+	</select>
+	
+	<!-- 增加织图等级与用户等级关联 -->
+	<insert id="addWorldLevelUserLevel">
+		insert into interact_world_level_user_level (user_level_id,world_level_id,date_add,date_modify,valid,operator_id) 
+			values (#{userLevelId},#{worldLevelId},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{valid},#{operatorId})
+	</insert>
+	
+	<!-- 删除之徒等级与用户等级的的关联 -->
+	<delete id="delWorldLevelUserLevelById">
+		delete from interact_world_level_user_level where id=#{id}
+	</delete>
+	
+</mapper>

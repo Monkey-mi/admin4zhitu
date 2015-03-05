@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       	http://www.springframework.org/schema/aop   
+       	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+		
+	<context:property-placeholder location="classpath:admin.properties" /> 
+	
+	<context:component-scan base-package="com.imzhitu.admin,com.hts.web" />
+
+    <context:annotation-config />
+    
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="${admin.database.jdbcUrl}"></property>
+		<property name="user" value="${admin.database.user}" />
+		<property name="password" value="${admin.database.password}" />
+		<property name="maxPoolSize" value="${database.maxPoolSize}"></property>  
+	    <property name="minPoolSize" value="${database.minPoolSize}"></property>
+	    <property name="maxIdleTime" value="${database.maxIdleTime}"></property>
+	    <property name="idleConnectionTestPeriod" value="${database.idleConnectionTestPeriod}"></property>
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean id="jdbcTemplate" class="com.hts.web.base.database.ZTJdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+	
+	<bean id="jedisConnFactory" 
+	    class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" 
+	    p:host-name="${redis.ip}" 
+	    p:port="${redis.port}"
+	    p:password="${redis.password}"
+	    p:use-pool="true"/>
+	
+	<bean id="redisTemplate" 
+	    class="org.springframework.data.redis.core.RedisTemplate" 
+	    p:connection-factory-ref="jedisConnFactory">
+		<property name="keySerializer">  
+        	<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>  
+	    </property>  
+	</bean>
+	
+	<bean id="webSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
+        <property name="configLocation" value="classpath:mybatis-config-web.xml" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+ 
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.imzhitu.admin.**.mapper" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> 
+    </bean>
+    
+    <bean id="webMapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
+  		<property name="basePackage" value="com.hts.web.**.mapper" /> 
+  		<property name="sqlSessionFactoryBeanName" value="webSqlSessionFactory" /> 
+  	</bean>
+	
+    <import resource="spring-config-web.xml" />
+    <import resource="spring-config-interact.xml"/>
+    
+</beans>

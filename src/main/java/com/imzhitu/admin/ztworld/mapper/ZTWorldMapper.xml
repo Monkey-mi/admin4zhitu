@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.ZTWorldMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldDto" id="ztWorldDto">
+		<result property="id" column="id" jdbcType="NUMERIC"/>
+		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
+		<result property="authorId" column="author_id" jdbcType="NUMERIC"/>
+		<result property="authorName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="authorAvatar" column="user_avatar" jdbcType="VARCHAR"/>
+		<result property="star" column="star" jdbcType="NUMERIC"/>
+		<result property="trust" column="trust" jdbcType="NUMERIC"/>
+		<result property="appVer" column="app_ver" jdbcType="FLOAT"/>
+		<result property="phoneSys" column="phone_sys" jdbcType="VARCHAR"/>
+		<result property="phoneVer" column="phone_ver" jdbcType="VARCHAR"/>
+		<result property="worldName" column="world_name" jdbcType="VARCHAR"/>
+		<result property="worldDesc" column="world_desc" jdbcType="VARCHAR"/>
+		<result property="worldLabel" column="world_label" jdbcType="VARCHAR"/>
+		<result property="worldType" column="world_type" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id" jdbcType="NUMERIC"/>
+		<result property="dateAdded" column="date_added" jdbcType="TIMESTAMP"/>
+		<result property="dateModified" column="date_modified" jdbcType="TIMESTAMP"/>
+		<result property="clickCount" column="click_count" jdbcType="NUMERIC"/>
+		<result property="likeCount" column="like_count" jdbcType="NUMERIC"/>
+		<result property="commentCount" column="comment_count" jdbcType="NUMERIC"/>
+		<result property="keepCount" column="keep_count" jdbcType="NUMERIC"/>
+		<result property="coverPath" column="cover_path" jdbcType="VARCHAR"/>
+		<result property="titlePath" column="title_path" jdbcType="VARCHAR"/>
+		<result property="titleThumbPath" column="title_thumb_path" jdbcType="VARCHAR"/>
+		<result property="longitude" column="longitude" jdbcType="DOUBLE"/>
+		<result property="latitude" column="latitude" jdbcType="DOUBLE"/>
+		<result property="locationDesc" column="location_desc" jdbcType="VARCHAR"/>
+		<result property="locationAddr" column="location_addr" jdbcType="VARCHAR"/>
+		<result property="phoneCode" column="phone_code" jdbcType="NUMERIC"/>
+		<result property="province" column="province" jdbcType="VARCHAR"/>
+		<result property="city" column="city" jdbcType="VARCHAR"/>
+		<result property="size" column="size" jdbcType="NUMERIC"/>
+		<result property="valid" column="valid" jdbcType="NUMERIC"/>
+		<result property="latestValid" column="latest_valid" jdbcType="NUMERIC"/>
+		<result property="shield" column="shield" jdbcType="NUMERIC"/>
+		<result property="squarerecd" column="squarerecd" jdbcType="NUMERIC"/>
+		<result property="worldId" column="id" jdbcType="NUMERIC"/>
+		<result property="user_level_id" column="user_level_id" jdbcType="INTEGER"/>
+		<result property="level_description" column="level_description" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<resultMap id="UserInfoMap" type="com.imzhitu.admin.common.pojo.UserInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="platform_code" property="platformCode" jdbcType="INTEGER" />
+		<result column="platform_token" property="platformToken" jdbcType="VARCHAR" />
+		<result column="platform_token_expires" property="platformTokenExpires" jdbcType="BIGINT" />
+		<result column="platform_sign" property="platformSign" jdbcType="VARCHAR" />
+		<result column="platform_verify" property="platformVerify" jdbcType="INTEGER" />
+		<result column="login_code" property="loginCode" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+		<result column="concern_count" property="concernCount" jdbcType="INTEGER" />
+		<result column="follow_count" property="followCount" jdbcType="INTEGER" />
+		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
+		<result column="liked_count" property="likedCount" jdbcType="INTEGER" />
+		<result column="keep_count" property="keepCount" jdbcType="INTEGER" />
+		<result column="push_token" property="pushToken" jdbcType="VARCHAR" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
+		<result column="phone_ver" property="phoneVer" jdbcType="REAL" />
+		<result column="online" property="online" jdbcType="INTEGER" />
+		<result column="accept_sys_push" property="acceptSysPush" jdbcType="INTEGER" />
+		<result column="accept_comment_push" property="acceptCommentPush" jdbcType="INTEGER" />
+		<result column="accept_reply_push" property="acceptReplyPush" jdbcType="INTEGER" />
+		<result column="accept_liked_push" property="acceptLikedPush" jdbcType="INTEGER" />
+		<result column="accept_keep_push" property="acceptKeepPush" jdbcType="INTEGER" />
+		<result column="accept_concern_push" property="acceptConcernPush" jdbcType="INTEGER" />
+		<result column="accept_msg_push" property="acceptMsgPush" jdbcType="INTEGER" />
+		<result column="accept_umsg_push" property="acceptUmsgPush" jdbcType="INTEGER" />
+		<result column="ver" property="ver" jdbcType="REAL" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		<result column="trust" property="trust" jdbcType="INTEGER" />
+		<result column="shield" property="shield" jdbcType="INTEGER" />
+		<result column="activity" property="activity" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<!-- 增加播放数 -->
+	<update id="addClickCount">
+		update hts.htworld_htworld set click_count=click_count+ #{clickCount} where id=#{worldId} and valid=1
+	</update>
+	<!-- 减少播放数 -->
+	<update id="reduceClickCount">
+		update hts.htworld_htworld set click_count=click_count- #{clickCount} where id=#{worldId} and valid=1
+	</update>
+	
+	<!-- 增加喜欢数 -->
+	<update id="addLikedCount">
+		update hts.htworld_htworld set like_count=like_count + #{likeCount} where id=#{worldId} and valid=1
+	</update>
+	<!-- 减少喜欢数 -->
+	<update id="reduceLikedCount">
+		update hts.htworld_htworld set like_count=like_count - #{likeCount} where id=#{worldId} and valid=1
+	</update>
+	
+	<!-- 增加收藏数 -->
+	<update id="addKeepCount">
+		update hts.htworld_htworld set keep_count=keep_count + #{keepCount} where id=#{worldId} and valid=1
+	</update>
+	<!-- 减少收藏数 -->
+	<update id="reduceKeepCount">
+		update hts.htworld_htworld set keep_count=keep_count - #{keepCount} where id=#{worldId} and valid=1
+	</update>
+	
+	<!-- 增加评论数 -->
+	<update id="addCommentCount">
+		update hts.htworld_htworld set comment_count=comment_count + #{commentCount} where id=#{worldId} and valid=1
+	</update>
+	<!-- 减少评论数 -->
+	<update id="reduceCommentCount">
+		update hts.htworld_htworld set comment_count=comment_count + #{commentCount} where id=#{worldId} and valid=1
+	</update>
+	
+	<!-- 更新评论数 -->
+	<update id="updateCommentCount">
+		update hts.htworld_htworld set comment_count=#{commentCount} where id=#{worldId} and valid=1
+	</update>
+	
+	<!-- 更新收藏数 -->
+	<update id="updateKeepCount">
+		update hts.htworld_htworld set keep_count=#{keepCount} where id=#{worldId} and valid=1
+	</update>
+	
+	<!-- 更新屏蔽标志 -->
+	<update id="updateWorldShield">
+		update hts.htworld_htworld set shield=#{shield} where id=#{worldId}
+	</update>
+	
+	<!-- 更新织图 -->
+	<update id="updateWorld">
+		update hts.htworld_htworld 
+		<set>
+			<if test="clickCount != null">
+				click_count = #{clickCount},
+			</if>
+			<if test="likeCount != null">
+				like_count = #{likeCount},
+			</if>
+			<if test="authorId != null">
+				author_id = #{authorId},
+			</if>
+		</set>
+		where id=#{worldId}
+	</update>
+	
+	<!-- 更新织图分类标签 -->
+	<update id="updateWorldTypeLabel">
+		update  hts.htworld_htworld set type_id=#{typeId}, world_type=#{worldType} where id=#{worldId}
+	</update>
+	
+	
+	<update id="updateLatestValid">
+		update hts.htworld_htworld set latest_valid=#{valid}, date_added=#{dateAdded} where id=#{worldId}
+	</update>
+	
+	<!-- 删除织图 -->
+	<delete id="deleteByIds">
+		delete from hts.htworld_htworld  where id in
+		<foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="queryAuthorInfoByWorldId" resultMap="UserInfoMap">
+		select u.* from hts.htworld_htworld as h,hts.user_info as u where h.author_id=u.id and h.id=#{worldId}
+	</select>
+	
+	<select id="queryMaxId" resultType="int">
+		select max(id) from hts.htworld_htworld where date_modified between #{dateAdded,jdbcType=TIMESTAMP} and #{dateModified,jdbcType=TIMESTAMP} 
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="queryHTWorldByAttrMapByMaxId" resultMap="ztWorldDto">
+		select h.*, 1-ISNULL(hq.world_id) as squarerecd 
+		from
+		(	select h2.*,u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
+			u0.signature,u0.address,u0.province as u_province,u0.city as u_city,u0.register_date,u0.user_label,u0.star,u0.trust,
+			u0.phone_code as u_phone_code,u0.online,u0.ver app_ver,u0.phone_sys,u0.phone_ver ,iull.user_level_id,iul.level_description
+		 	from
+		 		hts_admin.interact_user_level_list iull	left join  hts_admin.interact_user_level iul on iull.user_level_id=iul.id
+		 		right join hts.user_info as u0 on iull.user_id=u0.id,
+		 		hts.htworld_htworld as h2 		 		
+		 	<where> 
+		 		h2.author_id=u0.id
+		 		<if test="dateAdded != null">
+		 			<![CDATA[and h2.date_modified>=#{dateAdded}]]>
+		 		</if>
+		 		<if test="dateModified != null">
+		 			<![CDATA[and h2.date_modified<=#{dateModified}]]>
+		 		</if> 
+			 	<if test="worldId != null">
+			 		and h2.id= #{worldId}
+			 	</if>
+			 	<if test="shortLink != null">
+			 		and h2.short_link = #{shortLink}
+			 	</if>
+			 	<if test="authorId != null">
+			 		and u0.id = #{authorId}
+			 	</if>
+			 	<if test="authorName != null">
+			 		and u0.user_name = #{authorName}
+			 	</if>
+			 	<if test="worldLabel != null">
+			 		and h2.world_label = #{worldLabel}
+			 	</if>
+			 	<if test="phoneCode != null">
+			 		and h2.phone_code = #{phoneCode}
+			 	</if>
+			 	<if test="valid != null">
+			 		and h2.valid = #{valid}
+			 	</if>
+			 	<if test="shield != null">
+			 		and h2.shield = #{shield}
+			 	</if>
+			 	<if test="user_level_id != null">
+			 		and iull.user_level_id = #{user_level_id}
+			 	</if>
+			 	<if test="maxId != null and maxId != 0">
+			 		<![CDATA[ AND h2.id<=#{maxId}]]>
+			 	</if>			 	
+		 	</where>
+		 	<choose>
+		 		<when test="orderKey != null">
+		 			order by h2.id desc
+		 		</when>
+		 		<otherwise>
+		 			order by id desc
+		 		</otherwise>
+		 	</choose>
+		 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		 ) as h 
+		 left join hts.htworld_type_world as hq
+		 on h.id = hq.world_id and hq.recommender_id != 0
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryHTWorldCountByMaxId" resultType="long">
+		select count(*)
+		 	from
+		 		hts_admin.interact_user_level_list iull
+		 		right join hts.user_info as u0 on iull.user_id=u0.id,
+		 		hts.htworld_htworld as h2 		 		
+		 	<where> 
+		 		h2.author_id=u0.id
+		 		<if test="dateAdded != null">
+		 			<![CDATA[and h2.date_modified>=#{dateAdded}]]>
+		 		</if>
+		 		<if test="dateModified != null">
+		 			<![CDATA[and h2.date_modified<=#{dateModified}]]>
+		 		</if> 
+			 	<if test="worldId != null">
+			 		and h2.id= #{worldId}
+			 	</if>
+			 	<if test="shortLink != null">
+			 		and short_link = #{shortLink}
+			 	</if>
+			 	<if test="authorId != null">
+			 		and u0.id = #{authorId}
+			 	</if>
+			 	<if test="authorName != null">
+			 		and u0.user_name = #{authorName}
+			 	</if>
+			 	<if test="worldLabel != null">
+			 		and h2.world_label = #{worldLabel}
+			 	</if>
+			 	<if test="phoneCode != null">
+			 		and h2.phone_code = #{phoneCode}
+			 	</if>
+			 	<if test="valid != null">
+			 		and h2.valid = #{valid}
+			 	</if>
+			 	<if test="shield != null">
+			 		and h2.shield = #{shield}
+			 	</if>
+			 	<if test="user_level_id != null">
+			 		and iull.user_level_id = #{user_level_id}
+			 	</if>
+			 	<if test="maxId != null and maxId != 0">
+			 		<![CDATA[ AND h2.id<=#{maxId}]]>
+			 	</if>			 	
+		 	</where>
+	</select>
+	
+	<!-- 查询某用户发图总数 -->
+	<select id="queryWorldCountByUserId" resultType="long">
+		select count(*) from hts.htworld_htworld hh
+		where hh.author_id = #{userId}
+	</select>
+	
+	<update id="updateLatestInvalid">
+		update hts.htworld_htworld set latest_valid=0 
+		where author_id=#{authorId} and latest_valid>0
+	</update>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" 
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="admin-package" abstract="true" extends="json-default">
+		<!-- 定义一个拦截器stack -->
+		<interceptors>
+			<interceptor-stack name="htsStack">
+				<interceptor-ref name="defaultStack" />
+				<!-- 覆盖defultStack中的exception设置，启用它的日志功能 -->
+				<interceptor-ref name="exception">
+					<param name="logEnabled">true</param>
+					<param name="logLevel">info</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 修改默认的拦截器stack，原来是defaultStack -->
+		<default-interceptor-ref name="htsStack" />
+
+		<!--全局跳转 -->
+		<global-results>
+			<result name="exception">/error/error500.html</result>
+		</global-results>
+		 
+		<!-- 定义要捕获的异常 -->
+		<global-exception-mappings>
+			<exception-mapping result="exception" exception="java.lang.Exception" />
+		</global-exception-mappings>
+	</package>
+
+	<package name="root" namespace="/" extends="admin-package">
+	
+		<action name="">
+			<result type="dispatcher">/index.jsp</result>
+		</action>
+		
+		<action name="login">
+			<result type="dispatcher">/login.jsp</result>
+		</action>
+		
+		<action name="loginfailed">
+			<result type="dispatcher">/loginFailed.jsp</result>
+		</action>
+	
+		<action name="page_*_*">
+			<result type="dispatcher">/{1}/{2}.jsp</result>
+		</action>
+	</package>
+	
+	<include file="struts-constant.xml" />
+	<include file="struts-admin.xml" />
+	<include file="struts-userinfo.xml" />
+	<include file="struts-ztworld.xml" />
+	<include file="struts-op.xml" />
+	<include file="struts-interact.xml" />
+	<include file="struts-qiniu.xml" />
+	<include file="struts-statistics.xml"></include>
+	<include file="struts-logger.xml"></include>
+</struts>
+
+

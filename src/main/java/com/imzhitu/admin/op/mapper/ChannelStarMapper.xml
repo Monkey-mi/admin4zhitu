@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.ChannelStarMapper">
+	
+	<resultMap id="HTSOpChannelStarMap" type="com.hts.web.common.pojo.OpChannelStar">
+		<id column="recommend_id" property="recommendId" jdbcType="INTEGER" />
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		<result column="verify_name" property="verifyName" jdbcType="VARCHAR" />
+		<result column="verify_icon" property="verifyIcon" jdbcType="VARCHAR" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
+		<result column="phone_ver" property="phoneVer" jdbcType="VARCHAR" />
+		<result column="online" property="online" jdbcType="INTEGER" />
+		<result column="platform_verify" property="platformVerify" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="OpChannelStarMap" type="com.imzhitu.admin.common.pojo.OpChannelStar">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="valid" property="valid" jdbcType="INTEGER" />
+		<result column="notified" property="notified" jdbcType="INTEGER" />
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+	</resultMap>	
+	
+	<resultMap id="OpChannelStarDtoMap" type="com.imzhitu.admin.common.pojo.OpChannelStarDto">
+		<id column="channel_star_id" property="channelStarId" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="valid" property="valid" jdbcType="INTEGER" />
+		<result column="notified" property="notified" jdbcType="INTEGER" />
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR" />
+		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR" />
+		
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="platform_code" property="platformCode" jdbcType="INTEGER" />
+		<result column="platform_token" property="platformToken" jdbcType="VARCHAR" />
+		<result column="platform_token_expires" property="platformTokenExpires" jdbcType="BIGINT" />
+		<result column="platform_sign" property="platformSign" jdbcType="VARCHAR" />
+		<result column="platform_verify" property="platformVerify" jdbcType="INTEGER" />
+		<result column="login_code" property="loginCode" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+		<result column="concern_count" property="concernCount" jdbcType="INTEGER" />
+		<result column="follow_count" property="followCount" jdbcType="INTEGER" />
+		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
+		<result column="liked_count" property="likedCount" jdbcType="INTEGER" />
+		<result column="keep_count" property="keepCount" jdbcType="INTEGER" />
+		<result column="push_token" property="pushToken" jdbcType="VARCHAR" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
+		<result column="phone_ver" property="phoneVer" jdbcType="REAL" />
+		<result column="online" property="online" jdbcType="INTEGER" />
+		<result column="accept_sys_push" property="acceptSysPush" jdbcType="INTEGER" />
+		<result column="accept_comment_push" property="acceptCommentPush" jdbcType="INTEGER" />
+		<result column="accept_reply_push" property="acceptReplyPush" jdbcType="INTEGER" />
+		<result column="accept_liked_push" property="acceptLikedPush" jdbcType="INTEGER" />
+		<result column="accept_keep_push" property="acceptKeepPush" jdbcType="INTEGER" />
+		<result column="accept_concern_push" property="acceptConcernPush" jdbcType="INTEGER" />
+		<result column="accept_msg_push" property="acceptMsgPush" jdbcType="INTEGER" />
+		<result column="accept_umsg_push" property="acceptUmsgPush" jdbcType="INTEGER" />
+		<result column="ver" property="ver" jdbcType="REAL" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		<result column="trust" property="trust" jdbcType="INTEGER" />
+		<result column="shield" property="shield" jdbcType="INTEGER" />
+		<result column="activity" property="activity" jdbcType="INTEGER" />
+		
+	</resultMap>	
+
+	
+	<select id="queryCacheStar" resultMap="HTSOpChannelStarMap">
+		select 
+		cs.id as recommend_id, u.id, u.user_name, u.user_avatar, u.user_avatar_l, u.sex,
+		u.email, u.address, u.birthday, u.signature, u.user_label, u.province, u.city, u.register_date, 
+		u.phone_code, u.phone_sys, u.phone_ver, u.online, u.star
+		from (select id,user_id from hts.operations_channel_star where valid=1 and weight=0 and channel_id=#{channelId}
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		) as cs, hts.user_info as u where cs.user_id=u.id
+	</select>
+	
+	<select id="queryCacheStarWithWeight" resultMap="HTSOpChannelStarMap">
+		select 
+		cs.id as recommend_id, u.id, u.user_name, u.user_avatar, u.user_avatar_l, u.sex,
+		u.email, u.address, u.birthday, u.signature, u.user_label, u.province, u.city, u.register_date, 
+		u.phone_code, u.phone_sys, u.phone_ver, u.online, u.star, u.platform_verify
+		from (select id,user_id from hts.operations_channel_star where valid=1 and weight>0 and channel_id=#{channelId}
+		order by weight desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		) as cs, hts.user_info as u where cs.user_id=u.id
+	</select>
+	
+	
+	<select id="queryStars" resultMap="OpChannelStarDtoMap">
+		select st.id channel_star_id,st.channel_id,st.user_id,st.valid,st.notified,st.weight,
+		c.channel_name,c.channel_title,c.channel_icon,u.* from 
+		(select * from hts.operations_channel_star
+		<where>
+			<if test="channelId != null"> channel_id=#{channelId}</if>
+			<if test="userId != null"> AND user_id=#{userId}</if>
+	      	<if test="valid != null"> AND valid=#{valid}</if>
+	      	<if test="notified != null"> AND notified=#{notified}</if>
+	      	<if test="weight != null and weight == 0"> AND weight=#{weight}</if>
+	      	<if test="weight != null and weight > 0"> AND weight>=#{weight}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
+		</where>
+		order by weight desc, id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		) as st, hts.operations_channel c, hts.user_info u
+		where st.channel_id=c.id and st.user_id=u.id;
+	</select>
+	
+	
+	<select id="queryStarCount" resultType="long">
+		select count(*) from hts.operations_channel_star
+		<where>
+			<if test="channelId != null"> channel_id=#{channelId}</if>
+			<if test="userId != null"> AND user_id=#{userId}</if>
+	      	<if test="valid != null"> AND valid=#{valid}</if>
+	      	<if test="notified != null"> AND notified=#{notified}</if>
+	      	<if test="weight != null and weight == 0"> AND weight=#{weight}</if>
+	      	<if test="weight != null and weight > 0"> AND weight>=#{weight}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<update id="update">
+		update hts.operations_channel_star
+		<set>
+	      <if test="channelId != null">channel_id=#{channelId},</if>
+	      <if test="userId != null">user_id=#{userId},</if>
+	      <if test="valid != null">valid=#{valid},</if>
+	      <if test="notified != null">notified=#{notified},</if>
+	      <if test="weight != null">weight=#{weight}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
+	<insert id="save" useGeneratedKeys="false">
+		insert into hts.operations_channel_star (id,channel_id,user_id,valid,notified)
+	 		values (#{id}, #{channelId}, #{userId}, #{valid}, #{notified})
+	</insert>
+	
+	<update id="updateValidByIds">
+		update hts.operations_channel_star set valid=#{valid} where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+	<update id="updateId">
+		update hts.operations_channel_star set id=#{id} where channel_id=#{channelId} and user_id=#{userId}
+	</update>
+	
+	<delete id="deleteByIds">
+		delete from hts.operations_channel_star where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<select id="queryStarById" resultMap="OpChannelStarMap">
+		select * from hts.operations_channel_star where id=#{id}
+	</select>
+	
+	<select id="queryStarByChannelId" resultMap="OpChannelStarMap">
+		select * from hts.operations_channel_star where channel_id=#{channelId} and user_id=#{userId}
+	</select>
+	
+	<select id="queryUserIdById" resultType="int">
+		select user_id from hts.operations_channel_star where id=#{id}
+	</select>
+	
+	<select id="queryMaxId" resultType="int">
+		select max(id) from hts.operations_channel_star where channel_id=#{channel_id}
+	</select>
+</mapper>

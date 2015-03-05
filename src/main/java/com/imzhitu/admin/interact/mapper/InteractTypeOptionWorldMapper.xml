@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractTypeOptionWorldMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractTypeOptionWorldDto" id="TypeOptionWorldMapper">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="userId" column="user_id" jdbcType="INTEGER"/>
+		<result property="superb" column="superb" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="top" column="top" jdbcType="INTEGER"/>
+		<result property="operatorId" column="operator_id" jdbcType="INTEGER"/>
+		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
+		<result property="userName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
+		<result property="authorAvatar" column="user_avatar" jdbcType="VARCHAR"/>
+		<result property="clickCount" column="click_count" jdbcType="INTEGER"/>
+		<result property="likeCount" column="like_count" jdbcType="INTEGER"/>
+		<result property="commentCount" column="comment_count" jdbcType="INTEGER"/>
+		<result property="worldLabel" column="world_label" jdbcType="VARCHAR"/>
+		<result property="titleThumbPath" column="title_thumb_path" jdbcType="VARCHAR"/>
+		<result property="trust" column="trust" jdbcType="INTEGER"/>
+		<result property="reView" column="review" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractTypeOptionWorldDto" id="TypeOptionStarWorldMapper">
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="userId" column="user_id" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractTypeOptionWorldDto" id="TypeOptionReviewWorldMapper">
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="reView" column="review" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<!-- 增加 -->
+	<insert id="insertTypeOptionWorld">
+		insert into hts_admin.interact_type_option_world (world_id,user_id,superb,operator_id,valid,date_add,date_modify)
+		values (#{worldId},#{userId},#{superb},#{operatorId},#{valid},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<!-- 删除by ids -->
+	<delete id="delTypeOptionWorldByIds">
+		delete from hts_admin.interact_type_option_world
+			where id in
+			<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+				#{item}
+			</foreach>
+	</delete>
+	
+	<!-- 删除 by world_ids -->
+	<delete id="delTypeOptionWorldByWIds">
+		delete from hts_admin.interact_type_option_world
+			where world_id in
+			<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+				#{item}
+			</foreach>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateTypeOptionWorld">
+		update hts_admin.interact_type_option_world set 
+		<if test="superb != null">
+			superb=#{superb},
+		</if>
+		<if test="valid !=null">
+			valid=#{valid},
+		</if>
+		<if test="operatorId != null"> 
+			operator_id=#{operatorId},
+		</if>
+		<if test="top != null">
+			top = #{top},
+		</if>
+		date_modify = #{modifyDate,jdbcType=TIMESTAMP}
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="worldId != null">
+				and world_id=#{worldId}
+			</if>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+		</where>
+	</update>
+	
+	<!-- 分页查询 -->
+	<select id="queryTypeOptionWorldForList" resultMap="TypeOptionWorldMapper">
+		select itow.*,ui.user_name,ui.user_avatar,hh.short_link,hh.click_count,hh.like_count,hh.comment_count ,hh.title_thumb_path
+				,aui.user_name as operatorName
+			from hts_admin.interact_type_option_world itow
+			left join hts.htworld_htworld hh on itow.world_id=hh.id
+			left join hts.user_info ui on itow.user_id=ui.id
+			left join hts_admin.admin_user_info aui on itow.operator_id=aui.id
+		<where>
+			hh.valid = 1
+			and hh.shield = 0
+			<if test="maxId !=null and maxId != 0">
+				<![CDATA[and itow.id<= maxId]]>
+			</if>
+			<if test="top !=null">
+				and top=#{top}
+			</if>
+			<if test="addDate != null and modifyDate != null">
+				and ((itow.date_add between #{addDate,jdbcType=TIMESTAMP}  and #{modifyDate,jdbcType=TIMESTAMP} ) 
+						or (top=1 and itow.date_add between DATE_SUB(#{modifyDate,jdbcType=TIMESTAMP} ,INTERVAL 1 MONTH) and #{modifyDate,jdbcType=TIMESTAMP} )
+					)
+			</if>
+		</where>
+		order by top desc,id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>	
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryTypeOptionWorldCount" resultType="long">
+		select count(*) from hts_admin.interact_type_option_world itow
+		<where>
+			<if test="maxId !=null and maxId != 0">
+				<![CDATA[and itow.id<= maxId]]>
+			</if>
+			<if test="top !=null">
+				and top=#{top}
+			</if>
+			<if test="addDate != null and modifyDate != null">
+				and ((itow.date_add between #{addDate,jdbcType=TIMESTAMP}  and #{modifyDate,jdbcType=TIMESTAMP} ) 
+						or (top=1 and itow.date_add between DATE_SUB(#{modifyDate,jdbcType=TIMESTAMP} ,INTERVAL 1 MONTH) and #{modifyDate,jdbcType=TIMESTAMP} )
+					)
+			</if>
+		</where>
+	</select>
+	
+	<!-- 检查是否存在 -->
+	<select id="chechIsExist" resultType="long">
+		select count(*) from hts_admin.interact_type_option_world itow
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="worldId != null">
+				and world_id=#{worldId}
+			</if>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询明星用户发的织图 -->
+	<select id="queryStarWorld" resultMap="TypeOptionStarWorldMapper">
+		select hh.author_id as user_id,hh.id as world_id from hts.htworld_htworld hh left join hts.user_info ui on hh.author_id=ui.id
+		where ui.star>0 and hh.valid=1 and ui.shield=0 and hh.date_modified between #{addDate,jdbcType=TIMESTAMP}  and #{modifyDate,jdbcType=TIMESTAMP}
+	</select>
+	
+	<!-- 根据织图id来删除 -->
+	<delete id="delTypeOptionWorldByWid">
+		delete from hts_admin.interact_type_option_world
+			where world_id = #{worldId}
+	</delete>
+	
+	<!-- 修改精选点评 -->
+	<update id="updateReview">
+		update hts_admin.interact_type_option_world
+		set review=#{reView}
+		where world_id = #{worldId}
+	</update>
+	
+	<select id="queryTypeOptionWorld" resultMap="TypeOptionReviewWorldMapper">
+		select itow.*
+		from  hts_admin.interact_type_option_world itow
+		<where>
+			<if test="worldId != null">
+				itow.world_id = #{worldId}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.ZTWorldStickerTypeMapper">
+
+	<resultMap type="com.hts.web.common.pojo.HTWorldStickerTypeDto" id="HTSWorldStickerTypeMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldStickerType" id="WorldStickerTypeMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="valid" property="valid" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="queryCacheType" resultMap="HTSWorldStickerTypeMap">
+		select id,type_name from hts.htworld_sticker_type where valid=1 order by serial desc
+	</select>
+	
+	<select id="queryCacheRecommendType" resultMap="HTSWorldStickerTypeMap">
+		select id,type_name from hts.htworld_sticker_type where valid=1 and weight>1 order by weight desc
+	</select>
+	
+	<select id="queryCacheRecommendTypeByIds" resultMap="HTSWorldStickerTypeMap">
+		select id,type_name from hts.htworld_sticker_type where valid=1 and weight>1 and id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+		order by weight desc
+	</select>
+	
+	<select id="queryTypes" resultMap="WorldStickerTypeMap">
+		select * from hts.htworld_sticker_type 
+		<where>
+			<if test="weight == 0"> weight=#{weight}</if>
+			<if test="weight > 0"> weight>=#{weight}</if>
+			<if test="valid != null"> and valid=#{valid}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
+		</where>
+		order by weight desc, serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryTotal" resultType="long">
+		select count(*) from hts.htworld_sticker_type 
+		<where>
+			<if test="weight == 0"> weight=#{weight}</if>
+			<if test="weight > 0"> weight>=#{weight}</if>
+			<if test="valid != null"> and valid=#{valid}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ serial<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<select id="queryAllType" resultMap="WorldStickerTypeMap">
+		select * from hts.htworld_sticker_type 
+		<where>
+			valid=1
+			<if test="weight > 0"> and weight>=#{weight}</if>
+		</where>
+		order by serial desc
+	</select>
+	
+	<insert id="save">
+		insert into hts.htworld_sticker_type (type_name,weight,serial,valid)
+	 		values (#{typeName}, #{weight}, #{serial}, #{valid})
+	</insert>
+	
+	<update id="update">
+		update hts.htworld_sticker_type
+		<set>
+	      <if test="typeName != null">type_name=#{typeName},</if>
+	      <if test="weight != null">weight=#{weight},</if>
+	      <if test="serial != null">serial=#{serial},</if>
+	      <if test="valid != null">valid=#{valid}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
+	<update id="updateSerialById">
+		update hts.htworld_sticker_type set serial=#{serial} where id=#{id}
+	</update>
+
+	<delete id="deleteByIds">
+		delete from hts.htworld_sticker_type where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<update id="updateValidByIds">
+		update hts.htworld_sticker_type set valid=#{valid} where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+	<select id="queryById" resultMap="WorldStickerTypeMap">
+		select * from hts.htworld_sticker_type where id=#{id}
+	</select>
+	
+	<select id="queryMaxSerial" resultType="int">
+		select max(serial) from hts.htworld_sticker_type
+	</select>
+	
+</mapper>

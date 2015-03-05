@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.ChannelMapper">
+
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannel" id="OpChannelMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR"/>
+		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR"/>
+		<result column="sub_icon" property="subIcon" jdbcType="VARCHAR"/>
+		<result column="child_count" property="childCount" jdbcType="INTEGER"/>
+		<result column="child_count_base" property="childCountBase" jdbcType="INTEGER" />
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap type="com.hts.web.common.pojo.OpChannel" id="HTSOpChannelMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR"/>
+		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR"/>
+		<result column="sub_icon" property="subIcon" jdbcType="VARCHAR"/>
+		<result column="child_count" property="childCount" jdbcType="VARCHAR"/>
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<select id="queryValidChannel" resultMap="HTSOpChannelMap">
+		select * from hts.operations_channel where valid=1 order by serial desc limit #{limit}
+	</select>
+	
+	<select id="queryChannels" resultMap="OpChannelMap">
+		select * from hts.operations_channel
+		<where>
+			<if test="channelName != null">channelName=#{channelName}</if>
+	      	<if test="valid != null"> AND valid=#{valid}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND serial<=#{maxId}]]></if>
+		</where>
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryChannelCount" resultType="long">
+		select count(*) from hts.operations_channel
+		<where>
+			<if test="channelName != null">channelName=#{channelName}</if>
+	      	<if test="valid != null"> AND valid=#{valid}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND serial<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<update id="update">
+		update hts.operations_channel
+		<set>
+	      <if test="channelName != null">channel_name=#{channelName},</if>
+	      <if test="channelTitle != null">channel_title=#{channelTitle},</if>
+	      <if test="channelIcon != null">channel_icon=#{channelIcon},</if>
+	      <if test="subIcon != null">sub_icon=#{subIcon},</if>
+	      <if test="childCount != null">child_count=#{childCount},</if>
+	      <if test="childCountBase != null">child_count_base=#{childCountBase},</if>
+	      <if test="valid != null">valid=#{valid},</if>
+	      <if test="serial != null">serial=#{serial}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+		insert into hts.operations_channel (channel_name,channel_title,channel_icon, sub_icon, valid, serial)
+	 		values (#{channelName}, #{channelTitle}, #{channelIcon}, #{subIcon}, #{valid}, #{serial})
+	</insert>
+	
+	<update id="updateValidByIds">
+		update hts.operations_channel set valid=#{valid} where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+	<delete id="deleteByIds">
+		delete from hts.operations_channel where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<select id="queryChannelById" resultMap="OpChannelMap"> 
+		select * from hts.operations_channel where id=#{id}
+	</select>
+	
+	<!-- 查询所有的频道 -->
+	<select id="queryAllChannel" resultMap="OpChannelMap">
+		select * from hts.operations_channel where valid=1
+	</select>
+	
+	<select id="queryChildCountBase" resultType="int">
+		select child_count_base from hts.operations_channel where id=#{id}
+	</select>
+
+</mapper>

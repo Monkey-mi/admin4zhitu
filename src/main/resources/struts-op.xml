@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" 
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="admin_op" namespace="/admin_op" extends="admin-package">
+	
+		<action name="op_*" class="com.imzhitu.admin.op.OpAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="user_*" class="com.imzhitu.admin.op.OpUserAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+
+		<action name="ad_*" class="com.imzhitu.admin.op.OpAdAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="msg_*" class="com.imzhitu.admin.op.OpMsgAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="channel_*" class="com.imzhitu.admin.op.ChannelAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="chuser_*" class="com.imzhitu.admin.op.OpChannelUserAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="chIdverId_*" class="com.imzhitu.admin.op.OpChannelIdVerifyIdAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="cwSchedula_*" class="com.imzhitu.admin.op.OpChannelWorldSchedulaAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="uShield_*" class="com.imzhitu.admin.op.OpUserShieldAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="xmsResponse_*" class="com.imzhitu.admin.op.OpXiaoMiShuResponseAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+	</package>
+
+</struts>
+
+

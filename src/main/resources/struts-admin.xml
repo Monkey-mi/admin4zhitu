@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" 
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="admin" namespace="/admin" extends="admin-package">
+	
+		<action name="user_*" class="com.imzhitu.admin.privileges.AdminAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+			<result name="login" type="redirect">maintain_login</result>
+		</action>
+		
+		<action name="privileges_*" class="com.imzhitu.admin.privileges.PrivilegesAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+	</package>
+
+</struts>
+
+

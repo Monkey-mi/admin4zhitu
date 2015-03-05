@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.privileges.mapper.AdminUserInfoRoleMapper">
+	
+	<resultMap id="AdminUserRoleMap" type="com.imzhitu.admin.common.pojo.AdminUserRole">
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="user_id" property="userId" jdbcType="INTEGER" />
+	    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+  	</resultMap>
+
+	<!-- 保存用户角色关联  -->
+	<insert id="saveUserRole" useGeneratedKeys="true" keyProperty="id">
+	 	insert into hts_admin.admin_user_info_role (user_id,role_id)
+	 		values (#{userId}, #{roleId})
+	</insert>
+	 
+	<!-- 根据用户id删除关联信息 -->
+	<delete id="deleteByUserId" parameterType="int">
+	 	delete from hts_admin.admin_user_info_role where user_id = #{userId}
+	</delete>
+	 
+	<!-- 查询用户权限id列表 -->
+	<select id="queryRoleIdsByUserId" resultType="int">
+		select role_id from hts_admin.admin_user_info_role where user_id = #{userId}
+	</select> 
+	
+	
+	<!-- 根据用户id查询其所有的角色信息 -->
+	<select id="queryRoleInfoByUserId" resultMap="AdminUserRoleMap">
+		select auir.id,auir.user_id,auir.role_id
+			from hts_admin.admin_user_info_role auir
+			where auir.user_id=#{userId}
+	</select>
+	
+	<!-- 查询用户是否具有该权限 -->
+	<select id="queryUserRoleCountByUserId" resultType="long">
+		select count(1) from hts_admin.admin_user_info_role auir
+		where auir.user_id=#{userId} and auir.role_id=#{roleId}
+	</select>
+	
+	<!-- 查询对应名字的id -->
+	<select id="queryRoleIdByRoleName" resultType="Integer">
+		select id from hts_admin.admin_role ar where ar.role_name=#{roleName} 
+	</select>	 
+</mapper>

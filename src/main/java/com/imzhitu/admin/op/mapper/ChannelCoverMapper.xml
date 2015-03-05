@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.ChannelCoverMapper">
+
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelCover" id="OpChannelCoverMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="world_id" property="worldId" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap type="com.hts.web.common.pojo.OpChannelCover" id="HTSOpChannelCoverMap">
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="title_thumb_path" property="titleThumbPath" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="queryCacheCover" resultMap="HTSOpChannelCoverMap">
+		<foreach item="item" index="index" collection="channelIds"
+	    	separator="union all">
+	       	(select t.channel_id, h.title_thumb_path from hts_admin.op_channel_thumbnail t,
+	       	hts.htworld_htworld h where t.world_id=h.id and t.channel_id=#{item} order by t.id desc limit #{limit})
+	 	</foreach>
+	</select>
+	
+	<insert id="save">
+		insert into hts_admin.op_channel_thumbnail (channel_id,world_id) values (#{channelId}, #{worldId})
+	</insert>
+	
+	<update id="update">
+		update hts_admin.op_channel_thumbnail
+		<set>
+	      <if test="channelId != null">channel_id=#{channelId},</if>
+	      <if test="worldId != null">world_id=#{worldId}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
+	<delete id="deleteByChannelIdAndWID">
+		delete from hts_admin.op_channel_thumbnail where channel_id=#{channelId} 
+			and world_id=#{worldId}
+	</delete>
+	
+	
+
+</mapper>

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.ChannelTopOneMapper">
+	
+	<resultMap id="HTSOpChannelTopOneMap" type="com.hts.web.common.pojo.OpChannelTopOne">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		<result column="verify_name" property="verifyName" jdbcType="VARCHAR" />
+		<result column="verify_icon" property="verifyIcon" jdbcType="VARCHAR" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
+		<result column="phone_ver" property="phoneVer" jdbcType="VARCHAR" />
+		<result column="online" property="online" jdbcType="INTEGER" />
+		<result column="platform_verify" property="platformVerify" jdbcType="INTEGER" />
+		<result column="top_one_id" property="topOneId" jdbcType="INTEGER"/>
+		<result column="top_id" property="topId" jdbcType="INTEGER" />
+		<result column="top_desc" property="topDesc" jdbcType="VARCHAR" />
+		<result column="is_mututal" property="isMututal" jdbcType="INTEGER"/>
+		
+	</resultMap>
+	
+	<resultMap id="OpChannelTopOneMap" type="com.imzhitu.admin.common.pojo.OpChannelTopOne">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="top_id" property="topId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="period" property="period" jdbcType="INTEGER" />
+		<result column="valid" property="valid" jdbcType="INTEGER" />
+		<result column="notified" property="notified" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="OpChannelTopOneDtoMap" type="com.imzhitu.admin.common.pojo.OpChannelTopOneDto">
+		<id column="top_one_id" property="topOneId" jdbcType="INTEGER" />
+		<result column="top_id" property="topId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="period" property="period" jdbcType="INTEGER" />
+		<result column="valid" property="valid" jdbcType="INTEGER" />
+		<result column="notified" property="notified" jdbcType="INTEGER" />
+		<result column="top_desc" property="topDesc" jdbcType="VARCHAR" />
+		
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="platform_code" property="platformCode" jdbcType="INTEGER" />
+		<result column="platform_token" property="platformToken" jdbcType="VARCHAR" />
+		<result column="platform_token_expires" property="platformTokenExpires" jdbcType="BIGINT" />
+		<result column="platform_sign" property="platformSign" jdbcType="VARCHAR" />
+		<result column="platform_verify" property="platformVerify" jdbcType="INTEGER" />
+		<result column="login_code" property="loginCode" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+		<result column="concern_count" property="concernCount" jdbcType="INTEGER" />
+		<result column="follow_count" property="followCount" jdbcType="INTEGER" />
+		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
+		<result column="liked_count" property="likedCount" jdbcType="INTEGER" />
+		<result column="keep_count" property="keepCount" jdbcType="INTEGER" />
+		<result column="push_token" property="pushToken" jdbcType="VARCHAR" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
+		<result column="phone_ver" property="phoneVer" jdbcType="REAL" />
+		<result column="online" property="online" jdbcType="INTEGER" />
+		<result column="accept_sys_push" property="acceptSysPush" jdbcType="INTEGER" />
+		<result column="accept_comment_push" property="acceptCommentPush" jdbcType="INTEGER" />
+		<result column="accept_reply_push" property="acceptReplyPush" jdbcType="INTEGER" />
+		<result column="accept_liked_push" property="acceptLikedPush" jdbcType="INTEGER" />
+		<result column="accept_keep_push" property="acceptKeepPush" jdbcType="INTEGER" />
+		<result column="accept_concern_push" property="acceptConcernPush" jdbcType="INTEGER" />
+		<result column="accept_msg_push" property="acceptMsgPush" jdbcType="INTEGER" />
+		<result column="accept_umsg_push" property="acceptUmsgPush" jdbcType="INTEGER" />
+		<result column="ver" property="ver" jdbcType="REAL" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		<result column="trust" property="trust" jdbcType="INTEGER" />
+		<result column="shield" property="shield" jdbcType="INTEGER" />
+		<result column="activity" property="activity" jdbcType="INTEGER" />
+		
+	</resultMap>
+	
+	<resultMap id="OpChannelTopOnePeriodMap" type="com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod">
+		<id column="period" property="period" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="queryCacheTopOne" resultMap="HTSOpChannelTopOneMap">
+		select 
+		cto.id as top_one_id, cto.top_id, ctt.top_desc, u.id, u.user_name, u.user_avatar, u.user_avatar_l, u.sex,
+		u.email, u.address, u.birthday, u.signature, u.user_label, u.province, u.city, u.register_date, 
+		u.phone_code, u.phone_sys, u.phone_ver, u.online, u.star
+		from (select id, user_id, top_id from hts.operations_channel_top_one where valid=1)
+		as cto, hts.user_info as u, hts.operations_channel_top_type as ctt where cto.user_id=u.id and cto.top_id=ctt.id 
+	</select>
+	
+	<select id="queryTopOnes" resultMap="OpChannelTopOneDtoMap">
+		select o.id top_one_id,o.top_id,o.user_id,o.period,o.valid,o.notified,tt.top_desc, u.* from 
+		(select * from hts.operations_channel_top_one
+		<where>
+			<if test="userId != null"> user_id=#{userId}</if>
+			<if test="topId != null and topId != 0"> AND top_id=#{topId}</if>
+			<if test="period != null and period != 0"> AND period=#{period}</if>
+	      	<if test="valid != null"> AND valid=#{valid}</if>
+	      	<if test="notified != null"> AND notified=#{notified}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		) as o, hts.operations_channel_top_type tt, hts.user_info u
+		where o.top_id=tt.id and o.user_id=u.id;
+	</select>
+	
+	<select id="queryTopOneCount" resultType="long">
+		select count(*) from hts.operations_channel_top_one
+		<where>
+			<if test="userId != null"> user_id=#{userId}</if>
+			<if test="topId != null and topId != 0"> AND top_id=#{topId}</if>
+			<if test="period != null and period != 0"> AND period=#{period}</if>
+	      	<if test="valid != null"> AND valid=#{valid}</if>
+	      	<if test="notified != null"> AND notified=#{notified}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<update id="update">
+		update hts.operations_channel_top_one
+		<set>
+	      <if test="topId != null">top_id=#{topId},</if>
+	      <if test="userId != null">user_id=#{userId},</if>
+	      <if test="period != null">period=#{period},</if>
+	      <if test="valid != null">valid=#{valid},</if>
+	      <if test="notified != null">notified=#{notified}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
+	<insert id="save" useGeneratedKeys="false">
+		insert into hts.operations_channel_top_one (id,top_id,user_id,period,valid,notified)
+	 		values (#{id}, #{topId}, #{userId}, #{period}, #{valid}, #{notified})
+	</insert>
+	
+	<update id="updateValidByIds">
+		update hts.operations_channel_top_one set valid=#{valid} where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+	<delete id="deleteByIds">
+		delete from hts.operations_channel_top_one where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<update id="updateId">
+		update hts.operations_channel_top_one set id=#{newId} where id=#{id}
+	</update>
+	
+	<select id="queryTopOneById" resultMap="OpChannelTopOneMap">
+		select * from hts.operations_channel_top_one where id=#{id}
+	</select>
+	
+	
+	<!--精选最多 -->
+	<select id="querySuperbTopOne" resultType="Integer">
+		select hh.author_id from 
+		hts.htworld_type_world htw 
+		left join hts.htworld_htworld hh
+		on htw.world_id=hh.id
+		where htw.superb=1 and htw.valid=1
+		and htw.date_modify between #{beginDate} and #{endDate}
+		group by hh.author_id
+		order by count(hh.id) desc
+		limit 0,10
+	</select>
+	
+	<!-- 被点赞最多 -->
+	<select id="queryBeLikedTopOne" resultType="Integer">
+		select hh.author_id from 
+		hts.htworld_htworld hh
+		where hh.date_modified between #{beginDate} and #{endDate}
+		group by hh.author_id
+		order by sum(hh.like_count) desc
+		limit 0,10
+	</select>
+	
+	<!--点赞最多  -->
+	<select id="querylikeTopOne" resultType="Integer">
+		select hl.user_id from
+		hts.htworld_liked hl 
+		left join hts.operations_user_zombie zb
+		on hl.user_id=zb.user_id
+		where hl.liked_date between #{beginDate} and #{endDate}
+		and valid=1 and zb.user_id is null
+		group by hl.user_id 
+		order by count(hl.id) desc
+		limit 0,10
+	</select>
+	
+	<!-- 涨粉最多 -->
+	<select id="queryFollowerIncreaseTopOne" resultType="Integer">
+		select uc.concern_id from
+		hts.user_concern uc
+		where uc.concern_date between #{beginDate} and #{endDate}
+		and valid=1
+		group by uc.concern_id
+		order by count(uc.user_id) desc
+		limit 0,10
+	</select>
+	
+	<!-- 关注别人最多 -->
+	<select id="queryFollowTopOne" resultType="Integer">
+		select uc.user_id from
+		hts.user_concern uc
+		left join hts.operations_user_zombie zb
+		on uc.user_id=zb.user_id
+		where uc.concern_date between #{beginDate} and #{endDate}
+		and valid=1 and zb.user_id is null
+		group by uc.user_id
+		order by count(uc.concern_id) desc
+		limit 0,10
+	</select>
+	
+	<!-- 评论他人最多 -->
+	<select id="queryCommentTopOne" resultType="Integer">
+		select hc.author_id from
+		hts.htworld_comment hc
+		left join hts.operations_user_zombie zb
+		on hc.author_id=zb.user_id
+		where hc.comment_date between #{beginDate} and #{endDate}
+		and hc.valid=1 and hc.shield=0 and zb.user_id is null
+		group by hc.author_id
+		order by count(hc.id) desc
+		limit 0,10
+	</select>
+	
+	<!-- 标签最多 -->
+	<select id="queryLabelTopOne" resultType="Integer">
+		select hlw.user_id from 
+		hts.htworld_label_world hlw
+		left join hts.htworld_htworld hh 
+		on hlw.world_id= hh.id
+		where hh.date_modified between #{beginDate} and #{endDate}
+		and hlw.valid=1
+		group by hlw.user_id
+		order by count(hlw.label_id) desc
+		limit 0,10
+	</select>
+	
+	<!-- 被浏览最多 -->
+	<select id="queryBeClickTopOne" resultType="Integer">
+		select hh.author_id from
+		hts.htworld_htworld hh
+		where hh.date_modified between #{beginDate} and #{endDate}
+		and hh.valid=1 and hh.shield=0
+		group by hh.author_id
+		order by sum(hh.click_count) desc
+		limit 0,10
+	</select>
+	
+	<!-- 织图最多 -->
+	<select id="queryWorldTopOne" resultType="Integer">
+		select hh.author_id from
+		hts.htworld_htworld hh
+		where hh.date_modified between #{beginDate} and #{endDate}
+		and hh.valid=1 and hh.shield=0
+		group by hh.author_id
+		order by count(hh.id) desc
+		limit 0,10
+	</select>
+	
+	<!-- 图片最多 -->
+	<select id="queryPictureTopOne" resultType="Integer">
+		select hh.author_id from
+		hts.htworld_htworld hh
+		where hh.date_modified between #{beginDate} and #{endDate}
+		and hh.valid=1 and hh.shield=0
+		group by hh.author_id
+		order by sum(hh.child_count) desc
+		limit 0,10
+	</select>
+	
+	<!-- 活动最多 -->
+	<select id="queryActivityTopOne" resultType="Integer">
+		select hh.author_id from
+			hts.htworld_label_world hlw 
+			left join hts.htworld_label hl
+			on hlw.label_id=hl.id 
+			left join hts.htworld_htworld hh
+			on hlw.world_id=hh.id
+		where hh.date_modified between #{beginDate} and #{endDate}
+			and hh.valid=1 and hh.shield=0
+			and hl.label_state=1
+		group by hh.author_id
+		order by count(hlw.world_id) desc
+		limit 0,10
+	</select>
+	
+	<!-- 更新top one 数据 -->
+	<insert id="insertTopOne" >
+		insert hts.operations_channel_top_one 
+		(id,top_id,user_id,period,valid,notified)
+		values
+		(#{id},#{topId},#{userId},#{period},#{valid},#{notified})
+	</insert>
+	
+	<!-- 更新top one -->
+	<update id="updateTopOneValidByTopTypeIdAndPeriod">
+	  	update hts.operations_channel_top_one
+	  <![CDATA[	set valid=0 where top_id=#{topId} and period<#{period}]]>
+	</update>
+	
+	<select id="queryMaxPeriod" resultType="int">
+		select max(period) from hts.operations_channel_top_one
+	</select>
+	
+	<select id="queryPeriodList" resultMap="OpChannelTopOnePeriodMap">
+		select period from hts.operations_channel_top_one group by period order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+</mapper>

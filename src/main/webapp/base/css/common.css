@@ -1,0 +1,170 @@
+@charset 'utf-8';
+/* CSS Document */
+
+body {
+	background: #f2eee8;
+	margin: 0;
+	font-family:"微软雅黑",Arial, Helvetica, sans-serif;
+	overflow-x: hidden;
+	font-size:14px;
+}
+.h2, .h2_nob {
+	display:block;
+	font-size: 18px;
+	font-weight:600;
+	padding-bottom:5px;
+	color:#4c4c4c;
+}
+
+.h2_nob {
+	font-weight:normal;
+}
+
+.h3, .h3_nob {
+	display:block;
+	color:#4c4c4c;
+	font-size: 14px;
+	padding:0 0 0 0;
+	font-weight:600;
+}
+
+.h3_nob {
+	font-weight:normal;
+}
+
+.blue {
+	color: #33aee8;
+}
+
+.gray {
+	color: #afafaf;
+}
+
+#container {
+	margin: 0 auto 0 auto;
+	padding: 0 0 0 0;
+	width: 1366px;
+	background: transparent no-repeat;
+}
+
+#container_bg {
+	position:absolute;
+	width: 1366px;
+	height: 722px;
+	top: 0px;
+	z-index: -9;
+}
+
+#banner {
+	margin: 0px auto 0 auto;
+	width: 980px;
+	height: 130px;
+}
+
+#logo {
+	position:absolute;
+	margin: 15px 0px 0 0;
+	cursor:pointer;
+	width: 262px;
+	height: 112px;
+	float: left;
+	_background:none !important;
+    _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=noscale, src='./base/images/logo.png') !important;
+}
+
+#nav_div {
+	padding-right: 10px;
+	margin-top: 50px;
+	float: right;
+}
+
+#nav {
+	font-size: 22px;
+}
+#nav li {
+	margin: 0 0 0 20px;
+	list-style: none;
+	float: left;
+}
+#nav li a{
+	color: #afafaf;
+	text-decoration:none;
+}
+
+#nav li a:hover{
+	color: #33aee8;
+	text-decoration:underline;
+}
+
+#nav .nav_selected a{
+	color: #33aee8;
+}
+
+#footer_div {
+	margin: 0px auto 0 auto;
+	width: 980px;
+	height: 50px;
+	padding-top: 10px;	
+}
+
+.footer_nav a{
+	color: #6d737a;
+	text-decoration:none;
+}
+
+.footer_nav a:hover{
+	color: #33aee8;
+	text-decoration:underline;
+}
+
+#weibo_div{
+	height: 50px;
+	float: right;
+}
+
+#guanzhu{
+	display:inline-block;
+	margin-top:8px;
+	font-size: 14px;
+	color:#afafaf;
+	font-weight: 600;
+}	
+
+#bg_sina{
+	width: 30px;
+	height: 30px;
+	float:right;
+	background: url("../images/pic_index_btn.png");
+	background-position:218px -123px;
+}
+
+#footer_div {
+	text-align: center;
+}
+
+.footer_nav {
+	color:#6d737a;
+	font-size: 14px;
+	filter: alpha(opacity = 50);
+	-moz-opacity: 0.5;
+	opacity: 0.5;
+}
+
+.copyright{
+	color:#afafaf;
+	font-size:8px;
+	filter: alpha(opacity = 50);
+	-moz-opacity: 0.5;
+	opacity: 0.5;
+}
+
+#footer_nav li {
+	color: #ffffff;
+	font-size: 14px;
+	margin-right: 10px;
+	list-style: none;
+	float: left;
+}
+.first_world {
+		padding:0 0 0 28px;
+	}

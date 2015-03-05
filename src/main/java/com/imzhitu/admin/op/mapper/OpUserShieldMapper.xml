@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpUserShieldMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpUserShieldDto" id="UserShieldMapper">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="userId" column="user_id" jdbcType="INTEGER"/>
+		<result property="userName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="operatorId" column="operator_id" jdbcType="INTEGER"/>
+		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- 添加 -->
+	<insert id="addUserShield">
+		insert into op_user_shield 
+			(user_id,valid,operator_id,date_add,date_modify)
+			values
+			(#{userId},#{valid},#{operatorId},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delUserShield">
+		delete from op_user_shield
+		where id in 
+		<foreach collection="array" index="index" item="item"
+			open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateUserShield">
+		update op_user_shield set
+		<if test="valid != null">valid=#{valid},</if>
+		<if test="operatorId != null">operator_id=#{operatorId},</if>
+		date_modify=#{modifyDate,jdbcType=TIMESTAMP}
+		<where>
+			<if test="id != null">id=#{id}</if>
+			<if test="userId != null"> and user_id=#{userId}</if>
+		</where>
+	</update>
+	
+	<!-- 查询 总数-->
+	<select id="queryUserShieldCount" resultType="long">
+		select count(id) from op_user_shield
+		<where>
+			<if test="userId != null">user_id = #{userId}</if>
+			<if test="id != null">and id=#{id}</if>
+			<if test="valid != null">and valid=#{valid}</if>
+			<if test="maxId !=null and maxId != 0">
+				<![CDATA[ and id <= #{maxId} ]]>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="queryUserShieldForList" resultMap="UserShieldMapper">
+		select * from hts_admin.op_user_shield ous left join hts.user_info ui
+		<where>
+			<if test="userId != null">user_id = #{user_id}</if>
+			<if test="id != null">and id=#{id}</if>
+			<if test="valid != null">and valid=#{valid}</if>
+			<if test="maxId != null and maxId != 0"> 
+				<![CDATA[ and id <= #{maxId} ]]>
+			</if>
+		</where>
+	</select>
+	
+</mapper>

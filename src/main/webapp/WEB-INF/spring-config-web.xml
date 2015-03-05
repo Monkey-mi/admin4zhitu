@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+       http://www.springframework.org/schema/tx   
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd   
+       http://www.springframework.org/schema/aop   
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	
+	<!-- 
+	<bean id="webJdbcTemplate" class="com.hts.web.base.database.ZTJdbcTemplate">
+		<constructor-arg ref="webDataSource" />
+	</bean>
+	
+	<bean id="webBaseDao" class="com.hts.web.common.dao.impl.BaseDaoImpl"
+		p:jdbcTemplate-ref="webJdbcTemplate" 
+		p:urlPrefix="${urlPrefix}" />
+		
+	<bean id="webBaseService" class="com.hts.web.common.service.impl.BaseServiceImpl"
+		p:baseDao-ref="webBaseDao"/>
+	 -->
+	
+	<bean id="pushExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="queueCapacity" value="100" />
+	</bean>
+
+	<bean id="pushService" class="com.hts.web.push.service.impl.PushServiceImpl"  init-method="init" 
+	 	p:pushExecutor-ref="pushExecutor"/>
+		
+	<!--
+	<bean id="webUserLoginPersistentDao" class="com.hts.web.security.dao.impl.UserLoginPersistentDaoImpl" parent="webBaseDao" />
+	<bean id="webUserService" class="com.hts.web.security.service.impl.UserDetailsServiceImpl" />
+	<bean id="webUserLoginPersistentService" class="com.hts.web.security.service.impl.UserLoginPersistentServiceImpl" />
+	
+	 
+	<bean id="webBaseDao" class="com.hts.web.common.dao.impl.BaseDaoImpl"
+		p:jdbcTemplate-ref="webJdbcTemplate" 
+		p:urlPrefix="${urlPrefix}" />
+
+	<bean id="webKeyGenDao" class="com.hts.web.common.dao.impl.KeyGenDaoImpl"
+		parent="webBaseDao" />
+
+	<bean id="webBaseService" class="com.hts.web.common.service.impl.BaseServiceImpl"
+		p:baseDao-ref="webBaseDao"/>
+		
+	<bean id="webKeyGenService" class="com.hts.web.common.service.impl.KeyGenServiceImpl" parent="webBaseService"
+		p:keyGenDao-ref="webKeyGenDao" />
+		
+	<bean id="webUserInfoDao" class="com.hts.web.userinfo.dao.impl.UserInfoDaoImpl" parent="webBaseDao" />
+	<bean id="webUserConcernDao" class="com.hts.web.userinfo.dao.impl.UserConcernDaoImpl" parent="webBaseDao" />
+	<bean id="webSocialAccountDao" class="com.hts.web.userinfo.dao.impl.SocialAccountDaoImpl" parent="webBaseDao" />
+	<bean id="webUserLoginPersistentDao" class="com.hts.web.security.dao.impl.UserLoginPersistentDaoImpl" parent="webBaseDao" />
+	<bean id="webUserMsgDao" class="com.hts.web.userinfo.dao.impl.UserMsgDaoImpl" parent="webBaseDao" />
+	<bean id="webUserMsgSendBoxDao" class="com.hts.web.userinfo.dao.impl.UserMsgSendBoxDaoImpl" parent="webBaseDao" />
+	<bean id="webUserMsgRecipientBoxDao" class="com.hts.web.userinfo.dao.impl.UserMsgRecipientBoxDaoImpl" parent="webBaseDao" />
+	<bean id="webUserMsgShieldDao" class="com.hts.web.userinfo.dao.impl.UserMsgShieldDaoImpl" parent="webBaseDao" />
+	<bean id="webUserService" class="com.hts.web.security.service.impl.UserDetailsServiceImpl" />
+	<bean id="webUserLoginPersistentService" class="com.hts.web.security.service.impl.UserLoginPersistentServiceImpl" />
+	
+	<bean id="webWorldDao" class="com.hts.web.ztworld.dao.impl.HTWorldDaoImpl" parent="webBaseDao" />
+	<bean id="webWorldCacheDao" class="com.hts.web.ztworld.dao.impl.HTWorldCacheDaoImpl" parent="baseCacheDao" />
+	<bean id="webWorldChildWorldDao" class="com.hts.web.ztworld.dao.impl.HTWorldChildWorldDaoImpl" parent="webBaseDao" />
+	<bean id="webWorldCommentDao" class="com.hts.web.ztworld.dao.impl.HTWorldCommentDaoImpl" parent="webBaseDao" 
+		p:worldDao-ref="webWorldDao" />
+	<bean id="webWorldKeepDao" class="com.hts.web.ztworld.dao.impl.HTWorldKeepDaoImpl" parent="webBaseDao" />
+	<bean id="webWorldLikedDao" class="com.hts.web.ztworld.dao.impl.HTWorldLikedDaoImpl" parent="webBaseDao" 
+		p:worldDao-ref="webWorldDao" />
+	<bean id="webWorldReportDao" class="com.hts.web.ztworld.dao.impl.HTWorldReportDaoImpl" parent="webBaseDao" />
+	<bean id="webWorldInteractDao" class="com.hts.web.ztworld.dao.impl.HTWorldInteractDaoImpl" parent="webBaseDao"
+		p:worldDao-ref="webWorldDao" />
+	<bean id="webWorldLabelDao" class="com.hts.web.ztworld.dao.impl.HTWorldLabelDaoImpl" parent="webBaseDao" />
+	<bean id="webWorldLabelWorldDao" class="com.hts.web.ztworld.dao.impl.HTWorldLabelWorldDaoImpl" parent="webBaseDao" />
+		
+	<bean id="webActivityDao" class="com.hts.web.operations.dao.impl.ActivityDaoImpl" parent="webBaseDao"/>
+	<bean id="webActivityCacheDao" class="com.hts.web.operations.dao.impl.ActivityCacheDaoImpl" parent="baseCacheDao"/>
+	<bean id="webActivityAwardDao" class="com.hts.web.operations.dao.impl.ActivityAwardDaoImpl" parent="webBaseDao" />
+	<bean id="webUserRecommendDao" class="com.hts.web.operations.dao.impl.UserRecommendDaoImpl" parent="webBaseDao" />
+	<bean id="webSquarePushDao" class="com.hts.web.operations.dao.impl.SquarePushDaoImpl" parent="webBaseDao" />
+	<bean id="webUserVerifyDao" class="com.hts.web.userinfo.dao.impl.UserVerifyDaoImpl" parent="baseDao" />
+	<bean id="webUserVerifyCacheDao" class="com.hts.web.userinfo.dao.impl.UserVerifyCacheDaoImpl" parent="baseCacheDao" />
+	
+	<bean id="webWorldLabelCacheDao" class="com.hts.web.ztworld.dao.impl.HTWorldLabelCacheDaoImpl" parent="baseCacheDao"/>
+	
+		
+	<bean id="webUserInfoService" class="com.hts.web.userinfo.service.impl.UserInfoServiceImpl" parent="webBaseService"
+		p:keyGenService-ref="webKeyGenService"
+		p:userLoginPersistentService-ref="webUserLoginPersistentService"
+		p:tokenRepository-ref="webUserLoginPersistentDao"
+		p:userInfoDao-ref="webUserInfoDao"
+		p:socialAccountDao-ref="webSocialAccountDao"
+		p:userVerifyCacheDao-ref="webUserVerifyCacheDao" />
+
+	<bean id="webUserInteractService" class="com.hts.web.userinfo.service.impl.UserInteractServiceImpl" parent="webBaseService"
+		p:keyGenService-ref="webKeyGenService"
+		p:pushService-ref="pushService"
+		p:userInfoDao-ref="webUserInfoDao"
+		p:userConcernDao-ref="webUserConcernDao" />
+
+	<bean id="webUserMsgService" class="com.hts.web.userinfo.service.impl.UserMsgServiceImpl" parent="webBaseService" 
+		p:keyGenService-ref="webKeyGenService"
+		p:pushService-ref="pushService"
+		p:worldCommentDao-ref="webWorldCommentDao"
+		p:worldLikedDao-ref="webWorldLikedDao"
+		p:userConcernDao-ref="webUserConcernDao"
+		p:userInfoDao-ref="webUserInfoDao"
+		p:userMsgDao-ref="webUserMsgDao"
+		p:userMsgSendBoxDao-ref="webUserMsgSendBoxDao"
+		p:userMsgRecipientBoxDao-ref="webUserMsgRecipientBoxDao" 
+		p:userMsgShieldDao-ref="webUserMsgShieldDao"
+		p:sysMsgDao-ref="sysMsgDao"
+		p:worldInteractDao-ref="webWorldInteractDao">
+	
+		<property name="customerServiceId" value="${push.customerServiceId}"/>
+		<property name="feedbackListeners" value="${push.feedbackListeners}" />
+	</bean>
+	
+	<bean id="webWorldInteractService" class="com.hts.web.ztworld.service.impl.ZTWorldInteractServiceImpl" parent="webBaseService" 
+		p:keyGenService-ref="webKeyGenService" 
+		p:pushService-ref="pushService"
+		p:userInteractService-ref="webUserInteractService"
+		p:worldCommentDao-ref="webWorldCommentDao"
+		p:worldDao-ref="webWorldDao"
+		p:worldLikedDao-ref="webWorldLikedDao" 
+		p:worldKeepDao-ref="webWorldKeepDao"
+		p:worldReportDao-ref="webWorldReportDao" 
+		p:userInfoDao-ref="webUserInfoDao"
+		p:worldService-ref="webWorldService"
+		p:userInfoService-ref="webUserInfoService" />
+	
+	<bean id="webWorldService" class="com.hts.web.ztworld.service.impl.ZTWorldServiceImpl" parent="webBaseService" 
+		p:keyGenService-ref="webKeyGenService" 
+		p:worldDao-ref="webWorldDao"
+		p:worldCacheDao-ref="webWorldCacheDao"
+		p:userInfoDao-ref="webUserInfoDao"
+		p:worldChildWorldDao-ref="webWorldChildWorldDao"
+		p:activityDao-ref="webActivityDao"
+		p:worldCommentDao-ref="webWorldCommentDao"
+		p:worldLikedDao-ref="webWorldLikedDao" />
+		
+		<bean id="pushExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="15" />
+		<property name="queueCapacity" value="15" />
+	</bean>
+
+	<bean id="pushService" class="com.hts.web.push.service.impl.PushServiceImpl" parent="webBaseService" 
+		p:pushExecutor-ref="pushExecutor"
+		p:userInfoDao-ref="webUserInfoDao"
+		p:worldCommentDao-ref="webWorldCommentDao"
+		p:worldLikedDao-ref="webWorldLikedDao"
+		p:worldKeepDao-ref="webWorldKeepDao"
+		p:userConcernDao-ref="webUserConcernDao">
+		
+		<constructor-arg name="apnsPasswd" value="${push.apnsPasswd}" />
+		<constructor-arg name="certificateResource" value="${push.certificateResource}"/>
+		<constructor-arg name="isProduction" value="${push.isProduction}"/>
+		<constructor-arg name="maxConnections" value="150"/>
+		<constructor-arg name="appId" value="${push.appId}"/>
+		<constructor-arg name="appKey" value="${push.appKey}"/>
+		<constructor-arg name="masterSecret" value="${push.masterSecret}"/>
+		<constructor-arg name="iosAppId" value="${push.iosAppId}"/>
+		<constructor-arg name="iosAppKey" value="${push.iosAppKey}"/>
+		<constructor-arg name="iosMasterSecret" value="${push.iosMasterSecret}"/>
+	</bean>
+	-->
+	
+</beans>

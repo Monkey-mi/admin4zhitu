@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.SysMsgMapper">
+	
+	<resultMap id="OpSysMsgMap" type="com.imzhitu.admin.common.pojo.OpSysMsg">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="sender_id" property="senderId" jdbcType="INTEGER"/>
+		<result column="recipient_id" property="recipientId" jdbcType="INTEGER"/>
+		<result column="msg_date" property="msgDate" jdbcType="TIMESTAMP" />
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+		<result column="obj_type" property="objType" jdbcType="INTEGER"/>
+		<result column="obj_id" property="objId" jdbcType="INTEGER"/>
+		<result column="obj_meta" property="objMeta" jdbcType="VARCHAR"/>
+		<result column="obj_meta2" property="objMeta2" jdbcType="VARCHAR"/>
+		<result column="thumb_path" property="thumbPath" jdbcType="VARCHAR"/>
+		<result column="ck" property="ck" jdbcType="INTEGER"/>
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		<result column="recipient_valid" property="recipientValid" jdbcType="INTEGER"/>
+		<result column="pushed" property="pushed" jdbcType="INTEGER"/>
+		<result column="weight" property="weight" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<insert id="saveMsgByProcedure">
+		call hts.func_batch_save_sys_msg(#{content},#{objType},
+			#{objMeta},#{objMeta2},#{objId},#{senderId},#{msgDate})
+	</insert>	
+</mapper>
