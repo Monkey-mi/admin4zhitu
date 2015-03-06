@@ -176,7 +176,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			htworld.setCoverPath(coverPath);
 			String titleThumbPath = converLocalPathToQiNiuPath(zw.getThumbTitlePath());
 			htworld.setTitleThumbPath(titleThumbPath);
-			htworld.setLatestValid(Tag.FALSE);
+			htworld.setLatestValid(Tag.TRUE);
 			// 生成短链
 			String shortLink = MD5Encrypt.shortUrl(worldId);
 			htworld.setShortLink(shortLink);
@@ -260,10 +260,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 				childWorld.setWidth(zcw.getHeight());
 				
 				worldChildWorldDao.saveChildWorld(childWorld);
-				dto.setComplete(1);
-				dto.setModifyDate(now);
-				zombieWorldMapper.updateComplete(dto);
 			}
+			dto.setComplete(1);
+			dto.setModifyDate(now);
+			dto.setHtworldId(worldId);
+			dto.setShortLink(shortLink);
+			zombieWorldMapper.updateComplete(dto);
 			childWorldIdMap.clear();
 			
 		}
@@ -304,10 +306,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	 * @throws Exception
 	 */
 	@Override
-	public void queryZombieWorldForTable(int maxId,int page,int rows,Integer complete,Map<String,Object>jsonMap)throws Exception{
+	public void queryZombieWorldForTable(int maxId,Date addDate,Date modifyDate,int page,int rows,Integer complete,Map<String,Object>jsonMap)throws Exception{
 		ZombieWorld dto = new ZombieWorld();
 		dto.setComplete(complete);
 		dto.setMaxId(maxId);
+		dto.setModifyDate(modifyDate);
+		dto.setAddDate(addDate);
 		buildNumberDtos(dto,page,rows,jsonMap,new NumberDtoListAdapter<ZombieWorld>(){
 			@Override
 			public long queryTotal(ZombieWorld dto){
