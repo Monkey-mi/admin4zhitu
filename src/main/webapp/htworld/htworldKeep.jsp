@@ -22,6 +22,8 @@ var maxId = 0,
 		};
 		loadPageData(initPage);
 	},
+	
+	
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
 			maxId = 0;
