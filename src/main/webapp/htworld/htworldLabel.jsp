@@ -22,6 +22,7 @@ var maxSerial = 0,
 		},
 		loadPageData(initPage);
 	},
+	
 	myOnLoadBefore = function() {
 		interacts = {};
 	},
