@@ -32,7 +32,7 @@ var maxSerial = 0,
 			myQueryParams.maxSerial = maxSerial;
 		}
 	},
-	/// 
+	//test
 	
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
