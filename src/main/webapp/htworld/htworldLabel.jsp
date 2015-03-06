@@ -31,7 +31,6 @@ var maxSerial = 0,
 			myQueryParams.maxSerial = maxSerial;
 		}
 	},
-	//tes
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
 			if(data.maxSerial > maxSerial) {
