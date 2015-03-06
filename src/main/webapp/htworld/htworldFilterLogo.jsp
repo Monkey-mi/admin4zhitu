@@ -15,6 +15,8 @@ var htmTableTitle = "滤镜logo", //表格标题
 		toolbarComponent = '#tb';
 		loadPageData(initPage);
 	},
+	
+	
 	loadDataURL = "./admin_ztworld/ztworld_queryFilterLogoList", //数据装载请求地址
 	queryLogoByIdURL = "./admin_ztworld/ztworld_queryFilterLogo",
 	columnsFields = [
