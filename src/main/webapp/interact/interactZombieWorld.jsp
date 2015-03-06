@@ -23,6 +23,7 @@ var maxId = 0,
 			'maxId' : maxId,
 		},
 		loadPageData(initPage);
+		
 	},
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
