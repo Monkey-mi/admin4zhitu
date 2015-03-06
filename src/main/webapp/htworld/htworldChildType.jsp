@@ -16,7 +16,6 @@ var maxSerial = 0,
 		myQueryParams = {
 			'maxSerial' : maxSerial,
 		},
-		
 		loadPageData(initPage);
 	},
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
