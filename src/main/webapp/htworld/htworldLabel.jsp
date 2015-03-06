@@ -31,6 +31,7 @@ var maxSerial = 0,
 			myQueryParams.maxSerial = maxSerial;
 		}
 	},
+	
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
 			if(data.maxSerial > maxSerial) {
@@ -43,6 +44,7 @@ var maxSerial = 0,
 	htmTableWidth = 1170,
 	worldKey = "worldId",
 	loadDataURL = "./admin_ztworld/label_queryLabel", //数据装载请求地址
+	//teest
 	deleteURI = "./admin_ztworld/label_deleteLabels?ids=", //删除请求地址
 	updateSerialRL = "./admin_ztworld/label_updateLabelSerial?ids=", // 更新有效新请求地址
 	queryActivityByIdURL = "./admin_op/op_queryActivityById",  // 根据id查询活动
