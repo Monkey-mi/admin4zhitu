@@ -18,6 +18,8 @@
 		<result column="complete" property="complete" jdbcType="INTEGER"/>
 		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
 		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+		<result column="htworld_id" property="htworldId" jdbcType="INTEGER"/>
+		<result column="short_link" property="shortLink" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- 插入 -->
@@ -32,10 +34,11 @@
 	
 	<!-- 更新完成情况 -->
 	<update id="updateComplete">
-		update hts_admin.zombie_world set complete=1,date_modify = #{modifyDate}
+		update hts_admin.zombie_world set complete=1,date_modify = #{modifyDate},htworld_id=#{htworldId},short_link=#{shortLink}
 		where id=#{id}
 	</update>
 	
+		
 	<!-- 查询 id-->
 	<select id="queryZombieWorldId" resultType="Integer">
 		select id from hts_admin.zombie_world zw
@@ -85,7 +88,10 @@
 				and complete = #{complete}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[id <= #{maxId}]]>
+				<![CDATA[and id <= #{maxId}]]>
+			</if>
+			<if test="modifyDate != null and addDate != null">
+				and date_modify between #{addDate} and #{modifyDate}
 			</if>
 		</where>
 		order by id desc
@@ -103,7 +109,10 @@
 				and complete = #{complete}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[id <= #{maxId}]]>
+				<![CDATA[and id <= #{maxId}]]>
+			</if>
+			<if test="modifyDate != null and addDate != null">
+				and date_modify between #{addDate} and #{modifyDate}
 			</if>
 		</where>
 	</select>

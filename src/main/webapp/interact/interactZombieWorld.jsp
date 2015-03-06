@@ -12,7 +12,9 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript">
 var maxId = 0,
+	worldURLPrefix = 'http://www.imzhitu.com/DT',
 	htmTableTitle = "马甲发图计划管理", //表格标题
+	htmTablePageList = [10,30,50,100,150],
 	loadDataURL = "./admin_interact/interactZombieWorld_queryZombieWorldForTable", //数据装载请求地址
 	deleteURI = "./admin_interact/interactZombieWorld_batchSaveZombieWorldToHTWorld?ids=",
 	init = function() {
@@ -53,7 +55,7 @@ var maxId = 0,
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 			}
 		},
-		{field : 'modifyDate', title:'添加日期', align : 'center',width : 150, 
+		{field : 'modifyDate', title:'最后修改时间日期', align : 'center',width : 150, 
 			formatter: function(value,row,index){
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 			}
@@ -68,6 +70,18 @@ var maxId = 0,
   				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}
   		},
+  		{field : 'shortLink', title:'短链',align : 'center',width : 320,
+			styler: function(value,row,index){ 
+				return 'cursor:pointer;';
+			},
+			formatter : function(value, row, rowIndex ) {
+				if(value == "" || value == undefined) return "";
+				return "<a title='播放织图' class='updateInfo' href='javascript:showWorld(\""
+						+ worldURLPrefix + value + "\")'>" +value+"</a>";
+			}
+		},
+		{field : 'htworldId', title:'织图ID', align : 'center',width : 80}
+		
 	],
 	onAfterInit = function() {
 		$("#batch-save").window({
@@ -87,15 +101,16 @@ var maxId = 0,
 				$("#timeSpan").numberbox('clear');
 			}
 		});
+		
+		
 		removePageLoading();
 		$("#main").show();
 	};
 
 	
 	//根据complete查询马甲织图
-	function queryZombieWorldByComplete(){
+	function queryZombieWorldByComplete(complete){
 		myQueryParams.maxId=0;
-		var complete = $("#easyui-combobox").combobox('getValue');
 		myQueryParams.complete = complete;
 		$("#htm_table").datagrid('load',myQueryParams);
 	}
@@ -148,7 +163,29 @@ var maxId = 0,
 			return false;
 		}
 	}
+	
+	/**
+	* 展示织图
+	*/
+	function showWorld(uri) {
+		$.fancybox({
+			'margin'			: 20,
+			'width'				: '10',
+			'height'			: '100%',
+			'autoScale'			: true,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+			'href'				: uri + "?adminKey=zhangjiaxin"
+		});
+	}
 
+	function searchZombieWorld(){
+		myQueryParams.maxId=0;
+		myQueryParams.addDate=$("#beginDate").datetimebox('getValue');
+		myQueryParams.modifyDate=$("#endDate").datetimebox('getValue');
+		$("#htm_table").datagrid('load',myQueryParams);
+	}
 </script>
 
 </head>
@@ -156,11 +193,16 @@ var maxId = 0,
 	<table id="htm_table"></table>
 	<div id="tb" style="padding:5px;height:auto" class="none">
 		<a href="javascript:void(0);" onclick="javascript:batchSaveZombieWorldToHTWorld();" class="easyui-linkbutton" title="批量发图" plain="true" iconCls="icon-add" id="batchSaveBtn">批量发图</a>
-		<select id="ss-complete" class="easyui-combobox" style="width:100px;" onclick="queryZombieWorldByComplete()">
+		<select id="ss-complete" class="easyui-combobox" data-options="onSelect:function(rec){queryZombieWorldByComplete(rec.value);}" style="width:100px;" >
 		        <option value="">所有完成状态</option>
 		        <option value="0">未完成</option>
 		        <option value="1">已完成</option>
 	   	</select>
+	   	<span>起始时间：</span>
+   		<input id="beginDate"  class="easyui-datetimebox"/>
+   		<span>结束时间：</span>
+   		<input id="endDate"  class="easyui-datetimebox"/>
+   		<a href="javascript:void(0);" onclick="javascript:searchZombieWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 	</div>  
 	
 	<div id="batch-save">

@@ -26,6 +26,21 @@ public class ZombieWorld  extends AbstractNumberDto{
 	private Date addDate;
 	private Date modifyDate;
 	
+	private Integer htworldId;
+	private String shortLink;
+	
+	public String getShortLink() {
+		return shortLink;
+	}
+	public void setShortLink(String shortLink) {
+		this.shortLink = shortLink;
+	}
+	public Integer getHtworldId() {
+		return htworldId;
+	}
+	public void setHtworldId(Integer htworldId) {
+		this.htworldId = htworldId;
+	}
 	@JSON(format="yyyy/MM/dd HH:mm:ss")
 	public Date getAddDate() {
 		return addDate;

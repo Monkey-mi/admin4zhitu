@@ -28,7 +28,10 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 	private String childs;
 	private String imgPath;
 	private Integer titleId;
+	private Date addDate;
+	private Date modifyDate;
 	
+
 	private String ids;//批量发织图
 	private Date begin;//开始执行计划的时间
 	private Integer timeSpan;//
@@ -43,7 +46,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 	 */
 	public String queryZombieWorldForTable(){
 		try{
-			service.queryZombieWorldForTable(maxId, page, rows, complete, jsonMap);
+			service.queryZombieWorldForTable(maxId, addDate, modifyDate, page, rows, complete, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -254,5 +257,20 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 	public void setTimeSpan(Integer timeSpan) {
 		this.timeSpan = timeSpan;
 	}
-	
+
+	public Date getAddDate() {
+		return addDate;
+	}
+
+	public void setAddDate(Date addDate) {
+		this.addDate = addDate;
+	}
+
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
 }
