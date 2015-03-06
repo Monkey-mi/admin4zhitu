@@ -22,7 +22,6 @@ var maxSerial = 0,
 		},
 		loadPageData(initPage);
 	},
-	
 	myOnLoadBefore = function() {
 		interacts = {};
 	},
@@ -32,8 +31,7 @@ var maxSerial = 0,
 			myQueryParams.maxSerial = maxSerial;
 		}
 	},
-	//test
-	
+	//tes
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
 			if(data.maxSerial > maxSerial) {
