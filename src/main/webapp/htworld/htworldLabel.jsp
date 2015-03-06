@@ -90,6 +90,7 @@ var maxSerial = 0,
     onBeforeInit = function() {
 		showPageLoading();
 	},
+	// test2
 	onAfterInit = function() {
 		
 		$('#htm_serial').window({
