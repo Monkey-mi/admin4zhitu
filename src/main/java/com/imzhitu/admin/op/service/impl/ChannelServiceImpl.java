@@ -847,49 +847,38 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	}
 	
 	@Override
-	public void updateChannelStar(){
+	public void updateChannelStar() throws Exception{
 		Date now = new Date();
 		logger.info("======更新频道明星任务开始执行，开始时间："+now);
 		//查询频道类型所有类型
 		List<OpChannelTopType> channelTopTypeList = channelTopTypeMapper.queryTopTypes();
 		for(OpChannelTopType o:channelTopTypeList){
-			try{
+			OpChannelStar star = new OpChannelStar();
+			star.setChannelId(o.getId());
 				
-				//根据频道id查询频道排名前15个用户
-				List<Integer> channelUserList = opChannelUserService.queryChannelUserRankTopN(o.getId());
-				for(Integer u:channelUserList){
-					OpChannelStar star = new OpChannelStar();
-					star.setChannelId(o.getId());
-					star.setUserId(u);
-					star.setValid(Tag.TRUE);
-					star.setNotified(Tag.FALSE);
-					try{
-						//保存
-						OpChannelStar starExists = channelStarMapper.queryStarByChannelId(star);
-						Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_STAR_ID);
-						star.setId(id);
-						if(starExists != null) {
-							channelStarMapper.updateId(star);
-						} else {
-							channelStarMapper.save(star);
-						}
-						
-						//更新缓存
-						//channelStarCacheDao.updateChannelStar(star);
-						updateStarCache(star);
-						
-						//通知
-						//addStarRecommendMsg(star.getId());
-						
-					}catch(Exception e){
-						
+			//根据频道id查询频道排名前15个用户
+			List<Integer> channelUserList = opChannelUserService.queryChannelUserRankTopN(o.getId());
+			for(Integer u:channelUserList){
+				star.setUserId(u);
+				star.setValid(Tag.TRUE);
+				star.setNotified(Tag.FALSE);
+					//保存
+					OpChannelStar starExists = channelStarMapper.queryStarByChannelId(star);
+					Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_STAR_ID);
+					star.setId(id);
+					if(starExists != null) {
+						channelStarMapper.updateId(star);
+					} else {
+						channelStarMapper.save(star);
 					}
 					
-				}
-				
-			}catch(Exception e){
-				
+					//更新缓存
+					//channelStarCacheDao.updateChannelStar(star);
+					//通知
+					//addStarRecommendMsg(star.getId());
+					
 			}
+			updateStarCache(star);
 		}
 		Date end = new Date();
 		logger.info("=======更新频道明星完毕。结束时间："+end + ". 费时："+(now.getTime() - end.getTime()) + "ms");
