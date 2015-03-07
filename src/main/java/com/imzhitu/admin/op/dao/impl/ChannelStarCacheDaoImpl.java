@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.constant.CacheKeies;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
+import com.hts.web.common.util.Log;
 import com.hts.web.userinfo.service.UserInfoService;
 import com.imzhitu.admin.common.pojo.OpChannelStar;
 import com.imzhitu.admin.op.dao.ChannelStarCacheDao;
@@ -32,6 +33,9 @@ public class ChannelStarCacheDaoImpl extends BaseCacheDaoImpl<com.hts.web.common
 		if(cacheList.size() < star.getLimit()) {
 			star.setLimit(star.getLimit() - cacheList.size());
 			List<com.hts.web.common.pojo.OpChannelStar> noWeightlist = channelStarMapper.queryCacheStar(star);
+			for(com.hts.web.common.pojo.OpChannelStar s : noWeightlist) {
+				Log.debug(s.getId() + " : " + s.getUserName());
+			}
 			cacheList.addAll(noWeightlist);
 		}
 		userInfoService.extractVerify(cacheList);

@@ -103,7 +103,7 @@
 		from (select id,user_id from hts.operations_channel_star where valid=1 and weight=0 and channel_id=#{channelId}
 		order by id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
-		) as cs, hts.user_info as u where cs.user_id=u.id
+		) as cs, hts.user_info as u where cs.user_id=u.id order by cs.id desc
 	</select>
 	
 	<select id="queryCacheStarWithWeight" resultMap="HTSOpChannelStarMap">
@@ -134,7 +134,7 @@
 		order by weight desc, id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 		) as st, hts.operations_channel c, hts.user_info u
-		where st.channel_id=c.id and st.user_id=u.id;
+		where st.channel_id=c.id and st.user_id=u.id order by st.weight desc, st.id desc;
 	</select>
 	
 	

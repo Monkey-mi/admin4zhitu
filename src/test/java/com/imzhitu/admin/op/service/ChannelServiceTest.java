@@ -1,6 +1,7 @@
 package com.imzhitu.admin.op.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,10 +9,13 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
+import com.hts.web.common.util.Log;
 import com.imzhitu.admin.base.BaseTest;
 import com.imzhitu.admin.common.pojo.OpChannel;
 import com.imzhitu.admin.common.pojo.OpChannelStar;
+import com.imzhitu.admin.common.pojo.OpChannelStarDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
@@ -37,7 +41,7 @@ public class ChannelServiceTest extends BaseTest {
 	@Test
 	public void testUpdateChannelStarCache() throws Exception {
 		OpChannelStar star = new OpChannelStar();
-		star.setChannelId(1);
+		star.setChannelId(8);
 		service.updateStarCache(star);
 	}
 	
@@ -109,18 +113,28 @@ public class ChannelServiceTest extends BaseTest {
 	
 	@Test
 	public void testBuildStar() throws Exception {
-		logNumberList(logger, new TestNumberListAdapter(){
-
-			@Override
-			public void buildTestNumberList(Map<String, Object> jsonMap)
-					throws Exception {
-				OpChannelStar star = new OpChannelStar();
-				star.setChannelId(1);
-				service.buildStarDto(star, 1, 10, jsonMap);
-				star.setMaxId(3);
-				service.buildStarDto(star, 1, 10, jsonMap);
-			}
-		});
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		OpChannelStar star = new OpChannelStar();
+		star.setChannelId(8);
+		service.buildStarDto(star, 2, 10, jsonMap);
+		
+		List<OpChannelStarDto> starList = (List<OpChannelStarDto>) jsonMap.get(OptResult.JSON_KEY_ROWS);
+		for(OpChannelStarDto dto : starList) {
+			Log.debug(dto.getChannelStarId() + " : " + dto.getId() + " : " + star.getWeight() + dto.getUserName());
+		}
+		
+//		logNumberList(logger, new TestNumberListAdapter(){
+//
+//			@Override
+//			public void buildTestNumberList(Map<String, Object> jsonMap)
+//					throws Exception {
+//				OpChannelStar star = new OpChannelStar();
+//				star.setChannelId(8);
+////				service.buildStarDto(star, 1, 10, jsonMap);
+////				star.setMaxId(3);
+//				service.buildStarDto(star, 2, 10, jsonMap);
+//			}
+//		});
 	}
 	
 	
@@ -289,7 +303,7 @@ public class ChannelServiceTest extends BaseTest {
 	
 	@Test
 	public void testAddStarRecommendMsg() throws Exception {
-		service.addStarRecommendMsg(45);
+		service.addStarRecommendMsg(362);
 	}
 	
 	@Test
