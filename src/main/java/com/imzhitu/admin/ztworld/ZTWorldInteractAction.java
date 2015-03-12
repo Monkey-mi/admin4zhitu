@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hts.web.base.HTSException;
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
@@ -79,6 +80,34 @@ public class ZTWorldInteractAction extends BaseCRUDAction {
 	public String unShieldComment() {
 		try {
 			worldInteractService.unShieldComment(id);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 根据用户id来屏蔽该用户的所有评论
+	 * @return
+	 */
+	public String shieldCommentByUserId(){
+		try {
+			worldInteractService.updateCommentShieldByUserId(authorId, Tag.TRUE);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 解除该用户的所有评论屏蔽
+	 * @return
+	 */
+	public String unShieldCommentByUserId(){
+		try {
+			worldInteractService.updateCommentShieldByUserId(authorId, Tag.FALSE);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

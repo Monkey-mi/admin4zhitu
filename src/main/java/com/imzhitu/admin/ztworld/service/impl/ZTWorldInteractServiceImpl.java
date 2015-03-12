@@ -102,6 +102,11 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 		worldCommentDao.updateCommentShield(id, Tag.FALSE);
 	}
 	
+	@Override
+	public void updateCommentShieldByUserId(Integer userId,Integer shield)throws Exception{
+		worldCommentDao.updateCommentShieldByUserId(userId, shield);
+	}
+	
 	
 	@Override
 	public void buildLikedUser(Integer maxId, int start, int limit,

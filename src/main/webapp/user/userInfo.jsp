@@ -98,7 +98,18 @@ var maxId = 0,
 				}
 			}
 		},
-		shieldColumn,
+		{field : 'shield',title : '操作',align : 'center',width : 45,
+			formatter: function(value,row,index){
+				if(value == 1) {
+					img = "./common/images/undo.png";
+					return "<img title='解除屏蔽' class='htm_column_img pointer' onclick='javascript:unShield(\""+ row[recordIdKey] + "\",\"" + index + "\")' src='" + img + "'/>";
+				}
+				if(row.valid == 0) {
+					return '';
+				}
+				return "<a title='点击屏蔽织图' class='updateInfo' href='javascript:InitShieldWindow(\""+ row[recordIdKey] + "\",\"" + index + "\")'>" + '屏蔽'+ "</a>";
+			}
+		},
 		{field : 'platformCode',title:'社交平台',align : 'center', width:60, formatter: function(value, row, index) {
 			var platformCode = "织图";
 			switch(value) {
@@ -157,6 +168,24 @@ var maxId = 0,
 			resizable  :false,
 			onClose	: 	function(){
 				$("#delStar_userId").val("");
+			}
+		});
+		$('#htm_shieldUser').window({
+			modal 	: true,
+			width	:	400,
+			top		:	10,
+			height	:	155,
+			title	:	'屏蔽用户',
+			shadow	:	false,
+			closed	: 	true,
+			minimizable:false,
+			maximizable:false,
+			collapsible:false,
+			iconCls	:	'icon-cut',
+			resizable  :false,
+			onClose	: 	function(){
+				$("#comment_userId").val('');
+				$("#rowIndex").val('');
 			}
 		});
 		
@@ -594,6 +623,62 @@ function loadMsgFormValidate() {
 		$("#htm_delStar").window('close');
 	}
 
+	function InitShieldWindow(userId,index){
+		$("#comment_userId").val(userId);
+		$("#rowIndex").val(index);
+		$("#htm_shieldUser").window('open');
+	}
+	
+	/**
+	 * 屏蔽用户
+	 */
+	function shield() {
+		$("#htm_table").datagrid('loading');
+		var userId = $("#comment_userId").val();
+		var index = $("#rowIndex").val();
+		//屏蔽用户评论
+		if($("#commentShield").attr('checked') == 'checked'){
+			$.post("./admin_ztworld/interact_shieldCommentByUserId",{
+				'authorId':userId
+				},function(result){
+					if(result['result'] == 0) {
+						
+					} else {
+						$.messager.alert('失败提示',result['msg']);  //提示失败信息
+					}
+				},"json");
+		}
+		
+		//屏蔽用户
+		$.post("./admin_user/user_shieldUser",{
+			'userId':userId
+			},function(result){
+				if(result['result'] == 0) {
+					updateValue(index,'shield',1);
+				} else {
+					$.messager.alert('失败提示',result['msg']);  //提示失败信息
+				}
+				$("#htm_table").datagrid('loaded');
+			},"json");
+		$("#htm_shieldUser").window('close');
+	}
+
+	/**
+	 * 解除屏蔽
+	 */
+	function unShield(userId,index) {
+		$("#htm_table").datagrid('loading');
+		$.post("./admin_user/user_unShieldUser",{
+			'userId':userId
+			},function(result){
+				if(result['result'] == 0) {
+					updateValue(index,'shield',0);
+				} else {
+					$.messager.alert('失败提示',result['msg']);  //提示失败信息
+				}
+				$("#htm_table").datagrid('loaded');
+			},"json");
+	}
 
 </script>
 </head>
@@ -815,6 +900,40 @@ function loadMsgFormValidate() {
 						<td class="opt_btn" colspan="2" style="text-align:center;padding-top:10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="delStarSubmit();">删除</a> 
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#delStar_form').window('close');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">删除中...</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	
+	<!-- 屏蔽用户-->
+	<div id="htm_shieldUser">
+		<form id="shieldUser_form" method="post">
+			<table id="htm_shieldUser_table" width="380">
+				<tbody>
+					<tr>
+						<td colspan="2" style="padding: 10px 0 10px 0"><span style="padding-left:130px;">确定要屏蔽该用户么？</span></td>
+					</tr>
+					<tr>
+						<td colspan="2"><span style="padding-left:100px"><input type="checkbox"  id="commentShield" style="width: 13px; height: 13px; vertical-align: middle;"/>同时屏蔽该用户所有评论</span></td>
+					</tr>
+					<tr class="none">
+						<td colspan="2"><input type="text"  id="comment_userId" value="0" /></td>
+					</tr>
+					<tr class="none">
+						<td colspan="2"><input id="rowIndex" /></td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align:center;padding-top:10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="shield();">删除</a> 
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_shieldUser').window('close');">取消</a>
 						</td>
 					</tr>
 					<tr class="loading none">

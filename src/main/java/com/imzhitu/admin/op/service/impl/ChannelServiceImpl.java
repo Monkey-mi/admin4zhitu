@@ -860,7 +860,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			List<Integer> channelUserList = opChannelUserService.queryChannelUserRankTopN(o.getId());
 			for(Integer u:channelUserList){
 				star.setUserId(u);
-				star.setValid(Tag.TRUE);
+				star.setValid(Tag.FALSE);
 				star.setNotified(Tag.FALSE);
 					//保存
 					OpChannelStar starExists = channelStarMapper.queryStarByChannelId(star);
@@ -878,7 +878,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 					//addStarRecommendMsg(star.getId());
 					
 			}
-			updateStarCache(star);
+			//更新缓存
+			//updateStarCache(star);
 		}
 		Date end = new Date();
 		logger.info("=======更新频道明星完毕。结束时间："+end + ". 费时："+(now.getTime() - end.getTime()) + "ms");

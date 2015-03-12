@@ -82,4 +82,11 @@ public interface HTWorldCommentDao extends BaseDao {
 	 */
 	public void updateCommentShield(Integer id, Integer shield);
 	
+	/**
+	 * 根据作者的id，来屏蔽作者所有的评论
+	 * @param authorId
+	 * @param shield
+	 */
+	public void updateCommentShieldByUserId(Integer authorId,Integer shield);
+	
 }

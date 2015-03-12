@@ -42,6 +42,14 @@ public interface ZTWorldInteractService extends BaseService {
 	public void unShieldComment(Integer id)throws Exception;
 	
 	/**
+	 * 根据用户来屏蔽用户所有评论
+	 * @param userId
+	 * @param shield
+	 * @throws Exception
+	 */
+	public void updateCommentShieldByUserId(Integer userId,Integer shield)throws Exception;
+	
+	/**
 	 * 构建喜欢指定织图的用户列表
 	 * 
 	 * @param maxId
