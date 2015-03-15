@@ -344,10 +344,10 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 				HTWorld htworld = webWorldDao.queryWorldById(id);
 				Integer oriAuthorId = htworld.getAuthorId();
 				if(oriAuthorId != 0 && !oriAuthorId.equals(authorId)) {
-					int oriWorldCount = webUserInfoDao.queryWorldCountForUpdate(oriAuthorId);
-					webUserInfoDao.updateWorldCount(oriAuthorId, ++oriWorldCount);
-					int worldCount = webUserInfoDao.queryWorldCountForUpdate(authorId);
-					webUserInfoDao.updateWorldCount(authorId, ++worldCount);
+//					int oriWorldCount = webUserInfoDao.queryWorldCountForUpdate(oriAuthorId);
+//					webUserInfoDao.updateWorldCount(oriAuthorId, ++oriWorldCount);
+//					int worldCount = webUserInfoDao.queryWorldCountForUpdate(authorId);
+//					webUserInfoDao.updateWorldCount(authorId, ++worldCount);
 				}
 //				attrMap.put("author_id", authorId);
 				dto.setAuthorId(authorId);

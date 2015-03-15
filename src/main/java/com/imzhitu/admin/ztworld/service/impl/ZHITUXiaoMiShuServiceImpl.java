@@ -110,7 +110,9 @@ public class ZHITUXiaoMiShuServiceImpl extends BaseServiceImpl implements
 				webWorldChildWorldDao.saveChildWorld(child);
 			}
 			Long worldCount = webWorldDao.queryWorldCountByAuthorId(authorId);
-			webUserInfoDao.updateWorldCount(authorId, worldCount.intValue());
+			Integer childCount = webWorldDao.queryChildCount(authorId);
+			webUserInfoDao.updateWorldAndChildCount(authorId, worldCount.intValue(), childCount);
+			
 		}
 	}
 

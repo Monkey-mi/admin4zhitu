@@ -225,7 +225,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			worldDao.saveWorld(htworld);
 			// 更新织图总数
 			Long count = worldDao.queryWorldCountByAuthorId(zw.getAuthorId());
-			userInfoDao.updateWorldCount(zw.getAuthorId(), count.intValue());
+			Integer childCount = worldDao.queryChildCount(zw.getAuthorId());
+			userInfoDao.updateWorldAndChildCount(zw.getAuthorId(), count.intValue(), childCount);
 			
 			//保存子世界
 			Map<Integer,Integer> childWorldIdMap = new HashMap<Integer,Integer>();
