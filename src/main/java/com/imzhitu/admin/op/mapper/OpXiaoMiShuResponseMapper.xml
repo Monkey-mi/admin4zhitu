@@ -3,28 +3,41 @@
 <mapper namespace="com.imzhitu.admin.op.mapper.OpXiaoMiShuResponseMapper">
 
 	<resultMap type="com.imzhitu.admin.common.pojo.OpXiaoMiShuResponse" id="OpXiaoMiShuResponseMap">
-		<result column="responseId" property="responseId" jdbcType="INTEGER"/>
+		<result column="response_id" property="responseId" jdbcType="INTEGER"/>
 		<result column="content" property="content" jdbcType="VARCHAR"/>
 		<result column="keyId" property="keyId" jdbcType="INTEGER"/>
-		<result column="module" property="module" jdbcType="VARCHAR"/>
+		<result column="moduleName" property="moduleName" jdbcType="VARCHAR"/>
 		<result column="key" property="key" jdbcType="VARCHAR"/>
-		<result column="keyLength" property="keyLength" jdbcType="INTEGER"/>
+		<result column="keyValid" property="keyValid" jdbcType="INTEGER"/>
+		<result column="moduleValid" property="moduleValid" jdbcType="INTEGER"/>
+		<result column="moduleId" property="moduleId" jdbcType="INTEGER"/>
+		<result column="operator_id" property="operatorId" jdbcType="INTEGER"/>
+		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+		<result column="operatorName" property="operatorName" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- 插入回复内容 -->
 	<insert id="insertResponse">
 		insert into op_xiaomishu_response
-			(id,content)
+			(id,content,operator_id,module_id,date_modify)
 		values
-			(#{responseId},#{content})
+			(#{responseId},#{content},#{operatorId},#{moduleId},#{modifyDate,jdbcType=TIMESTAMP})
 	</insert>
 	
 	<!-- 插入key -->
 	<insert id="insertResponseKey">
 		insert into op_xiaomishu_response_key
-			(id,module,key,key_length,response_id)
+			(id,module_id,`key`,valid,response_id,operator_id,date_modify)
 		values
-			(#{keyId},#{module},#{key},#{keyLength},#{responseId})
+			(#{keyId},#{moduleId},#{key},#{keyValid},#{responseId},#{operatorId},#{modifyDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<!-- 插入模块 -->
+	<insert id="insertResponseModule">
+		insert into op_xiaomishu_response_module
+			(id,module_name,valid,operator_id,date_modify)
+		values
+			(#{moduleId},#{moduleName},#{moduleValid},#{operatorId},#{modifyDate,jdbcType=TIMESTAMP})
 	</insert>
 	
 	<!-- 删除回复内容-->
@@ -39,30 +52,205 @@
 		where id=#{keyId}
 	</delete>
 	
+	<!-- 删除模块 -->
+	<delete id="deleteResponseModule">
+		delete from op_xiaomishu_response_module
+		where id=#{moduleId}
+	</delete>
+	
 	<!-- 修改回复内容 -->
 	<update id="updateResponse">
 		update op_xiaomishu_response
-		set content=#{content}
+		set content=#{content},date_modify=#{modifyDate,jdbcType=TIMESTAMP},operator_id=#{operatorId}
 		where id=#{responseId}
 	</update>
 	
-	<!-- 查询 -->
+	<!-- 修改key -->
+	<update id="updateResponseKey">
+		update op_xiaomishu_response_key rk
+		<set>
+			<if test="key != null">
+				rk.key=#{key},
+			</if>
+			<if test="keyValid != null">
+				valid = #{keyValid},
+			</if>
+			<if test="modifyDate !=null">
+				date_modify=#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatorId != null">
+				operator_id=#{operatorId}
+			</if>
+		</set>
+		where id=#{keyId}
+	</update>
+	
+	<!-- 修改模块 -->
+	<update id="updateResponseModule">
+		update op_xiaomishu_response_module
+		<set>
+			<if test="moduleName != null">
+				module_name = #{moduleName},
+			</if>
+			<if test="moduleValid != null">
+				valid = #{moduleValid},
+			</if>
+			<if test="modifyDate !=null">
+				date_modify=#{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatorId != null">
+				operator_id=#{operatorId}
+			</if>
+		</set>
+		where id=#{moduleId}
+	</update>
+	
+	<!--分页 查询 所有 -->
 	<select id="queryResponseAndKey" resultMap="OpXiaoMiShuResponseMap">
-		select rk.id as keyId, rk.module,rk.key,rk.key_length as keyLength,xr.id as responseId,xr.content
+		select rk.id as keyId, rk.module_id as moduleId,rk.key,rk.valid as keyValid,
+			rk.response_id as responseId,xr.content,rm.module_name as moduleName,rm.valid as moduleValid,
+			rk.date_modify,rk.operator_id,ui.user_name as operatorName
 		from op_xiaomishu_response_key as rk left join op_xiaomishu_response as xr
-		on rk.response_id = xr.id
+			on rk.response_id = xr.id
+		left join op_xiaomishu_response_module as rm
+			on rk.module_id=rm.id
+		left join hts_admin.admin_user_info ui 
+			on rk.operator_id=ui.id
 		<where>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[rk.id < #{maxId}]]> 
+			</if>
 			<if test="keyId != null and keyId != 0">
-				rk.id = #{keyId}
+				and rk.id = #{keyId}
 			</if>
 			<if test="responseId != null">
 				and rk.response_id = #{responseId}
 			</if>
-			<if test="module != null ">
-				and rk.module = #{module}
+			<if test="moduleId != null ">
+				and rk.module_id = #{moduleId}
 			</if>
 			<if test="key != null">
 				and rk.key = #{key}
+			</if>
+			<if test="keyValid != null">
+				and rk.valid = #{keyValid}
+			</if>
+		</where>
+		order by keyId desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryResponseAndKeyTotalCount" resultType="long">
+		select count(*)
+		from op_xiaomishu_response_key rk
+		<where>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[rk.id < #{maxId}]]> 
+			</if>
+			<if test="keyId != null and keyId != 0">
+				and rk.id = #{keyId}
+			</if>
+			<if test="responseId != null">
+				and rk.response_id = #{responseId}
+			</if>
+			<if test="moduleId != null ">
+				and rk.module_id = #{moduleId}
+			</if>
+			<if test="key != null">
+				and rk.key = #{key}
+			</if>
+			<if test="keyValid != null">
+				and rk.valid = #{keyValid}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询模块 -->
+	<select id="queryResponseModule" resultMap="OpXiaoMiShuResponseMap">
+		select rm.id as moduleId,rm.module_name as moduleName,rm.valid as moduleValid,rm.date_modify
+		from op_xiaomishu_response_module rm
+		<where>
+			<if test="moduleId != null">
+				rm.id = #{moduleId}
+			</if>
+			<if test="moduleValid != null">
+				and rm.valid = #{moduleValid}
+			</if>
+			<if test="moduleName != null">
+				and rm.module_name = #{moduleName}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页查询模块 -->
+	<select id="queryResponseModuleForTable" resultMap="OpXiaoMiShuResponseMap">
+		select ui.user_name as operatorName,rm.module_name as moduleName,rm.valid as moduleValid,rm.date_modify,rm.id as moduleId
+		from hts_admin.op_xiaomishu_response_module rm
+		left join hts_admin.admin_user_info ui 
+		on rm.operator_id = ui.id
+		<where>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[rm.id < #{maxId}]]> 
+			</if>
+			<if test="moduleId != null">
+				rm.id = #{moduleId}
+			</if>
+			<if test="moduleValid != null">
+				and rm.valid = #{moduleValid}
+			</if>
+		</where>
+		order by rm.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询模块总数 -->
+	<select id="queryResponseModuleTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.op_xiaomishu_response_module rm
+		<where>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[rm.id < #{maxId}]]> 
+			</if>
+			<if test="moduleId != null">
+				rm.id = #{moduleId}
+			</if>
+			<if test="moduleValid != null">
+				and rm.valid = #{moduleValid}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页查询content -->
+	<select id="queryResponseContentForTable" resultMap="OpXiaoMiShuResponseMap">
+		select xr.content,xr.id as responseId,xr.module_id as moduleId,xr.date_modify,xr.operator_id,ui.user_name as operatorName,rm.module_name as moduleName
+		from hts_admin.op_xiaomishu_response xr
+		left join hts_admin.admin_user_info ui 
+		on xr.operator_id = ui.id
+		left join hts_admin.op_xiaomishu_response_module rm
+		on xr.module_id=rm.id
+		<where>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[xr.id < #{maxId}]]> 
+			</if>
+			<if test="moduleId != null">
+				and xr.module_id = #{moduleId}
+			</if>
+		</where>
+		order by xr.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询content 总数 -->
+	<select id="queryResponseContentTotalCount" resultType="long">
+		select count(*) 
+		from hts_admin.op_xiaomishu_response xr
+		<where>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[xr.id < #{maxId}]]> 
+			</if>
+			<if test="moduleId != null">
+				and xr.module_id = #{moduleId}
 			</if>
 		</where>
 	</select>

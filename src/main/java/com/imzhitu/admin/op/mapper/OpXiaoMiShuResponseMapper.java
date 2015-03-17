@@ -18,6 +18,12 @@ public interface OpXiaoMiShuResponseMapper {
 	public void insertResponseKey(OpXiaoMiShuResponse vo);
 	
 	/**
+	 * 插入小秘书模块
+	 * @param vo
+	 */
+	public void insertResponseModule(OpXiaoMiShuResponse vo);
+	
+	/**
 	 * 删除小秘书回复字典
 	 * @param vo
 	 */
@@ -30,15 +36,76 @@ public interface OpXiaoMiShuResponseMapper {
 	public void deleteResponseKey(OpXiaoMiShuResponse vo);
 	
 	/**
+	 * 删除小秘书模块
+	 * @param vo
+	 */
+	public void deleteResponseModule(OpXiaoMiShuResponse vo);
+	
+	/**
 	 * 更新小秘书回复字典
 	 * @param vo
 	 */
 	public void updateResponse(OpXiaoMiShuResponse vo);
 	
 	/**
-	 * 查询
+	 * 更新小秘书key
+	 * @param vo
+	 */
+	public void updateResponseKey(OpXiaoMiShuResponse vo);
+	
+	/**
+	 * 更新小秘书模块
+	 * @param vo
+	 */
+	public void updateResponseModule(OpXiaoMiShuResponse vo);
+	
+	/**
+	 * 分页查询
 	 * @param vo
 	 * @return
 	 */
 	public List<OpXiaoMiShuResponse> queryResponseAndKey(OpXiaoMiShuResponse vo);
+	
+	
+	/**
+	 * 分页查询总数
+	 * @param vo
+	 * @return
+	 */
+	public long queryResponseAndKeyTotalCount(OpXiaoMiShuResponse vo);
+	
+	/**
+	 * 查询所有的小秘书模块
+	 * @param vo
+	 * @return
+	 */
+	public List<OpXiaoMiShuResponse>queryResponseModule(OpXiaoMiShuResponse vo);
+	
+	/**
+	 * 分页查询模块
+	 * @param vo
+	 * @return
+	 */
+	public List<OpXiaoMiShuResponse> queryResponseModuleForTable(OpXiaoMiShuResponse vo);
+	
+	/**
+	 * 分页查询模块总数
+	 * @param vo
+	 * @return
+	 */
+	public long queryResponseModuleTotalCount(OpXiaoMiShuResponse vo);
+	
+	/**
+	 * 分页查询回复内容 
+	 * @param vo
+	 * @return
+	 */
+	public List<OpXiaoMiShuResponse> queryResponseContentForTable(OpXiaoMiShuResponse vo);
+	
+	/**
+	 * 分页查询回复内容总数
+	 * @param vo
+	 * @return
+	 */
+	public long queryResponseContentTotalCount(OpXiaoMiShuResponse vo);
 }
