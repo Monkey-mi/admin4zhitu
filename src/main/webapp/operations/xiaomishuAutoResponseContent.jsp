@@ -47,7 +47,19 @@ var maxId = 0,
 		{field : recordIdKey,title : '回复ID',align : 'center', width : 55},
 		{field : 'moduleId',title : '模块ID',align : 'center',width : 75},
 		{field : 'moduleName',title: '模块',align : 'center',width : 80},
-		{field : 'content',title : '回复内容',width : 440},
+		{field : 'content',title : '回复内容',width : 440,
+			formatter:function(value,row,index){
+				var img = "./base/js/jquery/jquery-easyui-1.3.2/themes/icons/pencil.png";
+				var str = "<img title='修改' class='htm_column_img pointer' src='" + img + "' onclick='javascript:updateContent(\""+row[recordIdKey] +"\",\""+index +"\")'/>";
+				if(value == undefined || value == "") {
+					return str;
+				} else if(value.length > 35) {
+					return value.substr(0,33) +"..."+str;
+				} else {
+					return value+str;
+				}
+			}
+		},
 		{field : 'operatorName',title: '最后修改者',align : 'center',width : 80},
 		{field : 'modifyDate', title:'最后修改时间日期', align : 'center',width : 150, 
 			formatter: function(value,row,index){
@@ -98,6 +110,26 @@ var maxId = 0,
 				$("#contentKey").val("");
 				$("#response_id").val("");
 				$("#keyModuleId").val("");
+			}
+		});
+		
+		$("#update_content").window({
+			modal : true,
+			width : 470,
+			top : 10,
+			height : 250,
+			title : '调教机器人',
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-add',
+			resizable : false,
+			onClose : function() {
+				$("#updateResponse_id").val('');
+				$("#updateContent").val('');
+				$("#updateIndex").val('');
 			}
 		});
 	};
@@ -160,7 +192,38 @@ var maxId = 0,
 			}
 		},"json");
 	}
-		
+	
+	function updateContent(responseId,index){
+		var rows = $("#htm_table").datagrid('getRows');
+		var content1 = rows[index]['content'];
+		$('#update_content .opt_btn').hide();
+		$('#update_content .loading').show();
+		$("#updateResponse_id").val(responseId);
+		$("#updateContent").val(content1);
+		$("#updateIndex").val(index);
+		$("#update_content").window('open');
+		$('#update_content .opt_btn').show();
+		$('#update_content .loading').hide();
+	}
+	
+	function updateContentSubmit(){
+		var form = $("#update_content_form");
+		var content = $("#updateContent").val();
+		$('#update_content .opt_btn').hide();
+		$('#update_content .loading').show();
+		$.post(form.attr("action"),form.serialize(),function(result){
+			$('#update_content .opt_btn').show();
+			$('#update_content .loading').hide();
+			if(result['result'] == 0) {
+				$('#update_content').window('close');  //关闭添加窗口
+				updateValue(index,'content',content);
+				$.messager.alert('提示',result['msg']);  //提示添加信息成功
+			} else {
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+		},"json");
+	}
+	
 </script>
 
 </head>
@@ -171,6 +234,7 @@ var maxId = 0,
 		<a href="javascript:void(0);" onclick="javascript:delContent();" class="easyui-linkbutton" title="删除小秘书回复" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
 	</div>
 	
+	<!-- 增加内容 -->
 	<div id="add_content">
 		<form id="add_content_form" action="./admin_op/xmsResponse_insertResponse" method="post">
 			<table class="htm_edit_table" width="450">
@@ -198,6 +262,7 @@ var maxId = 0,
 		</form>
 	</div>
 	
+	<!-- 增加key -->
 	<div id="add_contentKey">
 		<form id="add_contentKey_form" action="./admin_op/xmsResponse_batchAddResponseKey" method="post">
 			<table class="htm_edit_table" width="450">
@@ -222,6 +287,30 @@ var maxId = 0,
 						<td colspan="2" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addKeyForContentSubmit();">添加</a> 
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#add_contentKey').window('close');">取消</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	
+	<!-- 更新内容 -->
+	<div id="update_content">
+		<form id="update_content_form" action="./admin_op/xmsResponse_updateResponse" method="post">
+			<table class="htm_edit_table" width="450">
+				<tbody>
+					<tr>
+						<td class="leftTd">回复内容：</td>
+						<td><textarea  name="content" id="updateContent" style="height:150px"></textarea></td>
+					</tr>
+					<tr>
+						<td><input name="responseId" id="updateResponse_id" style="display:none"/></td>
+						<td><input id="updateIndex" style="display:none"/></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="updateContentSubmit();">添加</a> 
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#update_content').window('close');">取消</a>
 						</td>
 					</tr>
 				</tbody>

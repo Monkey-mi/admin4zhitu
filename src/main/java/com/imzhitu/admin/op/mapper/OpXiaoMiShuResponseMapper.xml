@@ -7,7 +7,7 @@
 		<result column="content" property="content" jdbcType="VARCHAR"/>
 		<result column="keyId" property="keyId" jdbcType="INTEGER"/>
 		<result column="moduleName" property="moduleName" jdbcType="VARCHAR"/>
-		<result column="key" property="key" jdbcType="VARCHAR"/>
+		<result column="content_key" property="key" jdbcType="VARCHAR"/>
 		<result column="keyValid" property="keyValid" jdbcType="INTEGER"/>
 		<result column="moduleValid" property="moduleValid" jdbcType="INTEGER"/>
 		<result column="moduleId" property="moduleId" jdbcType="INTEGER"/>
@@ -27,7 +27,7 @@
 	<!-- 插入key -->
 	<insert id="insertResponseKey">
 		insert into op_xiaomishu_response_key
-			(id,module_id,`key`,valid,response_id,operator_id,date_modify)
+			(id,module_id,content_key,valid,response_id,operator_id,date_modify)
 		values
 			(#{keyId},#{moduleId},#{key},#{keyValid},#{responseId},#{operatorId},#{modifyDate,jdbcType=TIMESTAMP})
 	</insert>
@@ -70,7 +70,7 @@
 		update op_xiaomishu_response_key rk
 		<set>
 			<if test="key != null">
-				rk.key=#{key},
+				rk.content_key=#{key},
 			</if>
 			<if test="keyValid != null">
 				valid = #{keyValid},
@@ -107,7 +107,7 @@
 	
 	<!--分页 查询 所有 -->
 	<select id="queryResponseAndKey" resultMap="OpXiaoMiShuResponseMap">
-		select rk.id as keyId, rk.module_id as moduleId,rk.key,rk.valid as keyValid,
+		select rk.id as keyId, rk.module_id as moduleId,rk.content_key,rk.valid as keyValid,
 			rk.response_id as responseId,xr.content,rm.module_name as moduleName,rm.valid as moduleValid,
 			rk.date_modify,rk.operator_id,ui.user_name as operatorName
 		from op_xiaomishu_response_key as rk left join op_xiaomishu_response as xr
@@ -130,7 +130,7 @@
 				and rk.module_id = #{moduleId}
 			</if>
 			<if test="key != null">
-				and rk.key = #{key}
+				and rk.content_key = #{key}
 			</if>
 			<if test="keyValid != null">
 				and rk.valid = #{keyValid}
@@ -158,7 +158,7 @@
 				and rk.module_id = #{moduleId}
 			</if>
 			<if test="key != null">
-				and rk.key = #{key}
+				and rk.content_key = #{key}
 			</if>
 			<if test="keyValid != null">
 				and rk.valid = #{keyValid}
