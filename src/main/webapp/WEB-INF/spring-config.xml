@@ -37,12 +37,21 @@
 		<constructor-arg ref="dataSource" />
 	</bean>
 	
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.maxActive}"/>
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+    </bean>
+	
 	<bean id="jedisConnFactory" 
 	    class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" 
 	    p:host-name="${redis.ip}" 
 	    p:port="${redis.port}"
 	    p:password="${redis.password}"
-	    p:use-pool="true"/>
+	    p:use-pool="true"
+	    p:poolConfig-ref="jedisPoolConfig" />
 	
 	<bean id="redisTemplate" 
 	    class="org.springframework.data.redis.core.RedisTemplate" 

@@ -33,6 +33,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		HTWorldCommentDao {
 	
 	private static final String table = HTS.HTWORLD_COMMENT;
+	
 	private static final String ORDER_BY_HC_ID_DESC = " order by hc.id desc";
 	
 	/** 查询评论SQL头部 */
@@ -69,8 +70,14 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	/**
 	 * 更新用户的所有评论的屏蔽标记
 	 */
-	private static final String UPDATE_COMMENT_SHIELD_BY_USER_ID = "update " + table + " set shield=? where author_id=?";
+	private static final String UPDATE_COMMENT_SHIELD_BY_USER_ID = "update " + table 
+			+ " set shield=? where author_id=?";
 	
+	private static final String QUERY_WID_BY_ID = "select world_id from " + table
+			+ " where id=?";
+	
+	private static final String QUERY_WIDS_BY_AUTHOR_ID = "select world_id from " + table
+			+ " where author_id=?";
 	
 	@Override
 	public List<ZTWorldCommentDto> queryComment(Map<String, Object> attrMap, Map<String, Object> userAttrMap, RowSelection rowSelection) {
@@ -207,6 +214,26 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		getJdbcTemplate().update(UPDATE_COMMENT_SHIELD_BY_USER_ID, shield,authorId);
 	}
 	
+	@Override
+	public Integer queryWorldId(Integer id) {
+		return queryForObjectWithNULL(QUERY_WID_BY_ID, Integer.class, id);
+	}
+
+	@Override
+	public List<Integer> queryWorldIds(Integer authorId) {
+		return getJdbcTemplate().query(QUERY_WIDS_BY_AUTHOR_ID, new Object[]{}, 
+				new RowMapper<Integer>() {
+
+					@Override
+					public Integer mapRow(ResultSet rs, int rowNum)
+							throws SQLException {
+						return rs.getInt("world_id");
+					}
+			
+		});
+	}
+	
+	
 	/**
 	 * 根据结果集构建MaintainCommentDto
 	 * @param rs
@@ -234,7 +261,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		}
 		return dto;
 	}
-	
 
 
 }

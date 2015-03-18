@@ -13,6 +13,7 @@ import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.hts.web.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.ZTWorldCommentDto;
 import com.imzhitu.admin.common.pojo.ZTWorldLikeDto;
@@ -42,6 +43,12 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private HTWorldReportDao worldReportDao;
+	
+	@Autowired
+	private com.hts.web.ztworld.dao.HTWorldCommentDao webCommentDao;
+	
+	@Autowired
+	private HTWorldDao worldDao;
 	
 	@Autowired
 	private com.hts.web.ztworld.service.ZTWorldInteractService webWorldInteractService;
@@ -95,16 +102,30 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void shieldComment(Integer id) throws Exception {
 		worldCommentDao.updateCommentShield(id, Tag.TRUE);
+		Integer wid = worldCommentDao.queryWorldId(id);
+		updateCommentCount(wid);
+	}
+	
+	private void updateCommentCount(Integer worldId) {
+		Long count = webCommentDao.queryCommentCount(worldId);
+		worldDao.updateCommentCount(worldId, count.intValue());
+		
 	}
 
 	@Override
 	public void unShieldComment(Integer id) throws Exception {
 		worldCommentDao.updateCommentShield(id, Tag.FALSE);
+		Integer wid = worldCommentDao.queryWorldId(id);
+		updateCommentCount(wid);
 	}
 	
 	@Override
 	public void updateCommentShieldByUserId(Integer userId,Integer shield)throws Exception{
 		worldCommentDao.updateCommentShieldByUserId(userId, shield);
+		List<Integer> wids = worldCommentDao.queryWorldIds(userId);
+		for(Integer wid : wids) {
+			updateCommentCount(wid);
+		}
 	}
 	
 	

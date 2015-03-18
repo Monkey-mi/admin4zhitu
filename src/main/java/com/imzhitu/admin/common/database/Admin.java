@@ -192,4 +192,11 @@ public class Admin {
 	 */
 	public static final Integer KEYGEN_XIAOMISHU_RESPONSE_KEY_ID = 8;
 	
+	public static final Integer KEYGEN_WORLD_SUBTITLE_ID = 9;
+	
+	/**
+	 * 小秘书自动回复moduleId
+	 */
+	public static final Integer KEYGEN_XIAOMISHU_RESPONSE_MODULE_ID = 10;
+	
 }

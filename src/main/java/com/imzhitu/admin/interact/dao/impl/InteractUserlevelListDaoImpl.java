@@ -62,7 +62,7 @@ public class InteractUserlevelListDaoImpl extends BaseDaoImpl implements Interac
 //	private static final String QUERY_NEW_WORLD_USER_LEVEL_LIST_BY_TIME = "select userLevelList.*,htworld.id as worldId from " +  htworld_table +"  htworld, "+table+ 
 //			" userLevelList where userLevelList.validity=" + Tag.TRUE+" and userLevelList.user_id=htworld.author_id and htworld.date_added between ? and ?";
 	private static final String QUERY_NEW_WORLD_USER_LEVEL_LIST_BY_TIME = "select userLevelList.*,htworld.id as worldId,htworld.author_id as authorId from " +  htworld_table +"  htworld left join "+table+ 
-			" userLevelList on userLevelList.user_id=htworld.author_id where  htworld.valid=1  and htworld.date_added between ? and ?";
+			" userLevelList on userLevelList.user_id=htworld.author_id where  htworld.valid=1 and htworld.id>0 and htworld.author_id>0 and htworld.date_added between ? and ?";
 	
 	@Override
 	public List<UserLevelListDto> QueryUserlevelList(Map<String,Object> attr,RowSelection rowSelection){

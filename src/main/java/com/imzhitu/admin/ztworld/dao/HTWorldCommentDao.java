@@ -88,5 +88,20 @@ public interface HTWorldCommentDao extends BaseDao {
 	 * @param shield
 	 */
 	public void updateCommentShieldByUserId(Integer authorId,Integer shield);
+
+	/**
+	 * 根据id查询world_id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Integer queryWorldId(Integer id);
+	
+	/**
+	 * 根据作者id查询world_ids
+	 * @param authorId
+	 * @return
+	 */
+	public List<Integer> queryWorldIds(Integer authorId);
 	
 }
