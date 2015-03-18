@@ -221,7 +221,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public List<Integer> queryWorldIds(Integer authorId) {
-		return getJdbcTemplate().query(QUERY_WIDS_BY_AUTHOR_ID, new Object[]{}, 
+		return getJdbcTemplate().query(QUERY_WIDS_BY_AUTHOR_ID, new Object[]{authorId}, 
 				new RowMapper<Integer>() {
 
 					@Override

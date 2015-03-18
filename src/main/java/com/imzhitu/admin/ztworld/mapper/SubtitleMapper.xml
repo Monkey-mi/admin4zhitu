@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.SubtitleMapper">
+
+	<resultMap type="com.hts.web.common.pojo.HTWorldSubtitleDto" id="HTSWorldSubtitleDtoMap">
+		<result column="serial" property="recommendId" jdbcType="INTEGER"/>
+		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+		<result column="subtitle_en" property="subtitleEn" jdbcType="VARCHAR"/>
+		<result column="trans_to" property="transTo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldSubtitle" id="WorldSubtitleMap">
+		<result column="serial" property="id" jdbcType="INTEGER"/>
+		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+		<result column="subtitle_en" property="subtitleEn" jdbcType="VARCHAR"/>
+		<result column="trans_to" property="transTo" jdbcType="VARCHAR" />
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<select id="queryCacheSubtitle" resultMap="HTSWorldSubtitleDtoMap">
+		select * from hts.htworld_subtitle order by serial desc limit #{limit}
+	</select>
+	
+	<insert id="saveSubtitle">
+		insert into hts.htworld_subtitle (subtitle, subtitle_en, trans_to, serial) values
+			(#{subtitle},#{subtitleEn},#{transTo},#{serial})
+	</insert>
+	
+	
+	<select id="queryTitles" resultMap="WorldSubtitleMap">
+		select * from hts.htworld_subtitle
+		<where>
+			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
+		</where>
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryTotal" resultType="long">
+		select count(*) from hts.htworld_subtitle
+		<where>
+			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<update id="update">
+		update hts.htworld_subtitle
+		<set>
+	      <if test="subtitle != null">subtitle=#{subtitle},</if>
+	      <if test="subtitleEn != null">subtitle_en=#{subtitleEn},</if>
+	      <if test="transTo != null">trans_to=#{transTo},</if>
+	      <if test="serial != null">serial=#{serial}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+
+	<delete id="deleteByIds">
+		delete from hts.htworld_subtitle where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<update id="updateSerialById">
+		update hts.htworld_subtitle set serial=#{serial} where id=#{id}
+	</update>
+	
+	<select id="queryById" resultMap="WorldSubtitleMap">
+		select * from hts.htworld_subtitle where id=#{id}
+	</select>
+</mapper>
