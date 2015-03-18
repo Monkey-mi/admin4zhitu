@@ -19,6 +19,7 @@ var maxId = 0,
 	recordIdKey='keyId',
 	hideIdColumn = false,
 	loadDataURL = "./admin_op/xmsResponse_queryXiaoMiShuResponseForTable", //数据装载请求地址
+	deleteURI = "./admin_op/xmsResponse_batchDelResponseKey?keyIdStr=",//删除
 	htmTablePageList = [20,30,50,100,200],
 	myQueryParams={},
 	init = function() {
@@ -71,13 +72,59 @@ var maxId = 0,
 		
 	};
 	
+	/**
+	 * 删除数据记录
+	 */
+	function del() {
+		var rows = $('#htm_table').datagrid('getSelections');	
+		if(isSelected(rows)){
+			$.messager.confirm('删除记录', '您确定要删除已选中的记录?', function(r){ 	
+				if(r){				
+					var ids = [];
+					for(var i=0;i<rows.length;i+=1){		
+						ids.push(rows[i]['keyId']);	
+						rowIndex = $('#htm_table').datagrid('getRowIndex',rows[i]);				
+					}	
+					$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
+					$('#htm_table').datagrid('loading');
+					$.post(deleteURI + ids,function(result){
+						$('#htm_table').datagrid('loaded');
+						if(result['result'] == 0) {
+							$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
+							$("#htm_table").datagrid("reload");
+						} else {
+							$.messager.alert('提示',result['msg']);
+						}
+						return false;
+					});	
+				//	return false;
+				}	
+			});		
+		}	
+	}
 	
+	function searchContentKey(){
+		var moduleId = $("#module_id").combobox('getValue');
+		var keyId = $("#ss_contenKey").searchbox('getValue');
+		myQueryParams.maxId = 0;
+		myQueryParams.moduleId = moduleId;
+		myQueryParams.keyId=keyId;
+		$('#htm_table').datagrid('load',myQueryParams);
+	}
 		
 		
 </script>
 
 </head>
 <body>
+	<div id="tb" style="padding:5px;height:auto" class="none">
+		<div>
+			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="批量删除key" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
+			<input class="easyui-combobox"  id="module_id" name="moduleId" onchange="validateSubmitOnce=true;" style="width:204px"
+								data-options="valueField:'moduleId',textField:'moduleName',url:'./admin_op/xmsResponse_queryResponseModule'"/>
+			<input id="ss_contenKey" searcher="searchContentKey" class="easyui-searchbox" prompt="输入关键字ID" style="width:120px;">
+   		</div>
+	</div> 
 	<table id="htm_table"></table>		
 </body>
 </html>

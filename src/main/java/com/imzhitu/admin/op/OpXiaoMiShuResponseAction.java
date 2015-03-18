@@ -35,7 +35,7 @@ public class OpXiaoMiShuResponseAction extends BaseCRUDAction{
 	private String key;
 	private String moduleName;
 	private String keyStr;
-	
+	private String keyIdStr;
 	
 
 	/**
@@ -188,12 +188,26 @@ public class OpXiaoMiShuResponseAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 批量增加关键字
+	 * @return
+	 */
 	public String batchAddResponseKey(){
 		try{
 			service.batchAddResponseKey(keyStr, moduleId, responseId, getCurrentLoginUserId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(OptResult.ADD_FAILED, jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String batchDelResponseKey(){
+		try{
+			service.batchDelResponseKey(keyIdStr);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(OptResult.DELETE_FAILED, jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
@@ -255,4 +269,14 @@ public class OpXiaoMiShuResponseAction extends BaseCRUDAction{
 	public void setKeyStr(String keyStr) {
 		this.keyStr = keyStr;
 	}
+
+	public String getKeyIdStr() {
+		return keyIdStr;
+	}
+
+	public void setKeyIdStr(String keyIdStr) {
+		this.keyIdStr = keyIdStr;
+	}
+	
+	
 }

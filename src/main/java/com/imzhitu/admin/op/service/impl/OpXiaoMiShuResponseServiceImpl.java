@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpXiaoMiShuResponse;
 import com.imzhitu.admin.common.service.KeyGenService;
@@ -266,6 +267,7 @@ public class OpXiaoMiShuResponseServiceImpl extends BaseServiceImpl implements O
 	 * @param responseId
 	 * @throws Exception
 	 */
+	@Override
 	public void batchAddResponseKey(String keyStr,Integer moduleId,Integer responseId,Integer operatorId)throws Exception{
 		if( null == keyStr)return;
 		String key[] = keyStr.split("\r\n");
@@ -274,4 +276,17 @@ public class OpXiaoMiShuResponseServiceImpl extends BaseServiceImpl implements O
 		}
 	}
 	
+	
+	/**
+	 * 批量删除key
+	 * @param keyIdStr
+	 * @throws Exception
+	 */
+	@Override
+	public void batchDelResponseKey(String keyIdStr)throws Exception{
+		Integer keyIds[] = StringUtil.convertStringToIds(keyIdStr);
+		for(int i=0; i<keyIds.length; i++){
+			deleteResponseKey(keyIds[i]);
+		}
+	}
 }

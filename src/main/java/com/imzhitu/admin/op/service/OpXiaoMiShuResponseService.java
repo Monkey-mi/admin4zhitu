@@ -101,4 +101,11 @@ public interface OpXiaoMiShuResponseService {
 	 */
 	public void batchAddResponseKey(String keyStr,Integer moduleId,Integer responseId,Integer operatorId)throws Exception;
 	
+	/**
+	 * 批量删除key
+	 * @param keyIdStr
+	 * @throws Exception
+	 */
+	public void batchDelResponseKey(String keyIdStr)throws Exception;
+	
 }
