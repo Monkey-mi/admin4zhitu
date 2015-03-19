@@ -192,6 +192,9 @@ public class Admin {
 	 */
 	public static final Integer KEYGEN_XIAOMISHU_RESPONSE_KEY_ID = 8;
 	
+	/**
+	 * 织图字幕id
+	 */
 	public static final Integer KEYGEN_WORLD_SUBTITLE_ID = 9;
 	
 	/**

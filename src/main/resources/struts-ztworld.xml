@@ -62,6 +62,13 @@
 			</result>
 		</action>
 		
+		<action name="title_*" class="com.imzhitu.admin.ztworld.SubtitleAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 
 </struts>

@@ -49,6 +49,21 @@ public class SubtitleAction extends BaseCRUDAction {
 	}
 
 	/**
+	 * 更新字幕缓存
+	 * 
+	 * @return
+	 */
+	public String updateTitleCache() {
+		try {
+			subtitleService.updateSubtitleCache();
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
 	 * 查询副标题
 	 * 
 	 * @return
