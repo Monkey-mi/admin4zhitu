@@ -10,7 +10,7 @@
 	</resultMap>
 	
 	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldSubtitle" id="WorldSubtitleMap">
-		<result column="serial" property="id" jdbcType="INTEGER"/>
+		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
 		<result column="subtitle_en" property="subtitleEn" jdbcType="VARCHAR"/>
 		<result column="trans_to" property="transTo" jdbcType="VARCHAR" />
@@ -30,6 +30,7 @@
 	<select id="queryTitles" resultMap="WorldSubtitleMap">
 		select * from hts.htworld_subtitle
 		<where>
+			<if test="transTo != null and transTo != 'all'">trans_to=#{transTo}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
 		</where>
 		order by serial desc
@@ -39,6 +40,7 @@
 	<select id="queryTotal" resultType="long">
 		select count(*) from hts.htworld_subtitle
 		<where>
+			<if test="transTo != null and transTo != 'all'">trans_to=#{transTo}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
 		</where>
 	</select>

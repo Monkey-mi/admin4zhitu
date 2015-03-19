@@ -15,7 +15,7 @@ public class SubtitleServiceTest extends BaseTest {
 	
 	@Test
 	public void updateSubtitleCacheTest() throws Exception {
-		service.updateSubtitleCache();
+		service.updateSubtitleCache(32);
 	}
 	
 //	@Test

@@ -62,7 +62,7 @@
 			</result>
 		</action>
 		
-		<action name="title_*" class="com.imzhitu.admin.ztworld.SubtitleAction"
+		<action name="subtitle_*" class="com.imzhitu.admin.ztworld.SubtitleAction"
 			method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>

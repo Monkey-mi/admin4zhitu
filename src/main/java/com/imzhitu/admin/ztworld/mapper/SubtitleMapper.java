@@ -21,7 +21,8 @@ public interface SubtitleMapper {
 
 	public void deleteByIds(Integer[] ids);
 	
-	public void updateSerialById(Integer id);
+	public void updateSerialById(@Param("id")Integer id, 
+			@Param("serial")Integer serial);
 	
 	public ZTWorldSubtitle queryById(Integer id);
 

@@ -8,7 +8,7 @@ import com.imzhitu.admin.common.pojo.ZTWorldSubtitle;
 
 public interface SubtitleService extends BaseService {
 	
-	public void updateSubtitleCache() throws Exception;
+	public void updateSubtitleCache(Integer limit) throws Exception;
 	
 	public void saveSubtitleByFile(File file, String transTo) throws Exception;
 
@@ -22,5 +22,7 @@ public interface SubtitleService extends BaseService {
 	public void deleteTitleByIds(String idsStr) throws Exception;
 	
 	public void updateTitle(ZTWorldSubtitle title) throws Exception;
+
+	public void updateTitleSerial(String[] ids) throws Exception;
 	
 }

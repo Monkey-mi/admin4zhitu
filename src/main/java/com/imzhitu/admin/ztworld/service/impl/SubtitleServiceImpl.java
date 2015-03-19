@@ -46,12 +46,21 @@ public class SubtitleServiceImpl extends BaseServiceImpl implements
 	private Integer subtitleCacheLimit = 30;
 
 	@Override
-	public void updateSubtitleCache() throws Exception {
-		subCacheDao.update(subtitleCacheLimit);
+	public void updateSubtitleCache(Integer limit) throws Exception {
+		if(limit == 0) {
+			limit = subtitleCacheLimit;
+		}
+		subCacheDao.update(limit);
 	}
 
 	@Override
 	public void saveSubtitleByFile(File file, String transTo) throws Exception {
+		if(file == null) {
+			throw new NullPointerException("please select subtitle file.");
+		}
+		if(transTo == null) {
+			throw new NullPointerException("please select translate language.");
+		}
 		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
 		detector.add(new ParsingDetector(false)); 
 		detector.add(JChardetFacade.getInstance());
@@ -138,6 +147,17 @@ public class SubtitleServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void updateTitle(ZTWorldSubtitle title) throws Exception {
 		subMapper.update(title);
+	}
+
+	@Override
+	public void updateTitleSerial(String[] idStrs) throws Exception {
+		for(int i = idStrs.length - 1; i >= 0; i--) {
+			if(StringUtil.checkIsNULL(idStrs[i]))
+				continue;
+			int id = Integer.parseInt(idStrs[i]);
+			Integer serial = keygenService.generateId(Admin.KEYGEN_WORLD_SUBTITLE_ID);
+			subMapper.updateSerialById(id, serial);
+		}
 	}
 
 	

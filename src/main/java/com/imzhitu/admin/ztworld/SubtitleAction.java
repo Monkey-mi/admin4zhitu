@@ -1,5 +1,7 @@
 package com.imzhitu.admin.ztworld;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
@@ -21,8 +23,10 @@ public class SubtitleAction extends BaseCRUDAction {
 	
 	private ZTWorldSubtitle title = new ZTWorldSubtitle();
 	
+	private File titleFile;
 	private Integer id;
 	private String ids;
+	private String transTo;
 	
 	public ZTWorldSubtitle getTitle() {
 		return title;
@@ -47,6 +51,22 @@ public class SubtitleAction extends BaseCRUDAction {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	public File getTitleFile() {
+		return titleFile;
+	}
+
+	public void setTitleFile(File titleFile) {
+		this.titleFile = titleFile;
+	}
+	
+	public String getTransTo() {
+		return transTo;
+	}
+
+	public void setTransTo(String transTo) {
+		this.transTo = transTo;
+	}
 
 	/**
 	 * 更新字幕缓存
@@ -55,8 +75,8 @@ public class SubtitleAction extends BaseCRUDAction {
 	 */
 	public String updateTitleCache() {
 		try {
-			subtitleService.updateSubtitleCache();
-			JSONUtil.optSuccess(jsonMap);
+			subtitleService.updateSubtitleCache(limit);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -70,7 +90,7 @@ public class SubtitleAction extends BaseCRUDAction {
 	 */
 	public String queryTitle() {
 		try {
-			subtitleService.buildTitles(title, start, limit, jsonMap);
+			subtitleService.buildTitles(title, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -86,7 +106,22 @@ public class SubtitleAction extends BaseCRUDAction {
 	public String saveTitle() {
 		try {
 			subtitleService.saveTitle(title);
-			JSONUtil.optSuccess(jsonMap);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 根据文件保存字幕
+	 * 
+	 * @return
+	 */
+	public String saveTitleByFile() {
+		try {
+			subtitleService.saveSubtitleByFile(titleFile, transTo);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -97,7 +132,7 @@ public class SubtitleAction extends BaseCRUDAction {
 	 * 删除字幕
 	 * @return
 	 */
-	public String deleteByIds() {
+	public String deleteTitleByIds() {
 		try {
 			subtitleService.deleteTitleByIds(ids);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
@@ -128,7 +163,24 @@ public class SubtitleAction extends BaseCRUDAction {
 	 */
 	public String queryTitleById() {
 		try {
-			subtitleService.queryTitleById(id);
+			ZTWorldSubtitle title = subtitleService.queryTitleById(id);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, title, OptResult.JSON_KEY_OBJ, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新字幕顺序
+	 * 
+	 * @return
+	 */
+	public String updateTitleSerial() {
+		String[] ids = request.getParameterValues("reIndexId");
+		try {
+			subtitleService.updateTitleSerial(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
