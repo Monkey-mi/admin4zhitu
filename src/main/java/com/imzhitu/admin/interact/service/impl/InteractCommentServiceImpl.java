@@ -160,6 +160,8 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void saveLabel(String labelName, Integer groupId) throws Exception {
+		boolean b = interactCommentLabelDao.checkLabelExsistByLabelName(labelName);
+		if(b == false)
 		interactCommentLabelDao.saveLabel(new InteractCommentLabel(labelName, groupId));
 	}
 	

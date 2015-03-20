@@ -53,7 +53,7 @@ var maxId = 0,
 	},
 	onAfterInit = function() {
 		$("#labelId_add").combotree({
-			url:'./admin_interact/comment_queryLabelTree?hasTotal=false',
+			url:'./admin_interact/comment_queryAllLabelTree',
 		});
 		$("#ss_labelId").combotree({
 			url:'./admin_interact/comment_queryLabelTree?hasTotal=true',
@@ -65,6 +65,35 @@ var maxId = 0,
 		    'searcher':searchComment,
 		   	'prompt':'搜索评论'
 		});
+		
+		$('#ss_searchLabel').combobox({
+			valueField:'id',
+			textField:'labelName',
+			selectOnNavigation:false,
+			url:'./admin_interact/comment_queryAllLabel',
+			icons:[{
+                iconCls:'icon-add'
+            },{
+                iconCls:'icon-cut'
+            }]
+		});
+		
+		$($('#ss_searchLabel').combobox('textbox')).unbind("keyup").bind("keyup", function (e) {
+	        if (e.keyCode == 13) {
+	        	var boxLabelId = $("#ss_searchLabel").combobox('getValue');
+//				var treeLabelId = $("#labelId_add").combotree('clear');
+				var boxLabelText = $("#ss_searchLabel").combobox('getText');
+				if(boxLabelId=="" || boxLabelText == boxLabelId){
+					//若combobox里输入的text与value一致，表明所输入的text在combobox列表中不存在，则清空输入，不在combotree上增加
+					$("#ss_searchLabel").combobox('clear');
+					return;
+				}
+				
+				$("#labelId_add").combotree('setValue',boxLabelId);
+				$("#ss_searchLabel").combobox('clear');
+	        }
+	    });
+		
 		removePageLoading();
 		$("#main").show();
 	};
@@ -179,7 +208,8 @@ function searchComment() {
 					<tr>
 						<td class="leftTd">标签：</td>
 						<td colspan="2">
-					        <input id="labelId_add" name="labelId" style="width:205px;" />
+					        <input id="labelId_add" name="labelId" style="width:100px;" />
+					        <input id="ss_searchLabel" style="width:100px;" ></input>
 						</td>
 					</tr>
 					<tr>

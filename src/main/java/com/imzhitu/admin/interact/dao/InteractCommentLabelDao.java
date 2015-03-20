@@ -17,6 +17,13 @@ import com.imzhitu.admin.common.pojo.InteractCommentLabelTree;
  *
  */
 public interface InteractCommentLabelDao extends BaseDao {
+	
+	/**
+	 * 查询是否存在该名字的标签
+	 * true 存在
+	 * false 不存在
+	 */
+	public boolean checkLabelExsistByLabelName(String labelName);
 
 	/**
 	 * 保存标签

@@ -75,6 +75,21 @@ public class InteractCommentLabelDaoImpl extends BaseDaoImpl implements Interact
 	 */
 	private static final String DELETE_BY_GROUP_ID = "delete from " + table + " where group_id=?";
 	
+	/**
+	 * 查询是否存在该名字的标签
+	 */
+	private static final String CHECK_EXSIST_BY_LABEL_NAME = "select count(*) from " + table + " where label_name=?";
+	
+	/**
+	 * 查询是否存在该名字的标签
+	 * true 存在
+	 * false 不存在
+	 */
+	public boolean checkLabelExsistByLabelName(String labelName){
+		long r = getJdbcTemplate().queryForLong(CHECK_EXSIST_BY_LABEL_NAME, labelName);
+		return r>0;
+	}
+	
 	
 	
 	@Override
