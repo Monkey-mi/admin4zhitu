@@ -56,13 +56,17 @@ public class InteractUserlevelListDaoImpl extends BaseDaoImpl implements Interac
 	private static final String DELETE_USER_LEVEL_BY_USERIDS = " delete from " + table + " where user_id in ";
 	private static final String GET_USER_LEVEL_COUNT = " select count(1) from " + table + " ull where id<=? ";
 	private static final String CHECK_USER_LEVEL_EXIST_BY_USER_ID = "select count(1) from  " + table + " where user_id=?"; 
+	private static final String QUERY_USER_LEVEL_ID_BY_USER_ID = "select user_level_id from " + table + " where user_id=?";
+	
 	/**
 	 * 查询单位时间内，新发的织图的等级用户列表
 	 */
 //	private static final String QUERY_NEW_WORLD_USER_LEVEL_LIST_BY_TIME = "select userLevelList.*,htworld.id as worldId from " +  htworld_table +"  htworld, "+table+ 
 //			" userLevelList where userLevelList.validity=" + Tag.TRUE+" and userLevelList.user_id=htworld.author_id and htworld.date_added between ? and ?";
-	private static final String QUERY_NEW_WORLD_USER_LEVEL_LIST_BY_TIME = "select userLevelList.*,htworld.id as worldId,htworld.author_id as authorId from " +  htworld_table +"  htworld left join "+table+ 
-			" userLevelList on userLevelList.user_id=htworld.author_id where  htworld.valid=1 and htworld.id>0 and htworld.author_id>0 and htworld.date_added between ? and ?";
+//	private static final String QUERY_NEW_WORLD_USER_LEVEL_LIST_BY_TIME = "select userLevelList.*,htworld.id as worldId,htworld.author_id as authorId from " +  htworld_table +"  htworld left join "+table+ 
+//			" userLevelList on userLevelList.user_id=htworld.author_id where  htworld.valid=1 and htworld.id>0 and htworld.author_id>0 and htworld.date_added between ? and ?";
+	private static final String QUERY_NEW_WORLD_USER_LEVEL_LIST_BY_TIME = "select htworld.id as worldId,htworld.author_id as authorId from " +  htworld_table +"  htworld "
+			+ "where  htworld.valid=1 and htworld.id>0 and htworld.author_id>0 and htworld.date_added between ? and ?";
 	
 	@Override
 	public List<UserLevelListDto> QueryUserlevelList(Map<String,Object> attr,RowSelection rowSelection){
@@ -101,6 +105,15 @@ public class InteractUserlevelListDaoImpl extends BaseDaoImpl implements Interac
 					return buildUserLevelList(rs);
 				}
 			});
+		}catch(EmptyResultDataAccessException e){
+			return null;
+		}
+	}
+	
+	@Override
+	public Integer QueryUserlevelIdByUserId(Integer userId){
+		try{
+			return getJdbcTemplate().queryForObject(QUERY_USER_LEVEL_ID_BY_USER_ID, new Object[]{userId}, Integer.class);
 		}catch(EmptyResultDataAccessException e){
 			return null;
 		}
@@ -211,11 +224,15 @@ public class InteractUserlevelListDaoImpl extends BaseDaoImpl implements Interac
 	 * @throws SQLException
 	 */
 	private InteractWorldLabelDto buildInteractWorldLabelDto(ResultSet rs)throws SQLException{
-		return new InteractWorldLabelDto(
-				rs.getInt("worldId"),
-				rs.getInt("authorId"),
-				rs.getInt("user_level_id")
-				);
+//		return new InteractWorldLabelDto(
+//				rs.getInt("worldId"),
+//				rs.getInt("authorId"),
+//				rs.getInt("user_level_id")
+//				);
+		InteractWorldLabelDto dto = new InteractWorldLabelDto();
+		dto.setUser_id(rs.getInt("authorId"));
+		dto.setWorldId(rs.getInt("worldId"));
+		return dto;
 	}
 	
 	/**

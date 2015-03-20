@@ -124,6 +124,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 		List<InteractWorldLabelDto> interactWorldLabel=null;
 		try{
 			userlevelDtoList = interactUserlevelDao.QueryUserlevelList();
+			//已经没有查询userlevelId
 			interactWorldLabel = interactUserlevelListDao.QueryNewWorldUserlevelListByTime(startTime, currentDate);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -139,8 +140,12 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 			 */
 			Integer userlevelId = userLevelMap.get(o.getUser_id());
 			if(null == userlevelId){//用户等级站里没有记录到该用户，则说明该用户没有被操作过。
+				//查询该用户的等级id，若没有等级，则为null
+				o.setUser_level_id( interactUserlevelListDao.QueryUserlevelIdByUserId(o.getUser_id()));
+			}
+			
+			if(null == userlevelId){//用户等级站里没有记录到该用户，则说明该用户没有被操作过。
 				if(o.getUser_level_id() == null || o.getUser_level_id() == 0){//该用户没有等级，则默认添加为普通用户
-					if(interactUserlevelListDao.CheckUserlevelExistByUserId(o.getUser_id()) == false){//没有被添加为等级用户，则添加为普通用户
 						interactUserlevelListDao.AddUserlevel(
 								new UserLevelListDto(
 										null,
@@ -154,7 +159,6 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 										0,//操作者：暂无
 										null
 										));
-					}
 					o.setUser_level_id(commonUserLevelId);
 				}else{//该用户有等级
 					//查看该用户是否为明星用户

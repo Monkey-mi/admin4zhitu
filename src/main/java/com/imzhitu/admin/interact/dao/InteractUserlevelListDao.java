@@ -99,4 +99,11 @@ public interface InteractUserlevelListDao extends BaseDao{
 	 * @param userLevelListDto
 	 */
 	public void UpdateUserlevelByUserId(UserLevelListDto userLevelListDto);
+	
+	/**
+	 * 根据用户id查询用户等级id
+	 * @param userId
+	 * @return
+	 */
+	public Integer QueryUserlevelIdByUserId(Integer userId);
 }
