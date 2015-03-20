@@ -256,8 +256,10 @@ function loadEditFormValidate(index, isUpdate) {
 							if(isUpdate) {
 								$("#ss-transTo").combobox('setValue', 'all');
 								myQueryParams['title.transTo'] = 'all';
+								$("#htm_table").datagrid('reload');
+							} else {
+								loadPageData(initPage);
 							}
-							loadPageData(initPage);
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
 						} else {
 							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
