@@ -198,9 +198,6 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 				o.setUser_level_id(userlevelId);
 			}
 			successTotalCount++;
-			if(successTotalCount == 99){
-				successTotalCount =99;
-			}
 			/**
 			 * 广告用户,织图不能出现在最新
 			 */
@@ -248,34 +245,6 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						
 						interactWorldService.saveInteractV2(o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
 								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), commentsArray, userlevel.getTime());//添加互动
-						/*
-						interactWorldService.saveInteractV2(o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
-									GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), null, userlevel.getTime());//添加互动
-						List<InteractPlanCommentLabel> list = interactPlanCommentLabelService.queryInteractPlanCommentLabelByDateAndTime(df.parse(df.format(currentDate)), df2.parse(df2.format(currentDate)));//查询当前有效标签
-						if(list != null && list.size() > 0){
-							int commentsize = GetLongRandamNum(userlevel.getMin_comment_count(),userlevel.getMax_comment_count());
-							int average = 0;
-							int length = list.size();
-							if(commentsize < list.size()){
-								average = 1;
-								length = commentsize;
-							} else {
-								average = commentsize / list.size();
-							}
-							
-							for(int i=0;i<length;i++){
-								String commentStr = "";
-								List<InteractPlanComment> planCommentList = interactPlanCommentService.queryNRandomPlanCommentByGroupId(average, list.get(i).getId());
-								for(int j=0;j<planCommentList.size();j++){
-									commentStr += planCommentList.get(j).getInteractCommentId();
-									if(j != planCommentList.size()-1)
-										commentStr += ",";
-								}
-								interactWorldService.saveInteractV2(o.getWorldId(), 0, 
-									0, commentStr.split(","), userlevel.getTime());//添加互动
-							}
-						}
-						*/
 						
 					}catch(Exception e){
 						e.printStackTrace();
