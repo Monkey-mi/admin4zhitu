@@ -1,6 +1,7 @@
 package com.imzhitu.admin.interact.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -113,9 +114,9 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	 */
 	@Override
 	public void ScanNewWorldAndJoinIntoInteract(){
+		Integer successTotalCount = 0;
 		Date currentDate = new Date();
 		Map<Integer,Integer> userLevelMap = new HashMap<Integer,Integer>();
-		List<Integer> commentIds = new java.util.ArrayList<Integer>();
 		logger.info("织图添加互动 begin ：" + currentDate);
 		Date startTime = new Date(currentDate.getTime() - WORK_TIME);
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -196,7 +197,10 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 			} else {//若用户等级站里有记录到该用户,则将改用户的等级设置为所记录的。原因是：可能同一个用户发了多张织图，该用户等级为C，根据规则，该用户的等级可能升级为B，此时，处理该用户的第一张织图时，其等级已经升级，并已经记录到userLevelMap
 				o.setUser_level_id(userlevelId);
 			}
-			
+			successTotalCount++;
+			if(successTotalCount == 99){
+				successTotalCount =99;
+			}
 			/**
 			 * 广告用户,织图不能出现在最新
 			 */
@@ -210,9 +214,41 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 			 */
 			for(UserLevelDto userlevel:userlevelDtoList){//等级遍历，匹配新发织图的用户对于的用户等级
 				if(userlevel.getId().equals(o.getUser_level_id())){
-					commentIds.clear(); //清空评论id列表
 					try{
 						interactWorldService.saveUserInteract(o.getUser_id(),GetLongRandamNum(userlevel.getMin_fans_count(),userlevel.getMax_fans_count()),userlevel.getTime());//添加粉丝
+						
+						StringBuilder strb = new StringBuilder();
+						List<InteractPlanCommentLabel> list = interactPlanCommentLabelService.queryInteractPlanCommentLabelByDateAndTime(df.parse(df.format(currentDate)), df2.parse(df2.format(currentDate)));//查询当前有效标签
+						if(list != null && list.size() > 0){
+							int commentsize = GetLongRandamNum(userlevel.getMin_comment_count(),userlevel.getMax_comment_count());
+							int average = 0;
+							int length = list.size();
+							if(commentsize < list.size()){
+								average = 1;
+								length = commentsize;
+							} else {
+								average = commentsize / list.size();
+							}
+							for(int i=0;i<length;i++){
+								List<InteractPlanComment> planCommentList = interactPlanCommentService.queryNRandomPlanCommentByGroupId(average, list.get(i).getId());
+								for(int j=0;j<planCommentList.size();j++){
+									if(strb.length() > 0){
+										strb.append(",");
+									}
+									strb.append(planCommentList.get(j).getInteractCommentId());
+								}
+							}
+							
+						}
+						
+						String[] commentsArray = null;
+						if(strb.length()>0){
+							commentsArray = strb.toString().split(",");
+						}
+						
+						interactWorldService.saveInteractV2(o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
+								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), commentsArray, userlevel.getTime());//添加互动
+						/*
 						interactWorldService.saveInteractV2(o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
 									GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), null, userlevel.getTime());//添加互动
 						List<InteractPlanCommentLabel> list = interactPlanCommentLabelService.queryInteractPlanCommentLabelByDateAndTime(df.parse(df.format(currentDate)), df2.parse(df2.format(currentDate)));//查询当前有效标签
@@ -239,6 +275,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 									0, commentStr.split(","), userlevel.getTime());//添加互动
 							}
 						}
+						*/
 						
 					}catch(Exception e){
 						e.printStackTrace();
@@ -248,7 +285,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 			}
 		}
 		Date end = new Date();
-		logger.info("织图添加互动 end , 共花费：" + (end.getTime() - currentDate.getTime()));
+		logger.info("织图添加互动 end , 共花费：" + (end.getTime() - currentDate.getTime())+" . total:"+interactWorldLabel.size()+". success:"+successTotalCount);
 	}
 	
 	/**
