@@ -254,10 +254,10 @@ function loadEditFormValidate(index, isUpdate) {
 							maxId = 0;
 							myQueryParams['title.maxId'] = maxId;
 							if(isUpdate) {
-								$("#ss-transTo").combobox('setValue', 'all');
-								myQueryParams['title.transTo'] = 'all';
 								$("#htm_table").datagrid('reload');
 							} else {
+								$("#ss-transTo").combobox('setValue', 'all');
+								myQueryParams['title.transTo'] = 'all';
 								loadPageData(initPage);
 							}
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
@@ -304,8 +304,8 @@ function submitSerialForm() {
 					$('#htm_serial').window('close');  //关闭添加窗口
 					maxId = 0;
 					myQueryParams['title.maxId'] = maxId;
-					$("#ss-transTo").combobox('setValue', 'all');
-					myQueryParams['title.transTo'] = 'all';
+					//$("#ss-transTo").combobox('setValue', 'all');
+					//myQueryParams['title.transTo'] = 'all';
 					loadPageData(initPage);
 				} else {
 					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
