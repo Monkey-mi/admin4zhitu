@@ -89,6 +89,7 @@
 			AND mcu.valid = 1
 			AND htw.valid = 1
 			AND htw.superb = 1
+			<![CDATA[AND htw.world_id > 0]]>
 			GROUP BY
 				mcu.user_id
 		) AS t1 ON mc.user_id = t1.user_id
