@@ -55,10 +55,17 @@ public class UserMsgDaoImpl extends BaseDaoImpl implements UserMsgDao {
 	/**
 	 * 查询收件箱信息总数
 	 */
+	/*
 	private static final String QUERY_SENDER_INDEX_COUNT_BY_MAX_ID = "select count(*)"
 			+ " from (select mr0.sender_id, mr0.recipient_id, m0.* from " 
 			+ tableRecipientBox + " as mr0, " + HTS.USER_MSG + " as m0"
 			+ " where mr0.content_id=m0.id and mr0.valid=1 and mr0.recipient_id=? and m0.id<=? GROUP BY mr0.sender_id ORDER BY m0.id desc) as m,"
+			+ HTS.USER_INFO + " as u0 where m.sender_id=u0.id";*/
+	private static final String QUERY_SENDER_INDEX_COUNT_BY_MAX_ID_HEAD = "select count(*)"
+			+ " from (select mr0.sender_id, mr0.recipient_id, m0.* from " 
+			+ tableRecipientBox + " as mr0, " + HTS.USER_MSG + " as m0"
+			+ " where mr0.content_id=m0.id and mr0.valid=1 and mr0.recipient_id=? and m0.id<=? ";
+	private static final String QUERY_SENDER_INDEX_COUNT_BY_MAX_ID_MAIN = " GROUP BY mr0.sender_id ORDER BY m0.id desc) as m,"
 			+ HTS.USER_INFO + " as u0 where m.sender_id=u0.id";
 	
 	
@@ -66,7 +73,13 @@ public class UserMsgDaoImpl extends BaseDaoImpl implements UserMsgDao {
 	public List<UserMsgRecipientDto> queryRecipientMsgBox(Integer recipientId,
 			LinkedHashMap<String, Object> attrMap, RowSelection rowSelection) {
 		String selection = buildQueryRecipientMsgBoxSelection(attrMap);
-		String sql = QUERY_RECIPIENT_BOX_HEAD + QUERY_RECIPIENT_BOX_MAIN + selection + QUERY_RECIPIENT_BOX_FOOT;
+		StringBuilder builder = new StringBuilder();
+		if(attrMap.get("senderId") != null) {
+			builder.append(" and mr0.sender_id=? ");
+		}else{
+			builder.append(" ");
+		}
+		String sql = QUERY_RECIPIENT_BOX_HEAD + builder.toString() + QUERY_RECIPIENT_BOX_MAIN + selection + QUERY_RECIPIENT_BOX_FOOT;
 		List<Object> argsList = new ArrayList<Object>();
 		argsList.add(recipientId);
 		CollectionUtil.collectMapValues(argsList, attrMap);
@@ -89,7 +102,13 @@ public class UserMsgDaoImpl extends BaseDaoImpl implements UserMsgDao {
 	public List<UserMsgRecipientDto> queryRecipientMsgBox(Integer maxId, Integer recipientId, 
 			LinkedHashMap<String, Object> attrMap, RowSelection rowSelection) {
 		String selection = buildQueryRecipientMsgBoxSelection(attrMap);
-		String sql = QUERY_RECIPIENT_BOX_HEAD + " and m0.id<=?" +QUERY_RECIPIENT_BOX_MAIN + selection + QUERY_RECIPIENT_BOX_FOOT;
+		StringBuilder builder = new StringBuilder();
+		if(attrMap.get("senderId") != null) {
+			builder.append(" and mr0.sender_id=? ");
+		}else{
+			builder.append(" ");
+		}
+		String sql = QUERY_RECIPIENT_BOX_HEAD + " and m0.id<=?" + builder.toString() +QUERY_RECIPIENT_BOX_MAIN + selection + QUERY_RECIPIENT_BOX_FOOT;
 		List<Object> argsList = new ArrayList<Object>();
 		argsList.add(recipientId);
 		argsList.add(maxId);
@@ -113,7 +132,14 @@ public class UserMsgDaoImpl extends BaseDaoImpl implements UserMsgDao {
 	public long queryRecipientMsgBoxCount(Integer maxId, Integer recipientId,
 			LinkedHashMap<String, Object> attrMap) {
 		String selection = buildQueryRecipientMsgBoxSelection(attrMap);
-		String sql = QUERY_SENDER_INDEX_COUNT_BY_MAX_ID + selection;
+//		String sql = QUERY_SENDER_INDEX_COUNT_BY_MAX_ID + selection;
+		StringBuilder builder = new StringBuilder();
+		if(attrMap.get("senderId") != null) {
+			builder.append(" and mr0.sender_id=? ");
+		}else{
+			builder.append(" ");
+		}
+		String sql = QUERY_SENDER_INDEX_COUNT_BY_MAX_ID_HEAD + builder.toString()+QUERY_SENDER_INDEX_COUNT_BY_MAX_ID_MAIN + selection;
 		List<Object> argsList = new ArrayList<Object>();
 		argsList.add(recipientId);
 		argsList.add(maxId);

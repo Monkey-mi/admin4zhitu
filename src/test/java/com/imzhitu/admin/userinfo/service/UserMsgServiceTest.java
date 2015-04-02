@@ -27,7 +27,7 @@ public class UserMsgServiceTest extends BaseTest {
 	@Test
 	public void testBuildSenderMsgIndex() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildRecipientMsgBox(0, 485, null, 1, 10, jsonMap);
+		service.buildRecipientMsgBox(0,null, 485, null, 1, 10, jsonMap);
 		logObj(jsonMap);
 	}
 	

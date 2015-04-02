@@ -124,9 +124,12 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public void buildRecipientMsgBox(Integer maxId, final Integer recipientId, Integer phoneCode,
+	public void buildRecipientMsgBox(Integer maxId,Integer senderId, final Integer recipientId, Integer phoneCode,
 			int start, int limit, Map<String, Object> jsonMap) throws Exception {
 		final LinkedHashMap<String, Object> attrMap = new LinkedHashMap<String, Object>();
+		if(senderId != null) {
+			attrMap.put("senderId", senderId);
+		}
 		if(phoneCode != null) {
 			attrMap.put("phone_code", phoneCode);
 		}

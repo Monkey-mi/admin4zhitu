@@ -55,7 +55,7 @@ public interface UserMsgService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void buildRecipientMsgBox(Integer maxId, Integer recipientId, Integer phoneCode, int start, int limit,
+	public void buildRecipientMsgBox(Integer maxId, Integer senderId,Integer recipientId, Integer phoneCode, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception;
 	
 	/**

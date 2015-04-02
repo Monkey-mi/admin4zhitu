@@ -35,7 +35,10 @@ public class UserMsgAction extends BaseCRUDAction {
 	private Integer otherId;
 	private Integer phoneCode;
 	private String activityName;
+	private Integer senderId;
 	
+	
+
 	@Autowired
 	private UserMsgService userMsgService;
 	@Autowired
@@ -84,7 +87,7 @@ public class UserMsgAction extends BaseCRUDAction {
 	 */
 	public String queryRecipientMsgBox() {
 		try {
-			userMsgService.buildRecipientMsgBox(maxId, userId, phoneCode, page, rows, jsonMap);
+			userMsgService.buildRecipientMsgBox(maxId,senderId, userId, phoneCode, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -209,6 +212,14 @@ public class UserMsgAction extends BaseCRUDAction {
 
 	public void setActivityName(String activityName) {
 		this.activityName = activityName;
+	}
+	
+	public Integer getSenderId() {
+		return senderId;
+	}
+
+	public void setSenderId(Integer senderId) {
+		this.senderId = senderId;
 	}
 	
 }

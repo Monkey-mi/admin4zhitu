@@ -36,7 +36,7 @@ var maxId = 0,
 	},
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
-			if(data.maxId > maxId) {
+			if(data.maxId >= maxId) {
 				maxId = data.maxId;
 				myQueryParams.maxId = maxId;
 			}
@@ -360,6 +360,16 @@ function appmsgObjTypeSelect(rec){
 	}
 }
 
+function searchBySenderId(){
+	var senderId = $("#ss_senderId").val();
+//	maxId = 0;
+	var myQueryParams = {
+			'maxId':maxId,
+			'senderId':senderId
+	};
+	$("#htm_table").datagrid('load',myQueryParams);
+}
+
 </script>
 </head>
 <body>
@@ -376,6 +386,8 @@ function appmsgObjTypeSelect(rec){
 	   		<span class="search_label">用户ID：</span>
 			<input id="ss_userId" style="width:150px;" />
 			<a href="javascript:void(0);" onclick="javascript:sendMsg();" class="easyui-linkbutton" plain="true" title="发私信" iconCls="icon-add">发私信</a>
+			<input id="ss_senderId" style="width:150px;"/>
+			<a href="javascript:void(0);" onclick="javascript:searchBySenderId();" class="easyui-linkbutton" title="查询" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 			<div style="display: inline-block;float: right; margin-right: 5px; margin-top:3px;">
 				<a href="javascript:void(0);" onclick="javascript:initAppMsgWindow();" class="easyui-linkbutton" title="即向全部用户发送通知" iconCls="icon-add">群推送</a>
 			</div>
