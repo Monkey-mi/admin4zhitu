@@ -12,7 +12,7 @@
 		<result column="serial" property="recommendId" jdbcType="INTEGER"/>
 		<result column="has_lock" property="hasLock" jdbcType="INTEGER"/>
 		<result column="label_id" property="labelId" jdbcType="INTEGER"/>
-		
+		<result column="fill" property="fill" jdbcType="TINYINT" />
 	</resultMap>
 	
 	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldSticker" id="WorldStickerMap">
@@ -29,6 +29,7 @@
 		<result column="valid" property="valid" jdbcType="INTEGER" />
 		<result column="has_lock" property="hasLock" jdbcType="INTEGER"/>
 		<result column="label_id" property="labelId" jdbcType="INTEGER"/>
+		<result column="fill" property="fill" jdbcType="TINYINT" />
 		<result column="type_name" property="typeName" jdbcType="VARCHAR" />
 	</resultMap>
 	
@@ -53,6 +54,7 @@
 			<if test="valid != null"> and valid=#{valid}</if>
 			<if test="hasLock != null"> and has_lock=#{hasLock}</if>
 			<if test="labelId != null"> and label_id=#{labelId}</if>
+			<if test="fill != null"> and fill=#{fill}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
 		</where>
 		order by serial desc
@@ -71,6 +73,7 @@
 			<if test="valid != null"> and valid=#{valid}</if>
 			<if test="hasLock != null"> and has_lock=#{hasLock}</if>
 			<if test="labelId != null"> and label_id=#{labelId}</if>
+			<if test="fill != null"> and fill=#{fill}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
 		</where>
 	</select>
@@ -78,9 +81,9 @@
 	<insert id="save">
 		insert into hts.htworld_sticker 
 		(type_id,sticker_path,sticker_thumb_path,sticker_demo_path,sticker_name,sticker_desc,
-			top_weight,weight,serial,valid,has_lock,label_id) values (#{typeId},#{stickerPath},
+			top_weight,weight,serial,valid,has_lock,label_id,fill) values (#{typeId},#{stickerPath},
 			#{stickerThumbPath},#{stickerDemoPath},#{stickerName},#{stickerDesc},#{topWeight},#{weight},
-		 	#{serial}, #{valid}, #{hasLock},#{labelId})
+		 	#{serial}, #{valid}, #{hasLock},#{labelId},#{fill})
 	</insert>
 	
 	<update id="update">
@@ -97,7 +100,8 @@
 	      <if test="serial != null">serial=#{serial},</if>
 	      <if test="valid != null">valid=#{valid},</if>
 	      <if test="hasLock != null">has_lock=#{hasLock},</if>
-	      <if test="labelId != null">label_id=#{labelId}</if>
+	      <if test="labelId != null">label_id=#{labelId},</if>
+	      <if test="fill != null">fill=#{fill}</if>
 	    </set>
 	  	where id=#{id}
 	</update>

@@ -34,6 +34,7 @@ public class ZTWorldSticker extends AbstractNumberDto implements Serializable {
 	private Integer valid;
 	private Integer hasLock;
 	private Integer labelId;
+	private Integer fill = 0;
 	private String typeName;
 	
 	public Integer getId() {
@@ -134,6 +135,14 @@ public class ZTWorldSticker extends AbstractNumberDto implements Serializable {
 
 	public void setLabelId(Integer labelId) {
 		this.labelId = labelId;
+	}
+	
+	public Integer getFill() {
+		return fill;
+	}
+
+	public void setFill(Integer fill) {
+		this.fill = fill;
 	}
 
 	public void setStickerDemoPath(String stickerDemoPath) {
