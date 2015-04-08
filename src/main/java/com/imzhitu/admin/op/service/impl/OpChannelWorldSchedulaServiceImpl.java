@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.apache.log4j.Logger;
 
 import com.hts.web.base.constant.Tag;
@@ -185,5 +184,24 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		
 		Date end = new Date();
 		logger.info("频道织图计划结束。结束时间：" + end.toString() + ". 花费: " + (end.getTime() - begin.getTime()) + "ms.");
+	}
+	
+	/**
+	 * 重新排序
+	 * @param wIds
+	 * @param schedula
+	 * @param operator
+	 * @throws Exception
+	 */
+	@Override
+	public void reSort(String[] ids,Date schedula,Integer operator)throws Exception{
+		for(int i= ids.length -1;i >= 0; i--){
+			String idStr = ids[i];
+			if(idStr != null && idStr != ""){
+				int id = Integer.parseInt(ids[i]);
+				long t = schedula.getTime() - i*1000;//用以排序
+				updateChannelWorldSchedula(id, null, null, null, null, null, operator, new Date(t));
+			}
+		}
 	}
 }

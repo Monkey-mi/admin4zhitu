@@ -3,9 +3,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>频道用户管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/htmCRUD20131111.css"></link>
 <script type="text/javascript">
 	var maxId=0,
 	loadDateUrl="./admin_op/cwSchedula_queryChannelWorldSchedulaForList",
@@ -99,6 +100,19 @@
 	
 	
 	$(function(){
+		$('#htm_resort').window({
+			title : '重新排序',
+			modal : true,
+			width : 600,
+			height : 235,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-tip',
+			resizable : false
+		});
 		tableInit();
 		$("#main").show();
 	});
@@ -158,14 +172,130 @@
 			return false;
 		}
 	}
+	
+	/**
+	 * 重新排序
+	 */
+	function reSortInit() {
+		$("#resort_form").find('input[name="reIndexId"]').val('');
+		$("#schedula").datetimebox('clear');
+		$('#htm_resort .opt_btn').show();
+		$('#htm_resort .loading').hide();
+		
+		var rows = $("#htm_table").datagrid('getSelections');
+		$('#resort_form .reindex_column').each(function(i){
+			if(i<rows.length)
+				$(this).val(rows[i]['id']);
+		});
+		$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值
+		// 打开添加窗口
+		$("#htm_resort").window('open');
+		
+	}
+
+	function submitReSortForm() {
+		var $form = $('#resort_form');
+		if($form.form('validate')) {
+			$('#htm_resort .opt_btn').hide();
+			$('#htm_resort .loading').show();
+			$('#resort_form').form('submit', {
+				url: $form.attr('action'),
+				success: function(data){
+					var result = $.parseJSON(data);
+					$('#htm_resort .opt_btn').show();
+					$('#htm_resort .loading').hide();
+					if(result['result'] == 0) { 
+						$('#htm_resort').window('close');  //关闭添加窗口
+						tableLoadDate(1);
+					} else {
+						$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+					}
+					
+				}
+			});
+		}
+		
+	}
 </script>
 </head>
 <body>
 	<div id="main">
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
+			<a href="javascript:void(0);" onclick="javascript:reSortInit();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
 		</div>
 		<table id="htm_table"></table>
+		
+		<!-- 重排频道织图计划 -->
+		<div id="htm_resort">
+			<form id="resort_form" action="./admin_op/cwSchedula_reSort" method="post">
+				<table class="htm_resort_table" width="580">
+					<tbody>
+						<tr>
+							<td class="leftTd">织图ID：</td>
+							<td>
+								<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br/>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftTd">计划更新时间：</td>
+							<td><input id="schedula" name="schedula" class="easyui-datetimebox"></td>
+						</tr>
+						<tr>
+							<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReSortForm();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_resort').window('close');">取消</a>
+							</td>
+						</tr>
+						<tr class="loading none">
+							<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+								<span style="vertical-align:middle;">排序中...</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div> 
 	</div>
 </body>
 </html>

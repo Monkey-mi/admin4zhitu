@@ -1,6 +1,5 @@
 package com.imzhitu.admin.op;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	private Date addDate;		//添加时间
 	private Date modifyDate;	//最后修改时间
 	private String idsStr;		//id 字符串
-	private String schedula;	//计划时间字符串
+	private Date schedula;		//计划时间字符串
 	
 	
 	@Autowired
@@ -40,14 +39,16 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		this.service = service;
 	}
 
-	public String getSchedula() {
+	
+	
+	public Date getSchedula() {
 		return schedula;
 	}
 
-	public void setSchedula(String schedula) {
+	public void setSchedula(Date schedula) {
 		this.schedula = schedula;
 	}
-	
+
 	public String queryChannelWorldSchedulaForList(){
 		try{
 			service.queryChannelWorldSchedulaForList(maxId, page, rows, id, userId, worldId, channelId, finish, valid, addDate, modifyDate, jsonMap);
@@ -87,12 +88,26 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		try{
 			String[] wids = request.getParameterValues("reIndexId");
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			service.batchAddChannelWorldSchedula(wids, df.parse(schedula), channelId, Tag.FALSE, Tag.TRUE, user.getId());
+			service.batchAddChannelWorldSchedula(wids, schedula, channelId, Tag.FALSE, Tag.TRUE, user.getId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();
 			JSONUtil.optFailed(OptResult.ADD_FAILED, jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 重新排序
+	 */
+	public String reSort(){
+		try{
+			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String[] ids = request.getParameterValues("reIndexId");
+			service.reSort(ids, schedula, user.getId());
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}

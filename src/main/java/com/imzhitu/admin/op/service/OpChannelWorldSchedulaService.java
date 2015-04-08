@@ -53,5 +53,14 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * @throws Exception
 	 */
 	public void channelWorldSchedula()throws Exception;
+	
+	/**
+	 * 重新排序
+	 * @param wIds
+	 * @param schedula
+	 * @param operator
+	 * @throws Exception
+	 */
+	public void reSort(String[] ids,Date schedula,Integer operator)throws Exception;
 
 }
