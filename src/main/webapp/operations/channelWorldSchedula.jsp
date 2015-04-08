@@ -39,7 +39,9 @@
 					loadMsg:"加载中....",
 					url	   :	loadDateUrl,
 					queryParams : tableQueryParams,
+					remoteSort: true,
 					pagination: true,
+					idField   :'id',
 					pageNumber: pageNum,
 					toolbar:'#tb',
 					columns: [[
@@ -178,7 +180,7 @@
 	 */
 	function reSortInit() {
 		$("#resort_form").find('input[name="reIndexId"]').val('');
-		$("#schedula").datetimebox('clear');
+		//$("#schedula").datetimebox('clear');
 		$('#htm_resort .opt_btn').show();
 		$('#htm_resort .loading').hide();
 		
@@ -206,7 +208,7 @@
 					$('#htm_resort .loading').hide();
 					if(result['result'] == 0) { 
 						$('#htm_resort').window('close');  //关闭添加窗口
-						tableLoadDate(1);
+						$("#htm_table").datagrid("reload");
 					} else {
 						$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 					}
