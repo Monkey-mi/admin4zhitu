@@ -218,6 +218,17 @@
 		}
 		
 	}
+	
+	function searchChannelWorldSchedula(){
+		var valid = $("#ss_valid").combobox('getValue');
+		var finish = $("#ss_finish").combobox('getValue');
+		var queryParams = {
+				'valid':valid,
+				'finish':finish
+		};
+		$("#htm_table").datagrid("load",queryParams);
+		
+	}
 </script>
 </head>
 <body>
@@ -225,6 +236,17 @@
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
 			<a href="javascript:void(0);" onclick="javascript:reSortInit();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
+			<select id="ss_valid" class="easyui-combobox"  style="width:100px;">
+		        <option value="" selected="selected">有效性</option>
+		        <option value="0">无效</option>
+		        <option value="1">有效</option>
+	   		</select>
+		   	<select id="ss_finish" class="easyui-combobox"  style="width:100px;">
+		        <option value="" selected="selected">完成标志</option>
+		        <option value="0">未完成</option>
+		        <option value="1">已完成</option>
+	   		</select>
+	   		<a href="javascript:void(0);" onclick="javascript:searchChannelWorldSchedula();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 		</div>
 		<table id="htm_table"></table>
 		
