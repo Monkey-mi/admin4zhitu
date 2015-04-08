@@ -106,7 +106,8 @@
 		u.email, u.address, u.birthday, u.signature, u.user_label, u.province, u.city, u.register_date, 
 		u.phone_code, u.phone_sys, u.phone_ver, u.online, u.star
 		from (select id, user_id, top_id from hts.operations_channel_top_one where valid=1)
-		as cto, hts.user_info as u, hts.operations_channel_top_type as ctt where cto.user_id=u.id and cto.top_id=ctt.id 
+		as cto, hts.user_info as u, hts.operations_channel_top_type as ctt where cto.user_id=u.id and cto.top_id=ctt.id
+		and ctt.valid=1 order by ctt.serial desc 
 	</select>
 	
 	<select id="queryTopOnes" resultMap="OpChannelTopOneDtoMap">
