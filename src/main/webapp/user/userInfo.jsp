@@ -113,6 +113,9 @@ var maxId = 0,
 		{field : 'platformCode',title:'社交平台',align : 'center', width:60, formatter: function(value, row, index) {
 			var platformCode = "织图";
 			switch(value) {
+			case 1:
+				platformCode = "微信";
+				break;
 			case 2:
 //				platformCode = "新浪";
 				platformCode = "<a href='http://www.weibo.com/u/"+row['loginCode'] + "' target='_blank'>新浪</a>";
