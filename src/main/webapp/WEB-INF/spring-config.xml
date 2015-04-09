@@ -39,6 +39,26 @@
 	    <property name="idleConnectionTestPeriod" value="${database.slave.idleConnectionTestPeriod}"></property>
 	</bean>
 	
+	<bean id="dataSource" class="com.imzhitu.admin.common.dataSourceMasterSlave.DynamicDataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="master" value-ref="masterDataSource"/>
+				<entry key="slave" value-ref="slaveDataSource"/>
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="masterDataSource"/>
+	</bean>
+	<!-- 配置数据库注解aop -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	<bean id="manyDataSourceAspect" class="com.imzhitu.admin.common.dataSourceMasterSlave.DataSourceAspect"/>
+	<aop:config>
+		<aop:aspect id="dataSourceCut" ref="manyDataSourceAspect">
+			<aop:pointcut expression="execution(* com.imzhitu.admin.*.mapper.*.*(..))" id="dataSourceCutPoint"/>
+			<aop:before pointcut-ref="dataSourceCutPoint" method="before"/>
+		</aop:aspect>
+	</aop:config>
+	
+	
 	<!-- 
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -80,12 +100,16 @@
 	
 	<bean id="webSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
         <property name="configLocation" value="classpath:mybatis-config-web.xml" />
-        <property name="dataSource" ref="masterDataSource" />
+        <!-- 
+        <property name="dataSource" ref="masterDataSource" /> -->
+         <property name="dataSource" ref="dataSource" />
     </bean>
  
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
         <property name="configLocation" value="classpath:mybatis-config.xml" />
-        <property name="dataSource" ref="masterDataSource" />
+        <!-- 
+        <property name="dataSource" ref="masterDataSource" /> -->
+         <property name="dataSource" ref="dataSource" />
     </bean>
     
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">

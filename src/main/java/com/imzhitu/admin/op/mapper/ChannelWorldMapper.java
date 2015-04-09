@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 
@@ -24,6 +25,7 @@ public interface ChannelWorldMapper {
 	 * @param world
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelWorldDto> queryChannelWorlds(OpChannelWorld world);
 	
 	/**
@@ -32,6 +34,7 @@ public interface ChannelWorldMapper {
 	 * @param world
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryChannelWorldCount(OpChannelWorld world);
 	
 	/**
@@ -100,6 +103,7 @@ public interface ChannelWorldMapper {
 	 * @param channelId
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer querySumChildCountByChannelId(Integer channelId);
 	
 	/**
@@ -109,6 +113,7 @@ public interface ChannelWorldMapper {
 	 * @param worldId
 	 * @return
 	 */
+	@DataSource("slave")
 	public OpChannelWorld queryWorldByChannelId(OpChannelWorld world);
 	
 	/**
@@ -116,10 +121,12 @@ public interface ChannelWorldMapper {
 	 * @param worldId
 	 * @return
 	 */
+	@DataSource("slave")
 	public OpChannelWorld queryChannelWorldByWorldId(Integer worldId);
 	
 	/**
 	 * 根据织图id，查询该织图入选了哪些频道
 	 */
+	@DataSource("slave")
 	public List<String> queryChannelNameByWorldId(Integer worldId);
 }

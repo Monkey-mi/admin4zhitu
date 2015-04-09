@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelStar;
 import com.imzhitu.admin.common.pojo.OpChannelStarDto;
 
@@ -24,6 +25,7 @@ public interface ChannelStarMapper {
 	 * @param star
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<com.hts.web.common.pojo.OpChannelStar> queryCacheStar(OpChannelStar star);
 	
 	/**
@@ -32,6 +34,7 @@ public interface ChannelStarMapper {
 	 * @param star
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<com.hts.web.common.pojo.OpChannelStar> queryCacheStarWithWeight(OpChannelStar star);
 	
 	/**
@@ -40,6 +43,7 @@ public interface ChannelStarMapper {
 	 * @param star
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelStarDto> queryStars(OpChannelStar star);
 	
 	/**
@@ -48,6 +52,7 @@ public interface ChannelStarMapper {
 	 * @param star
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryStarCount(OpChannelStar star);
 	
 	/**
@@ -70,6 +75,7 @@ public interface ChannelStarMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryUserIdById(Integer id);
 	
 	/**
@@ -100,6 +106,7 @@ public interface ChannelStarMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public OpChannelStar queryStarById(Integer id);
 	
 	/**
@@ -109,6 +116,7 @@ public interface ChannelStarMapper {
 	 * @param userId
 	 * @return
 	 */
+	@DataSource("slave")
 	public OpChannelStar queryStarByChannelId(OpChannelStar star);
 	
 	/**
@@ -117,6 +125,7 @@ public interface ChannelStarMapper {
 	 * @param channelId
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryMaxId(Integer channelId);
 	
 }

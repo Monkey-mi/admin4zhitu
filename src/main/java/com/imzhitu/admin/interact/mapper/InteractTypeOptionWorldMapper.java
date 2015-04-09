@@ -2,6 +2,7 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractTypeOptionWorldDto;
 
 public interface InteractTypeOptionWorldMapper {
@@ -32,6 +33,7 @@ public interface InteractTypeOptionWorldMapper {
 	/**
 	 * 分页查询
 	 */
+	@DataSource("slave")
 	public List<InteractTypeOptionWorldDto> queryTypeOptionWorldForList(InteractTypeOptionWorldDto dto);
 	
 	/**
@@ -39,11 +41,13 @@ public interface InteractTypeOptionWorldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryTypeOptionWorldCount(InteractTypeOptionWorldDto dto);
 	
 	/**
 	 * 查询明星发的图
 	 */
+	@DataSource("slave")
 	public List<InteractTypeOptionWorldDto> queryStarWorld(InteractTypeOptionWorldDto dto);
 	
 	/**
@@ -51,6 +55,7 @@ public interface InteractTypeOptionWorldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long chechIsExist(InteractTypeOptionWorldDto dto);
 	
 	/**
@@ -69,6 +74,7 @@ public interface InteractTypeOptionWorldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public InteractTypeOptionWorldDto queryTypeOptionWorld(InteractTypeOptionWorldDto dto);
 	
 

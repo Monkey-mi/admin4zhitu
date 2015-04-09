@@ -2,6 +2,7 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractAutoResponseSchedula;
 
 public interface InteractAutoResponseSchedulaMapper {
@@ -35,6 +36,7 @@ public interface InteractAutoResponseSchedulaMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<InteractAutoResponseSchedula> queryAutoResponseSchedula(InteractAutoResponseSchedula dto);
 	
 	/**
@@ -42,6 +44,7 @@ public interface InteractAutoResponseSchedulaMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryAutoResponseSchedulaCount(InteractAutoResponseSchedula dto);
 	
 	/**
@@ -49,5 +52,6 @@ public interface InteractAutoResponseSchedulaMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<InteractAutoResponseSchedula> queryUnCompleteSchedula(InteractAutoResponseSchedula dto);
 }

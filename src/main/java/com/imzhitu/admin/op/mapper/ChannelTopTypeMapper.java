@@ -2,6 +2,7 @@ package com.imzhitu.admin.op.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 
 /**
@@ -21,6 +22,7 @@ public interface ChannelTopTypeMapper {
 	 * @param type
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelTopType> queryTopTypes();
 	
 	/**
@@ -29,6 +31,7 @@ public interface ChannelTopTypeMapper {
 	 * @param type
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryTopTypeCount(OpChannelTopType type);
 	
 	/**
@@ -58,5 +61,6 @@ public interface ChannelTopTypeMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public String queryTitleById(Integer id);
 }

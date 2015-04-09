@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannel;
 
 /**
@@ -23,6 +24,7 @@ public interface ChannelMapper {
 	 * @param valid
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<com.hts.web.common.pojo.OpChannel> queryValidChannel(@Param("limit")Integer limit);
 
 	/**
@@ -31,6 +33,7 @@ public interface ChannelMapper {
 	 * @param channel
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannel> queryChannels(OpChannel channel);
 	
 	/**
@@ -39,12 +42,14 @@ public interface ChannelMapper {
 	 * @param channel
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryChannelCount(OpChannel channel);
 	
 	/**
 	 * 查询所有的频道
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannel> queryAllChannel();
 	
 	/**
@@ -82,6 +87,7 @@ public interface ChannelMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public OpChannel queryChannelById(Integer id);
 	
 	/**
@@ -90,6 +96,7 @@ public interface ChannelMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryChildCountBase(Integer id);
 		
 }

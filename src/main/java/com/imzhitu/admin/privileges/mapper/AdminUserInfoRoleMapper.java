@@ -2,6 +2,7 @@ package com.imzhitu.admin.privileges.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.AdminUserRole;
 
 public interface AdminUserInfoRoleMapper {
@@ -17,6 +18,7 @@ public interface AdminUserInfoRoleMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<AdminUserRole> queryRoleInfoByUserId(AdminUserRole dto);
 	
 	/**
@@ -24,10 +26,12 @@ public interface AdminUserInfoRoleMapper {
 	 * @param userRole
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryUserRoleCountByUserId(AdminUserRole userRole);
 	
 	/**
 	 * 根据角色名字查询角色id
 	 */
+	@DataSource("slave")
 	public Integer queryRoleIdByRoleName(String roleName);
 }

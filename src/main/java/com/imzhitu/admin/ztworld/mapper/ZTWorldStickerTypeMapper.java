@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.hts.web.common.pojo.HTWorldStickerTypeDto;
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.ZTWorldStickerType;
 
 /**
@@ -23,6 +24,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * 
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<HTWorldStickerTypeDto> queryCacheType();
 	
 	/**
@@ -30,6 +32,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * 
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<HTWorldStickerTypeDto> queryCacheRecommendType();
 	
 	/**
@@ -38,6 +41,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * @param ids
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<HTWorldStickerTypeDto> queryCacheRecommendTypeByIds(Integer[] ids);
 	
 	/**
@@ -46,6 +50,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * @param type
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<ZTWorldStickerType> queryTypes(ZTWorldStickerType type);
 	
 	/**
@@ -53,6 +58,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * 
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<ZTWorldStickerType> queryAllType(ZTWorldStickerType type);
 	
 	/**
@@ -61,6 +67,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public ZTWorldStickerType queryById(Integer id);
 	
 	/**
@@ -69,6 +76,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * @param type
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryTotal(ZTWorldStickerType type);
 	
 	/**
@@ -112,6 +120,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * 查询最大序号
 	 * 
 	 */
+	@DataSource("slave")
 	public Integer queryMaxSerial();
 
 }

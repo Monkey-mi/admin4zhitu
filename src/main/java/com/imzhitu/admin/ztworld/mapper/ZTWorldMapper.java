@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
 
@@ -112,6 +113,7 @@ public interface ZTWorldMapper {
 	 * @param rowSelection
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<ZTWorldDto> queryHTWorldByAttrMapByMaxId(ZTWorldDto dto);
 	
 	/**
@@ -124,6 +126,7 @@ public interface ZTWorldMapper {
 	 * @param userAttrMap
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryHTWorldCountByMaxId(ZTWorldDto dto);
 	
 	/**
@@ -131,6 +134,7 @@ public interface ZTWorldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryMaxId(ZTWorldDto dto);
 	
 	
@@ -182,6 +186,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @return
 	 */
+	@DataSource("slave")
 	public UserInfo queryAuthorInfoByWorldId(Integer worldId);
 	
 	/**
@@ -198,6 +203,7 @@ public interface ZTWorldMapper {
 	 * @param userId
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryWorldCountByUserId(Integer userId);
 	
 	/**

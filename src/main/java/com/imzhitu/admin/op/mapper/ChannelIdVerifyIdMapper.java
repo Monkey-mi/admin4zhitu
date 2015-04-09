@@ -2,6 +2,7 @@ package com.imzhitu.admin.op.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelIdVerifyIdDto;
 
 public interface ChannelIdVerifyIdMapper {
@@ -16,6 +17,7 @@ public interface ChannelIdVerifyIdMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long checkIsExistByVerifyId(OpChannelIdVerifyIdDto dto);
 	
 	/**
@@ -30,6 +32,7 @@ public interface ChannelIdVerifyIdMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryChannelIdByVerifyId(OpChannelIdVerifyIdDto dto);
 	
 	/**
@@ -37,6 +40,7 @@ public interface ChannelIdVerifyIdMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelIdVerifyIdDto> queryChannelIdVerifyIdForList(OpChannelIdVerifyIdDto dto);
 	
 	/**
@@ -44,5 +48,6 @@ public interface ChannelIdVerifyIdMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryChannelIdVerifyIdCount(OpChannelIdVerifyIdDto dto);
 }

@@ -2,6 +2,7 @@ package com.imzhitu.admin.privileges.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.AdminPrivileges;
 import com.imzhitu.admin.common.pojo.AdminPrivilegesGroup;
 import com.imzhitu.admin.common.pojo.AdminUserPrivileges;
@@ -12,6 +13,7 @@ public interface AdminUserPrivilegesMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryUserPrivilegeIdListByUID(AdminUserPrivileges dto);
 	
 	/**
@@ -19,12 +21,14 @@ public interface AdminUserPrivilegesMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<AdminUserPrivileges> queryUserPrivilegesByUID(AdminUserPrivileges dto);
 	
 	/**
 	 * 查询所有的权限组
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<AdminPrivilegesGroup> queryPrivilegesGroupList();
 	
 	/**
@@ -39,6 +43,7 @@ public interface AdminUserPrivilegesMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryCountByPrivilegeId(AdminUserPrivileges dto);
 	
 	/**
@@ -46,18 +51,21 @@ public interface AdminUserPrivilegesMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryUserPrivilegeCountByUID(AdminUserPrivileges dto);
 	
 	/**
 	 * 查询所有权限
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<AdminPrivileges> queryAllPrivileges();
 	
 	/**
 	 * 查询所有权限总数
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryAllPrivilegesCount();
 	
 	/**
@@ -65,6 +73,7 @@ public interface AdminUserPrivilegesMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<AdminPrivileges> queryUserPrivilegesForTable(Integer  userId);
 	
 	/**
@@ -72,6 +81,7 @@ public interface AdminUserPrivilegesMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryUserPrivilegesCountForTable(Integer userId);
 	
 	/**

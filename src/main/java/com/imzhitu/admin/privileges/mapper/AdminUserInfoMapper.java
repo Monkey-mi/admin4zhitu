@@ -2,6 +2,7 @@ package com.imzhitu.admin.privileges.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.AdminUser;
 
 /**
@@ -21,16 +22,20 @@ public interface AdminUserInfoMapper {
 	
 	public void deleteByIds(Integer[] ids);
 	
+	@DataSource("slave")
 	public AdminUser queryAdminUserById(Integer id);
 	
+	@DataSource("slave")
 	public List<AdminUser> queryUsers(AdminUser adminUser);
 	
+	@DataSource("slave")
 	public long queryCount(AdminUser adminUser);
 	
 	/**
 	 * 查询所有人员
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<AdminUser> queryUserNameAndId();
 	
 	/**
@@ -38,6 +43,7 @@ public interface AdminUserInfoMapper {
 	 * @param adminUser
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<AdminUser> queryAllNotSuperAdminOrOpAdminUserInfo();
 	
 }

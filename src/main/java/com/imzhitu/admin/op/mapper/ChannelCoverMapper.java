@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelCover;
 
 public interface ChannelCoverMapper {
@@ -14,6 +15,7 @@ public interface ChannelCoverMapper {
 	 * @param channelIds
 	 * @param limit
 	 */
+	@DataSource("slave")
 	public List<com.hts.web.common.pojo.OpChannelCover> 
 		queryCacheCover(@Param("channelIds")Integer[] channelIds, @Param("limit")Integer limit);
 	

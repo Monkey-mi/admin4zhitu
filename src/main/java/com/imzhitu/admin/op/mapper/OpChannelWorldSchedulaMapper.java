@@ -2,6 +2,7 @@ package com.imzhitu.admin.op.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
 
 public interface OpChannelWorldSchedulaMapper {
@@ -28,6 +29,7 @@ public interface OpChannelWorldSchedulaMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelWorldSchedulaDto> queryChannelWorldSchedulaForList(OpChannelWorldSchedulaDto dto);
 	
 	/**
@@ -35,6 +37,7 @@ public interface OpChannelWorldSchedulaMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryChannelWorldSchedulaCount(OpChannelWorldSchedulaDto dto);
 	
 	/**
@@ -43,6 +46,7 @@ public interface OpChannelWorldSchedulaMapper {
 	 * @param dto.addDate 和 modifyDate 是用来先限定 schedulaDate 的
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelWorldSchedulaDto>queryChannelWorldSchedula(OpChannelWorldSchedulaDto dto);
 	
 }

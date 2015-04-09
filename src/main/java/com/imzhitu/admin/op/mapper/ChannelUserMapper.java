@@ -1,6 +1,8 @@
 package com.imzhitu.admin.op.mapper;
 
 import java.util.List;
+
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelUserDto;
 
 public interface ChannelUserMapper {
@@ -9,6 +11,7 @@ public interface ChannelUserMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryChannelUserRankTopN(OpChannelUserDto dto);
 	
 	/**
@@ -39,6 +42,7 @@ public interface ChannelUserMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelUserDto> queryChannelUserForList(OpChannelUserDto dto);
 	
 	/**
@@ -46,6 +50,7 @@ public interface ChannelUserMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryChannelUserCount(OpChannelUserDto dto);
 	
 	/**
@@ -53,6 +58,7 @@ public interface ChannelUserMapper {
 	 * @param worldId
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryUserIdByWorldId(Integer worldId);
 	
 	/**
@@ -60,6 +66,7 @@ public interface ChannelUserMapper {
 	 * @param userId
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer querySuperbScore(Integer userId);
 	
 	/**
@@ -67,6 +74,7 @@ public interface ChannelUserMapper {
 	 * @param userId
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryChannelScore(Integer userId);
 	
 	/**
@@ -74,6 +82,7 @@ public interface ChannelUserMapper {
 	 * @param userId
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryRegisterScore(Integer userId);
 	
 	/**
@@ -81,5 +90,6 @@ public interface ChannelUserMapper {
 	 * @param userId
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryLastWorldScore(Integer userId);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.hts.web.common.pojo.HTWorldStickerDto;
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.ZTWorldSticker;
 
 public interface ZTWorldStickerMapper {
@@ -14,6 +15,7 @@ public interface ZTWorldStickerMapper {
 	 * 
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<HTWorldStickerDto> queryCacheTopStickerDto();
 	
 	/**
@@ -21,6 +23,7 @@ public interface ZTWorldStickerMapper {
 	 * 
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<HTWorldStickerDto> queryCacheRecommendStickerDto(@Param("typeId")Integer typeId,
 			@Param("limit")Integer limit);
 	
@@ -30,6 +33,7 @@ public interface ZTWorldStickerMapper {
 	 * @param sticker
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<ZTWorldSticker> queryStickers(ZTWorldSticker sticker);
 	
 	/**
@@ -38,6 +42,7 @@ public interface ZTWorldStickerMapper {
 	 * @param sticker
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryTotal(ZTWorldSticker sticker);
 	
 	/**
@@ -83,6 +88,7 @@ public interface ZTWorldStickerMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public ZTWorldSticker queryById(Integer id);
 	
 }

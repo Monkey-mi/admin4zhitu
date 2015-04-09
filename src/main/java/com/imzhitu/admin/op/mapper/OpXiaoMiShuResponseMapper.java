@@ -2,6 +2,7 @@ package com.imzhitu.admin.op.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpXiaoMiShuResponse;
 
 public interface OpXiaoMiShuResponseMapper {
@@ -64,6 +65,7 @@ public interface OpXiaoMiShuResponseMapper {
 	 * @param vo
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpXiaoMiShuResponse> queryResponseAndKey(OpXiaoMiShuResponse vo);
 	
 	
@@ -72,6 +74,7 @@ public interface OpXiaoMiShuResponseMapper {
 	 * @param vo
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryResponseAndKeyTotalCount(OpXiaoMiShuResponse vo);
 	
 	/**
@@ -79,6 +82,7 @@ public interface OpXiaoMiShuResponseMapper {
 	 * @param vo
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpXiaoMiShuResponse>queryResponseModule(OpXiaoMiShuResponse vo);
 	
 	/**
@@ -86,6 +90,7 @@ public interface OpXiaoMiShuResponseMapper {
 	 * @param vo
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpXiaoMiShuResponse> queryResponseModuleForTable(OpXiaoMiShuResponse vo);
 	
 	/**
@@ -93,6 +98,7 @@ public interface OpXiaoMiShuResponseMapper {
 	 * @param vo
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryResponseModuleTotalCount(OpXiaoMiShuResponse vo);
 	
 	/**
@@ -100,6 +106,7 @@ public interface OpXiaoMiShuResponseMapper {
 	 * @param vo
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpXiaoMiShuResponse> queryResponseContentForTable(OpXiaoMiShuResponse vo);
 	
 	/**
@@ -107,5 +114,6 @@ public interface OpXiaoMiShuResponseMapper {
 	 * @param vo
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryResponseContentTotalCount(OpXiaoMiShuResponse vo);
 }

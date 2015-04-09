@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOneDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
@@ -14,6 +15,7 @@ public interface ChannelTopOneMapper {
 	 * 查询缓存top　one列表
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<com.hts.web.common.pojo.OpChannelTopOne> queryCacheTopOne();
 
 	/**
@@ -22,6 +24,7 @@ public interface ChannelTopOneMapper {
 	 * @param topOne
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelTopOneDto> queryTopOnes(OpChannelTopOne topOne);
 	
 	/**
@@ -29,6 +32,7 @@ public interface ChannelTopOneMapper {
 	 * @param topOne
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryTopOneCount(OpChannelTopOne topOne);
 	
 	/**
@@ -73,6 +77,7 @@ public interface ChannelTopOneMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public OpChannelTopOne queryTopOneById(Integer id);
 	
 	/**
@@ -80,6 +85,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> querySuperbTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -87,6 +93,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryBeLikedTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -94,6 +101,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> querylikeTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -101,6 +109,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryFollowerIncreaseTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -108,6 +117,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryFollowTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -115,6 +125,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryCommentTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -122,6 +133,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryLabelTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -136,6 +148,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryBeClickTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -143,6 +156,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryWorldTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -150,6 +164,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryPictureTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -157,6 +172,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryActivityTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -170,6 +186,7 @@ public interface ChannelTopOneMapper {
 	 * 
 	 * @return
 	 */
+	@DataSource("slave")
 	public Integer queryMaxPeriod();
 	
 	/**
@@ -177,5 +194,6 @@ public interface ChannelTopOneMapper {
 	 * 
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpChannelTopOnePeriod> queryPeriodList(OpChannelTopOnePeriod period);
 }

@@ -2,6 +2,7 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractRefreshZombieHtworld;
 import com.imzhitu.admin.common.pojo.UserZombieHtworld;
 
@@ -23,6 +24,7 @@ public interface InteractRefreshZombieHtworldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryZombieHtworldTotalByMaxDate(UserZombieHtworld dto);
 	
 	/**
@@ -30,6 +32,7 @@ public interface InteractRefreshZombieHtworldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<UserZombieHtworld> queryZombieHtworld(UserZombieHtworld dto);
 	
 	/**
@@ -37,6 +40,7 @@ public interface InteractRefreshZombieHtworldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<UserZombieHtworld> queryZombieComment(InteractRefreshZombieHtworld dto);
 	
 	/**
@@ -44,6 +48,7 @@ public interface InteractRefreshZombieHtworldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public  UserZombieHtworld queryZombieHtworldByWid(InteractRefreshZombieHtworld dto);
 	
 	/**
@@ -51,5 +56,6 @@ public interface InteractRefreshZombieHtworldMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<Integer> queryWidByUid(InteractRefreshZombieHtworld dto);
 }
