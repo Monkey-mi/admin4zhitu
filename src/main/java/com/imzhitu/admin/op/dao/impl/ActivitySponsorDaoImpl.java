@@ -88,12 +88,12 @@ public class ActivitySponsorDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void saveSponsor(Integer activityId, Integer userId) {
-		getJdbcTemplate().update(SAVE_SPONSOR, new Object[]{activityId, userId});
+		getMasterJdbcTemplate().update(SAVE_SPONSOR, new Object[]{activityId, userId});
 	}
 
 	@Override
 	public void deleteByActivityId(Integer activityId) {
-		getJdbcTemplate().update(DELETE_BY_ACTIVITY_ID, new Object[]{activityId});
+		getMasterJdbcTemplate().update(DELETE_BY_ACTIVITY_ID, new Object[]{activityId});
 	}
 
 	@Override

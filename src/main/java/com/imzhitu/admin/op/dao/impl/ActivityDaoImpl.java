@@ -102,7 +102,7 @@ public class ActivityDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void saveActivity(OpActivity activity) {
-		getJdbcTemplate().update(SAVE_ACTIVITY, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_ACTIVITY, new Object[]{
 			activity.getId(),
 			activity.getTitlePath(),
 			activity.getTitleThumbPath(),
@@ -126,7 +126,7 @@ public class ActivityDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateActivity(OpActivity activity) {
-		getJdbcTemplate().update(UPDATE_ACTIVITY, new Object[]{
+		getMasterJdbcTemplate().update(UPDATE_ACTIVITY, new Object[]{
 			activity.getTitlePath(),
 			activity.getTitleThumbPath(),
 			activity.getChannelPath(),
@@ -213,12 +213,12 @@ public class ActivityDaoImpl extends BaseDaoImpl implements
 	public void deleteByIds(Integer[] ids) {
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = DELETE_BY_IDS + inSelection;
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	@Override
 	public void deleteById(Integer id) {
-		getJdbcTemplate().update(DElETE_BY_ID, new Object[]{id});
+		getMasterJdbcTemplate().update(DElETE_BY_ID, new Object[]{id});
 	}
 	
 	public OpActivity buildActivity(ResultSet rs) throws SQLException {

@@ -74,7 +74,7 @@ public class HTWorldReportDaoImpl extends BaseDaoImpl implements HTWorldReportDa
 	public void deleteReportById(Integer[] ids){
 		String inSection = SQLUtil.buildInSelection(ids);
 		String sql = DELETE_REPORT_BY_ID + inSection;
-		getJdbcTemplate().update(sql,(Object[])ids);
+		getMasterJdbcTemplate().update(sql,(Object[])ids);
 		
 	}
 	

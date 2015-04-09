@@ -68,7 +68,7 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao{
 	
 	@Override
 	public void saveRolePrivilegesGroup(Integer roleId, Integer groupId) {
-		getJdbcTemplate().update(SAVE_ROLE_PRIVILEGES_GROUP, new Object[]{roleId,groupId});
+		getMasterJdbcTemplate().update(SAVE_ROLE_PRIVILEGES_GROUP, new Object[]{roleId,groupId});
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao{
 	
 	@Override
 	public void deleteRolePrivilegesGroupByRoleId(Integer roleId) {
-		getJdbcTemplate().update(DELETE_ROLE_GROUP_BY_ROLE_ID, new Object[]{roleId});
+		getMasterJdbcTemplate().update(DELETE_ROLE_GROUP_BY_ROLE_ID, new Object[]{roleId});
 	}
 	
 	@Override

@@ -35,28 +35,28 @@ public class InteractPlanCommentLabelDaoImpl extends BaseDaoImpl implements Inte
 	
 	@Override
 	public void addPlanCommentLabel(String description,Date startTime,Date deadline,Date workStartTime,Date workEndTime,Integer valid,Date addDate,Date modifyDate,Integer operatorId,Integer groupId ){
-		getJdbcTemplate().update(ADD_PLAN_COMMENT_LABEL, description,startTime,deadline,workStartTime,workEndTime,valid,addDate,modifyDate,operatorId,groupId);
+		getMasterJdbcTemplate().update(ADD_PLAN_COMMENT_LABEL, description,startTime,deadline,workStartTime,workEndTime,valid,addDate,modifyDate,operatorId,groupId);
 	}
 	
 	@Override
 	public void delPlanCommentLabelByIds(Integer[]ids){
 		String sql = DEL_PLAN_COMMENT_LABEL_BY_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql , (Object[])ids);
+		getMasterJdbcTemplate().update(sql , (Object[])ids);
 	}
 	
 	@Override
 	public void delPlanCommentLabelByGroupId(Integer groupId){
-		getJdbcTemplate().update(DEL_PLAN_COMMENT_LABEL_BY_GROUP_ID, groupId);
+		getMasterJdbcTemplate().update(DEL_PLAN_COMMENT_LABEL_BY_GROUP_ID, groupId);
 	}
 	
 	@Override
 	public void updatePlanCommentLabelById(Integer id,String description,Date startTime,Date deadline,Time workStartTime,Time workEndTime,Integer  valid,Integer operatorId,Date modifyDate){
-		getJdbcTemplate().update(UPDATE_PLAN_COMMENT_LABEL_BY_ID, description,startTime,deadline,workStartTime,workEndTime,valid,operatorId,modifyDate,id);
+		getMasterJdbcTemplate().update(UPDATE_PLAN_COMMENT_LABEL_BY_ID, description,startTime,deadline,workStartTime,workEndTime,valid,operatorId,modifyDate,id);
 	}
 	
 	@Override
 	public void updatePlanCommentValidById(Integer valid,Integer id,Integer operatorId,Date modifyDate){
-		getJdbcTemplate().update(UPDATE_PLAN_COMMENT_LABEL_VALID_BY_ID, valid,operatorId,modifyDate,id);
+		getMasterJdbcTemplate().update(UPDATE_PLAN_COMMENT_LABEL_VALID_BY_ID, valid,operatorId,modifyDate,id);
 	}
 	
 	@Override

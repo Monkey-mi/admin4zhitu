@@ -206,12 +206,12 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateCommentShield(Integer id, Integer shield) {
-		getJdbcTemplate().update(UPDATE_COMMENT_SHIELD, new Object[]{shield, id});
+		getMasterJdbcTemplate().update(UPDATE_COMMENT_SHIELD, new Object[]{shield, id});
 	}
 	
 	@Override
 	public void updateCommentShieldByUserId(Integer authorId,Integer shield){
-		getJdbcTemplate().update(UPDATE_COMMENT_SHIELD_BY_USER_ID, shield,authorId);
+		getMasterJdbcTemplate().update(UPDATE_COMMENT_SHIELD_BY_USER_ID, shield,authorId);
 	}
 	
 	@Override

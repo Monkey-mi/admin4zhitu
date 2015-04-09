@@ -25,21 +25,21 @@ public class UserTrustDaoImpl extends BaseDaoImpl implements UserTrustDao{
 	private static final String QUERY_USER_TRUST_BY_ID =  " select ut.*,aui.user_name from " + table + " ut left join " + Admin.ADMIN_USER_INFO+" aui on ut.operator_id=aui.id where ut.id=?";
 	
 	public void addUserTrust(Integer userId,Date addDate,Date modifyDate,Integer trust,Integer operatorId){
-		getJdbcTemplate().update(ADD_USER_TRUST, userId,addDate,modifyDate,trust,operatorId);
+		getMasterJdbcTemplate().update(ADD_USER_TRUST, userId,addDate,modifyDate,trust,operatorId);
 	}
 	
 	public void delUserTrust(Integer[] ids){
 		String sql = DEL_USET_TRUST + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	
 	public void updateUserTrustByUid(Integer userId,Date modifyDate,Integer trust,Integer operatorId){
-		getJdbcTemplate().update(UPDATE_USER_TRUST_BY_UID, modifyDate,trust,operatorId,userId);
+		getMasterJdbcTemplate().update(UPDATE_USER_TRUST_BY_UID, modifyDate,trust,operatorId,userId);
 	}
 	
 	public void updateUserTrustById(Integer id,Date modifyDate,Integer trust,Integer operatorId){
-		getJdbcTemplate().update(UPDATE_USER_TRUST_BY_ID,modifyDate,trust,operatorId,id);
+		getMasterJdbcTemplate().update(UPDATE_USER_TRUST_BY_ID,modifyDate,trust,operatorId,id);
 	}
 	
 	public UserTrust queryUserTrustByUid(Integer userId){

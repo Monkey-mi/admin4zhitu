@@ -51,7 +51,7 @@ public class ZHITUXiaoMiShuDaoImpl extends BaseDaoImpl implements ZHITUXiaoMiShu
 	@Override
 	public void addZTWorld(ZTWorldDto htworld){
 		if(htworld.getLatestValid()==null)htworld.setLatestValid(0);
-		getJdbcTemplate().update(SAVE_WORLD, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_WORLD, new Object[]{
 				htworld.getId(),
 				htworld.getShortLink(),
 				htworld.getWorldName(),
@@ -99,7 +99,7 @@ public class ZHITUXiaoMiShuDaoImpl extends BaseDaoImpl implements ZHITUXiaoMiShu
 	@Override
 	public void delZTWorldByIds(Integer[] ids){
 		String sql = DEL_WORLD_BY_IDS+SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	
@@ -120,12 +120,12 @@ public class ZHITUXiaoMiShuDaoImpl extends BaseDaoImpl implements ZHITUXiaoMiShu
 	
 	@Override
 	public void updateZTWorldDesc(Integer wid,String worldDesc){
-		getJdbcTemplate().update(UPDATE_WORLD_DESC_BY_WID, worldDesc,wid);
+		getMasterJdbcTemplate().update(UPDATE_WORLD_DESC_BY_WID, worldDesc,wid);
 	}
 	
 	@Override
 	public void updateWorldLabel(Integer wid,String worldLabel){
-		getJdbcTemplate().update(UPDATE_WORLD_LABEL_BY_WID,worldLabel,wid);
+		getMasterJdbcTemplate().update(UPDATE_WORLD_LABEL_BY_WID,worldLabel,wid);
 	}
 	
 	@Override

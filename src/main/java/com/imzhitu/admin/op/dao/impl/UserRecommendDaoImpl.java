@@ -240,7 +240,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void deleteRecommendUserByUserId(Integer userId) {
-		getJdbcTemplate().update(DELETE_BY_USER_ID, userId);
+		getMasterJdbcTemplate().update(DELETE_BY_USER_ID, userId);
 	}
 
 	@Override
@@ -250,13 +250,13 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void updateRecommendDesc(Integer id, String desc) {
-		getJdbcTemplate().update(UPDATE_RECOMMEND_DESC, 
+		getMasterJdbcTemplate().update(UPDATE_RECOMMEND_DESC, 
 				new Object[]{desc, id});
 	}
 	
 	@Override
 	public void updateRecommendId(Integer userId, Integer id) {
-		getJdbcTemplate().update(UPDATE_ID, new Object[]{id, userId});
+		getMasterJdbcTemplate().update(UPDATE_ID, new Object[]{id, userId});
 	}
 	
 	@Override
@@ -271,12 +271,12 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = UPDATE_SYS_ACCEPT_BY_IDS + inSelection;
 		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{state}, true);
-		getJdbcTemplate().update(sql, args);
+		getMasterJdbcTemplate().update(sql, args);
 	}
 	
 	@Override
 	public void updateNotified(Integer id, Integer notified) {
-		getJdbcTemplate().update(UPDATE_NOTIFIED_BY_ID, new Object[]{notified, id});
+		getMasterJdbcTemplate().update(UPDATE_NOTIFIED_BY_ID, new Object[]{notified, id});
 	}
 	
 	@Override
@@ -303,7 +303,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void setFixPosByUserId(Integer uid , Integer fixPos){
-		getJdbcTemplate().update(UPDATE_FIX_POS_BY_UID, fixPos,uid);
+		getMasterJdbcTemplate().update(UPDATE_FIX_POS_BY_UID, fixPos,uid);
 	}
 	
 	@Override
@@ -321,7 +321,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void updateVerifyId(Integer id, Integer verifyId) {
-		getJdbcTemplate().update(UPDATE_VERIFY_ID, new Object[]{verifyId, id});
+		getMasterJdbcTemplate().update(UPDATE_VERIFY_ID, new Object[]{verifyId, id});
 	}
 	
 	@Override
@@ -331,7 +331,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateWeight(Integer id, Integer weight) {
-		getJdbcTemplate().update(UPDATE_WEIGHT, new Object[]{weight, id});
+		getMasterJdbcTemplate().update(UPDATE_WEIGHT, new Object[]{weight, id});
 	}
 	
 	@Override

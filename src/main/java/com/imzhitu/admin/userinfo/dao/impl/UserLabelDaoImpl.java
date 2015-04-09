@@ -64,7 +64,7 @@ public class UserLabelDaoImpl extends BaseDaoImpl implements UserLabelDao {
 			
 	@Override
 	public void saveLabel(UserLabel label) {
-		getJdbcTemplate().update(SAVE_LABEL, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_LABEL, new Object[]{
 			label.getId(),
 			label.getLabelName(),
 			label.getLabelPinyin(),
@@ -97,11 +97,11 @@ public class UserLabelDaoImpl extends BaseDaoImpl implements UserLabelDao {
 
 	@Override
 	public void deleteLabelByUserId(Integer userId) {
-		getJdbcTemplate().update(DELETE_LABEL_USER_BY_UID, new Object[]{userId});
+		getMasterJdbcTemplate().update(DELETE_LABEL_USER_BY_UID, new Object[]{userId});
 	}
 
 	@Override
 	public void saveLabelUser(Integer labelId, Integer userId) {
-		getJdbcTemplate().update(SAVE_LABEL_USER, new Object[]{userId, labelId});
+		getMasterJdbcTemplate().update(SAVE_LABEL_USER, new Object[]{userId, labelId});
 	}
 }

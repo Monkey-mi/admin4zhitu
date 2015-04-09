@@ -44,17 +44,6 @@ public class AdminServiceImpl extends BaseServiceImpl implements AdminService{
 	@Autowired
 	private AdminUserInfoRoleMapper adminUserInfoRoleMapper;
 
-	@Value("${database.maxIdleTime}") // 为了测试如何从properties文件中注入数据
-	private String test = "12345";
-	
-	public String getTest() {
-		return test;
-	}
-
-	public void setTest(String test) {
-		this.test = test;
-	}
-
 	@Override
 	public void register(AdminUser userInfo,String[] roleIds) throws Exception {
 		String password = userInfo.getPassword();
@@ -154,7 +143,7 @@ public class AdminServiceImpl extends BaseServiceImpl implements AdminService{
 
 	@Override
 	public void logProperty() {
-		logger.debug(test);
+//		logger.debug(test);
 	}
 	
 }

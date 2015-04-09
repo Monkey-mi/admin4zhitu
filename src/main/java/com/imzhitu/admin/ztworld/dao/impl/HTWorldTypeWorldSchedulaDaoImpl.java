@@ -40,7 +40,7 @@ public class HTWorldTypeWorldSchedulaDaoImpl extends BaseDaoImpl implements HTWo
 	private static final String UPDATE_TYPE_WORLD_SCHEDULA = " update " + table + " set schedula=?,complete=?,date_modify=?,operator_id=? where world_id=?";
 	@Override
 	public void addTypeWorldSchedula(HTWorldTypeWorldSchedulaDto dto){
-		getJdbcTemplate().update(ADD_TYPE_WORLD_SCHEDULA,
+		getMasterJdbcTemplate().update(ADD_TYPE_WORLD_SCHEDULA,
 				dto.getType_world_id(),
 				dto.getSchedula(),
 				dto.getAddDate(),
@@ -52,7 +52,7 @@ public class HTWorldTypeWorldSchedulaDaoImpl extends BaseDaoImpl implements HTWo
 	@Override 
 	public void delTypeWorldSchedulaByIds(Integer[] ids){
 		String sql = DEL_TYPE_WORLD_SCHEDULA_BY_IDS +SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	
@@ -93,7 +93,7 @@ public class HTWorldTypeWorldSchedulaDaoImpl extends BaseDaoImpl implements HTWo
 	public void updateCompleteByIds(Integer[] ids,Integer complete){
 		String sql = UPDATE_COMPLETE_BY_WORLD_IDS + SQLUtil.buildInSelection(ids);
 		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{complete}, true);
-		getJdbcTemplate().update(sql,args);
+		getMasterJdbcTemplate().update(sql,args);
 	}
 	
 	@Override
@@ -109,7 +109,7 @@ public class HTWorldTypeWorldSchedulaDaoImpl extends BaseDaoImpl implements HTWo
 	
 	@Override
 	public void updateTypeWorldSchedula(Integer world_id,Date schedula,Date modifyDate,Integer operatorId,Integer complete){
-		getJdbcTemplate().update(UPDATE_TYPE_WORLD_SCHEDULA, schedula,complete,modifyDate,operatorId,world_id);
+		getMasterJdbcTemplate().update(UPDATE_TYPE_WORLD_SCHEDULA, schedula,complete,modifyDate,operatorId,world_id);
 	}
 	
 	/**

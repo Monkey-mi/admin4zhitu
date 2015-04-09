@@ -42,6 +42,6 @@ public class PrivilegesGroupDaoImpl extends BaseDaoImpl implements PrivilegesGro
 
 	@Override
 	public void deleteRolePrivilegesGroupByGroupId(Integer groupId){
-		getJdbcTemplate().update(DELETE_ROLE_GROUP_BY_GROUP_ID, new Object[]{groupId});
+		getMasterJdbcTemplate().update(DELETE_ROLE_GROUP_BY_GROUP_ID, new Object[]{groupId});
 	}
 }

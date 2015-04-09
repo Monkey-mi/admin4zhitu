@@ -37,12 +37,12 @@ public class InteractWorldlevelWorldCommentDaoImpl extends BaseDaoImpl implement
 	
 	@Override
 	public void addWorldlevelWorldComment(Integer wid,Integer cid,Integer complete,Date dateAdd){
-		getJdbcTemplate().update(ADD_WORLD_COMMENT, wid,cid,complete,dateAdd);
+		getMasterJdbcTemplate().update(ADD_WORLD_COMMENT, wid,cid,complete,dateAdd);
 	}
 	
 	@Override
 	public void updateWorldlevelWorldCommentComplete(Integer wid,Integer complete){
-		getJdbcTemplate().update(UPDATE_COMPLETE,complete,wid);
+		getMasterJdbcTemplate().update(UPDATE_COMPLETE,complete,wid);
 	}
 	
 	private InteractWorldlevelWorldComment buildWorldComment(ResultSet rs)throws SQLException{

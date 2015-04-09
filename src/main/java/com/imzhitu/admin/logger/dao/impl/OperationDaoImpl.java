@@ -111,7 +111,7 @@ public class OperationDaoImpl extends BaseDaoImpl implements OperationDao {
 	
 	@Override
 	public void saveOperation(LoggerOperation opt) {
-		getJdbcTemplate().update(SAVE_OPT, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_OPT, new Object[]{
 			opt.getId(),
 			opt.getOptInterface(),
 			opt.getOptName(),
@@ -122,7 +122,7 @@ public class OperationDaoImpl extends BaseDaoImpl implements OperationDao {
 
 	@Override
 	public void updateOperation(LoggerOperation opt) {
-		getJdbcTemplate().update(UPDATE_OPT, new Object[]{
+		getMasterJdbcTemplate().update(UPDATE_OPT, new Object[]{
 			opt.getOptInterface(),
 			opt.getOptName(),
 			opt.getOptDesc(),
@@ -138,7 +138,7 @@ public class OperationDaoImpl extends BaseDaoImpl implements OperationDao {
 
 	@Override
 	public void updateSerial(Integer id, Integer serial) {
-		getJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, id});
+		getMasterJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, id});
 	}
 	
 	public LoggerOperation buildOperation(ResultSet rs) throws SQLException {

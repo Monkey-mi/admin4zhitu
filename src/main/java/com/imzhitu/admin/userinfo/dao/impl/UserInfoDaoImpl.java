@@ -262,7 +262,7 @@ public class UserInfoDaoImpl extends BaseDaoImpl implements UserInfoDao{
 	
 	@Override
 	public void updateShield(Integer userId, Integer valid) {
-		getJdbcTemplate().update(UPDATE_SHIELD, new Object[]{valid, userId});
+		getMasterJdbcTemplate().update(UPDATE_SHIELD, new Object[]{valid, userId});
 	}
 	
 	@Override
@@ -279,7 +279,7 @@ public class UserInfoDaoImpl extends BaseDaoImpl implements UserInfoDao{
 	
 	@Override
 	public void updateStarById(Integer id, Integer star) {
-		getJdbcTemplate().update(UPDATE_STAR_BY_ID, new Object[]{star, id});
+		getMasterJdbcTemplate().update(UPDATE_STAR_BY_ID, new Object[]{star, id});
 	}
 	
 	@Override
@@ -287,17 +287,17 @@ public class UserInfoDaoImpl extends BaseDaoImpl implements UserInfoDao{
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = UPDATE_STAT_BY_IDS + inSelection;
 		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{star}, true);
-		getJdbcTemplate().update(sql, args);
+		getMasterJdbcTemplate().update(sql, args);
 	}
 	
 	@Override
 	public void updateUserLabel(Integer userId, String label) {
-		getJdbcTemplate().update(UPDATE_USER_LABEL, new Object[]{label, userId});
+		getMasterJdbcTemplate().update(UPDATE_USER_LABEL, new Object[]{label, userId});
 	}
 	
 	@Override
 	public void updateTrustById(Integer userId, Integer trust) {
-		getJdbcTemplate().update(UPDATE_TRUST_BY_ID, new Object[]{trust, userId});
+		getMasterJdbcTemplate().update(UPDATE_TRUST_BY_ID, new Object[]{trust, userId});
 	}
 	
 	@Override
@@ -311,7 +311,7 @@ public class UserInfoDaoImpl extends BaseDaoImpl implements UserInfoDao{
 	 */
 	@Override
 	public void updateSignature(Integer userId,String signature){
-		getJdbcTemplate().update(UPDATE_SIGNATURE, signature,userId);
+		getMasterJdbcTemplate().update(UPDATE_SIGNATURE, signature,userId);
 	}
 	
 

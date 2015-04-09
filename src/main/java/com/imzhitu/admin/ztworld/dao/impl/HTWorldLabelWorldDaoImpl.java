@@ -123,12 +123,12 @@ public class HTWorldLabelWorldDaoImpl extends BaseDaoImpl implements HTWorldLabe
 	
 	@Override
 	public void deleteByWorldId(Integer worldId) {
-		getJdbcTemplate().update(DELETE_LABEL_WORLD_BY_WID, new Object[]{worldId});
+		getMasterJdbcTemplate().update(DELETE_LABEL_WORLD_BY_WID, new Object[]{worldId});
 	}
 
 	@Override
 	public void saveLabelWorld(HTWorldLabelWorld labelWorld) {
-		getJdbcTemplate().update(SAVE_LABEL_WORLD, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_LABEL_WORLD, new Object[]{
 			labelWorld.getId(),
 			labelWorld.getWorldId(),
 			labelWorld.getUserId(),
@@ -152,7 +152,7 @@ public class HTWorldLabelWorldDaoImpl extends BaseDaoImpl implements HTWorldLabe
 	public void deleteByLabelIds(Integer[] labelIds) {
 		String inSelection = SQLUtil.buildInSelection(labelIds);
 		String sql = DELETE_LABEL_WORLD_BY_LIDS + inSelection;
-		getJdbcTemplate().update(sql, (Object[])labelIds);
+		getMasterJdbcTemplate().update(sql, (Object[])labelIds);
 	}
 
 	@Override
@@ -234,7 +234,7 @@ public class HTWorldLabelWorldDaoImpl extends BaseDaoImpl implements HTWorldLabe
 		String selection = SQLUtil.buildInSelection(worldIds);
 		String sql = UPDATE_VALID_BY_WIDS + selection;
 		Object[] args = SQLUtil.getArgsByInCondition(worldIds, new Object[]{valid}, true);
-		getJdbcTemplate().update(sql, args);
+		getMasterJdbcTemplate().update(sql, args);
 	}
 	
 	@Override
@@ -280,17 +280,17 @@ public class HTWorldLabelWorldDaoImpl extends BaseDaoImpl implements HTWorldLabe
 	
 	@Override
 	public void updateLabelNameInHtworldHtworld(Integer worldId,String labelStr){
-		getJdbcTemplate().update(UPDATE_LABEL_NAME_ON_HTWORLD_HTWORLD, labelStr,worldId);
+		getMasterJdbcTemplate().update(UPDATE_LABEL_NAME_ON_HTWORLD_HTWORLD, labelStr,worldId);
 	}
 	
 	@Override
 	public void updateLabelWorldValid(Integer id, Integer valid) {
-		getJdbcTemplate().update(UPDATE_LABEL_WORLD_VALID_BY_ID, new Object[]{valid,id});
+		getMasterJdbcTemplate().update(UPDATE_LABEL_WORLD_VALID_BY_ID, new Object[]{valid,id});
 	}
 	
 	@Override
 	public void updateLabelWorldSerial(Integer id, Integer serial) {
-		getJdbcTemplate().update(UPDATE_LABEL_WORLD_SERIAL, new Object[]{serial, id});
+		getMasterJdbcTemplate().update(UPDATE_LABEL_WORLD_SERIAL, new Object[]{serial, id});
 	}
 
 	public HTWorldLabelWorld buildLabelWorld(ResultSet rs) throws SQLException {

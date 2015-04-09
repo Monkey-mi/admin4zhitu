@@ -85,7 +85,7 @@ public class ActivityAwardDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void saveAward(OpActivityAward award) {
-		getJdbcTemplate().update(SAVE_AWARD, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_AWARD, new Object[]{
 				award.getActivityId(),
 				award.getIconThumbPath(),
 				award.getIconPath(),
@@ -101,7 +101,7 @@ public class ActivityAwardDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void updateAward(OpActivityAward award) {
-		getJdbcTemplate().update(UPDATE_AWARD, new Object[]{
+		getMasterJdbcTemplate().update(UPDATE_AWARD, new Object[]{
 				award.getActivityId(),
 				award.getIconThumbPath(),
 				award.getIconPath(),
@@ -123,7 +123,7 @@ public class ActivityAwardDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateSerial(Integer id, Integer serial) {
-		getJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, id});
+		getMasterJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, id});
 	}
 	
 	@Override

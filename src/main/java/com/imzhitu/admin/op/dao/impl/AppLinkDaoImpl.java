@@ -73,7 +73,7 @@ public class AppLinkDaoImpl extends BaseDaoImpl implements AppLinkDao {
 
 	@Override
 	public void saveAppLink(OpAdAppLink link) {
-		getJdbcTemplate().update(SAVE_LINK, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_LINK, new Object[]{
 			link.getId(),
 			link.getAppName(),
 			link.getAppIcon(),
@@ -163,12 +163,12 @@ public class AppLinkDaoImpl extends BaseDaoImpl implements AppLinkDao {
 
 	@Override
 	public void addClickCount(Integer id) {
-		getJdbcTemplate().update(ADD_CLICK_COUNT, new Object[]{id});
+		getMasterJdbcTemplate().update(ADD_CLICK_COUNT, new Object[]{id});
 	}
 	
 	@Override
 	public void updateSerial(Integer id, Integer serial) {
-		getJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, id});
+		getMasterJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, id});
 	}
 	
 	@Override
@@ -176,7 +176,7 @@ public class AppLinkDaoImpl extends BaseDaoImpl implements AppLinkDao {
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = UPDATE_APP_OPEN + inSelection;
 		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{open}, true);
-		getJdbcTemplate().update(sql, args);
+		getMasterJdbcTemplate().update(sql, args);
 	}
 	
 	/**
@@ -219,7 +219,7 @@ public class AppLinkDaoImpl extends BaseDaoImpl implements AppLinkDao {
 
 	@Override
 	public void updateAppLink(OpAdAppLink link) {
-		getJdbcTemplate().update(UPDATE_APP_LINK, new Object[]{
+		getMasterJdbcTemplate().update(UPDATE_APP_LINK, new Object[]{
 			link.getAppName(),
 			link.getAppIcon(),
 			link.getAppDesc(),

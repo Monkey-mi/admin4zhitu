@@ -100,7 +100,6 @@ public class InteractWorldServiceTest extends BaseTest {
 	}
 	
 	@Test
-	@Transactional(propagation=Propagation.NEVER)
 	public void testCommitComment() throws Exception {
 		service.commitComment();
 	}

@@ -54,7 +54,7 @@ public class UserOperationDaoImpl extends BaseDaoImpl implements UserOperationDa
 	
 	@Override
 	public void saveLog(Integer userId, Integer optId, String args, Date optDate) {
-		getJdbcTemplate().update(SAVE_LOG, new Object[]{userId, optId, args, optDate});
+		getMasterJdbcTemplate().update(SAVE_LOG, new Object[]{userId, optId, args, optDate});
 	}
 
 	@Override

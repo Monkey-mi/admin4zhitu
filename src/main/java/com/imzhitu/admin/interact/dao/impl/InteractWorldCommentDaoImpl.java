@@ -68,7 +68,7 @@ public class InteractWorldCommentDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void saveComment(InteractWorldComment comment) {
-		getJdbcTemplate().update(SAVE_COMMENT, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_COMMENT, new Object[]{
 			comment.getInteractId(),
 			comment.getWorldId(),
 			comment.getUserId(),
@@ -134,28 +134,28 @@ public class InteractWorldCommentDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateFinished(Integer id, Integer finished) {
-		getJdbcTemplate().update(UPDATE_FINISHED, new Object[]{finished, id});
+		getMasterJdbcTemplate().update(UPDATE_FINISHED, new Object[]{finished, id});
 	}
 
 	@Override
 	public void updateValid(Integer maxInteractId, Integer valid) {
-		getJdbcTemplate().update(UPDATE_VALID_BY_MAX_INTERACT_ID, new Object[]{valid, maxInteractId, 1-valid});
+		getMasterJdbcTemplate().update(UPDATE_VALID_BY_MAX_INTERACT_ID, new Object[]{valid, maxInteractId, 1-valid});
 	}
 	
 	@Override
 	public void deleteByInteractIds(Integer[] interactIds) {
 		String sql = DELETE_BY_INTERACT_IDS + SQLUtil.buildInSelection(interactIds);
-		getJdbcTemplate().update(sql, (Object[])interactIds);
+		getMasterJdbcTemplate().update(sql, (Object[])interactIds);
 	}
 	
 	@Override
 	public void deleteByInteractId(Integer interactId) {
-		getJdbcTemplate().update(DELETE_BY_INTERACT_ID, interactId);
+		getMasterJdbcTemplate().update(DELETE_BY_INTERACT_ID, interactId);
 	}
 	
 	@Override
 	public void updateUnFinishedSchedule(Date now) {
-		getJdbcTemplate().update(UPDATE_UN_FINISH_SCHEDULE, new Object[]{now, Tag.FALSE});
+		getMasterJdbcTemplate().update(UPDATE_UN_FINISH_SCHEDULE, new Object[]{now, Tag.FALSE});
 	}
 	
 	
@@ -199,7 +199,7 @@ public class InteractWorldCommentDaoImpl extends BaseDaoImpl implements
 	 */
 	@Override
 	public void updateValidAndSCHTimeById(Integer valid,Date date_schedule,Integer id){
-		getJdbcTemplate().update(UPDATE_VALID_SCHTIME_BY_ID, valid,date_schedule,id);
+		getMasterJdbcTemplate().update(UPDATE_VALID_SCHTIME_BY_ID, valid,date_schedule,id);
 	}
 	
 	/**
@@ -226,7 +226,7 @@ public class InteractWorldCommentDaoImpl extends BaseDaoImpl implements
 	@Override
 	public void deleteInteractCommentByids(Integer[] ids){
 		String sql = DELETE_BY_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	/**
@@ -234,7 +234,7 @@ public class InteractWorldCommentDaoImpl extends BaseDaoImpl implements
 	 */
 	@Override
 	public void updateCommentIdById(Integer id,Integer commentId){
-		getJdbcTemplate().update(UPDATE_COMMENT_ID_BY_ID, commentId,id);
+		getMasterJdbcTemplate().update(UPDATE_COMMENT_ID_BY_ID, commentId,id);
 	}
 
 }

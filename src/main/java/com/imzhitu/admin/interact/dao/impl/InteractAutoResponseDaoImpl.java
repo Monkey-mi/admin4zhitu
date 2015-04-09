@@ -102,7 +102,7 @@ public class InteractAutoResponseDaoImpl extends BaseDaoImpl implements Interact
 	@Override
 	public void delAutoResponseByIds(Integer[] ids){
 		String sql = DELETE_BY_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public class InteractAutoResponseDaoImpl extends BaseDaoImpl implements Interact
 	 */
 	@Override
 	public void addResponse(Integer responseId,Integer commentId,Integer complete,Integer world_id,Integer author, Integer re_author){
-		getJdbcTemplate().update(ADD_RESPONSE, responseId,commentId,complete,world_id,author,re_author);
+		getMasterJdbcTemplate().update(ADD_RESPONSE, responseId,commentId,complete,world_id,author,re_author);
 	}
 	
 	/**
@@ -175,7 +175,7 @@ public class InteractAutoResponseDaoImpl extends BaseDaoImpl implements Interact
 	@Override
 	public void updateResponseCompleteByIds(Integer[] ids){
 		String sql = UPDATE_COMPLETE_BY_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	/**

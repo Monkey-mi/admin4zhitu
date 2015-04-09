@@ -155,52 +155,52 @@ public class HTWorldDaoImpl extends BaseDaoImpl implements HTWorldDao{
 
 	@Override
 	public int addClickCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(ADD_CLICK_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(ADD_CLICK_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	@Override
 	public int reduceClickCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(REDUCE_CLICK_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(REDUCE_CLICK_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	@Override
 	public int addLikedCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(ADD_LIKED_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(ADD_LIKED_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	@Override
 	public int reduceLikedCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(REDUCE_LIKED_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(REDUCE_LIKED_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	@Override
 	public int addKeepCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(ADD_KEEP_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(ADD_KEEP_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	@Override
 	public int reduceKeepCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(REDUCE_KEEP_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(REDUCE_KEEP_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	@Override
 	public int addCommentCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(ADD_COMMENT_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(ADD_COMMENT_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	@Override
 	public int reduceCommentCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(REDUCE_COMMENT_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(REDUCE_COMMENT_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 	
 	@Override
 	public int updateCommentCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(UPDATE_COMMENT_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(UPDATE_COMMENT_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	@Override
 	public int updateKeepCount(Integer worldId, Integer count) {
-		return getJdbcTemplate().update(UPDATE_KEEP_COUNT, new Object[]{count, worldId, Tag.TRUE});
+		return getMasterJdbcTemplate().update(UPDATE_KEEP_COUNT, new Object[]{count, worldId, Tag.TRUE});
 	}
 
 	
@@ -324,7 +324,7 @@ public class HTWorldDaoImpl extends BaseDaoImpl implements HTWorldDao{
 
 	@Override
 	public void updateWorldShield(Integer worldId, Integer shield) {
-		getJdbcTemplate().update(UPDATE_WORLD_SHIELD, new Object[]{shield, worldId});
+		getMasterJdbcTemplate().update(UPDATE_WORLD_SHIELD, new Object[]{shield, worldId});
 	}
 	
 	
@@ -336,20 +336,20 @@ public class HTWorldDaoImpl extends BaseDaoImpl implements HTWorldDao{
 		attrMap.clear();
 		attrMap = null;
 		argsList.add(worldId);
-		getJdbcTemplate().update(sql, argsList.toArray());
+		getMasterJdbcTemplate().update(sql, argsList.toArray());
 	}
 	
 	@Override
 	public void deleteByIds(Integer[] ids) {
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = DELETE_WORLD_BY_IDS + inSelection;
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	@Override
 	public void updateWorldTypeLabel(Integer worldId, Integer typeId,
 			String worldType) {
-		getJdbcTemplate().update(UPDATE_WORLD_TYPE_LABEL, new Object[]{typeId,
+		getMasterJdbcTemplate().update(UPDATE_WORLD_TYPE_LABEL, new Object[]{typeId,
 				worldType, worldId});
 	}
 
@@ -367,7 +367,7 @@ public class HTWorldDaoImpl extends BaseDaoImpl implements HTWorldDao{
 	
 	@Override
 	public void updateLatestValid(Integer id, Integer valid, Date dateAdded) {
-		getJdbcTemplate().update(UPDATE_WORLD_LATEST_VALID, new Object[]{valid, dateAdded, id});
+		getMasterJdbcTemplate().update(UPDATE_WORLD_LATEST_VALID, new Object[]{valid, dateAdded, id});
 	}
 	
 	@Override

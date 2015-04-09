@@ -67,7 +67,7 @@ public class HTWorldChildWorldTypeDaoImpl extends BaseDaoImpl implements
 			+ " set type_path=?,total=?,use_count=?,type_desc=?,desc_path=?,label_name=?,serial=? where id=?";
 	@Override
 	public void saveType(HTWorldChildWorldType type) {
-		getJdbcTemplate().update(SAVE_TYPE, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_TYPE, new Object[]{
 			type.getId(),
 			type.getTypePath(),
 			type.getTotal(),
@@ -129,12 +129,12 @@ public class HTWorldChildWorldTypeDaoImpl extends BaseDaoImpl implements
 	public void deleteType(Integer[] ids) {
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = DELETE_TYPE + inSelection;
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 
 	@Override
 	public void updateSerial(Integer id, Integer serial) {
-		getJdbcTemplate().update(UPDATE_TYPE_SERIAL, new Object[]{serial, id});
+		getMasterJdbcTemplate().update(UPDATE_TYPE_SERIAL, new Object[]{serial, id});
 	}
 	
 	@Override
@@ -193,7 +193,7 @@ public class HTWorldChildWorldTypeDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void updateType(HTWorldChildWorldType type) {
-		getJdbcTemplate().update(UPDATE_TYPE, new Object[]{
+		getMasterJdbcTemplate().update(UPDATE_TYPE, new Object[]{
 			type.getTypePath(),
 			type.getTotal(),
 			type.getUseCount(),

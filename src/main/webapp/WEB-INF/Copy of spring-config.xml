@@ -14,6 +14,7 @@
        	http://www.springframework.org/schema/aop   
        	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 		
+		<!-- 
 	<context:property-placeholder location="classpath:admin.properties" /> 
 	
 	<context:component-scan base-package="com.imzhitu.admin,com.hts.web" />
@@ -97,7 +98,6 @@
      	</tx:attributes>  
  	</tx:advice> 
  	
-    <!-- 配置参与事务的类 -->
 	<aop:config>
 		<aop:advisor 
 			pointcut="execution(* com.imzhitu.admin.*.service.*(..))
@@ -105,7 +105,6 @@
 				or execution(* com.imzhitu.admin.*.mapper.*(..))"
 			advice-ref="txAdvice" />
 		
-		<!-- 
 		<aop:aspect ref="operationLogger">
 			<aop:around
 				pointcut="execution(* com.imzhitu.admin.*.service.*.commit*(..))
@@ -116,7 +115,6 @@
 					or execution(* com.imzhitu.admin.*.service.*.add*(..))"
 				method="saveUserOperationLog"  />
 		</aop:aspect>
-		 -->
 	</aop:config>
 	
 	<bean id="jdbcTemplate" class="com.hts.web.base.database.ZTJdbcTemplate">
@@ -160,5 +158,6 @@
     
     <import resource="spring-config-web.xml" />
     <import resource="spring-config-interact.xml"/>
+     -->
     
 </beans>

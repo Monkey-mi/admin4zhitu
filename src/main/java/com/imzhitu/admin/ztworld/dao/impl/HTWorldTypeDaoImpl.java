@@ -89,7 +89,7 @@ public class HTWorldTypeDaoImpl extends BaseDaoImpl implements HTWorldTypeDao {
 	
 	@Override
 	public void saveType(HTWorldType type) {
-		getJdbcTemplate().update(SAVE_TYPE, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_TYPE, new Object[]{
 			type.getId(),
 			type.getTypeName(),
 			type.getTypePinyin(),
@@ -136,7 +136,7 @@ public class HTWorldTypeDaoImpl extends BaseDaoImpl implements HTWorldTypeDao {
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = UPDATE_TYPE_VALID_BY_IDS + inSelection;
 		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{valid}, true);
-		getJdbcTemplate().update(sql, args);
+		getMasterJdbcTemplate().update(sql, args);
 	}
 	
 	/**

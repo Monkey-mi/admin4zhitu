@@ -42,28 +42,28 @@ public class InteractPlanCommentDaoImpl extends BaseDaoImpl implements InteractP
 	
 	@Override
 	public void addPlanComment(Integer groupId,String content,Date addDate , Date modifyDate,Integer operatorId,Integer valid,Integer interactCommentId){
-		getJdbcTemplate().update(ADD_PLAN_COMMENT, groupId,content,addDate,modifyDate,operatorId,valid,interactCommentId);
+		getMasterJdbcTemplate().update(ADD_PLAN_COMMENT, groupId,content,addDate,modifyDate,operatorId,valid,interactCommentId);
 	}
 	
 	@Override
 	public void delPlanCommentByIds(Integer[] ids){
 		String sql = DEL_PLAN_COMMENT_BY_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	@Override
 	public void delPlanCommentByGroupId(Integer groupId){
-		getJdbcTemplate().update(DEL_PLAN_COMMENT_BY_GROUP_ID, groupId);
+		getMasterJdbcTemplate().update(DEL_PLAN_COMMENT_BY_GROUP_ID, groupId);
 	}
 	
 	@Override
 	public void updateCommentContentById(Integer id,String content,Integer groupId,Integer valid,Date modifyDate,Integer operatorId){
-		getJdbcTemplate().update(UPDATE_PLAN_COMMENT_CONTENT_BY_ID,content,groupId,valid,modifyDate,operatorId,id);
+		getMasterJdbcTemplate().update(UPDATE_PLAN_COMMENT_CONTENT_BY_ID,content,groupId,valid,modifyDate,operatorId,id);
 	}
 	
 	@Override
 	public void updatePlanCommentValidById(Integer id,Integer valid,Integer operatorId,Date modifyDate ){
-		getJdbcTemplate().update(UPDATE_PLAN_COMMENT_VALID_BY_ID,valid,operatorId,modifyDate,id);
+		getMasterJdbcTemplate().update(UPDATE_PLAN_COMMENT_VALID_BY_ID,valid,operatorId,modifyDate,id);
 	}
 	
 	/**

@@ -58,7 +58,7 @@ public class InteractWorldLikedDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void saveLiked(InteractWorldLiked liked) {
-		getJdbcTemplate().update(SAVE_LIKED, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_LIKED, new Object[]{
 			liked.getInteractId(),
 			liked.getWorldId(),
 			liked.getUserId(),
@@ -109,23 +109,23 @@ public class InteractWorldLikedDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateFinished(Integer id, Integer finished) {
-		getJdbcTemplate().update(UPDATE_FINISHED, new Object[]{finished, id});
+		getMasterJdbcTemplate().update(UPDATE_FINISHED, new Object[]{finished, id});
 	}
 	
 	@Override
 	public void updateValid(Integer maxInteractId, Integer valid) {
-		getJdbcTemplate().update(UPDATE_VALID_BY_MAX_INTERACT_ID, new Object[]{valid, maxInteractId, 1-valid});
+		getMasterJdbcTemplate().update(UPDATE_VALID_BY_MAX_INTERACT_ID, new Object[]{valid, maxInteractId, 1-valid});
 	}
 
 	@Override
 	public void deleteByInteractIds(Integer[] interactIds) {
 		String sql = DELETE_BY_INTERACT_IDS + SQLUtil.buildInSelection(interactIds);
-		getJdbcTemplate().update(sql, (Object[])interactIds);
+		getMasterJdbcTemplate().update(sql, (Object[])interactIds);
 	}
 	
 	@Override
 	public void deleteByInteractId(Integer interactId) {
-		getJdbcTemplate().update(DELETE_BY_INTERACT_ID, interactId);
+		getMasterJdbcTemplate().update(DELETE_BY_INTERACT_ID, interactId);
 	}
 	
 	@Override
@@ -145,7 +145,7 @@ public class InteractWorldLikedDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateUnFinishedSchedule(Date now) {
-		getJdbcTemplate().update(UPDATE_UN_FINISH_SCHEDULE, new Object[]{now, Tag.FALSE});
+		getMasterJdbcTemplate().update(UPDATE_UN_FINISH_SCHEDULE, new Object[]{now, Tag.FALSE});
 	}
 	
 	
@@ -167,7 +167,7 @@ public class InteractWorldLikedDaoImpl extends BaseDaoImpl implements
 	 */
 	@Override
 	public void updateValidAndSCHTimeById(Integer valid,Date date_schedule,Integer id){
-		getJdbcTemplate().update(UPDATE_VALID_SCHTIME_BY_ID, valid,date_schedule,id);
+		getMasterJdbcTemplate().update(UPDATE_VALID_SCHTIME_BY_ID, valid,date_schedule,id);
 	}
 	
 	/**

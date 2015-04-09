@@ -169,7 +169,7 @@ public class HTWorldLabelDaoImpl extends BaseDaoImpl implements HTWorldLabelDao 
 
 	@Override
 	public void updateSerial(Integer id, Integer serial) {
-		getJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, id});
+		getMasterJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, id});
 	}
 
 	@Override
@@ -188,12 +188,12 @@ public class HTWorldLabelDaoImpl extends BaseDaoImpl implements HTWorldLabelDao 
 
 	@Override
 	public void updateWorldCount(Integer id, Integer worldCount) {
-		getJdbcTemplate().update(UPDATE_WORLD_COUNT, new Object[]{worldCount, id});
+		getMasterJdbcTemplate().update(UPDATE_WORLD_COUNT, new Object[]{worldCount, id});
 	}
 
 	@Override
 	public void updateLabelState(Integer id, Integer state) {
-		getJdbcTemplate().update(UPDATE_LABEL_STATE, new Object[]{state, id});
+		getMasterJdbcTemplate().update(UPDATE_LABEL_STATE, new Object[]{state, id});
 	}
 
 	@Override

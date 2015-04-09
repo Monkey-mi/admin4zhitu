@@ -71,13 +71,13 @@ public class InteractWorldlevelDaoImpl extends BaseDaoImpl implements
 	public void DeleteWorldLevelByIds(Integer[] ids) throws Exception {
 		// TODO Auto-generated method stub
 		String sql = DELETE_WORLD_LEVEL_BY_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 
 	@Override
 	public void AddWorldlevel(ZTWorldLevelDto worldlevelDto) throws Exception {
 		// TODO Auto-generated method stub
-		getJdbcTemplate().update(ADD_WORLD_LEVEL, new Object[]{
+		getMasterJdbcTemplate().update(ADD_WORLD_LEVEL, new Object[]{
 				worldlevelDto.getMin_fans_count(),worldlevelDto.getMax_fans_count(),
 				worldlevelDto.getMin_liked_count(),worldlevelDto.getMax_liked_count(),
 				worldlevelDto.getMin_comment_count(),worldlevelDto.getMax_comment_count(),
@@ -88,7 +88,7 @@ public class InteractWorldlevelDaoImpl extends BaseDaoImpl implements
 	@Override
 	public void UpdateWorldlevel(ZTWorldLevelDto worldlevelDto)	throws Exception {
 		// TODO Auto-generated method stub
-		getJdbcTemplate().update(UPDATE_WORLD_LEVEL, new Object[]{
+		getMasterJdbcTemplate().update(UPDATE_WORLD_LEVEL, new Object[]{
 				worldlevelDto.getMin_fans_count(),worldlevelDto.getMax_fans_count(),
 				worldlevelDto.getMin_liked_count(),worldlevelDto.getMax_liked_count(),
 				worldlevelDto.getMin_comment_count(),worldlevelDto.getMax_comment_count(),

@@ -16,7 +16,7 @@ public class InteractActiveOperatedDaoImpl extends BaseDaoImpl implements Intera
 	
 	@Override
 	public void addOperated(Integer wid,Integer operated){
-		getJdbcTemplate().update(ADD_OPERATED, wid,operated);
+		getMasterJdbcTemplate().update(ADD_OPERATED, wid,operated);
 	}
 	
 	@Override
@@ -31,11 +31,11 @@ public class InteractActiveOperatedDaoImpl extends BaseDaoImpl implements Intera
 	
 	@Override
 	public void delOperated(Integer wid){
-		getJdbcTemplate().update(DEL_OPERATED, wid);
+		getMasterJdbcTemplate().update(DEL_OPERATED, wid);
 	}
 	
 	@Override
 	public void updateOperated(Integer wid,Integer  operated){
-		getJdbcTemplate().update(UPDATE_OPERATED, operated,wid);
+		getMasterJdbcTemplate().update(UPDATE_OPERATED, operated,wid);
 	}
 }

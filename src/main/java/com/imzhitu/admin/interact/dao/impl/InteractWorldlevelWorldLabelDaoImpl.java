@@ -35,11 +35,11 @@ public class InteractWorldlevelWorldLabelDaoImpl extends BaseDaoImpl implements 
 	}
 	
 	public void addWorldlevelWorldLabel(Integer wid,Integer lid,Integer complete,Date dateAdd){
-		getJdbcTemplate().update(ADD_WORLD_LABEL, wid,lid,complete,dateAdd);
+		getMasterJdbcTemplate().update(ADD_WORLD_LABEL, wid,lid,complete,dateAdd);
 	}
 	
 	public void updateWorldlevelWorldLabelComplete(Integer wid,Integer complete){
-		getJdbcTemplate().update(UPDATE_COMPLETE,complete,wid);
+		getMasterJdbcTemplate().update(UPDATE_COMPLETE,complete,wid);
 	}
 	
 	private InteractWorldlevelWorldLabel buildInteractWorldlevelWorldLabel(ResultSet rs)throws SQLException{

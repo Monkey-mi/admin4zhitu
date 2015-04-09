@@ -49,7 +49,7 @@ public class PrivilegesDaoImpl extends BaseDaoImpl implements PrivilegesDao{
 	
 	@Override
 	public void deletePrivilegesByGroupId(Integer groupId) {
-		getJdbcTemplate().update(DELETE_PRIVILEGES_BY_GROUP_ID, new Object[]{groupId});
+		getMasterJdbcTemplate().update(DELETE_PRIVILEGES_BY_GROUP_ID, new Object[]{groupId});
 	}
 	
 	@Override

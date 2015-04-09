@@ -24,7 +24,7 @@ public class SysMsgDaoImpl extends BaseDaoImpl implements SysMsgDao {
 	
 //	@Override
 //	public void saveMsg(OpSysMsg msg) {
-//		getJdbcTemplate().update(SAVE_MSG, new Object[]{
+//		getMasterJdbcTemplate().update(SAVE_MSG, new Object[]{
 //				msg.getId(),
 //				msg.getSenderId(),
 //				msg.getRecipientId(),
@@ -40,7 +40,7 @@ public class SysMsgDaoImpl extends BaseDaoImpl implements SysMsgDao {
 
 	@Override
 	public void deleteMsgById(Integer id) {
-		getJdbcTemplate().update(DELETE_BY_ID, new Object[]{id});
+		getMasterJdbcTemplate().update(DELETE_BY_ID, new Object[]{id});
 	}
 
 }

@@ -76,7 +76,7 @@ public class UserVerifyDaoImpl extends BaseDaoImpl implements UserVerifyDao {
 	
 	@Override
 	public void saveVerify(UserVerify verify) {
-		getJdbcTemplate().update(SAVE_VERIFY, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_VERIFY, new Object[]{
 				verify.getId(),
 				verify.getVerifyName(),
 				verify.getVerifyDesc(),
@@ -126,7 +126,7 @@ public class UserVerifyDaoImpl extends BaseDaoImpl implements UserVerifyDao {
 
 	@Override
 	public void updateVerifySerial(Integer id, Integer serial) {
-		getJdbcTemplate().update(UPDATE_VERIFY_SERIAL, 
+		getMasterJdbcTemplate().update(UPDATE_VERIFY_SERIAL, 
 				new Object[]{serial, id});
 	}
 	
@@ -159,7 +159,7 @@ public class UserVerifyDaoImpl extends BaseDaoImpl implements UserVerifyDao {
 	
 	@Override
 	public void updateVerify(UserVerify verify) {
-		getJdbcTemplate().update(UPDATE_VERIFY, new Object[]{
+		getMasterJdbcTemplate().update(UPDATE_VERIFY, new Object[]{
 				verify.getVerifyName(),
 				verify.getVerifyDesc(),
 				verify.getVerifyIcon(),

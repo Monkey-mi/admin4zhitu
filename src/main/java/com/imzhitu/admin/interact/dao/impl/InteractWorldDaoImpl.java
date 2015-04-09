@@ -96,7 +96,7 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void saveInteract(InteractWorld interact) {
-		getJdbcTemplate().update(SAVE_INTERACT, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_INTERACT, new Object[]{
 			interact.getId(),
 			interact.getWorldId(),
 			interact.getClickCount(),
@@ -129,7 +129,7 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	@Override
 	public void updateInteract(Integer id, Integer clickCount,
 			Integer commentCount, Integer likedCount, Integer duration) {
-		getJdbcTemplate().update(UPDATE_INTERACT, new Object[]{
+		getMasterJdbcTemplate().update(UPDATE_INTERACT, new Object[]{
 			clickCount, commentCount, likedCount, duration, id
 		});
 	}
@@ -194,13 +194,13 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateValid(Integer maxId, Integer valid) {
-		getJdbcTemplate().update(UPDATE_VALID_BY_MAX_ID, new Object[]{valid, maxId, 1-valid});
+		getMasterJdbcTemplate().update(UPDATE_VALID_BY_MAX_ID, new Object[]{valid, maxId, 1-valid});
 	}
 	
 	@Override
 	public void deleteInteract(Integer[] ids) {
 		String sql = DELETE_INTERACT + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 
 	@Override
@@ -215,7 +215,7 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void deleteInteract(Integer id) {
-		getJdbcTemplate().update(DELETE_BY_ID, id);
+		getMasterJdbcTemplate().update(DELETE_BY_ID, id);
 	}
 	
 	@Override
@@ -266,7 +266,7 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 			head=UPDATE_VALID_FALSE_BY_WORLDID;
 		}
 		String sql = head + SQLUtil.buildInSelection(wids);
-		getJdbcTemplate().update(sql,(Object[])wids);
+		getMasterJdbcTemplate().update(sql,(Object[])wids);
 	}
 	
 	/**

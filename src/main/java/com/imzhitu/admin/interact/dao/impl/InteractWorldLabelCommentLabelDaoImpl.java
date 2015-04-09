@@ -119,7 +119,7 @@ public class InteractWorldLabelCommentLabelDaoImpl extends BaseDaoImpl implement
 	@Override
 	public void DeleteWorldLabelCommentLabelByIds(Integer[] ids){
 		String sql = DELETE_WORLD_LABEL_COMMENT_LABEL_BY_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	/**
@@ -145,7 +145,7 @@ public class InteractWorldLabelCommentLabelDaoImpl extends BaseDaoImpl implement
 	 */
 	@Override
 	public void AddWorldLabelCommentLabelCount(WorldLabelCommentLabelDto worldLabelCommentLabelDto){
-		getJdbcTemplate().update(ADD_WORLD_LABEL_COMMENT_LABEL, worldLabelCommentLabelDto.getWorld_label_id(),worldLabelCommentLabelDto.getComment_label_id());
+		getMasterJdbcTemplate().update(ADD_WORLD_LABEL_COMMENT_LABEL, worldLabelCommentLabelDto.getWorld_label_id(),worldLabelCommentLabelDto.getComment_label_id());
 	}
 
 	/**

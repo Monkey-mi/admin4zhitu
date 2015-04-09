@@ -120,7 +120,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao{
 	
 	@Override
 	public void saveUserInfoRole( Integer userId, Integer roleId){
-		getJdbcTemplate().update(SAVE_UERR_INFO_ROLE, new Object[]{userId,roleId});
+		getMasterJdbcTemplate().update(SAVE_UERR_INFO_ROLE, new Object[]{userId,roleId});
 	}
 	
 	@Override
@@ -136,12 +136,12 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao{
 	
 	@Override
 	public void deleteUserInfoRoleByUserId( Integer userId){
-		getJdbcTemplate().update(DELETE_USER_INFO_ROLE_BY_USER_ID, new Object[]{userId});
+		getMasterJdbcTemplate().update(DELETE_USER_INFO_ROLE_BY_USER_ID, new Object[]{userId});
 	}
 
 	@Override
 	public void updatePassword(Integer userId, byte[] password) {
-		getJdbcTemplate().update(UPDATE_PASSWORD, new Object[]{password, userId});
+		getMasterJdbcTemplate().update(UPDATE_PASSWORD, new Object[]{password, userId});
 	}
 
 	

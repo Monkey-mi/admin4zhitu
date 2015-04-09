@@ -42,7 +42,7 @@ public class KeyGenDaoImpl extends BaseDaoImpl implements KeyGenDao{
 	
 	@Override
 	public void updateMaxId(int keyId, int maxId) {
-		getJdbcTemplate().update(UPDATE_MAX_ID, new Object[]{maxId, keyId}); //更新最大id
+		getMasterJdbcTemplate().update(UPDATE_MAX_ID, new Object[]{maxId, keyId}); //更新最大id
 	}
 	
 }

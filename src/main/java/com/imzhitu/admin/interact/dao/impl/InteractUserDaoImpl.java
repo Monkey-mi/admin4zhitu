@@ -89,7 +89,7 @@ public class InteractUserDaoImpl extends BaseDaoImpl implements InteractUserDao 
 	
 	@Override
 	public void saveInteract(InteractUser interact) {
-		getJdbcTemplate().update(SAVE_INTERACT, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_INTERACT, new Object[]{
 			interact.getId(),
 			interact.getUserId(),
 			interact.getFollowCount(),
@@ -147,14 +147,14 @@ public class InteractUserDaoImpl extends BaseDaoImpl implements InteractUserDao 
 	
 	@Override
 	public void updateInteract(Integer interactId, Integer followCount, Integer duration) {
-		getJdbcTemplate().update(UPDATE_INTERACT, new Object[]{followCount, duration, interactId});
+		getMasterJdbcTemplate().update(UPDATE_INTERACT, new Object[]{followCount, duration, interactId});
 	}
 	
 	@Override
 	public void deleteByIds(Integer[] ids) {
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = DELETE_BY_IDS + inSelection;
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	@Override

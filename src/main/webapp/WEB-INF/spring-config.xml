@@ -17,24 +17,41 @@
 
     <context:annotation-config />
     
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+    <bean id="masterDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
 		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
-		<property name="jdbcUrl" value="${admin.database.jdbcUrl}"></property>
-		<property name="user" value="${admin.database.user}" />
-		<property name="password" value="${admin.database.password}" />
-		<property name="maxPoolSize" value="${database.maxPoolSize}"></property>  
-	    <property name="minPoolSize" value="${database.minPoolSize}"></property>
-	    <property name="maxIdleTime" value="${database.maxIdleTime}"></property>
-	    <property name="idleConnectionTestPeriod" value="${database.idleConnectionTestPeriod}"></property>
+		<property name="jdbcUrl" value="${database.master.jdbcUrl}"></property>
+		<property name="user" value="${database.master.user}" />
+		<property name="password" value="${database.master.password}" />
+		<property name="maxPoolSize" value="${database.master.maxPoolSize}"></property>  
+	    <property name="minPoolSize" value="${database.master.minPoolSize}"></property>
+	    <property name="maxIdleTime" value="${database.master.maxIdleTime}"></property>
+	    <property name="idleConnectionTestPeriod" value="${database.master.idleConnectionTestPeriod}"></property>
 	</bean>
 	
+	<bean id="slaveDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="${database.slave.jdbcUrl}"></property>
+		<property name="user" value="${database.slave.user}" />
+		<property name="password" value="${database.slave.password}" />
+		<property name="maxPoolSize" value="${database.slave.maxPoolSize}"></property>  
+	    <property name="minPoolSize" value="${database.slave.minPoolSize}"></property>
+	    <property name="maxIdleTime" value="${database.slave.maxIdleTime}"></property>
+	    <property name="idleConnectionTestPeriod" value="${database.slave.idleConnectionTestPeriod}"></property>
+	</bean>
+	
+	<!-- 
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
+	 -->
+	
+	<bean id="masterJdbcTemplate" class="com.hts.web.base.database.ZTJdbcTemplate">
+		<constructor-arg ref="masterDataSource" />
+	</bean>
 	
 	<bean id="jdbcTemplate" class="com.hts.web.base.database.ZTJdbcTemplate">
-		<constructor-arg ref="dataSource" />
+		<constructor-arg ref="slaveDataSource" />
 	</bean>
 	
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
@@ -63,12 +80,12 @@
 	
 	<bean id="webSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
         <property name="configLocation" value="classpath:mybatis-config-web.xml" />
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="masterDataSource" />
     </bean>
  
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
         <property name="configLocation" value="classpath:mybatis-config.xml" />
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="masterDataSource" />
     </bean>
     
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">

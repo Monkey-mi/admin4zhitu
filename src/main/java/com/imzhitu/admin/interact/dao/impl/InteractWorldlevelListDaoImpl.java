@@ -68,18 +68,18 @@ public class InteractWorldlevelListDaoImpl extends BaseDaoImpl implements Intera
 	
 	@Override
 	public void addWorldLevelList(Integer worldId,Integer  world_level_id,Integer validity,Date addDate,Date modifyDate,Integer operatorId){
-		getJdbcTemplate().update(ADD_WORLD_LEVEL_LIST, worldId,world_level_id,validity,addDate,modifyDate,operatorId);
+		getMasterJdbcTemplate().update(ADD_WORLD_LEVEL_LIST, worldId,world_level_id,validity,addDate,modifyDate,operatorId);
 	}
 	
 	@Override
 	public void delWorldLevelListByWIds(Integer[] wIds){
 		String sql = DEL_WORLD_LEVEL_LIST_BY_WIDS+SQLUtil.buildInSelection(wIds);
-		getJdbcTemplate().update(sql, (Object[])wIds);
+		getMasterJdbcTemplate().update(sql, (Object[])wIds);
 	}
 	
 	@Override
 	public void updateWorldLevelList(Integer worldId , Integer world_level_id,Integer validity,Date modifyDate,Integer operatorId){
-		getJdbcTemplate().update(UPDATE_WORLD_LEVEL_LIST, world_level_id,validity,modifyDate,operatorId,worldId);
+		getMasterJdbcTemplate().update(UPDATE_WORLD_LEVEL_LIST, world_level_id,validity,modifyDate,operatorId,worldId);
 	}
 	
 	

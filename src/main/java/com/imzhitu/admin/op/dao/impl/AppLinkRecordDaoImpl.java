@@ -33,7 +33,7 @@ public class AppLinkRecordDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void saveRecord(OpAdAppLinkRecord record) {
-		getJdbcTemplate().update(SAVE_RECORD, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_RECORD, new Object[]{
 			record.getRecordip(),
 			record.getRecordDate(),
 			record.getAppId()

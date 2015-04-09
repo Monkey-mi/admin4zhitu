@@ -161,7 +161,7 @@ public class ActivityWinnerDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void saveWinner(OpActivityWinner winner) {
-		getJdbcTemplate().update(SAVE_WINNER, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_WINNER, new Object[]{
 			winner.getId(),
 			winner.getActivityId(),
 			winner.getWorldId(),
@@ -174,7 +174,7 @@ public class ActivityWinnerDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void deleteWinner(Integer activityId, Integer worldId) {
-		getJdbcTemplate().update(DELETE_WINNER, new Object[]{activityId, worldId});
+		getMasterJdbcTemplate().update(DELETE_WINNER, new Object[]{activityId, worldId});
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class ActivityWinnerDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void updateAwardId(Integer activityId, Integer worldId, Integer awardId) {
-		getJdbcTemplate().update(UPDATE_WINNER_AWARD, new Object[]{awardId, activityId, worldId});
+		getMasterJdbcTemplate().update(UPDATE_WINNER_AWARD, new Object[]{awardId, activityId, worldId});
 	}
 	
 

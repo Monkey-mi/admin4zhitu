@@ -80,7 +80,7 @@ public class InteractUserFollowDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void saveFollow(InteractUserFollow follow) {
-		getJdbcTemplate().update(SAVE_FOLLOW, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_FOLLOW, new Object[]{
 			follow.getInteractId(),
 			follow.getUserId(),
 			follow.getFollowId(),
@@ -125,7 +125,7 @@ public class InteractUserFollowDaoImpl extends BaseDaoImpl implements
 	public void deleteByInteractId(Integer[] interactIds) {
 		String inSelection = SQLUtil.buildInSelection(interactIds);
 		String sql = DELETE_BY_INTERACT_IDS + inSelection;
-		getJdbcTemplate().update(sql, (Object[])interactIds);
+		getMasterJdbcTemplate().update(sql, (Object[])interactIds);
 	}
 	
 
@@ -147,12 +147,12 @@ public class InteractUserFollowDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateUnFinishedSchedule(Date now) {
-		getJdbcTemplate().update(UPDATE_UN_FINISH_SCHEDULE, new Object[]{now, Tag.FALSE});
+		getMasterJdbcTemplate().update(UPDATE_UN_FINISH_SCHEDULE, new Object[]{now, Tag.FALSE});
 	}
 	
 	@Override
 	public void updateFinished(Integer id, Integer finished) {
-		getJdbcTemplate().update(UPDATE_FINISHED, new Object[]{finished, id});
+		getMasterJdbcTemplate().update(UPDATE_FINISHED, new Object[]{finished, id});
 	}
 	
 	@Override

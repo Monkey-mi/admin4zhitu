@@ -136,17 +136,17 @@ public class InteractUserlevelListDaoImpl extends BaseDaoImpl implements Interac
 	
 	@Override
 	public void UpdateValidityByUserId(Integer userId, Integer validity){
-		getJdbcTemplate().update(UPDATE_VALIDITY_BY_USERID, validity,userId);
+		getMasterJdbcTemplate().update(UPDATE_VALIDITY_BY_USERID, validity,userId);
 	}
 	
 	@Override
 	public void UpdateValidityById(Integer id,Integer validity){
-		getJdbcTemplate().update(UPDATE_VALIDITY_BY_ID, validity,id);
+		getMasterJdbcTemplate().update(UPDATE_VALIDITY_BY_ID, validity,id);
 	}
 	
 	@Override
 	public void AddUserlevel(UserLevelListDto userLevelDto){
-		getJdbcTemplate().update(ADD_USER_LEVEL, new Object[]{
+		getMasterJdbcTemplate().update(ADD_USER_LEVEL, new Object[]{
 				userLevelDto.getUser_id(),
 				userLevelDto.getUser_level_id(),
 				userLevelDto.getValidity(),
@@ -159,13 +159,13 @@ public class InteractUserlevelListDaoImpl extends BaseDaoImpl implements Interac
 	@Override
 	public void DeleteUserlevelByIds(Integer[] ids){
 		String sql = DELETE_USER_LEVEL_BY_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql,(Object[])ids);
+		getMasterJdbcTemplate().update(sql,(Object[])ids);
 	}
 	
 	@Override
 	public void DeleteUserlevelByUserids(Integer[] userIds){
 		String sql = DELETE_USER_LEVEL_BY_USERIDS + SQLUtil.buildInSelection(userIds);
-		getJdbcTemplate().update(sql);
+		getMasterJdbcTemplate().update(sql);
 	}
 	
 	/**
@@ -198,7 +198,7 @@ public class InteractUserlevelListDaoImpl extends BaseDaoImpl implements Interac
 	 */
 	@Override
 	public void UpdateUserlevelByUserId(UserLevelListDto userLevelListDto){
-		getJdbcTemplate().update(UPDATE_USER_LEVEL_BU_USER_ID, 
+		getMasterJdbcTemplate().update(UPDATE_USER_LEVEL_BU_USER_ID, 
 				userLevelListDto.getUser_level_id(),userLevelListDto.getValidity(),
 				userLevelListDto.getModifyDate(),userLevelListDto.getOperatorId(),userLevelListDto.getUser_id());
 	}

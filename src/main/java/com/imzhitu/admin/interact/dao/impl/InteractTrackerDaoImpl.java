@@ -57,7 +57,7 @@ public class InteractTrackerDaoImpl extends BaseDaoImpl implements InteractTrack
 	
 	@Override
 	public void saveTrack(InteractTracker tracker) {
-		getJdbcTemplate().update(SAVE_TRACKER, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_TRACKER, new Object[]{
 			tracker.getInteractDesc(),
 			tracker.getInteractStep(),
 			tracker.getInteractBegin(),
@@ -71,19 +71,19 @@ public class InteractTrackerDaoImpl extends BaseDaoImpl implements InteractTrack
 
 	@Override
 	public void updateLastInteractDate(Integer id, Date lastDate) {
-		getJdbcTemplate().update(UPDATE_LAST_INTERACT_DATE, new Object[]{lastDate,id});
+		getMasterJdbcTemplate().update(UPDATE_LAST_INTERACT_DATE, new Object[]{lastDate,id});
 	}
 
 
 	@Override
 	public void updateLastTrackDate(Date lastDate) {
-		getJdbcTemplate().update(UPDATE_LAST_TRACK_DATE, new Object[]{lastDate});
+		getMasterJdbcTemplate().update(UPDATE_LAST_TRACK_DATE, new Object[]{lastDate});
 	}
 
 
 	@Override
 	public void updateTrackValid(Integer valid) {
-		getJdbcTemplate().update(UPDATE_VALID, new Object[]{valid});
+		getMasterJdbcTemplate().update(UPDATE_VALID, new Object[]{valid});
 	}
 
 

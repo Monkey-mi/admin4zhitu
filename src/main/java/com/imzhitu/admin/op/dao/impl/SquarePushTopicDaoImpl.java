@@ -66,7 +66,7 @@ public class SquarePushTopicDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void saveTopic(OpSquareTopic topic) {
-		getJdbcTemplate().update(SAVE_TOPIC, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_TOPIC, new Object[]{
 			topic.getTopic(),
 			topic.getTopicPath(),
 			topic.getTopicPathHd(),
@@ -76,7 +76,7 @@ public class SquarePushTopicDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void deleteTopicById(Integer id) {
-		getJdbcTemplate().update(DELETE_TOPIC_BY_ID, id);
+		getMasterJdbcTemplate().update(DELETE_TOPIC_BY_ID, id);
 	}
 
 }

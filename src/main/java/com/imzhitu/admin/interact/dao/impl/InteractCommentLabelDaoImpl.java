@@ -94,7 +94,7 @@ public class InteractCommentLabelDaoImpl extends BaseDaoImpl implements Interact
 	
 	@Override
 	public void saveLabel(InteractCommentLabel label) {
-		getJdbcTemplate().update(SAVE_LABEL, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_LABEL, new Object[]{
 			label.getLabelName(),
 			label.getGroupId()
 		});
@@ -196,12 +196,12 @@ public class InteractCommentLabelDaoImpl extends BaseDaoImpl implements Interact
 	
 	@Override
 	public void updateLabel(Integer id, String labelName, Integer groupId) {
-		getJdbcTemplate().update(UPDATE_LABEL_BY_ID, new Object[]{labelName, groupId, id});
+		getMasterJdbcTemplate().update(UPDATE_LABEL_BY_ID, new Object[]{labelName, groupId, id});
 	}
 	
 	@Override
 	public void deleteByGroupId(Integer groupId) {
-		getJdbcTemplate().update(DELETE_BY_GROUP_ID, new Object[]{groupId});
+		getMasterJdbcTemplate().update(DELETE_BY_GROUP_ID, new Object[]{groupId});
 	}
 	
 

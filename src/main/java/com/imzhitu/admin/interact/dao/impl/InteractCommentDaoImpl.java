@@ -44,7 +44,7 @@ public class InteractCommentDaoImpl extends BaseDaoImpl implements InteractComme
 	
 	@Override
 	public void saveComment(InteractComment comment) {
-		getJdbcTemplate().update(SAVE_COMMENT, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_COMMENT, new Object[]{
 			comment.getId(),
 			comment.getContent(),
 			comment.getLabelId()
@@ -189,12 +189,12 @@ public class InteractCommentDaoImpl extends BaseDaoImpl implements InteractComme
 	@Override
 	public void deleteByIds(Integer[] ids) {
 		String sql = UPDATE_COMMENT_VALID_IDS + SQLUtil.buildInSelection(ids);
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	@Override
 	public void addCount(Integer id, Integer count) {
-		getJdbcTemplate().update(ADD_COUNT, new Object[]{count, id});
+		getMasterJdbcTemplate().update(ADD_COUNT, new Object[]{count, id});
 	}
 
 	@Override
@@ -211,11 +211,11 @@ public class InteractCommentDaoImpl extends BaseDaoImpl implements InteractComme
 
 	@Override
 	public void updateComment(Integer id, String content, Integer labelId) {
-		getJdbcTemplate().update(UPDATE_COMMENT_BY_ID, new Object[]{content, labelId, id});
+		getMasterJdbcTemplate().update(UPDATE_COMMENT_BY_ID, new Object[]{content, labelId, id});
 	}
 
 	@Override
 	public void updateCommentContentById(String content,Integer id){
-		getJdbcTemplate().update(UPDATE_COMMENT_CONTENT_BY_ID,content,id);
+		getMasterJdbcTemplate().update(UPDATE_COMMENT_CONTENT_BY_ID,content,id);
 	}
 }

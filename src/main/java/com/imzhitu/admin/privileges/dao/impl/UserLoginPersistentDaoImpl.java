@@ -60,14 +60,14 @@ public class UserLoginPersistentDaoImpl extends BaseDaoImpl implements
 	public void createNewToken(PersistentRememberMeToken token) {
 		Integer userId = getJdbcTemplate().queryForInt(QUERY_USER_ID_BY_LOGIN_CODE, 
 				new Object[]{token.getUsername()});
-		getJdbcTemplate().update(DELETE_TOKEN_BY_USER_ID, new Object[]{userId});
-		getJdbcTemplate().update(SAVE_TOKEN, new Object[]{userId,
+		getMasterJdbcTemplate().update(DELETE_TOKEN_BY_USER_ID, new Object[]{userId});
+		getMasterJdbcTemplate().update(SAVE_TOKEN, new Object[]{userId,
 				token.getSeries(), token.getTokenValue(), token.getDate()});
 	}
 
 	@Override
 	public void updateToken(String series, String tokenValue, Date lastUsed) {
-		getJdbcTemplate().update(UPDATE_TOKEN, new Object[]{tokenValue, lastUsed, series});
+		getMasterJdbcTemplate().update(UPDATE_TOKEN, new Object[]{tokenValue, lastUsed, series});
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class UserLoginPersistentDaoImpl extends BaseDaoImpl implements
 			Integer userId = getJdbcTemplate().queryForInt(QUERY_USER_ID_BY_LOGIN_CODE, 
 					new Object[]{username});
 			if(userId != null) {
-				getJdbcTemplate().update(DELETE_TOKEN_BY_USER_ID, userId);
+				getMasterJdbcTemplate().update(DELETE_TOKEN_BY_USER_ID, userId);
 			}
 		} catch(EmptyResultDataAccessException e) {
 			

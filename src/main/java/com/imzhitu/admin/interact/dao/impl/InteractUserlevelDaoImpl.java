@@ -108,7 +108,7 @@ public class InteractUserlevelDaoImpl extends BaseDaoImpl implements InteractUse
 	public void DeleteUserlevelByIds(Integer[] ids)throws Exception{
 		try{
 			String sql = DELETE_USER_LEVEL_BY_IDS + SQLUtil.buildInSelection(ids);
-			getJdbcTemplate().update(sql,(Object[])ids);
+			getMasterJdbcTemplate().update(sql,(Object[])ids);
 		}catch(Exception e){
 			throw e;
 		}
@@ -120,7 +120,7 @@ public class InteractUserlevelDaoImpl extends BaseDaoImpl implements InteractUse
 	@Override
 	public void AddUserlevel(UserLevelDto userlevelDto)throws Exception {
 		try{
-			getJdbcTemplate().update(ADD_USER_LEVEL, new Object[]{
+			getMasterJdbcTemplate().update(ADD_USER_LEVEL, new Object[]{
 					userlevelDto.getMin_fans_count(),userlevelDto.getMax_fans_count(),
 					userlevelDto.getMin_liked_count(),userlevelDto.getMax_liked_count(),
 					userlevelDto.getMin_comment_count(),userlevelDto.getMax_comment_count(),
@@ -137,7 +137,7 @@ public class InteractUserlevelDaoImpl extends BaseDaoImpl implements InteractUse
 	@Override
 	public void UpdateUserlevelById(UserLevelDto userlevelDto)throws Exception{
 		try{
-			getJdbcTemplate().update(UPDATE_USER_LEVEL, new Object[]{
+			getMasterJdbcTemplate().update(UPDATE_USER_LEVEL, new Object[]{
 					userlevelDto.getMin_fans_count(),userlevelDto.getMax_fans_count(),
 					userlevelDto.getMin_liked_count(),userlevelDto.getMax_liked_count(),
 					userlevelDto.getMin_comment_count(),userlevelDto.getMax_comment_count(),

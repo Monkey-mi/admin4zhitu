@@ -87,7 +87,7 @@ public class ActivityLogoDaoImpl extends BaseDaoImpl implements ActivityLogoDao 
 	
 	@Override
 	public void saveLogo(OpActivityLogo logo) {
-		getJdbcTemplate().update(SAVE_LOGO, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_LOGO, new Object[]{
 				logo.getActivityId(),
 				logo.getLogoPath(),
 				logo.getSerial(),
@@ -132,7 +132,7 @@ public class ActivityLogoDaoImpl extends BaseDaoImpl implements ActivityLogoDao 
 	public void deleteByIds(Integer[] ids) {
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = DELETE_BY_IDS + inSelection;
-		getJdbcTemplate().update(sql, (Object[])ids);
+		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 	
 	@Override
@@ -153,7 +153,7 @@ public class ActivityLogoDaoImpl extends BaseDaoImpl implements ActivityLogoDao 
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = UPDATE_VALID_BY_IDS + inSelection;
 		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{valid}, true);
-		getJdbcTemplate().update(sql, args);
+		getMasterJdbcTemplate().update(sql, args);
 	}
 	
 	@Override
@@ -161,7 +161,7 @@ public class ActivityLogoDaoImpl extends BaseDaoImpl implements ActivityLogoDao 
 		String inSelection = SQLUtil.buildInSelection(activityIds);
 		String sql = UPDATE_VALID_BY_ACTIVITY_IDS + inSelection;
 		Object[] args = SQLUtil.getArgsByInCondition(activityIds, new Object[]{valid}, true);
-		getJdbcTemplate().update(sql, args);
+		getMasterJdbcTemplate().update(sql, args);
 	}
 	
 	public OpActivityLogo buildLogo(ResultSet rs) throws SQLException {
@@ -195,7 +195,7 @@ public class ActivityLogoDaoImpl extends BaseDaoImpl implements ActivityLogoDao 
 
 	@Override
 	public void updateSeria(Integer id, Integer serial) {
-		getJdbcTemplate().update(UPDATE_SERIAL_BY_ID, new Object[]{serial, id});
+		getMasterJdbcTemplate().update(UPDATE_SERIAL_BY_ID, new Object[]{serial, id});
 	}
 
 }

@@ -183,7 +183,7 @@ public class HTWorldTypeWorldDaoImpl extends BaseDaoImpl implements
 	@Override
 	public void saveTypeWorld(HTWorldTypeWorld typeWorld) {
 		Date now = new Date();
-		getJdbcTemplate().update(SAVE_TYPE_WORLD, new Object[]{
+		getMasterJdbcTemplate().update(SAVE_TYPE_WORLD, new Object[]{
 			typeWorld.getId(),
 			typeWorld.getWorldId(),
 			typeWorld.getTypeId(),
@@ -329,7 +329,7 @@ public class HTWorldTypeWorldDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void deleteTypeWorld(Integer id) {
-		getJdbcTemplate().update(DELETE_TYPE_WORLD_BY_ID, id);
+		getMasterJdbcTemplate().update(DELETE_TYPE_WORLD_BY_ID, id);
 	}
 	
 	@Override
@@ -339,43 +339,43 @@ public class HTWorldTypeWorldDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void deleteByWorldId(Integer worldId) {
-		getJdbcTemplate().update(DELETE_TYPE_WORLD_BY_WORLD_ID, worldId);
+		getMasterJdbcTemplate().update(DELETE_TYPE_WORLD_BY_WORLD_ID, worldId);
 	}
 
 	@Override
 	public void updateType(int id, int typeId) {
-		getJdbcTemplate().update(UPDATE_TYPE, new Object[]{typeId, id});
+		getMasterJdbcTemplate().update(UPDATE_TYPE, new Object[]{typeId, id});
 	}
 
 	@Override
 	public void updateSuperb(int id, int superb) {
-		getJdbcTemplate().update(UPDATE_SUPERB, new Object[]{superb, id});
+		getMasterJdbcTemplate().update(UPDATE_SUPERB, new Object[]{superb, id});
 	}
 	
 	@Override
 	public void updateSuperbByWId(Integer worldId,int superb){
-		getJdbcTemplate().update(UPDATE_SUPERB_BY_WID, new Object[]{superb,worldId});
+		getMasterJdbcTemplate().update(UPDATE_SUPERB_BY_WID, new Object[]{superb,worldId});
 	}
 	
 	@Override
 	public void updateWeight(int id, int weight) {
-		getJdbcTemplate().update(UPDATE_WEIGHT, new Object[]{weight, id});
+		getMasterJdbcTemplate().update(UPDATE_WEIGHT, new Object[]{weight, id});
 	}
 
 	@Override
 	public int updateValidByWorldId(Integer worldId, Integer valid) {
-		return getJdbcTemplate().update(UPDATE_VALID_BY_WORLD_ID, new Object[]{valid, worldId, 1-valid});
+		return getMasterJdbcTemplate().update(UPDATE_VALID_BY_WORLD_ID, new Object[]{valid, worldId, 1-valid});
 	}
 	
 	@Override
 	public void updateSerial(Integer worldId, Integer serial) {
-		getJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, worldId});
+		getMasterJdbcTemplate().update(UPDATE_SERIAL, new Object[]{serial, worldId});
 	}
 	
 
 	@Override
 	public void updateTypeId(Integer worldId, Integer typeId) {
-		getJdbcTemplate().update(UPDATE_TYPE_ID, new Object[]{typeId, worldId});
+		getMasterJdbcTemplate().update(UPDATE_TYPE_ID, new Object[]{typeId, worldId});
 	}
 	
 	
@@ -384,19 +384,19 @@ public class HTWorldTypeWorldDaoImpl extends BaseDaoImpl implements
 		String inSelection = SQLUtil.buildInSelection(ids);
 		String sql = UPDATE_TYPE_WORLD_VALID_BY_IDS + inSelection;
 		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{Tag.TRUE}, true);
-		getJdbcTemplate().update(sql, args);
+		getMasterJdbcTemplate().update(sql, args);
 	}
 	
 	@Override
 	public void updateTypeWorldValidByWorldIds(Integer[] worldIds){
 		String sql = UPDATE_TYPE_WORLD_VALID_BY_WORLD_IDS + SQLUtil.buildInSelection(worldIds);
 		Object[] args = SQLUtil.getArgsByInCondition(worldIds, new Object[]{Tag.TRUE}, true);
-		getJdbcTemplate().update(sql,args);
+		getMasterJdbcTemplate().update(sql,args);
 	}
 	
 	@Override
 	public void updateAllRecommendTypeWorldValid(Integer valid) {
-		getJdbcTemplate().update(UPDATE_ALL_RECOMMEND_TYPE_WORLD_VALID_BY_IDS, valid, 1-valid);
+		getMasterJdbcTemplate().update(UPDATE_ALL_RECOMMEND_TYPE_WORLD_VALID_BY_IDS, valid, 1-valid);
 	}
 
 
@@ -465,19 +465,19 @@ public class HTWorldTypeWorldDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void updateRecommenderId(Integer worldId, Integer recommenderId) {
-		getJdbcTemplate().update(UPDATE_RECOMMEND_ID_BY_WORLD_ID, recommenderId, worldId);
+		getMasterJdbcTemplate().update(UPDATE_RECOMMEND_ID_BY_WORLD_ID, recommenderId, worldId);
 	}
 	
 	@Override
 	public void updateIsSorted(Integer[] ids,Integer isSorted){
 		String sql = UPDATE_IS_SORTED_BY_IDS + SQLUtil.buildInSelection(ids);
 		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{isSorted}, true);
-		getJdbcTemplate().update(sql,args);
+		getMasterJdbcTemplate().update(sql,args);
 	}
 	
 	@Override
 	public void updateModifyDateByWid(Integer wid,Date modifyDate){
-		getJdbcTemplate().update(UPDATE_MODIFY_DATE_BY_WORLD_ID, modifyDate,wid);
+		getMasterJdbcTemplate().update(UPDATE_MODIFY_DATE_BY_WORLD_ID, modifyDate,wid);
 	}
 	
 	/**
@@ -485,7 +485,7 @@ public class HTWorldTypeWorldDaoImpl extends BaseDaoImpl implements
 	 */
 	@Override
 	public void updateTypeWorldReview(Integer worldId,String review){
-		getJdbcTemplate().update(UPDATE_TYPE_WORLD_REVIEW, review,worldId);
+		getMasterJdbcTemplate().update(UPDATE_TYPE_WORLD_REVIEW, review,worldId);
 	}
 	
 	/**
