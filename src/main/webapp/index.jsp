@@ -10,7 +10,10 @@
     <link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}" />
     <link href="${webRootPath }/jquery-easyui-layout/css/default20131110.css?ver=${webVer}" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src='${webRootPath }/jquery-easyui-layout/js/outlook4.js?ver=${webVer}'> </script>
+    <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery.danmu.min.js"></script>
     <script type="text/javascript">
+		var maxDmId = 0;
+		   		
         $(function() {
         	$('body').fadeIn();
             $('#loginOut').click(function() {
@@ -44,6 +47,28 @@
             		$('#htm_pass .loading').hide();
     			}
     		});
+    		
+    		var dmWidth = $(window).width()-280-200;
+    		$("#danmu").danmu({
+				left: 280,    //区域的起始位置x坐标
+				top: 8 ,  //区域的起始位置y坐标
+				height: 62, //区域的高度 
+				width: dmWidth, //区域的宽度 
+				zindex :9999, //div的css样式zindex
+				speed:30000, //弹幕速度，飞过区域的毫秒数 
+				sumtime:9999999999 , //弹幕运行总时间
+				danmuss:{}, //danmuss对象，运行时的弹幕内容 
+				default_font_color:"#FFFFFF", //弹幕默认字体颜色 
+				font_size_small:14, //小号弹幕的字体大小,注意此属性值只能是整数
+				font_size_big:18, //大号弹幕的字体大小 
+				opacity:"0.9", //弹幕默认透明度 
+				top_botton_danmu_time:10000 //顶端底端弹幕持续时间 
+			});
+			$('#danmu').danmu('danmu_start'); //如果你传递了合法的danmuss对象进去（不是必须的），刷新页面后就可以在div中看到弹幕运行的效果啦。
+			fetchDanmu();
+			setInterval(function(){
+				fetchDanmu();
+			}, 60*1000);
         });
         
         var formSubmitOnce = true;
@@ -95,6 +120,35 @@
         		}
         		return true;
         	}});
+        }
+        
+        function fetchDanmu() {
+        	$.post("./admin_user/msg_queryDanmu", {
+        		'maxId':maxDmId,
+        		'start':1,
+        		'limit':10,
+        	}, function(result){
+        		if(result['result'] == 0) {
+        			var msgs = result['msg'];
+        			if(msgs.length > 0) {
+        				var now = $('#danmu').data("nowtime");
+        				if(msgs.length >= 10) {
+	        				var tip = '{ "text":"最新一波用户反馈正在靠近","color":"red","size":"1","position":"1","time":' + now + '}';
+	        				var tipObj = eval('(' + tip + ')');
+							$('#danmu').danmu("add_danmu", tipObj);
+						}
+        				for(var i in msgs) {
+        					var msg = msgs[i];
+        					msg['time'] = '' + now +'';
+							$('#danmu').danmu("add_danmu", msg);
+							now = now + 10;
+							if(i == 0) {
+								maxDmId = msg['id'];
+							}
+        				} 
+        			}
+        		}
+        	}, "json");
         }
     </script>
     <style type="text/css">
@@ -153,8 +207,9 @@
 <body class="easyui-layout">
     <div region="north" border="false" style="background-color: rgb(102, 102, 102); color:white; text-align: center; width: 100%;  background-position: initial initial; background-repeat: initial initial;" title="" class="panel-body panel-body-noheader panel-body-noborder layout-body ">
        <div id="header-inner">
-				<table cellpadding="0" cellspacing="0" style="width:100%;">
-					<tbody><tr>
+			<table cellpadding="0" cellspacing="0" style="width:100%;">
+				<tbody>
+					<tr>
 						<td rowspan="2" style="width:20px;">
 						</td>
 						<td style="height:52px;">
@@ -173,8 +228,10 @@
 							</div>
 						</td>
 					</tr>
-				</tbody></table>
-			</div>
+				</tbody>
+			</table>
+		</div>
+		<div id="danmu"></div>
     </div>
     <div region="west" hide="true" split="true" title="导航菜单" style="width:180px;" id="west">
 	<div id="nav" class="easyui-accordion" fit="true" border="false">

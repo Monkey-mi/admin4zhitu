@@ -79,4 +79,16 @@ public interface UserMsgService extends BaseService {
 	 * @param recipientId
 	 */
 	public void updateRecipientMsgBoxUnValid(String senderIdsStr, Integer recipientId);
+	
+	/**
+	 * 构建弹幕消息
+	 * 
+	 * @param maxId
+	 * @param start
+	 * @param limit
+	 * @param jsonMap
+	 * @throws Exception
+	 */
+	public void buildUserMsgDanmu(int maxId, int start, int limit,
+			Map<String, Object> jsonMap) throws Exception; 
 }

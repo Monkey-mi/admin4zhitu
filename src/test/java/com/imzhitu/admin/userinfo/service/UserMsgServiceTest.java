@@ -37,4 +37,11 @@ public class UserMsgServiceTest extends BaseTest {
 		service.buildUserMsg(485, 400, 0, 1, 10, jsonMap);
 		logObj(jsonMap);
 	}
+	
+	@Test
+	public void buildDanmu() throws Exception {
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		service.buildUserMsgDanmu(0, 1, 10, jsonMap);
+		logObj(jsonMap);
+	}
 }

@@ -3,9 +3,11 @@ package com.imzhitu.admin.userinfo.dao;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.hts.web.base.database.RowCallback;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.dao.BaseDao;
 import com.hts.web.common.pojo.UserMsgRecipientDto;
+import com.imzhitu.admin.common.pojo.UserMsgDanmu;
 
 /**
  * <p>
@@ -53,5 +55,20 @@ public interface UserMsgDao extends BaseDao {
 	 */
 	public long queryRecipientMsgBoxCount(Integer maxId, Integer recipientId, 
 			LinkedHashMap<String, Object> attrMap);
+	
+	/**
+	 * 查询弹幕
+	 * 
+	 * @return
+	 */
+	public void queryMsgDanmu(Integer recipientId, RowSelection rowSelection, RowCallback<UserMsgDanmu> callback);
+	
+	/**
+	 * 查询弹幕
+	 * 
+	 * @param maxId
+	 * @return
+	 */
+	public void queryMsgDanmu(Integer maxId, Integer recipientId, RowSelection rowSelection, RowCallback<UserMsgDanmu> callback);
 
 }

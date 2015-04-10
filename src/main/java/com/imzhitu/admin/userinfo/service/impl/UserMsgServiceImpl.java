@@ -6,21 +6,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
+import com.hts.web.base.database.RowCallback;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.pojo.UserMsgDto;
 import com.hts.web.common.pojo.UserMsgRecipientDto;
 import com.hts.web.common.pojo.UserPushInfo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
+import com.hts.web.common.util.Log;
+import com.hts.web.common.util.NumberUtil;
 import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.common.pojo.UserMsgDanmu;
 import com.imzhitu.admin.op.service.impl.OpServiceImpl;
 import com.imzhitu.admin.userinfo.dao.UserMsgDao;
 import com.imzhitu.admin.userinfo.service.UserMsgService;
@@ -58,8 +62,18 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private UserMsgDao userMsgDao;
+
 	
+	@Value("${push.customerServiceId}")
+	private Integer customerServiceId;
 	
+	public Integer getCustomerServiceId() {
+		return customerServiceId;
+	}
+
+	public void setCustomerServiceId(Integer customerServiceId) {
+		this.customerServiceId = customerServiceId;
+	}
 
 	@Override
 	public void pushSysMsg(String idsStr, String content) throws Exception {
@@ -186,4 +200,91 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 		webUserMsgRecipientBoxDao.updateRecipientUnValid(ids, recipientId);
 	}
 
+	@Override
+	public void buildUserMsgDanmu(int maxId, int start, int limit,
+			Map<String, Object> jsonMap) throws Exception {
+		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<UserMsgDanmu>() {
+
+			@Override
+			public List<UserMsgDanmu> getSerializables(RowSelection rowSelection) {
+				final List<UserMsgDanmu> list = new ArrayList<UserMsgDanmu>();
+				userMsgDao.queryMsgDanmu(customerServiceId, rowSelection, new RowCallback<UserMsgDanmu>() {
+
+					@Override
+					public void callback(UserMsgDanmu t) {
+						setDanmuColor(t);
+						setDanmuPos(t);
+						list.add(t);
+					}
+				});
+				return list;
+			}
+
+			@Override
+			public List<UserMsgDanmu> getSerializableByMaxId(int maxId,
+					RowSelection rowSelection) {
+				final List<UserMsgDanmu> list = new ArrayList<UserMsgDanmu>();
+				userMsgDao.queryMsgDanmu(maxId, customerServiceId, rowSelection, new RowCallback<UserMsgDanmu>() {
+
+					@Override
+					public void callback(UserMsgDanmu t) {
+						setDanmuColor(t);
+						setDanmuPos(t);
+						list.add(t);
+					}
+				});
+				return list;
+			}
+
+			@Override
+			public long getTotalByMaxId(int maxId) {
+				return 0;
+			}
+			
+		}, OptResult.JSON_KEY_MSG, OptResult.TOTAL);
+	}
+
+	/**
+	 * 设置弹幕颜色
+	 * @param dm
+	 */
+	private void setDanmuColor(UserMsgDanmu dm) {
+		String color = "";
+		int i = NumberUtil.getRandomIndex(4);
+		switch(i) {
+		case 2:
+			color = "#d5a5a5";
+			break;
+		case 3:
+			color = "#e6f1b3";
+			break;
+		default:
+			color = "#f2f2f2";
+			break;
+		}
+		dm.setColor(color);
+	}
+	
+	/**
+	 * 设置弹幕位置
+	 * 
+	 * @param dm
+	 */
+	private void setDanmuPos(UserMsgDanmu dm) {
+		int pos = 0;
+//		int i = NumberUtil.getRandomIndex(10);
+//		switch(i) {
+//		case 2:
+//			pos = 1;
+//			break;
+//		case 3:
+//			pos = 2;
+//			break;
+//		default:
+//			pos = 0;
+//			break;
+//		}
+		dm.setPosition(pos);
+	}
+	
 }

@@ -7,15 +7,18 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.database.HTS;
+import com.hts.web.base.database.RowCallback;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.dao.impl.BaseDaoImpl;
 import com.hts.web.common.pojo.UserInfoDto;
 import com.hts.web.common.pojo.UserMsgRecipientDto;
 import com.hts.web.common.util.CollectionUtil;
+import com.imzhitu.admin.common.pojo.UserMsgDanmu;
 import com.imzhitu.admin.userinfo.dao.UserMsgDao;
 
 /**
@@ -31,6 +34,8 @@ import com.imzhitu.admin.userinfo.dao.UserMsgDao;
 public class UserMsgDaoImpl extends BaseDaoImpl implements UserMsgDao {
 	
 	private static final String tableRecipientBox = HTS.USER_MSG_RECIPIENT_BOX;
+
+	private static final String MSG_DANMU = "m.id, m.content";
 	
 	/**
 	 * 查询收件箱信息SQL头部
@@ -38,7 +43,7 @@ public class UserMsgDaoImpl extends BaseDaoImpl implements UserMsgDao {
 	private static final String QUERY_RECIPIENT_BOX_HEAD = "select m.*," + U0_INFO + ",u0.phone_code,u0.phone_sys,u0.phone_ver,u0.ver"
 			+ " from (select mr0.sender_id, mr0.recipient_id,mr0.ck, m0.* from " 
 			+ tableRecipientBox + " as mr0, " + HTS.USER_MSG 
-			+ " as m0 where mr0.content_id=m0.id and mr0.valid=1 and mr0.recipient_id=?";
+			+ " as m0 where mr0.id=m0.id and mr0.valid=1 and mr0.recipient_id=?";
 	
 	/**
 	 * 查询收件箱信息SQL中部
@@ -64,10 +69,18 @@ public class UserMsgDaoImpl extends BaseDaoImpl implements UserMsgDao {
 	private static final String QUERY_SENDER_INDEX_COUNT_BY_MAX_ID_HEAD = "select count(*)"
 			+ " from (select mr0.sender_id, mr0.recipient_id, m0.* from " 
 			+ tableRecipientBox + " as mr0, " + HTS.USER_MSG + " as m0"
-			+ " where mr0.content_id=m0.id and mr0.valid=1 and mr0.recipient_id=? and m0.id<=? ";
+			+ " where mr0.id=m0.id and mr0.valid=1 and mr0.recipient_id=? and m0.id<=? ";
+	
 	private static final String QUERY_SENDER_INDEX_COUNT_BY_MAX_ID_MAIN = " GROUP BY mr0.sender_id ORDER BY m0.id desc) as m,"
 			+ HTS.USER_INFO + " as u0 where m.sender_id=u0.id";
 	
+	private static final String QUERY_DANMU = "select " + MSG_DANMU + " from " + HTS.USER_MSG
+			+ " as m," + tableRecipientBox + " as mr" 
+			+ " where m.id=mr.id and mr.recipient_id=? and valid=1 order by m.id desc limit ?";
+	
+	private static final String QUERY_DANMU_BY_MAX_ID= "select " + MSG_DANMU + " from " + HTS.USER_MSG
+			+ " as m," + tableRecipientBox + " as mr" 
+			+ " where m.id=mr.id and mr.recipient_id=? and valid=1 and mr.id > ? order by m.id desc limit ?";
 	
 	@Override
 	public List<UserMsgRecipientDto> queryRecipientMsgBox(Integer recipientId,
@@ -197,6 +210,38 @@ public class UserMsgDaoImpl extends BaseDaoImpl implements UserMsgDao {
 				rs.getInt("ck"),
 				senderInfo);
 		return dto;
+	}
+
+	@Override
+	public void queryMsgDanmu(Integer recipientId, RowSelection rowSelection,
+			final RowCallback<UserMsgDanmu> callback) {
+		getJdbcTemplate().query(QUERY_DANMU, new Object[]{recipientId, rowSelection.getLimit()},
+				new RowCallbackHandler() {
+
+			@Override
+			public void processRow(ResultSet rs) throws SQLException {
+				UserMsgDanmu dm = new UserMsgDanmu();
+				dm.setId(rs.getInt("id"));
+				dm.setText(rs.getString("content"));
+				callback.callback(dm);
+			}
+		});
+	}
+
+	@Override
+	public void queryMsgDanmu(Integer maxId, Integer recipientId, RowSelection rowSelection, 
+			final RowCallback<UserMsgDanmu> callback) {
+		getJdbcTemplate().query(QUERY_DANMU_BY_MAX_ID, 
+				new Object[]{recipientId, maxId, rowSelection.getLimit()}, new RowCallbackHandler() {
+
+			@Override
+			public void processRow(ResultSet rs) throws SQLException {
+				UserMsgDanmu dm = new UserMsgDanmu();
+				dm.setId(rs.getInt("id"));
+				dm.setText(rs.getString("content"));
+				callback.callback(dm);
+			}
+		});
 	}
 
 }

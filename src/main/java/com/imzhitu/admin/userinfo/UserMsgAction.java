@@ -141,6 +141,21 @@ public class UserMsgAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 查询弹幕
+	 * 
+	 * @return
+	 */
+	public String queryDanmu() {
+		try {
+			userMsgService.buildUserMsgDanmu(maxId, start, limit, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public UserMsgService getUserMsgService() {
 		return userMsgService;
 	}
