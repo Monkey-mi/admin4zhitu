@@ -25,6 +25,7 @@ public interface ChannelCoverMapper {
 	 * 
 	 * @param cover
 	 */
+	@DataSource("master")
 	public void save(OpChannelCover cover);
 	
 	/**
@@ -32,6 +33,7 @@ public interface ChannelCoverMapper {
 	 * 
 	 * @param cover
 	 */
+	@DataSource("master")
 	public void update(OpChannelCover cover);
 	
 	/**
@@ -39,5 +41,6 @@ public interface ChannelCoverMapper {
 	 * 
 	 * @param cover
 	 */
+	@DataSource("master")
 	public void deleteByChannelIdAndWID(OpChannelCover cover);
 }

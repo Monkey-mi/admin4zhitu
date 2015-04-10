@@ -18,6 +18,7 @@ public interface InteractAutoResponseMapper {
 	 * 增加回复
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void addResponse(InteractAutoResponseDto dto);
 	
 	/**
@@ -49,6 +50,7 @@ public interface InteractAutoResponseMapper {
 	 * 更新回复的完成性
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void updateResponseCompleteByIds(Integer[] ids);
 	
 	/**
@@ -63,6 +65,7 @@ public interface InteractAutoResponseMapper {
 	 * 删除自动回复 by ids
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void delAutoResponseByIds(Integer[] ids);
 	
 	/**

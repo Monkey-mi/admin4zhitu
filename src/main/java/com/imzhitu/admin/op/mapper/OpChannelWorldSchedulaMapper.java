@@ -10,18 +10,21 @@ public interface OpChannelWorldSchedulaMapper {
 	 * 增加
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void insertChannelWorldSchedula(OpChannelWorldSchedulaDto dto);
 	
 	/**
 	 * 删除
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void delChannelWorldSchedula(Integer[] ids);
 	
 	/**
 	 * 更新
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateChannelWorldSchedula(OpChannelWorldSchedulaDto dto);
 	
 	/**

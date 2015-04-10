@@ -35,6 +35,7 @@ public interface AdminUserPrivilegesMapper {
 	 * 给用户增加权限
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void addUserPrivilege(AdminUserPrivileges dto);
 	
 	
@@ -88,5 +89,6 @@ public interface AdminUserPrivilegesMapper {
 	 * 更新有效性
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateValid(AdminUserPrivileges dto);
 }

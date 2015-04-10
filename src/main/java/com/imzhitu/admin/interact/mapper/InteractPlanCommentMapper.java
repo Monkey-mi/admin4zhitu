@@ -11,12 +11,14 @@ public interface InteractPlanCommentMapper {
 	 * 增加计划评论
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void addPlanComment(InteractPlanComment dto);
 	
 	/**
 	 * 删除计划评论
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void delPlanCommentByIds(Integer[]ids);
 	
 	/**
@@ -47,11 +49,13 @@ public interface InteractPlanCommentMapper {
 	 * 更新计划评论内容 根据id
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateCommentContentById(InteractPlanComment dto);
 	
 	/**
 	 * 更新评论内容有效性
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateCommentContentValid(InteractPlanComment dto);
 }

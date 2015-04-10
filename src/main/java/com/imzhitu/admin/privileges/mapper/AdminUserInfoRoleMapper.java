@@ -7,10 +7,13 @@ import com.imzhitu.admin.common.pojo.AdminUserRole;
 
 public interface AdminUserInfoRoleMapper {
 	
+	@DataSource("master")
 	public void saveUserRole(AdminUserRole userRole);
 	
+	@DataSource("master")
 	public void deleteByUserId(Integer uid);
 	
+	@DataSource("slave")
 	public Integer[] queryRoleIdsByUserId(Integer userId);
 	
 	/**

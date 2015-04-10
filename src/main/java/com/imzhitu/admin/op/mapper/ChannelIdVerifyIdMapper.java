@@ -10,6 +10,7 @@ public interface ChannelIdVerifyIdMapper {
 	 * 插入
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void insertChannelIdVerifyId(OpChannelIdVerifyIdDto dto);
 	
 	/**
@@ -24,6 +25,7 @@ public interface ChannelIdVerifyIdMapper {
 	 * 批量删除
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void batchDeleteChannelIdVerifyId(Integer[] ids);
 	
 	

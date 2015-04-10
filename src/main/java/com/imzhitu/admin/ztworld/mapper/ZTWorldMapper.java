@@ -14,6 +14,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param count
 	 */
+	@DataSource("master")
 	public int addClickCount(ZTWorldDto dto);
 	
 	/**
@@ -21,6 +22,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param count
 	 */
+	@DataSource("master")
 	public int reduceClickCount(ZTWorldDto dto);
 	
 	/**
@@ -28,6 +30,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param count
 	 */
+	@DataSource("master")
 	public int addLikedCount(ZTWorldDto dto);
 	
 	/**
@@ -35,6 +38,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param count
 	 */
+	@DataSource("master")
 	public int reduceLikedCount(ZTWorldDto dto);
 	
 	/**
@@ -42,6 +46,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param count
 	 */
+	@DataSource("master")
 	public int addKeepCount(ZTWorldDto dto);
 	
 	/**
@@ -49,6 +54,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param count
 	 */
+	@DataSource("master")
 	public int reduceKeepCount(ZTWorldDto dto);
 	
 	/**
@@ -56,6 +62,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param count
 	 */
+	@DataSource("master")
 	public int addCommentCount(ZTWorldDto dto);
 	
 	/**
@@ -63,6 +70,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param count
 	 */
+	@DataSource("master")
 	public int reduceCommentCount(ZTWorldDto dto);
 	
 	/**
@@ -72,6 +80,7 @@ public interface ZTWorldMapper {
 	 * @param count
 	 * @return
 	 */
+	@DataSource("master")
 	public int updateCommentCount(ZTWorldDto dto);
 	
 	/**
@@ -81,6 +90,7 @@ public interface ZTWorldMapper {
 	 * @param count
 	 * @return
 	 */
+	@DataSource("master")
 	public int updateKeepCount(ZTWorldDto dto);
 	
 	
@@ -144,6 +154,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param shield
 	 */
+	@DataSource("master")
 	public void updateWorldShield(ZTWorldDto dto);
 
 	/**
@@ -152,6 +163,7 @@ public interface ZTWorldMapper {
 	 * @param worldId
 	 * @param attrMap
 	 */
+	@DataSource("master")
 	public void updateWorld(ZTWorldDto dto);
 	
 	/**
@@ -169,6 +181,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 	
 	/**
@@ -178,6 +191,7 @@ public interface ZTWorldMapper {
 	 * @param typeId
 	 * @param worldType
 	 */
+	@DataSource("master")
 	public void updateWorldTypeLabel(Integer worldId, Integer typeId, String worldType);
 	
 	/**
@@ -196,6 +210,7 @@ public interface ZTWorldMapper {
 	 * @param valid
 	 * @param dateModified
 	 */
+	@DataSource("master")
 	public void updateLatestValid(ZTWorldDto dto);
 	
 	/**
@@ -211,6 +226,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @param authorId
 	 */
+	@DataSource("master")
 	public void updateLatestInvalid(@Param("authorId")Integer authorId);
 	
 }

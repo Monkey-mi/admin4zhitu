@@ -42,6 +42,7 @@ public interface ChannelWorldMapper {
 	 * 
 	 * @param world
 	 */
+	@DataSource("master")
 	public void save(OpChannelWorld world);
 	
 	/**
@@ -49,6 +50,7 @@ public interface ChannelWorldMapper {
 	 * 
 	 * @param world
 	 */
+	@DataSource("master")
 	public void update(OpChannelWorld world);
 	
 	/**
@@ -56,6 +58,7 @@ public interface ChannelWorldMapper {
 	 * 
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 	
 	/**
@@ -64,6 +67,7 @@ public interface ChannelWorldMapper {
 	 * @param ids
 	 * @param valid
 	 */
+	@DataSource("master")
 	public void updateValidByIds(@Param("ids")Integer[] ids, @Param("valid")Integer valid);
 	
 	/**
@@ -71,6 +75,7 @@ public interface ChannelWorldMapper {
 	 * @param wids
 	 * @param valid
 	 */
+	@DataSource("master")
 	public void updateValidByWIds(@Param("wids")Integer[]wids,@Param("valid")Integer valid);
 	
 	/**
@@ -79,6 +84,7 @@ public interface ChannelWorldMapper {
 	 * @param id
 	 * @param newId
 	 */
+	@DataSource("master")
 	public void updateId(OpChannelWorld world);
 	
 	/**
@@ -87,6 +93,7 @@ public interface ChannelWorldMapper {
 	 * @param id
 	 * @param newId
 	 */
+	@DataSource("master")
 	public void updateIdById(@Param("id")Integer id, @Param("newId")Integer newId);
 	
 	/**
@@ -95,6 +102,7 @@ public interface ChannelWorldMapper {
 	 * @param id
 	 * @return
 	 */
+	@DataSource("slave")
 	public OpChannelWorld queryChannelWorldById(Integer id);
 	
 	/**

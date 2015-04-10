@@ -16,10 +16,13 @@ import com.imzhitu.admin.common.pojo.AdminUser;
  */
 public interface AdminUserInfoMapper {
 
+	@DataSource("master")
 	public Integer saveUser(AdminUser adminUser);
 	
+	@DataSource("master")
 	public void updateUser(AdminUser adminUser);
 	
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 	
 	@DataSource("slave")

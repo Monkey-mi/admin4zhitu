@@ -50,6 +50,7 @@ public interface ZTWorldStickerMapper {
 	 * 
 	 * @param sticker
 	 */
+	@DataSource("master")
 	public void update(ZTWorldSticker sticker);
 	
 	/**
@@ -57,6 +58,7 @@ public interface ZTWorldStickerMapper {
 	 * 
 	 * @param sticker
 	 */
+	@DataSource("master")
 	public void save(ZTWorldSticker sticker);
 	
 	/**
@@ -64,6 +66,7 @@ public interface ZTWorldStickerMapper {
 	 * 
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 
 	/**
@@ -72,6 +75,7 @@ public interface ZTWorldStickerMapper {
 	 * @param ids
 	 * @param valid
 	 */
+	@DataSource("master")
 	public void updateValidByIds(@Param("ids")Integer[] ids, @Param("valid")Integer valid);
 	
 	/**
@@ -80,6 +84,7 @@ public interface ZTWorldStickerMapper {
 	 * @param id
 	 * @param serial
 	 */
+	@DataSource("master")
 	public void updateSerialById(@Param("id")Integer id, @Param("serial")Integer serial);
 	
 	/**

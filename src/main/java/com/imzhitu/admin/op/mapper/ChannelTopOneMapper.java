@@ -40,6 +40,7 @@ public interface ChannelTopOneMapper {
 	 * 
 	 * @param topOne
 	 */
+	@DataSource("master")
 	public void save(OpChannelTopOne topOne);
 
 	/**
@@ -47,6 +48,7 @@ public interface ChannelTopOneMapper {
 	 * 
 	 * @param topOne
 	 */
+	@DataSource("master")
 	public void update(OpChannelTopOne topOne);
 
 	/**
@@ -54,6 +56,7 @@ public interface ChannelTopOneMapper {
 	 *
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 	
 	/**
@@ -62,6 +65,7 @@ public interface ChannelTopOneMapper {
 	 * @param ids
 	 * @param valid
 	 */
+	@DataSource("master")
 	public void updateValidByIds(@Param("ids")Integer[] ids, @Param("valid")Integer valid);
 
 	/**
@@ -70,6 +74,7 @@ public interface ChannelTopOneMapper {
 	 * @param id
 	 * @param newId
 	 */
+	@DataSource("master")
 	public void updateId(@Param("id")Integer id, @Param("newId")Integer newId);
 	
 	/**
@@ -141,6 +146,7 @@ public interface ChannelTopOneMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("master")
 	public Integer insertTopOne(OpChannelTopOne dto);
 	
 	/**
@@ -179,6 +185,7 @@ public interface ChannelTopOneMapper {
 	 * 根据toptype来更新valid
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateTopOneValidByTopTypeIdAndPeriod(OpChannelTopOne dto);
 	
 	/**

@@ -9,15 +9,19 @@ import com.imzhitu.admin.common.pojo.UserInfo;
 
 public interface UserInfoMapper {
 
+	@DataSource("master")
 	public int deleteById(Integer id);
     
+	@DataSource("master")
 	public int insertSelective(UserInfo record);
 
 	@DataSource("slave")
 	public UserInfo selectById(Integer id);
 
+	@DataSource("master")
 	public int updateLoginInfoById(UserInfo record);
 	
+	@DataSource("master")
 	public int updateByIdSelective(UserInfo record);
 	
 	@DataSource("slave")
@@ -26,6 +30,7 @@ public interface UserInfoMapper {
 	@DataSource("slave")
 	public int selectMaxId();
 	
+	@DataSource("master")
 	public void updateTrust(@Param("id")Integer id, 
 			@Param("trust")Integer trust);
 	

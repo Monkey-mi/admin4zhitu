@@ -60,6 +60,7 @@ public interface ChannelStarMapper {
 	 * 
 	 * @param star
 	 */
+	@DataSource("master")
 	public void save(OpChannelStar star);
 	
 	/**
@@ -67,6 +68,7 @@ public interface ChannelStarMapper {
 	 * 
 	 * @param star
 	 */
+	@DataSource("master")
 	public void update(OpChannelStar star);
 	
 	/**
@@ -84,6 +86,7 @@ public interface ChannelStarMapper {
 	 * @param ids
 	 * @param valid
 	 */
+	@DataSource("master")
 	public void updateValidByIds(@Param("ids")Integer[] ids, @Param("valid")Integer valid);
 	
 	/**
@@ -91,6 +94,7 @@ public interface ChannelStarMapper {
 	 * 
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 	
 	/**
@@ -98,6 +102,7 @@ public interface ChannelStarMapper {
 	 * 
 	 * @param star
 	 */
+	@DataSource("master")
 	public void updateId(OpChannelStar star);
 	
 	/**

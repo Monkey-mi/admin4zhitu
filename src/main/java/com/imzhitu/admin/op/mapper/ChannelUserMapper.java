@@ -18,23 +18,27 @@ public interface ChannelUserMapper {
 	 * 插入
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void insertChannelUser(OpChannelUserDto dto);
 	
 	/**
 	 * 删除
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void deleteChannelUser(OpChannelUserDto dto);
 	
 	/**
 	 * 批量删除
 	 */
+	@DataSource("master")
 	public  void deleteChannelUserByIds(Integer[] ids);
 	
 	/**
 	 * 更新Valid
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateChannelUserValid(OpChannelUserDto dto);
 	
 	/**

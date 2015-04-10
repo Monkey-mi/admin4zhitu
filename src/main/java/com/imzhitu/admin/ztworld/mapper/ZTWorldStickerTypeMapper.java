@@ -84,6 +84,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * 
 	 * @param type
 	 */
+	@DataSource("master")
 	public void save(ZTWorldStickerType type);
 
 	/**
@@ -91,6 +92,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * 
 	 * @param type
 	 */
+	@DataSource("master")
 	public void update(ZTWorldStickerType type);
 	
 	/**
@@ -98,6 +100,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * 
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 	
 	/**
@@ -106,6 +109,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * @param ids
 	 * @param valid
 	 */
+	@DataSource("master")
 	public void updateValidByIds(@Param("ids")Integer[] ids, @Param("valid")Integer valid);
 	
 	/**
@@ -114,6 +118,7 @@ public interface ZTWorldStickerTypeMapper {
 	 * @param id
 	 * @param serial
 	 */
+	@DataSource("master")
 	public void updateSerialById(@Param("id")Integer id, @Param("serial")Integer serial);
 	
 	/**

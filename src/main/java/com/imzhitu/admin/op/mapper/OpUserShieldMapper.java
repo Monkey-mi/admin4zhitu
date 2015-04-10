@@ -10,18 +10,21 @@ public interface OpUserShieldMapper {
 	 * 增加
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void addUserShield(OpUserShieldDto dto);
 	
 	/**
 	 * 批量删除
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void delUserShield(Integer[] ids);
 	
 	/**
 	 * 更新
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateUserShield(OpUserShieldDto dto);
 	
 	/**

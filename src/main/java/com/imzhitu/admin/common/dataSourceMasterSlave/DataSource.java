@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * 数据库annotation定义
- * @DataSource('read') / @DataSource('write')
+ * @DataSource('master') / @DataSource('slave')
  * @author zxx
  *
  */

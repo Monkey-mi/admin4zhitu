@@ -10,24 +10,28 @@ public interface InteractTypeOptionWorldMapper {
 	 * 添加
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void insertTypeOptionWorld(InteractTypeOptionWorldDto dto);
 	
 	/**
 	 * 删除根据ids
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void delTypeOptionWorldByIds(Integer[] ids);
 	
 	/**
 	 * 删除，根据world——ids
 	 * @param wids
 	 */
+	@DataSource("master")
 	public void delTypeOptionWorldByWIds(Integer[] wids);
 	
 	/**
 	 * 修改
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateTypeOptionWorld(InteractTypeOptionWorldDto dto);
 	
 	/**
@@ -61,12 +65,14 @@ public interface InteractTypeOptionWorldMapper {
 	/**
 	 * 根据wid来删除
 	 */
+	@DataSource("master")
 	public void delTypeOptionWorldByWid(Integer worldId);
 	
 	/**
 	 * 修改精选点评
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateReview(InteractTypeOptionWorldDto dto);
 	
 	/**

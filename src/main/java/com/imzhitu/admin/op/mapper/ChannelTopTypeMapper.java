@@ -39,6 +39,7 @@ public interface ChannelTopTypeMapper {
 	 * 
 	 * @param type
 	 */
+	@DataSource("master")
 	public void save(OpChannelTopType type);
 	
 	/**
@@ -46,6 +47,7 @@ public interface ChannelTopTypeMapper {
 	 * 
 	 * @param type
 	 */
+	@DataSource("master")
 	public void update(OpChannelTopType type);
 	
 	/**
@@ -53,6 +55,7 @@ public interface ChannelTopTypeMapper {
 	 * 
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 	
 	/**

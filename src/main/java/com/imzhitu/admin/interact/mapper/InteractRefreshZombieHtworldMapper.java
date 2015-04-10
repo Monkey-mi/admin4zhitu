@@ -11,12 +11,14 @@ public interface InteractRefreshZombieHtworldMapper {
 	 * 刷新织图时间
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void refreshWorldCreateDate(InteractRefreshZombieHtworld dto);
 	
 	/**
 	 * 刷新织图评论时间
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void refreshCommentCreateDate(InteractRefreshZombieHtworld dto);
 	
 	/**

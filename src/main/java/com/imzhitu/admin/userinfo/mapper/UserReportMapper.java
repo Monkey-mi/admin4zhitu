@@ -21,6 +21,7 @@ public interface UserReportMapper {
 	@DataSource("slave")
 	public long queryTotal(UserReportDto report);
 	
+	@DataSource("master")
 	public void updateValidByIds(Integer[] ids);
 	
 }

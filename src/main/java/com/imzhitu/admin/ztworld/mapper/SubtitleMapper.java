@@ -19,12 +19,16 @@ public interface SubtitleMapper {
 	@DataSource("slave")
 	public long queryTotal(ZTWorldSubtitle title);
 	
+	@DataSource("master")
 	public void saveSubtitle(ZTWorldSubtitle title);
 	
+	@DataSource("master")
 	public void update(ZTWorldSubtitle title);
 
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 	
+	@DataSource("master")
 	public void updateSerialById(@Param("id")Integer id, 
 			@Param("serial")Integer serial);
 	

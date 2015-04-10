@@ -10,6 +10,7 @@ public interface InteractPlanCommentLabelMapper {
 	 * 增加计划评论标签
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void addPlanCommentLabel(InteractPlanCommentLabel dto);
 	
 	/**
@@ -39,6 +40,7 @@ public interface InteractPlanCommentLabelMapper {
 	 * 更新计划评论的有效性 根据id
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updatePlanCommentValidById(InteractPlanCommentLabel dto);
 	
 	/**

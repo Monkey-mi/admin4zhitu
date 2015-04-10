@@ -34,11 +34,13 @@ public interface InteractWorldLevelUserLevelMapper {
 	 * 增加
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void addWorldLevelUserLevel(InteractWorldLevelUserLevel  dto);
 	
 	/**
 	 * 删除
 	 * @param id
 	 */
+	@DataSource("master")
 	public void delWorldLevelUserLevelById(Integer id);
 }

@@ -11,24 +11,28 @@ public interface InteractAutoResponseSchedulaMapper {
 	 * 添加
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void addAutoResponseSchedula(InteractAutoResponseSchedula dto);
 	
 	/**
 	 * 批量删除
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void delInteractAutoResponseSchedula(Integer[] ids);
 	
 	/**
 	 * 更新
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateAutoResponseSchedula(InteractAutoResponseSchedula dto);
 	
 	/**
 	 * 更新完成情况
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void updateAutoResponseSchedulaComplete(Integer[] ids);
 	
 	/**

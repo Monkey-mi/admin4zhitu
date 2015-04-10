@@ -57,6 +57,7 @@ public interface ChannelMapper {
 	 * 
 	 * @param channel
 	 */
+	@DataSource("master")
 	public void save(OpChannel channel);
 	
 	/**
@@ -64,6 +65,7 @@ public interface ChannelMapper {
 	 * 
 	 * @param channel
 	 */
+	@DataSource("master")
 	public void update(OpChannel channel);
 	
 	/**
@@ -71,6 +73,7 @@ public interface ChannelMapper {
 	 * 
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
 
 	/**
@@ -79,6 +82,7 @@ public interface ChannelMapper {
 	 * @param ids
 	 * @param valid
 	 */
+	@DataSource("master")
 	public void updateValidByIds(@Param("ids")Integer[] ids, @Param("valid")Integer valid);
 	
 	/**
