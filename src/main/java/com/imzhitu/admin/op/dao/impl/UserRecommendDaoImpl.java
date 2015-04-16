@@ -223,7 +223,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 		Set<String> keySet = attrMap.keySet();
 		Object[] keies = keySet.toArray();
 		for(int i = 0; i < keies.length; i++) {
-			if(keies[i].equals("last_used")){
+			if(keies[i].equals("last_login")){
 				builder.append(" and ulp.").append(keies[i]).append(" < ? ");
 			}else if(keies[i].equals("user_name"))
 				builder.append(" and u0.").append(keies[i]).append(" like ?");

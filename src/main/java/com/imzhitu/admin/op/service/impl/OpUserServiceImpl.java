@@ -110,8 +110,8 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 		
 		if(lastUsed !=null && lastUsed== 1){
 			Date now = new Date();
-			Date monthago = new Date(now.getTime() - 30l*24*60*60*1000);
-			attrMap.put("last_used", monthago);
+			long monthago = now.getTime() - 30l*24*60*60*1000;
+			attrMap.put("last_login", monthago);
 		}
 		
 		if(!StringUtil.checkIsNULL(userName)) {

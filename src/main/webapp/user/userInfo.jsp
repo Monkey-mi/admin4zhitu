@@ -140,7 +140,7 @@ var maxId = 0,
 //		}
 	
 		],
-	htmTablePageList = [10,20,50],
+	htmTablePageList = [50,100,300],
 	addWidth = 530; //添加信息宽度
 	addHeight = 220; //添加信息高度
 	addTitle = "添加用户信息", //添加信息标题,
