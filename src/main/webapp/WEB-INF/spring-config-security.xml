@@ -16,7 +16,7 @@
 	<http pattern="/1234567.html" security="none"></http>
 	<http pattern="/robots.txt" security="none"></http>
 	
-	<http auto-config="true" use-expressions="true" access-denied-page="/login.jsp" >
+	<http auto-config="true" use-expressions="true"  >
 	
 		<intercept-url pattern="/admin_op/user_saveZombieUserByIdsDirect" access="permitAll" />
 		<intercept-url pattern="/admin_interact/interactZombieWorld_beenDownload" access="permitAll"/>

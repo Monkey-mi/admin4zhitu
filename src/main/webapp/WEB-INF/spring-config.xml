@@ -98,6 +98,11 @@
 	    </property>  
 	</bean>
 	
+	<bean id="redisKeyTemplate"
+		class="org.springframework.data.redis.core.StringRedisTemplate" 
+	    p:connection-factory-ref="jedisConnFactory" >
+	</bean>
+	
 	<bean id="webSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
         <property name="configLocation" value="classpath:mybatis-config-web.xml" />
         <!-- 

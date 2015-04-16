@@ -137,6 +137,7 @@
 	<bean id="channelWorldSchedulaService" class="com.imzhitu.admin.op.service.impl.OpChannelWorldSchedulaServiceImpl"/>
 	<bean id="interactTypeOptionWorldService" class="com.imzhitu.admin.interact.service.impl.InteractTypeOptionWorldServiceImpl"/>
 	<bean id="interactAutoResponseSchedulaService" class="com.imzhitu.admin.interact.service.impl.InteractAutoResponseSchedulaServiceImpl"/>
+	<bean id="osPushService" class="com.imzhitu.admin.aliyun.service.impl.OsPushServiceImpl" />
 		
 	<!-- 互动播放定时任务 -->
     <bean id="interactClickJobDetail"
@@ -462,12 +463,37 @@
   		</property>
 	</bean>
 	
+	<!-- opensearch修改提交任务 -->
+    <bean id="osPushJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="osPushService"/>
+        </property>
+        <property name="targetMethod">
+            <value>pushUpdate</value>
+        </property>
+        <property name="concurrent"> 
+			<value>false</value>
+		</property> 
+    </bean>
+
+	<!-- opensearch修改提交定时任务周期 -->
+    <bean id="osPushJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="osPushJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/1 * * * ?</value><!-- 每隔1分钟 -->
+        </property>
+    </bean>
+	
 
 	<!-- 
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list> 
+            	
                 <ref bean="interactCommentJobTrigger" />
                 <ref bean="interactClickJobTrigger"/>
                 <ref bean="interactLikedJobTrigger" />
@@ -483,8 +509,10 @@
                 <ref bean="updateChannelWorldSchedulaTrigger"/>
                 <ref bean="autoAddStarWorldTrigger"/>
                 <ref bean="autoResponseSchedulaTrigger"/>
+                 
+                <ref bean="osPushJobTrigger" />
             </list>
         </property>
     </bean>
-	 -->
+    -->
 </beans>
