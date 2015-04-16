@@ -191,7 +191,7 @@
 		and htw.date_modify between #{beginDate} and #{endDate}
 		group by hh.author_id
 		order by count(hh.id) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 被点赞最多 -->
@@ -201,7 +201,7 @@
 		where hh.date_modified between #{beginDate} and #{endDate}
 		group by hh.author_id
 		order by sum(hh.like_count) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!--点赞最多  -->
@@ -214,7 +214,7 @@
 		and valid=1 and zb.user_id is null
 		group by hl.user_id 
 		order by count(hl.id) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 涨粉最多 -->
@@ -225,7 +225,7 @@
 		and valid=1
 		group by uc.concern_id
 		order by count(uc.user_id) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 关注别人最多 -->
@@ -238,7 +238,7 @@
 		and valid=1 and zb.user_id is null
 		group by uc.user_id
 		order by count(uc.concern_id) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 评论他人最多 -->
@@ -251,7 +251,7 @@
 		and hc.valid=1 and hc.shield=0 and zb.user_id is null
 		group by hc.author_id
 		order by count(hc.id) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 标签最多 -->
@@ -264,7 +264,7 @@
 		and hlw.valid=1
 		group by hlw.user_id
 		order by count(hlw.label_id) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 被浏览最多 -->
@@ -275,7 +275,7 @@
 		and hh.valid=1 and hh.shield=0
 		group by hh.author_id
 		order by sum(hh.click_count) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 织图最多 -->
@@ -286,7 +286,7 @@
 		and hh.valid=1 and hh.shield=0
 		group by hh.author_id
 		order by count(hh.id) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 图片最多 -->
@@ -297,7 +297,7 @@
 		and hh.valid=1 and hh.shield=0
 		group by hh.author_id
 		order by sum(hh.child_count) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 活动最多 -->
@@ -313,7 +313,7 @@
 			and hl.label_state=1
 		group by hh.author_id
 		order by count(hlw.world_id) desc
-		limit 0,10
+		limit 0,20
 	</select>
 	
 	<!-- 更新top one 数据 -->
