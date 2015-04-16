@@ -361,14 +361,14 @@ public class UserZombieDaoImpl extends BaseDaoImpl implements UserZombieDao {
 	
 	@Override
 	public long queryUnFollowZombieCount(Integer userId, Integer shield) {
-		return getJdbcTemplate().queryForLong(QUERY_UN_FOLLOW_ZOMBIE_COUNT_BY_SHIELD, 
+		return getMasterJdbcTemplate().queryForLong(QUERY_UN_FOLLOW_ZOMBIE_COUNT_BY_SHIELD, 
 				new Object[]{userId, shield});
 	}
 	
 	@Override
 	public Integer queryUnFollowUserIdByPageIndex(Integer userId, int shield,
 			int page) {
-		return getJdbcTemplate().queryForInt(QUERY_UN_FOLLOW_USER_ID_BY_PAGE_INDEX, 
+		return getMasterJdbcTemplate().queryForInt(QUERY_UN_FOLLOW_USER_ID_BY_PAGE_INDEX, 
 				new Object[]{userId, shield, page});
 	}
 
@@ -404,7 +404,7 @@ public class UserZombieDaoImpl extends BaseDaoImpl implements UserZombieDao {
 	 */
 	@Override
 	public long queryZombieFollowCountByUserIdForInteractForInteract(Integer userId,Integer worldId){
-		return getJdbcTemplate().queryForLong(QUERY_FOLLOW_ZOMBIE_COUNT_BY_USER_ID_FOR_INTERACT, userId,worldId);
+		return getMasterJdbcTemplate().queryForLong(QUERY_FOLLOW_ZOMBIE_COUNT_BY_USER_ID_FOR_INTERACT, userId,worldId);
 	}
 	
 	/**
@@ -417,7 +417,7 @@ public class UserZombieDaoImpl extends BaseDaoImpl implements UserZombieDao {
 	@Override
 	public Integer queryZombieFollowByUserIdForInteractForInteract(Integer userId,Integer worldId,int page,int limit){
 		try{
-			return getJdbcTemplate().queryForObject(QUERY_FOLLOW_ZOMBIE_BY_USER_ID_FOR_INTERACT,Integer.class,userId,worldId,page);
+			return getMasterJdbcTemplate().queryForObject(QUERY_FOLLOW_ZOMBIE_BY_USER_ID_FOR_INTERACT,Integer.class,userId,worldId,page);
 		}catch(EmptyResultDataAccessException e){
 			return null;
 		}
