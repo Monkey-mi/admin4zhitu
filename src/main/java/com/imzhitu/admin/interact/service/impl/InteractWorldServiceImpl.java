@@ -863,16 +863,16 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		for(InteractWorldCommentDto comment : commentList) {
 			try {
-				successfullyFinishCount++;
 				webWorldInteractService.saveComment(false, comment.getWorldId(), null,
 						comment.getUserId(), " : " + comment.getContent());
 				interactWorldCommentDao.updateFinished(comment.getId(), Tag.TRUE);
+				successfullyFinishCount++;
 			} catch (HTSException e) {
 				interactWorldCommentDao.updateFinished(comment.getId(), Tag.TRUE);
 			} catch(YunbaException e2){
 				interactWorldCommentDao.updateFinished(comment.getId(), Tag.TRUE);
-			} catch (Exception e) {
-				logger.info(e.getMessage());
+			} catch (Exception e3) {
+				logger.info(e3.getMessage());
 			}
 			
 		}
