@@ -24,8 +24,7 @@ var maxId = 0,
 		firstMonthDate = new Date();
 	},
 	today = new Date(),
-	//todayStr = baseTools.simpleFormatDate(today),
-	todayStr = today.format("yyyy-MM-dd hh:mm:ss"),
+	todayStr = baseTools.simpleFormatDate(today),
 	showWorldAndInteractPage="page_htworld_htworldShow";
 	
 	timeCompare = function(date) {
@@ -500,6 +499,16 @@ var htmTableTitle = "分享列表维护", //表格标题
 		
 		$("#searchBtn").click(function() {
 			search();
+		});
+
+		$("#startTime").datebox({
+			value:todayStr,
+			onSelect:timeCompare
+		});
+		
+		$("#endTime").datebox({
+			value:todayStr,
+			onSelect:timeCompare
 		});
 		
 		$("#searchTodayBtn").click(function() {
@@ -1268,8 +1277,8 @@ var htmTableTitle = "分享列表维护", //表格标题
 	<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
 			<!-- <a href="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" style="vertical-align:middle;" title="删除织图" plain="true" iconCls="icon-cut" id="delBtn">删除</a> -->
-	        <span class="search_label">起始时间:</span><input id="startTime"  style="width:120px;" class="easyui-datetimebox">
-	        <span class="search_label">结束时间:</span><input id="endTime"  style="width:120px;" class="easyui-datetimebox">
+	        <span class="search_label">起始时间:</span><input id="startTime"  style="width:100px">
+	        <span class="search_label">结束时间:</span><input id="endTime" style="width:100px">
 	        <span class="search_label">客户端:</span>
 			<select id="phoneCode" class="easyui-combobox" name="phoneCode" style="width:75px;">
 				<option value="">所有</option>
