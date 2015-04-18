@@ -39,7 +39,7 @@
 				{
 					width  :600,
 					height :350,
-					pageList : [30,50,100],
+					pageList : [100,150,300],
 					loadMsg:"加载中....",
 					url	   :	loadDateUrl,
 					queryParams : commentQueryParams,

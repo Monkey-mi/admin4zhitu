@@ -18,7 +18,9 @@ var maxSerial = 0,
 	init = function() {
 		myQueryParams = {
 			'maxSerial' : maxSerial,
-			'recommenderId' : 1
+			'recommenderId' : 1,
+			'myOrder':'desc',
+			'mySort' :'serial'
 		},
 		loadPageData(initPage);
 	},
