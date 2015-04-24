@@ -1,6 +1,8 @@
 package com.imzhitu.admin.ztworld.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +41,13 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
-	private Integer recommendStickerLimit = 9;
+	private static final int REC_TYPE_SUPERB = -1;
+	
+	private static final int REC_TYPE_HOT = -2;
+	
+	private Integer recommendStickerLimit = 60;
+	
+	private Integer hotStickerLimit = 9;
 	
 	public Integer getRecommendStickerLimit() {
 		return recommendStickerLimit;
@@ -227,31 +235,39 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 			throw new Exception("please select recommend sticker type");
 		}
 		
-		List<HTWorldStickerTypeDto> recTypes = null;
-		Integer[] typeIds = null;
+		List<HTWorldStickerTypeDto> recTypes = new ArrayList<HTWorldStickerTypeDto>();
+//		Integer[] typeIds = null;
+//		
+//		if(typeIdStrs.length > 0 && typeIdStrs[0].equals("0")) {
+//			recTypes = stickerTypeMapper.queryCacheRecommendType();
+//			typeIds = new Integer[recTypes.size()];
+//			for(int i = 0; i < typeIds.length; i++) {
+//				typeIds[i] = recTypes.get(i).getId();
+//			}
+//		} else {
+//			typeIds = new Integer[typeIdStrs.length];
+//			for(int i = 0; i < typeIdStrs.length; i++) {
+//				typeIds[i] = Integer.parseInt(typeIdStrs[i]);
+//			}
+//			recTypes = stickerTypeMapper.queryCacheRecommendTypeByIds(typeIds);
+//		}
 		
-		if(typeIdStrs.length > 0 && typeIdStrs[0].equals("0")) {
-			recTypes = stickerTypeMapper.queryCacheRecommendType();
-			typeIds = new Integer[recTypes.size()];
-			for(int i = 0; i < typeIds.length; i++) {
-				typeIds[i] = recTypes.get(i).getId();
-			}
-		} else {
-			typeIds = new Integer[typeIdStrs.length];
-			for(int i = 0; i < typeIdStrs.length; i++) {
-				typeIds[i] = Integer.parseInt(typeIdStrs[i]);
-			}
-			recTypes = stickerTypeMapper.queryCacheRecommendTypeByIds(typeIds);
+		int res = stickerCacheDao.updateRecommendSticker(REC_TYPE_SUPERB, recommendStickerLimit);
+		if(res == 0) {
+			recTypes.add(new HTWorldStickerTypeDto(REC_TYPE_SUPERB, "精选贴纸"));
 		}
 		
-		if(recTypes.size() > 0) {
-			stickerCacheDao.updateRecommendSticker(typeIds, recommendStickerLimit);
+		long endTime = new Date().getTime();
+		long startTime = endTime - 7*24*60*60*1000;
+		res = stickerCacheDao.updateHotSticker(startTime, endTime, REC_TYPE_HOT, hotStickerLimit);
+		if(res == 0) {
+			recTypes.add(new HTWorldStickerTypeDto(REC_TYPE_HOT, "近期最热"));
 		}
-		stickerCacheDao.updateTopSticker();
+		
 		typeCacheDao.updateRecommendType(recTypes);
+		stickerCacheDao.updateTopSticker();
 		typeCacheDao.updateStickerType();
 	}
-
 
 	@Override
 	public ZTWorldSticker queryStickerById(Integer id) throws Exception {

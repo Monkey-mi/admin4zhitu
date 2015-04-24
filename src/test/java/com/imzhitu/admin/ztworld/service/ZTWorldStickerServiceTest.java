@@ -90,6 +90,7 @@ public class ZTWorldStickerServiceTest extends BaseTest {
 		sticker.setWeight(1);
 		sticker.setHasLock(1);
 		sticker.setLabelId(0);
+		sticker.setFill(0);
 		service.saveSticker(sticker);
 	}
 	

@@ -12,5 +12,26 @@ public interface HTWorldStickerCacheDao extends BaseCacheDao {
 	/**
 	 * 更新推荐贴纸
 	 */
-	public void updateRecommendSticker(Integer[] typeIds, Integer limit);
+//	public void updateRecommendSticker(Integer[] typeIds, Integer limit);
+	
+	/**
+	 * 更新推荐贴纸
+	 * 
+	 * @param typeId
+	 * @param limit
+	 */
+	public int updateRecommendSticker(Integer typeId, Integer limit);
+	
+	/**
+	 * 更新热门贴纸
+	 * 
+	 * @param startTime
+	 * @param endTime
+	 * @param typeId
+	 * @param limit
+	 * @return
+	 */
+	public int updateHotSticker(long startTime, long endTime, 
+			Integer typeId, Integer limit);
+	
 }

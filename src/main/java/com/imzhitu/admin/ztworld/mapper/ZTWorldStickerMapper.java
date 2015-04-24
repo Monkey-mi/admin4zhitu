@@ -24,8 +24,7 @@ public interface ZTWorldStickerMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<HTWorldStickerDto> queryCacheRecommendStickerDto(@Param("typeId")Integer typeId,
-			@Param("limit")Integer limit);
+	public List<HTWorldStickerDto> queryCacheRecommendStickerDto(@Param("limit")Integer limit);
 	
 	/**
 	 * 查询贴纸列表
@@ -95,5 +94,16 @@ public interface ZTWorldStickerMapper {
 	 */
 	@DataSource("slave")
 	public ZTWorldSticker queryById(Integer id);
+	
+	/**
+	 * 查询缓存热门贴纸
+	 * 
+	 * @param startTime
+	 * @param endTime
+	 * @param limit
+	 */
+	@DataSource("slave")
+	public List<HTWorldStickerDto> queryCacheHotStickerDto(@Param("startTime")Long startTime,
+			@Param("endTime")Long endTime, @Param("limit")Integer limit);
 	
 }

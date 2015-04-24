@@ -34,7 +34,7 @@ public class ZTWorldSticker extends AbstractNumberDto implements Serializable {
 	private Integer valid;
 	private Integer hasLock;
 	private Integer labelId;
-	private Integer fill = 0;
+	private Integer fill;
 	private String typeName;
 	
 	public Integer getId() {
