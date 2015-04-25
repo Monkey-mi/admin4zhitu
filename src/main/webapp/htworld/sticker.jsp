@@ -94,9 +94,18 @@ var maxId = 0,
   			formatter: function(value,row,index) {
   				if(value == 1) {
   					img = "./common/images/ok.png";
-  					return "<img title='已生效' class='htm_column_img'  src='" + img + "'/>";
+  					return "<img title='有锁' class='htm_column_img'  src='" + img + "'/>";
   				}
-  				return "无锁";
+  				return "no";
+  			}
+  		},
+  		{field : 'fill',title : '全屏',align : 'center', width: 45,
+  			formatter: function(value,row,index) {
+  				if(value == 1) {
+  					img = "./common/images/ok.png";
+  					return "<img title='全屏' class='htm_column_img'  src='" + img + "'/>";
+  				}
+  				return "no";
   			}
   		},
   		{field : 'stickerName',title : '名字',align : 'center',width : 120},
@@ -289,6 +298,13 @@ function initEditWindow(id, index, isUpdate) {
 				} else {
 					$("#lock_edit").attr('checked', 'checked');
 				}
+				
+				if(obj['fill'] == 0) {
+					$("#unfill_edit").attr('checked', 'checked');
+				} else {
+					$("#fill_edit").attr('checked', 'checked');
+				}
+				
 				$("#stickerName_edit").val(obj['stickerName']);
 				$("#stickerDesc_edit").val(obj['stickerDesc']);
 				
@@ -322,6 +338,8 @@ function initEditWindow(id, index, isUpdate) {
 			$("#typeId_edit").combobox('select', data[0]['id']);
 		}
 		$("#lock_edit").attr('checked', 'checked');
+		$("#unfill_edit").attr('checked', 'checked');
+		$("#un_edit").attr('checked', 'checked');
 		$('#htm_edit').panel('setTitle', '添加贴纸');
 		$('#htm_edit').window('open');
 		$("#edit_loading").hide();
@@ -508,6 +526,7 @@ function searchSticker() {
 	myQueryParams['sticker.weight'] = $('#ss-weight').combobox('getValue');
 	myQueryParams['sticker.typeId'] = $('#ss-typeId').combobox('getValue');
 	myQueryParams['sticker.hasLock'] = $('#ss-hasLock').combobox('getValue');
+	myQueryParams['sticker.fill'] = $('#ss-fill').combobox('getValue');
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
@@ -589,6 +608,11 @@ function submitRefreshForm() {
 	   			<option value="">所有锁状态</option>
 	   			<option value="1">有锁</option>
 	   			<option value="0">无锁</option>
+   			</select>
+   			<select id="ss-fill" class="easyui-combobox" style="width:100px;">
+	   			<option value="">全屏状态</option>
+	   			<option value="0">no全屏</option>
+	   			<option value="1">全屏</option>
    			</select>
    			<a href="javascript:void(0);" onclick="javascript:searchSticker();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
    			<div style="display: inline-block;float: right; margin-right: 5px; margin-top:3px;">
@@ -693,10 +717,18 @@ function submitRefreshForm() {
 							<td class="rightTd" colspan="4">
 							</td>
 						</tr>
-						<tr class="none">
-							<td colspan="3"><input type="text" name="sticker.id" id="id_edit" onchange="validateSubmitOnce=true;"/></td>
+						<tr>
+							<td class="leftTd">全屏状态：</td>
+							<td>
+								<input id="unfill_edit" class="radio" type="radio" name="sticker.fill" checked="checked" value="0" />no全屏
+								<input id="fill_edit" class="radio" type="radio" name="sticker.fill" value="1" />全屏
+							</td>
+							<td class="rightTd" colspan="4">
+							</td>
 						</tr>
-						
+						<tr class="none">
+							<td colspan="６"><input type="text" name="sticker.id" id="id_edit" onchange="validateSubmitOnce=true;"/></td>
+						</tr>
 						<tr class="none">
 							<td colspan="6"><input type="text" name="sticker.valid" id="valid_edit" onchange="validateSubmitOnce=true;"/></td>
 						</tr>

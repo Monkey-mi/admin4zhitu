@@ -73,7 +73,7 @@ public interface ZTWorldStickerTypeMapper {
 	/**
 	 * 查询分类总数
 	 * 
-	 * @param type
+	 * @param typequeryCacheHotStickerDto
 	 * @return
 	 */
 	@DataSource("slave")

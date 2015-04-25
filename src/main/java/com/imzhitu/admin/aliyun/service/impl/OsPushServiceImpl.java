@@ -28,12 +28,12 @@ public class OsPushServiceImpl implements OsPushService {
 	public void pushUpdate() {
 		Date begin = new Date();
 		try {
-		osUserInfoCacheDao.popOpts(optCommitLimit);
-		osUserLoginCacheDao.popOpts(optCommitLimit);
-		Date end = new Date();
-			log.info("push opensearch update, begin date=" + format.format(begin) 
-					+ " , end date=" + format.format(end) + ", cost " 
-					+ (end.getTime() - begin.getTime()) / 1000 + " second");
+			osUserInfoCacheDao.popOpts(optCommitLimit);
+			osUserLoginCacheDao.popOpts(optCommitLimit);
+//			Date end = new Date();
+//			log.info("push opensearch update, begin date=" + format.format(begin) 
+//					+ " , end date=" + format.format(end) + ", cost " 
+//					+ (end.getTime() - begin.getTime()) / 1000 + " second");
 		} catch(Exception e) {
 			log.warn("push opensearch update error, begin date=" 
 					+ format.format(begin), e);

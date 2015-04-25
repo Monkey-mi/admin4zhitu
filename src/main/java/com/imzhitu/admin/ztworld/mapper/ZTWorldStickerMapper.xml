@@ -38,8 +38,8 @@
 	</select>
 	
 	<select id="queryCacheRecommendStickerDto" resultMap="HTSWorldStickerDtoMap">
-		select * from hts.htworld_sticker where type_id=#{typeId} 
-		and valid=1 and weight>0 order by serial desc limit #{limit}
+		select * from hts.htworld_sticker where valid=1 
+		and weight>0 order by serial desc limit #{limit}
 	</select>
 	
 	<select id="queryStickers" resultMap="WorldStickerMap">
@@ -128,6 +128,13 @@
 	
 	<select id="queryById" resultMap="WorldStickerMap">
 		select * from hts.htworld_sticker where id=#{id}
+	</select>
+	
+	<select id="queryCacheHotStickerDto" resultMap="HTSWorldStickerDtoMap">
+		SELECT st.* from hts.htworld_sticker st, (
+		SELECT sticker_id, COUNT(*) as c FROM hts.htworld_sticker_used
+		WHERE used_time BETWEEN #{startTime} AND #{endTime} GROUP BY sticker_id order by c desc
+		limit #{limit}) sc where st.id= sc.sticker_id
 	</select>
 
 </mapper>

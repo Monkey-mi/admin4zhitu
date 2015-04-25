@@ -140,6 +140,7 @@
 	<bean id="osPushService" class="com.imzhitu.admin.aliyun.service.impl.OsPushServiceImpl" />
 	<bean id="platService" class="com.imzhitu.admin.plat.service.impl.PlatServiceImpl" />
 	<bean id="opStarRecommendSchedulaService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendSchedulaServiceImpl" />
+
 		
 	<!-- 互动播放定时任务 -->
     <bean id="interactClickJobDetail"
@@ -534,7 +535,11 @@
         </property>
     </bean>
 	
+<<<<<<< HEAD
 	 <!--
+=======
+	<!-- 
+>>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -558,6 +563,7 @@
                 <ref bean="osPushJobTrigger" />
                 <ref bean="platConcernJobTrigger" />
                 <ref bean="starRecommendSchedulaTrigger" />
+
             </list>
         </property>
     </bean>

@@ -58,6 +58,7 @@
 	<include file="struts-qiniu.xml" />
 	<include file="struts-statistics.xml"></include>
 	<include file="struts-logger.xml"></include>
+	<include file="struts-plat.xml"></include>
 </struts>
 
 

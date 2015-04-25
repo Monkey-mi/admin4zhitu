@@ -2,6 +2,7 @@ package com.imzhitu.admin.ztworld.dao.impl;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,8 @@ import com.imzhitu.admin.ztworld.mapper.ZTWorldStickerMapper;
 public class HTWorldStickerCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStickerDto> implements
 		HTWorldStickerCacheDao {
 
+	private static Logger log = Logger.getLogger(HTWorldStickerCacheDaoImpl.class);
+	
 	@Autowired
 	private ZTWorldStickerMapper stickerMapper;
 	
@@ -30,20 +33,54 @@ public class HTWorldStickerCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStickerD
 					list.toArray(objs));
 		}
 	}
+//
+//	@Override
+//	public void updateRecommendSticker(Integer[] typeIds, Integer limit) {
+//		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_RECOMMEND)) {
+//			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_RECOMMEND);
+//		}
+//		for(Integer typeId : typeIds) {
+//			List<HTWorldStickerDto> list = stickerMapper.queryCacheRecommendStickerDto(limit);
+//			if(list.size() > 0) {
+//				HTWorldStickerDto[] objs = new HTWorldStickerDto[list.size()];
+//				getRedisTemplate().opsForList().rightPushAll(CacheKeies.ZTWORLD_STICKER_RECOMMEND, 
+//						list.toArray(objs));
+//			}
+//		}
+//	}
 
 	@Override
-	public void updateRecommendSticker(Integer[] typeIds, Integer limit) {
+	public int updateRecommendSticker(Integer typeId, Integer limit) {
 		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_RECOMMEND)) {
 			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_RECOMMEND);
 		}
-		for(Integer typeId : typeIds) {
-			List<HTWorldStickerDto> list = stickerMapper.queryCacheRecommendStickerDto(typeId, limit);
-			if(list.size() > 0) {
-				HTWorldStickerDto[] objs = new HTWorldStickerDto[list.size()];
-				getRedisTemplate().opsForList().rightPushAll(CacheKeies.ZTWORLD_STICKER_RECOMMEND, 
-						list.toArray(objs));
+		List<HTWorldStickerDto> list = stickerMapper.queryCacheRecommendStickerDto(limit);
+		if(list.size() > 0) {
+			for(HTWorldStickerDto dto : list) {
+				dto.setTypeId(typeId);
+				getRedisTemplate().opsForList().rightPush(CacheKeies.ZTWORLD_STICKER_RECOMMEND, 
+						dto);
 			}
+			return 0;
 		}
+		return -1;
+	}
+
+	@Override
+	public int updateHotSticker(long startTime, long endTime, Integer typeId, Integer limit) {
+		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_HOT)) {
+			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_HOT);
+		}
+		List<HTWorldStickerDto> list = stickerMapper.queryCacheHotStickerDto(startTime, endTime, limit);
+		if(list.size() > 0) {
+			for(HTWorldStickerDto dto : list) {
+				dto.setTypeId(typeId);
+				getRedisTemplate().opsForList().rightPush(CacheKeies.ZTWORLD_STICKER_HOT, 
+						dto);
+			}
+			return 0;
+		}
+		return -1;
 	}
 	
 }
