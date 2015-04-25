@@ -85,7 +85,7 @@
 		p:interactCommentService-ref="interactCommentService"
 		p:interactWorldService-ref="interactWorldService"
 		p:interactWorldlevelDao-ref="interactWorldlevelDao" />
-		
+		d":2655325482,"idstr":"2655325482","class":1,"screen_name":"搞笑热门微博集锦","name":"搞笑热门微博集锦","province":"44","city":"1","location":"广东 广州","d
 	<bean id="interactWorldLabelCommentLabelService" class="com.imzhitu.admin.interact.service.impl.InteractWorldLabelCommentLabelServiceImpl"
 		p:interactCommentLabelDao-ref="interactCommentLabelDao"
 		p:interactWorldLabelCommentLabelDao-ref="interactWorldLabelCommentLabelDao"/>
@@ -101,7 +101,7 @@
 		p:interactCommentService-ref="interactCommentService"
 		p:interactCommentDao-ref="interactCommentDao" 
 		p:webWorldService-ref="webWorldService"
-		p:webWorldInteractService-ref="webWorldInteractService" 
+		p:webWorldInteractService-ref="webWorldInteractService" d":2655325482,"idstr":"2655325482","class":1,"screen_name":"搞笑热门微博集锦","name":"搞笑热门微博集锦","province":"44","city":"1","location":"广东 广州","d
 		p:interactUserDao-ref="interactUserDao"
 		p:interactUserFollowDao-ref="interactUserFollowDao"
 		p:webUserInteractService-ref="webUserInteractService"
@@ -138,6 +138,8 @@
 	<bean id="interactTypeOptionWorldService" class="com.imzhitu.admin.interact.service.impl.InteractTypeOptionWorldServiceImpl"/>
 	<bean id="interactAutoResponseSchedulaService" class="com.imzhitu.admin.interact.service.impl.InteractAutoResponseSchedulaServiceImpl"/>
 	<bean id="osPushService" class="com.imzhitu.admin.aliyun.service.impl.OsPushServiceImpl" />
+	<bean id="platService" class="com.imzhitu.admin.plat.service.impl.PlatServiceImpl" />
+	<bean id="opStarRecommendSchedulaService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendSchedulaServiceImpl" />
 		
 	<!-- 互动播放定时任务 -->
     <bean id="interactClickJobDetail"
@@ -463,6 +465,27 @@
   		</property>
 	</bean>
 	
+	
+	<!-- 达人推荐置顶计划 -->
+	<bean id="starRecommendSchedulaJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="opStarRecommendSchedulaService"/>
+		</property>
+		<property name="targetMethod">
+			<value>doStarRecommendSchedula</value>
+		</property>
+	</bean>
+	
+	<bean id="starRecommendSchedulaTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="starRecommendSchedulaJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>0 0/2 * * * ?</value><!-- 每10分钟执行 -->
+  		</property>
+	</bean>
+	
+	
 	<!-- opensearch修改提交任务 -->
     <bean id="osPushJobDetail"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -486,9 +509,32 @@
             <value>0 0/1 * * * ?</value><!-- 每隔1分钟 -->
         </property>
     </bean>
-	
+    
+    <!-- 社交平台关注提交任务 -->
+    <bean id="platConcernJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="platService"/>
+        </property>
+        <property name="targetMethod">
+            <value>pushConcern</value>
+        </property>
+        <property name="concurrent"> 
+			<value>false</value>
+		</property> 
+    </bean>
 
-	<!-- 
+	<!-- opensearch修改提交定时任务周期 -->
+    <bean id="platConcernJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="platConcernJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/1 * * * ?</value><!-- 每隔2分钟 -->
+        </property>
+    </bean>
+	
+	 <!--
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -509,10 +555,11 @@
                 <ref bean="updateChannelWorldSchedulaTrigger"/>
                 <ref bean="autoAddStarWorldTrigger"/>
                 <ref bean="autoResponseSchedulaTrigger"/>
-                 
                 <ref bean="osPushJobTrigger" />
+                <ref bean="platConcernJobTrigger" />
+                <ref bean="starRecommendSchedulaTrigger" />
             </list>
         </property>
     </bean>
-    -->
+     -->
 </beans>

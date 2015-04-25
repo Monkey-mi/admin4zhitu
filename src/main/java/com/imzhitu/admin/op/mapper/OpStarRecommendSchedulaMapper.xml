@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpStarRecommendSchedulaMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpStarRecommendSchedulaDto" id="StarRecommendSchedulaMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="user_id" property="userId" jdbcType="INTEGER"/>
+		<result column="operator" property="operator" jdbcType="INTEGER"/>
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		<result column="osr_id" property="osrId" jdbcType="INTEGER"/>
+		<result column="operatorName" property="operatorName" jdbcType="VARCHAR"/>
+		<result column="schedula" property="schedula" jdbcType="TIMESTAMP"/>
+		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
+		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
+		<result column="top" property="top" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- add -->
+	<insert id="insertStarRecommendSchedula">
+		insert hts_admin.op_star_recommend_schedula
+			(osr_id,schedula,date_add,date_modify,operator,valid,top,finish)
+		values
+			(#{osrId},#{schedula,jdbcType=TIMESTAMP},
+				#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{operator},#{valid},#{top},#{finish})
+	</insert>
+	
+	<!-- del -->
+	<delete id="deleteStarRecommendSchedula">
+		delete from hts_admin.op_star_recommend_schedula
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="osrId != null">
+				and osr_id = #{osrId}
+			</if>
+			<if test="valid != null ">
+				and valid = #{valid}
+			</if>
+		</where>
+	</delete>
+	
+	<!-- update -->
+	<update id="updateStarRecommendSchedula">
+		update hts_admin.op_star_recommend_schedula
+		<set>
+			<if test="valid != null ">
+				valid = #{valid},
+			</if>
+			<if test="schedula != null">
+				schedula = #{schedula,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyDate != null">
+				date_modify = #{modifyDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operator != null">
+				operator = #{operator},
+			</if>
+			<if test="finish != null">
+				finish = #{finish}
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="osrId != null">
+				and osr_id = #{osrId}
+			</if>
+			<if test="top != null">
+				and top = #{top}
+			</if>
+		</where>
+	</update>
+	
+	<!-- update finish -->
+	<update id="updateStarRecommendSchedulaFinish">
+		update hts_admin.op_star_recommend_schedula
+		set finish=#{finish}
+		where id=#{id}
+	</update>
+	
+	<!-- 分页查询 -->
+	<select id="queryStarRecommendSchedula" resultMap="StarRecommendSchedulaMap">
+		select osrs.*,aui.user_name as operatorName,osr.user_id
+		from hts_admin.op_star_recommend_schedula osrs left join hts_admin.admin_user_info aui on osrs.operator=aui.id
+		left join hts.operations_star_recommend osr on osrs.osr_id=osr.id
+		<where>
+			<if test="id != null">
+				osrs.id = #{id}
+			</if>
+			<if test="osrId != null">
+				and osrs.osr_id = #{osrId}
+			</if>
+			<if test="userId != null">
+				and osr.user_id = #{userId}
+			</if>
+			<if test="top != null">
+				and osrs.top = #{top}
+			</if>
+			<if test="finish != null">
+				and osrs.finish = #{finish}
+			</if>
+			<if test="addDate != null and modifyDate != null">
+				<![CDATA[and osrs.schedula between #{addDate,jdbcType=TIMESTAMP} and #{modifyDate,jdbcType=TIMESTAMP}]]>
+			</if>
+		</where>
+		order by schedula desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryStarRecommendSchedulaTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.op_star_recommend_schedula osrs 
+		left join hts.operations_star_recommend osr on osrs.osr_id=osr.id
+		<where>
+			<if test="id != null">
+				osrs.id = #{id}
+			</if>
+			<if test="osrId != null">
+				and osrs.osr_id = #{osrId}
+			</if>
+			<if test="userId != null">
+				and osr.user_id = #{userId}
+			</if>
+			<if test="top != null">
+				and osrs.top = #{top}
+			</if>
+			<if test="finish != null">
+				and osrs.finish = #{finish}
+			</if>
+			<if test="addDate != null and modifyDate != null">
+				<![CDATA[and osrs.schedula between #{addDate,jdbcType=TIMESTAMP} and #{modifyDate,jdbcType=TIMESTAMP}]]>
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -66,6 +66,18 @@
 			</result>
 		</action>
 		
+		<action name="starRecommend_*" class="com.imzhitu.admin.op.OpStarRecommendAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="schedulaStarRecommend_*" class="com.imzhitu.admin.op.OpStarRecommendSchedulaAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 
 </struts>

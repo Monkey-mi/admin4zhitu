@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpStarRecommendMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpStarRecommendDto" id="StarRecommendMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="user_id" property="userId" jdbcType="INTEGER"/>
+		<result column="top" property="top" jdbcType="INTEGER"/>
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+		<result column="concern_count" property="concernCount" jdbcType="INTEGER" />
+		<result column="follow_count" property="followCount" jdbcType="INTEGER" />
+		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
+		<result column="liked_count" property="likedCount" jdbcType="INTEGER" />
+		<result column="keep_count" property="keepCount" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<!-- add -->
+	<insert id="insertStarRecommend">
+		insert into hts.operations_star_recommend
+			(user_id,top,valid)
+		values 
+			(#{userId},#{top},#{valid})
+	</insert>
+	
+	<!-- del -->
+	<delete id="deleteStarRecommend">
+		delete from hts.operations_star_recommend
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+			<if test="top != null">
+				and top = #{top}
+			</if>
+			<if test="valid != null">
+				and valid = #{valid}
+			</if>
+		</where>
+	</delete>
+	
+	<!-- update -->
+	<update id="updateStarRecommend">
+		update hts.operations_star_recommend 
+		<set>
+			<if test="top != null">
+				top = #{top},
+			</if>
+			<if test="valid != null">
+				valid = #{valid}
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+		</where>
+	</update>
+	
+	<!-- select -->
+	<select id="selectStarRecommend" resultMap="StarRecommendMap">
+		select sr.* from hts.operations_star_recommend sr
+		<where>
+			<if test="id != null">
+				sr.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and sr.id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and sr.user_id = #{userId}
+			</if>
+			<if test="top != null">
+				and sr.top = #{top}
+			</if>
+			<if test="valid != null">
+				and sr.valid = #{valid}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="queryStarRecommend" resultMap="StarRecommendMap">
+		select sr.*,ui.user_name,ui.user_avatar,ui.sex,ui.signature,ui.user_label,ui.register_date,
+				ui.concern_count,ui.follow_count,ui.world_count,ui.liked_count,ui.keep_count
+		 from hts.operations_star_recommend sr
+		left join hts.user_info ui on sr.user_id=ui.id
+		<where>
+			<if test="id != null">
+				sr.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and sr.id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and sr.user_id = #{userId}
+			</if>
+			<if test="top != null">
+				and sr.top = #{top}
+			</if>
+			<if test="valid != null">
+				and sr.valid = #{valid}
+			</if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryStarRecommendTotalCount" resultType="long">
+		select count(*) from hts.operations_star_recommend sr
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+			<if test="top != null">
+				and top = #{top}
+			</if>
+			<if test="valid != null">
+				and valid = #{valid}
+			</if>
+		</where>
+	</select>
+</mapper>

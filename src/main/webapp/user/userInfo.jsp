@@ -66,8 +66,14 @@ var maxId = 0,
 		},
 		likedCountColumn,
 		keepCountColumn,
-		{field : 'signature', title:'签名',align:'center', width:120,editor:'text'},
+		{field : 'signature', title:'签名',align:'center', width:100,editor:'text'},
 		userLabelColumn,
+		{field : 'beStarRecommend',title:'达人推荐',align:'center',width:60,
+			formatter: function(value,row,index){
+				img = "./common/images/edit_add.png";
+				return "<img title='达人推荐' class='htm_column_img pointer' onclick='javascript:toBeStarRecommend("+row.userId+")' src='" + img + "'/>";
+			}	
+		},
 		{field : 'userrecd',title : '推荐',align : 'center',width : 45,
 			formatter: function(value,row,index){
 				// 未添加进推荐列表
@@ -683,6 +689,13 @@ function loadMsgFormValidate() {
 			},"json");
 	}
 
+	function toBeStarRecommend(userId){
+		$.post("./admin_op/starRecommend_addStarRecommend",{
+			'userId':userId
+		},function(result){
+			$.messager.alert('提示',result['msg']);
+		},"json");
+	}
 </script>
 </head>
 <body>
