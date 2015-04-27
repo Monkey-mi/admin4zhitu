@@ -20,7 +20,7 @@ public class OpWorldTypeDto2CacheDaoImpl extends BaseCacheDaoImpl<OpWorldTypeDto
 
 	@Override
 	public void updateWorldTypeDto2(int limit) {
-		List<OpWorldTypeDto2> dtoList = webSquarePushDao.querySuperbSquareIndex(new RowSelection(1, limit));
+		List<OpWorldTypeDto2> dtoList = webSquarePushDao.querySuperbSquareIndexFromMaster(new RowSelection(1, limit));
 		if(getRedisTemplate().hasKey(CacheKeies.OP_SUPERB_TYPE)) {
 			getRedisTemplate().delete(CacheKeies.OP_SUPERB_TYPE);
 		}

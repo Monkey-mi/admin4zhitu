@@ -535,16 +535,11 @@
         </property>
     </bean>
 	
-<<<<<<< HEAD
-	 <!--
-=======
 	<!-- 
->>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list> 
-            	
                 <ref bean="interactCommentJobTrigger" />
                 <ref bean="interactClickJobTrigger"/>
                 <ref bean="interactLikedJobTrigger" />
@@ -563,9 +558,8 @@
                 <ref bean="osPushJobTrigger" />
                 <ref bean="platConcernJobTrigger" />
                 <ref bean="starRecommendSchedulaTrigger" />
-
             </list>
         </property>
     </bean>
-     -->
+    -->
 </beans>

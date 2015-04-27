@@ -1,11 +1,15 @@
 package com.imzhitu.admin.ztworld;
 
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.pojo.HTWorldFilterLogo;
 import com.hts.web.common.util.JSONUtil;
+import com.hts.web.common.util.StringUtil;
+import com.hts.web.ztworld.service.impl.ZTWorldServiceImpl;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
 
@@ -57,11 +61,17 @@ public class ZTWorldAction extends BaseCRUDAction {
 	private String logoPath;
 	private String logoDesc;
 	private Integer user_level_id;	//用户登记
+	
+	private Integer childId;
+	private Boolean  isNotAddClick = false; // 不添加播放次数标记位
 
 	
 
 	@Autowired
 	private ZTWorldService worldService;
+	
+	@Autowired
+	private com.hts.web.ztworld.service.ZTWorldService webWorldService;
 	
 	/**
 	 * 查询今日更新的世界
@@ -73,6 +83,40 @@ public class ZTWorldAction extends BaseCRUDAction {
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询封面子世界所在分页的子世界信息
+	 * 
+	 * @return
+	 */
+	public String queryTitleChildWorldPage() {
+		try {
+			boolean isAdmin = false;
+			String admin = request.getParameter("adminKey");
+			if(!StringUtil.checkIsNULL(admin) && admin.equals(ZTWorldServiceImpl.ADMIN_PASS)) {
+				isAdmin = true;
+			}
+			JSONObject json = webWorldService.getTitleChildPageInfo(worldId, limit, isNotAddClick, isAdmin);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, json, OptResult.JSON_KEY_HTWORLD, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(getCurrentLoginUserId(), e.getMessage(), e, jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询指定子世界所在分页的子世界信息
+	 * @return
+	 */
+	public String queryChildWorldPage() {
+		try {
+			JSONObject json = webWorldService.getChildWorldPageInfoById(worldId, childId, limit);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, json, OptResult.JSON_KEY_HTWORLD, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(getCurrentLoginUserId(), e.getMessage(), e, jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
@@ -452,4 +496,22 @@ public class ZTWorldAction extends BaseCRUDAction {
 	public void setUser_level_id(Integer user_level_id) {
 		this.user_level_id = user_level_id;
 	}
+
+	public Integer getChildId() {
+		return childId;
+	}
+
+	public void setChildId(Integer childId) {
+		this.childId = childId;
+	}
+
+	public Boolean getIsNotAddClick() {
+		return isNotAddClick;
+	}
+
+	public void setIsNotAddClick(Boolean isNotAddClick) {
+		this.isNotAddClick = isNotAddClick;
+	}
+	
+	
 }
