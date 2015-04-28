@@ -6,6 +6,7 @@
 		<result column="user_id" property="userId" jdbcType="INTEGER"/>
 		<result column="top" property="top" jdbcType="INTEGER"/>
 		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		<result column="activity" property="activity" jdbcType="INTEGER"/>
 		
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />
 		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
@@ -23,9 +24,9 @@
 	<!-- add -->
 	<insert id="insertStarRecommend">
 		insert into hts.operations_star_recommend
-			(user_id,top,valid)
+			(user_id,top,valid,activity)
 		values 
-			(#{userId},#{top},#{valid})
+			(#{userId},#{top},#{valid},#{activity})
 	</insert>
 	
 	<!-- del -->
@@ -55,7 +56,10 @@
 				top = #{top},
 			</if>
 			<if test="valid != null">
-				valid = #{valid}
+				valid = #{valid},
+			</if>
+			<if test="activity != null">
+				activity = #{activity}
 			</if>
 		</set>
 		<where>

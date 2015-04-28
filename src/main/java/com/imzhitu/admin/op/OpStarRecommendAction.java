@@ -37,7 +37,7 @@ public class OpStarRecommendAction extends BaseCRUDAction{
 	 */
 	public String toBeTop(){
 		try{
-			opStarRecommendService.updateStarRecommend(id, userId, top, valid);
+			opStarRecommendService.updateStarRecommend(id, userId, top, valid,activity);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -97,14 +97,16 @@ public class OpStarRecommendAction extends BaseCRUDAction{
 	private Integer valid;
 	private Integer top;
 	private String idStr;
+	private Integer activity;
 
-	public OpStarRecommendService getOpStarRecommendService() {
-		return opStarRecommendService;
+	public Integer getActivity() {
+		return activity;
 	}
-	public void setOpStarRecommendService(
-			OpStarRecommendService opStarRecommendService) {
-		this.opStarRecommendService = opStarRecommendService;
+
+	public void setActivity(Integer activity) {
+		this.activity = activity;
 	}
+
 	public Integer getUserId() {
 		return userId;
 	}

@@ -17,7 +17,7 @@ public interface OpStarRecommendService {
 	/**
 	 * 修改
 	 */
-	public void updateStarRecommend(Integer id,Integer userId,Integer top,Integer valid)throws Exception;
+	public void updateStarRecommend(Integer id,Integer userId,Integer top,Integer valid,Integer activity)throws Exception;
 	
 	/**
 	 * 分页查询

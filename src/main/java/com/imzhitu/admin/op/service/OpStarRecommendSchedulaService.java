@@ -48,4 +48,6 @@ public interface OpStarRecommendSchedulaService {
 	 * 执行达人推荐置顶计划
 	 */
 	public void doStarRecommendSchedula();
+	
+	
 }

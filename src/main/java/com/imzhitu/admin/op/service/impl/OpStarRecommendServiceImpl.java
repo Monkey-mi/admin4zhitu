@@ -30,6 +30,7 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 			return;
 		dto.setTop(top);
 		dto.setValid(valid);
+		dto.setActivity(0);
 		starRecommendMapper.insertStarRecommend(dto);
 	}
 
@@ -49,7 +50,7 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 
 	@Override
 	public void updateStarRecommend(Integer id, Integer userId, Integer top,
-			Integer valid) throws Exception {
+			Integer valid,Integer activity) throws Exception {
 		// TODO Auto-generated method stub
 		if(id == null && userId == null)
 			return;
@@ -58,6 +59,7 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 		dto.setUserId(userId);
 		dto.setTop(top);
 		dto.setValid(valid);
+		dto.setActivity(activity);
 		starRecommendMapper.updateStarRecommend(dto);
 	}
 

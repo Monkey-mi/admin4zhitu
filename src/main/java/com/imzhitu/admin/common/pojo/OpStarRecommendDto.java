@@ -10,6 +10,13 @@ public class OpStarRecommendDto extends UserInfoBase{
 	private Integer userId;
 	private Integer top;
 	private Integer valid;
+	private Integer activity;
+	public Integer getActivity() {
+		return activity;
+	}
+	public void setActivity(Integer activity) {
+		this.activity = activity;
+	}
 	public Integer getId() {
 		return id;
 	}

@@ -150,6 +150,7 @@ public class OpStarRecommendSchedulaServiceImpl extends BaseServiceImpl implemen
 	/**
 	 * 执行达人推荐置顶计划
 	 */
+	@Override
 	public void doStarRecommendSchedula(){
 		Date now = new Date();
 		Integer resultCount = 0;
@@ -173,5 +174,7 @@ public class OpStarRecommendSchedulaServiceImpl extends BaseServiceImpl implemen
 		Date end = new Date();
 		log.info("doStarRecommendSchedula end. cost:"+(end.getTime() - now.getTime()) + "ms. total:"+list.size()+". success:"+resultCount);
 	}
+	
+	
 
 }
