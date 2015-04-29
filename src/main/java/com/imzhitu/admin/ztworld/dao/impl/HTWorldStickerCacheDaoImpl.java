@@ -68,14 +68,14 @@ public class HTWorldStickerCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStickerD
 
 	@Override
 	public int updateHotSticker(long startTime, long endTime, Integer typeId, Integer limit) {
-		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_HOT)) {
-			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_HOT);
-		}
+//		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_HOT)) {
+//			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_HOT);
+//		}
 		List<HTWorldStickerDto> list = stickerMapper.queryCacheHotStickerDto(startTime, endTime, limit);
 		if(list.size() > 0) {
 			for(HTWorldStickerDto dto : list) {
 				dto.setTypeId(typeId);
-				getRedisTemplate().opsForList().rightPush(CacheKeies.ZTWORLD_STICKER_HOT, 
+				getRedisTemplate().opsForList().rightPush(CacheKeies.ZTWORLD_STICKER_RECOMMEND, 
 						dto);
 			}
 			return 0;
