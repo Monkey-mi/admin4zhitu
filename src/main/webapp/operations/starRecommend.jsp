@@ -222,6 +222,13 @@ function submitReSortForm() {
 	}
 	
 }
+
+
+function refreshStarRecommendCache(){
+	$.post("./admin_op/schedulaStarRecommend_updateStarRecommendCache",function(result){
+		$.messager.alert('提示',result['msg']);
+	});
+}
 	
 
 </script>
@@ -231,7 +238,8 @@ function submitReSortForm() {
 		<table id="htm_table"></table>
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
-			<a href="javascript:void(0);" onclick="javascript:reSortInit();" class="easyui-linkbutton" title="添加达人推荐置顶计划" plain="true" iconCls="icon-converter" id="reIndexedBtn">添加达人推荐置顶计划</a>
+			<a href="javascript:void(0);" onclick="javascript:reSortInit();" class="easyui-linkbutton" title="添加达人推荐置顶计划" plain="true" iconCls="icon-add" id="reIndexedBtn">添加达人推荐置顶计划</a>
+			<a href="javascript:void(0);" onclick="javascript:refreshStarRecommendCache();" class="easyui-linkbutton" title="刷新达人推荐缓存" plain="true" iconCls="icon-converter" >刷新达人推荐缓存</a>
 		</div> 
 		
 		<!-- 重排频道织图计划 -->

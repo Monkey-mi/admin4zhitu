@@ -140,6 +140,7 @@
 	<bean id="osPushService" class="com.imzhitu.admin.aliyun.service.impl.OsPushServiceImpl" />
 	<bean id="platService" class="com.imzhitu.admin.plat.service.impl.PlatServiceImpl" />
 	<bean id="opStarRecommendSchedulaService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendSchedulaServiceImpl" />
+	<bean id="opStarRecommendCacheService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendCacheServiceImpl" />
 
 		
 	<!-- 互动播放定时任务 -->
@@ -482,7 +483,27 @@
 			<ref bean="starRecommendSchedulaJob"/>
 		</property>
 		<property name="cronExpression">
-  			<value>0 0/2 * * * ?</value><!-- 每10分钟执行 -->
+  			<value>0 0/10 * * * ?</value><!-- 每10分钟执行 -->
+  		</property>
+	</bean>
+	
+	
+	<!-- 达人推荐缓存更新计划 -->
+	<bean id="starRecommendCacheJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="opStarRecommendCacheService"/>
+		</property>
+		<property name="targetMethod">
+			<value>doUpdateStarRecommendCacheSchedula</value>
+		</property>
+	</bean>
+	
+	<bean id="starRecommendCacheTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="starRecommendCacheJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>0 0 0/2 * * ?</value><!-- 每10分钟执行 -->
   		</property>
 	</bean>
 	
@@ -558,6 +579,7 @@
                 <ref bean="osPushJobTrigger" />
                 <ref bean="platConcernJobTrigger" />
                 <ref bean="starRecommendSchedulaTrigger" />
+                <ref bean="starRecommendCacheTrigger" />
             </list>
         </property>
     </bean>

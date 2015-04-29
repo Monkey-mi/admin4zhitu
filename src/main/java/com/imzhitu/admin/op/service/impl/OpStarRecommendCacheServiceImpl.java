@@ -16,7 +16,7 @@ public class OpStarRecommendCacheServiceImpl implements OpStarRecommendCacheServ
 	private com.hts.web.operations.service.OpStarRecommendService htsOpStarRecommendService;
 	
 	@Autowired
-	private com.hts.web.userinfo.service.UserActivityService userActivityService;
+	private com.hts.web.userinfo.service.UserActivityService htsUserActivityService;
 	
 	private Logger log = Logger.getLogger(OpStarRecommendCacheServiceImpl.class);
 	
@@ -38,7 +38,7 @@ public class OpStarRecommendCacheServiceImpl implements OpStarRecommendCacheServ
 		try{
 			List<OpStarRecommendDto> list = htsOpStarRecommendService.queryStarRecommend();
 			for(OpStarRecommendDto dto:list){
-				userActivityService.addActivityScore(Tag.ACT_TYPE_CHANGE_SUB, dto.getId());
+				htsUserActivityService.addActivityScore(Tag.ACT_TYPE_CHANGE_SUB, dto.getId());
 			}
 			updateStarRecommendCache();
 		}catch(Exception e){

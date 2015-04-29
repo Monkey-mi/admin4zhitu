@@ -8,6 +8,7 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
+import com.imzhitu.admin.op.service.OpStarRecommendCacheService;
 import com.imzhitu.admin.op.service.OpStarRecommendService;
 
 public class OpStarRecommendAction extends BaseCRUDAction{
@@ -16,6 +17,22 @@ public class OpStarRecommendAction extends BaseCRUDAction{
 	
 	@Autowired
 	private OpStarRecommendService opStarRecommendService;
+	
+	@Autowired
+	private OpStarRecommendCacheService opStarRecommendCacheService;
+	
+	/**
+	 * 更新缓存
+	 */
+	public String updateStarRecommendCache(){
+		try{
+			opStarRecommendCacheService.updateStarRecommendCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 	
 	/**
 	 * 分页查询
