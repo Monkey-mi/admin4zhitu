@@ -941,7 +941,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 //		interactWorldClickDao.updateUnFinishedSchedule(now);
 //		interactWorldCommentDao.updateUnFinishedSchedule(now);
 //		interactWorldLikedDao.updateUnFinishedSchedule(now);
-		interactUserFollowDao.updateUnFinishedSchedule(now);
+//		interactUserFollowDao.updateUnFinishedSchedule(now);
 	}
 
 	@Override
