@@ -19,6 +19,7 @@
 		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
 		<result column="liked_count" property="likedCount" jdbcType="INTEGER" />
 		<result column="keep_count" property="keepCount" jdbcType="INTEGER" />
+		<result column="star" property="star" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<!-- add -->
@@ -97,7 +98,7 @@
 	<!-- 分页查询 -->
 	<select id="queryStarRecommend" resultMap="StarRecommendMap">
 		select sr.*,ui.user_name,ui.user_avatar,ui.sex,ui.signature,ui.user_label,ui.register_date,
-				ui.concern_count,ui.follow_count,ui.world_count,ui.liked_count,ui.keep_count
+				ui.concern_count,ui.follow_count,ui.world_count,ui.liked_count,ui.keep_count,ui.star
 		 from hts.operations_star_recommend sr
 		left join hts.user_info ui on sr.user_id=ui.id
 		<where>
@@ -117,7 +118,18 @@
 				and sr.valid = #{valid}
 			</if>
 		</where>
-		order by id desc
+		<if test="orderBy == null">
+			order by sr.activity desc,sr.id desc
+		</if>
+		<if test="orderBy == 1">
+			order by ui.concern_count desc
+		</if>
+		<if test="orderBy == 2">
+			order by ui.follow_count desc
+		</if>
+		<if test="orderBy == 3">
+			order by ui.world_count desc
+		</if>
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	

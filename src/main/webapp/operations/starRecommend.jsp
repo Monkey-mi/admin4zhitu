@@ -68,6 +68,7 @@ var maxId = 0,
   				return "<img title='无效' class='htm_column_img' src='" + img + "'/>";
   			}
   		},
+  		{field : 'activity', title:'活跃值',align:'center', width:80,editor:'text'},
 		{field : 'valid',title : '有效性',align : 'center', width: 45,
   			formatter: function(value,row,index) {
   				if(value == 1) {
@@ -100,6 +101,25 @@ var maxId = 0,
 			collapsible : false,
 			iconCls : 'icon-tip',
 			resizable : false
+		});
+		
+		$('#ss_top').combobox({
+			onSelect:function(record){
+				var myQueryParams = {
+						'top' : record.value,
+						'orderBy' : $('#ss_orderBy').combobox('getValue')
+				};
+				$("#htm_table").datagrid('load',myQueryParams);
+			}
+		});
+		$('#ss_orderBy').combobox({
+			onSelect:function(record){
+				var myQueryParams = {
+						'top' : $('#ss_top').combobox('getValue'),
+						'orderBy' : record.value
+				};
+				$("#htm_table").datagrid('load',myQueryParams);
+			}
 		});
 		
 		removePageLoading();
@@ -230,6 +250,13 @@ function refreshStarRecommendCache(){
 	});
 }
 	
+function searchByUid(){
+	var userId = $("#ss_uid").searchbox('getValue');
+	var myQueryParams = {
+			'userId' : userId
+	};
+	$("#htm_table").datagrid('load',myQueryParams);
+}
 
 </script>
 </head>
@@ -237,6 +264,18 @@ function refreshStarRecommendCache(){
 	<div id="main" style="display: none;">
 		<table id="htm_table"></table>
 		<div id="tb" style="padding:5px;height:auto" class="none">
+			<input id="ss_uid" class="easyui-searchbox" prompt="请输入用户id" style="width:150px;" searcher="searchByUid">
+			<select id="ss_top" class="easyui-combobox"  style="width:100px;" >
+		        <option value="">是否置顶</option>
+		        <option value="1">置顶</option>
+		        <option value="0">非置顶</option>
+	   		</select>
+	   		<select id="ss_orderBy" class="easyui-combobox"  style="width:100px;" >
+		        <option value="">按活跃值排序</option>
+		        <option value="1">按关注数排序</option>
+		        <option value="2">按粉丝数排序</option>
+		        <option value="3">按织图数排序</option>
+	   		</select>
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
 			<a href="javascript:void(0);" onclick="javascript:reSortInit();" class="easyui-linkbutton" title="添加达人推荐置顶计划" plain="true" iconCls="icon-add" id="reIndexedBtn">添加达人推荐置顶计划</a>
 			<a href="javascript:void(0);" onclick="javascript:refreshStarRecommendCache();" class="easyui-linkbutton" title="刷新达人推荐缓存" plain="true" iconCls="icon-converter" >刷新达人推荐缓存</a>

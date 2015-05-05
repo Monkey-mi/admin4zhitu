@@ -1,6 +1,8 @@
 package com.imzhitu.admin.common.pojo;
 
-public class OpStarRecommendDto extends UserInfoBase{
+import com.hts.web.base.constant.Tag;
+
+public class OpStarRecommendDto extends UserInfoBase {
 
 	/**
 	 * 
@@ -10,7 +12,31 @@ public class OpStarRecommendDto extends UserInfoBase{
 	private Integer userId;
 	private Integer top;
 	private Integer valid;
-	private Integer activity;
+	private Integer activity;		  // 活跃值
+	private Integer star = Tag.FALSE; // 明星标记
+	private Integer orderBy;		  // 用以排序的
+	
+	public Integer getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(Integer orderBy) {
+		this.orderBy = orderBy;
+	}
+
+	public Integer getStar() {
+		return star;
+	}
+
+	public void setStar(Integer star) {
+		this.star = star;
+	}
+	
+	@Override
+	public Integer getVerifyId() {
+		return star;
+	}
+	
 	public Integer getActivity() {
 		return activity;
 	}

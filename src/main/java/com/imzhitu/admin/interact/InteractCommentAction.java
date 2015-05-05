@@ -41,7 +41,9 @@ public class InteractCommentAction extends BaseCRUDAction {
 	private Boolean hasTotal;
 	private Integer selected = 0;
 	private String interactCommentJSON;
+	private String commentsStr;		//多条评论字符串，以回车换行为分割符。用以批量添加
 	
+
 	@Autowired
 	private InteractCommentService interactCommentService;
 	
@@ -103,6 +105,22 @@ public class InteractCommentAction extends BaseCRUDAction {
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch(Exception e) {
 			e.printStackTrace();
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String batchSaveComment(){
+		try{
+			if(commentsStr != null && !"".equals(commentsStr.trim())){
+				String[] comments = commentsStr.split("\n");
+				for(String str:comments){
+					if(!"".equals(str.trim()))
+						interactCommentService.saveComment(null, str, labelId);
+				}
+			}
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
@@ -506,4 +524,12 @@ public class InteractCommentAction extends BaseCRUDAction {
 		return this.interactCommentJSON;
 	}
 	
+	
+	public String getCommentsStr() {
+		return commentsStr;
+	}
+
+	public void setCommentsStr(String commentsStr) {
+		this.commentsStr = commentsStr;
+	}
 }

@@ -503,7 +503,7 @@
 			<ref bean="starRecommendCacheJob"/>
 		</property>
 		<property name="cronExpression">
-  			<value>0 0 0/2 * * ?</value><!-- 每10分钟执行 -->
+  			<value>0 0 0/2 * * ?</value><!-- 每120分钟执行 -->
   		</property>
 	</bean>
 	

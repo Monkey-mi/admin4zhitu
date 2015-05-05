@@ -12,6 +12,7 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.common.pojo.OpStarRecommendDto;
 import com.imzhitu.admin.op.mapper.OpStarRecommendMapper;
+import com.imzhitu.admin.op.service.OpStarRecommendCacheService;
 import com.imzhitu.admin.op.service.OpStarRecommendService;
 
 @Service
@@ -19,6 +20,13 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 
 	@Autowired
 	private OpStarRecommendMapper starRecommendMapper;
+	
+	@Autowired
+	private com.hts.web.userinfo.service.UserInfoService webUserInfoService;
+	
+	@Autowired
+	private OpStarRecommendCacheService opStarRecommendCacheService;
+	
 	@Override
 	public void insertStarRecommend(Integer userId, Integer top, Integer valid)
 			throws Exception {
@@ -65,7 +73,7 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 
 	@Override
 	public void queryStarRecommend(int maxId,int page, int rows, Map<String, Object> jsonMap,
-			Integer id, Integer userId, Integer top, Integer valid)
+			Integer id, Integer userId, Integer top, Integer valid,Integer orderBy)
 			throws Exception {
 		// TODO Auto-generated method stub
 		OpStarRecommendDto dto = new OpStarRecommendDto();
@@ -76,6 +84,7 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 		dto.setMaxId(maxId);
 		dto.setFirstRow((page-1)*rows);
 		dto.setLimit(rows);
+		dto.setOrderBy(orderBy);
 		long totalCount = starRecommendMapper.queryStarRecommendTotalCount(dto);
 		List<OpStarRecommendDto> list = new ArrayList<OpStarRecommendDto>();
 		
@@ -105,7 +114,8 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 						}
 					}
 				}else{//置顶的不过够(page-1)*rows个,结果集里面的必然是非置顶的
-					dto.setFirstRow(0);
+					int  firstRow = (int)((page-1)*rows - topTotalCount );
+					dto.setFirstRow(firstRow);
 					int limit = rows - (int)(topTotalCount%rows);
 					dto.setLimit(limit);
 					dto.setTop(Tag.FALSE);
@@ -120,6 +130,8 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 					list.addAll(li);
 				}
 			}
+			
+			webUserInfoService.extractVerify(list);
 			
 			int reMaxId = 0;
 			for(int i=0; i< list.size(); i++){
@@ -144,5 +156,50 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 		dto.setValid(valid);
 		return starRecommendMapper.queryStarRecommendTotalCount(dto);
 	}
+	
+	
+	/**
+	 * 从缓存中读取达人推荐数据。这些数据经过加工之后，在后台显示
+	 * @param jsonMap
+	 * @throws Exception
+	 */
+	@Override
+	public void queryStarRecommendFromCache(Map<String,Object>jsonMap)throws Exception{
+		//从缓存中读取达人推荐。但是这些信息在后台显示中是偏少的，需要再组装一些数据。
+		List<com.hts.web.common.pojo.OpStarRecommendDto> htsStarRecommendList = opStarRecommendCacheService.queryStarRecommendCache();
+		
+		//遍历从缓存中读取的数据，为其添加数据
+		if(htsStarRecommendList != null && htsStarRecommendList.size() > 0 ){
+			OpStarRecommendDto tempDto = new OpStarRecommendDto();
+			List<OpStarRecommendDto> list = new ArrayList<OpStarRecommendDto>(htsStarRecommendList.size());
+			for(com.hts.web.common.pojo.OpStarRecommendDto htsStarRecommend : htsStarRecommendList){
+				tempDto.setUserId(htsStarRecommend.getId());
+				List<OpStarRecommendDto> ol = starRecommendMapper.queryStarRecommend(tempDto);
+				if(ol != null && ol.size() == 1){
+					OpStarRecommendDto dto = ol.get(0);
+					dto.setVerifyIcon(htsStarRecommend.getVerifyIcon());
+					dto.setVerifyName(htsStarRecommend.getVerifyName());
+					list.add(dto);
+				}else{
+					throw new Exception("query starRecommend by userId failed. it is null or size > 1 which excepted 1. ");
+				}
+			}
+			
+			jsonMap.put(OptResult.JSON_KEY_TOTAL, list.size());
+			jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+			jsonMap.put(OptResult.JSON_KEY_MAX_ID, 0);
+		}
+		
+	}
+	
+	/**
+	 * 更新达人推荐的缓存
+	 * @throws Exception
+	 */
+	@Override
+	public void updateStarRecommendCache()throws Exception{
+		opStarRecommendCacheService.updateStarRecommendCache();
+	}
+	
 
 }

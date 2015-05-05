@@ -18,6 +18,8 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery.form.min.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/baseTools.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/emotion/rl_exp.js"></script>
+<link rel="stylesheet" href="${webRootPath }/base/js/jquery/emotion/rl_exp.css" />
 <script type="text/javascript">
 	var commentMaxId=0,
 	worldId = <%= worldId %>,
@@ -612,7 +614,78 @@
 			},"json");
 	}
 	
+	
+	/**
+	 * 保存评论
+	 */
+	function saveComment() {
+		var commentsStr = $("#rl_exp_input").val(),
+			//labelId = $("#labelId_comment").combobox('getValue');
+			labelId = 31;
+		if(labelId == "") {
+			labelId = 31;
+		}
+		if(commentsStr == "") {
+			$.messager.alert('提示',"请输入评论内容");
+			return;
+		}
+		$("#saveBtn").hide();
+		$("#div-add-comment .loading").show();
+		$.post("./admin_interact/comment_batchSaveComment",{
+			'labelId':labelId,
+			'commentsStr':commentsStr
+		}, function(result){
+			if(result['result'] == 0) {
+				$("#rl_exp_input").val('');
+				refreshComment4Add();
+			} else {
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+			$("#saveBtn").show();
+			$("#div-add-comment .loading").hide();
+		},'json');
+	}
+	
 </script>
+
+<style type="text/css">
+	body {
+		font-size: 14px;
+	}
+	.xm-bq{margin:10px 0;font-size:14px;color:#333;}
+	.xm-bq a{color:#09c;margin:0 5px;}
+	.xm-bq a:hover{color:#E10602;}
+	.rl_exp {margin-left:10px; width:624px}
+	.rl_exp_main {height:230px; overflow-y: scroll;}
+	.comment-main{
+		width:502px;
+		float:right;
+		text-align:left;
+	}
+	.comment-main textarea{width:100%;border:1px solid #dcdcdc;}
+	.comment-main textarea:focus{outline:none;border-color:#4bf;}
+	.comment-main a{font-size:12px;text-decoration:none;color:#09c;}
+	.comment-main a:hover{color:#E10602;}
+	
+	#rl_exp_input {
+		width: 502px;
+		margin-left:10px;
+		margin-top: 15px;
+		float:right;
+	}
+	#rl_bq {
+		text-align: center;
+	}
+	.div-comment-opt{
+		background-color:#f3f3f3;
+		width:508px;
+		margin-top: 10px;
+		padding-top:15px;
+		height:38px;
+		text-align: center;
+		float:right;
+	}
+</style>
 </head>
 <body>
 	<div id="main">
@@ -625,7 +698,6 @@
 				<form id="interact_form" action="./admin_interact/worldlevel_AddLevelWorld" method="post" class="none">
 					<table class="htm_edit_table"  width="600px;" class="none">
 						<tbody>
-							
 							<tr style="display:none;">
 								<td class="leftTd">织图id：</td>
 								<td><input type="text" id="worldId_interact" name="world_id"  onchange="validateSubmitOnce=true;" readonly="readonly" value="<%=worldId%>"/></td>
@@ -674,6 +746,31 @@
 				</form>
 				<br>
 				<table id="comments_interact_table" style="float:right;margin-top:20px;"></table>
+			</div>
+		</div>
+		
+		<!-- 添加评论 -->
+		<div id="div-add-comment">
+			<!-- 添加评论 -->
+			<div style="width:50%;height: 230px;float:left;">
+				<div id="comment" class="comment-main">
+					<textarea name="content" id="rl_exp_input" rows="13"></textarea>
+					<div class="div-comment-opt">
+						<a id="saveBtn" class="easyui-linkbutton" iconCls="icon-ok" title="保存评论" onclick="javascript:saveComment()" href="javascript:void(0);">确定</a>
+						<span class="loading none">
+						<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+						<span style="vertical-align:middle;">请稍后...</span>
+						</span>
+						<a class="easyui-linkbutton" iconCls="icon-cancel" title="关闭窗口" onclick="closePage();">取消</a>
+					</div>
+				</div>
+			</div>
+			
+			<!-- emoji表情 -->
+			<div style="width:50%;height: 230px;float:right;margin-top:15px;">
+				<div  class="rl_exp" id="rl_bq" style="position: static;">
+					<ul class="rl_exp_main clearfix rl_selected"></ul>
+				</div>
 			</div>
 		</div>
 		

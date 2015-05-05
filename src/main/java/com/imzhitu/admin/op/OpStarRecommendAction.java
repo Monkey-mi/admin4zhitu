@@ -8,7 +8,6 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.op.service.OpStarRecommendCacheService;
 import com.imzhitu.admin.op.service.OpStarRecommendService;
 
 public class OpStarRecommendAction extends BaseCRUDAction{
@@ -18,15 +17,12 @@ public class OpStarRecommendAction extends BaseCRUDAction{
 	@Autowired
 	private OpStarRecommendService opStarRecommendService;
 	
-	@Autowired
-	private OpStarRecommendCacheService opStarRecommendCacheService;
-	
 	/**
 	 * 更新缓存
 	 */
 	public String updateStarRecommendCache(){
 		try{
-			opStarRecommendCacheService.updateStarRecommendCache();
+			opStarRecommendService.updateStarRecommendCache();
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -40,7 +36,11 @@ public class OpStarRecommendAction extends BaseCRUDAction{
 	 */
 	public String queryStarRecommendForTable(){
 		try{
-			opStarRecommendService.queryStarRecommend(maxId, page, rows, jsonMap, id, userId, top, valid);
+			
+			if(isCacheFlag != null && isCacheFlag == Tag.TRUE)
+				opStarRecommendService.queryStarRecommendFromCache(jsonMap);//查询缓存
+			else
+				opStarRecommendService.queryStarRecommend(maxId, page, rows, jsonMap, id, userId, top, valid,orderBy);//查询所有人
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -115,6 +115,24 @@ public class OpStarRecommendAction extends BaseCRUDAction{
 	private Integer top;
 	private String idStr;
 	private Integer activity;
+	private Integer isCacheFlag;		//是否是查询缓存里的数据标志
+	private Integer orderBy;			//用以排序null表示根据活跃值来排序。1.关注别人降序排序。2.粉丝降序排序。3.织图数量降序排序
+
+	public Integer getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(Integer orderBy) {
+		this.orderBy = orderBy;
+	}
+
+	public Integer getIsCacheFlag() {
+		return isCacheFlag;
+	}
+
+	public void setIsCacheFlag(Integer isCacheFlag) {
+		this.isCacheFlag = isCacheFlag;
+	}
 
 	public Integer getActivity() {
 		return activity;

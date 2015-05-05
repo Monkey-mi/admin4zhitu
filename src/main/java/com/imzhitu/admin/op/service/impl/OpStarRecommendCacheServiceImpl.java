@@ -47,4 +47,14 @@ public class OpStarRecommendCacheServiceImpl implements OpStarRecommendCacheServ
 		Date end = new Date();
 		log.info("doUpdateStarRecommendCacheSchedula end. cost:"+(end.getTime()-now.getTime()));
 	}
+	
+	/**
+	 * 从缓存中读取达人推荐
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<OpStarRecommendDto> queryStarRecommendCache()throws Exception{
+		return htsOpStarRecommendService.queryStarRecommend();
+	}
 }
