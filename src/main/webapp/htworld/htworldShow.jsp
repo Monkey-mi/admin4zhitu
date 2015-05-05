@@ -621,9 +621,9 @@
 	function saveComment() {
 		var commentsStr = $("#rl_exp_input").val(),
 			//labelId = $("#labelId_comment").combobox('getValue');
-			labelId = 31;
+			labelId = 5;
 		if(labelId == "") {
-			labelId = 31;
+			labelId = 5;
 		}
 		if(commentsStr == "") {
 			$.messager.alert('提示',"请输入评论内容");

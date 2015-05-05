@@ -121,6 +121,14 @@ var maxId = 0,
 				$("#htm_table").datagrid('load',myQueryParams);
 			}
 		});
+		$('#ss_cache').combobox({
+			onSelect:function(record){
+				var myQueryParams = {
+						'isCacheFlag' : record.value
+				};
+				$("#htm_table").datagrid('load',myQueryParams);
+			}
+		});
 		
 		removePageLoading();
 		$("#main").show();
@@ -245,7 +253,7 @@ function submitReSortForm() {
 
 
 function refreshStarRecommendCache(){
-	$.post("./admin_op/schedulaStarRecommend_updateStarRecommendCache",function(result){
+	$.post("./admin_op/starRecommend_updateStarRecommendCache",function(result){
 		$.messager.alert('提示',result['msg']);
 	});
 }
@@ -275,6 +283,10 @@ function searchByUid(){
 		        <option value="1">按关注数排序</option>
 		        <option value="2">按粉丝数排序</option>
 		        <option value="3">按织图数排序</option>
+	   		</select>
+	   		<select id="ss_cache" class="easyui-combobox"  style="width:120px;" >
+		        <option value="">是否正在推荐给用户</option>
+		        <option value="1">正在推荐给用户</option>
 	   		</select>
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
 			<a href="javascript:void(0);" onclick="javascript:reSortInit();" class="easyui-linkbutton" title="添加达人推荐置顶计划" plain="true" iconCls="icon-add" id="reIndexedBtn">添加达人推荐置顶计划</a>
