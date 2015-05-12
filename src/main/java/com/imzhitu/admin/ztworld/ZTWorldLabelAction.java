@@ -94,7 +94,8 @@ public class ZTWorldLabelAction extends BaseCRUDAction {
 	 */
 	public String saveLabel() {
 		try {
-			worldLabelService.saveLabel(labelName);
+			Integer id = worldLabelService.saveLabel(labelName);
+			jsonMap.put("labelId", id);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

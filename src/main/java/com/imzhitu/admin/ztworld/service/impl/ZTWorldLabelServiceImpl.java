@@ -147,7 +147,7 @@ public class ZTWorldLabelServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public void saveLabel(String labelName)throws Exception {
+	public Integer saveLabel(String labelName)throws Exception {
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
 		HTWorldLabel label = worldLabelDao.queryLabelByName(labelName);
 		if(label != null) {
@@ -156,6 +156,7 @@ public class ZTWorldLabelServiceImpl extends BaseServiceImpl implements
 			String pinyin = StringUtil.getPinYin(labelName);
 			worldLabelDao.saveLabel(new HTWorldLabel(id, labelName, pinyin, 0, new Date(), Tag.FALSE, Tag.TRUE, id, 0));
 		}
+		return id;
 	}
 
 	@Override

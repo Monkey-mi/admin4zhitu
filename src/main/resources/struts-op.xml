@@ -78,6 +78,12 @@
 			</result>
 		</action>
 		
+		<action name="v2channel_*" class="com.imzhitu.admin.op.OpChannelV2Action" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 
 </struts>

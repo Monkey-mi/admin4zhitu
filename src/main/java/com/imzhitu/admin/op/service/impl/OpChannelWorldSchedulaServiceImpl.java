@@ -22,7 +22,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	public static Integer workingTime=60*60*1000;
 	
 	@Autowired
-	public ChannelService channelService;
+	private ChannelService channelService;
 	
 	@Autowired
 	private OpChannelWorldSchedulaMapper channelWorldSchedulaMapper;

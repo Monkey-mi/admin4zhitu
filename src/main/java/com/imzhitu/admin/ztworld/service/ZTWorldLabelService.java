@@ -39,7 +39,7 @@ public interface ZTWorldLabelService extends BaseService {
 	 * @param labelName
 	 * @throws Exception
 	 */
-	public void saveLabel(String labelName) throws Exception;
+	public Integer saveLabel(String labelName) throws Exception;
 	
 	/**
 	 * 删除标签

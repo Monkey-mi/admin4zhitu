@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpChannelV2Mapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelV2Dto" id="OpChannelV2Mapper">
+		<result column="id" property="channelId" jdbcType="INTEGER"/>
+		<result column="owner_id" property="ownerId" jdbcType="INTEGER"/>
+		<result column="owner_name" property="ownerName" jdbcType="VARCHAR"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR"/>
+		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+		<result column="channel_desc" property="channelDesc" jdbcType="VARCHAR"/>
+		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR"/>
+		<result column="sub_icon" property="subIcon" jdbcType="VARCHAR"/>
+		<result column="channel_type" property="channelTypeId" jdbcType="INTEGER"/>
+		<result column="channel_type_name" property="channelTypeName" jdbcType="VARCHAR"/>
+		<result column="channel_label" property="channelLabelNames" jdbcType="VARCHAR"/>
+		<result column="label_ids" property="channelLabelIds" jdbcType="VARCHAR"/>
+		<result column="world_count" property="worldCount" jdbcType="INTEGER"/>
+		<result column="child_count" property="worldPictureCount" jdbcType="INTEGER"/>
+		<result column="member_count" property="memberCount" jdbcType="INTEGER"/>
+		<result column="superb_count" property="superbCount" jdbcType="INTEGER"/>
+		<result column="child_count_base" property="childCountBase" jdbcType="INTEGER"/>
+		<result column="create_time" property="createTime" jdbcType="BIGINT"/>
+		<result column="last_modified" property="lastModifiedTime" jdbcType="INTEGER"/>
+		<result column="superb" property="superb" jdbcType="INTEGER"/>
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="danmu" property="danmu" jdbcType="INTEGER"/>
+		<result column="mood" property="moodFlag" jdbcType="INTEGER"/>
+		<result column="world" property="worldFlag" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<!-- insert -->
+	<insert id="insertOpChannel">
+		insert into hts.operations_channel (owner_id,channel_name,channel_title,subtitle,channel_desc,channel_icon,
+			sub_icon,channel_type,channel_label,label_ids,world_count,child_count,member_count,superb_count,
+			child_count_base,create_time,last_modified,superb,valid,serial,danmu,mood,world)
+		values
+			(#{ownerId},#{channelName},#{channelTitle},#{subtitle},#{channelDesc},#{channelIcon},
+			#{subIcon},#{channelTypeId},#{channelLabelNames},#{channelLabelIds},#{worldCount},#{worldPictureCount},#{memberCount},#{superbCount},
+			#{childCountBase},#{createTime},#{lastModifiedTime},#{superb},#{valid},#{serial},#{danmu},#{moodFlag},#{worldFlag})
+	</insert>
+	
+	<!-- delete -->
+	<delete id="deleteOpChannel">
+		delete from hts.operations_channel
+		<where>
+			<if test="channelId != null">
+				id = #{channelId}
+			</if>
+			<if test="ownerId != null">
+				and owner_id = #{ownerId}
+			</if>
+		</where>
+	</delete>
+	
+	<update id="updateOpChannel">
+		update hts.operations_channel
+		<set>
+			<if test="ownerId != null">
+				owner_id = #{ownerId},
+			</if>
+			<if test="channelName != null">
+				channel_name = #{channelName},
+			</if>
+			<if test="channelTitle != null">
+				channel_title = #{channelTitle},
+			</if>
+			<if test="subtitle != null">
+				subtitle = #{subtitle},
+			</if>
+			<if test="channelDesc != null">
+				channel_desc = #{channelDesc},
+			</if>
+			<if test="channelIcon != null">
+				channel_icon = #{channelIcon},
+			</if>
+			<if test="subIcon != null">
+				sub_icon = #{subIcon},
+			</if>
+			<if test="channelTypeId != null">
+				channel_type = #{channelTypeId},
+			</if>
+			<if test="channelLabelNames != null and channelLabelNames !='' ">
+				channel_label = #{channelLabelNames},
+			</if>
+			<if test="channelLabelIds != null and channelLabelIds != '' ">
+				label_ids = #{channelLabelIds},
+			</if>
+			<if test="worldCount != null">
+				world_count = #{worldCount},
+			</if>
+			<if test="worldPictureCount != null">
+				child_count = #{worldPictureCount},
+			</if>
+			<if test="memberCount != null">
+				member_count = #{memberCount},
+			</if>
+			<if test="superbCount != null">
+				superb_count = #{superbCount},
+			</if>
+			<if test="childCountBase != null">
+				child_count_base = #{childCountBase},
+			</if>
+			<if test="lastModifiedTime != null">
+				last_modified = #{lastModifiedTime},
+			</if>
+			<if test="superb != null">
+				superb = #{superb},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="serial != null">
+				serial = #{serial},
+			</if>
+			<if test="danmu != null">
+				danmu = #{danmu},
+			</if>
+			<if test="moodFlag != null">
+				mood = #{moodFlag},
+			</if>
+			<if test="worldFlag != null">
+				world = #{worldFlag}
+			</if>
+		</set>
+		where id = #{channelId}
+	</update>
+	
+	<!-- 分页查询 -->
+	<select id="queryOpChannel" resultMap="OpChannelV2Mapper">
+		select * from hts.operations_channel 
+		<where>
+			<if test="channelId != null">
+				id = #{channelId}
+			</if>
+			<if test="ownerId != null">
+				and owner_id = #{ownerId}
+			</if>
+			<if test="superb != null">
+				and superb = #{superb}
+			</if>
+			<if test="valid != null">
+				and valid = #{valid}
+			</if>
+			<if test="serial != null">
+				and serial = #{serial}
+			</if>
+			<if test="danmu != null">
+				and danmu = #{danmu}
+			</if>
+			<if test="moodFlag != null">
+				and mood = #{moodFlag}
+			</if>
+			<if test="worldFlag != null">
+				and world = #{worldFlag}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and id <= #{maxId}]]>
+			</if>
+		</where>
+		<if test="orderBy == null">
+			order by id desc
+		</if>
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryOpChannelTotalCount" resultType="long">
+		select count(*) from hts.operations_channel 
+		<where>
+			<if test="channelId != null">
+				id = #{channelId}
+			</if>
+			<if test="ownerId != null">
+				and owner_id = #{ownerId}
+			</if>
+			<if test="superb != null">
+				and superb = #{superb}
+			</if>
+			<if test="valid != null">
+				and valid = #{valid}
+			</if>
+			<if test="serial != null">
+				and serial = #{serial}
+			</if>
+			<if test="danmu != null">
+				and danmu = #{danmu}
+			</if>
+			<if test="moodFlag != null">
+				and mood = #{moodFlag}
+			</if>
+			<if test="worldFlag != null">
+				and world = #{worldFlag}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+</mapper>
