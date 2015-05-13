@@ -272,7 +272,7 @@ function initEditWindow(id, index, isUpdate) {
 				$("#id_edit").val(obj['channelId']);
 				$("#valid_edit").val(obj['valid']);
 				$("#serial_edit").val(obj['serial']);
-				
+				$("#ownerId_edit").val(obj['ownerId']);
 				$("#channelsubtitle").val(obj['subtitle']);
 				$("#channel_type_id").combobox('setValue',obj['channelTypeId']);
 				
@@ -474,6 +474,7 @@ function addChannelSubmit(){
 	var channelLabelIds = labelIds;
 	var channelTypeId = $("#channel_type_id").combobox('getValue');
 	var subtitle = $("#channelsubtitle").val();
+	var ownerId = $("#ownerId_edit").val();
 	
 	$('#htm_table').datagrid('loading');
 	$.post(url,{
@@ -485,7 +486,8 @@ function addChannelSubmit(){
 		'subIcon':subIcon,
 		'channelLabelNames':channelLabelNames,
 		'channelLabelIds':channelLabelIds,
-		'channelTypeId':channelTypeId
+		'channelTypeId':channelTypeId,
+		'ownerId':ownerId
 		},function(result){
 			$('#htm_table').datagrid('loaded');
 			if(result['result'] == 0){
@@ -560,6 +562,12 @@ function searchChannelByName(){
 							<td class="leftTd">副标题：</td>
 							<td><textarea name="subtitle" id="channelsubtitle" onchange="validateSubmitOnce=true;"></textarea></td>
 							<td class="rightTd"><div id="channelsubtitle_editTip" class="tipDIV"></div></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd">拥有者ID：</td>
+							<td><input name="ownerId" id="ownerId_edit" onchange="validateSubmitOnce=true;" style="width: 206px;"></input></td>
+							<td class="rightTd"><div id="ownerId_editTip" class="tipDIV"></div></td>
 						</tr>
 						
 						<tr>

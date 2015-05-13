@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.aliyun.service.OsChannelService;
-import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpChannel;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
