@@ -1,7 +1,6 @@
 package com.imzhitu.admin.op;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
-import com.hts.web.common.pojo.HTWorldLabel;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
@@ -102,6 +100,16 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	public String batchUpdateChannelValid(){
+		try{
+			opChannelV2Service.batchUpdateValid(channelIdsStr,valid);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	private Integer channelId;			//id
 	private Integer ownerId;			//拥有者ID
 	private String ownerName;			//拥有者名称
@@ -130,7 +138,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	private Integer worldFlag;			//织图标记
 	
 	private Integer orderBy;			//排序
-	
+	private String channelIdsStr;		//channel id array string
 	
 	
 	public Integer getMoodFlag() {
@@ -294,6 +302,14 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	}
 	public void setOrderBy(Integer orderBy) {
 		this.orderBy = orderBy;
+	}
+
+	public String getChannelIdsStr() {
+		return channelIdsStr;
+	}
+
+	public void setChannelIdsStr(String channelIdsStr) {
+		this.channelIdsStr = channelIdsStr;
 	}
 	
 

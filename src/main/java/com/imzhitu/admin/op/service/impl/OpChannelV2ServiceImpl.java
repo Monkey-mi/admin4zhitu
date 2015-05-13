@@ -1,6 +1,7 @@
 package com.imzhitu.admin.op.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,12 @@ import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hts.web.aliyun.service.OsChannelService;
+import com.hts.web.base.constant.Tag;
+import com.hts.web.common.pojo.OpChannel;
 import com.hts.web.common.service.impl.BaseServiceImpl;
+import com.hts.web.common.service.impl.KeyGenServiceImpl;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
@@ -20,10 +26,16 @@ import com.imzhitu.admin.op.service.OpChannelV2Service;
 public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannelV2Service{
 
 	@Autowired
-	OpChannelV2Mapper opChannelV2Mapper;
+	private OpChannelV2Mapper opChannelV2Mapper;
 	
 	@Autowired
-	OpenSearchService openSearchService;
+	private OpenSearchService openSearchService;
+	
+	@Autowired
+	private com.hts.web.common.service.KeyGenService keyGenService;
+	
+	@Autowired
+	private OsChannelService osChannelService;
 	
 	@Override
 	public void insertOpChannel(Integer ownerId, String channelName,
@@ -35,30 +47,35 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			Integer valid, Integer serial, Integer danmu, Integer moodFlag,
 			Integer worldFlag) throws Exception{
 		// TODO Auto-generated method stub
-		OpChannelV2Dto dto = new OpChannelV2Dto();
-		dto.setOwnerId(ownerId);
-		dto.setChannelName(channelName);
-		dto.setChannelTitle(channelTitle);
-		dto.setSubtitle(subtitle);
-		dto.setChannelDesc(channelDesc);
-		dto.setChannelIcon(channelIcon);
-		dto.setSubIcon(subIcon);
-		dto.setChannelTypeId(channelTypeId);
-		dto.setChannelLabelNames(channelLabelNames);
-		dto.setChannelLabelIds(channelLabelIds);
-		dto.setWorldCount(worldCount);
-		dto.setWorldPictureCount(worldPictureCount);
-		dto.setMemberCount(memberCount);
-		dto.setSuperbCount(superbCount);
-		dto.setChildCountBase(childCountBase);
-		dto.setSuperb(superb);
-		dto.setValid(valid);
-		dto.setSerial(serial);
-		dto.setDanmu(danmu);
-		dto.setMoodFlag(moodFlag);
-		dto.setWorldFlag(worldFlag);
+//		OpChannelV2Dto dto = new OpChannelV2Dto();
+		Integer channelId = keyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
+//		dto.setChannelId(channelId);
+//		dto.setOwnerId(ownerId);
+//		dto.setChannelName(channelName);
+//		dto.setChannelTitle(channelTitle);
+//		dto.setSubtitle(subtitle);
+//		dto.setChannelDesc(channelDesc);
+//		dto.setChannelIcon(channelIcon);
+//		dto.setSubIcon(subIcon);
+//		dto.setChannelTypeId(channelTypeId);
+//		dto.setChannelLabelNames(channelLabelNames);
+//		dto.setChannelLabelIds(channelLabelIds);
+//		dto.setWorldCount(worldCount);
+//		dto.setWorldPictureCount(worldPictureCount);
+//		dto.setMemberCount(memberCount);
+//		dto.setSuperbCount(superbCount);
+//		dto.setChildCountBase(childCountBase);
+//		dto.setSuperb(superb);
+//		dto.setValid(valid);
+//		dto.setSerial(serial);
+//		dto.setDanmu(danmu);
+//		dto.setMoodFlag(moodFlag);
+//		dto.setWorldFlag(worldFlag);
+//		
+//		opChannelV2Mapper.insertOpChannel(dto);
 		
-		opChannelV2Mapper.insertOpChannel(dto);
+		osChannelService.saveChannelAtOnce(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, 
+				channelIcon, subIcon, channelTypeId, channelLabelNames,channelLabelIds ,danmu, moodFlag, worldFlag);
 	}
 
 	@Override
@@ -218,6 +235,40 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			return null;
 		}
 		
+	}
+	
+	
+	public void updateValid(Integer  channelId,Integer valid)throws Exception{
+		OpChannelV2Dto dto = new OpChannelV2Dto();
+		dto.setChannelId(channelId);
+		dto.setValid(valid);
+		opChannelV2Mapper.updateOpChannel(dto);
+	}
+	
+	public void batchUpdateValid(String channelIdsStr,Integer valid)throws Exception{
+		if(channelIdsStr == null || "".equals(channelIdsStr.trim())){
+			return ;
+		}
+		Integer [] channelIds = StringUtil.convertStringToIds(channelIdsStr);
+		List<OpChannel> list = new ArrayList<OpChannel>(channelIds.length);
+		for(int i=0; i<channelIds.length;i++){
+			updateValid(channelIds[i],valid);
+			OpChannelV2Dto d = queryOpChannelById(channelIds[i]);
+			if(null == d){
+				continue;
+			}
+			OpChannel opChannel = new OpChannel();
+			opChannel.setChannelIcon(d.getChannelIcon());
+			opChannel.setChannelName(d.getChannelName());
+			opChannel.setChannelTitle(d.getChannelTitle());
+			opChannel.setChildCount(d.getWorldPictureCount());
+			opChannel.setId(d.getChannelId());
+			opChannel.setSerial(d.getSerial());
+			opChannel.setSubIcon(d.getSubIcon());
+			list.add(opChannel);
+		}
+		
+		osChannelService.updateChannelAtOnce(list);
 	}
 
 }

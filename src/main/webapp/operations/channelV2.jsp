@@ -25,7 +25,7 @@ var maxId = 0,
 	saveChannelURL = "./admin_op/v2channel_insertOpChannel", // 保存频道地址
 	updateChannelByIdURL = "./admin_op/v2channel_updateOpChannel", // 更新频道地址
 	queryChannelByIdURL = "./admin_op/v2channel_queryOpChannelById", // 根据id查询频道
-	updateValidURL = "./admin_op/channel_updateChannelValid?ids=",
+	updateValidURL = "./admin_op/v2channel_batchUpdateChannelValid?channelIdsStr=",
 	
 	htmTablePageList = [6,10,20],
 	myIdField = 'channelId',
@@ -518,7 +518,6 @@ function addChannelSubmit(){
 			<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效频道！" plain="true" iconCls="icon-ok">批量生效</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效频道！" plain="true" iconCls="icon-tip">批量失效</a>
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序</a>
-			<a href="javascript:void(0);" onclick="javascript:refresh();" class="easyui-linkbutton" title="刷新缓存" plain="true" iconCls="icon-reload">刷新缓存</a>
 			<span class="search_label">有效性过滤：</span>
 			<select id="ss_valid" style="width:80px;">
 	   			<option value="">所有状态</option>

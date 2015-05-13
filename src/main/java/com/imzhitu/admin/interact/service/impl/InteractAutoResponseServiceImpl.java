@@ -100,17 +100,23 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	}
 	
 	/**
-	 * 计划完成后，设置完成状态
+	 * 计划完成后，新插入一条数据
+	 * 
 	 */
 	@Override 
 	public void updateResponseCompleteById(Integer id){
 		InteractAutoResponseDto dto = autoResponseMapper.queryRespnse(id);
-		Integer[] responseIds = new Integer[1];
-		Date now = new Date();
 		if(dto != null){
-			responseIds[0] = dto.getResponseId();
-			webWorldCommentDao.updateValidByIds(responseIds);
-			webWorldCommentDao.updateCommentDateById(dto.getResponseId(), now);
+			HTWorldComment comment = webWorldCommentDao.queryCommentById(dto.getResponseId());
+			if(comment == null){
+				return;
+			}
+				
+			Integer commentId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
+			comment.setId(commentId);
+			comment.setCk(Tag.FALSE);
+			comment.setValid(Tag.TRUE);
+			webWorldCommentDao.saveWorldComment(comment);
 		}
 		
 	}

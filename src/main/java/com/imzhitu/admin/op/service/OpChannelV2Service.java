@@ -63,4 +63,18 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 */
 	public OpChannelV2Dto queryOpChannelById(Integer id)throws Exception;
+	
+	/**
+	 * 更新
+	 * @param channelId
+	 * @throws Exception
+	 */
+	public void updateValid(Integer  channelId,Integer valid)throws Exception;
+	
+	/**
+	 * 批量update
+	 * @param channelIdsStr
+	 * @throws Exception
+	 */
+	public void batchUpdateValid(String channelIdsStr,Integer valid)throws Exception;
 }

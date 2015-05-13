@@ -32,11 +32,11 @@
 
 	<!-- insert -->
 	<insert id="insertOpChannel">
-		insert into hts.operations_channel (owner_id,channel_name,channel_title,subtitle,channel_desc,channel_icon,
+		insert into hts.operations_channel (id,owner_id,channel_name,channel_title,subtitle,channel_desc,channel_icon,
 			sub_icon,channel_type,channel_label,label_ids,world_count,child_count,member_count,superb_count,
 			child_count_base,create_time,last_modified,superb,valid,serial,danmu,mood,world)
 		values
-			(#{ownerId},#{channelName},#{channelTitle},#{subtitle},#{channelDesc},#{channelIcon},
+			(#{channelId},#{ownerId},#{channelName},#{channelTitle},#{subtitle},#{channelDesc},#{channelIcon},
 			#{subIcon},#{channelTypeId},#{channelLabelNames},#{channelLabelIds},#{worldCount},#{worldPictureCount},#{memberCount},#{superbCount},
 			#{childCountBase},#{createTime},#{lastModifiedTime},#{superb},#{valid},#{serial},#{danmu},#{moodFlag},#{worldFlag})
 	</insert>
