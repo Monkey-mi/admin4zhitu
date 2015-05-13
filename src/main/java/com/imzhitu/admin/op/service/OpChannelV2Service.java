@@ -37,7 +37,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param dto
 	 * @return
 	 */
-	public void queryOpChannel(Integer channelId,Integer ownerId,Integer superb,Integer valid,
+	public void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,
 			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,int start,int rows,Integer maxId,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
@@ -45,7 +45,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param dto
 	 * @return
 	 */
-	public long queryOpChannelTotalCount(Integer channelId,Integer ownerId,Integer superb,Integer valid,
+	public long queryOpChannelTotalCount(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,
 			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer maxId)throws Exception;
 	
 	/**

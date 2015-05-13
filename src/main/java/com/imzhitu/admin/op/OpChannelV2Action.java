@@ -25,7 +25,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	public String insertOpChannel(){
 		try{
 			opChannelV2Service.insertOpChannel(ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, subIcon, channelTypeId,
-					channelLabelNames, channelLabelIds, 0, 0, 0, 0, 0, Tag.TRUE, Tag.FALSE, 0, Tag.FALSE, Tag.FALSE, Tag.TRUE);
+					channelLabelNames, channelLabelIds, 0, 0, 0, 0, 0, Tag.FALSE, Tag.FALSE, 0, Tag.FALSE, Tag.FALSE, Tag.TRUE);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -57,7 +57,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	
 	public String queryOpChannel(){
 		try{
-			opChannelV2Service.queryOpChannel(channelId, ownerId, Tag.TRUE, valid, serial, danmu, moodFlag, worldFlag, start, rows, channelId, jsonMap);
+			opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag, page, rows, channelId, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

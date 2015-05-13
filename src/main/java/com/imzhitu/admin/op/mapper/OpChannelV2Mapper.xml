@@ -137,6 +137,12 @@
 			<if test="ownerId != null">
 				and owner_id = #{ownerId}
 			</if>
+			<if test="channelTypeId != null">
+				and channel_type = #{channelTypeId}
+			</if>
+			<if test="channelName != null">
+				and channel_name like CONCAT('%',#{channelName},'%')
+			</if>
 			<if test="superb != null">
 				and superb = #{superb}
 			</if>
@@ -174,6 +180,12 @@
 			</if>
 			<if test="ownerId != null">
 				and owner_id = #{ownerId}
+			</if>
+			<if test="channelTypeId != null">
+				and channel_type = #{channelTypeId}
+			</if>
+			<if test="channelName != null">
+				and channel_name like CONCAT('%',#{channelName},'%')
 			</if>
 			<if test="superb != null">
 				and superb = #{superb}

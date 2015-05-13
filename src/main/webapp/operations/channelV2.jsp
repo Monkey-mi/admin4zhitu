@@ -15,7 +15,7 @@ var maxId = 0,
 	},
 	hideIdColumn = false,
 	htmTableTitle = "频道列表", //表格标题
-	htmTableWidth = 1170,
+	htmTableWidth = 1470,
 	batchEnableTip = "您确定要使已选中的频道生效吗？",
 	batchDisableTip = "您确定要使已选中的频道失效吗？",
 	toolbarComponent = '#tb',
@@ -54,32 +54,23 @@ var maxId = 0,
 				return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
 			}
 		},
-		{field : 'subIcon',title : '副icon', align : 'center',width : 60, height:60,
-			formatter:function(value,row,index) {
-				if(value == '' || value == undefined)
-					return '';
-				else
-					return "<img width='30px' height='30px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
-			}
-		},
 		{field : 'channelName',title : '频道名称',align : 'center',width : 120},
 		{field : 'channelTitle',title : '频道标题',align : 'center',width : 200},
 		{field : 'subtitle',title:'频道副标题',align : 'center',width : 150},
-		{field : 'channelTypeId',title:'频道类型',align : 'center',width : 100,
+		{field : 'channelTypeId',title:'频道类型',align : 'center',width : 80,
 			formatter:function(value,row,index){
 				switch(value){
 					case 1 :return "活动频道";
 					case 2 :return "贴纸频道";
 					case 3 :return "屏蔽频道";
-					default:return "未知";
+					default:return "默认频道";
 				}
 			}},
 		{field : 'channelLabelNames',title:'标签',width:100},
-		{field : 'worldCount',title:'织图总数',width : 80},
-		{field : 'worldPictureCount',title:'图片总数',width : 80},
-		{field : 'memberCount',title:'成员总数',width : 80},
-		{field : 'superbCount',title:'精选总数',width : 80},
-		{field : 'childCountBase',title:'图片基数',width : 80},
+		{field : 'worldCount',title:'织图总数',align : 'center',width : 60},
+		{field : 'worldPictureCount',title:'图片总数',align : 'center',width : 60},
+		{field : 'memberCount',title:'成员总数',align : 'center',width : 60},
+		{field : 'superbCount',title:'精选总数',align : 'center',width : 60},
   		{field : 'opt',title : '操作',width : 80,align : 'center',rowspan : 1,
 			formatter : function(value, row, index ) {
 				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.channelId + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
@@ -507,6 +498,14 @@ function addChannelSubmit(){
 	},"json");
 }
 
+
+function searchChannelByName(){
+	var myQueryParam = {
+		'channelName':$("#ss_channelName").searchbox('getValue')
+	}
+	$('#htm_table').datagrid('load',myQueryParam);
+}
+
 </script>
 </head>
 <body>
@@ -517,13 +516,14 @@ function addChannelSubmit(){
 			<a href="javascript:void(0);" onclick="javascript:initEditWindow(0,0,false);" class="easyui-linkbutton" title="添加织图到广场" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效频道！" plain="true" iconCls="icon-ok">批量生效</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效频道！" plain="true" iconCls="icon-tip">批量失效</a>
-			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序</a>
+			<!-- <a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序</a> -->
 			<span class="search_label">有效性过滤：</span>
 			<select id="ss_valid" style="width:80px;">
 	   			<option value="">所有状态</option>
 	   			<option value="1">生效</option>
 	   			<option value="0">未生效</option>
    			</select>
+   			<input id="ss_channelName" class="easyui-searchbox" searcher="searchChannelByName" prompt="请输入频道名" style="width:120px;"></input>
    		</div>
 		</div> 
 	
@@ -561,21 +561,6 @@ function addChannelSubmit(){
 							<td><textarea name="subtitle" id="channelsubtitle" onchange="validateSubmitOnce=true;"></textarea></td>
 							<td class="rightTd"><div id="channelsubtitle_editTip" class="tipDIV"></div></td>
 						</tr>
-						<tr>
-							<td class="leftTd">副ICON：</td>
-							<td style="height: 90px;">
-								<input class="none" type="text" name="subIcon" id="subIcon_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-								<a id="subIcon_edit_upload_btn" style="position: absolute; margin:12px 0 0 70px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-								<a id="subIcon_edit_del_btn" style="position: absolute; margin:-7px 0 0 30px" onclick="javascript:clearEditSubIcon();" class="easyui-linkbutton none" plain="true" title="删除" iconCls="icon-cancel"></a> 
-								<img id="subImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="50px" height="50px">
-								<div id="subIcon_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
-									上传中...<span class="upload_progress"></span><span>%</span>
-								</div>
-							</td>
-							<td class="rightTd">
-								<div id="channelIcon_editTip" style="display: inline-block;" class="tipDIV"></div>
-							</td>
-						</tr>
 						
 						<tr>
 							<td class="leftTd">频道标签：</td>
@@ -593,7 +578,7 @@ function addChannelSubmit(){
 							<td class="leftTd">频道类型：</td>
 							<td>
 								<select name="channelTypeId" id="channel_type_id" class="easyui-combobox" onchange="validateSubmitOnce=true;" style="width: 206px;">
-									<option value="0">未知频道</option>
+									<option value="0">默认频道</option>
 						   			<option value="1">活动频道</option>
 						   			<option value="2">贴纸频道</option>
 						   			<option value="3">屏蔽频道</option>

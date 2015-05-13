@@ -47,35 +47,35 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			Integer valid, Integer serial, Integer danmu, Integer moodFlag,
 			Integer worldFlag) throws Exception{
 		// TODO Auto-generated method stub
-//		OpChannelV2Dto dto = new OpChannelV2Dto();
+		OpChannelV2Dto dto = new OpChannelV2Dto();
 		Integer channelId = keyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
-//		dto.setChannelId(channelId);
-//		dto.setOwnerId(ownerId);
-//		dto.setChannelName(channelName);
-//		dto.setChannelTitle(channelTitle);
-//		dto.setSubtitle(subtitle);
-//		dto.setChannelDesc(channelDesc);
-//		dto.setChannelIcon(channelIcon);
-//		dto.setSubIcon(subIcon);
-//		dto.setChannelTypeId(channelTypeId);
-//		dto.setChannelLabelNames(channelLabelNames);
-//		dto.setChannelLabelIds(channelLabelIds);
-//		dto.setWorldCount(worldCount);
-//		dto.setWorldPictureCount(worldPictureCount);
-//		dto.setMemberCount(memberCount);
-//		dto.setSuperbCount(superbCount);
-//		dto.setChildCountBase(childCountBase);
-//		dto.setSuperb(superb);
-//		dto.setValid(valid);
-//		dto.setSerial(serial);
-//		dto.setDanmu(danmu);
-//		dto.setMoodFlag(moodFlag);
-//		dto.setWorldFlag(worldFlag);
-//		
-//		opChannelV2Mapper.insertOpChannel(dto);
+		dto.setChannelId(channelId);
+		dto.setOwnerId(ownerId);
+		dto.setChannelName(channelName);
+		dto.setChannelTitle(channelTitle);
+		dto.setSubtitle(subtitle);
+		dto.setChannelDesc(channelDesc);
+		dto.setChannelIcon(channelIcon);
+		dto.setSubIcon(subIcon);
+		dto.setChannelTypeId(channelTypeId);
+		dto.setChannelLabelNames(channelLabelNames);
+		dto.setChannelLabelIds(channelLabelIds);
+		dto.setWorldCount(worldCount);
+		dto.setWorldPictureCount(worldPictureCount);
+		dto.setMemberCount(memberCount);
+		dto.setSuperbCount(superbCount);
+		dto.setChildCountBase(childCountBase);
+		dto.setSuperb(superb);
+		dto.setValid(valid);
+		dto.setSerial(serial);
+		dto.setDanmu(danmu);
+		dto.setMoodFlag(moodFlag);
+		dto.setWorldFlag(worldFlag);
 		
-		osChannelService.saveChannelAtOnce(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, 
-				channelIcon, subIcon, channelTypeId, channelLabelNames,channelLabelIds ,danmu, moodFlag, worldFlag);
+		opChannelV2Mapper.insertOpChannel(dto);
+		
+//		osChannelService.saveChannelAtOnce(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, 
+//				channelIcon, subIcon, channelTypeId, channelLabelNames,channelLabelIds ,danmu, moodFlag, worldFlag);
 	}
 
 	@Override
@@ -128,13 +128,15 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 
 	@Override
-	public void queryOpChannel(Integer channelId,
+	public void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,
 			Integer ownerId, Integer superb, Integer valid, Integer serial,
 			Integer danmu, Integer moodFlag, Integer worldFlag, int start,
 			int rows, Integer maxId,Map<String, Object> jsonMap) throws Exception{
 		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(channelId);
+		dto.setChannelName(channelName);
+		dto.setChannelTypeId(channelTypeId);
 		dto.setOwnerId(ownerId);
 		dto.setSuperb(superb);
 		dto.setValid(valid);
@@ -162,12 +164,14 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 
 	@Override
-	public long queryOpChannelTotalCount(Integer channelId, Integer ownerId,
+	public long queryOpChannelTotalCount(Integer channelId,String channelName, Integer channelTypeId,Integer ownerId,
 			Integer superb, Integer valid, Integer serial, Integer danmu,
 			Integer moodFlag, Integer worldFlag,Integer maxId) throws Exception{
 		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(channelId);
+		dto.setChannelName(channelName);
+		dto.setChannelTypeId(channelTypeId);
 		dto.setOwnerId(ownerId);
 		dto.setSuperb(superb);
 		dto.setValid(valid);
@@ -245,6 +249,10 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		opChannelV2Mapper.updateOpChannel(dto);
 	}
 	
+	/**
+	 * 批量更新
+	 */
+	@Override
 	public void batchUpdateValid(String channelIdsStr,Integer valid)throws Exception{
 		if(channelIdsStr == null || "".equals(channelIdsStr.trim())){
 			return ;

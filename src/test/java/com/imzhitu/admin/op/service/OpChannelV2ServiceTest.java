@@ -23,7 +23,7 @@ public class OpChannelV2ServiceTest extends BaseTest {
 	@Test
 	public void queryChannelTest()throws Exception{
 		Map<String,Object> jsonMap = new HashMap<String,Object>();
-		service.queryOpChannel(null, null, null, null, null, null, null, null, 1, 10, 0, jsonMap);
+		service.queryOpChannel(null,"人生",null, null, null, null, null, null, null, null, 1, 10, 0, jsonMap);
 	}
 	
 	@Test
