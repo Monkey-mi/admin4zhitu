@@ -8,19 +8,19 @@ import org.springframework.stereotype.Repository;
 import com.hts.web.base.constant.CacheKeies;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
 import com.hts.web.common.pojo.OpChannel;
+import com.hts.web.operations.dao.ChannelDao;
 import com.imzhitu.admin.op.dao.ChannelCacheDao;
-import com.imzhitu.admin.op.mapper.ChannelMapper;
 
 @Repository
 public class ChannelCacheDaoImpl extends BaseCacheDaoImpl<OpChannel> implements
 		ChannelCacheDao {
 	
 	@Autowired
-	private ChannelMapper channelMapper;
+	private ChannelDao webChannelDao;
 
 	@Override
 	public void updateChannel(Integer limit) {
-		List<OpChannel> clist = channelMapper.queryValidChannel(limit);
+		List<OpChannel> clist = webChannelDao.querySuperbChannel();
 		if(getRedisTemplate().hasKey(CacheKeies.OP_CHANNEL)) {
 			getRedisTemplate().delete(CacheKeies.OP_CHANNEL);
 		}

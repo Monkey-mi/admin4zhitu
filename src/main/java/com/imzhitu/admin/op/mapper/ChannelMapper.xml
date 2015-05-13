@@ -4,29 +4,56 @@
 
 	<resultMap type="com.imzhitu.admin.common.pojo.OpChannel" id="OpChannelMap">
 		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="owner_id" property="ownerId" jdbcType="INTEGER"/>
 		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
 		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR"/>
+		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+		<result column="channel_desc" property="channelDesc" jdbcType="VARCHAR"/>
 		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR"/>
+		<result column="channel_type" property="channelType" jdbcType="INTEGER"/>
 		<result column="sub_icon" property="subIcon" jdbcType="VARCHAR"/>
+		<result column="world_count" property="worldCount" jdbcType="INTEGER"/>
 		<result column="child_count" property="childCount" jdbcType="INTEGER"/>
+		<result column="member_count" property="memberCount" jdbcType="INTEGER"/>
+		<result column="superb_count" property="superbCount" jdbcType="INTEGER"/>
 		<result column="child_count_base" property="childCountBase" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+		<result column="last_modified" property="lastModified" jdbcType="BIGINT" />
 		<result column="valid" property="valid" jdbcType="INTEGER"/>
 		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="danmu" property="danmu" jdbcType="INTEGER" />
+		<result column="mood" property="mood" jdbcType="INTEGER" />
+		<result column="world" property="world" jdbcType="INTEGER" />
 	</resultMap>
 	
+	<!-- 
 	<resultMap type="com.hts.web.common.pojo.OpChannel" id="HTSOpChannelMap">
 		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="owner_id" property="ownerId" jdbcType="INTEGER"/>
 		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
 		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR"/>
+		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
+		<result column="channel_desc" property="channelDesc" jdbcType="VARCHAR"/>
 		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR"/>
+		<result column="channel_type" property="channelType" jdbcType="INTEGER"/>
 		<result column="sub_icon" property="subIcon" jdbcType="VARCHAR"/>
+		<result column="world_count" property="worldCount" jdbcType="INTEGER"/>
+		<result column="child_count" property="childCount" jdbcType="INTEGER"/>
+		<result column="member_count" property="memberCount" jdbcType="INTEGER"/>
+		<result column="superb_count" property="superbCount" jdbcType="INTEGER"/>
 		<result column="child_count" property="childCount" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+		<result column="last_modified" property="lastModified" jdbcType="BIGINT" />
 		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="danmu" property="danmu" jdbcType="INTEGER" />
+		<result column="mood" property="mood" jdbcType="INTEGER" />
+		<result column="world" property="world" jdbcType="INTEGER" />
 	</resultMap>
 
 	<select id="queryValidChannel" resultMap="HTSOpChannelMap">
 		select * from hts.operations_channel where valid=1 order by serial desc limit #{limit}
 	</select>
+	 -->
 	
 	<select id="queryChannels" resultMap="OpChannelMap">
 		select * from hts.operations_channel
