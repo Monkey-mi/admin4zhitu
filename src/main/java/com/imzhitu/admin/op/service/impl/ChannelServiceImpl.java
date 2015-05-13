@@ -257,6 +257,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void saveChannel(OpChannel channel) throws Exception {
 		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_ID);
+		channel.setId(serial);
 		channel.setSerial(serial);
 		channelMapper.save(channel);
 	}
