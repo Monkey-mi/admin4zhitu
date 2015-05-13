@@ -91,8 +91,8 @@
 	</update>
 	
 	<insert id="save" useGeneratedKeys="true" keyProperty="id">
-		insert into hts.operations_channel (channel_name,channel_title,channel_icon, sub_icon, valid, serial)
-	 		values (#{channelName}, #{channelTitle}, #{channelIcon}, #{subIcon}, #{valid}, #{serial})
+		insert into hts.operations_channel (id,channel_name,channel_title,channel_icon, sub_icon, valid, serial)
+	 		values (#{id},#{channelName}, #{channelTitle}, #{channelIcon}, #{subIcon}, #{valid}, #{serial})
 	</insert>
 	
 	<update id="updateValidByIds">

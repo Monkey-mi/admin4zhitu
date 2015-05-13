@@ -177,8 +177,8 @@ var maxId = 0,
 		$('#ss_valid').combobox({
 			onSelect:function(record) {
 				maxId = 0;
-				myQueryParams['channel.maxId'] = maxId;
-				myQueryParams['channel.valid'] = record.value;
+				myQueryParams['maxId'] = maxId;
+				myQueryParams['valid'] = record.value;
 				loadPageData(initPage);
 			}
 		});

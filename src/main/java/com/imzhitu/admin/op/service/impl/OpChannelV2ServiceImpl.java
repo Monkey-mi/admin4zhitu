@@ -204,6 +204,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 				if(flag == false){
 					JSONObject tmpJO = new JSONObject();
 					tmpJO.put("id", -1);
+//					byte[] b = label.getBytes("iso-8859-1");
+//					String labelUTF_8 = new String(b,"utf-8");
 					tmpJO.put("label_name", "创建此标签:"+label);
 					jsonArray.add(0, tmpJO);
 				}
