@@ -15,7 +15,7 @@ var maxId = 0,
 	},
 	hideIdColumn = false,
 	htmTableTitle = "频道列表", //表格标题
-	htmTableWidth = 1470,
+	htmTableWidth = 1330,
 	batchEnableTip = "您确定要使已选中的频道生效吗？",
 	batchDisableTip = "您确定要使已选中的频道失效吗？",
 	toolbarComponent = '#tb',
@@ -55,8 +55,7 @@ var maxId = 0,
 			}
 		},
 		{field : 'channelName',title : '频道名称',align : 'center',width : 120},
-		{field : 'channelTitle',title : '频道标题',align : 'center',width : 200},
-		{field : 'subtitle',title:'频道副标题',align : 'center',width : 150},
+		{field : 'channelDesc',title : '频道描述',align : 'center',width : 200},
 		{field : 'channelTypeId',title:'频道类型',align : 'center',width : 80,
 			formatter:function(value,row,index){
 				switch(value){
@@ -150,7 +149,7 @@ var maxId = 0,
 			title: '添加频道',
 			modal : true,
 			width : 520,
-			height : 575,
+			height : 440,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -273,7 +272,7 @@ function initEditWindow(id, index, isUpdate) {
 				$("#valid_edit").val(obj['valid']);
 				$("#serial_edit").val(obj['serial']);
 				$("#ownerId_edit").val(obj['ownerId']);
-				$("#channelsubtitle").val(obj['subtitle']);
+				$("#channelDesc_edit").val(obj['channelDesc']);
 				$("#channel_type_id").combobox('setValue',obj['channelTypeId']);
 				
 				$("#edit_loading").hide();
@@ -468,21 +467,23 @@ function addChannelSubmit(){
 	}
 	var channelIcon = $("#channelIcon_edit").val();
 	var channelName = $("#channelName_edit").val();
-	var channelTitle = $("#channelTitle_edit").val();
+//	var channelTitle = $("#channelTitle_edit").val();
+//	var subtitle = $("#channelsubtitle").val();
 	var subIcon = $("#subIcon_edit").val();
 	var channelLabelNames = labelnames;
 	var channelLabelIds = labelIds;
 	var channelTypeId = $("#channel_type_id").combobox('getValue');
-	var subtitle = $("#channelsubtitle").val();
 	var ownerId = $("#ownerId_edit").val();
+	var channelDesc = $("#channelDesc_edit").val();
 	
 	$('#htm_table').datagrid('loading');
 	$.post(url,{
 		'channelId':channelId,
 		'channelIcon':channelIcon,
 		'channelName':channelName,
-		'channelTitle':channelTitle,
-		'subtitle':subtitle,
+//		'channelTitle':channelTitle,
+//		'subtitle':subtitle,
+		'channelDesc':channelDesc,
 		'subIcon':subIcon,
 		'channelLabelNames':channelLabelNames,
 		'channelLabelIds':channelLabelIds,
@@ -553,6 +554,7 @@ function searchChannelByName(){
 							<td><input id="channelName_edit" name="channelName" onchange="validateSubmitOnce=true;"/></td>
 							<td class="rightTd"><div id="channelName_editTip" class="tipDIV"></div></td>
 						</tr>
+						<!-- 
 						<tr>
 							<td class="leftTd">标题：</td>
 							<td><textarea name="channelTitle" id="channelTitle_edit" onchange="validateSubmitOnce=true;"></textarea></td>
@@ -563,7 +565,14 @@ function searchChannelByName(){
 							<td><textarea name="subtitle" id="channelsubtitle" onchange="validateSubmitOnce=true;"></textarea></td>
 							<td class="rightTd"><div id="channelsubtitle_editTip" class="tipDIV"></div></td>
 						</tr>
-						
+						 -->
+						 
+						 <tr>
+							<td class="leftTd">频道描述：</td>
+							<td><textarea name="channelDesc" id="channelDesc_edit" onchange="validateSubmitOnce=true;"></textarea></td>
+							<td class="rightTd"><div id="channelDesc_editTip" class="tipDIV"></div></td>
+						</tr>
+						 
 						<tr>
 							<td class="leftTd">拥有者ID：</td>
 							<td><input name="ownerId" id="ownerId_edit" onchange="validateSubmitOnce=true;" style="width: 206px;"></input></td>
