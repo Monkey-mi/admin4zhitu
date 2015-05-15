@@ -20,11 +20,11 @@ public interface AdminAndUserRelationshipService extends BaseService {
      * @param adminId	管理员账号ID
      * @param userId	织图用户ID
      * 
-     * @return jsonMap
+     * @return true 创建成功	false 创建失败
      * @throws Exception
      * @author zhangbo 2015-05-13
      */
-    public void createAdminAndUserRelationship(Integer adminId, Integer userId) throws Exception;
+    public boolean createAdminAndUserRelationship(Integer adminId, Integer userId) throws Exception;
     
     /**
      * 更新管理员账号与织图用户之间的关联关系
