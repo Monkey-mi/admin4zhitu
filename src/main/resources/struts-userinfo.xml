@@ -41,6 +41,13 @@
 			</result>
 		</action>
 		
+		<action name="admin_user_*" class="com.imzhitu.admin.userinfo.AdminAndUserRelationshipAction"
+			method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 
 </struts>
