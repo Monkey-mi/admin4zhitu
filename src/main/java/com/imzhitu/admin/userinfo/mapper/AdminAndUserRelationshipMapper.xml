@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.userinfo.mapper.AdminAndUserRelationshipMapper">
+
+	<!-- 定义结果集 -->
+	<resultMap id="AdminAndUserRelationshipMap" type="com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="admin_user_id" property="adminUserId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="adminUserName" property="adminUserName" jdbcType="VARCHAR" />
+		<result column="userName" property="userName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<!-- 查询全表数据 -->
+	<select id="queryAllResults" resultMap="AdminAndUserRelationshipMap">
+		select 
+			relationship.id, 
+			relationship.admin_user_id, 
+			relationship.user_id, 
+			ad.user_name as adminUserName, 
+			u.user_name as userName, 
+			relationship.create_time, 
+			relationship.update_time
+		from 
+			hts_admin.admin_user_relationship_binding relationship, 
+			hts.user_info u, 
+			hts_admin.admin_user_info ad
+		where 
+			relationship.admin_user_id = ad.id
+			and relationship.user_id = u.id
+	</select>
+	
+	
+	<!-- 通过管理员id -->
+	<select id="queryResultsByDTO" resultMap="AdminAndUserRelationshipMap">
+		select 
+			relationship.id, 
+			relationship.admin_user_id, 
+			relationship.user_id, 
+			ad.user_name as adminUserName, 
+			u.user_name as userName, 
+			relationship.create_time, 
+			relationship.update_time
+		from 
+			hts_admin.admin_user_relationship_binding relationship, 
+			hts.user_info u, 
+			hts_admin.admin_user_info ad
+		<where>
+			<if test="adminUserId != null">
+				ad.id = #{adminUserId,jdbcType=INTEGER}
+			</if>
+			and relationship.admin_user_id = ad.id
+			and relationship.user_id = u.id
+		</where>
+	</select>
+	
+	<!-- 保存管理员账号与织图用户关联关系 -->
+	<insert id="addByDTO" parameterType="com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto">
+		insert into hts_admin.admin_user_relationship_binding (admin_user_id, user_id)
+		VALUES (#{adminUserId},(select u.id from hts.user_info u where u.id = #{userId}))
+	</insert>
+	
+	<!-- 更新管理员账号与织图用户关联关系 -->
+	<update id="updateByDTO" parameterType="com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto">
+		update hts_admin.admin_user_relationship_binding
+		<set>
+			<if test="adminUserId != null">
+				admin_user_id = #{adminUserId,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP}d
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据id删除管理员账号与织图用户关联关系 -->
+	<delete id="deleteByDTO" parameterType="com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto">
+		delete from hts_admin.admin_user_relationship_binding
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	  
+</mapper>
