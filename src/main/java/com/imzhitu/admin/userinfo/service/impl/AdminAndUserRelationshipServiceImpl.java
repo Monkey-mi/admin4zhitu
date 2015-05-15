@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
-import com.imzhitu.admin.common.pojo.AdminUser;
+import com.imzhitu.admin.common.pojo.AdminRole;
 import com.imzhitu.admin.common.pojo.AdminUserPrivileges;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.constant.Permission;
+import com.imzhitu.admin.privileges.dao.RoleDao;
 import com.imzhitu.admin.privileges.mapper.AdminUserInfoMapper;
-import com.imzhitu.admin.privileges.mapper.AdminUserPrivilegesMapper;
 import com.imzhitu.admin.userinfo.mapper.AdminAndUserRelationshipMapper;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.service.AdminAndUserRelationshipService;
@@ -53,12 +53,12 @@ public class AdminAndUserRelationshipServiceImpl extends BaseServiceImpl impleme
     private AdminUserInfoMapper adminMapper;
     
     /**
-     * 权限映射对象
+     * 角色映射对象
      * 
      * @author zhangbo 2015年5月15日
      */
     @Autowired
-    private AdminUserPrivilegesMapper permissionMapper;
+    private RoleDao roleDao;
     
     @Override
     public boolean createAdminAndUserRelationship(Integer adminId, Integer userId) throws Exception{
@@ -91,17 +91,15 @@ public class AdminAndUserRelationshipServiceImpl extends BaseServiceImpl impleme
     @Override
     public List<AdminAndUserRelationshipDto> getAllAdminAndUserRelationshipByRole(
 	    Integer adminId) throws Exception {
-	// 根据id获取传入管理员的权限列表
-	AdminUserPrivileges permission = new AdminUserPrivileges();
-	permission.setUserId(adminId);
-	List<AdminUserPrivileges> permissionList = permissionMapper.queryUserPrivilegesByUID(permission);
+	// 根据id获取传入管理员的角色列表
+	List<AdminRole> adminRoleList = roleDao.queryRoleByUserId(adminId);
 	
-	// 声明是否具有超级管理员或运营管理员权限
+	// 声明是否具有超级管理员或运营管理员角色
 	boolean flag = false;
 	
-	for (AdminUserPrivileges adminUserPrivileges : permissionList) {
-	    if ( adminUserPrivileges.getPrivilegeName().equals(Permission.SUPER_ADMIN) 
-		    || adminUserPrivileges.getPrivilegeName().equals(Permission.OP_ADMIN) ) {
+	for (AdminRole adminRole : adminRoleList) {
+	    if ( adminRole.getRoleName().equals(Permission.SUPER_ADMIN) 
+		    || adminRole.getRoleName().equals(Permission.OP_ADMIN) ) {
 		flag = true;
 		break;
 	    }
@@ -122,13 +120,8 @@ public class AdminAndUserRelationshipServiceImpl extends BaseServiceImpl impleme
 
     @Override
     public Map<String, Object> queryAdminAndUserRelationship(Integer adminId) throws Exception {
-	
-	// 定义输入的DTO
-	AdminAndUserRelationshipDto dto = new AdminAndUserRelationshipDto();
-	dto.setAdminUserId(adminId);
-	
-	// 通过DTO获得管理员账号与织图用户的关联关系结果集
-	List<AdminAndUserRelationshipDto> result = relationshipMapper.queryResultsByDTO(dto);
+	// 通过管理员Id获得管理员账号与织图用户的关联关系结果集
+	List<AdminAndUserRelationshipDto> result = getAllAdminAndUserRelationshipByRole(adminId);
 	
 	Map<String, Object> jsonMap = new HashMap<String, Object>();
 	jsonMap.put(OptResult.ROWS, result);
