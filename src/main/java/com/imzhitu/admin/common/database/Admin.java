@@ -202,4 +202,9 @@ public class Admin {
 	 */
 	public static final Integer KEYGEN_XIAOMISHU_RESPONSE_MODULE_ID = 10;
 	
+	/**
+	 * 系统弹幕id
+	 */
+	public static final Integer KEYGEN_OP_SYS_DANMU_ID = 11;
+	
 }
