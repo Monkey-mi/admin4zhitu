@@ -2,9 +2,6 @@ package com.imzhitu.admin.userinfo.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
-import org.springframework.stereotype.Repository;
-
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 

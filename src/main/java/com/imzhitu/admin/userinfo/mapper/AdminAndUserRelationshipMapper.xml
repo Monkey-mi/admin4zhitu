@@ -30,6 +30,7 @@
 		where 
 			relationship.admin_user_id = ad.id
 			and relationship.user_id = u.id
+		order by ad.id asc, u.id asc
 	</select>
 	
 	
@@ -54,6 +55,8 @@
 			and relationship.admin_user_id = ad.id
 			and relationship.user_id = u.id
 		</where>
+		order by ad.id asc, u.id asc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
 	<!-- 保存管理员账号与织图用户关联关系 -->
@@ -66,14 +69,8 @@
 	<update id="updateByDTO" parameterType="com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto">
 		update hts_admin.admin_user_relationship_binding
 		<set>
-			<if test="adminUserId != null">
-				admin_user_id = #{adminUserId,jdbcType=INTEGER},
-			</if>
 			<if test="userId != null">
 				user_id = #{userId,jdbcType=INTEGER},
-			</if>
-			<if test="updateTime != null">
-				update_time = #{updateTime,jdbcType=TIMESTAMP}d
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}

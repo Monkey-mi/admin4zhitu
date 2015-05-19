@@ -2,13 +2,15 @@ package com.imzhitu.admin.common.pojo;
 
 import java.io.Serializable;
 
+import com.hts.web.common.pojo.AbstractNumberDto;
+
 /**
  * 管理员账号与织图用户绑定关系的数据传输对象
  * 
  * @author zhangbo 2015-05-13
  *
  */
-public class AdminAndUserRelationshipDto implements Serializable {
+public class AdminAndUserRelationshipDto  extends AbstractNumberDto implements Serializable {
 
 	/**
 	 * 序列号

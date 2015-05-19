@@ -29,23 +29,29 @@ public interface AdminAndUserRelationshipService extends BaseService {
     /**
      * 更新管理员账号与织图用户之间的关联关系
      * 
-     * @author zhangbo 2015-05-13
+     * @param id	关联关系主键ID
+     * @param userId	织图用户ID
      * 
-     * @return jsonMap
+     * @return true 更新成功	false 更新失败
      * @throws Exception
+     * @author zhangbo 2015-05-13
      */
-    public Map<String, Object> updateAdminAndUserRelationship() throws Exception;
+    public boolean updateAdminAndUserRelationship(Integer id, Integer userId) throws Exception;
     
     /**
-     * 查询管理员账号与织图用户之间的关联关系
+     * 查询管理员账号与织图用户之间的关联关系（分页查询）
      * 
      * @param adminId	管理员账号ID
-     * 
-     * @return jsonMap
+     * @param maxId	
+     * @param page	page对应分页查询start
+     * @param rows	对应分页查询limit
+     * @param jsonMap	返回前台结果集
      * @throws Exception
      * @author zhangbo 2015-05-13
      */
-    public Map<String, Object> queryAdminAndUserRelationship(Integer adminId) throws Exception;
+    public void queryAdminAndUserRelationship(Integer adminId, Integer maxId,
+	    Integer page, Integer rows, Map<String, Object> jsonMap)
+	    throws Exception;
     
     /**
      * 查询管理员账号与织图用户之间的关联关系
@@ -67,6 +73,6 @@ public interface AdminAndUserRelationshipService extends BaseService {
      * @return jsonMap
      * @throws Exception
      */
-    public Map<String, Object> deleteAdminAndUserRelationship() throws Exception;
+    public void deleteAdminAndUserRelationship(Integer[] ids) throws Exception;
 
 }

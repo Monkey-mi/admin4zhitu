@@ -54,7 +54,7 @@ var isToolBarView = true; //是否需要显示添加、删除按钮
 var isPagination = true; //是否支持分页
 var htmTableIcon = "icon-search"; //标题图标
 var htmTableWidth = 1200; //表格宽度
-var htmTableHeight = 450; //表格高度
+//var htmTableHeight = 450; //表格高度
 var htmTablePageList = [5,10,15,20,25,30]; //页面最大显示记录条数设置
 var isRowNumbers = true; //是否显示行号
 var mySortName = "id"; //排序字段名
@@ -196,7 +196,7 @@ function loadPageData(pageNum) {
 		title: htmTableTitle,
 		iconCls: htmTableIcon,
 		width: htmTableWidth,
-		height: htmTableHeight,
+//		height: htmTableHeight,
 		url:loadDataURL, //加载数据的URL
 		rowStyler:myRowStyler,
 		pageList: htmTablePageList,
