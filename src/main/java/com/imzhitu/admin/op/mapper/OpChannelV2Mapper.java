@@ -42,4 +42,12 @@ public interface OpChannelV2Mapper {
 	 */
 	@DataSource("slave")
 	public long queryOpChannelTotalCount(OpChannelV2Dto dto);
+	
+	/**
+	 * 根据拥有着IdArray 来查询
+	 * @param ownerIdArray
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<OpChannelV2Dto>queryOpChannelByOwnerIds(Integer[] ownerIdArray);
 }

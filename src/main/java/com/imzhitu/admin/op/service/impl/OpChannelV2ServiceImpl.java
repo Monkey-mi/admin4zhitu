@@ -12,14 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.aliyun.service.OsChannelService;
+import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.pojo.OpChannel;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
+import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
+import com.imzhitu.admin.userinfo.service.AdminAndUserRelationshipService;
 
 @Service
 public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannelV2Service{
@@ -35,6 +38,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	
 	@Autowired
 	private OsChannelService osChannelService;
+	
+	@Autowired
+	private AdminAndUserRelationshipService adminAndUserRelationshipService;
 	
 	@Override
 	public void insertOpChannel(Integer ownerId, String channelName,
@@ -278,6 +284,25 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		}
 		
 		osChannelService.updateChannelAtOnce(list);
+	}
+	
+	/**
+	 * 根据管理员账号查询其对应的频道
+	 * 
+	 * @param adminUserId
+	 * @param jsonMap
+	 * @throws Exception
+	 */
+	@Override
+	public void queryOpChannelByAdminUserId(Integer adminUserId,Map<String,Object>jsonMap)throws Exception{
+		List<AdminAndUserRelationshipDto> relationshipList = adminAndUserRelationshipService.getAllAdminAndUserRelationshipByRole(adminUserId);
+		Integer[] ownerIdArray = new Integer[relationshipList.size()];
+		for(int i=0; i<relationshipList.size(); i++){
+			ownerIdArray[i] = relationshipList.get(i).getUserId();
+		}
+		List<OpChannelV2Dto>channelList = opChannelV2Mapper.queryOpChannelByOwnerIds(ownerIdArray);
+		jsonMap.put(OptResult.ROWS, jsonMap);
+		jsonMap.put(OptResult.TOTAL, channelList.size());
 	}
 
 }

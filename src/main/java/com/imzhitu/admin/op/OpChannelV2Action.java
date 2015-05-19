@@ -1,17 +1,23 @@
 package com.imzhitu.admin.op;
 
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
+import com.imzhitu.admin.common.pojo.AdminRole;
+import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
 
@@ -22,6 +28,12 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	@Autowired
 	private OpChannelV2Service opChannelV2Service;
 	
+	
+	
+	/**
+	 * 插入频道
+	 * @return
+	 */
 	public String insertOpChannel(){
 		try{
 			opChannelV2Service.insertOpChannel(ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, subIcon, channelTypeId,
@@ -33,6 +45,10 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 删除频道
+	 * @return
+	 */
 	public String deleteOpChannel(){
 		try{
 			opChannelV2Service.deleteOpChannel(channelId, ownerId);
@@ -43,6 +59,10 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 更新频道
+	 * @return
+	 */
 	public String updateOpChannel(){
 		try{
 			opChannelV2Service.updateOpChannel(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, subIcon, channelTypeId,
@@ -54,10 +74,13 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	
+	/**
+	 * 分页查询频道
+	 * @return
+	 */
 	public String queryOpChannel(){
 		try{
-			opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag, page, rows, channelId, jsonMap);
+			opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag, page, rows, maxId, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -89,7 +112,10 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		return null;
 	}
 	
-	
+	/**
+	 * 根据ID查询频道
+	 * @return
+	 */
 	public String queryOpChannelById(){
 		try{
 			OpChannelV2Dto dto = opChannelV2Service.queryOpChannelById(channelId);
@@ -100,11 +126,43 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 批量更新有效性
+	 * @return
+	 */
 	public String batchUpdateChannelValid(){
 		try{
 			opChannelV2Service.batchUpdateValid(channelIdsStr,valid);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	
+	public String queryOpChannelByAdminUserId(){
+		try{
+			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			List<AdminRole> adminRoleList = (List<AdminRole>)user.getAuthorities();
+			boolean bSuperAdmin = false;
+			boolean bOpAdmin = false;
+			for(AdminRole role:adminRoleList){
+				if("super_admin".equals(role.getRoleName())){
+					bSuperAdmin = true;
+					break;
+				}
+				if("op_admin".equals(role.getRoleName())){
+					bOpAdmin = true;
+					break;
+				}
+			}
+			if( bSuperAdmin || bOpAdmin){
+				opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag, page, rows, maxId, jsonMap);
+			}else{
+				opChannelV2Service.queryOpChannelByAdminUserId(getCurrentLoginUserId(), jsonMap);
+			}
+		}catch(Exception e ){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;

@@ -77,4 +77,13 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 */
 	public void batchUpdateValid(String channelIdsStr,Integer valid)throws Exception;
+	
+	/**
+	 * 根据管理员账号查询其对应的频道
+	 * 
+	 * @param adminUserId
+	 * @param jsonMap
+	 * @throws Exception
+	 */
+	public void queryOpChannelByAdminUserId(Integer adminUserId,Map<String,Object>jsonMap)throws Exception;
 }

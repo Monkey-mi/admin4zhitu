@@ -211,4 +211,14 @@
 		</where>
 	</select>
 	
+	<!-- 根据ownerIds 来查询 -->
+	<select id="queryOpChannelByOwnerIds" resultMap="OpChannelV2Mapper">
+		select * from hts.operations_channel 
+		where owner_id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</select>
+	
 </mapper>
