@@ -131,8 +131,10 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private ChannelCoverCacheDao channelCoverCacheDao;
+
+	private static final int CHANNEL_CACHE_LIMIT_2_9_89 = 8;
 	
-	private Integer channelLimit = 10;
+	private Integer channeCachelLimit = 1000;
 	
 	private Integer channelCoverLimit = 5;
 
@@ -146,12 +148,12 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		this.channelStarLimit = channelStarLimit;
 	}
 	
-	public Integer getChannelLimit() {
-		return channelLimit;
+	public Integer getChanneCachelLimit() {
+		return channeCachelLimit;
 	}
 
-	public void setChannelLimit(Integer channelLimit) {
-		this.channelLimit = channelLimit;
+	public void setChanneCachelLimit(Integer channeCachelLimit) {
+		this.channeCachelLimit = channeCachelLimit;
 	}
 
 	public Integer getChannelCoverLimit() {
@@ -164,7 +166,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateChannelCache() throws Exception {
-		channelCacheDao.updateChannel(channelLimit);
+		channelCacheDao.updateChannel(channeCachelLimit);
 		updateChannelCoverCache();
 	}
 
@@ -223,7 +225,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		channel.setChildCountBase(childCountBase);
 		channelMapper.update(channel);
 		
-		channelCacheDao.updateChannel(channelLimit);
+		channelCacheDao.updateChannel(channeCachelLimit);
 	}
 
 	@Override
@@ -1186,7 +1188,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateChannelCoverCache() throws Exception {
-		List<com.hts.web.common.pojo.OpChannel> clist = channelCacheDao.queryChannel();
+		List<com.hts.web.common.pojo.OpChannel> clist 
+			= channelCacheDao.queryChannel(CHANNEL_CACHE_LIMIT_2_9_89);
 		if(clist.size() > 0) {
 			Integer[] cids = new Integer[clist.size()];
 			for(int i = 0; i < clist.size(); i++) {

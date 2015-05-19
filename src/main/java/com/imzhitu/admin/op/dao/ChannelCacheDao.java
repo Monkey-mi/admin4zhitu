@@ -9,5 +9,5 @@ public interface ChannelCacheDao extends BaseCacheDao {
 
 	public void updateChannel(Integer limit);
 	
-	public List<OpChannel> queryChannel();
+	public List<OpChannel> queryChannel(Integer limit);
 }

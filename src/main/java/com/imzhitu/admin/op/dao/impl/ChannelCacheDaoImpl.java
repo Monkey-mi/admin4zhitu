@@ -20,7 +20,7 @@ public class ChannelCacheDaoImpl extends BaseCacheDaoImpl<OpChannel> implements
 
 	@Override
 	public void updateChannel(Integer limit) {
-		List<OpChannel> clist = webChannelDao.querySuperbChannel();
+		List<OpChannel> clist = webChannelDao.querySuperbChannel(limit);
 		if(getRedisTemplate().hasKey(CacheKeies.OP_CHANNEL)) {
 			getRedisTemplate().delete(CacheKeies.OP_CHANNEL);
 		}
@@ -31,8 +31,8 @@ public class ChannelCacheDaoImpl extends BaseCacheDaoImpl<OpChannel> implements
 	}
 
 	@Override
-	public List<OpChannel> queryChannel() {
-		return getRedisTemplate().opsForList().range(CacheKeies.OP_CHANNEL, 0, -1);
+	public List<OpChannel> queryChannel(Integer limit) {
+		return getRedisTemplate().opsForList().range(CacheKeies.OP_CHANNEL, 0, limit - 1);
 	}
 
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.SysDanmuMapper">
+
+	<resultMap type="com.imzhitu.admin.common.pojo.OpSysDanmu" id="SysDanmuMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="author_id" property="authorId" jdbcType="INTEGER"/>
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="save">
+		insert into hts.operations_channel_sys_danmu 
+		(channel_id, author_id, content, serial) values
+		(#{channelId},#{authorId},#{content},#{serial})
+	</insert>
+	
+	<select id="querySysDanmu" resultMap="SysDanmuMap">
+		select d0.*,u0.user_name, u0.user_avatar, c0.channel_name
+		from hts.operations_channel_sys_danmu d0, hts.user_info u0,
+		hts.operations_channel c0
+		<where>
+			d0.author_id=u0.id and d0.channel_id=c0.id
+			<if test="channelId != null and channelId != 0"> and d0.channel_id=#{channelId}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ and d0.serial<=#{maxId}]]></if>
+		</where>
+		order by d0.serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryTotal" resultType="long">
+		select count(*) from hts.operations_channel_sys_danmu
+		<where>
+			<if test="channelId != null and channelId != 0">channel_id=#{channelId}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<update id="update">
+		update hts.operations_channel_sys_danmu
+		<set>
+	      <if test="channelId != null">channel_id=#{channelId},</if>
+	      <if test="authorId != null">author_id=#{authorId},</if>
+	      <if test="content != null">content=#{content},</if>
+	      <if test="serial != null">serial=#{serial}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+
+	<delete id="deleteByIds">
+		delete from hts.operations_channel_sys_danmu where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<update id="updateSerialById">
+		update hts.operations_channel_sys_danmu set serial=#{serial} where id=#{id}
+	</update>
+	
+	<select id="queryById" resultMap="SysDanmuMap">
+		select d0.*,u0.user_name, u0.user_avatar 
+		from hts.operations_channel_sys_danmu d0, hts.user_info u0 
+		where d0.author_id=u0.id and d0.id=#{id}
+	</select>
+</mapper>
