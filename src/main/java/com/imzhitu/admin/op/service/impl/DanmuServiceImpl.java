@@ -95,12 +95,13 @@ public class DanmuServiceImpl extends BaseServiceImpl implements DanmuService {
 			while((line = reader.readLine()) != null) {
 				List<Integer> zids = opUserService.getRandomUserZombieIds(2); // 获取2个，取第1个
 				String content = line.trim();
-				OpSysDanmu dm = new OpSysDanmu();
-				dm.setChannelId(channelId);
-				dm.setContent(content);
-				dm.setAuthorId(zids.get(0));
-				
-				saveSysDanmu(dm);
+				if(!StringUtil.checkIsNULL(content)) {
+					OpSysDanmu dm = new OpSysDanmu();
+					dm.setChannelId(channelId);
+					dm.setContent(content);
+					dm.setAuthorId(zids.get(0));
+					saveSysDanmu(dm);
+				}
 			}
 		} finally {
 			reader.close();
