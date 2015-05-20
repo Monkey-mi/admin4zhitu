@@ -21,7 +21,34 @@ public class OpChannelWorld extends AbstractNumberDto {
 	private Integer valid;
 	private Integer notified;
 	private String channelName;
+	private Integer superb;
+	private Integer weight;
+	private Integer serial;
 	
+
+	public Integer getSuperb() {
+		return superb;
+	}
+
+	public void setSuperb(Integer superb) {
+		this.superb = superb;
+	}
+
+	public Integer getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Integer weight) {
+		this.weight = weight;
+	}
+
+	public Integer getSerial() {
+		return serial;
+	}
+
+	public void setSerial(Integer serial) {
+		this.serial = serial;
+	}
 
 	public String getChannelName() {
 		return channelName;

@@ -25,6 +25,20 @@ public class ZombieWorld  extends AbstractNumberDto{
 	private Integer complete;
 	private Date addDate;
 	private Date modifyDate;
+	private Integer channelId;
+	public Integer getChannelId() {
+		return channelId;
+	}
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
+	}
+	public String getChannelName() {
+		return channelName;
+	}
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
+	}
+	private String channelName;
 	
 	private Integer htworldId;
 	private String shortLink;

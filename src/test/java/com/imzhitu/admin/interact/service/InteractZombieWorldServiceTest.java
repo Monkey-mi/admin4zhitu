@@ -30,28 +30,35 @@ public class InteractZombieWorldServiceTest extends BaseTest{
 		String coverPath = "1807891425.jpg";
 		String titlePath = "1807891425.jpg";
 		String titleThumbPath = "1807891425.jpg.middleImage";
-		service.saveZombieWorld(childsJSON, 1, 527, null,null,null, null, coverPath, titlePath, titleThumbPath, null, null, null, 238823);
+		service.saveZombieWorld(childsJSON, 1, 527, null,null,null, null, coverPath, titlePath, titleThumbPath, null, null, null, 238823,null);
 	}
 	
 	@Test
 	public void savaZombieWorldToHtWorldTest()throws Exception{
-//		service.saveZombieWorldToHtWorld(29);
-		String localPath="e:\\your\\1419493801.jpg.thumbnail";
-		if(localPath == null || localPath.equals(""))return ;
-		int nameBeginPos = localPath.lastIndexOf('\\');
-		if (nameBeginPos < 0)
-			nameBeginPos = -1;
-		int nameEndPos = localPath.indexOf(".jpg");
-		String str = localPath.substring(nameBeginPos+1, nameEndPos);
-		try{
-			Long time = Long.parseLong(str);
-			Date date = new Date(time*1000);
-			SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
-			String dateStr = df.format(date);
-			log.info("http://imzhitu.qiniudn.com/ios/image/" + dateStr + "/"+localPath.substring(nameBeginPos+1));
-		}catch(Exception e){
-			throw new Exception("名字出错");
-		}
+		service.saveZombieWorldToHtWorld(384);
+//		String localPath="e:\\your\\1419493801.jpg.thumbnail";
+//		if(localPath == null || localPath.equals(""))return ;
+//		int nameBeginPos = localPath.lastIndexOf('\\');
+//		if (nameBeginPos < 0)
+//			nameBeginPos = -1;
+//		int nameEndPos = localPath.indexOf(".jpg");
+//		String str = localPath.substring(nameBeginPos+1, nameEndPos);
+//		try{
+//			Long time = Long.parseLong(str);
+//			Date date = new Date(time*1000);
+//			SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
+//			String dateStr = df.format(date);
+//			log.info("http://imzhitu.qiniudn.com/ios/image/" + dateStr + "/"+localPath.substring(nameBeginPos+1));
+//		}catch(Exception e){
+//			throw new Exception("名字出错");
+//		}
 		
+	}
+	
+	@Test
+	public void batchSaveZombieWorldToHTWorldTest()throws Exception{
+//		Date now = new Date();
+//		service.batchSaveZombieWorldToHTWorld("384", new Date(now.getTime() + 10*1000), 1);
+//		Thread.sleep(121*1000);
 	}
 }

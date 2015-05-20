@@ -71,7 +71,7 @@ var maxId = 0,
   				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}
   		},
-  		{field : 'shortLink', title:'短链',align : 'center',width : 320,
+  		{field : 'shortLink', title:'短链',align : 'center',width : 220,
 			styler: function(value,row,index){ 
 				return 'cursor:pointer;';
 			},
@@ -81,7 +81,9 @@ var maxId = 0,
 						+ worldURLPrefix + value + "\")'>" +value+"</a>";
 			}
 		},
-		{field : 'htworldId', title:'织图ID', align : 'center',width : 80}
+		{field : 'htworldId', title:'织图ID', align : 'center',width : 80},
+		{field : 'channelId',title:'频道ID',align : 'center',width:70},
+		{field : 'channelName',title:'频道名称',align:'center',width:90}
 		
 	],
 	onAfterInit = function() {
