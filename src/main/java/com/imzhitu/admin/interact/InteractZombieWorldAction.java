@@ -30,6 +30,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 	private Integer titleId;
 	private Date addDate;
 	private Date modifyDate;
+	private Integer channelId;
 	
 
 	private String ids;//批量发织图
@@ -77,7 +78,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 	public String saveZombieWorld(){
 		try{
 			service.saveZombieWorld(childs,titleId,authorId,worldName,worldDesc,worldLabel,null,
-					coverPath,titlePath,thumbTitlePath,longitude,latitude,locationAddr,size);
+					coverPath,titlePath,thumbTitlePath,longitude,latitude,locationAddr,size,channelId);
 			JSONUtil.optResult(0, "success", jsonMap);
 		}catch(Exception e){
 			JSONUtil.optResult(-1, "fail", jsonMap);
@@ -272,5 +273,13 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
+	}
+
+	public Integer getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
 	}
 }

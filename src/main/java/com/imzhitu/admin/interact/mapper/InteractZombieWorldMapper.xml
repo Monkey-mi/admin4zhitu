@@ -20,16 +20,18 @@
 		<result column="date_modify" property="modifyDate" jdbcType="TIMESTAMP"/>
 		<result column="htworld_id" property="htworldId" jdbcType="INTEGER"/>
 		<result column="short_link" property="shortLink" jdbcType="VARCHAR"/>
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- 插入 -->
 	<insert id="insertZombieWorld">
 		insert into hts_admin.zombie_world 
 		(id,world_name,world_desc,world_label,world_label_ids,author_id,cover_path,title_path,
-		 title_thumb_path,longitude,location_addr,size,complete,date_add,date_modify)
+		 title_thumb_path,longitude,location_addr,size,complete,date_add,date_modify,channel_id)
 		 values
 		 (#{id},#{worldName},#{worldDesc},#{worldLabel},#{worldLabelIds},#{authorId},#{coverPath},#{titlePath},
-		  #{thumbTitlePath},#{longitude},#{locationAddr},#{size},#{complete},#{addDate},#{modifyDate})
+		  #{thumbTitlePath},#{longitude},#{locationAddr},#{size},#{complete},#{addDate},#{modifyDate},#{channelId})
 	</insert>
 	
 	<!-- 更新完成情况 -->
@@ -79,19 +81,23 @@
 	
 	<!-- 分页查询 -->
 	<select id="queryZombieWorldForTable" resultMap="ZombieWorldMapper">
-		select * from hts_admin.zombie_world zw
+		select zw.*,oc.channel_name from hts_admin.zombie_world zw
+		left join hts.operations_channel oc on zw.channel_id=oc.id
 		<where>
 			<if test="id != null">
-				id = #{id}
+				zw.id = #{id}
 			</if>
 			<if test="complete != null">
-				and complete = #{complete}
+				and zw.complete = #{complete}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[and id <= #{maxId}]]>
+				<![CDATA[and zw.id <= #{maxId}]]>
 			</if>
 			<if test="modifyDate != null and addDate != null">
-				and date_modify between #{addDate} and #{modifyDate}
+				and zw.date_modify between #{addDate} and #{modifyDate}
+			</if>
+			<if test="channelId != null">
+				and zw.channel_id = #{channelId}
 			</if>
 		</where>
 		order by id desc
@@ -113,6 +119,9 @@
 			</if>
 			<if test="modifyDate != null and addDate != null">
 				and date_modify between #{addDate} and #{modifyDate}
+			</if>
+			<if test="channelId != null">
+				and zw.channel_id = #{channelId}
 			</if>
 		</where>
 	</select>
