@@ -20,6 +20,8 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	private Date channelWorldDateAdded;
 	private Integer channelWorldValid;
 	private Integer notified;
+	private Integer weight;	// 权重，即置顶，0为不置顶，1为置顶
+	private Integer superb;	// 加精，0为不加精，1为加精
 	
 	private String channelName;
 	private String channelTitle;
@@ -83,6 +85,34 @@ public class OpChannelWorldDto extends ZTWorldBase {
 
 	public void setNotified(Integer notified) {
 		this.notified = notified;
+	}
+
+	/**
+	 * @return the weight
+	 */
+	public Integer getWeight() {
+	    return weight;
+	}
+
+	/**
+	 * @param weight the weight to set
+	 */
+	public void setWeight(Integer weight) {
+	    this.weight = weight;
+	}
+
+	/**
+	 * @return the superb
+	 */
+	public Integer getSuperb() {
+	    return superb;
+	}
+
+	/**
+	 * @param superb the superb to set
+	 */
+	public void setSuperb(Integer superb) {
+	    this.superb = superb;
 	}
 
 	public Integer getAuthorId() {
