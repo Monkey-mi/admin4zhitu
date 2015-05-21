@@ -34,6 +34,7 @@ import com.hts.web.ztworld.dao.HTWorldDao;
 import com.hts.web.ztworld.dao.HTWorldLabelDao;
 import com.hts.web.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.common.database.Admin;
+import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.ZombieChildWorld;
 import com.imzhitu.admin.common.pojo.ZombieWorld;
 import com.imzhitu.admin.common.service.KeyGenService;
@@ -41,6 +42,8 @@ import com.imzhitu.admin.interact.mapper.InteractZombieChildWorldMapper;
 import com.imzhitu.admin.interact.mapper.InteractZombieImgMapper;
 import com.imzhitu.admin.interact.mapper.InteractZombieWorldMapper;
 import com.imzhitu.admin.interact.service.InteractZombieService;
+import com.imzhitu.admin.op.mapper.ChannelMapper;
+import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 
 @Service
 public class InteractZombieServiceImpl extends BaseServiceImpl implements InteractZombieService{
@@ -53,6 +56,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	
 	@Autowired
 	private InteractZombieChildWorldMapper zombieChildWorldMapper;
+	
+	@Autowired
+	private ChannelWorldMapper channelWorlMapper;
+	
+	@Autowired
+	private ChannelMapper channelMapper;
 	
 	@Autowired
 	private KeyGenService keyGenService;
@@ -82,7 +91,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			String worldDesc, String worldLabel, String labelIds,  
 			String coverPath, String titlePath, String titleThumbPath, 
 			Double longitude, Double latitude,
-			String locationAddr, Integer size)throws Exception{
+			String locationAddr, Integer size,Integer channelId)throws Exception{
 		Date now = new Date();
 		ZombieWorld zombieWorld = new ZombieWorld();
 		Integer id = keyGenService.generateId(Admin.KEYGEN_ZOMBIE_WORLD);
@@ -102,6 +111,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		zombieWorld.setWorldName(worldName);
 		zombieWorld.setAddDate(now);
 		zombieWorld.setModifyDate(now);
+		if(channelId == null){
+			zombieWorld.setChannelId(0);
+		}else{
+			zombieWorld.setChannelId(channelId);
+		}
+		
 		//保存zombie world
 		zombieWorldMapper.insertZombieWorld(zombieWorld);
 		
@@ -141,135 +156,142 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	 * @param zombieWorldId
 	 * @throws Exception
 	 */
-	public void saveZombieWorldToHtWorld(Integer zombieWorldId)throws Exception{
+	public Integer saveZombieWorldToHtWorld(Integer zombieWorldId)throws Exception{
 		Date now = new Date();
 		ZombieWorld dto = new ZombieWorld();
 		dto.setId(zombieWorldId);
 		dto.setComplete(0);
 		List<ZombieWorld> list = zombieWorldMapper.queryZombieWorld(dto);
-		for(ZombieWorld zw:list){
-			//查询zombie child world
-			List<ZombieChildWorld> childworldList = zombieChildWorldMapper.queryZombieChildWorld(zw.getId());
-			
-			HTWorld htworld = new HTWorld();
-			Integer worldId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_HTWORLD_ID);
-			htworld.setId(worldId);
-			htworld.setAuthorId(zw.getAuthorId());
-			htworld.setWorldName(zw.getWorldName());
-			htworld.setChildCount(childworldList.size());
-			htworld.setWorldDesc(zw.getWorldDesc());
-			htworld.setWorldLabel(zw.getWorldLabel());
-			htworld.setDateAdded(now);
-			htworld.setDateModified(now);
-			htworld.setLatitude(zw.getLatitude());
-			htworld.setLongitude(zw.getLongitude());
-			htworld.setShield(0);
-			htworld.setVer(1);
-			htworld.setClickCount(0);
-			htworld.setCommentCount(0);
-			htworld.setLikeCount(0);
-			htworld.setValid(Tag.TRUE);
-			htworld.setSize(zw.getSize());
-			String titlePath = converLocalPathToQiNiuPath(zw.getTitlePath());
-			htworld.setTitlePath(titlePath);
-			String coverPath = converLocalPathToQiNiuPath(zw.getCoverPath());
-			htworld.setCoverPath(coverPath);
-			String titleThumbPath = converLocalPathToQiNiuPath(zw.getThumbTitlePath());
-			htworld.setTitleThumbPath(titleThumbPath);
-			htworld.setLatestValid(Tag.TRUE);
-			// 生成短链
-			String shortLink = MD5Encrypt.shortUrl(worldId);
-			htworld.setShortLink(shortLink);
-			
-			// 保存织图标签
-			if(!StringUtil.checkIsNULL(zw.getWorldLabel())) {
-				String[] names = zw.getWorldLabel().split(",");
-				Set<String> nameSet = new LinkedHashSet<String>();
-				Map<String, HTWorldLabel> labelMap = worldLabelDao.queryLabelByNames(names);
-				for(String name : names) {
-					name = StringUtil.filterXSS(name);
-					if(StringUtil.checkIsNULL(name) || name.trim().equals("") || nameSet.contains(name)) {
-						continue;
-					}
-					nameSet.add(name);
-					HTWorldLabel label = labelMap.get(name);
-					Integer labelId = 0;
-					Integer valid = Tag.TRUE;
-					if(label == null) {
-						labelId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
-						String pinyin = StringUtil.getPinYin(name);
-						label = new HTWorldLabel(labelId, name, pinyin, 0, new Date(), Tag.FALSE, Tag.TRUE, 0, 0);
-						worldLabelDao.saveLabel(label);
-					} else {
-						labelId = label.getId();
-						if(label.getLabelState().equals(Tag.WORLD_LABEL_ACTIVITY)) {
-							valid = Tag.FALSE;
-						}
-					}
-					Integer lwid = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_WORLD_ID);
-					worldLabelWorldDao.saveLabelWorld(new HTWorldLabelWorld(lwid, worldId, zw.getAuthorId(), 
-							labelId, valid, lwid, 0));
-					int count = 0;
-					if(label.getLabelState().equals(Tag.WORLD_LABEL_NORMAL)) { // 普通标签算真实总数，其他标签等审核
-						Long labelWorldCount = worldLabelWorldDao.queryWorldCountByLabelId(labelId);
-						count = labelWorldCount.intValue();
-						worldLabelDao.updateWorldCount(labelId, count);
-					}
-					
-				}
-				String[] labelArray = new String[nameSet.size()];
-				htworld.setWorldLabel(StringUtil.convertArrayToString(nameSet.toArray(labelArray)));
-			}
-			
-			//保存织图
-			worldDao.saveWorld(htworld);
-			// 更新织图总数
-			Long count = worldDao.queryWorldCountByAuthorId(zw.getAuthorId());
-			Integer childCount = worldDao.queryChildCount(zw.getAuthorId());
-			userInfoDao.updateWorldAndChildCount(zw.getAuthorId(), count.intValue(), childCount);
-			
-			//保存子世界
-			Map<Integer,Integer> childWorldIdMap = new HashMap<Integer,Integer>();
-			for(int i=0; i < childworldList.size(); i++){
-				ZombieChildWorld zcw = childworldList.get(i);
-				HTWorldChildWorld childWorld = new HTWorldChildWorld();
-				Integer childWorldId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_CHILD_WORLD_ID);
-				childWorldIdMap.put(zcw.getId(), childWorldId);
-				if(zcw.getAtId() == 0){
-					childWorld.setAtId(0);
-				} else {
-					childWorld.setAtId(childWorldIdMap.get(zcw.getAtId()));
-				}
-				
-				childWorld.setId(childWorldId);
-				childWorld.setWorldId(worldId);
-				childWorld.setAngle(zcw.getAngle());
-				childWorld.setChildWorldDesc(zcw.getChildWorldDesc());
-				childWorld.setCoordinatex(zcw.getCoordinatex());
-				childWorld.setCoordinatey(zcw.getCoordinatey());
-				childWorld.setIsTitle(zcw.getIsTitle());
-				
-				String path = converLocalPathToQiNiuPath(zcw.getPath());
-				childWorld.setPath(path);
-				
-				String thumbPath = converLocalPathToQiNiuPath(zcw.getThumbPath());
-				childWorld.setThumbPath(thumbPath);
-				
-				childWorld.setType(zcw.getType());
-				childWorld.setTypePath(zcw.getTypePath());
-				childWorld.setHeight(zcw.getHeight());
-				childWorld.setWidth(zcw.getHeight());
-				
-				worldChildWorldDao.saveChildWorld(childWorld);
-			}
-			dto.setComplete(1);
-			dto.setModifyDate(now);
-			dto.setHtworldId(worldId);
-			dto.setShortLink(shortLink);
-			zombieWorldMapper.updateComplete(dto);
-			childWorldIdMap.clear();
-			
+		if(list == null || list.size() != 1){
+			return null;
 		}
+		
+		ZombieWorld zw = list.get(0);
+		
+		//查询zombie child world
+		List<ZombieChildWorld> childworldList = zombieChildWorldMapper.queryZombieChildWorld(zw.getId());
+		
+		HTWorld htworld = new HTWorld();
+		Integer worldId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_HTWORLD_ID);
+		htworld.setId(worldId);
+		htworld.setAuthorId(zw.getAuthorId());
+		htworld.setWorldName(zw.getWorldName());
+		htworld.setChildCount(childworldList.size());
+		htworld.setWorldDesc(zw.getWorldDesc());
+		htworld.setWorldLabel(zw.getWorldLabel());
+		htworld.setDateAdded(now);
+		htworld.setDateModified(now);
+		htworld.setLatitude(zw.getLatitude());
+		htworld.setLongitude(zw.getLongitude());
+		htworld.setShield(0);
+		htworld.setVer(1);
+		htworld.setClickCount(0);
+		htworld.setCommentCount(0);
+		htworld.setLikeCount(0);
+		htworld.setValid(Tag.TRUE);
+		htworld.setSize(zw.getSize());
+		String titlePath = converLocalPathToQiNiuPath(zw.getTitlePath());
+		htworld.setTitlePath(titlePath);
+		String coverPath = converLocalPathToQiNiuPath(zw.getCoverPath());
+		htworld.setCoverPath(coverPath);
+		String titleThumbPath = converLocalPathToQiNiuPath(zw.getThumbTitlePath());
+		htworld.setTitleThumbPath(titleThumbPath);
+		htworld.setLatestValid(Tag.TRUE);
+		// 生成短链
+		String shortLink = MD5Encrypt.shortUrl(worldId);
+		htworld.setShortLink(shortLink);
+		htworld.setTp(0);
+		
+		// 保存织图标签
+		if(!StringUtil.checkIsNULL(zw.getWorldLabel())) {
+			String[] names = zw.getWorldLabel().split(",");
+			Set<String> nameSet = new LinkedHashSet<String>();
+			Map<String, HTWorldLabel> labelMap = worldLabelDao.queryLabelByNames(names);
+			for(String name : names) {
+				name = StringUtil.filterXSS(name);
+				if(StringUtil.checkIsNULL(name) || name.trim().equals("") || nameSet.contains(name)) {
+					continue;
+				}
+				nameSet.add(name);
+				HTWorldLabel label = labelMap.get(name);
+				Integer labelId = 0;
+				Integer valid = Tag.TRUE;
+				if(label == null) {
+					labelId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
+					String pinyin = StringUtil.getPinYin(name);
+					label = new HTWorldLabel(labelId, name, pinyin, 0, new Date(), Tag.FALSE, Tag.TRUE, 0, 0);
+					worldLabelDao.saveLabel(label);
+				} else {
+					labelId = label.getId();
+					if(label.getLabelState().equals(Tag.WORLD_LABEL_ACTIVITY)) {
+						valid = Tag.FALSE;
+					}
+				}
+				Integer lwid = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_WORLD_ID);
+				worldLabelWorldDao.saveLabelWorld(new HTWorldLabelWorld(lwid, worldId, zw.getAuthorId(), 
+						labelId, valid, lwid, 0));
+				int count = 0;
+				if(label.getLabelState().equals(Tag.WORLD_LABEL_NORMAL)) { // 普通标签算真实总数，其他标签等审核
+					Long labelWorldCount = worldLabelWorldDao.queryWorldCountByLabelId(labelId);
+					count = labelWorldCount.intValue();
+					worldLabelDao.updateWorldCount(labelId, count);
+				}
+				
+			}
+			String[] labelArray = new String[nameSet.size()];
+			htworld.setWorldLabel(StringUtil.convertArrayToString(nameSet.toArray(labelArray)));
+		}
+		
+		//保存织图
+		worldDao.saveWorld(htworld);
+		
+		
+		// 更新织图总数
+		Long count = worldDao.queryWorldCountByAuthorId(zw.getAuthorId());
+		Integer childCount = worldDao.queryChildCount(zw.getAuthorId());
+		userInfoDao.updateWorldAndChildCount(zw.getAuthorId(), count.intValue(), childCount);
+		
+		//保存子世界
+		Map<Integer,Integer> childWorldIdMap = new HashMap<Integer,Integer>();
+		for(int i=0; i < childworldList.size(); i++){
+			ZombieChildWorld zcw = childworldList.get(i);
+			HTWorldChildWorld childWorld = new HTWorldChildWorld();
+			Integer childWorldId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_CHILD_WORLD_ID);
+			childWorldIdMap.put(zcw.getId(), childWorldId);
+			if(zcw.getAtId() == 0){
+				childWorld.setAtId(0);
+			} else {
+				childWorld.setAtId(childWorldIdMap.get(zcw.getAtId()));
+			}
+			
+			childWorld.setId(childWorldId);
+			childWorld.setWorldId(worldId);
+			childWorld.setAngle(zcw.getAngle());
+			childWorld.setChildWorldDesc(zcw.getChildWorldDesc());
+			childWorld.setCoordinatex(zcw.getCoordinatex());
+			childWorld.setCoordinatey(zcw.getCoordinatey());
+			childWorld.setIsTitle(zcw.getIsTitle());
+			
+			String path = converLocalPathToQiNiuPath(zcw.getPath());
+			childWorld.setPath(path);
+			
+			String thumbPath = converLocalPathToQiNiuPath(zcw.getThumbPath());
+			childWorld.setThumbPath(thumbPath);
+			
+			childWorld.setType(zcw.getType());
+			childWorld.setTypePath(zcw.getTypePath());
+			childWorld.setHeight(zcw.getHeight());
+			childWorld.setWidth(zcw.getHeight());
+			
+			worldChildWorldDao.saveChildWorld(childWorld);
+		}
+		dto.setComplete(1);
+		dto.setModifyDate(now);
+		dto.setHtworldId(worldId);
+		dto.setShortLink(shortLink);
+		zombieWorldMapper.updateComplete(dto);
+		childWorldIdMap.clear();
+		return worldId;
 	}
 	
 	/**
@@ -463,9 +485,30 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 						//检查数据是否合法
 						List<ZombieWorld> zombieWorldList = zombieWorldMapper.queryZombieWorld(dto);
 						if(zombieWorldList != null && zombieWorldList.size() == 1){
-							if(zombieWorldList.get(0).getComplete() == Tag.FALSE){
-								//正式发布
-								saveZombieWorldToHtWorld(id);
+							ZombieWorld zw = zombieWorldList.get(0);
+							if(zw.getComplete() == Tag.FALSE){
+								//正式发布织图
+								Integer worldId = saveZombieWorldToHtWorld(id);
+								
+								//添加到频道
+								if(zw.getChannelId() != null && zw.getChannelId() != 0){
+									if(channelMapper.queryChannelById(zw.getChannelId()) != null){
+										Integer channelWorldId = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+										OpChannelWorld channelWorld = new OpChannelWorld();
+										channelWorld.setAuthorId(zw.getAuthorId());
+										channelWorld.setChannelId(zw.getChannelId());
+										channelWorld.setDateAdded(now);
+										channelWorld.setId(channelWorldId);
+										channelWorld.setNotified(Tag.TRUE);
+										channelWorld.setValid(Tag.TRUE);
+										channelWorld.setWorldId(worldId);
+										channelWorld.setSuperb(Tag.FALSE);
+										channelWorld.setWeight(0);
+										channelWorld.setSerial(worldId);
+										channelWorlMapper.save(channelWorld);
+									}
+								}
+								
 								//睡眠多少毫秒
 								Thread.sleep(timeMsSpan);
 							}

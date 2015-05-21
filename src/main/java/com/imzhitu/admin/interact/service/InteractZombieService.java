@@ -22,7 +22,7 @@ public interface InteractZombieService {
 			String worldDesc, String worldLabel, String labelIds,  
 			String coverPath, String titlePath, String titleThumbPath, 
 			Double longitude, Double latitude,
-			String locationAddr, Integer size)throws Exception;
+			String locationAddr, Integer size,Integer channelId)throws Exception;
 	
 	/**
 	 * 查询马甲织图数据
@@ -36,7 +36,7 @@ public interface InteractZombieService {
 	 * @param zombieWorldId
 	 * @throws Exception
 	 */
-	public void saveZombieWorldToHtWorld(Integer zombieWorldId)throws Exception;
+	public Integer saveZombieWorldToHtWorld(Integer zombieWorldId)throws Exception;
 	
 	/**
 	 * 分页查询

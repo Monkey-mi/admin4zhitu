@@ -641,21 +641,129 @@ var tableview = $.extend({}, $.fn.datagrid.defaults.view, {
 		
 		//operations
 		cc.push("<td valign='top' style='width:230px;'>");
-		cc.push("<span>置顶</span>");
-		cc.push("|");
-		cc.push("<span>加精</span>");
-		cc.push("|");
-		cc.push("<span>评论</span>");
-		cc.push("|");
-		cc.push("<span>点赞</span>");
-		cc.push("|");
-		cc.push("<span>删除</span>");
+		
+		var topText = "";
+		// 为0是没有设置置顶，显示：置顶，否则为1，已经设置置顶，显示：取消置顶
+		if (rowData.weight == 0) {
+			topText = "置顶";
+		} else {
+			topText = "取消置顶";
+		}
+		cc.push("<a id='topId' href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setTop("+rowData.channelWorldId+","+rowData.weight+","+rowIndex+")'>"+topText+"</a>");
+		cc.push("  |  ");
+		
+		var superbText = "";
+		// 为0是没有加精，显示：加精，否则为1，已经设置加精，显示：取消加精
+		if (rowData.superb == 0) {
+			superbText = "加精";
+		} else {
+			superbText = "取消加精";
+		}
+		cc.push("<a id='superbId' href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setSuperb("+rowData.channelWorldId+","+rowData.superb+","+rowIndex+")'>"+superbText+"</a>");
+		cc.push("  |  ");
+		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setComment()'>评论</a>");
+		cc.push("  |  ");
+		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setLike()'>点赞</a>");
+		cc.push("  |  ");
+		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='deleteWorldFromCannel("+rowData.channelWorldId+","+rowIndex+")'>删除</a>");
 		cc.push("</td>");
 		
 		
 		return cc.join('');
     }
 });
+
+function setTop(id, weightFlg, rowIndex){
+	var isTop = false;	// 设置置顶,默认不置顶
+	
+	// 当前weightFlg为0，即按钮显示：置顶，那么isTop设置为true，反之：取消置顶，设置为false
+	if (weightFlg == 0) {
+		isTop = true;
+	} else if (weightFlg == 1) {
+		isTop = false;
+	}
+	$.post("./admin_op/worldChannel_setTopOperation", {"id" : id, "isTop" : isTop}, function(data){
+		$.messager.alert("提示", data.msg);
+		// 若操作成功，则把当前行置顶按钮展示值，刷新
+		if (data.result == 0){
+			var weightValue;	// 声明置顶权重
+			
+			// 若isTop为true，表示置顶成功，则按钮显示值为“取消置顶”，那么要刷新的权重值应该设置为1
+			if (isTop) {
+				weightValue = 1;
+			} else {
+				weightValue = 0;
+			}
+			$("#htm_table").datagrid('rejectChanges'); // 取消所有编辑操作
+			$("#htm_table").datagrid('unselectAll'); // 取消所有选择
+			$("#htm_table").datagrid('selectRow', rowIndex);
+			var data = $("#htm_table").datagrid('getSelected');
+			data['weight'] = weightValue;
+			$("#htm_table").datagrid('updateRow',{
+				index: rowIndex,
+				row: data
+			});
+			$("#htm_table").datagrid('refreshRow',rowIndex);
+			$("#htm_table").datagrid('acceptChanges');
+			$("#htm_table").datagrid('unselectRow',rowIndex);
+		}
+	});
+}
+function setSuperb(id, superbFlg, rowIndex){
+	var isSuperb = false;	// 设置加精,默认加精
+	
+	// 当前superbFlg为0，即按钮显示：加精，那么isSuperb设置为true，反之：取消加精，设置为false
+	if (superbFlg == 0) {
+		isSuperb = true;
+	} else if (superbFlg == 1) {
+		isSuperb = false;
+	}
+	$.post("./admin_op/worldChannel_setSuperbOperation", {"id" : id, "isSuperb" : isSuperb}, function(data){
+		$.messager.alert("提示", data.msg);
+		// 若操作成功，则把当前行加精按钮展示值，刷新
+		if (data.result == 0){
+			var superbValue;	// 声明加精value
+			
+			// 若isSuperb为true，表示加精成功，则按钮显示值为“取消加精”，那么要刷新的加精值应该设置为1
+			if (isSuperb) {
+				superbValue = 1;
+			} else {
+				superbValue = 0;
+			}
+			$("#htm_table").datagrid('rejectChanges'); // 取消所有编辑操作
+			$("#htm_table").datagrid('unselectAll'); // 取消所有选择
+			$("#htm_table").datagrid('selectRow', rowIndex);
+			var data = $("#htm_table").datagrid('getSelected');
+			data['superb'] = superbValue;
+			$("#htm_table").datagrid('updateRow',{
+				index: rowIndex,
+				row: data
+			});
+			$("#htm_table").datagrid('refreshRow',rowIndex);
+			$("#htm_table").datagrid('acceptChanges');
+			$("#htm_table").datagrid('unselectRow',rowIndex);
+		}
+	});
+}
+function setComment(){
+	alert("Comment");
+}
+function setLike(){
+	alert("Like");
+}
+function deleteWorldFromCannel(id,rowIndex){
+	$.post("./admin_op/worldChannel_deleteWorldFromCannel", {"id" : id}, function(data){
+		$.messager.alert("提示", data.msg);
+		// 若删除成功，则把当前行从表格中移除
+		if (data.result == 0){
+			$("#htm_table").datagrid("deleteRow",rowIndex);
+			
+			// 下面方法为重新排序，避免删除后行索引乱序，重新取出当前页面集合，然后放入表格中
+			var rows = $("#htm_table").datagrid("getRows");
+			$("#htm_table").datagrid("loadData", rows);
+		}
+	});
+}
 
 </script>
 </head>

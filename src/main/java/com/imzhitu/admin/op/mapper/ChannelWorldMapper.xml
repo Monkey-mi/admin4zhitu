@@ -13,7 +13,7 @@
 	</resultMap>
 	
 	
-	
+		
 	<resultMap id="OpChannelWorldDtoMap" type="com.imzhitu.admin.common.pojo.OpChannelWorldDto">
 		<id column="channel_world_id" property="channelWorldId" jdbcType="INTEGER" />
 		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>

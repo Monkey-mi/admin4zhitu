@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpWorldOfCannelMapper">
+
+	<!-- 定义结果集 -->
+<!-- 	<resultMap id="OpWorldOfCannelMap" type="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto"> -->
+<!-- 		<id column="id" property="id" jdbcType="INTEGER" /> -->
+<!-- 		<result column="weight" property="weight" jdbcType="INTEGER" /> -->
+<!-- 		<result column="superb" property="superb" jdbcType="INTEGER" /> -->
+<!-- 	</resultMap> -->
+	
+	<!-- 更新织图在频道中的权重，即是否置顶 -->
+	<update id="setTopByDto" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
+		update hts.operations_channel_world
+		<set>
+			weight = #{weight,jdbcType=INTEGER},
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 更新织图在频道中的加精 -->
+	<update id="setSuperbByDto" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
+		update hts.operations_channel_world
+		<set>
+			superb = #{superb,jdbcType=INTEGER},
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据id删除织图与频道关联关系 -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from hts.operations_channel_world
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	  
+</mapper>
