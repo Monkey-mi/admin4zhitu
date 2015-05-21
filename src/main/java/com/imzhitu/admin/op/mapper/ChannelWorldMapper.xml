@@ -21,6 +21,8 @@
 		<result column="channel_world_date_added" property="channelWorldDateAdded" jdbcType="TIMESTAMP"/>
 		<result column="channel_world_valid" property="channelWorldValid" jdbcType="INTEGER"/>
 		<result column="notified" property="notified" jdbcType="INTEGER"/>
+		<result column="weight" property="weight" jdbcType="INTEGER"/>
+		<result column="superb" property="superb" jdbcType="INTEGER"/>
 		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
 		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR" />
 		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR" />
@@ -86,7 +88,7 @@
 	</select>
 	
 	<select id="queryChannelWorlds" resultMap="OpChannelWorldDtoMap">
-		select cw.id as channel_world_id,cw.channel_id,cw.world_id,cw.valid as channel_world_valid,cw.notified,
+		select cw.id as channel_world_id,cw.channel_id,cw.world_id,cw.valid as channel_world_valid,cw.notified,cw.weight,cw.superb,
 		c.channel_name, c.channel_title,c.channel_icon, h.*,u.user_name,u.user_avatar,u.star,u.trust
 		,ISNULL(ocws.finish) as beSchedula ,IFNULL(ocws.finish,0) as schedulaComplete, IFNULL(oct.id, 0) as is_cover
 		from 
@@ -135,8 +137,8 @@
 	</update>
 	
 	<insert id="save">
-		insert into hts.operations_channel_world (id,channel_id,world_id,author_id,date_added,valid,notified)
-	 		values (#{id}, #{channelId}, #{worldId}, #{authorId}, #{dateAdded}, #{valid}, #{notified})
+		insert into hts.operations_channel_world (id,channel_id,world_id,author_id,date_added,valid,notified,superb,weight,serial)
+	 		values (#{id}, #{channelId}, #{worldId}, #{authorId}, #{dateAdded}, #{valid}, #{notified},#{superb},#{weight},#{serial})
 	</insert>
 	
 	<update id="updateId">
