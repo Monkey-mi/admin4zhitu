@@ -334,15 +334,23 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			Integer worldId = Integer.parseInt(worldAndAuthor[0]);
 			Integer authorId = Integer.parseInt(worldAndAuthor[1]);
 			
-			Integer channelWorldId = keyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+			//先查询是否重复
 			OpChannelWorld channelWorld = new OpChannelWorld();
-			channelWorld.setAuthorId(authorId);
+			channelWorld.setWorldId(worldId);
+			
+			long r = channelWorlMapper.queryChannelWorldCount(channelWorld);
+			if(r != 0){
+				continue;
+			}
+			
+			Integer channelWorldId = keyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+			
 			channelWorld.setChannelId(channelId);
+			channelWorld.setAuthorId(authorId);
 			channelWorld.setDateAdded(now);
 			channelWorld.setId(channelWorldId);
 			channelWorld.setNotified(Tag.FALSE);
 			channelWorld.setValid(Tag.TRUE);
-			channelWorld.setWorldId(worldId);
 			channelWorld.setSuperb(Tag.FALSE);
 			channelWorld.setWeight(0);
 			channelWorld.setSerial(channelWorldId);
