@@ -504,7 +504,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 										channelWorld.setWorldId(worldId);
 										channelWorld.setSuperb(Tag.FALSE);
 										channelWorld.setWeight(0);
-										channelWorld.setSerial(worldId);
+										channelWorld.setSerial(channelWorldId);
 										channelWorlMapper.save(channelWorld);
 									}
 								}
