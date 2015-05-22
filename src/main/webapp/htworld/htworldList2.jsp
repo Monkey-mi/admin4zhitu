@@ -6,6 +6,32 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>织图管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
+<jsp:include page="../common/tourlistHeader.jsp"></jsp:include>
+<script type="text/javascript" src="${webRootPath }/htworld/js/htworldList2.js?ver=${webVer}"></script>
+<style type="text/css">
+#superb-title {
+	color:#fafafa;
+	font-size:36px;
+	margin: 42px 0 34px 0;
+	display:none;
+}
+
+#superb-box {
+		margin:0 auto;
+		width:1024px;
+		text-align:left;
+	}
+.superb {
+	width:320px;
+	height:320px;
+	display:inline-block;
+	position:relative;	
+	margin-bottom:32px;
+}
+.superb-margin {
+	margin-right:32px;
+}
+</style>
 </head>
 <body>
 	<div>
@@ -46,9 +72,4 @@
 	<div id="superb-box">
 	</div>
 </body>
-<link rel="stylesheet" type="text/css" href="http://www.imzhitu.com/index/css/index4.css?ver=${webVer}" />
-<link rel="stylesheet" type="text/css" href="http://www.imzhitu.com/htworld/webv2/css/htszoomtourV2.css?ver=${webVer}" />
-<script type="text/javascript" src="http://www.imzhitu.com/base/js/baseTools.js?ver=${webVer}"></script>
-<script type="text/javascript" src="http://www.imzhitu.com/htworld/common/js/jquery.htszoomtourV3.js?ver=${webVer}"></script>
-<script type="text/javascript" src="${webRootPath }/htworld/js/htworldList2.js?ver=${webVer}"></script>
 </html>
