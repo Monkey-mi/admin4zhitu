@@ -2,6 +2,7 @@ package com.imzhitu.admin.op.service.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.hts.web.aliyun.service.OsChannelService;
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpChannel;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
@@ -20,6 +22,8 @@ import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
+import com.imzhitu.admin.common.pojo.OpChannelWorld;
+import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
 import com.imzhitu.admin.userinfo.service.AdminAndUserRelationshipService;
@@ -41,6 +45,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	
 	@Autowired
 	private AdminAndUserRelationshipService adminAndUserRelationshipService;
+	
+	@Autowired
+	private ChannelWorldMapper channelWorlMapper;
 	
 	@Override
 	public void insertOpChannel(Integer ownerId, String channelName,
@@ -303,6 +310,45 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		List<OpChannelV2Dto>channelList = opChannelV2Mapper.queryOpChannelByOwnerIds(ownerIdArray);
 		jsonMap.put(OptResult.ROWS, jsonMap);
 		jsonMap.put(OptResult.TOTAL, channelList.size());
+	}
+	
+	
+	/**
+	 * 批量插入织图到频道
+	 * @param channelId
+	 * @param worldAndAuthorIds
+	 * @throws Exception
+	 */
+	@Override
+	public void batchInsertWorldToChannel(Integer channelId,String worldAndAuthorIds)throws Exception{
+		if(channelId == null || worldAndAuthorIds == null){
+			return;
+		}
+		Date now = new Date();
+		String[] worldAndAuthors = worldAndAuthorIds.trim().split(",");
+		for(int i=0; i<worldAndAuthors.length; i++){
+			String[] worldAndAuthor = worldAndAuthors[i].split("-");
+			if(worldAndAuthor.length != 2){
+				continue;
+			}
+			Integer worldId = Integer.parseInt(worldAndAuthor[0]);
+			Integer authorId = Integer.parseInt(worldAndAuthor[1]);
+			
+			Integer channelWorldId = keyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+			OpChannelWorld channelWorld = new OpChannelWorld();
+			channelWorld.setAuthorId(authorId);
+			channelWorld.setChannelId(channelId);
+			channelWorld.setDateAdded(now);
+			channelWorld.setId(channelWorldId);
+			channelWorld.setNotified(Tag.FALSE);
+			channelWorld.setValid(Tag.TRUE);
+			channelWorld.setWorldId(worldId);
+			channelWorld.setSuperb(Tag.FALSE);
+			channelWorld.setWeight(0);
+			channelWorld.setSerial(channelWorldId);
+			channelWorlMapper.save(channelWorld);
+		}
+		
 	}
 
 }

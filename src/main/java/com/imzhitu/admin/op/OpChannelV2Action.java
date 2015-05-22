@@ -168,6 +168,16 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	public String batchInsertWorldToChannel(){
+		try{
+			opChannelV2Service.batchInsertWorldToChannel(channelId, worldAndAuthorIdsStr);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	private Integer channelId;			//id
 	private Integer ownerId;			//拥有者ID
 	private String ownerName;			//拥有者名称
@@ -197,6 +207,8 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	
 	private Integer orderBy;			//排序
 	private String channelIdsStr;		//channel id array string
+	
+	private String worldAndAuthorIdsStr;//worldId and authorId，eg：123-114,124-114
 	
 	
 	public Integer getMoodFlag() {
@@ -368,6 +380,14 @@ public class OpChannelV2Action extends BaseCRUDAction{
 
 	public void setChannelIdsStr(String channelIdsStr) {
 		this.channelIdsStr = channelIdsStr;
+	}
+
+	public String getWorldAndAuthorIdsStr() {
+		return worldAndAuthorIdsStr;
+	}
+
+	public void setWorldAndAuthorIdsStr(String worldAndAuthorIdsStr) {
+		this.worldAndAuthorIdsStr = worldAndAuthorIdsStr;
 	}
 	
 

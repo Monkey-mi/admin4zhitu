@@ -86,4 +86,12 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 */
 	public void queryOpChannelByAdminUserId(Integer adminUserId,Map<String,Object>jsonMap)throws Exception;
+	
+	/**
+	 * 批量插入织图到频道
+	 * @param channelId
+	 * @param worldAndAuthorIds
+	 * @throws Exception
+	 */
+	public void batchInsertWorldToChannel(Integer channelId,String worldAndAuthorIds)throws Exception;
 }
