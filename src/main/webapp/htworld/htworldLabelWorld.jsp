@@ -233,6 +233,7 @@ function addWorldToChannelSubmit(){
 			},function(result){
 				$('#htm_table').datagrid('loaded');
 				$.messager.alert('提示',result['msg']);
+				$('#addWorldToChannelDiv').window('close');
 			});				
 		}else{
 			$.messager.alert('更新失败','请先选择记录，再执行更新操作!','error');

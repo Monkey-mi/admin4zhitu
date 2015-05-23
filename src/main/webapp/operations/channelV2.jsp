@@ -255,7 +255,7 @@ function initEditWindow(id, index, isUpdate) {
 					$("#subImg_edit").attr('src', obj['subIcon']);	
 				}
 				
-				if(obj['channelLabelNames'].length>0 && obj['channelLabelIds'].length>0 ){
+				if(obj['channelLabelNames'] ){
 					var labelNameArray = obj['channelLabelNames'].split(",");
 					var labelIdArray = obj['channelLabelIds'].split(",");
 					for(i=0;i<labelNameArray.length;i++){

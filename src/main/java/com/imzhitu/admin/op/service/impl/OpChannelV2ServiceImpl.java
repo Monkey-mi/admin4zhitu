@@ -308,7 +308,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			ownerIdArray[i] = relationshipList.get(i).getUserId();
 		}
 		List<OpChannelV2Dto>channelList = opChannelV2Mapper.queryOpChannelByOwnerIds(ownerIdArray);
-		jsonMap.put(OptResult.ROWS, jsonMap);
+		jsonMap.put(OptResult.ROWS, channelList);
 		jsonMap.put(OptResult.TOTAL, channelList.size());
 	}
 	
