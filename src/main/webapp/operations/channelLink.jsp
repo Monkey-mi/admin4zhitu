@@ -132,7 +132,7 @@
 			title : '新增计划评论标签',
 			modal : true,
 			width : 420,
-			height : 300,
+			height : 150,
 			shadow : false,
 			closed : true,
 			minimizable : false,
