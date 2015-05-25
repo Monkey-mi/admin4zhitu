@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpChannelLinkMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelLink" id="OpChannelLinkMapper">
+		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+		<result property="channelName" column="channelName" jdbcType="VARCHAR"/>
+		<result property="linkChannelId" column="link_id" jdbcType="INTEGER"/>
+		<result property="linkChannelName" column="linkChannelName" jdbcType="VARCHAR"/>
+		<result property="serial" column="serial" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- insert -->
+	<insert id="insertOpChannelLink">
+		insert into hts.operations_channel_link
+		(channel_id,link_id,serial) values (#{channelId},#{linkChannelId},#{serial})
+	</insert>
+	
+	<!-- delete -->
+	<delete id="deleteOpChannelLink">
+		delete from hts.operations_channel_link
+		where channel_id=#{channelId} and link_id=#{linkChannelId}
+	</delete>
+	
+	<!-- 分页查询 -->
+	<select id="queryOpChannelLink" resultMap="OpChannelLinkMapper">
+	    select ocl.*,oc1.channel_name as channelName,oc2.channel_name as linkChannelName 
+	    from hts.operations_channel_link ocl 
+	    	left join hts.operations_channel oc1 on ocl.channel_id=oc1.id
+	    	left join hts.operations_channel oc2 on ocl.link_id=oc2.id 
+	    <where>
+	    	<if test="maxId != null and maxId != 0">
+	    		<![CDATA[ocl.serial <= #{maxId}]]>
+	    	</if>
+	    	<if test="channelId != null">
+	    		and ocl.channel_id = #{channelId}
+	    	</if>
+	    	<if test="linkChannelId != null">
+	    		and ocl.link_id = #{linkChannelId}
+	    	</if>
+	    </where>
+	    order by serial desc
+	    <include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryOpChannelLinkTotalCount" resultType="long">
+		select count(*)
+		from hts.operations_channel_link ocl 
+		 <where>
+	    	<if test="maxId != null and maxId != 0">
+	    		<![CDATA[ocl.serial <= #{maxId}]]>
+	    	</if>
+	    	<if test="channelId != null">
+	    		and ocl.channel_id = #{channelId}
+	    	</if>
+	    	<if test="linkChannelId != null">
+	    		and ocl.link_id = #{linkChannelId}
+	    	</if>
+	    </where>
+	</select>
+	
+</mapper>

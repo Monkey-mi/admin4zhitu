@@ -97,7 +97,7 @@ function queryChannelById(channelId){
 				$("#totalWorldCount").text(obj['worldCount']);
 				$("#totalConcernCount").text(obj['memberCount']);
 				$("#channelLabels a").remove();
-				if(obj['channelLabelNames'].length>0 && obj['channelLabelIds'].length>0 ){
+				if(obj['channelLabelNames'] && obj['channelLabelNames'].length>0 ){
 					var labelNameArray = obj['channelLabelNames'].split(",");
 					var labelIdArray = obj['channelLabelIds'].split(",");
 					for(i=0;i<labelNameArray.length;i++){
