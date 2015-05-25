@@ -3,34 +3,76 @@
 <mapper namespace="com.imzhitu.admin.op.mapper.OpWorldOfCannelMapper">
 
 	<!-- 定义结果集 -->
-<!-- 	<resultMap id="OpWorldOfCannelMap" type="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto"> -->
-<!-- 		<id column="id" property="id" jdbcType="INTEGER" /> -->
-<!-- 		<result column="weight" property="weight" jdbcType="INTEGER" /> -->
-<!-- 		<result column="superb" property="superb" jdbcType="INTEGER" /> -->
-<!-- 	</resultMap> -->
+	<resultMap id="OpWorldOfCannelMap" type="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER" />
+		<result column="world_id" property="worldId" jdbcType="INTEGER" />
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+		<result column="superb" property="superb" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 根据织图与频道关联表主键id，在cache表中查询结果 -->
+	<select id="queryFromCacheById" parameterType="java.lang.Integer" resultMap = "OpWorldOfCannelMap">
+		select * from hts_admin.op_channel_world_cache
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据频道id，在cache表中查询结果 -->
+	<select id="queryFromCacheByCannelId" parameterType="java.lang.Integer" resultMap = "OpWorldOfCannelMap">
+		select * from hts_admin.op_channel_world_cache
+		where channel_id = #{channelId,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 在中间表中插入频道与织图关联关系的数据 -->
+	<insert id="insertDataToCacheByDto" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
+		insert into hts_admin.op_channel_world_cache
+			(id, channel_id, world_id, weight, superb)
+		values
+			(#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{worldId,jdbcType=INTEGER}, #{weight,jdbcType=INTEGER}, #{superb,jdbcType=INTEGER})
+	</insert>
 	
 	<!-- 更新织图在频道中的权重，即是否置顶 -->
-	<update id="setTopByDto" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
-		update hts.operations_channel_world
+	<update id="updateDataToCacheByDto" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
+		update hts_admin.op_channel_world_cache
 		<set>
-			weight = #{weight,jdbcType=INTEGER},
+			<if test="weight != null">weight = #{weight,jdbcType=INTEGER},</if>
+			<if test="superb != null">superb = #{superb,jdbcType=INTEGER},</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 	
-	<!-- 更新织图在频道中的加精 -->
-	<update id="setSuperbByDto" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
+	<!-- 在织图与频道关联关系表中将valid设置为0，置为失效 -->
+	<update id="setValidById" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
 		update hts.operations_channel_world
 		<set>
-			superb = #{superb,jdbcType=INTEGER},
+			valid = #{valid,jdbcType=INTEGER}
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 	
-	<!-- 根据id删除织图与频道关联关系 -->
+	<!-- 在中间表中删除频道与织图关联关系的数据 -->
 	<delete id="deleteById" parameterType="java.lang.Integer">
 		delete from hts.operations_channel_world
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
+	
+	<!-- 删除cache中间表中的数据，根据id集 -->
+	<delete id="deleteByIds">
+		delete from hts_admin.op_channel_world_cache where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<!-- 在织图与频道关联关系表中将valid设置为0，置为失效 -->
+	<update id="syncDataToMainTable" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
+		update hts.operations_channel_world
+		<set>
+			<if test="weight != null">weight = #{weight,jdbcType=INTEGER},</if>
+			<if test="superb != null">superb = #{superb,jdbcType=INTEGER},</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 	  
 </mapper>

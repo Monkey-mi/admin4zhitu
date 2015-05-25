@@ -649,7 +649,9 @@ var tableview = $.extend({}, $.fn.datagrid.defaults.view, {
 		} else {
 			topText = "取消置顶";
 		}
-		cc.push("<a id='topId' href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setTop("+rowData.channelWorldId+","+rowData.weight+","+rowIndex+")'>"+topText+"</a>");
+		var topLink = "<a id='topId' href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setTop("
+				+rowData.channelWorldId+","+rowData.channelId+","+rowData.worldId+","+rowData.weight+","+rowIndex+")'>"+topText+"</a>";
+		cc.push(topLink);
 		cc.push("  |  ");
 		
 		var superbText = "";
@@ -659,13 +661,15 @@ var tableview = $.extend({}, $.fn.datagrid.defaults.view, {
 		} else {
 			superbText = "取消加精";
 		}
-		cc.push("<a id='superbId' href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setSuperb("+rowData.channelWorldId+","+rowData.superb+","+rowIndex+")'>"+superbText+"</a>");
+		var superbLink = "<a id='superbId' href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setSuperb("
+			+rowData.channelWorldId+","+rowData.channelId+","+rowData.worldId+","+rowData.superb+","+rowIndex+")'>"+superbText+"</a>";
+		cc.push(superbLink);
 		cc.push("  |  ");
 		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setComment()'>评论</a>");
 		cc.push("  |  ");
 		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setLike()'>点赞</a>");
 		cc.push("  |  ");
-		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='deleteWorldFromCannel("+rowData.channelWorldId+","+rowIndex+")'>删除</a>");
+		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setValidDisable("+rowData.channelWorldId+","+rowIndex+")'>删除</a>");
 		cc.push("</td>");
 		
 		
@@ -673,7 +677,7 @@ var tableview = $.extend({}, $.fn.datagrid.defaults.view, {
     }
 });
 
-function setTop(id, weightFlg, rowIndex){
+function setTop(id, channelId, worldId, weightFlg, rowIndex){
 	var isTop = false;	// 设置置顶,默认不置顶
 	
 	// 当前weightFlg为0，即按钮显示：置顶，那么isTop设置为true，反之：取消置顶，设置为false
@@ -682,7 +686,7 @@ function setTop(id, weightFlg, rowIndex){
 	} else if (weightFlg == 1) {
 		isTop = false;
 	}
-	$.post("./admin_op/worldChannel_setTopOperation", {"id" : id, "isTop" : isTop}, function(data){
+	$.post("./admin_op/worldChannel_setTopOperation", {"id":id, "channelId":channelId, "worldId":worldId, "isTop":isTop}, function(data){
 		$.messager.alert("提示", data.msg);
 		// 若操作成功，则把当前行置顶按钮展示值，刷新
 		if (data.result == 0){
@@ -708,8 +712,8 @@ function setTop(id, weightFlg, rowIndex){
 			$("#htm_table").datagrid('unselectRow',rowIndex);
 		}
 	});
-}
-function setSuperb(id, superbFlg, rowIndex){
+};
+function setSuperb(id, channelId, worldId, superbFlg, rowIndex){
 	var isSuperb = false;	// 设置加精,默认加精
 	
 	// 当前superbFlg为0，即按钮显示：加精，那么isSuperb设置为true，反之：取消加精，设置为false
@@ -718,7 +722,7 @@ function setSuperb(id, superbFlg, rowIndex){
 	} else if (superbFlg == 1) {
 		isSuperb = false;
 	}
-	$.post("./admin_op/worldChannel_setSuperbOperation", {"id" : id, "isSuperb" : isSuperb}, function(data){
+	$.post("./admin_op/worldChannel_setSuperbOperation", {"id":id, "channelId":channelId, "worldId":worldId, "isSuperb":isSuperb}, function(data){
 		$.messager.alert("提示", data.msg);
 		// 若操作成功，则把当前行加精按钮展示值，刷新
 		if (data.result == 0){
@@ -744,15 +748,15 @@ function setSuperb(id, superbFlg, rowIndex){
 			$("#htm_table").datagrid('unselectRow',rowIndex);
 		}
 	});
-}
+};
 function setComment(){
 	alert("Comment");
 }
 function setLike(){
 	alert("Like");
 }
-function deleteWorldFromCannel(id,rowIndex){
-	$.post("./admin_op/worldChannel_deleteWorldFromCannel", {"id" : id}, function(data){
+function setValidDisable(id,rowIndex){
+	$.post("./admin_op/worldChannel_setValidOperation", {"id":id, isValid:false}, function(data){
 		$.messager.alert("提示", data.msg);
 		// 若删除成功，则把当前行从表格中移除
 		if (data.result == 0){
@@ -763,7 +767,13 @@ function deleteWorldFromCannel(id,rowIndex){
 			$("#htm_table").datagrid("loadData", rows);
 		}
 	});
-}
+};
+
+function setSyncOperation(){
+	$.post("./admin_op/worldChannel_syncOperation", {"channelId" : baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID")}, function(data){
+		$.messager.alert("提示", data.msg);
+	});
+};
 
 </script>
 </head>
@@ -774,31 +784,9 @@ function deleteWorldFromCannel(id,rowIndex){
 	<div style="border-bottom:solid 2px;width: 220px;height: 30px;margin-bottom: 30px;font-weight: bolder; font-size: 20px;padding: 10px 0 0 20px;"><span id="channelNameTitle">请先选择频道</span></div>
 	<table id="htm_table"></table>
 	
-	<div id="tb" style="padding:5px;height:auto" class="none">
+	<div id="tb" style="padding:5px;height:auto">
 		<div>
-			<span id="htm_opt_btn" class="none">
-			<a href="javascript:void(0);" onclick="javascript:htmUI.htmWindowAdd();" class="easyui-linkbutton" title="添加频道红人" plain="true" iconCls="icon-add">添加</a>
-			<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>
-			<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
-			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
-			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
-			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
-			<a href="javascript:void(0);" onclick="javascript:refresh();" class="easyui-linkbutton" title="更新图片基数" plain="true" iconCls="icon-reload">更新图片基数</a>
-			<select id="ss-notified" class="easyui-combobox" style="width:100px;">
-		        <option value="">所有通知状态</option>
-		        <option value="0">未通知</option>
-		        <option value="1">已通知</option>
-	   		</select>
-	   		<select id="ss-valid" class="easyui-combobox" style="width:100px;">
-		        <option value="">所有生效状态</option>
-		        <option value="0">未生效</option>
-		        <option value="1">生效</option>
-	   		</select>
-	   		<a href="javascript:void(0);" onclick="javascript:searchWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
-	   		<span style="display: inline-block; vertical-align:middle; float: right;">
-		        <input id="ss-worldId" class="easyui-searchbox" searcher="searchByWID" prompt="输入织图ID搜索" style="width:150px;" />
-			</span>
-			</span>
+			<a href="javascript:void(0);" onclick="setSyncOperation()" class="easyui-linkbutton">同步</a>
    		</div>
 	</div> 
 

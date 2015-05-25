@@ -24,11 +24,21 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      * 序列号
      */
     private static final long serialVersionUID = 1266080732618521674L;
-
+    
     /**
      * 频道与织图关联关系表的id（频道织图的id）
      */
     private Integer id;
+    
+    /**
+     * 频道id
+     */
+    private Integer channelId;
+    
+    /**
+     * 织图id
+     */
+    private Integer worldId;
 
     /**
      * 织图在频道中是否置顶
@@ -39,6 +49,11 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      * 织图在频道中是否加精
      */
     private boolean isSuperb;
+    
+    /**
+     * 织图在频道中是否生效
+     */
+    private boolean isValid;
 
     /**
      * @return the id
@@ -53,6 +68,34 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      */
     public void setId(Integer id) {
 	this.id = id;
+    }
+
+    /**
+     * @return the channelId
+     */
+    public Integer getChannelId() {
+        return channelId;
+    }
+
+    /**
+     * @param channelId the channelId to set
+     */
+    public void setChannelId(Integer channelId) {
+        this.channelId = channelId;
+    }
+
+    /**
+     * @return the worldId
+     */
+    public Integer getWorldId() {
+        return worldId;
+    }
+
+    /**
+     * @param worldId the worldId to set
+     */
+    public void setWorldId(Integer worldId) {
+        this.worldId = worldId;
     }
 
     /**
@@ -83,11 +126,29 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
         this.isSuperb = isSuperb;
     }
 
+    /**
+     * @return the isValid
+     */
+    public boolean isValid() {
+        return isValid;
+    }
+
+    /**
+     * @param isValid the isValid to set
+     */
+    public void setIsValid(boolean isValid) {
+        this.isValid = isValid;
+    }
+
     private static final String CANCEL = "取消";
     private static final String TOP_SUCCESS = "置顶成功";
     private static final String TOP_FAILED = "置顶失败";
     private static final String SUPERB_SUCCESS = "加精成功";
     private static final String SUPERB_FAILED = "加精失败";
+    private static final String EMPTY_SUCCESS = "加精成功";
+    private static final String EMPTY_FAILED = "加精失败";
+    private static final String SYNC_SUCCESS = "同步成功";
+    private static final String SYNC_FAILED = "同步失败";
 
     @Autowired
     private OpWorldOfCannelService opWorldOfCannelService;
@@ -100,8 +161,7 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      */
     public String setTopOperation() {
 	try {
-	    opWorldOfCannelService.setTopById(getId(), isTop());
-	    System.out.println("isTop>>>>>>>>>>>>>>>>>>>>.." + isTop());
+	    opWorldOfCannelService.setTopToCache(getId(), getChannelId(), getWorldId(), isTop());
 	    setTopResult(true);
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -118,7 +178,7 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      */
     public String setSuperbOperation() {
 	try {
-	    opWorldOfCannelService.setSuperbById(getId(), isSuperb());
+	    opWorldOfCannelService.setSuperbById(getId(), getChannelId(), getWorldId(), isSuperb());
 	    setSuperbResult(true);
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -126,20 +186,56 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	}
 	return StrutsKey.JSON;
     }
-
+    
     /**
-     * 删除织图与频道关联关系
+     * 设置是否失效
+     * 1、在页面点击删除，设置valid为0
+     * 2、在回收站中恢复，设置valid为1
      *
      * @return
      * @author zhangbo 2015年5月19日
      */
-    public String deleteWorldFromCannel() {
+    public String setValidOperation() {
 	try {
-	    opWorldOfCannelService.deleteById(getId());
+	    opWorldOfCannelService.setValidById(getId(), isValid());
 	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    JSONUtil.optFailed(OptResult.DELETE_FAILED, jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+
+    /**
+     * 删除织图与频道关联关系（硬删除），从回收站中清空
+     *
+     * @return
+     * @author zhangbo 2015年5月19日
+     */
+    public String setEmpty() {
+	try {
+	    opWorldOfCannelService.deleteById(getId());
+	    JSONUtil.optSuccess(EMPTY_SUCCESS, jsonMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    JSONUtil.optFailed(EMPTY_FAILED, jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
+    /**
+     * 同步织图与频道关联关系中间表数据到主表（包括置顶、加精、删除信息）
+     *
+     * @return
+     * @author zhangbo 2015年5月22日
+     */
+    public String syncOperation() {
+	try {
+	    opWorldOfCannelService.syncDataFromCache(getChannelId());
+	    JSONUtil.optSuccess(SYNC_SUCCESS, jsonMap);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    JSONUtil.optFailed(SYNC_FAILED, jsonMap);
 	}
 	return StrutsKey.JSON;
     }

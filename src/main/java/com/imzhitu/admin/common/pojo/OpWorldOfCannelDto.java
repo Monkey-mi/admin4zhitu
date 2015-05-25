@@ -21,6 +21,16 @@ public class OpWorldOfCannelDto implements Serializable {
      * 织图与频道关联表主键id
      */
     private Integer id;
+    
+    /**
+     * 频道id
+     */
+    private Integer channelId;
+    
+    /**
+     * 织图id
+     */
+    private Integer worldId;
 
     /**
      * 织图在频道中的权重，1为置顶，0为不置顶
@@ -31,6 +41,11 @@ public class OpWorldOfCannelDto implements Serializable {
      * 织图在频道中加精，1为加精，0为不加精
      */
     private Integer superb;
+    
+    /**
+     * 织图在频道中是否生效，1为生效，0为不生效
+     */
+    private Integer valid;
 
     /**
      * @return the id
@@ -45,6 +60,34 @@ public class OpWorldOfCannelDto implements Serializable {
      */
     public void setId(Integer id) {
 	this.id = id;
+    }
+
+    /**
+     * @return the channelId
+     */
+    public Integer getChannelId() {
+        return channelId;
+    }
+
+    /**
+     * @param channelId the channelId to set
+     */
+    public void setChannelId(Integer channelId) {
+        this.channelId = channelId;
+    }
+
+    /**
+     * @return the worldId
+     */
+    public Integer getWorldId() {
+        return worldId;
+    }
+
+    /**
+     * @param worldId the worldId to set
+     */
+    public void setWorldId(Integer worldId) {
+        this.worldId = worldId;
     }
 
     /**
@@ -75,6 +118,20 @@ public class OpWorldOfCannelDto implements Serializable {
      */
     public void setSuperb(Integer superb) {
 	this.superb = superb;
+    }
+
+    /**
+     * @return the valid
+     */
+    public Integer getValid() {
+        return valid;
+    }
+
+    /**
+     * @param valid the valid to set
+     */
+    public void setValid(Integer valid) {
+        this.valid = valid;
     }
 
 }
