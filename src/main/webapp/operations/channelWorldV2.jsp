@@ -7,10 +7,10 @@
 <title>频道织图管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<jsp:include page="../common/tourlistHeader.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
-<script type="text/javascript" src="${webRootPath }/base/js/baseTools.js?ver=${webVer} "></script>
 <script type="text/javascript" src="${webRootPath }/common/js/worldmaintain2014021801.js"></script>
 <script type="text/javascript">
 var maxId = 0,
@@ -233,6 +233,7 @@ var maxId = 0,
 		
 		removePageLoading();
 		$("#main").show();
+		
 	};
 	
 	
@@ -615,11 +616,22 @@ var tableview = $.extend({}, $.fn.datagrid.defaults.view, {
 		cc.push("</div>");
 		
 		//world browser
-		//var worldIframe = "<iframe src='http://www.imzhitu.com/DT"+rowData['shortLink'] +"?adminKey=zhangjiaxin' style='height:100%;width:502px;' ></iframe>";
-		var worldIframe = "<iframe src='http://192.168.1.151/hts/DT"+rowData['shortLink'] +"?adminKey=zhangjiaxin' style='height:100%;width:502px;' ></iframe>";
+		var worldIframe = "<iframe src='http://www.imzhitu.com/DT"+rowData['shortLink'] +"?adminKey=zhangjiaxin' style='height:100%;width:502px;' ></iframe>";
+		//var worldIframe = "<iframe src='http://192.168.1.151/hts/DT"+rowData['shortLink'] +"?adminKey=zhangjiaxin' style='height:100%;width:502px;' ></iframe>";
 		cc.push("<div style='width:502px;height:300px;margin:auto;'>");
 		cc.push(worldIframe);
 		cc.push("</div>");
+		//var worldFrame = $("<div style='width:502px;margin:auto;'></div>").appendtour({
+		//					'width':502,
+		//					'worldId':rowData['worldId'],
+		//					'ver':rowData['appver'],
+		//					'worldDesc':rowData['worldDesc'],
+		//					'titlePath':rowData['titlePath'],
+		//					'url':'./admin_ztworld/ztworld_queryTitleChildWorldPage',
+		//					'loadMoreURL':'./admin_ztworld/ztworld_queryChildWorldPage'
+		//				});
+		//cc.push(worldFrame);
+		
 		
 		//likeCount and commentCount
 		var likeCountUri = 'page_htworld_htworldLiked?worldId='+ rowData['worldId']; //喜欢管理地址	
@@ -635,8 +647,8 @@ var tableview = $.extend({}, $.fn.datagrid.defaults.view, {
 		//worldId and htworld url
 		cc.push("<div  style='height:30px;text-align:center;margin-bottom:10px;line-height:30px;'>");
 		cc.push("<span>织图ID: "+rowData['worldId']+"</span>");
-		//cc.push('<span>织图链接: http://www.imzhitu.com/DT'+rowData['shortLink']+'</span>');
-		cc.push('<span style="margin-left:40px;">织图链接: http://192.168.1.151/hts/DT'+rowData['shortLink']+'</span>');
+		cc.push('<span>织图链接: http://www.imzhitu.com/DT'+rowData['shortLink']+'</span>');
+		//cc.push('<span style="margin-left:40px;">织图链接: http://192.168.1.151/hts/DT'+rowData['shortLink']+'</span>');
 		cc.push("</div>");
 		
 		//operations
@@ -787,7 +799,7 @@ function setSyncOperation(){
 	<div id="tb" style="padding:5px;height:auto">
 		<div>
 			<a href="javascript:void(0);" onclick="setSyncOperation()" class="easyui-linkbutton">同步</a>
-   		</div>
+		</div>
 	</div> 
 
 	<!-- 添加记录 -->
@@ -919,6 +931,7 @@ function setSyncOperation(){
 			</table>
 		</form>
 	</div>
+	
 	
 	</div>
 </body>
