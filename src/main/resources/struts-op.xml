@@ -96,6 +96,12 @@
 			</result>
 		</action>
 		
+		<action name="channelLink_*" class="com.imzhitu.admin.op.OpChannelLinkAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 
 </struts>
