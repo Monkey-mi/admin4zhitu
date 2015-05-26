@@ -14,7 +14,7 @@
 <script language="javascript" src="${webRootPath }/base/js/jquery/formvalidator4.0/DateTimeMask.js" type="text/javascript"></script>
 
 
-<script language="javascript" src="${webRootPath }/base/js/baseTools.js" type="text/javascript"></script>
+<script language="javascript" src="${webRootPath }/base/js/baseTools.js?ver=${webVer}" type="text/javascript"></script>
 <script language="javascript" src="${webRootPath }/base/js/json2.js" type="text/javascript"></script>
 
 
