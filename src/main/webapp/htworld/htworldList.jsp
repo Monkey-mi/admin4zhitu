@@ -1272,10 +1272,14 @@ var htmTableTitle = "分享列表维护", //表格标题
 </script>
 </head>
 <body>
-	<div id="main">
+	<div id="main" class="none">
 	<table id="htm_table"></table>
 	<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
+			<a href="./page_htworld_htworldList2" title="瀑布流模式">
+				<img class="switch-icon" src="./htworld/images/grid-icon.png" style="width:15px;vertical-align:middle;" /></a>
+			<a href="./page_htworld_htworldList" title="列表模式">
+				<img class="switch-icon" src="./htworld/images/list-icon.png" style="width:15px;vertical-align:middle;" /></a>
 			<!-- <a href="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" style="vertical-align:middle;" title="删除织图" plain="true" iconCls="icon-cut" id="delBtn">删除</a> -->
 	        <span class="search_label">起始时间:</span><input id="startTime"  style="width:100px">
 	        <span class="search_label">结束时间:</span><input id="endTime" style="width:100px">

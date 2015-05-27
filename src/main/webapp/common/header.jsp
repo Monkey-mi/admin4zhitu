@@ -1,5 +1,6 @@
 <!-- jquery -->
-<script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery-migrate-1.1.1.min.js"></script>
 <!-- easy ui -->
 <link rel="stylesheet" type="text/css" href="${webRootPath }/base/js/jquery/jquery-easyui-1.3.5/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css" href="${webRootPath }/base/js/jquery/jquery-easyui-1.3.5/themes/icon.css" />

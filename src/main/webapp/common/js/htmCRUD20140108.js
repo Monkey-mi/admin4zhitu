@@ -232,6 +232,7 @@ function loadPageData(pageNum) {
 		buttons:pageButtons,
 		onBeforeRefresh:myOnBeforeRefresh
 	});
+	
 }
 
 

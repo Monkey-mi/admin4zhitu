@@ -163,7 +163,7 @@ public class ZTWorldLabelServiceImpl extends BaseServiceImpl implements
 	public void deleteLabel(String idsStr) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		worldLabelDao.deleteByIds(ids);
-		worldLabelWorldDao.deleteByLabelIds(ids);
+//		worldLabelWorldDao.deleteByLabelIds(ids);
 		updateHotLabel(hotLimit, activityLimit);
 	}
 
