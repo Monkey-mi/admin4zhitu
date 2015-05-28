@@ -41,8 +41,9 @@ var maxId = 0,
 			endTime = $('#endTime').datetimebox('getValue'),
 			phoneCode = $('#phoneCode').combobox('getValue'),
 			valid = $("#valid").combobox('getValue'),
-			shield = $("#shield").combobox('getValue');
-			user_level_id = $("#search_userLevelId").combobox('getValue');
+			shield = $("#shield").combobox('getValue'),
+			user_level_id = $("#search_userLevelId").combobox('getValue'),
+			rows = myQueryParams.rows;
 		myQueryParams = {
 			'maxId' : maxId,
 			'startTime':startTime,
@@ -53,7 +54,7 @@ var maxId = 0,
 			'user_level_id':user_level_id
 		};
 		//$("#htm_table").datagrid("load",myQueryParams);
-		loadData(1, myQueryParams.rows);
+		loadData(1, rows);
 	},
 	searchByPhoneCode = function(record) {
 		var startTime = $('#startTime').datetimebox('getValue'),
@@ -494,9 +495,9 @@ var htmTableTitle = "分享列表维护", //表格标题
 			'maxId' : maxId,
 			'startTime':todayStr,
 			'endTime':todayStr,
-			'rows':10
+			'rows':30
 		},
-		loadData(1, 10);
+		loadData(1, 30);
 	},
 	myOnLoadBefore = function() {
 		interacts = {};
@@ -1063,6 +1064,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 		});
 		
 		$("#pagination").pagination({
+			pageList: [30,50,100,10],
 			onBeforeRefresh : function(pageNumber, pageSize) {
 				if(pageNumber <= 1) {
 					maxId = 0;

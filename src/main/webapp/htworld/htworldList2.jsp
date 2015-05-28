@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>织图管理</title>
-<jsp:include page="../common/header.jsp"></jsp:include>
+<jsp:include page="../common/headerJQuery11.jsp"></jsp:include>
 <jsp:include page="../common/bootstrapHeader.jsp"></jsp:include>
 <jsp:include page="../common/tourlistHeader.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
@@ -57,6 +57,9 @@ body {
 	margin-bottom:5px;
 }
 
+.world-author-name {
+	margin-left:5px;
+}
 
 .world-info {
 	padding:0px 10px 0 10px;

@@ -80,13 +80,13 @@ public class ChannelServiceTest extends BaseTest {
 	
 	@Test
 	public void testSaveChannel() throws Exception {
-		OpChannel channel = new OpChannel();
-		int rand = (int)(Math.random() * 10000);
-		channel.setChannelName("测试频道" + rand); 
-		channel.setValid(Tag.TRUE);
-		channel.setChannelTitle("测试频道标题" + rand);
-		channel.setChannelIcon("http://imzhitu.qiniudn.com/op%2Fchannel%2F%E5%90%83%E8%B4%A7_%402x.png");
-		service.saveChannel(channel);
+//		OpChannel channel = new OpChannel();
+//		int rand = (int)(Math.random() * 10000);
+//		channel.setChannelName("测试频道" + rand); 
+//		channel.setValid(Tag.TRUE);
+//		channel.setChannelTitle("测试频道标题" + rand);
+//		channel.setChannelIcon("http://imzhitu.qiniudn.com/op%2Fchannel%2F%E5%90%83%E8%B4%A7_%402x.png");
+//		service.saveChannel(channel);
 	}
 	
 	@Test
@@ -469,4 +469,5 @@ public class ChannelServiceTest extends BaseTest {
 		p.setLimit(10);
 		service.queryTopOnePeriodList(p, 1, 10, true);
 	}
+	
 }

@@ -166,7 +166,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateChannelCache() throws Exception {
-		channelCacheDao.updateChannel(channeCachelLimit);
+		channelCacheDao.updateChannel(18);
 		updateChannelCoverCache();
 	}
 
