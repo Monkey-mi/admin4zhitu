@@ -131,6 +131,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private ChannelCoverCacheDao channelCoverCacheDao;
+	
+	@Autowired
+	private com.hts.web.operations.dao.ChannelThemeCacheDao webThemeCacheDao;
 
 	private static final int CHANNEL_CACHE_LIMIT_2_9_89 = 8;
 	
@@ -166,7 +169,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateChannelCache() throws Exception {
-		channelCacheDao.updateChannel(18);
+		channelCacheDao.updateChannel(channeCachelLimit);
+		webThemeCacheDao.updateTheme();
 		updateChannelCoverCache();
 	}
 
