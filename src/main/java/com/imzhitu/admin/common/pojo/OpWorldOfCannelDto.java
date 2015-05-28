@@ -46,6 +46,11 @@ public class OpWorldOfCannelDto implements Serializable {
      * 织图在频道中是否生效，1为生效，0为不生效
      */
     private Integer valid;
+    
+    /**
+     * 织图在频道被删除的原因
+     */
+    private String deleteReason;
 
     /**
      * @return the id
@@ -132,6 +137,20 @@ public class OpWorldOfCannelDto implements Serializable {
      */
     public void setValid(Integer valid) {
         this.valid = valid;
+    }
+
+    /**
+     * @return the deleteReason
+     */
+    public String getDeleteReason() {
+        return deleteReason;
+    }
+
+    /**
+     * @param deleteReason the deleteReason to set
+     */
+    public void setDeleteReason(String deleteReason) {
+        this.deleteReason = deleteReason;
     }
 
 }

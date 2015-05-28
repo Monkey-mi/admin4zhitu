@@ -3,15 +3,16 @@
  */
 package com.imzhitu.admin.op;
 
-import org.aspectj.internal.lang.reflect.StringToType;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import ch.qos.logback.core.joran.util.StringToObjectConverter;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
+import com.imzhitu.admin.common.pojo.ChannelWorldRecyclerDto;
+import com.imzhitu.admin.common.pojo.OpWorldOfCannelDto;
+import com.imzhitu.admin.op.service.ChannelService;
 import com.imzhitu.admin.op.service.OpWorldOfCannelService;
 
 /**
@@ -29,6 +30,11 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      * 频道与织图关联关系表的id（频道织图的id）
      */
     private Integer id;
+    
+    /**
+     * 频道与织图关联关系表的id集合
+     */
+    private String ids;
     
     /**
      * 频道id
@@ -54,6 +60,22 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      * 织图在频道中是否生效
      */
     private boolean isValid;
+    
+    /**
+     * 织图在频道中删除的理由
+     */
+    private String deleteReason;
+    
+    // 如下是单个频道中回收站功能接收的参数，织图id使用worldId
+    /**
+     * 用户ID
+     */
+    private Integer authorId;
+    
+    /**
+     * 关键字，用于根据织图描述的查询
+     */
+    private String keyword;
 
     /**
      * @return the id
@@ -68,6 +90,20 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      */
     public void setId(Integer id) {
 	this.id = id;
+    }
+
+    /**
+     * @return the ids
+     */
+    public String getIds() {
+        return ids;
+    }
+
+    /**
+     * @param ids the ids to set
+     */
+    public void setIds(String ids) {
+        this.ids = ids;
     }
 
     /**
@@ -140,18 +176,64 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
         this.isValid = isValid;
     }
 
+    /**
+     * @return the deleteReason
+     */
+    public String getDeleteReason() {
+        return deleteReason;
+    }
+
+    /**
+     * @param deleteReason the deleteReason to set
+     */
+    public void setDeleteReason(String deleteReason) {
+        this.deleteReason = deleteReason;
+    }
+
+    /**
+     * @return the authorId
+     */
+    public Integer getAuthorId() {
+        return authorId;
+    }
+
+    /**
+     * @param authorId the authorId to set
+     */
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
+    }
+
+    /**
+     * @return the keyword
+     */
+    public String getKeyword() {
+        return keyword;
+    }
+
+    /**
+     * @param keyword the keyword to set
+     */
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
     private static final String CANCEL = "取消";
     private static final String TOP_SUCCESS = "置顶成功";
     private static final String TOP_FAILED = "置顶失败";
     private static final String SUPERB_SUCCESS = "加精成功";
     private static final String SUPERB_FAILED = "加精失败";
-    private static final String EMPTY_SUCCESS = "加精成功";
-    private static final String EMPTY_FAILED = "加精失败";
+    private static final String EMPTY_SUCCESS = "永久删除成功";
+    private static final String EMPTY_FAILED = "永久删除失败";
     private static final String SYNC_SUCCESS = "同步成功";
     private static final String SYNC_FAILED = "同步失败";
-
+    private static final String RECOVER_SUCCESS = "恢复成功";
+    
     @Autowired
     private OpWorldOfCannelService opWorldOfCannelService;
+    
+    @Autowired
+    private ChannelService cannelService;
 
     /**
      * 频道织图中置顶操作
@@ -197,11 +279,36 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      */
     public String setValidOperation() {
 	try {
-	    opWorldOfCannelService.setValidById(getId(), isValid());
-	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+	    // 若为有效，即在回收站中恢复
+	    if( isValid() ) {
+		// 在回收站中恢复，为批量，且valid设置为1
+		cannelService.updateChannelWorldValid(getIds(),1);
+		
+		// 由于是恢复，那么要把中间表中对应数据删除掉
+		Integer[] ids = StringUtil.convertStringToIds(getIds());
+		opWorldOfCannelService.deleteByIdsFromCache(ids);
+		
+		JSONUtil.optSuccess(RECOVER_SUCCESS, jsonMap);
+	    } 
+	    // 若为无效，即在页面点击删除
+	    else {
+		// 在主表中更新被删除的valid字段为0
+		cannelService.updateChannelWorldValid(getId().toString(),0);
+		
+		OpWorldOfCannelDto dto = new OpWorldOfCannelDto();
+		dto.setId(getId());
+		dto.setChannelId(getChannelId());
+		dto.setWorldId(getWorldId());
+		dto.setValid(0);
+		dto.setDeleteReason(getDeleteReason());
+		// 当前被删除的信息记录到中间表
+		opWorldOfCannelService.setDataToCache(dto);
+		
+		JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
-	    JSONUtil.optFailed(OptResult.DELETE_FAILED, jsonMap);
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
 	}
 	return StrutsKey.JSON;
     }
@@ -212,9 +319,10 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      * @return
      * @author zhangbo 2015年5月19日
      */
-    public String setEmpty() {
+    public String setEmptyByIds() {
 	try {
-	    opWorldOfCannelService.deleteById(getId());
+	    opWorldOfCannelService.deleteByIdsFromCache(StringUtil.convertStringToIds(getIds()));
+	    cannelService.deleteChannelWorlds(getIds());
 	    JSONUtil.optSuccess(EMPTY_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -239,7 +347,31 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	}
 	return StrutsKey.JSON;
     }
-
+    
+    /**
+     * 回收站列表查询
+     *
+     * @return
+     * @author zhangbo 2015年5月27日
+     */
+    public String queryRecyclerdData(){
+	try {
+	    ChannelWorldRecyclerDto dto = new ChannelWorldRecyclerDto();
+	    dto.setChannelId(getChannelId());
+	    if ( getWorldId() != null ) {
+		dto.setWorldId(getWorldId());
+	    } else if ( getAuthorId() != null ) {
+		dto.setAuthorId(getAuthorId());
+	    } else if ( getKeyword() != null && !getKeyword().isEmpty() ) {
+		dto.setWorldDesc(getKeyword());
+	    }
+	    opWorldOfCannelService.buildRecyclerList(dto, page, rows, jsonMap);
+	    JSONUtil.optSuccess(jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
     /**
      * 设置置顶操作的返回值
      * 
@@ -288,5 +420,5 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	    JSONUtil.optFailed(msg, jsonMap);
 	}
     }
-
+    
 }

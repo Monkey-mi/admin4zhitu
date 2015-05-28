@@ -10,6 +10,17 @@
 		<result column="weight" property="weight" jdbcType="INTEGER" />
 		<result column="superb" property="superb" jdbcType="INTEGER" />
 	</resultMap>
+	
+	<!-- 定义回收站列表结果集 -->
+	<resultMap id="RecycerMap" type="com.imzhitu.admin.common.pojo.ChannelWorldRecyclerDto">
+		<id column="id" property="channelWorldId" jdbcType="INTEGER" />
+		<result column="worldId" property="worldId" jdbcType="INTEGER" />
+		<result column="author_id" property="authorId" jdbcType="INTEGER" />
+		<result column="title_thumb_path" property="thumbPath" jdbcType="VARCHAR" />
+		<result column="world_desc" property="worldDesc" jdbcType="VARCHAR" />
+		<result column="delete_reason" property="deleteReason" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+	</resultMap>
 
 	<!-- 根据织图与频道关联表主键id，在cache表中查询结果 -->
 	<select id="queryFromCacheById" parameterType="java.lang.Integer" resultMap = "OpWorldOfCannelMap">
@@ -20,15 +31,18 @@
 	<!-- 根据频道id，在cache表中查询结果 -->
 	<select id="queryFromCacheByCannelId" parameterType="java.lang.Integer" resultMap = "OpWorldOfCannelMap">
 		select * from hts_admin.op_channel_world_cache
-		where channel_id = #{channelId,jdbcType=INTEGER}
+		where channel_id = #{channelId,jdbcType=INTEGER} and valid = 1
 	</select>
 	
 	<!-- 在中间表中插入频道与织图关联关系的数据 -->
 	<insert id="insertDataToCacheByDto" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
 		insert into hts_admin.op_channel_world_cache
-			(id, channel_id, world_id, weight, superb)
+			(id, channel_id, world_id, weight, superb, valid, delete_reason)
 		values
-			(#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{worldId,jdbcType=INTEGER}, #{weight,jdbcType=INTEGER}, #{superb,jdbcType=INTEGER})
+			(#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, 
+			#{worldId,jdbcType=INTEGER}, #{weight,jdbcType=INTEGER}, 
+			#{superb,jdbcType=INTEGER}, #{valid,jdbcType=INTEGER}, 
+			#{deleteReason,jdbcType=INTEGER})
 	</insert>
 	
 	<!-- 更新织图在频道中的权重，即是否置顶 -->
@@ -37,27 +51,14 @@
 		<set>
 			<if test="weight != null">weight = #{weight,jdbcType=INTEGER},</if>
 			<if test="superb != null">superb = #{superb,jdbcType=INTEGER},</if>
+			<if test="valid != null">valid = #{valid,jdbcType=INTEGER},</if>
+			<if test="deleteReason != null">delete_reason = #{deleteReason,jdbcType=VARCHAR},</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	
-	<!-- 在织图与频道关联关系表中将valid设置为0，置为失效 -->
-	<update id="setValidById" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
-		update hts.operations_channel_world
-		<set>
-			valid = #{valid,jdbcType=INTEGER}
-		</set>
-		where id = #{id,jdbcType=INTEGER}
-	</update>
-	
-	<!-- 在中间表中删除频道与织图关联关系的数据 -->
-	<delete id="deleteById" parameterType="java.lang.Integer">
-		delete from hts.operations_channel_world
-		where id = #{id,jdbcType=INTEGER}
-	</delete>
 	
 	<!-- 删除cache中间表中的数据，根据id集 -->
-	<delete id="deleteByIds">
+	<delete id="deleteByIdsFromCache">
 		delete from hts_admin.op_channel_world_cache where id in
 		<foreach item="item" index="index" collection="array"
 	    	open="(" separator="," close=")">
@@ -65,14 +66,47 @@
 	 	</foreach>
 	</delete>
 	
-	<!-- 在织图与频道关联关系表中将valid设置为0，置为失效 -->
-	<update id="syncDataToMainTable" parameterType="com.imzhitu.admin.common.pojo.OpWorldOfCannelDto">
-		update hts.operations_channel_world
-		<set>
-			<if test="weight != null">weight = #{weight,jdbcType=INTEGER},</if>
-			<if test="superb != null">superb = #{superb,jdbcType=INTEGER},</if>
-		</set>
-		where id = #{id,jdbcType=INTEGER}
-	</update>
-	  
+	<!-- 根据频道id，查询回收站列表 -->
+	<select id="queryRecyclerByDTO" resultMap = "RecycerMap">
+		select 
+			c.id AS channelWorldId, 
+			h.id AS worldId, 
+			h.title_thumb_path, 
+			h.world_desc, 
+			m.author_id, 
+			c.delete_reason, 
+			c.update_time
+		from
+			hts_admin.op_channel_world_cache c,
+			hts.operations_channel_world m,
+			hts.htworld_htworld h
+		<where>
+			c.id = m.id
+			<if test="worldId != null">and h.id = #{worldId,jdbcType=INTEGER}</if>
+			<if test="authorId != null">and m.author_id = #{authorId,jdbcType=INTEGER}</if>
+			<if test="worldDesc != null">and h.world_desc LIKE ("%#{worldDesc,jdbcType=VARCHAR}%")</if>
+			and	c.channel_id = #{channelId,jdbcType=INTEGER}
+			and c.valid = 0
+			and c.world_id = h.id
+		</where>
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 根据频道id，查询回收站列表总数 -->
+	<select id="queryRecyclerCountByDTO" resultType="long">
+		select count(*) from
+			hts_admin.op_channel_world_cache c,
+			hts.operations_channel_world m,
+			hts.htworld_htworld h
+		<where>
+			c.id = m.id
+			<if test="worldId != null">and h.id = #{worldId,jdbcType=INTEGER}</if>
+			<if test="authorId != null">and m.author_id = #{authorId,jdbcType=INTEGER}</if>
+			<if test="worldDesc != null">and h.world_desc LIKE ("%#{worldDesc,jdbcType=VARCHAR}%")</if>
+			and	c.channel_id = #{channelId,jdbcType=INTEGER}
+			and c.valid = 0
+			and c.world_id = h.id
+		</where>
+	</select>
+	
 </mapper>

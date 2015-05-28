@@ -6,6 +6,7 @@ package com.imzhitu.admin.op.mapper;
 import java.util.List;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
+import com.imzhitu.admin.common.pojo.ChannelWorldRecyclerDto;
 import com.imzhitu.admin.common.pojo.OpWorldOfCannelDto;
 
 /**
@@ -60,43 +61,36 @@ public interface OpWorldOfCannelMapper {
     public void updateDataToCacheByDto(OpWorldOfCannelDto dto);
 
     /**
-     * 在织图与频道关联关系表中将valid设置为0，置为失效
-     *
-     * @param dto
-     *            织图与频道关联表数据传输对象
-     * 
-     * @author zhangbo 2015年5月20日
-     */
-    @DataSource("master")
-    public void setValidById(OpWorldOfCannelDto dto);
-
-    /**
-     * 根据id删除织图与频道的关联关系
-     *
-     * @param id
-     *            织图与频道关联表主键id
-     * 
-     * @author zhangbo 2015年5月20日
-     */
-    @DataSource("master")
-    public void deleteById(Integer id);
-    
-    /**
-     * 根据id集，删除织图与频道的关联关系
+     * 根据id集，在中间表中删除织图与频道的关联关系
      *
      * @param ids
-     *            织图与频道关联表主键id集合
+     *            织图与频道关联表主键id集合，即中间表id集合
      * 
-     * @author zhangbo 2015年5月20日
+     * @author zhangbo 2015年5月26日
      */
     @DataSource("master")
-    public void deleteByIds(Integer[] ids);
+    public void deleteByIdsFromCache(Integer[] ids);
 
     /**
-     * 同步中间表数据到主表，根据频道id来同步
+     * 查询回收站列表
      *
-     * @author zhangbo 2015年5月22日
+     * @param dto
+     *            频道织图回收站数据传输对象
+     * @return
+     * @author zhangbo 2015年5月27日
      */
-    @DataSource("master")
-    public void syncDataToMainTable(OpWorldOfCannelDto dto);
+    @DataSource("slave")
+    public List<ChannelWorldRecyclerDto> queryRecyclerByDTO(ChannelWorldRecyclerDto dto);
+    
+    /**
+     * 查询回收站列表总数
+     *
+     * @param dto
+     *            频道织图回收站数据传输对象
+     * @return
+     * @author zhangbo 2015年5月27日
+     */
+    @DataSource("slave")
+    public long queryRecyclerCountByDTO(ChannelWorldRecyclerDto dto);
+
 }

@@ -681,7 +681,9 @@ var tableview = $.extend({}, $.fn.datagrid.defaults.view, {
 		cc.push("  |  ");
 		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setLike()'>点赞</a>");
 		cc.push("  |  ");
-		cc.push("<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setValidDisable("+rowData.channelWorldId+","+rowIndex+")'>删除</a>");
+		var validLink = "<a href='javascript:void(0)' class='easyui-linkbutton l-btn' onclick='setValidDisable("
+			+rowData.channelWorldId+","+rowData.channelId+","+rowData.worldId+","+rowIndex+")'>删除</a>"
+		cc.push(validLink);
 		cc.push("</td>");
 		
 		
@@ -767,16 +769,22 @@ function setComment(){
 function setLike(){
 	alert("Like");
 }
-function setValidDisable(id,rowIndex){
-	$.post("./admin_op/worldChannel_setValidOperation", {"id":id, isValid:false}, function(data){
-		$.messager.alert("提示", data.msg);
-		// 若删除成功，则把当前行从表格中移除
-		if (data.result == 0){
-			$("#htm_table").datagrid("deleteRow",rowIndex);
-			
-			// 下面方法为重新排序，避免删除后行索引乱序，重新取出当前页面集合，然后放入表格中
-			var rows = $("#htm_table").datagrid("getRows");
-			$("#htm_table").datagrid("loadData", rows);
+function setValidDisable(id, channelId, worldId, rowIndex){
+	$.messager.prompt("提示", "请填写删除原因：", function(r){
+		// 不等于undefined，即为点击确定
+		if (r != undefined){
+			var params = {id:id, isValid:false, channelId:channelId, worldId:worldId, deleteReason:r};
+			$.post("./admin_op/worldChannel_setValidOperation", params, function(data){
+				$.messager.alert("提示", data.msg);
+				// 若删除成功，则把当前行从表格中移除
+				if (data.result == 0){
+					$("#htm_table").datagrid("deleteRow",rowIndex);
+					
+					// 下面方法为重新排序，避免删除后行索引乱序，重新取出当前页面集合，然后放入表格中
+					var rows = $("#htm_table").datagrid("getRows");
+					$("#htm_table").datagrid("loadData", rows);
+				}
+			});
 		}
 	});
 };
