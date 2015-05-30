@@ -779,11 +779,6 @@ function setValidDisable(id, channelId, worldId, rowIndex){
 				$.messager.alert("提示", data.msg);
 				// 若删除成功，则把当前行从表格中移除
 				if (data.result == 0){
-//					$("#htm_table").datagrid("deleteRow",rowIndex);
-					
-					// 下面方法为重新排序，避免删除后行索引乱序，重新取出当前页面集合，然后放入表格中
-//					var rows = $("#htm_table").datagrid("getRows");
-//					$("#htm_table").datagrid("loadData", rows);
 					$("#htm_table").datagrid("reload");
 				}
 			});
