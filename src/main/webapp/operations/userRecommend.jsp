@@ -48,7 +48,7 @@ var maxId = 0,
 		}
 	},
 	htmTableTitle = "推荐用户列表", //表格标题
-	htmTableWidth = 1250,
+	htmTableWidth = 1350,
 	toolbarComponent = '#tb',
 	recordIdKey = "id",
 	uidKey = "userId",
@@ -60,6 +60,27 @@ var maxId = 0,
 		{field : 'ck',checkbox : true },
 		{field : recordIdKey,title : 'id',align : 'center',width : 120},
 		phoneCodeColumn,
+		{field : 'platformCode',title:'社交平台',align : 'center', width:60, formatter: function(value, row, index) {
+			var platformCode = "织图";
+			switch(value) {
+			case 1:
+				platformCode = "微信";
+				break;
+			case 2:
+//				platformCode = "新浪";
+				platformCode = "<a href='http://www.weibo.com/u/"+row['loginCode'] + "' target='_blank'>新浪</a>";
+				break;
+			case 3:
+				platformCode = "人人";
+				break;
+			case 4:
+				platformCode = "QQ空间";
+				break;
+			default:
+				break;
+			}
+			return platformCode;
+		}},
 		userAvatarColumn,
 		userIdColumn,
 		userNameColumn,
