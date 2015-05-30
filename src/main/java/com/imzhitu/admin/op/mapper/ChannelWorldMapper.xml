@@ -192,7 +192,7 @@
 			WHERE ocw.world_id=#{worldId} 
 	</select>
 	
-	<update id="updateIdById">
-		update hts.operations_channel_world set id=#{newId} where id=#{id}
+	<update id="updateSerialById">
+		update hts.operations_channel_world set serial=#{serial} where id=#{id}
 	</update>
 </mapper>

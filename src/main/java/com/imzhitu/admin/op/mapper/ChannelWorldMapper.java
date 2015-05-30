@@ -94,7 +94,7 @@ public interface ChannelWorldMapper {
 	 * @param newId
 	 */
 	@DataSource("master")
-	public void updateIdById(@Param("id")Integer id, @Param("newId")Integer newId);
+	public void updateSerialById(@Param("id")Integer id, @Param("serial")Integer serial);
 	
 	/**
 	 * 根据id查询频道织图

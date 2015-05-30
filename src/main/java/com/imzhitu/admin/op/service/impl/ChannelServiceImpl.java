@@ -134,6 +134,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private com.hts.web.operations.dao.ChannelThemeCacheDao webThemeCacheDao;
+	
+	@Autowired
+	private com.hts.web.operations.service.ChannelService webChannelService;
 
 	private static final int CHANNEL_CACHE_LIMIT_2_9_89 = 8;
 	
@@ -651,8 +654,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void addChannelWorldId(Integer id) throws Exception {
-		Integer newId = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
-		channelWorldMapper.updateIdById(id, newId);
+		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+		channelWorldMapper.updateSerialById(id, serial);
 	}
 
 	@Override
@@ -661,12 +664,13 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		channelWorldMapper.updateValidByIds(ids, valid);
 		if(ids != null && ids.length > 0) {
-			OpChannelWorld world = channelWorldMapper.queryChannelWorldById(ids[0]);
-			if(world != null) {
-				updateChannelWorldCache(world.getChannelId(), 0);
-			}
 			if(valid != null && valid.equals(Tag.TRUE)) // 生效时同时重新排序 
 				addChannelWorldId(ids);
+			OpChannelWorld world = channelWorldMapper.queryChannelWorldById(ids[0]);
+			if(world != null) {
+//				updateChannelWorldCache(world.getChannelId(), 0);
+				webChannelService.updateWorldAndChildCount(world.getChannelId());
+			}
 		}
 	}
 	
@@ -681,7 +685,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		if(wids.length > 0 && valid != null){
 			channelWorldMapper.updateValidByWIds(wids, valid);
 			if(valid != null && valid.equals(Tag.TRUE)) // 生效时同时重新排序 
-					addChannelWorldId(channelId, wids);
+				addChannelWorldId(channelId, wids);
 			updateChannelWorldCache(channelId, 0);
 		}
 	}
