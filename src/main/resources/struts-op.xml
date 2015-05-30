@@ -102,6 +102,18 @@
 			</result>
 		</action>
 		
+		<action name="superbChannel_*" class="com.imzhitu.admin.op.OpSuperbChannelRecommendAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="channel_baseCount_*" class="com.imzhitu.admin.op.OpChannelBaseCountAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 
 </struts>

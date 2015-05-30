@@ -19,7 +19,7 @@ var maxId = 0,
 	batchEnableTip = "您确定要使已选中的织图生效吗？",
 	batchDisableTip = "您确定要使已选中的织图失效吗？",
 	channelQueryParam = {},
-	channelMaxId=0,
+//	channelMaxId=0,
 	init = function() {
 		loadPageData(initPage);
 	},
@@ -124,8 +124,10 @@ var maxId = 0,
 		showPageLoading();
 	},
 	
-	channelMaxId = 0,
-	channelQueryParams = {},
+//	channelQueryParams = {},
+	
+	myQueryParams['world.channelId'] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") ? baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") : "";
+	myQueryParams['world.valid'] = 1;
 	
 	onAfterInit = function() {
 		
@@ -223,13 +225,12 @@ var maxId = 0,
 // 			}
 // 		});
 		
-		
 		//改变视图
 		$("#htm_table").datagrid({
 			view:tableview,
 			checkOnSelect:false
 		});
-		getChannelIdFromCookie();
+//		getChannelIdFromCookie();
 		
 		removePageLoading();
 		$("#main").show();
@@ -557,15 +558,15 @@ function addCover(channelId, worldId, index) {
 }
 
 
-function getChannelIdFromCookie(){
-	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
-	var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
-	if(channelId){
-		channelQueryParam ['world.channelId'] = channelId;
-		$("#htm_table").datagrid('load',channelQueryParam);
-		$("#channelNameTitle").text(channelName);
-	}
-}
+//function getChannelIdFromCookie(){
+//	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
+//	var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
+//	if(channelId){
+//		channelQueryParam ['world.channelId'] = channelId;
+//		$("#htm_table").datagrid('load',channelQueryParam);
+//		$("#channelNameTitle").text(channelName);
+//	}
+//}
 
 /**
  * 改变表格表现形式
@@ -778,11 +779,12 @@ function setValidDisable(id, channelId, worldId, rowIndex){
 				$.messager.alert("提示", data.msg);
 				// 若删除成功，则把当前行从表格中移除
 				if (data.result == 0){
-					$("#htm_table").datagrid("deleteRow",rowIndex);
+//					$("#htm_table").datagrid("deleteRow",rowIndex);
 					
 					// 下面方法为重新排序，避免删除后行索引乱序，重新取出当前页面集合，然后放入表格中
-					var rows = $("#htm_table").datagrid("getRows");
-					$("#htm_table").datagrid("loadData", rows);
+//					var rows = $("#htm_table").datagrid("getRows");
+//					$("#htm_table").datagrid("loadData", rows);
+					$("#htm_table").datagrid("reload");
 				}
 			});
 		}
@@ -806,6 +808,7 @@ function setSyncOperation(){
 	
 	<div id="tb" style="padding:5px;height:auto">
 		<div>
+			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
 			<a href="javascript:void(0);" onclick="setSyncOperation()" class="easyui-linkbutton">同步</a>
 		</div>
 	</div> 
