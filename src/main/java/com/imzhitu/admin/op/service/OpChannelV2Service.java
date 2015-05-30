@@ -15,7 +15,7 @@ public interface OpChannelV2Service extends BaseService{
 	public void insertOpChannel(Integer ownerId,String channelName,String channelTitle,String subtitle,String channelDesc,
 			String channelIcon,String subIcon,Integer channelTypeId,String channelLabelNames,String channelLabelIds,Integer worldCount,
 			Integer worldPictureCount,Integer memberCount,Integer  superbCount,Integer childCountBase,Integer superb,Integer valid,
-			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag)throws Exception;
+			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId)throws Exception;
 	
 	/**
 	 * 删除
@@ -30,7 +30,7 @@ public interface OpChannelV2Service extends BaseService{
 	public void updateOpChannel(Integer channelId,Integer ownerId,String channelName,String channelTitle,String subtitle,String channelDesc,
 			String channelIcon,String subIcon,Integer channelTypeId,String channelLabelNames,String channelLabelIds,Integer worldCount,
 			Integer worldPictureCount,Integer memberCount,Integer  superbCount,Integer childCountBase,Integer superb,Integer valid,
-			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag)throws Exception;
+			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId)throws Exception;
 	
 	/**
 	 * 分页查询
@@ -38,7 +38,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 */
 	public void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,
-			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,int start,int rows,Integer maxId,Map<String,Object>jsonMap)throws Exception;
+			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId,int start,int rows,Integer maxId,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
 	 * 分页查询总数
@@ -46,7 +46,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 */
 	public long queryOpChannelTotalCount(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,
-			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer maxId)throws Exception;
+			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer maxId,Integer themeId)throws Exception;
 	
 	/**
 	 * 从opensearch查询标签。

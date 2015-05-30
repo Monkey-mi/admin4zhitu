@@ -28,17 +28,19 @@
 		<result column="danmu" property="danmu" jdbcType="INTEGER"/>
 		<result column="mood" property="moodFlag" jdbcType="INTEGER"/>
 		<result column="world" property="worldFlag" jdbcType="INTEGER"/>
+		<result column="theme_id" property="themeId" jdbcType="INTEGER"/>
+		<result column="theme_name" property="themeName" jdbcType="VARCHAR"/>
 	</resultMap>
 
 	<!-- insert -->
 	<insert id="insertOpChannel">
 		insert into hts.operations_channel (id,owner_id,channel_name,channel_title,subtitle,channel_desc,channel_icon,
 			sub_icon,channel_type,channel_label,label_ids,world_count,child_count,member_count,superb_count,
-			child_count_base,create_time,last_modified,superb,valid,serial,danmu,mood,world)
+			child_count_base,create_time,last_modified,superb,valid,serial,danmu,mood,world,theme_id)
 		values
 			(#{channelId},#{ownerId},#{channelName},#{channelTitle},#{subtitle},#{channelDesc},#{channelIcon},
 			#{subIcon},#{channelTypeId},#{channelLabelNames},#{channelLabelIds},#{worldCount},#{worldPictureCount},#{memberCount},#{superbCount},
-			#{childCountBase},#{createTime},#{lastModifiedTime},#{superb},#{valid},#{serial},#{danmu},#{moodFlag},#{worldFlag})
+			#{childCountBase},#{createTime},#{lastModifiedTime},#{superb},#{valid},#{serial},#{danmu},#{moodFlag},#{worldFlag},#{themeId})
 	</insert>
 	
 	<!-- delete -->
@@ -121,7 +123,10 @@
 				mood = #{moodFlag},
 			</if>
 			<if test="worldFlag != null">
-				world = #{worldFlag}
+				world = #{worldFlag},
+			</if>
+			<if test="themeId != null">
+				theme_id = #{themeId}
 			</if>
 		</set>
 		where id = #{channelId}
@@ -129,44 +134,48 @@
 	
 	<!-- 分页查询 -->
 	<select id="queryOpChannel" resultMap="OpChannelV2Mapper">
-		select * from hts.operations_channel 
+		select oc.*,oct.theme_name from hts.operations_channel  oc
+		left join hts.operations_channel_theme  oct on oc.theme_id=oct.id
 		<where>
 			<if test="channelId != null">
-				id = #{channelId}
+				oc.id = #{channelId}
 			</if>
 			<if test="ownerId != null">
-				and owner_id = #{ownerId}
+				and oc.owner_id = #{ownerId}
 			</if>
 			<if test="channelTypeId != null">
-				and channel_type = #{channelTypeId}
+				and oc.channel_type = #{channelTypeId}
 			</if>
 			<if test="channelName != null">
-				and channel_name like CONCAT('%',#{channelName},'%')
+				and oc.channel_name like CONCAT('%',#{channelName},'%')
 			</if>
 			<if test="superb != null">
-				and superb = #{superb}
+				and oc.superb = #{superb}
 			</if>
 			<if test="valid != null">
-				and valid = #{valid}
+				and oc.valid = #{valid}
 			</if>
 			<if test="serial != null">
-				and serial = #{serial}
+				and oc.serial = #{serial}
 			</if>
 			<if test="danmu != null">
-				and danmu = #{danmu}
+				and oc.danmu = #{danmu}
 			</if>
 			<if test="moodFlag != null">
-				and mood = #{moodFlag}
+				and oc.mood = #{moodFlag}
 			</if>
 			<if test="worldFlag != null">
-				and world = #{worldFlag}
+				and oc.world = #{worldFlag}
+			</if>
+			<if test="themeId != null">
+				and oc.theme_id = #{themeId}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[and id <= #{maxId}]]>
+				<![CDATA[and oc.id <= #{maxId}]]>
 			</if>
 		</where>
 		<if test="orderBy == null">
-			order by id desc
+			order by oc.id desc
 		</if>
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
@@ -204,6 +213,9 @@
 			</if>
 			<if test="worldFlag != null">
 				and world = #{worldFlag}
+			</if>
+			<if test="themeId != null">
+				and theme_id = #{themeId}
 			</if>
 			<if test="maxId != null and maxId != 0">
 				<![CDATA[and id <= #{maxId}]]>
