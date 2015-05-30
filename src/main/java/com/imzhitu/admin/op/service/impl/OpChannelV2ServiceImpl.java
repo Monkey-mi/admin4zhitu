@@ -49,6 +49,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	@Autowired
 	private ChannelWorldMapper channelWorlMapper;
 	
+	@Autowired
+	private com.hts.web.operations.service.ChannelService webChannelService;
+	
 	@Override
 	public void insertOpChannel(Integer ownerId, String channelName,
 			String channelTitle, String subtitle, String channelDesc,
@@ -360,6 +363,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			channelWorld.setSerial(channelWorldId);
 			channelWorlMapper.save(channelWorld);
 		}
+		
+		webChannelService.updateWorldAndChildCount(channelId);
 		
 	}
 
