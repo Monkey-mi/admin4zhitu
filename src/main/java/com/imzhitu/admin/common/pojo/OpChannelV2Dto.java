@@ -37,6 +37,23 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	private Integer worldFlag;			//织图标记
 	
 	private Integer orderBy;			//排序
+	private Integer themeId;			//主题ID
+	
+	private String themeName;			//主题名称
+	
+	public Integer getThemeId() {
+		return themeId;
+	}
+	public void setThemeId(Integer themeId) {
+		this.themeId = themeId;
+	}
+	public String getThemeName() {
+		return themeName;
+	}
+	public void setThemeName(String themeName) {
+		this.themeName = themeName;
+	}
+	
 	
 	
 	

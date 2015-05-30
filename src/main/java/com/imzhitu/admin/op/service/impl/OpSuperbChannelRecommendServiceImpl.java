@@ -15,6 +15,7 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.dao.ChannelCacheDao;
 import com.hts.web.operations.dao.ChannelDao;
+import com.hts.web.operations.dao.ChannelThemeCacheDao;
 import com.imzhitu.admin.common.pojo.OpSuperbChannelRecommend;
 import com.imzhitu.admin.op.mapper.OpSuperbChannelRecommendMapper;
 import com.imzhitu.admin.op.service.OpSuperbChannelRecommendService;
@@ -30,6 +31,9 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 	
 	@Autowired
 	private ChannelCacheDao channelCacheDao;
+	
+	@Autowired
+	private ChannelThemeCacheDao channelThemeCacheDao;
 
 	@Override
 	public void insertSuperbChannelRecommend(Integer channelId, Integer valid,
@@ -104,6 +108,7 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 	}
 	
 	
+	@Override
 	public void updateSuperbChannelRecommendCache()throws Exception{
 		//查询所有精选频道
 		List<OpChannel> list = channelDao.querySuperbChannel(2000);
@@ -138,6 +143,7 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 			}
 		}
 		channelCacheDao.updateChannel(topList, superbList);
+		channelThemeCacheDao.updateTheme();
 	}
 
 }

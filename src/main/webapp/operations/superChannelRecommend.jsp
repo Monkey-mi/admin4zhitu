@@ -241,6 +241,18 @@
 		
 		
 	}
+	
+	function updateSuperbChannelRecommendCache(){
+		$('#htm_table').datagrid('loading');
+		$.post("./admin_op/superbChannel_updateSuperbChannnelRecommendCache",function(result){
+			if(result['result'] == 0) {
+				$.messager.alert('提示',result['msg']);
+				$("#htm_table").datagrid("loaded");
+			} else {
+				$.messager.alert('提示',result['msg']);
+			}
+		});
+	}
 </script>
 </head>
 <body>
@@ -251,6 +263,7 @@
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">批量删除</a>
 			<a href="javascript:void(0);" onclick="javascript:update(1);" class="easyui-linkbutton" title="批量有效" plain="true" iconCls="icon-ok" id="reIndexedBtn">批量有效</a>
 			<a href="javascript:void(0);" onclick="javascript:update(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip" id="reIndexedBtn">批量失效</a>
+			<a href="javascript:void(0);" onclick="javascript:updateSuperbChannelRecommendCache();" class="easyui-linkbutton" title="刷新缓存" plain="true" iconCls="icon-converter" id="reIndexedBtn">刷新缓存</a>
 		</div>
 		<table id="htm_table"></table>
 		 

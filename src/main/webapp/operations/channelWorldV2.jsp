@@ -806,6 +806,7 @@ function setSyncOperation(){
 	
 	<div id="tb" style="padding:5px;height:auto">
 		<div>
+			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
 			<a href="javascript:void(0);" onclick="setSyncOperation()" class="easyui-linkbutton">同步</a>
 		</div>
 	</div> 

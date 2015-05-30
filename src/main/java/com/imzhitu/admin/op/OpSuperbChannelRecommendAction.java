@@ -45,6 +45,10 @@ public class OpSuperbChannelRecommendAction extends BaseCRUDAction{
 		this.idsStr = idsStr;
 	}
 	
+	/**
+	 * 分页查询
+	 * @return
+	 */
 	public String querySuperbChannelRecommend(){
 		try{
 			service.qeurySuperbChannelRecommend(id, channelId, valid, maxId, page, rows, jsonMap);
@@ -55,6 +59,11 @@ public class OpSuperbChannelRecommendAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	
+	/**
+	 * 批量删除
+	 * @return
+	 */
 	public String batchDeleteSuperbChannelRecommend(){
 		try{
 			service.batchDeleteSuperbChannelRecommend(idsStr);
@@ -65,6 +74,11 @@ public class OpSuperbChannelRecommendAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	
+	/**
+	 * 批量更新有效性
+	 * @return
+	 */
 	public String batchUpdateSuperbChannelRecommendValid(){
 		try{
 			service.batchUpdateSuperbChannelRecommendValid(valid,idsStr);
@@ -75,10 +89,24 @@ public class OpSuperbChannelRecommendAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 添加
+	 * @return
+	 */
 	public String insertSuperbChannelRecommend(){
 		try{
 			service.insertSuperbChannelRecommend(channelId, Tag.TRUE, getCurrentLoginUserId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String updateSuperbChannnelRecommendCache(){
+		try{
+			service.updateSuperbChannelRecommendCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}

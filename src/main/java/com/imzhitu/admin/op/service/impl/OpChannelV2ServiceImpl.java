@@ -57,7 +57,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			Integer worldCount, Integer worldPictureCount, Integer memberCount,
 			Integer superbCount, Integer childCountBase, Integer superb,
 			Integer valid, Integer serial, Integer danmu, Integer moodFlag,
-			Integer worldFlag) throws Exception{
+			Integer worldFlag,Integer themeId) throws Exception{
 		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		Integer channelId = keyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
@@ -83,6 +83,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setDanmu(danmu);
 		dto.setMoodFlag(moodFlag);
 		dto.setWorldFlag(worldFlag);
+		dto.setThemeId(themeId);
 		
 		opChannelV2Mapper.insertOpChannel(dto);
 		
@@ -110,7 +111,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			Integer worldPictureCount, Integer memberCount,
 			Integer superbCount, Integer childCountBase, Integer superb,
 			Integer valid, Integer serial, Integer danmu, Integer moodFlag,
-			Integer worldFlag) throws Exception{
+			Integer worldFlag,Integer themeId) throws Exception{
 		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(channelId);
@@ -135,6 +136,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setDanmu(danmu);
 		dto.setMoodFlag(moodFlag);
 		dto.setWorldFlag(worldFlag);
+		dto.setThemeId(themeId);
 		
 		opChannelV2Mapper.updateOpChannel(dto);
 	}
@@ -142,7 +144,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	@Override
 	public void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,
 			Integer ownerId, Integer superb, Integer valid, Integer serial,
-			Integer danmu, Integer moodFlag, Integer worldFlag, int start,
+			Integer danmu, Integer moodFlag, Integer worldFlag,Integer themeId, int start,
 			int rows, Integer maxId,Map<String, Object> jsonMap) throws Exception{
 		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
@@ -157,6 +159,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setMoodFlag(moodFlag);
 		dto.setWorldFlag(worldFlag);
 		dto.setMaxId(maxId);
+		dto.setThemeId(themeId);
 		
 		buildNumberDtos("getChannelId",dto,start,rows,jsonMap,new NumberDtoListAdapter<OpChannelV2Dto>(){
 
@@ -178,7 +181,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	@Override
 	public long queryOpChannelTotalCount(Integer channelId,String channelName, Integer channelTypeId,Integer ownerId,
 			Integer superb, Integer valid, Integer serial, Integer danmu,
-			Integer moodFlag, Integer worldFlag,Integer maxId) throws Exception{
+			Integer moodFlag, Integer worldFlag,Integer maxId,Integer themeId) throws Exception{
 		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(channelId);
@@ -192,6 +195,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setMoodFlag(moodFlag);
 		dto.setWorldFlag(worldFlag);
 		dto.setMaxId(maxId);
+		dto.setThemeId(themeId);
 		return opChannelV2Mapper.queryOpChannelTotalCount(dto);
 	}
 	

@@ -37,4 +37,10 @@ public interface OpSuperbChannelRecommendService extends BaseService{
 	 * @return
 	 */
 	public long querySuperbChannelRecommendCount(Integer id,Integer channelId,Integer valid,Integer maxId)throws Exception;
+	
+	/**
+	 * 刷新精选频道推荐缓存
+	 * @throws Exception
+	 */
+	public void updateSuperbChannelRecommendCache()throws Exception;
 }

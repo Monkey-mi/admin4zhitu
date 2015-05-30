@@ -37,7 +37,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	public String insertOpChannel(){
 		try{
 			opChannelV2Service.insertOpChannel(ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, subIcon, channelTypeId,
-					channelLabelNames, channelLabelIds, 0, 0, 0, 0, 0, Tag.FALSE, Tag.FALSE, 0, Tag.FALSE, Tag.FALSE, Tag.TRUE);
+					channelLabelNames, channelLabelIds, 0, 0, 0, 0, 0, Tag.FALSE, Tag.FALSE, 0, Tag.FALSE, Tag.FALSE, Tag.TRUE,themeId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -66,7 +66,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	public String updateOpChannel(){
 		try{
 			opChannelV2Service.updateOpChannel(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, subIcon, channelTypeId,
-					channelLabelNames, channelLabelIds, worldCount, worldPictureCount, memberCount, superbCount, childCountBase, superb, valid, serial, danmu, moodFlag, worldFlag);
+					channelLabelNames, channelLabelIds, worldCount, worldPictureCount, memberCount, superbCount, childCountBase, superb, valid, serial, danmu, moodFlag, worldFlag,themeId);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -80,7 +80,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	 */
 	public String queryOpChannel(){
 		try{
-			opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag, page, rows, maxId, jsonMap);
+			opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag,themeId, page, rows, maxId, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -158,7 +158,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 				}
 			}
 			if( bSuperAdmin || bOpAdmin){
-				opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag, page, rows, maxId, jsonMap);
+				opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag,themeId, page, rows, maxId, jsonMap);
 			}else{
 				opChannelV2Service.queryOpChannelByAdminUserId(getCurrentLoginUserId(), jsonMap);
 			}
@@ -209,6 +209,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	private String channelIdsStr;		//channel id array string
 	
 	private String worldAndAuthorIdsStr;//worldId and authorId，eg：123-114,124-114
+	private Integer themeId;			//主题ID
 	
 	
 	public Integer getMoodFlag() {
@@ -388,6 +389,14 @@ public class OpChannelV2Action extends BaseCRUDAction{
 
 	public void setWorldAndAuthorIdsStr(String worldAndAuthorIdsStr) {
 		this.worldAndAuthorIdsStr = worldAndAuthorIdsStr;
+	}
+
+	public Integer getThemeId() {
+		return themeId;
+	}
+
+	public void setThemeId(Integer themeId) {
+		this.themeId = themeId;
 	}
 	
 

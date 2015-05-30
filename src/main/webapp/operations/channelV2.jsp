@@ -15,7 +15,7 @@ var maxId = 0,
 	},
 	hideIdColumn = false,
 	htmTableTitle = "频道列表", //表格标题
-	htmTableWidth = 1330,
+	htmTableWidth = 1410,
 	batchEnableTip = "您确定要使已选中的频道生效吗？",
 	batchDisableTip = "您确定要使已选中的频道失效吗？",
 	toolbarComponent = '#tb',
@@ -65,7 +65,8 @@ var maxId = 0,
 					default:return "默认频道";
 				}
 			}},
-		{field : 'channelLabelNames',title:'标签',width:100},
+		{field : 'themeName',title:'主题',align : 'center',width:80},
+		{field : 'channelLabelNames',title:'标签',align : 'center',width:100},
 		{field : 'worldCount',title:'织图总数',align : 'center',width : 60},
 		{field : 'worldPictureCount',title:'图片总数',align : 'center',width : 60},
 		{field : 'memberCount',title:'成员总数',align : 'center',width : 60},
@@ -149,7 +150,7 @@ var maxId = 0,
 			title: '添加频道',
 			modal : true,
 			width : 520,
-			height : 440,
+			height : 540,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -169,6 +170,8 @@ var maxId = 0,
 				$("#channel_labelIds").val('');
 				$("#id_edit").val('');
 				$("#channelLabel").html('');
+				$("#ss_isSuperb").combobox('clear');
+				$("#channelThemeId").combobox('clear');
 				$("#edit_form").hide();
 				$("#edit_loading").show();
 			}
@@ -274,6 +277,8 @@ function initEditWindow(id, index, isUpdate) {
 				$("#ownerId_edit").val(obj['ownerId']);
 				$("#channelDesc_edit").val(obj['channelDesc']);
 				$("#channel_type_id").combobox('setValue',obj['channelTypeId']);
+				$("#channelThemeId").combobox('setValue',obj['themeId']);
+				$("#ss_isSuperb").combobox('setValue',obj['superb']);
 				
 				$("#edit_loading").hide();
 				$("#edit_form").show();
@@ -475,6 +480,8 @@ function addChannelSubmit(){
 	var channelTypeId = $("#channel_type_id").combobox('getValue');
 	var ownerId = $("#ownerId_edit").val();
 	var channelDesc = $("#channelDesc_edit").val();
+	var themeId = $("#channelThemeId").combobox('getValue');
+	var superb = $("#ss_isSuperb").combobox('getValue');
 	
 	$('#htm_table').datagrid('loading');
 	$.post(url,{
@@ -488,7 +495,9 @@ function addChannelSubmit(){
 		'channelLabelNames':channelLabelNames,
 		'channelLabelIds':channelLabelIds,
 		'channelTypeId':channelTypeId,
-		'ownerId':ownerId
+		'ownerId':ownerId,
+		'themeId':themeId,
+		'superb' :superb
 		},function(result){
 			$('#htm_table').datagrid('loaded');
 			if(result['result'] == 0){
@@ -589,6 +598,37 @@ function searchChannelByName(){
 							</td>
 							
 							<td class="rightTd"><div id="channelLabel_editTip" class="tipDIV"></div></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd">频道描述：</td>
+							<td><textarea name="channelDesc" id="channelDesc_edit" onchange="validateSubmitOnce=true;"></textarea></td>
+							<td class="rightTd"><div id="channelDesc_editTip" class="tipDIV"></div></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd">是否为精选：</td>
+							<td>
+								<select name="superb" id="ss_isSuperb" style="width:206px;" class="easyui-combobox">
+									<option value="0">非精选</option>
+						   			<option value="1">精选</option>
+					   			</select>
+							</td>
+							<td class="rightTd"><div id="channelLabel_editTip" class="tipDIV"></div></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd">专属主题：</td>
+							<td>
+								<select name="themeId" id="channelThemeId" class="easyui-combobox" onchange="validateSubmitOnce=true;" style="width: 206px;">
+									<option value="10000">旅行频道</option>
+						   			<option value="10001">美食频道</option>
+						   			<option value="10003">时尚摄影频道</option>
+						   			<option value="10004">生活(情感)频道</option>
+						   			<option value="10006">织图官方频道</option>
+								</select>
+							</td>
+							<td class="rightTd"><div id="channelType_editTip" class="tipDIV"></div></td>
 						</tr>
 						
 						<tr>
