@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.hts.web.common.dao.impl.BaseDaoImpl;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.AdminRole;
+import com.imzhitu.admin.constant.Permission;
 import com.imzhitu.admin.privileges.dao.RoleDao;
 
 /**
@@ -121,5 +122,20 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao{
 						rs.getString("role_desc"));
 			}
 		});
+	}
+
+	@Override
+	public boolean isSuperOrOpAdmin(Integer userId) {
+	    // 声明是否具有超级管理员或运营管理员角色
+	    boolean flag = false;
+
+	    for (AdminRole adminRole : queryRoleByUserId(userId)) {
+		if (adminRole.getRoleName().equals(Permission.SUPER_ADMIN)
+			|| adminRole.getRoleName().equals(Permission.OP_ADMIN)) {
+		    flag = true;
+		    break;
+		}
+	    }
+	    return flag;
 	}
 }

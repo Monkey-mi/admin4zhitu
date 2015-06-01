@@ -104,7 +104,7 @@ public class AdminAndUserRelationshipServiceImpl extends BaseServiceImpl impleme
 	AdminAndUserRelationshipDto dto = new AdminAndUserRelationshipDto();
 	
 	// 若不具有超级管理员或运营管理员角色，返回与传入用户有关联关系的用户信息结果集，否则返回全表查询的数据
-	if (!validateAdminRole(adminId)) {
+	if (!roleDao.isSuperOrOpAdmin(adminId)) {
 	    dto.setAdminUserId(adminId);
 	}
 	// 通过DTO获得管理员账号与织图用户的关联关系结果集
@@ -121,7 +121,7 @@ public class AdminAndUserRelationshipServiceImpl extends BaseServiceImpl impleme
 	dto.setMaxId(maxId);
 	
 	// 若不具有super_admin或op_admin权限，则设置adminId查询此管理员与织图用户的关联关系，若具有超级权限，则不设置adminId，进行全表查询
-	if (!validateAdminRole(adminId)) {
+	if (!roleDao.isSuperOrOpAdmin(adminId)) {
 	    dto.setAdminUserId(adminId);
 	}
 	
@@ -173,29 +173,4 @@ public class AdminAndUserRelationshipServiceImpl extends BaseServiceImpl impleme
 	
     }
     
-    /**
-     * 校验用户权限，是否具有super_admin或op_admin
-     *
-     * @param adminId	管理员id
-     * @return
-     * @author zhangbo 2015年5月19日
-     */
-    private boolean validateAdminRole(Integer adminId){
-	// 根据id获取传入管理员的角色列表
-	List<AdminRole> adminRoleList = roleDao.queryRoleByUserId(adminId);
-		
-	// 声明是否具有超级管理员或运营管理员角色
-	boolean flag = false;
-		
-	for (AdminRole adminRole : adminRoleList) {
-	    
-	    if ( adminRole.getRoleName().equals(Permission.SUPER_ADMIN) 
-		    || adminRole.getRoleName().equals(Permission.OP_ADMIN) ) {
-		flag = true;
-		break;
-	    }
-	}
-	return flag;
-    }
-
 }

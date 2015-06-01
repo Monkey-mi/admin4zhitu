@@ -59,4 +59,12 @@ public interface RoleDao extends BaseDao {
 	 * @return
 	 */
 	public List<AdminRole> queryRoleByUserId(Integer userId);
+	
+	/**
+	 * 校验管理员权限，是否具有super_admin或op_admin
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public boolean isSuperOrOpAdmin(Integer userId);
 }
