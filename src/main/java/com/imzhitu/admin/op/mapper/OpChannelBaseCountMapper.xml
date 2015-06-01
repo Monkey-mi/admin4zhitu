@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpChannelBaseCountMapper">
+	<resultMap id="ChannelBaseCount" type="com.imzhitu.admin.common.pojo.ChannelBaseCountDto">
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="world_count" property="worldBaseCount" jdbcType="INTEGER"/>
+		<result column="child_count" property="childBaseCount" jdbcType="INTEGER"/>
+		<result column="member_count" property="memberBaseCount" jdbcType="INTEGER"/>
+		<result column="superb_count" property="superbBaseCount" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- 插入数据到频道基数管理表 -->
+	<insert id="insertChannelBaseCount">
+		insert into hts.operations_channel_count_base
+		(channel_id,world_count,child_count,member_count,superb_count) 
+		values (#{channelId},#{worldBaseCount},#{childBaseCount},#{memberBaseCount},#{superbBaseCount})
+	</insert>
+	
+	<!-- 更新数据到频道基数管理表 -->
+	<update id="updateChannelBaseCount">
+		update hts.operations_channel_count_base
+		<set>
+			<if test="worldBaseCount != null">world_count = #{worldBaseCount,jdbcType=INTEGER},</if>
+			<if test="childBaseCount != null">child_count = #{childBaseCount,jdbcType=INTEGER},</if>
+			<if test="memberBaseCount != null">member_count = #{memberBaseCount,jdbcType=INTEGER},</if>
+			<if test="superbBaseCount != null">superb_count = #{superbBaseCount,jdbcType=VARCHAR}</if>
+		</set>
+		where channel_id = #{channelId,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 通过channelId删除频道基数管理表数据 -->
+	<delete id="deleteChannelBaseCountByChannelIds">
+		delete from hts.operations_channel_count_base where channel_id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<!-- 查询频道基数管理结果集 -->
+	<select id="queryChannelBaseCountList" resultMap="ChannelBaseCount">
+	    select 
+		    cb.channel_id, 
+		    cb.world_count, 
+		    cb.child_count, 
+		    cb.member_count, 
+		    cb.superb_count
+		from 
+			hts.operations_channel_count_base cb, 
+			hts_admin.admin_user_relationship_binding au, 
+			hts.operations_channel c
+		<where>
+			<if test="maxId != null and maxId != 0"><![CDATA[ AND cb.channel_id<=#{maxId}]]></if>
+			c.owner_id = au.user_id
+			and c.id = cb.channel_id
+			<if test="adminId != null">
+			and au.admin_user_id = #{adminId}
+			</if>
+		</where>
+		order by cb.channel_id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 查询频道基数管理结果集数量 -->
+	<select id="queryChannelBaseCount" resultType="long">
+	    select 
+		    count(*)
+		from 
+			hts.operations_channel_count_base cb, 
+			hts_admin.admin_user_relationship_binding au, 
+			hts.operations_channel c
+		<where>
+			<if test="maxId != null and maxId != 0"><![CDATA[ AND cb.channel_id<=#{maxId}]]></if>
+			c.owner_id = au.user_id
+			and c.id = cb.channel_id
+			<if test="adminId != null">
+			and au.admin_user_id = #{adminId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询频道是否存在于频道基数管理表 -->
+	<select id="isExistChannelBaseCount" resultType="long">
+		select count(*) from hts.operations_channel_count_base where channel_id = #{channelId}
+	</select>
+	
+</mapper>

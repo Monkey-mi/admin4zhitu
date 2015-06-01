@@ -46,7 +46,8 @@
 			for(var i=0;i<rows.length;i++){		
 				ids.push(rows[i].channelWorldId);
 			}
-			$.post('./admin_op/worldChannel_setValidOperation', {'ids' : ids.toString(), isValid:true}, function(data){
+			var reqParams = {'ids':ids.toString(), isValid:true, channelId:baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID")};
+			$.post('./admin_op/worldChannel_setValidOperation', reqParams, function(data){
 				$.messager.alert("提示", data.msg);
 				$('#htm_table').datagrid('reload');
 			});
@@ -63,7 +64,8 @@
 					for(var i=0;i<rows.length;i++){	
 						ids.push(rows[i].channelWorldId);
 					}
-					$.post('./admin_op/worldChannel_setEmptyByIds', {'ids' : ids.toString()}, function(data){
+					var reqParams = {'ids':ids.toString(), channelId:baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID")};
+					$.post('./admin_op/worldChannel_setEmptyByIds', reqParams, function(data){
 						$.messager.alert("提示", data.msg);
 						$('#htm_table').datagrid('reload');
 					});
