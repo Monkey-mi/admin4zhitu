@@ -62,7 +62,7 @@
 	<!-- 保存管理员账号与织图用户关联关系 -->
 	<insert id="addByDTO" parameterType="com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto">
 		insert into hts_admin.admin_user_relationship_binding (admin_user_id, user_id)
-		VALUES (#{adminUserId},(select u.id from hts.user_info u where u.id = #{userId}))
+		VALUES (#{adminUserId},#{userId})
 	</insert>
 	
 	<!-- 更新管理员账号与织图用户关联关系 -->
