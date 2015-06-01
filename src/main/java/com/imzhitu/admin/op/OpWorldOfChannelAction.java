@@ -234,6 +234,9 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
     
     @Autowired
     private ChannelService cannelService;
+    
+    @Autowired
+    private com.hts.web.operations.service.ChannelService webCannelService;
 
     /**
      * 频道织图中置顶操作
@@ -261,6 +264,8 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
     public String setSuperbOperation() {
 	try {
 	    opWorldOfCannelService.setSuperbById(getId(), getChannelId(), getWorldId(), isSuperb());
+	    // 更新精选总数, 加精和取消加精调用
+	    webCannelService.updateSuperbCount(getChannelId()); 
 	    setSuperbResult(true);
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -306,6 +311,8 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 		
 		JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 	    }
+	    // 更新织图和图片总数,删除时候调用
+	    webCannelService.updateWorldAndChildCount(getChannelId());
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -323,6 +330,8 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	try {
 	    opWorldOfCannelService.deleteByIdsFromCache(StringUtil.convertStringToIds(getIds()));
 	    cannelService.deleteChannelWorlds(getIds());
+	    // 更新织图和图片总数,删除时候调用
+	    webCannelService.updateWorldAndChildCount(getChannelId());
 	    JSONUtil.optSuccess(EMPTY_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    e.printStackTrace();
