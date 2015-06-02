@@ -16,6 +16,9 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	@Autowired
 	private OpChannelMemberMapper channelMemberMapper;
 	
+	@Autowired
+	private com.hts.web.operations.service.ChannelService webChannelService;
+	
 	@Override
 	public void insertChannelMember(Integer channelId, Integer userId,
 			Integer degree) throws Exception {
@@ -24,9 +27,16 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 		Date now = new Date();
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
+		
+		long total = channelMemberMapper.queryChannelMemberTotalCount(dto);
 		dto.setDegree(degree);
 		dto.setSubTime(now.getTime());
-		channelMemberMapper.insertChannelMember(dto);
+		if(0 == total){
+			channelMemberMapper.insertChannelMember(dto);
+			webChannelService.updateMemberCount(channelId);
+		}else{
+			channelMemberMapper.updateChannelMemberDegree(dto);
+		}			
 	}
 
 	@Override
