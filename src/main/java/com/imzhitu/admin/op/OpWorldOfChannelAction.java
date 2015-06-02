@@ -3,6 +3,7 @@
  */
 package com.imzhitu.admin.op;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
@@ -25,6 +26,8 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      * 序列号
      */
     private static final long serialVersionUID = 1266080732618521674L;
+    
+    private Logger log = Logger.getLogger(OpWorldOfChannelAction.class);
     
     /**
      * 频道与织图关联关系表的id（频道织图的id）
@@ -249,7 +252,7 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	    opWorldOfCannelService.setTopToCache(getId(), getChannelId(), getWorldId(), isTop());
 	    setTopResult(true);
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    log.info(e.getStackTrace().toString());
 	    setTopResult(false);
 	}
 	return StrutsKey.JSON;
@@ -264,11 +267,9 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
     public String setSuperbOperation() {
 	try {
 	    opWorldOfCannelService.setSuperbById(getId(), getChannelId(), getWorldId(), isSuperb());
-	    // 更新精选总数, 加精和取消加精调用
-	    webCannelService.updateSuperbCount(getChannelId()); 
 	    setSuperbResult(true);
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    log.info(e.getStackTrace().toString());
 	    setSuperbResult(false);
 	}
 	return StrutsKey.JSON;
@@ -314,7 +315,7 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	    // 更新织图和图片总数,删除时候调用
 	    webCannelService.updateWorldAndChildCount(getChannelId());
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    log.info(e.getStackTrace().toString());
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
 	}
 	return StrutsKey.JSON;
@@ -334,14 +335,14 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	    webCannelService.updateWorldAndChildCount(getChannelId());
 	    JSONUtil.optSuccess(EMPTY_SUCCESS, jsonMap);
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    log.info(e.getStackTrace().toString());
 	    JSONUtil.optFailed(EMPTY_FAILED, jsonMap);
 	}
 	return StrutsKey.JSON;
     }
     
     /**
-     * 同步织图与频道关联关系中间表数据到主表（包括置顶、加精、删除信息）
+     * 同步织图与频道关联关系中间表数据到主表（包括置顶、加精信息）
      *
      * @return
      * @author zhangbo 2015年5月22日
@@ -349,10 +350,12 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
     public String syncOperation() {
 	try {
 	    opWorldOfCannelService.syncDataFromCache(getChannelId());
+	    // 更新精选总数, 加精和取消加精调用
+	    webCannelService.updateSuperbCount(getChannelId());
 	    JSONUtil.optSuccess(SYNC_SUCCESS, jsonMap);
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    JSONUtil.optFailed(SYNC_FAILED, jsonMap);
+	    log.info(e.getStackTrace().toString());
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
 	}
 	return StrutsKey.JSON;
     }

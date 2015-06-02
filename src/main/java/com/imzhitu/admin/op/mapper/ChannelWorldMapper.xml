@@ -132,8 +132,8 @@
 	      <if test="worldId != null">world_id=#{worldId},</if>
 	      <if test="authorId != null">author_id=#{authorId},</if>
 	      <if test="valid != null">valid=#{valid},</if>
-	      <if test="notified != null">notified=#{notified}</if>
-	      <if test="superb != null">superb=#{superb}</if>
+	      <if test="notified != null">notified=#{notified},</if>
+	      <if test="superb != null">superb=#{superb},</if>
 	      <if test="weight != null">weight=#{weight}</if>
 	    </set>
 	  	where id=#{id}
