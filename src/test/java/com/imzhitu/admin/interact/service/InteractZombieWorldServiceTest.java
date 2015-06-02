@@ -35,7 +35,7 @@ public class InteractZombieWorldServiceTest extends BaseTest{
 	
 	@Test
 	public void savaZombieWorldToHtWorldTest()throws Exception{
-		service.saveZombieWorldToHtWorld(384);
+		service.saveZombieWorldToHtWorld(399);
 //		String localPath="e:\\your\\1419493801.jpg.thumbnail";
 //		if(localPath == null || localPath.equals(""))return ;
 //		int nameBeginPos = localPath.lastIndexOf('\\');

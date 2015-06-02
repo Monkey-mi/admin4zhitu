@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpChannelMemberMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelMemberDto" id="OpChannelLinkMapper">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="user_id" property="userId" jdbcType="INTEGER"/>
+		<result column="sub_time" property="subTime" jdbcType="BIGINT"/>
+		<result column="degree" property="degree" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<insert id="insertChannelMember">
+		insert hts.operations_channel_member 
+			(channel_id,user_id,sub_time,degree)
+		values (#{channelId},#{userId},#{subTime},#{degree})
+	</insert>
+	
+	<update id="updateChannelMemberDegree">
+		update hts.operations_channel_member  set degree = #{degree}
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="userId != null and channelId != null">
+				and user_id = #{userId} and channel_id = #{channelId}
+			</if>
+		</where>
+	</update>
+	
+	<select id="queryChannelMemberTotalCount" resultType="long">
+		select count(*) from hts.operations_channel_member ocm
+		<where>
+			<if test="id != null">
+				ocm.id = #{id}
+			</if>
+			<if test="channelId != null">
+				and ocm.channel_id = #{channelId}
+			</if>
+			<if test="userId != null">
+				and ocm.user_id = #{userId}
+			</if>
+			<if test="degree != null">
+				and ocm.degree = #{degree}
+			</if>
+			<if test="maxId != null">
+				<![CDATA[ and ocm.id = #{maxId} ]]>
+			</if>
+		</where>
+	</select>
+</mapper>

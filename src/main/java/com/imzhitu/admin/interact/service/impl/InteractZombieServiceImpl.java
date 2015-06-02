@@ -80,6 +80,9 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	@Autowired
 	private UserInfoDao userInfoDao;
 	
+	@Autowired
+	private com.hts.web.operations.service.ChannelService webChannelService;
+	
 	private String baseThumbPathAixin = "http://imzhitu.qiniudn.com/world/thumbs/1403056393000.png";
 	private String baseThumbPathXing = "http://imzhitu.qiniudn.com/world/thumbs/1403057093000.png";
 	private String baseThumbPathHuabian = "http://imzhitu.qiniudn.com/world/thumbs/1403056953000.png";
@@ -506,6 +509,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 										channelWorld.setWeight(0);
 										channelWorld.setSerial(channelWorldId);
 										channelWorlMapper.save(channelWorld);
+										//更新频道图片总数
+										webChannelService.updateWorldAndChildCount(zw.getChannelId());
 									}
 								}
 								

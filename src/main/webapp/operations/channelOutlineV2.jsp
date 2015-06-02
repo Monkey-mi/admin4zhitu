@@ -140,7 +140,7 @@ function queryChannelById(channelId){
 							<span class="search_label">请选择频道：</span>
 							<input id="ss-channel" style="width:200px;" >
 							<div style="width:100%;padding-top:10px;">
-								<span class="infotitle">频道名称:<span id="channelName" style="width:120px;display: inline-block;"></span></span>
+								<span class="infotitle">频道名称:<span id="channelName" style="width:180px;display: inline-block;"></span></span>
 								<span class="infotitle">创建时间:<span id="channelCreateTime" style="width:180px;display: inline-block;">0000-00-00 00:00:00</span></span>
 								<span class="infotitle">频道  ID:<span id="channelIdSpan" style="width:80px;display: inline-block;">0</span></span>
 							</div>

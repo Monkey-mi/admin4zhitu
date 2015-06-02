@@ -122,6 +122,9 @@ var maxId = 0,
     }],
     onBeforeInit = function() {
 		showPageLoading();
+		var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
+		if(channelName)
+			$("#channelNameTitle").text(channelName);
 	},
 	
 //	channelQueryParams = {},

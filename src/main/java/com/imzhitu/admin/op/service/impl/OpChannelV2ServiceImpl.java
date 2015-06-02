@@ -25,6 +25,7 @@ import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
+import com.imzhitu.admin.op.service.OpChannelMemberService;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
 import com.imzhitu.admin.userinfo.service.AdminAndUserRelationshipService;
 
@@ -51,6 +52,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	
 	@Autowired
 	private com.hts.web.operations.service.ChannelService webChannelService;
+	
+	@Autowired
+	private OpChannelMemberService channelMemberService;
 	
 	@Override
 	public void insertOpChannel(Integer ownerId, String channelName,
@@ -89,6 +93,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setThemeId(themeId);
 		
 		opChannelV2Mapper.insertOpChannel(dto);
+		//新增频道的同时须将该频道拥有着关注该频道
+		channelMemberService.insertChannelMember(channelId, ownerId, Tag.TRUE);
 		
 //		osChannelService.saveChannelAtOnce(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, 
 //				channelIcon, subIcon, channelTypeId, channelLabelNames,channelLabelIds ,danmu, moodFlag, worldFlag);
@@ -103,6 +109,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setOwnerId(ownerId);
 		dto.setChannelId(channelId);
 		opChannelV2Mapper.deleteOpChannel(dto);
+		
+		
 	}
 
 	@Override
@@ -118,6 +126,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(channelId);
+		List<OpChannelV2Dto> list = opChannelV2Mapper.queryOpChannel(dto);
+		
 		dto.setOwnerId(ownerId);
 		dto.setChannelName(channelName);
 		dto.setChannelTitle(channelTitle);
@@ -142,6 +152,16 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setThemeId(themeId);
 		
 		opChannelV2Mapper.updateOpChannel(dto);
+		
+		//若是修改了所有者，则修妖修改原拥有着的degree，和现拥有者的degree
+		if(list.size() == 1){
+			if(list.get(0).getOwnerId() == ownerId){
+				return;
+			}
+			//原拥有者degree设置为0
+			channelMemberService.updateChannelMemberDegree(null, channelId, list.get(0).getOwnerId(), Tag.FALSE);
+			channelMemberService.updateChannelMemberDegree(null, channelId, ownerId, Tag.TRUE);
+		}
 	}
 
 	@Override
