@@ -584,10 +584,10 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			
 		} else {
 			world.setDateAdded(new Date());
-			world.setSerial(world.getWorldId());
 			world.setSuperb(Tag.FALSE);
 			world.setWeight(0);
 			Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+			world.setSerial(id);
 			world.setId(id);
 			if(world.getAuthorId() == null) {
 				Integer authorId = webWorldDao.queryAuthorId(world.getWorldId());
