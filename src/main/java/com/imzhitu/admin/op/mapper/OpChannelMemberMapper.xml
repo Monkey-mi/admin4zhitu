@@ -42,7 +42,7 @@
 			<if test="degree != null">
 				and ocm.degree = #{degree}
 			</if>
-			<if test="maxId != null">
+			<if test="maxId != null and maxId != 0">
 				<![CDATA[ and ocm.id = #{maxId} ]]>
 			</if>
 		</where>
