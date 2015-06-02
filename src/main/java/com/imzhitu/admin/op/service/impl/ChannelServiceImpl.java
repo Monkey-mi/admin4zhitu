@@ -642,6 +642,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		world.setId(newId);
 		world.setWorldId(wid);
 		world.setChannelId(channelId);
+		world.setSerial(newId);
 		channelWorldMapper.updateId(world);
 	}
 	
