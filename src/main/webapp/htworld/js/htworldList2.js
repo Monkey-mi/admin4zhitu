@@ -92,6 +92,15 @@ function loadData(pageNumber, pageSize) {
 	$.post("./admin_ztworld/ztworld_queryHTWorldList",myQueryParams,
 			function(result){
 			if(result['result'] == 0) {
+				if(result.maxId > maxId) {
+					maxId = result.maxId;
+					myQueryParams.maxId = maxId;
+				}
+				if(result.activityId != 'undefined') {
+					activityId = result.activityId;
+				} else {
+					activityId = 0;
+				}
 				dataList = [];
 				$(".world-opt-wrap").remove();
 				refreshPagination(result['total'], pageSize, pageNumber);
@@ -1168,8 +1177,8 @@ var htmTableTitle = "分享列表维护", //表格标题
 	}
 	
 	/**
-	*显示用户信息
-	*/
+	 * 显示用户信息
+	 */
 	function showUserInfo(uri){
 		$.fancybox({
 			'margin'			: 20,
@@ -1274,8 +1283,8 @@ var htmTableTitle = "分享列表维护", //表格标题
 	}
 	
 	/**
-	*查找type评论
-	*/
+	 * 查找type评论
+	 */
 	function searchTypeComment() {
 		var comment = $("#ss_type_comment").searchbox("getValue");
 		commentMaxId = 0;
@@ -1287,8 +1296,8 @@ var htmTableTitle = "分享列表维护", //表格标题
 	}
 	
 	/**
-	*worldId显示界面初始化
-	*/
+	 * worldId显示界面初始化
+	 */
 	function showWorldAndInteract(uri){
 		$.fancybox({
 			'margin'			: 20,

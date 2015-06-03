@@ -181,6 +181,11 @@ body {
 .window {
 	position:fixed;
 }
+
+.zt-tag-img {
+	width:22px !important;
+	height:22px !important;
+}
 </style>
 </head>
 <body>
