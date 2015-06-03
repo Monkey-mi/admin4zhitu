@@ -44,7 +44,7 @@ public interface InteractZombieService {
 	 * @return
 	 * @throws Exception
 	 */
-	public void queryZombieWorldForTable(int maxId,Date addDate,Date modifyDate,int page,int rows,Integer complete,Map<String,Object>jsonMap)throws Exception;
+	public void queryZombieWorldForTable(Integer channelId,int maxId,Date addDate,Date modifyDate,int page,int rows,Integer complete,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
 	 * 批量定时发布马甲织图

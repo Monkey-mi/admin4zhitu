@@ -47,7 +47,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 	 */
 	public String queryZombieWorldForTable(){
 		try{
-			service.queryZombieWorldForTable(maxId, addDate, modifyDate, page, rows, complete, jsonMap);
+			service.queryZombieWorldForTable(channelId,maxId, addDate, modifyDate, page, rows, complete, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

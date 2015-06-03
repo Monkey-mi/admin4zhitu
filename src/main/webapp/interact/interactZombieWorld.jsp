@@ -187,6 +187,7 @@ var maxId = 0,
 		myQueryParams.maxId=0;
 		myQueryParams.addDate=$("#beginDate").datetimebox('getValue');
 		myQueryParams.modifyDate=$("#endDate").datetimebox('getValue');
+		myQueryParams.channelId = $("#channelId").val();
 		$("#htm_table").datagrid('load',myQueryParams);
 	}
 </script>
@@ -205,6 +206,8 @@ var maxId = 0,
    		<input id="beginDate"  class="easyui-datetimebox"/>
    		<span>结束时间：</span>
    		<input id="endDate"  class="easyui-datetimebox"/>
+   		<span>频道ID</span>
+   		<input id="channelId">
    		<a href="javascript:void(0);" onclick="javascript:searchZombieWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 	</div>  
 	
