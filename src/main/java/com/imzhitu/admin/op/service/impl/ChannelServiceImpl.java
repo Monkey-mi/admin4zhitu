@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service.impl;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -573,6 +574,13 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 				webUserInfoService.extractVerify(worldList);
 				return worldList;
 			}
+		}, new NumberDtoListMaxIdAdapter(){
+
+		    @Override
+		    public Serializable getMaxId(
+			    List<? extends Serializable> list) throws Exception {
+			return channelWorldMapper.queryChannelWorldMaxId();
+		    }
 		});
 	}
 

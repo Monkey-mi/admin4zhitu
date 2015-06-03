@@ -38,6 +38,14 @@ public interface ChannelWorldMapper {
 	public long queryChannelWorldCount(OpChannelWorld world);
 	
 	/**
+	 * 查询频道织图最大maxId
+	 * 
+	 * @return
+	 */
+	@DataSource("slave")
+	public Integer queryChannelWorldMaxId();
+	
+	/**
 	 * 保存频道织图
 	 * 
 	 * @param world

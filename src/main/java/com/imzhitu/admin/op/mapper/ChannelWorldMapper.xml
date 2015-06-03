@@ -125,6 +125,10 @@
 		</where>
 	</select>
 	
+	<select id="queryChannelWorldMaxId" resultType="java.lang.Integer">
+		select max(id) from hts.operations_channel_world
+	</select>
+	
 	<update id="update">
 		update hts.operations_channel_world
 		<set>
