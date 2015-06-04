@@ -171,7 +171,10 @@ var maxId = 0,
 			maximizable : false,
 			collapsible : false,
 			iconCls : 'icon-converter',
-			resizable : false
+			resizable : false，
+			onClose : function() {
+				$(".reindex_column").val('');
+			}
 		});
 		
 		$('#htm_refresh').window({
