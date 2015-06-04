@@ -599,4 +599,13 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		titleChild.setCoordinatex(0);
 		titleChild.setCoordinatey(0);
 	}
+	
+	/**
+	 * 批量更新标签
+	 * @throws Exception
+	 */
+	@Override
+	public void batchUpdateZombieWorldLabel(String zombieWorldIds,String labelString)throws Exception{
+		
+	}
 }

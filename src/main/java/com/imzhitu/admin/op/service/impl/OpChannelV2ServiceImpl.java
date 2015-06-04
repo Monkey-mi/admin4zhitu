@@ -272,9 +272,10 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @throws Exception
 	 */
 	@Override
-	public OpChannelV2Dto queryOpChannelById(Integer id)throws Exception{
+	public OpChannelV2Dto queryOpChannelByIdOrName(Integer id,String channelName)throws Exception{
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(id);
+		dto.setChannelName(channelName);
 		List<OpChannelV2Dto> list = opChannelV2Mapper.queryOpChannel(dto);
 		if(list != null && list.size() == 1){
 			return list.get(0);
@@ -304,7 +305,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		List<OpChannel> list = new ArrayList<OpChannel>(channelIds.length);
 		for(int i=0; i<channelIds.length;i++){
 			updateValid(channelIds[i],valid);
-			OpChannelV2Dto d = queryOpChannelById(channelIds[i]);
+			OpChannelV2Dto d = queryOpChannelByIdOrName(channelIds[i],null);
 			if(null == d){
 				continue;
 			}
@@ -330,15 +331,42 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @throws Exception
 	 */
 	@Override
-	public void queryOpChannelByAdminUserId(Integer adminUserId,Map<String,Object>jsonMap)throws Exception{
+	public void queryOpChannelByAdminUserId(Integer channelId,String channelName,Integer channelTypeId,Integer adminUserId,Map<String,Object>jsonMap)throws Exception{
 		List<AdminAndUserRelationshipDto> relationshipList = adminAndUserRelationshipService.getAllAdminAndUserRelationshipByRole(adminUserId);
 		Integer[] ownerIdArray = new Integer[relationshipList.size()];
 		for(int i=0; i<relationshipList.size(); i++){
 			ownerIdArray[i] = relationshipList.get(i).getUserId();
 		}
 		List<OpChannelV2Dto>channelList = opChannelV2Mapper.queryOpChannelByOwnerIds(ownerIdArray);
-		jsonMap.put(OptResult.ROWS, channelList);
-		jsonMap.put(OptResult.TOTAL, channelList.size());
+		List<OpChannelV2Dto>resultList = new ArrayList<OpChannelV2Dto>();
+		if(channelList != null && channelList.size()>0){
+			if(channelId != null ){
+				for(OpChannelV2Dto dto:channelList){
+					if(dto.getChannelId() == channelId){
+						resultList.add(dto);
+						break;
+					}
+				}
+			}else if(channelName != null){
+				for(OpChannelV2Dto dto:channelList){
+					if(dto.getChannelName() == channelName){
+						resultList.add(dto);
+						break;
+					}
+				}
+			}else if(channelTypeId != null){
+				for(OpChannelV2Dto dto:channelList){
+					if(dto.getChannelTypeId() == channelTypeId){
+						resultList.add(dto);
+						break;
+					}
+				}
+			}
+		}
+		
+		
+		jsonMap.put(OptResult.ROWS, resultList);
+		jsonMap.put(OptResult.TOTAL, resultList.size());
 	}
 	
 	

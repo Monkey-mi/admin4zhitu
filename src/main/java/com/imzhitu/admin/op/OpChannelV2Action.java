@@ -116,9 +116,9 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	 * 根据ID查询频道
 	 * @return
 	 */
-	public String queryOpChannelById(){
+	public String queryOpChannelByIdOrName(){
 		try{
-			OpChannelV2Dto dto = opChannelV2Service.queryOpChannelById(channelId);
+			OpChannelV2Dto dto = opChannelV2Service.queryOpChannelByIdOrName(channelId,channelName);
 			JSONUtil.optResult(OptResult.OPT_SUCCESS, dto, OptResult.JSON_KEY_OBJ, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -160,7 +160,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			if( bSuperAdmin || bOpAdmin){
 				opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag,themeId, page, rows, maxId, jsonMap);
 			}else{
-				opChannelV2Service.queryOpChannelByAdminUserId(getCurrentLoginUserId(), jsonMap);
+				opChannelV2Service.queryOpChannelByAdminUserId(channelId,channelName,channelTypeId,getCurrentLoginUserId(), jsonMap);
 			}
 		}catch(Exception e ){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

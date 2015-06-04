@@ -62,7 +62,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public OpChannelV2Dto queryOpChannelById(Integer id)throws Exception;
+	public OpChannelV2Dto queryOpChannelByIdOrName(Integer id,String channelName)throws Exception;
 	
 	/**
 	 * 更新
@@ -85,7 +85,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void queryOpChannelByAdminUserId(Integer adminUserId,Map<String,Object>jsonMap)throws Exception;
+	public void queryOpChannelByAdminUserId(Integer channelId,String channelName,Integer channelTypeId,Integer adminUserId,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
 	 * 批量插入织图到频道

@@ -53,4 +53,10 @@ public interface InteractZombieService {
 	 * @param timeSpan
 	 */
 	public void batchSaveZombieWorldToHTWorld(final String zombieWorldIds,final Date begin, final Integer timeSpan);
+	
+	/**
+	 * 批量更新标签
+	 * @throws Exception
+	 */
+	public void batchUpdateZombieWorldLabel(String zombieWorldIds,String labelString)throws Exception;
 }

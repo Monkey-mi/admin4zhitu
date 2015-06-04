@@ -52,6 +52,7 @@ var maxId = 0,
 	addRecommendMsgURL = "./admin_op/channel_addChannelWorldRecommendMsgs?ids=",
 	queryChannelURL = "./admin_op/channel_queryChannelById",
 	updateCoverCacehURL = "./admin_op/channel_updateChannelCoverCache",
+	queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName",// 根据id或民称查询频道
 	columnsFields = [
 		{field : 'ck',checkbox : true },
 		{field : recordIdKey,title : '序号',align : 'center',width : 60},
@@ -575,6 +576,40 @@ function addCover(channelId, worldId, index) {
 }
 
 
+/**
+ * 根据频道Id或名字查询频道
+ */
+function queryChannelByIdOrName(){
+	var channelIdOrName = $("#ss-channelSearch").searchbox('getValue');
+	var params={};
+	if(channelIdOrName){
+		channelIdOrName = channelIdOrName.trim();
+		if(isNaN(channelIdOrName)){
+			params['channelName']=channelIdOrName;
+		}else{
+			maxId = 0;
+			myQueryParams['world.maxId'] = maxId;
+			myQueryParams['world.channelId'] = obj['channelId'];
+			$("#htm_table").datagrid("load",myQueryParams);
+			return;
+		}
+	
+		$.post(queryChannelByIdOrNameURL,params, function(result){
+			if(result['result'] == 0) {
+				var obj = result['obj'];
+				
+				maxId = 0;
+				myQueryParams['world.maxId'] = maxId;
+				myQueryParams['world.channelId'] = obj['channelId'];
+				$("#htm_table").datagrid("load",myQueryParams);
+			} else {
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+			
+		},"json");
+	}
+}
+
 </script>
 </head>
 <body>
@@ -585,6 +620,7 @@ function addCover(channelId, worldId, index) {
 		<div>
 			<span class="search_label">请选择频道：</span>
 			<input id="ss-channel" style="width:100px;" />
+			<input id="ss-channelSearch" prompt="输入频道ID或者频道名称" searcher="queryChannelByIdOrName" class="easyui-searchbox" style="width:100px;">
 			<span id="htm_opt_btn" class="none">
 			<a href="javascript:void(0);" onclick="javascript:htmUI.htmWindowAdd();" class="easyui-linkbutton" title="添加频道红人" plain="true" iconCls="icon-add">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>

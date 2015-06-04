@@ -9,7 +9,7 @@
 <script type="text/javascript">
 var channelQueryParam={};
 var channelMaxId = 0;
-var queryChannelByIdURL = "./admin_op/v2channel_queryOpChannelById";// 根据id查询频道
+var queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName";// 根据id和名称查询频道
 
 $(document).ready(function(){
 	$('#ss-channel').combogrid({
@@ -46,7 +46,7 @@ $(document).ready(function(){
 	    onSelect:function(index,row){
 	    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID",row.channelId,10*24*60*60*1000);
 	    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME",row.channelName,10*24*60*60*1000);
-	    	queryChannelById(row.channelId);
+	    	queryChannelByIdOrName(row.channelId);
 	    }
 	});
 	
@@ -71,19 +71,26 @@ $(document).ready(function(){
 function getChannelIdFromCookie(){
 	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
 	if(channelId){
-		queryChannelById(channelId);
+		queryChannelByIdOrName(channelId);
 	}
 }
 
 
 /**
- * 根据频道Id查询频道
+ * 根据频道Id或名字查询频道
  */
-function queryChannelById(channelId){
-	if(channelId){
-		$.post(queryChannelByIdURL,{
-			"channelId":channelId
-		}, function(result){
+function queryChannelByIdOrName(channelIdOrName){
+	var params={};
+	if(channelIdOrName){
+		channelIdOrName = channelIdOrName.trim();
+		if(isNaN(channelIdOrName)){
+			params['channelName']=channelIdOrName;
+		}else{
+			params['channelId']=channelIdOrName;
+		}
+	}
+	if(channelIdOrName){
+		$.post(queryChannelByIdOrNameURL,params, function(result){
 			if(result['result'] == 0) {
 				var obj = result['obj'];
 				var createTime = new Date(obj['createTime']);
@@ -117,6 +124,11 @@ function queryChannelById(channelId){
 		},"json");
 	}
 }
+
+function channelSerach(){
+	var searchFactor = $("#ss-channelSearch").searchbox('getValue');	
+	queryChannelByIdOrName(searchFactor);
+}
 </script>
 <style type="text/css">
 	.channelInfo{
@@ -139,6 +151,7 @@ function queryChannelById(channelId){
 						<div style="width:100%;height:60px;">
 							<span class="search_label">请选择频道：</span>
 							<input id="ss-channel" style="width:200px;" >
+							<input id="ss-channelSearch" prompt="输入频道ID或者频道名称" searcher="channelSerach" class="easyui-searchbox" style="width:100px;">
 							<div style="width:100%;padding-top:10px;">
 								<span class="infotitle">频道名称:<span id="channelName" style="width:180px;display: inline-block;"></span></span>
 								<span class="infotitle">创建时间:<span id="channelCreateTime" style="width:180px;display: inline-block;">0000-00-00 00:00:00</span></span>

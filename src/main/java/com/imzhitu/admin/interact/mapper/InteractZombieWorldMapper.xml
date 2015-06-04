@@ -40,6 +40,12 @@
 		where id=#{id}
 	</update>
 	
+	<!-- 更新标签 -->
+	<update id="updateZombieWorldLabel">
+		update hts_admin.zombie_world set world_label=#{worldLabel},date_modify = #{modifyDate}
+		where id=#{id}
+	</update>
+	
 		
 	<!-- 查询 id-->
 	<select id="queryZombieWorldId" resultType="Integer">

@@ -25,4 +25,7 @@ public interface InteractZombieWorldMapper {
 	
 	@DataSource("slave")
 	public long queryZombieWorldTotalCountForTable(ZombieWorld dto);
+	
+	@DataSource("master")
+	public void updateZombieWorldLabel(ZombieWorld dto);
 }

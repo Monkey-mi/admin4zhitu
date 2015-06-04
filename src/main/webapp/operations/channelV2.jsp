@@ -24,7 +24,7 @@ var maxId = 0,
 	deleteURI = "./admin_op/channel_deleteChannels?ids=", //删除请求地址
 	saveChannelURL = "./admin_op/v2channel_insertOpChannel", // 保存频道地址
 	updateChannelByIdURL = "./admin_op/v2channel_updateOpChannel", // 更新频道地址
-	queryChannelByIdURL = "./admin_op/v2channel_queryOpChannelById", // 根据id查询频道
+	queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName", // 根据id查询频道
 	updateValidURL = "./admin_op/v2channel_batchUpdateChannelValid?channelIdsStr=",
 	
 	htmTablePageList = [6,10,20],
@@ -241,7 +241,7 @@ function initEditWindow(id, index, isUpdate) {
 	if(isUpdate) {
 		$('#htm_edit').panel('setTitle', '修改频道信息');
 		$('#htm_edit').window('open');
-		$.post(queryChannelByIdURL,{
+		$.post(queryChannelByIdOrNameURL,{
 			"channelId":id
 		}, function(result){
 			if(result['result'] == 0) {
@@ -511,10 +511,18 @@ function addChannelSubmit(){
 }
 
 
-function searchChannelByName(){
-	var myQueryParam = {
-		'channelName':$("#ss_channelName").searchbox('getValue')
+function searchChannelByIdOrName(){
+	var channelSearchFactor = $("#ss_channelName").searchbox('getValue');
+	var myQueryParam = {};
+	if(channelSearchFactor){
+		channelSearchFactor = channelSearchFactor.trim();
 	}
+	if(isNaN(channelSearchFactor)){
+		myQueryParam['channelName'] = channelSearchFactor;
+	}else{
+		myQueryParam['channelId'] = channelSearchFactor;
+	}
+	
 	$('#htm_table').datagrid('load',myQueryParam);
 }
 
@@ -535,7 +543,7 @@ function searchChannelByName(){
 	   			<option value="1">生效</option>
 	   			<option value="0">未生效</option>
    			</select>
-   			<input id="ss_channelName" class="easyui-searchbox" searcher="searchChannelByName" prompt="请输入频道名" style="width:120px;"></input>
+   			<input id="ss_channelName" class="easyui-searchbox" searcher="searchChannelByIdOrName" prompt="请输入频道名或频道ID" style="width:120px;"></input>
    		</div>
 		</div> 
 	
