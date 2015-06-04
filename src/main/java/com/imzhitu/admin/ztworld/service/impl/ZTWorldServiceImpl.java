@@ -137,8 +137,9 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	@Override
 	public void buildWorld(int maxId, int start, int limit, String startDateStr, 
 			String endDateStr, String shortLink, Integer phoneCode, String label, 
-			String authorName, Integer valid, Integer shield, Integer user_level_id,String orderKey,
-			String orderBy, Map<String, Object> jsonMap) throws Exception{
+			String authorName, Integer valid, Integer shield, String worldDesc, 
+			Integer user_level_id,String orderKey,String orderBy, 
+			Map<String, Object> jsonMap) throws Exception{
 		ZTWorldDto dto = new ZTWorldDto();
 		dto.setMaxId(maxId);
 		dto.setLimit(limit);
@@ -209,6 +210,12 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		
 		if(shield != null) {
 			dto.setShield(shield);
+		}
+		
+		if(worldDesc != null) {
+			dto.setWorldDesc("%" + worldDesc + "%");
+			dto.setDateAdded(null);
+			dto.setDateModified(null);
 		}
 		
 		List<ZTWorldDto> dtoList = null;

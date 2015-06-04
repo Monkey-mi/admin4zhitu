@@ -131,13 +131,14 @@ function drawWorldOpt($worldOpt, worlds, index) {
 	$worldOpt.attr("style", myRowStyler(index, world));
 	var $authorInfo = $('<div class="world-author">'
 			+'<span>'+authorAvatarColumn.formatter(world['authorAvatar'],world,index)+'</span>'
-			+'<span class="world-author-name">'+getAuthorName(world['authorName'],world,index)
+			+'<span class="world-author-name">'+getAuthorName(world['authorName'],world,index) +'</span>'
+			+'<span>'+phoneCodeColumn.formatter(world['phoneCode'],world,index) +'</span>'
 			+'<hr class="divider"></hr>'
 			+'<div>织图ID:'+worldIdAndShowWorldColumn.formatter(world['worldId'],world,index) 
-			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span></span>'
+			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span>'
 			+'</div>'
 			+'<div>用户ID:'+authorIdColumn.formatter(world['authorId'],world,index) 
-			+'('+userLevelColumn.formatter(world['level_description'],world,index)+')</span>'
+			+'('+userLevelColumn.formatter(world['level_description'],world,index)+')'
 			+'</div>'
 			+'</div>');
 	var $worldInfo = $('<div class="world-info">'
@@ -207,6 +208,7 @@ function drawWorldOpt($worldOpt, worlds, index) {
 
 function getAuthorName(value, row, index) {
 	if(row.authorId != 0) {
+		value = value.substr(0, 15);
 		if(row.trust == 1) {
 			return "<a title='移出信任列表.\n推荐人:"
 				+row.trustOperatorName+"\n最后修改时间:"
@@ -229,7 +231,6 @@ function getAuthorName(value, row, index) {
 	} else if(baseTools.isNULL(value)) {
 		return "织图用户";
 	}
-	
 }
 
 function getTypeInteract(value, row, index) {
@@ -1418,6 +1419,20 @@ var htmTableTitle = "分享列表维护", //表格标题
 		var rows = myQueryParams.rows;
 		myQueryParams = {
 			'authorName' : authorName
+		};
+		loadData(1, rows);
+	}
+	
+	function searchByWorldDesc() {
+		maxId = 0;
+		var worldDesc = $('#ss_worldDesc').searchbox('getValue');
+		if(worldDesc == "") {
+			search();
+			return
+		}
+		var rows = myQueryParams.rows;
+		myQueryParams = {
+			'worldDesc' : worldDesc
 		};
 		loadData(1, rows);
 	}

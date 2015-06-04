@@ -19,7 +19,7 @@
 	</context-param>
 	<context-param>
 		<param-name>webVer</param-name>
-		<param-value>2015010231</param-value>
+		<param-value>2015060301</param-value>
 	</context-param>
 
 	<filter>

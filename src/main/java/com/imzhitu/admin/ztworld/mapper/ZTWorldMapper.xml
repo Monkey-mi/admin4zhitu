@@ -228,6 +228,9 @@
 			 	<if test="shield != null">
 			 		and h2.shield = #{shield}
 			 	</if>
+			 	<if test="worldDesc != null">
+			 		and h2.world_desc like #{worldDesc}
+			 	</if>
 			 	<if test="user_level_id != null">
 			 		and iull.user_level_id = #{user_level_id}
 			 	</if>
@@ -287,6 +290,9 @@
 			 	</if>
 			 	<if test="shield != null">
 			 		and h2.shield = #{shield}
+			 	</if>
+			 	<if test="worldDesc != null">
+			 		and h2.world_desc like #{worldDesc}
 			 	</if>
 			 	<if test="user_level_id != null">
 			 		and iull.user_level_id = #{user_level_id}

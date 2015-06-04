@@ -458,6 +458,15 @@ function searchByAuthorName() {
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
+function searchByWorldDesc() {
+	maxId = 0;
+	var worldDesc = $('#ss_worldDesc').searchbox('getValue');
+	myQueryParams = {
+		'worldDesc' : worldDesc
+	};
+	$("#htm_table").datagrid("load",myQueryParams);
+}
+
 /**
  * 添加信任
  * 

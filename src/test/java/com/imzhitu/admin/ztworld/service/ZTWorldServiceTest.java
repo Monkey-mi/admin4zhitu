@@ -30,7 +30,7 @@ public class ZTWorldServiceTest extends BaseTest {
 //		service.buildWorld(100000, 1, 10, null,
 //				null, null, null, null, null,Tag.TRUE, Tag.FALSE, null, null, jsonMap);
 		service.buildWorld(0, 1, 10, null,
-				null, null, null, null, null,Tag.TRUE, Tag.FALSE, 22,null, null, jsonMap);
+				null, null, null, null, null,Tag.TRUE, Tag.FALSE,"哈哈", 22,null, null, jsonMap);
 		logObj(jsonMap);
 	}
 	

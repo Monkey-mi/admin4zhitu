@@ -56,6 +56,7 @@ public class ZTWorldAction extends BaseCRUDAction {
 	private Integer typeId;
 	private Integer valid;
 	private Integer shield;
+	private String worldDesc;
 	
 	private Float ver;
 	private String logoPath;
@@ -64,7 +65,6 @@ public class ZTWorldAction extends BaseCRUDAction {
 	
 	private Integer childId;
 	private Boolean  isNotAddClick = false; // 不添加播放次数标记位
-
 	
 
 	@Autowired
@@ -79,7 +79,7 @@ public class ZTWorldAction extends BaseCRUDAction {
 	public String queryHTWorldList() {
 		try {
 			worldService.buildWorld(maxId, page, rows, startTime, endTime, shortLink, 
-					phoneCode, worldLabel, authorName, valid, shield,user_level_id, sort, order, jsonMap);
+					phoneCode, worldLabel, authorName, valid, shield,worldDesc,user_level_id, sort, order, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -511,6 +511,14 @@ public class ZTWorldAction extends BaseCRUDAction {
 
 	public void setIsNotAddClick(Boolean isNotAddClick) {
 		this.isNotAddClick = isNotAddClick;
+	}
+
+	public String getWorldDesc() {
+		return worldDesc;
+	}
+
+	public void setWorldDesc(String worldDesc) {
+		this.worldDesc = worldDesc;
 	}
 	
 	
