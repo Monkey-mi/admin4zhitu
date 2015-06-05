@@ -644,7 +644,6 @@ function queryChannelByIdOrName(){
 	var channelIdOrName = $("#ss-channelSearch").searchbox('getValue');
 	var params={};
 	if(channelIdOrName){
-		channelIdOrName = channelIdOrName.replace(/(^\s*)|(\s*$)/g,'');
 		if(isNaN(channelIdOrName)){
 			params['channelName']=channelIdOrName;
 		}else{

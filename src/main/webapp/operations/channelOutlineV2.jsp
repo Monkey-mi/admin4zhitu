@@ -82,7 +82,6 @@ function getChannelIdFromCookie(){
 function queryChannelByIdOrName(channelIdOrName){
 	var params={};
 	if(channelIdOrName){
-		channelIdOrName = channelIdOrName.replace(/(^\s*)|(\s*$)/g,'');
 		if(isNaN(channelIdOrName)){
 			params['channelName']=channelIdOrName;
 		}else{
@@ -108,7 +107,7 @@ function queryChannelByIdOrName(channelIdOrName){
 					var labelNameArray = obj['channelLabelNames'].split(",");
 					var labelIdArray = obj['channelLabelIds'].split(",");
 					for(i=0;i<labelNameArray.length;i++){
-						if(labelNameArray[i].replace(/(^\s*)|(\s*$)/g,'') != "" && labelIdArray[i].replace(/(^\s*)|(\s*$)/g,'') != ""){
+						if(labelNameArray[i] != "" && labelIdArray[i] != ""){
 							var labelSpan = $("<a href='javascript:void(0);' class='easyui-linkbutton l-btn' style='vertical-align:middle;height:24px;overflow:hidden;padding:2px 4px 2px 4px;' labelId='"+labelIdArray[i]
 											+"' labelName='"+labelNameArray[i]+"'>"+labelNameArray[i]+"</a>").click(function(){
 								$(this).remove();
