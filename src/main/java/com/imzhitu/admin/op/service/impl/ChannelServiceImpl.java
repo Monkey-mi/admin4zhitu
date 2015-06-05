@@ -177,6 +177,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	public void updateChannelCache() throws Exception {
 		channelCacheDao.updateChannel(channeCachelLimit);
 		webThemeCacheDao.updateTheme();
+		channelCacheDao.updateOldChannel();
 		updateChannelCoverCache();
 	}
 
