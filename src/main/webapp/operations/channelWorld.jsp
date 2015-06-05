@@ -15,6 +15,7 @@
 var maxId = 0,
 	channelId = 0,
 	notifyIndex = 0,
+	currentIndex = 0,
 	batchEnableTip = "您确定要使已选中的织图生效吗？",
 	batchDisableTip = "您确定要使已选中的织图失效吗？",
 	init = function() {
@@ -41,7 +42,7 @@ var maxId = 0,
 	},
 	hideIdColumn = true,
 	htmTableTitle = "频道织图列表", //表格标题
-	htmTableWidth = 1200,
+	htmTableWidth = 1300,
 	toolbarComponent = '#tb',
 	myIdField = "channelWorldId",
 	recordIdKey = "channelWorldId",
@@ -126,6 +127,12 @@ var maxId = 0,
   					+ "' onclick='javascript:addCover(\""+ row['channelId'] + "\",\""+ row['worldId'] + "\",\"" + index + "\")' />";
   			}
   		},
+  		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160,
+			formatter: function(value,row,index) {
+				return "<a href='javascript:void(0);' class='pointer' title='"+value+"'"
+				+" onclick='javascript:multiple(\""+ row['worldId'] + "\",\"" + index + "\")'>"+value+"</a>";
+  			}
+		},
   		dateModified,
 		],
 	addWidth = 520, //添加信息宽度
@@ -171,7 +178,7 @@ var maxId = 0,
 			maximizable : false,
 			collapsible : false,
 			iconCls : 'icon-converter',
-			resizable : false，
+			resizable : false,
 			onClose : function() {
 				$(".reindex_column").val('');
 			}
@@ -256,6 +263,21 @@ var maxId = 0,
 		
 		removePageLoading();
 		$("#main").show();
+		
+		$('#htm_multiple').window({
+			title : '添加到多个频道',
+			modal : true,
+			width : 660,
+			height : 195,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-converter',
+			resizable : false
+		});
+		
 	};
 	
 	
@@ -406,6 +428,42 @@ function submitReIndexForm() {
 	}
 }
 
+/**
+ * 添加到多个频道
+ */
+function multiple(worldId, index) {
+	currentIndex = index;
+	$('#htm_multiple .opt_btn').show();
+	$('#htm_multiple .loading').hide();
+	$("#worldId_multiple").val(worldId);
+	
+	// 打开添加窗口
+	$("#htm_multiple").window('open');
+}
+
+
+function submitMutipleForm() {
+	var $form = $('#multiple_form');
+	if($form.form('validate')) {
+		$('#htm_multiple .opt_btn').hide();
+		$('#htm_multiple .loading').show();
+		$form.form('submit', {
+			url: $form.attr('action'),
+			success: function(data){
+				var result = $.parseJSON(data);
+				$('#htm_multiple .opt_btn').show();
+				$('#htm_multiple .loading').hide();
+				if(result['result'] == 0) { 
+					$('#htm_multiple').window('close');  //关闭添加窗口
+					updateValue(currentIndex,'multiple',result['obj']);	
+				} else {
+					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+				}
+				
+			}
+		});
+	}
+}
 
 /**
  * 搜索推荐用户
@@ -592,7 +650,7 @@ function queryChannelByIdOrName(){
 		}else{
 			maxId = 0;
 			myQueryParams['world.maxId'] = maxId;
-			myQueryParams['world.channelId'] = obj['channelId'];
+			myQueryParams['world.channelId'] = channelIdOrName;
 			$("#htm_table").datagrid("load",myQueryParams);
 			return;
 		}
@@ -779,6 +837,49 @@ function queryChannelByIdOrName(){
 			</table>
 		</form>
 	</div>
+	
+	
+	<!-- 重排索引 -->
+	<div id="htm_multiple">
+		<form id="multiple_form" action="./admin_op/channel_saveChannelWorlds" method="post">
+			<table class="htm_edit_table" width="660">
+				<tbody>
+					<tr>
+						<td class="leftTd">频道ID：</td>
+						<td>
+							<input name="batchCID" class="easyui-validatebox reindex_column" required="true"/>
+							<input name="batchCID" class="reindex_column"/>
+							<input name="batchCID" class="reindex_column"/>
+							<input name="batchCID" class="reindex_column"/>
+							<input name="batchCID" class="reindex_column"/>
+							<input name="batchCID" class="reindex_column"/>
+							<input name="batchCID" class="reindex_column"/>
+							<input name="batchCID" class="reindex_column"/>
+							<input name="batchCID" class="reindex_column"/>
+							<input name="batchCID" class="reindex_column"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">频道ID：</td>
+						<td><input type="text" name="worldId" id="worldId_multiple" /></td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitMutipleForm();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_multiple').window('close');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">排序中...</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	
 	
 	</div>
 </body>
