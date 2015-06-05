@@ -59,9 +59,11 @@ body {
 
 .world-author-name {
 	margin-left:5px;
-	width:100px;
-	height:20px;
+	width:160px;
+	height:18px;
 	overflow-y:hidden;
+	display:inline-block;
+	vertical-align:middle;
 }
 
 .world-info {
@@ -515,7 +517,7 @@ body {
 					<tr>
 						<td class="leftTd">频道名称：</td>
 						<td ><input id="channelId" name="world.channelId" class="easyui-combobox" 
-							data-options="valueField:'id',textField:'channelName',url:'./admin_op/channel_queryAllChannel'"/></td>
+							data-options="valueField:'id',textField:'channelName',multiple:'true',url:'./admin_op/channel_queryAllChannel'"/></td>
 					</tr>
 					<tr>
 						<td class="leftTd">织图ID：</td>

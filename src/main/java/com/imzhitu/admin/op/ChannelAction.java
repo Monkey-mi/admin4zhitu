@@ -51,6 +51,7 @@ public class ChannelAction extends BaseCRUDAction{
 	private Boolean addAllTag;
 	private Integer childCountBase;
 	private Boolean isAdd = true;
+	private Integer worldId;
 	
 	/**
 	 * 查询频道缓存
@@ -718,7 +719,23 @@ public class ChannelAction extends BaseCRUDAction{
 			channelService.updateChannelCoverCache();
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
-			e.printStackTrace();
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 保存频道织图
+	 * 
+	 * @return
+	 */
+	public String saveChannelWorlds() {
+		String[] channelIds = request.getParameterValues("batchCID");
+		try {
+			List<String> names = channelService.saveChannelWorlds(worldId, channelIds);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, names,
+					OptResult.JSON_KEY_OBJ, jsonMap);
+		} catch(Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
@@ -858,6 +875,14 @@ public class ChannelAction extends BaseCRUDAction{
 
 	public void setCover(OpChannelCover cover) {
 		this.cover = cover;
+	}
+
+	public Integer getWorldId() {
+		return worldId;
+	}
+
+	public void setWorldId(Integer worldId) {
+		this.worldId = worldId;
 	}
 	
 }

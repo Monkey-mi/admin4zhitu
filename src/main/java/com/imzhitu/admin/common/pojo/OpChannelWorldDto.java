@@ -1,6 +1,8 @@
 package com.imzhitu.admin.common.pojo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -31,6 +33,9 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	
 	private Integer isCover = Tag.FALSE;
 
+	// 存在于多个频道
+	private List<String> multiple = new ArrayList<String>();
+	
 	public Integer getBeSchedula() {
 		return beSchedula;
 	}
@@ -164,5 +169,12 @@ public class OpChannelWorldDto extends ZTWorldBase {
 		this.isCover = isCover;
 	}
 
-	
+	public List<String> getMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(List<String> multiple) {
+		this.multiple = multiple;
+	}
+
 }

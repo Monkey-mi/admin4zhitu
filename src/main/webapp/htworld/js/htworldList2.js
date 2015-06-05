@@ -158,10 +158,6 @@ function drawWorldOpt($worldOpt, worlds, index) {
 	var $world = $('<div class="world" />');
 	
 	var $opt = $('<div class="world-opt-head-wrap">'
-			+ '<span class="world-opt-head">互动</span>'
-			+ '<span>|</span>'
-			+ '<span class="world-opt-head">精选</span>'
-			+ '<span>|</span>'
 			+ '<span class="world-opt-head">活动</span>'
 			+ '<span>|</span>'
 			+ '<span class="world-opt-head">最新</span>'
@@ -169,12 +165,6 @@ function drawWorldOpt($worldOpt, worlds, index) {
 			+ '<span class="world-opt-head">操作</span>'
 			+'</div>'
 			+ '<div class="world-opt-btn-wrap">'
-			+ '<span class="world-opt-btn">'
-			+ getTypeInteract(world['typeInteract'], world, index)
-			+ '</span>'+ '<span>|</span>'
-			+ '<span class="world-opt-btn">'
-			+ getWorldType(world['worldType'], world, index)
-			+ '</span>'+ '<span>|</span>'
 			+ '<span class="world-opt-btn">'
 			+ getActiveOperated(world['activeOperated'], world, index)
 			+ '</span>'+ '<span>|</span>'

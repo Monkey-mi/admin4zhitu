@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
+import com.imzhitu.admin.common.pojo.OpChannelNameDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 
@@ -145,4 +146,7 @@ public interface ChannelWorldMapper {
 	 */
 	@DataSource("slave")
 	public List<String> queryChannelNameByWorldId(Integer worldId);
+	
+	@DataSource("slave")
+	public List<OpChannelNameDto> queryChannelNameByWIDs(Integer[] wids);
 }

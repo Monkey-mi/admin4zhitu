@@ -573,4 +573,14 @@ public interface ChannelService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateChannelCoverCache() throws Exception;
+	
+	/**
+	 * 批量保存频道织图
+	 * 
+	 * @param worldId
+	 * @param channelIdsStr
+	 * @throws Exception
+	 */
+	public List<String> saveChannelWorlds(Integer worldId,
+			String[] channelIdsStr) throws Exception;
 }

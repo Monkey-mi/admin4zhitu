@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.common.pojo.OpChannel;
 import com.imzhitu.admin.common.pojo.OpChannelCover;
+import com.imzhitu.admin.common.pojo.OpChannelNameDto;
 import com.imzhitu.admin.common.pojo.OpChannelStar;
 import com.imzhitu.admin.common.pojo.OpChannelStarDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
@@ -570,7 +572,23 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			
 			@Override
 			public List<? extends AbstractNumberDto> queryList(OpChannelWorld world) {
-				List<OpChannelWorldDto> worldList = channelWorldMapper.queryChannelWorlds(world);
+				final List<OpChannelWorldDto> worldList = channelWorldMapper.queryChannelWorlds(world);
+				if(worldList.size() > 0) {
+					Map<Integer, Integer> idxMap = new HashMap<Integer, Integer>();
+					Integer[] wids = new Integer[worldList.size()];
+					for(int i = 0; i < worldList.size(); i++) {
+						Integer wid = worldList.get(i).getWorldId();
+						wids[i] = wid;
+						idxMap.put(wid, i);
+					}
+					List<OpChannelNameDto> nameList = channelWorldMapper.queryChannelNameByWIDs(wids);
+					for(int i = 0; i < nameList.size(); i++) {
+						Integer wid = nameList.get(i).getWorldId();
+						String name = nameList.get(i).getChannelName();
+						Integer idx = idxMap.get(wid);
+						worldList.get(idx).getMultiple().add(name);
+					}
+				}
 				webUserInfoService.extractVerify(worldList);
 				return worldList;
 			}
@@ -1217,6 +1235,43 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			}
 			channelCoverCacheDao.updateCoverCache(cids, channelCoverLimit);
 		}
+	}
+
+	@Override
+	public List<String> saveChannelWorlds(Integer worldId, String[] channelIdsStr)
+			throws Exception {
+		if(channelIdsStr == null || channelIdsStr.length == 0) {
+			throw new HTSException("please set channelids");
+		}
+		for(String s : channelIdsStr) {
+			if(StringUtil.checkIsNULL(s)) {
+				continue;
+			}
+			Integer cid = Integer.parseInt(s);
+			OpChannelWorld world = new OpChannelWorld();
+			world.setChannelId(cid);
+			world.setWorldId(worldId);
+			OpChannelWorld worldExists = channelWorldMapper.queryWorldByChannelId(world);
+			if(worldExists == null) {
+				world.setNotified(Tag.TRUE);
+				world.setDateAdded(new Date());
+				world.setSuperb(Tag.FALSE);
+				world.setWeight(0);
+				Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+				world.setSerial(id);
+				world.setId(id);
+				world.setValid(Tag.TRUE);
+				if(world.getAuthorId() == null) {
+					Integer authorId = webWorldDao.queryAuthorId(world.getWorldId());
+					world.setAuthorId(authorId);
+				}
+				try {
+					channelWorldMapper.save(world);
+				} catch(DuplicateKeyException e) {
+				}
+			}
+		}
+		return channelWorldMapper.queryChannelNameByWorldId(worldId);
 	}
 
 }
