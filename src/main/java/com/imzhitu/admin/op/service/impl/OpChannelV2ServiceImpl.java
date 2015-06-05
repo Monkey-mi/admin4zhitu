@@ -67,6 +67,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			Integer worldFlag,Integer themeId) throws Exception{
 		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
+		Date now = new Date();
 		Integer channelId = keyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
 		dto.setChannelId(channelId);
 		dto.setOwnerId(ownerId);
@@ -91,6 +92,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setMoodFlag(moodFlag);
 		dto.setWorldFlag(worldFlag);
 		dto.setThemeId(themeId);
+		dto.setCreateTime(now.getTime());
+		dto.setLastModifiedTime(now.getTime());
 		
 		opChannelV2Mapper.insertOpChannel(dto);
 		//新增频道的同时须将该频道拥有着关注该频道

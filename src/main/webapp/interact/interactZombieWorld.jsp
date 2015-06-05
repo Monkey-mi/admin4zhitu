@@ -17,6 +17,7 @@ var maxId = 0,
 	htmTablePageList = [10,30,50,100,150],
 	loadDataURL = "./admin_interact/interactZombieWorld_queryZombieWorldForTable", //数据装载请求地址
 	deleteURI = "./admin_interact/interactZombieWorld_batchSaveZombieWorldToHTWorld?ids=",
+	batchUpdateLabelsURL = "./admin_interact/interactZombieWorld_batchUpdateZombieWorldlabel?ids=",
 	init = function() {
 		toolbarComponent = '#tb';
 		myQueryParams = {
@@ -51,12 +52,12 @@ var maxId = 0,
 			}
 		},
 		{field : 'worldDesc', title:'织图描述', align : 'center',width : 80},
-		{field : 'addDate', title:'添加日期', align : 'center',width : 150, 
+		{field : 'addDate', title:'添加日期', align : 'center',width : 120, 
 			formatter: function(value,row,index){
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 			}
 		},
-		{field : 'modifyDate', title:'最后修改时间日期', align : 'center',width : 150, 
+		{field : 'modifyDate', title:'最后修改时间日期', align : 'center',width : 120, 
 			formatter: function(value,row,index){
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 			}
@@ -83,7 +84,8 @@ var maxId = 0,
 		},
 		{field : 'htworldId', title:'织图ID', align : 'center',width : 80},
 		{field : 'channelId',title:'频道ID',align : 'center',width:70},
-		{field : 'channelName',title:'频道名称',align:'center',width:90}
+		{field : 'channelName',title:'频道名称',align:'center',width:90},
+		{field : 'worldLabel',title:'织图标签',align:'center',width:120},
 		
 	],
 	onAfterInit = function() {
@@ -105,6 +107,65 @@ var maxId = 0,
 			}
 		});
 		
+		$("#batch-update-label").window({
+			title : '批量更新马甲织图标签',
+			modal : true,
+			width : 420,
+			height : 200,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-add',
+			resizable : false,
+			onClose : function(){
+				$("#channelLabel").html('');
+			}
+		});
+		
+		
+		$('#channelLabelSearch').combobox({
+			valueField:'id',
+			textField:'label_name',
+			onChange:function(rec){
+				var url="./admin_op/v2channel_queryOpChannelLabel?channelLabelNames="+$('#channelLabelSearch').combobox('getValue');
+				$('#channelLabelSearch').combobox('reload',url);
+			},
+			onSelect:function(rec){
+				var channelLabelId = rec.id;
+				var channelLabelName = rec.label_name;
+				if(rec.id == -1){
+					channelLabelName = channelLabelName.substring(channelLabelName.indexOf(":")+1);
+					$.messager.confirm('更新记录',"是否创建标签："+channelLabelName,function(r){
+						if(r){
+							$.post("./admin_ztworld/label_saveLabel",{
+								'labelName':channelLabelName
+							},function(result){
+								if(result['result'] == 0){
+									channelLabelId = result['labelId'];
+									var labelSpan = $("<a href='javascript:void(0);' class='easyui-linkbutton l-btn' style='vertical-align:middle;height:24px;width:52px;overflow:hidden;' labelId='"
+											+channelLabelId+"' labelName='"+channelLabelName+"'>"+channelLabelName+"</a>").click(function(){
+										$(this).remove();
+									});
+									$("#channelLabel").append(labelSpan);
+									$('#channelLabelSearch').combobox('clear');
+								}else{
+									$.messager.alert('提示',result['msg']);
+								}
+							},"json");
+						}
+					});
+				}else{
+					var labelSpan = $("<a href='javascript:void(0);' class='easyui-linkbutton l-btn' style='vertical-align:middle;height:24px;width:52px;overflow:hidden;' labelId='"
+							+channelLabelId+"' labelName='"+channelLabelName+"'>"+channelLabelName+"</a>").click(function(){
+						$(this).remove();
+					});
+					$("#channelLabel").append(labelSpan);
+					$('#channelLabelSearch').combobox('clear');
+				}
+			}
+		});
 		
 		removePageLoading();
 		$("#main").show();
@@ -190,6 +251,50 @@ var maxId = 0,
 		myQueryParams.channelId = $("#channelId").val();
 		$("#htm_table").datagrid('load',myQueryParams);
 	}
+	
+	function initBatchUpdateLabel(){
+		$('#batch-update-label').window('open');
+		var rows = $('#htm_table').datagrid('getSelections');	
+		if(isSelected(rows) == false){
+			$('#batch-update-label').window('close');
+		}
+	}
+	
+	function submitBatchUpdateLabelForm(){
+		var labelnames="";
+		$("#channelLabel a").each(function(){
+			labelnames += $(this).attr("labelName");
+			labelnames +=",";
+		});
+		
+		if(labelnames.length > 0){
+			labelnames = labelnames.substring(0, labelnames.length-1);
+		}else{
+			$.messager.alert('操作失败','请先选择标签，再执行操作!','error');
+			return;
+		}
+		var rows = $('#htm_table').datagrid('getSelections');	
+		if(isSelected(rows)){
+			var ids = [];
+			for(var i=0;i<rows.length;i+=1){		
+				ids.push(rows[i]['id']);	
+			}	
+			$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
+			$('#htm_table').datagrid('loading');
+			$.post(batchUpdateLabelsURL+ids,{
+				'worldLabel':labelnames
+			},function(result){
+				$('#htm_table').datagrid('loaded');
+				if(result['result'] == 0) {
+					$('#htm_table').datagrid('reload');
+				} else {
+					$.messager.alert('提示',result['msg']);
+				}
+				$("#batch-save").window('close');
+			},"json");
+		}
+		
+	}
 </script>
 
 </head>
@@ -197,6 +302,7 @@ var maxId = 0,
 	<table id="htm_table"></table>
 	<div id="tb" style="padding:5px;height:auto" class="none">
 		<a href="javascript:void(0);" onclick="javascript:batchSaveZombieWorldToHTWorld();" class="easyui-linkbutton" title="批量发图" plain="true" iconCls="icon-add" id="batchSaveBtn">批量发图</a>
+		<a href="javascript:void(0);" onclick="javascript:initBatchUpdateLabel();" class="easyui-linkbutton" title="批量修改标签" plain="true" iconCls="icon-add" id="batchSaveBtn">批量修改标签</a>
 		<select id="ss-complete" class="easyui-combobox" data-options="onSelect:function(rec){queryZombieWorldByComplete(rec.value);}" style="width:100px;" >
 		        <option value="">所有完成状态</option>
 		        <option value="0">未完成</option>
@@ -231,6 +337,34 @@ var maxId = 0,
 						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitBatchSaveForm();">确定</a>
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#batch-save').window('close');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">保存中...</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	
+	<div id="batch-update-label">
+		<form id="batchUpdateLabel_form"  method="post" >
+			<table class="htm_edit_table" width="340">
+				<tbody>
+					<tr>
+						<td class="leftTd">标签：</td>
+						<td>
+							<div id="channelLabel" style="width: 206px;height: 60px;background-color: #b8b8b8;"></div>
+							<input id="channelLabelSearch" style="width: 206px;">
+						</td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitBatchUpdateLabelForm();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#batch-update-label').window('close');">取消</a>
 						</td>
 					</tr>
 					<tr class="loading none">

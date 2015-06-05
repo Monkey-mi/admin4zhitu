@@ -262,7 +262,7 @@ function initEditWindow(id, index, isUpdate) {
 					var labelNameArray = obj['channelLabelNames'].split(",");
 					var labelIdArray = obj['channelLabelIds'].split(",");
 					for(i=0;i<labelNameArray.length;i++){
-						if(labelNameArray[i].trim() != "" && labelIdArray[i].trim() != ""){
+						if(labelNameArray[i] != "" && labelIdArray[i] != ""){
 							var labelSpan = $("<a href='javascript:void(0);' class='easyui-linkbutton l-btn' style='vertical-align:middle;height:24px;width:52px;overflow:hidden;' labelId='"+labelIdArray[i]
 											+"' labelName='"+labelNameArray[i]+"'>"+labelNameArray[i]+"</a>").click(function(){
 								$(this).remove();
@@ -514,9 +514,6 @@ function addChannelSubmit(){
 function searchChannelByIdOrName(){
 	var channelSearchFactor = $("#ss_channelName").searchbox('getValue');
 	var myQueryParam = {};
-	if(channelSearchFactor){
-		channelSearchFactor = channelSearchFactor.trim();
-	}
 	if(isNaN(channelSearchFactor)){
 		myQueryParam['channelName'] = channelSearchFactor;
 	}else{

@@ -606,6 +606,33 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	 */
 	@Override
 	public void batchUpdateZombieWorldLabel(String zombieWorldIds,String labelString)throws Exception{
+		String[] labels = labelString.trim().split(",");
+		Integer[] zombieWorldIdArray = StringUtil.convertStringToIds(zombieWorldIds);
+		int size = labels.length;
+		List<String> list = new ArrayList<String>();
+		ZombieWorld dto = new ZombieWorld();
+		dto.setModifyDate(new Date());
+		long l = 0;
+		for(int j=0; j<zombieWorldIdArray.length; j++){
+			/**
+			 * 算法描述：
+			 * 		先随机一个数。然后查看该数的字节码，决定该字节码对应的标签是否需要
+			 */
+			l = Math.round(Math.random()*1024);
+			for(int  i=0; i < size; i++){
+				if(((l >> i) & 1) == 1){
+					list.add(labels[i]);
+				}
+			}
+			
+			if(list.size()>0){
+				String label = list.toString();
+				dto.setWorldLabel(label.substring(1,label.length()-1 ));
+				dto.setId(zombieWorldIdArray[j]);
+				zombieWorldMapper.updateZombieWorldLabel(dto);
+				list.clear();
+			}
+		}
 		
 	}
 }

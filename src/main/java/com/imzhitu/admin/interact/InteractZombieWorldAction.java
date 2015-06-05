@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
+import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.interact.service.InteractZombieService;
@@ -124,6 +125,16 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 			JSONUtil.optResult(0, "success", jsonMap);
 		}catch(Exception e){
 			JSONUtil.optResult(-1, "fail", jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String batchUpdateZombieWorldlabel(){
+		try{
+			service.batchUpdateZombieWorldLabel(ids, worldLabel);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}

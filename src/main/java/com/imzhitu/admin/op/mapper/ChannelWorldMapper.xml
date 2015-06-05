@@ -109,7 +109,7 @@
 			<if test="notified != null"> AND ocw.notified=#{notified}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ AND ocw.id<=#{maxId}]]></if>
 		</where>
-		order by weight desc, id desc
+		order by weight desc, serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 		) as cw left join hts_admin.op_channel_world_schedula ocws
 			on cw.world_id = ocws.world_id

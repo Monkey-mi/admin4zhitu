@@ -61,4 +61,9 @@ public class InteractZombieWorldServiceTest extends BaseTest{
 //		service.batchSaveZombieWorldToHTWorld("384", new Date(now.getTime() + 10*1000), 1);
 //		Thread.sleep(121*1000);
 	}
+	
+	@Test
+	public void batchUpdateZombieWorldLabelTest()throws Exception{
+		service.batchUpdateZombieWorldLabel("299,300,301,302", "japan,abc,fuck,nothing,right,不行,随便测");
+	}
 }
