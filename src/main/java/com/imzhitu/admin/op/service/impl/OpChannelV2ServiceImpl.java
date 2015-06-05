@@ -93,6 +93,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setWorldFlag(worldFlag);
 		dto.setThemeId(themeId);
 		dto.setCreateTime(now.getTime());
+		dto.setLastModifiedTime(now.getTime());
 		
 		opChannelV2Mapper.insertOpChannel(dto);
 		//新增频道的同时须将该频道拥有着关注该频道
