@@ -42,7 +42,7 @@ var maxId = 0,
 	},
 	hideIdColumn = true,
 	htmTableTitle = "频道织图列表", //表格标题
-	htmTableWidth = 1300,
+	htmTableWidth = 1380,
 	toolbarComponent = '#tb',
 	myIdField = "channelWorldId",
 	recordIdKey = "channelWorldId",
@@ -129,7 +129,7 @@ var maxId = 0,
   		},
   		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160,
 			formatter: function(value,row,index) {
-				return "<a href='javascript:void(0);' class='pointer' title='"+value+"'"
+				return "<a href='javascript:void(0);' class='pointer updateInfo' title='"+value+"'"
 				+" onclick='javascript:multiple(\""+ row['worldId'] + "\",\"" + index + "\")'>"+value+"</a>";
   			}
 		},
@@ -268,7 +268,7 @@ var maxId = 0,
 			title : '添加到多个频道',
 			modal : true,
 			width : 660,
-			height : 195,
+			height : 165,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -860,8 +860,8 @@ function queryChannelByIdOrName(){
 						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">频道ID：</td>
-						<td><input type="text" name="worldId" id="worldId_multiple" /></td>
+						<td class="leftTd">织图ID：</td>
+						<td><input type="text" name="worldId" id="worldId_multiple"  readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
