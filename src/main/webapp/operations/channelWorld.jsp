@@ -171,7 +171,7 @@ var maxId = 0,
 			maximizable : false,
 			collapsible : false,
 			iconCls : 'icon-converter',
-			resizable : false，
+			resizable : false,
 			onClose : function() {
 				$(".reindex_column").val('');
 			}
@@ -592,7 +592,7 @@ function queryChannelByIdOrName(){
 		}else{
 			maxId = 0;
 			myQueryParams['world.maxId'] = maxId;
-			myQueryParams['world.channelId'] = obj['channelId'];
+			myQueryParams['world.channelId'] = channelIdOrName;
 			$("#htm_table").datagrid("load",myQueryParams);
 			return;
 		}
