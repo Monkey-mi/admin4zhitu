@@ -155,7 +155,7 @@
 	</insert>
 	
 	<update id="updateId">
-		update hts.operations_channel_world set id=#{id} where channel_id=#{channelId} and world_id=#{worldId}
+		update hts.operations_channel_world set id=#{id},serial=#{serial} where channel_id=#{channelId} and world_id=#{worldId}
 	</update>
 	
 	<update id="updateValidByIds">
