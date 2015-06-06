@@ -41,6 +41,21 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	
 	private String themeName;			//主题名称
 	
+	private Long yestodayMemberIncreasement;	//昨日新增成员数
+	private Long yestodayWorldIncreasement;	//昨日新增织图数
+	
+	public Long getYestodayMemberIncreasement() {
+		return yestodayMemberIncreasement;
+	}
+	public void setYestodayMemberIncreasement(Long yestodayMemberIncreasement) {
+		this.yestodayMemberIncreasement = yestodayMemberIncreasement;
+	}
+	public Long getYestodayWorldIncreasement() {
+		return yestodayWorldIncreasement;
+	}
+	public void setYestodayWorldIncreasement(Long yestodayWorldIncreasement) {
+		this.yestodayWorldIncreasement = yestodayWorldIncreasement;
+	}
 	public Integer getThemeId() {
 		return themeId;
 	}

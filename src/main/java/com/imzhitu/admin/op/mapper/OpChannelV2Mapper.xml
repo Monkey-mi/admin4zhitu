@@ -233,4 +233,29 @@
 	 	</foreach>
 	</select>
 	
+	<!-- 查询昨日新增成员数。不包括马甲 -->
+	<select id="queryYestodayMemberIncreasement" resultType="long">
+		select count(*) from hts.operations_channel_member ocm 
+		where ocm.channel_id = #{channelId}
+		and ocm.sub_time between #{yestodayTime} and #{todayTime}
+		and not exists ( select ouz.id
+			from hts.operations_user_zombie ouz
+			where ouz.user_id=ocm.user_id
+		)
+	</select>
+	
+	<!-- 查询昨日新增织图数 -->
+	<select id="queryYestodayWorldIncreasement" resultType="long">
+		select count(*) from hts.operations_channel_world ocw
+		where ocw.channel_id = #{channelId}
+		and ocw.date_added between #{yestoday,jdbcType=TIMESTAMP} and #{today,jdbcType=TIMESTAMP}
+		and not exists (
+			select ouz.id
+			from hts.operations_user_zombie ouz
+			where ouz.user_id=ocw.author_id
+		)
+		
+	</select>
+	
+	
 </mapper>

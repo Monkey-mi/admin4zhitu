@@ -1,6 +1,9 @@
 package com.imzhitu.admin.op.mapper;
 
+import java.util.Date;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
@@ -50,4 +53,25 @@ public interface OpChannelV2Mapper {
 	 */
 	@DataSource("slave")
 	public List<OpChannelV2Dto>queryOpChannelByOwnerIds(Integer[] ownerIdArray);
+	
+	/**
+	 * 查询昨日新增成员数。不包括马甲
+	 * @param yestodayTime
+	 * @param todayTime
+	 * @param dto
+	 * @return
+	 */
+	@DataSource("slave")
+	public long queryYestodayMemberIncreasement(@Param("yestodayTime") Long yestodayTime,@Param("todayTime") Long todayTime,@Param("channelId")Integer  channelId);
+	
+	
+	/**
+	 *	查询昨日新增织图数 ,不包括马甲
+	 * @param yestodayTime
+	 * @param todayTime
+	 * @param dto
+	 * @return
+	 */
+	@DataSource("slave")
+	public long queryYestodayWorldIncreasement(@Param("yestoday") Date yestoday,@Param("today") Date today,@Param("channelId")Integer  channelId);
 }

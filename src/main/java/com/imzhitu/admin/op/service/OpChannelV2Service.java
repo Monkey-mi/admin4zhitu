@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service;
 
+import java.util.Date;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
@@ -94,4 +95,24 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 */
 	public void batchInsertWorldToChannel(Integer channelId,String worldAndAuthorIds)throws Exception;
+	
+	/**
+	 * 查询昨天新增织图数，不包含马甲
+	 * @param yestoday
+	 * @param today
+	 * @param channelId
+	 * @return
+	 * @throws Exception
+	 */
+	public long queryYestodayWorldIncreasement(Date yestoday, Date today,Integer  channelId)throws Exception;
+	
+	/**
+	 * 查询昨天新增成员数，不包含马甲
+	 * @param yestodayTime
+	 * @param todayTime
+	 * @param channelId
+	 * @return
+	 * @throws Exception
+	 */
+	public long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId)throws Exception;
 }

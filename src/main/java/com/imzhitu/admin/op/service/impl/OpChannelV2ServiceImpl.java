@@ -1,6 +1,8 @@
 package com.imzhitu.admin.op.service.impl;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -281,7 +283,12 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setChannelName(channelName);
 		List<OpChannelV2Dto> list = opChannelV2Mapper.queryOpChannel(dto);
 		if(list != null && list.size() == 1){
-			return list.get(0);
+			OpChannelV2Dto o = list.get(0);
+			long yestodayMemberIncreasement =  queryYestodayMemberIncreasement(null,null,o.getChannelId());
+			long yestodayWorldIncreasement  =  queryYestodayWorldIncreasement(null, null, o.getChannelId());
+			o.setYestodayMemberIncreasement(yestodayMemberIncreasement);
+			o.setYestodayWorldIncreasement(yestodayWorldIncreasement);
+			return o;
 		}else {
 			return null;
 		}
@@ -364,6 +371,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 						break;
 					}
 				}
+			}else{
+				resultList.addAll(channelList);
 			}
 		}
 		
@@ -419,6 +428,48 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		
 		webChannelService.updateWorldAndChildCount(channelId);
 		
+	}
+	
+	/**
+	 * 查询昨天新增成员数，不包含马甲
+	 * @param yestodayTime
+	 * @param todayTime
+	 * @param channelId
+	 * @return
+	 * @throws Exception
+	 */
+	public long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId)throws Exception{
+		Date now = new Date();
+		DateFormat df = new  SimpleDateFormat("yyyy-MM-dd");
+		Date today = df.parse(df.format(now));
+		if(yestodayTime == null ){
+			yestodayTime = today.getTime() - 24*60*60*1000;
+		}
+		if(todayTime == null){
+			todayTime = today.getTime();
+		}
+		return opChannelV2Mapper.queryYestodayMemberIncreasement(yestodayTime, todayTime, channelId);
+	}
+	
+	/**
+	 * 查询昨天新增织图数，不包含马甲
+	 * @param yestoday
+	 * @param today
+	 * @param channelId
+	 * @return
+	 * @throws Exception
+	 */
+	public long queryYestodayWorldIncreasement(Date yestoday, Date today,Integer  channelId)throws Exception{
+		Date now = new Date();
+		DateFormat df = new  SimpleDateFormat("yyyy-MM-dd");
+		Date today1 = df.parse(df.format(now));
+		if(yestoday == null ){
+			yestoday = new Date(today1.getTime() - 24*60*60*1000);
+		}
+		if(today == null){
+			today = today1;
+		}
+		return opChannelV2Mapper.queryYestodayWorldIncreasement(yestoday, today, channelId);
 	}
 
 }
