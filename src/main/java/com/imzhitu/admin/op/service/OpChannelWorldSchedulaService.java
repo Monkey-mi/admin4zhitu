@@ -39,13 +39,14 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	/**
 	 * 批量添加
 	 * @param wIds
+	 * @param superbWids	加精的worldid集合，用,分割
 	 * @param channelId
 	 * @param finish
 	 * @param valid
 	 * @param operator
 	 * @throws Exception
 	 */
-	public void batchAddChannelWorldSchedula(String[] wIds,Date schedula,Integer channelId,Integer finish,
+	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids,Date schedula,Integer channelId,Integer finish,
 			Integer valid,Integer operator)throws Exception;
 	
 	/**
@@ -61,6 +62,6 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * @param operator
 	 * @throws Exception
 	 */
-	public void reSort(String[] ids,Date schedula,Integer operator)throws Exception;
+	public void reSort(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception;
 
 }
