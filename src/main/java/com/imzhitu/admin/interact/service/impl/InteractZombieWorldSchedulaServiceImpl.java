@@ -17,7 +17,6 @@ import com.imzhitu.admin.interact.mapper.InteractZombieWorldSchedulaMapper;
 import com.imzhitu.admin.interact.service.InteractZombieService;
 import com.imzhitu.admin.interact.service.InteractZombieWorldSchedulaService;
 
-@Service
 public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl implements InteractZombieWorldSchedulaService{
 
 	@Autowired

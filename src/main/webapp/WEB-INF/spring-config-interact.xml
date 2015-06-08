@@ -141,6 +141,7 @@
 	<bean id="platService" class="com.imzhitu.admin.plat.service.impl.PlatServiceImpl" />
 	<bean id="opStarRecommendSchedulaService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendSchedulaServiceImpl" />
 	<bean id="opStarRecommendCacheService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendCacheServiceImpl" />
+	<bean id="interactZombieWorldSchedulaService" class="com.imzhitu.admin.interact.service.impl.InteractZombieWorldSchedulaServiceImpl"/>
 
 		
 	<!-- 互动播放定时任务 -->
@@ -555,12 +556,33 @@
             <value>0 0/1 * * * ?</value><!-- 每隔2分钟 -->
         </property>
     </bean>
+    
+     <!-- 马甲计划发图 -->
+    <bean id="zombieWorldSchedulaJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="interactZombieWorldSchedulaService"/>
+        </property>
+        <property name="targetMethod">
+            <value>doZombieWorldSchedulaJob</value>
+        </property>
+    </bean>
+
+	<!-- 马甲计划发图 -->
+    <bean id="zombieWorldSchedulaJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="zombieWorldSchedulaJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/5 * * * ?</value><!-- 每隔5分钟 -->
+        </property>
+    </bean>
 	
-	<!-- 
+	
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
-            <list> 
+            <list> <!-- 
                 <ref bean="interactCommentJobTrigger" />
                 <ref bean="interactClickJobTrigger"/>
                 <ref bean="interactLikedJobTrigger" />
@@ -580,8 +602,10 @@
                 <ref bean="platConcernJobTrigger" />
                 <ref bean="starRecommendSchedulaTrigger" />
                 <ref bean="starRecommendCacheTrigger" />
+                -->
+                <ref bean="zombieWorldSchedulaJobTrigger" />
             </list>
         </property>
     </bean>
-    -->
+    
 </beans>

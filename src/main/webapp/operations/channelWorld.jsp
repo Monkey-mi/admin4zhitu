@@ -188,7 +188,7 @@ var maxId = 0,
 			title : '重新排序',
 			modal : true,
 			width : 660,
-			height : 195,
+			height : 235,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -811,6 +811,12 @@ function queryChannelByIdOrName(){
 					<tr>
 						<td class="leftTd">计划更新时间：</td>
 						<td><input id="schedula" name="schedula" class="easyui-datetimebox" required="true"></td>
+					</tr>
+					<tr>
+						<td class="leftTd">时间间隔(分钟)：</td>
+						<td>
+							<input  id="minuteTimeSpan" class="easyui-numberbox" value="5" style="width:171px"/>
+						</td>
 					</tr>
 					<tr class="none">
 						<td colspan="2"><input type="text" name="channelId" id="channelId_indexed" /></td>

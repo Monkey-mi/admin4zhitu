@@ -16,7 +16,7 @@ var maxId = 0,
 	htmTableTitle = "马甲发图计划管理", //表格标题
 	htmTablePageList = [10,30,50,100,150],
 	loadDataURL = "./admin_interact/interactZombieWorld_queryZombieWorldForTable", //数据装载请求地址
-	deleteURI = "./admin_interact/interactZombieWorld_batchSaveZombieWorldToHTWorld?ids=",
+	batchSaveURI = "./admin_interact/zombieWorldSchedula_batchInsertZombieWorldSchedula?zombieWorldIdsStr=",
 	batchUpdateLabelsURL = "./admin_interact/interactZombieWorld_batchUpdateZombieWorldlabel?ids=",
 	init = function() {
 		toolbarComponent = '#tb';
@@ -201,13 +201,12 @@ var maxId = 0,
 			$('#htm_table').datagrid('loading');
 			var begin = $("#beginSaveTime").datetimebox('getValue');
 			var timeSpan = $("#timeSpan").numberbox('getValue');
-			$.post(deleteURI+ids,{
-				'begin':begin,
-				'timeSpan':timeSpan
+			$.post(batchSaveURI+ids,{
+				'schedula':begin,
+				'minuteTimeSpan':timeSpan
 			},function(result){
 				$('#htm_table').datagrid('loaded');
 				if(result['result'] == 0) {
-					$.messager.alert('提示',"正在发图中。。。");
 				} else {
 					$.messager.alert('提示',result['msg']);
 				}
