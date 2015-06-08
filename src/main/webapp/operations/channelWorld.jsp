@@ -93,6 +93,23 @@ var maxId = 0,
   				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}
   		},
+  		{field : 'channelWorldSchedulaSuperb',title : '加精',align : 'center', width: 45,
+  			formatter: function(value,row,index) {
+  				if(value == 1) {
+  					img = "./common/images/ok.png";
+  					return "<img title='加精' class='htm_column_img'  src='" + img + "'/>";
+  				}
+  				img = "./common/images/tip.png";
+  				return "<img title='未加精' class='htm_column_img' src='" + img + "'/>";
+  			},
+  			editor:{
+  				type:'checkbox',  
+                options:{
+                    on: 1,  
+                    off: 0
+                }
+  			}
+  		},
   		{field : 'beSchedula',title : '计划',align : 'center', width: 45,
   			formatter: function(value,row,index) {
   				if(value == 0) {
@@ -391,6 +408,15 @@ function reIndexed() {
 		if(i<rows.length)
 			$(this).val(rows[i]['worldId']);
 	});
+	// 定义存储加精织图id集合
+	var superbWids = [];
+	for(var i=0;i<rows.length;i++){
+		if (rows[i].channelWorldSchedulaSuperb==1){
+			superbWids.push(rows[i].worldId);
+		}
+	}
+	
+	$("#superbWids_indexed").val(superbWids);
 	
 	// 打开添加窗口
 	$("#htm_indexed").window('open');
@@ -400,7 +426,8 @@ function reIndexed() {
  * 清空索引排序
  */
 function clearReIndexedForm() {
-	$("#indexed_form").find('input[name="reIndexId"]').val('');	
+	$("#indexed_form").find('input[name="reIndexId"]').val('');
+	$("#superbWids_indexed").val('');
 }
 
 function submitReIndexForm() {
@@ -422,7 +449,7 @@ function submitReIndexForm() {
 				} else {
 					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 				}
-				
+				$('#htm_table').datagrid('clearSelections');
 			}
 		});
 	}
@@ -787,6 +814,9 @@ function queryChannelByIdOrName(){
 					</tr>
 					<tr class="none">
 						<td colspan="2"><input type="text" name="channelId" id="channelId_indexed" /></td>
+					</tr>
+					<tr class="none">
+						<td colspan="2"><input type="text" name="superbWids" id="superbWids_indexed" /></td>
 					</tr>
 					<tr>
 						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">

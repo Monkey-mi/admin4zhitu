@@ -630,7 +630,11 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateChannelWorld(OpChannelWorld world) throws Exception {
+	    if ( world.getId() == null || world.getId().equals("") ) {
+		channelWorldMapper.updateChannelWorldByWorldIdAndChannelId(world);
+	    } else {
 		channelWorldMapper.update(world);
+	    }
 	}
 
 	@Override

@@ -63,6 +63,14 @@ public interface ChannelWorldMapper {
 	public void update(OpChannelWorld world);
 	
 	/**
+	 * 通过织图id和频道id共同更新频道织图
+	 * 
+	 * @param world
+	 */
+	@DataSource("master")
+	public void updateChannelWorldByWorldIdAndChannelId(OpChannelWorld world);
+	
+	/**
 	 * 根据ids删除记录
 	 * 
 	 * @param ids
