@@ -72,7 +72,6 @@ var maxId = 0,
 function initWorldBoxWidth() {
 	var length = parseInt($(window).width() / (250 + 10));
 	$("#world-box").css("width",length * (250 + 10) + 20 + 'px');
-	
 }
 
 function refreshPagination(total, pageSize, pageNumber)	{
