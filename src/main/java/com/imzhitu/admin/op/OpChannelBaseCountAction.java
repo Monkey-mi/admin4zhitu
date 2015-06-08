@@ -63,6 +63,9 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
     
     @Autowired
     private ChannelService channelService;
+    
+    @Autowired
+    private com.hts.web.operations.service.ChannelService webChannelService;
 
     /**
      * 保存数据到频道基数管理表
@@ -74,6 +77,11 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
 	try {
 	    if (isExistChannel(baseCountDto.getChannelId())) {
 		service.saveChannelBaseCount(baseCountDto);
+		
+		webChannelService.updateWorldAndChildCount(baseCountDto.getChannelId()); //更新织图和图片总数
+		webChannelService.updateMemberCount(baseCountDto.getChannelId()); // 更新频道成员订阅总数
+		webChannelService.updateSuperbCount(baseCountDto.getChannelId()); // 更新频道加精总数
+		
 		JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 	    } else {
 		JSONUtil.optSuccess("频道id不存在，请填写正确的频道id", jsonMap);
@@ -113,6 +121,13 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
 	try {
 	    Integer[] ids = StringUtil.convertStringToIds(getChannelIds());
 	    service.deleteChannelBaseCount(ids);
+	    
+	    for (Integer channelId : ids) {
+		webChannelService.updateWorldAndChildCount(channelId); //更新织图和图片总数
+		webChannelService.updateMemberCount(channelId); // 更新频道成员订阅总数
+		webChannelService.updateSuperbCount(baseCountDto.getChannelId()); // 更新频道加精总数
+	    }
+	    
 	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    e.printStackTrace();
