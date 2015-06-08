@@ -1,0 +1,174 @@
+body {
+	margin:0 auto;
+	margin:0 auto;
+	text-align:center;
+	background:#eee;
+}
+
+.switch-icon {
+	cursor:pointer;
+	width:15px;
+	vertical-align:middle;
+}
+
+#world-box {
+	width:100%;
+	text-align:left;
+	margin-top:90px;
+	margin-bottom:60px;
+	padding-left:10px;
+	display:inline-block;
+}
+
+.world-label {
+	width:230px;
+	height:20px;
+}
+
+.world-desc {
+	width:230px;
+	height:40px;
+	margin: 5px 0 5px 0;
+	overflow-y:auto;
+}
+
+.world-author {
+	padding:0px 10px 0 10px;
+	margin-bottom:5px;
+}
+
+.world-author-name {
+	margin-left:5px;
+	width:156px;
+	height:18px;
+	overflow-y:hidden;
+	display:inline-block;
+	vertical-align:middle;
+	color:#228b22;
+}
+
+.world-info {
+	padding:0px 10px 0 10px;
+}
+
+.world-date {
+	float:right;
+	font-size:12px;
+	color:#868686;
+}
+
+.world-info .glyphicon {
+	margin-top:2px;
+}
+.world-info .world-count{
+	margin-right:15px;
+	margin-left:4px;
+	line-height:20px;
+	height:20px;
+	vertical-align:text-bottom;
+}
+
+.world-label {
+	color:#729AAF;
+	height:20px;
+	overflow-y:hidden;
+}
+
+.world-opt-wrap {
+	display:inline-block;
+  background: #fff;
+  padding: 10px 0px 10px 0px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  margin: 7px;
+  -webkit-box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+  overflow: hidden;
+}
+
+.world-opt-left {
+  border-color: #ddd;
+  border-width: 1px;
+  border-radius: 4px 4px 0 0;
+  -webkit-box-shadow: none;
+  height:250px;
+  box-shadow: none;
+	display:inline-block;
+	float:left;
+}
+
+.world-opt-head-wrap {
+	color:#868686;
+	margin-bottom:0px;
+}	
+
+	.divider {
+	color:#868686;
+	margin:5px 0 5px 0;
+}
+.world-opt-head {
+	color:#868686;
+	display:inline-block;
+	width:47px;
+	text-align:center;
+}
+
+.world-opt-btn-wrap {
+	color:#868686;
+}
+.world-opt-btn {
+	display:inline-block;
+	width:47px;
+	text-align:center;
+}
+
+.world-channel {
+	color:#868686;
+	margin-left:16px;
+}
+
+.world {
+	width:250px;
+	height:250px;
+	display:inline-block;
+	position:relative;	
+	margin-bottom:10px;
+}
+
+.world-margin {
+	margin-left:5px;
+	margin-right:5px;
+}
+
+.navbar-fixed-top .container{
+	width:100%;
+	padding-top:10px;
+	text-align:center;
+}
+
+.navbar-fixed-top .pagination {
+	margin-top:10px;
+	margin-bottom:5px;
+}
+.htm_column_img {
+	border-radius:20px;
+}
+
+#page-loading {
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin-left:-60px;
+	margin-top:-55px;
+	z-index:9999;
+	display:none;
+}
+
+.window {
+	position:fixed;
+}
+
+.zt-tag-img {
+	width:22px !important;
+	height:22px !important;
+}

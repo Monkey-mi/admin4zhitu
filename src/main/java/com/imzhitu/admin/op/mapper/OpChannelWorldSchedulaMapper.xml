@@ -32,9 +32,9 @@
 	<!-- 增加 -->
 	<insert id="insertChannelWorldSchedula">
 		insert into hts_admin.op_channel_world_schedula 
-		(world_id,channel_id,valid,operator_id,date_add,date_modify,date_schedula,finish)
+		(world_id,channel_id,valid,superb,operator_id,date_add,date_modify,date_schedula,finish)
 		values
-		(#{worldId},#{channelId},#{valid},#{operatorId},
+		(#{worldId},#{channelId},#{valid},#{superb},#{operatorId},
 			#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{schedulaDate},#{finish})
 	</insert>
 	
@@ -61,6 +61,9 @@
 			</if>
 			<if test="valid != null">
 				valid = #{valid},
+			</if>
+			<if test="superb != null">
+				superb = #{superb},
 			</if>
 			<if test="finish != null">
 				finish = #{finish},

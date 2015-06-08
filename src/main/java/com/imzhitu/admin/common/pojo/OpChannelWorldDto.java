@@ -36,6 +36,8 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	// 存在于多个频道
 	private List<String> multiple = new ArrayList<String>();
 	
+	private Integer channelWorldSchedulaSuperb;	// 计划中加精，0为不加精，1为加精
+	
 	public Integer getBeSchedula() {
 		return beSchedula;
 	}
@@ -175,6 +177,20 @@ public class OpChannelWorldDto extends ZTWorldBase {
 
 	public void setMultiple(List<String> multiple) {
 		this.multiple = multiple;
+	}
+
+	/**
+	 * @return the channelWorldSchedulaSuperb
+	 */
+	public Integer getChannelWorldSchedulaSuperb() {
+	    return channelWorldSchedulaSuperb;
+	}
+
+	/**
+	 * @param channelWorldSchedulaSuperb the channelWorldSchedulaSuperb to set
+	 */
+	public void setChannelWorldSchedulaSuperb(Integer channelWorldSchedulaSuperb) {
+	    this.channelWorldSchedulaSuperb = channelWorldSchedulaSuperb;
 	}
 
 }

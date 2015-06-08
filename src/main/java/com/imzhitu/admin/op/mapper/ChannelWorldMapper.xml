@@ -21,6 +21,7 @@
 		<result column="author_id" property="authorId" jdbcType="INTEGER" />
 		<result column="channel_world_date_added" property="channelWorldDateAdded" jdbcType="TIMESTAMP"/>
 		<result column="channel_world_valid" property="channelWorldValid" jdbcType="INTEGER"/>
+		<result column="channel_world_schedula_superb" property="channelWorldSchedulaSuperb" jdbcType="INTEGER"/>
 		<result column="notified" property="notified" jdbcType="INTEGER"/>
 		<result column="weight" property="weight" jdbcType="INTEGER"/>
 		<result column="superb" property="superb" jdbcType="INTEGER"/>
@@ -95,7 +96,9 @@
 	</select>
 	
 	<select id="queryChannelWorlds" resultMap="OpChannelWorldDtoMap">
-		select cw.id as channel_world_id,cw.channel_id,cw.world_id,cw.valid as channel_world_valid,cw.notified,cw.weight,cw.superb,
+		select cw.id as channel_world_id,cw.channel_id,cw.world_id,cw.valid as channel_world_valid,
+		ocws.superb as channel_world_schedula_superb,
+		cw.notified,cw.weight,cw.superb,
 		c.channel_name, c.channel_title,c.channel_icon, h.*,u.user_name,u.user_avatar,u.star,u.trust
 		,ISNULL(ocws.finish) as beSchedula ,IFNULL(ocws.finish,0) as schedulaComplete, IFNULL(oct.id, 0) as is_cover
 		from 
@@ -147,6 +150,18 @@
 	      <if test="weight != null">weight=#{weight}</if>
 	    </set>
 	  	where id=#{id}
+	</update>
+	
+	<update id="updateChannelWorldByWorldIdAndChannelId">
+		update hts.operations_channel_world
+		<set>
+	      <if test="authorId != null">author_id=#{authorId},</if>
+	      <if test="valid != null">valid=#{valid},</if>
+	      <if test="notified != null">notified=#{notified},</if>
+	      <if test="superb != null">superb=#{superb},</if>
+	      <if test="weight != null">weight=#{weight}</if>
+	    </set>
+	  	where channel_id=#{channelId} and world_id=#{worldId}
 	</update>
 	
 	<insert id="save">

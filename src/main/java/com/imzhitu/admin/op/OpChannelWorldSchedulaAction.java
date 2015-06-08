@@ -29,6 +29,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	private Date schedula;		//计划时间字符串
 	private String superbWids;		//计划时间字符串
 	private Integer minuteTimeSpan;//计划时间间隔
+
 	
 	@Autowired
 	private OpChannelWorldSchedulaService service;
@@ -182,6 +183,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	public void setSuperbWids(String superbWids) {
 	    this.superbWids = superbWids;
 	}
+
 	
 	public Integer getMinuteTimeSpan() {
 		return minuteTimeSpan;
@@ -190,6 +192,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	public void setMinuteTimeSpan(Integer minuteTimeSpan) {
 		this.minuteTimeSpan = minuteTimeSpan;
 	}
+
 	
 	
 

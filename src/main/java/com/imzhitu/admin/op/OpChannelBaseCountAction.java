@@ -3,6 +3,7 @@
  */
 package com.imzhitu.admin.op;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
@@ -25,6 +26,8 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
      * 序列号
      */
     private static final long serialVersionUID = 6813398937925814369L;
+    
+    private Logger log = Logger.getLogger(OpChannelBaseCountAction.class);
 
     private ChannelBaseCountDto baseCountDto = new ChannelBaseCountDto();
     
@@ -87,7 +90,7 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
 		JSONUtil.optSuccess("频道id不存在，请填写正确的频道id", jsonMap);
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    log.error(e);
 	    JSONUtil.optFailed(OptResult.ADD_FAILED, jsonMap);;
 	}
 	return StrutsKey.JSON;
@@ -105,7 +108,7 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
 	    service.buildChannelBaseCountList(baseCountDto,page,rows,jsonMap);
 	    JSONUtil.optSuccess(OptResult.QUERY_SUCCESS, jsonMap);
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    log.error(e);
 	    JSONUtil.optFailed(OptResult.QUERY_SUCCESS, jsonMap);;
 	}
 	return StrutsKey.JSON;
@@ -130,7 +133,7 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
 	    
 	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    log.error(e);
 	    JSONUtil.optFailed(OptResult.DELETE_SUCCESS, jsonMap);;
 	}
 	return StrutsKey.JSON;

@@ -419,7 +419,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			channelWorld.setDateAdded(now);
 			channelWorld.setId(channelWorldId);
 			channelWorld.setNotified(Tag.FALSE);
-			channelWorld.setValid(Tag.TRUE);
+			channelWorld.setValid(Tag.FALSE);
 			channelWorld.setSuperb(Tag.FALSE);
 			channelWorld.setWeight(0);
 			channelWorld.setSerial(channelWorldId);
