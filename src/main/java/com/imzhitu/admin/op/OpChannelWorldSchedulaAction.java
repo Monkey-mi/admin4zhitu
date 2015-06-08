@@ -9,6 +9,7 @@ import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.op.service.OpChannelWorldSchedulaService;
@@ -26,7 +27,8 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	private Date modifyDate;	//最后修改时间
 	private String idsStr;		//id 字符串
 	private Date schedula;		//计划时间字符串
-	
+	private String superbWids;		//计划时间字符串
+	private Integer minuteTimeSpan;//计划时间间隔
 	
 	@Autowired
 	private OpChannelWorldSchedulaService service;
@@ -88,7 +90,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		try{
 			String[] wids = request.getParameterValues("reIndexId");
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			service.batchAddChannelWorldSchedula(wids, schedula, channelId, Tag.FALSE, Tag.TRUE, user.getId());
+			service.batchAddChannelWorldSchedula(wids, getSuperbWids(), schedula, channelId, Tag.FALSE, Tag.TRUE, user.getId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -104,7 +106,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		try{
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			String[] ids = request.getParameterValues("reIndexId");
-			service.reSort(ids, schedula, user.getId());
+			service.reSort(ids, schedula,minuteTimeSpan, user.getId());
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -165,6 +167,28 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	}
 	public void setIdsStr(String idsStr) {
 		this.idsStr = idsStr;
+	}
+
+	/**
+	 * @return the superbWids
+	 */
+	public String getSuperbWids() {
+	    return superbWids;
+	}
+
+	/**
+	 * @param superbWids the superbWids to set
+	 */
+	public void setSuperbWids(String superbWids) {
+	    this.superbWids = superbWids;
+	}
+	
+	public Integer getMinuteTimeSpan() {
+		return minuteTimeSpan;
+	}
+
+	public void setMinuteTimeSpan(Integer minuteTimeSpan) {
+		this.minuteTimeSpan = minuteTimeSpan;
 	}
 	
 	
