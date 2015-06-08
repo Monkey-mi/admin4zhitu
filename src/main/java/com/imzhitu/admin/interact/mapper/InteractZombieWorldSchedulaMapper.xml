@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractZombieWorldSchedulaMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.ZombieWorldSchedulaDto" id="ZombieWorldMapper">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="zombieWorldId" column="zombie_world_id" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="finished" column="finished" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="operator" column="operator" jdbcType="INTEGER"/>
+		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
+		<result property="schedula" column="schedula" jdbcType="TIMESTAMP"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertZombieWorldSchedula">
+		insert into hts_admin.zombie_world_schedula (zombie_world_id,valid,finished,operator,schedula,date_add)
+		values (#{zombieWorldId},#{valid},#{finished},#{operator},#{schedula,jdbcType=TIMESTAMP},#{addDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<!-- BATCH DELETE -->
+	<delete id="batchDeleteZombieWorldSchedula">
+		delete from hts_admin.zombie_world_schedula
+		where id in 
+		<foreach item="item" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	
+	<!-- UPDATE -->
+	<update id="updateZombieWorldSchedula">
+		update hts_admin.zombie_world_schedula
+		<set>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="finished != null">
+				finished = #{finished},
+			</if>
+			<if test="schedula != null ">
+				schedula = #{schedula},
+			</if>
+			<if test="operator != null">
+				operator = #{operator}
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="zombieWorldId != null">
+				and zombie_world_id = #{zombieWorldId}
+			</if>
+		</where>
+	</update>
+	
+	<!-- SELECT -->
+	<select id="queryZombieWorldSchedula" resultMap="ZombieWorldMapper">
+		select zws.*,aui.user_name as operatorName from hts_admin.zombie_world_schedula  zws
+		left join hts_admin.admin_user_info aui on zws.operator=aui.id
+		<where>
+			<if test="id != null">
+				zws.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and zws.id <= #{maxId}]]>
+			</if>
+			<if test="zombieWorldId != null">
+				and zws.zombie_world_id = #{zombieWorldId}
+			</if>
+			<if test="valid != null">
+				and zws.valid = #{valid}
+			</if>
+		</where>
+		order by zws.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- SELECT COUNT -->
+	<select id="queryZombieWorldSchedulaTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.zombie_world_schedula  zws
+		<where>
+			<if test="id != null">
+				zws.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and zws.id <= #{maxId}]]>
+			</if>
+			<if test="zombieWorldId != null">
+				and zws.zombie_world_id = #{zombieWorldId}
+			</if>
+			<if test="valid != null">
+				and zws.valid = #{valid}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryZombieWorldSchedulaByTime" resultMap="ZombieWorldMapper" >
+		select * from hts_admin.zombie_world_schedula  zws
+		where zws.schedula between #{beginDate} and #{endDate} 
+		and valid=#{valid} and finished=#{finished} 
+	</select>
+	
+	
+</mapper>
