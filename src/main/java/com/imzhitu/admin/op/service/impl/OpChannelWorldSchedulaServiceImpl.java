@@ -4,14 +4,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.apache.log4j.Logger;
 
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
 import com.imzhitu.admin.op.mapper.OpChannelWorldSchedulaMapper;
 import com.imzhitu.admin.op.service.ChannelService;
@@ -130,13 +131,14 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	/**
 	 * 批量添加
 	 */
-	public void batchAddChannelWorldSchedula(String[] wIds,Date schedula,Integer channelId,Integer finish,
+	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids, Date schedula,Integer channelId,Integer finish,
 			Integer valid,Integer operatorId)throws Exception{
 		channelService.addChannelWorldId(channelId,wIds);
 		Date now = new Date();
 		for(String s:wIds){
 			if(s.equals(""))continue;
 			Integer worldId = Integer.parseInt(s);
+			
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
 			dto.setWorldId(worldId);
 			long r = channelWorldSchedulaMapper.queryChannelWorldSchedulaCount(dto);
@@ -147,6 +149,13 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setFinish(finish);
 			dto.setValid(valid);
 			dto.setOperatorId(operatorId);
+			
+			if (superbWids.contains(s)) {	// 若加精的集合中包含当前操作的worldId，则设置加精
+			    dto.setSuperb(1);
+			} else {
+			    dto.setSuperb(0);
+			}
+
 			if(0 == r){
 				channelWorldSchedulaMapper.insertChannelWorldSchedula(dto);
 			}else{
@@ -165,21 +174,27 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		dto.setValid(Tag.TRUE);
 		dto.setFinish(Tag.FALSE);
 		List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldSchedula(dto);
-		Integer[] wids = new Integer[1];
-		if(list.size() > 0){	
-			for(int i=0; i<list.size(); i++){
-				wids[0] = list.get(i).getWorldId();
-				updateChannelWorldSchedula(list.get(i).getId(),null,null,null,Tag.TRUE,null,null,null);
-				channelService.updateChannelWorldValid(wids, list.get(i).getChannelId(), Tag.TRUE);
-				try{
-					channelService.addChannelWorldRecommendMsgByWorldId(list.get(i).getWorldId());
-				}catch(Exception e){
-					
-				}
-			}
-			
-			
+		
+		for (OpChannelWorldSchedulaDto schedulaDto : list) {
+		    updateChannelWorldSchedula(schedulaDto.getId(),null,null,null,Tag.TRUE,null,null,null);
+		    
+		    OpChannelWorld world = new OpChannelWorld();
+		    world.setChannelId(schedulaDto.getChannelId());
+		    world.setWorldId(schedulaDto.getWorldId());
+		    world.setValid(schedulaDto.getValid());
+		    world.setSuperb(schedulaDto.getSuperb());
+		    channelService.updateChannelWorld(world);
+		    
+        	    /*
+        	     * 下列注释，是针对以前频道的玩法：一张织图添加到频道中，会推送消息给用户 现在频道玩法变化，故先注释
+        	     */
+//        	    try {
+//        		channelService.addChannelWorldRecommendMsgByWorldId(schedulaDto.getWorldId());
+//        	    } catch (Exception e) {
+//        
+//        	    }
 		}
+		
 		//通知
 		
 		Date end = new Date();
@@ -194,12 +209,13 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	 * @throws Exception
 	 */
 	@Override
-	public void reSort(String[] ids,Date schedula,Integer operator)throws Exception{
+	public void reSort(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception{
+		long timeSpan = minuteTimeSpan*60*1000L;
 		for(int i= ids.length -1;i >= 0; i--){
 			String idStr = ids[i];
 			if(idStr != null && idStr != ""){
 				int id = Integer.parseInt(ids[i]);
-				long t = schedula.getTime() - i*1000;//用以排序
+				long t = schedula.getTime() - i*timeSpan;//用以排序
 				updateChannelWorldSchedula(id, null, null, null, null, null, operator, new Date(t));
 			}
 		}
