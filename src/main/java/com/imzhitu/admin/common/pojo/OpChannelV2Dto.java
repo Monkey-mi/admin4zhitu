@@ -44,6 +44,10 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	private Long yestodayMemberIncreasement;	//昨日新增成员数
 	private Long yestodayWorldIncreasement;	//昨日新增织图数
 	
+	private String userName;
+	private String userAvatar;
+	private String userAvatarL;
+	
 	public Long getYestodayMemberIncreasement() {
 		return yestodayMemberIncreasement;
 	}
@@ -68,10 +72,6 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	public void setThemeName(String themeName) {
 		this.themeName = themeName;
 	}
-	
-	
-	
-	
 	public Integer getMoodFlag() {
 		return moodFlag;
 	}
@@ -234,6 +234,23 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	public void setOrderBy(Integer orderBy) {
 		this.orderBy = orderBy;
 	}
-	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserAvatar() {
+		return userAvatar;
+	}
+	public void setUserAvatar(String userAvatar) {
+		this.userAvatar = userAvatar;
+	}
+	public String getUserAvatarL() {
+		return userAvatarL;
+	}
+	public void setUserAvatarL(String userAvatarL) {
+		this.userAvatarL = userAvatarL;
+	}
 	
 }

@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.constant.Tag;
 import com.imzhitu.admin.base.BaseTest;
-import com.imzhitu.admin.common.pojo.OpSysMsg;
-import com.imzhitu.admin.op.service.OpMsgService;
 
 public class OpMsgServiceTest extends BaseTest {
 
@@ -27,14 +26,14 @@ public class OpMsgServiceTest extends BaseTest {
 	public void testSaveNotice() throws Exception {
 		service.saveNotice("http://imzhitu.qiniudn.com/op/notice/2014081101.jpg", "http://www.imzhitu.com", Tag.IOS);
 	}
-	
-//	@Test
-//	public void pushAppMsgTest() throws Exception {
-//		OpSysMsg msg = new OpSysMsg();
-//		msg.setObjId(0);
-//		msg.setObjType(9);
-//		msg.setObjMeta("http://www.imzhitu.com");
-//		msg.setContent("呵呵");
-//		service.pushAppMsg(msg, true, true);
-//	}
+
+	@Test
+	public void updateStartPageTest() throws Exception {
+		Date beginDate = new Date();
+		Date endDate = new Date();
+		service.updateStartPageCache(
+				"http://imzhitu.qiniudn.com/op/notice/2015060901.jpg",
+				1,"http://imzhitu.com/operations/2015051501.html",
+				beginDate , endDate, 10);
+	}
 }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.hts.web.base.HTSException;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.pojo.OpNotice;
 import com.hts.web.common.service.impl.BaseServiceImpl;
@@ -33,6 +32,9 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 
 	@Autowired
 	private com.hts.web.push.service.PushService pushService;
+	
+	@Autowired
+	private com.hts.web.operations.dao.StartPageCacheDao webStartPageCacheDao;
 	
 	@Value("${push.appMsgSenderId}")
 	private Integer appMsgSenderId = 2063;
@@ -92,5 +94,22 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		if(inApp) {
 			sysMsgMapper.saveMsgByProcedure(msg);
 		}
+	}
+
+	@Override
+	public void updateStartPageCache(String linkPath, Integer linkType, String link,
+			Date beginDate, Date endDate, Integer showCount) throws Exception {
+		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_MSG_START_PAGE_ID);
+		com.hts.web.common.pojo.OpMsgStartPage wpage =
+				new com.hts.web.common.pojo.OpMsgStartPage();
+		wpage.setId(id);
+		wpage.setLinkPath(linkPath);
+		wpage.setLinkType(linkType);
+		wpage.setLink(link);
+		wpage.setBeginDate(beginDate);
+		wpage.setEndDate(endDate);
+		wpage.setShowCount(showCount);
+		webStartPageCacheDao.updateStartPage(wpage);
+		
 	}
 }

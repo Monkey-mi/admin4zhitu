@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.hts.web.common.pojo.OpNotice;
@@ -57,4 +58,12 @@ public interface OpMsgService extends BaseService {
 	 */
 	public void pushAppMsg(OpSysMsg msg, 
 			Boolean inApp, Boolean noticed) throws Exception;
+
+	/**
+	 * 更新启动缓存
+	 * 
+	 * @throws Exception
+	 */
+	public void updateStartPageCache(String linkPath, Integer linkType, String link,
+			Date beginDate, Date endDate, Integer showCount) throws Exception;
 }

@@ -25,10 +25,12 @@ import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
+import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
 import com.imzhitu.admin.op.service.OpChannelMemberService;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
+import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.service.AdminAndUserRelationshipService;
 
 @Service
@@ -57,6 +59,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	
 	@Autowired
 	private OpChannelMemberService channelMemberService;
+	
+	@Autowired
+	private UserInfoMapper userInfoMapper;
 	
 	@Override
 	public void insertOpChannel(Integer ownerId, String channelName,
@@ -288,6 +293,14 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			long yestodayWorldIncreasement  =  queryYestodayWorldIncreasement(null, null, o.getChannelId());
 			o.setYestodayMemberIncreasement(yestodayMemberIncreasement);
 			o.setYestodayWorldIncreasement(yestodayWorldIncreasement);
+			
+			// 获取频道主信息
+			if(o.getOwnerId() != null) {
+				UserInfo u = userInfoMapper.selectById(o.getOwnerId());
+				o.setUserName(u.getUserName());
+				o.setUserAvatar(u.getUserAvatar());
+				o.setUserAvatarL(u.getUserAvatarL());
+			}
 			return o;
 		}else {
 			return null;
