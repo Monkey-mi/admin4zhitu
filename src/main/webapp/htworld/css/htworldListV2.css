@@ -1,6 +1,10 @@
 body {
 	margin:0 auto;
 	margin:0 auto;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  	font-size: 14px;
+  	line-height: 1.42857143;
+  	color: #333;
 	text-align:center;
 	background:#eee;
 }
@@ -166,6 +170,12 @@ body {
 
 .window {
 	position:fixed;
+}
+
+/*解决easyuicombogrid与bootstrap样式冲突*/
+.panel-body {
+	padding:0;
+	overflow:hidden;
 }
 
 .zt-tag-img {

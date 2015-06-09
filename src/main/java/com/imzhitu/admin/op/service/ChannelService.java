@@ -583,4 +583,16 @@ public interface ChannelService extends BaseService {
 	 */
 	public List<String> saveChannelWorlds(Integer worldId,
 			String[] channelIdsStr) throws Exception;
+	
+	
+	/**
+	 * 搜索频道
+	 * 
+	 * @param query
+	 * @param jsonMap
+	 * @throws Exception
+	 */
+	public void searchChannel(String query, Integer maxId, Integer start, Integer limit,
+			Map<String, Object> jsonMap) throws Exception;
+	
 }

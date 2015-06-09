@@ -1279,4 +1279,32 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		return channelWorldMapper.queryChannelNameByWorldId(worldId);
 	}
 
+	@Override
+	public void searchChannel(String query, Integer maxId, Integer start, Integer limit,
+			Map<String, Object> jsonMap) throws Exception {
+		final OpChannel channel = new OpChannel();
+		channel.setMaxId(maxId);
+		if(!StringUtil.checkIsNULL(query)) {
+			try {
+				Integer id = Integer.parseInt(query);
+				channel.setId(id);
+			} catch(NumberFormatException e) {
+				channel.setChannelName("%" + query + "%");
+			}
+		}
+		buildNumberDtos(OptResult.JSON_KEY_ROWS, OptResult.JSON_KEY_TOTAL, OptResult.JSON_KEY_MAX_ID, 
+				 "getSerial", channel, start, limit, jsonMap, new NumberDtoListAdapter<OpChannel>() {
+			
+			@Override
+			public long queryTotal(OpChannel topOne) {
+				return channelMapper.searchChannelCount(channel);
+			}
+			
+			@Override
+			public List<? extends AbstractNumberDto> queryList(OpChannel topOne) {
+				return channelMapper.searchChannel(channel);
+			}
+		});
+	}
+
 }

@@ -137,6 +137,11 @@ var maxId = 0,
 	
 //	myQueryParams['world.channelId'] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") ? baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") : "";
 //	myQueryParams['world.valid'] = 1;
+
+	searchChannelMaxId = 0,
+	searchChannelQueryParams = {
+		'maxId':searchChannelMaxId
+	},
 	
 	onAfterInit = function() {
 	
@@ -208,65 +213,60 @@ var maxId = 0,
 		});
 		
 		
-// 		$('#ss-channel').combogrid({
-// 			panelWidth : 320,
-// 		    panelHeight : 490,
-// 		    loadMsg : '加载中，请稍后...',
-// 		    multiple : false,
-// 		    required : false,
-// 		   	idField : 'channelId',
-// 		    textField : 'channelName',
-// 		    url : './admin_op/v2channel_queryOpChannelByAdminUserId',
-// 		    pagination : true,
-// 		    remoteSort : false,
-// 		    columns:[[
-// 				{field : 'channelId',title : 'ID', align : 'center',width : 60},
-// 				{field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
-// 					formatter:function(value,row,index) {
-// 						return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
-// 					}
-// 				},
-// 				{field : 'channelName',title : '频道名称',align : 'center',width : 120},
-// 			]],
-// 			queryParams:channelQueryParam,
-// 		    onLoadSuccess:function(data) {
-// 		    	if(data.result == 0) {
-// 					if(data.maxId > channelMaxId) {
-// 						channelMaxId = data.maxId;
-// 						channelQueryParam.maxId = channelMaxId;
-// 					}
-// 				}
-// 		    },
-// 		    onSelect:function(index,row){
-// 		    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID",row.channelId);
-// 		    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME",row.channelName);
-// 		    	myQueryParams['world.channelId'] = row.channelId;
-// 		    	$("#htm_table").datagrid('load',myQueryParams);
-// 		    }
-// 		});
-		
-// 		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
-// 		p.pagination({
-// 			onBeforeRefresh : function(pageNumber, pageSize) {
-// 				if(pageNumber <= 1) {
-// 					channelMaxId = 0;
-// 					channelQueryParams['channel.maxId'] = userMaxId;
-// 				}
-// 			}
-// 		});
-		
 		//改变视图
-		$("#htm_table").datagrid({
-			view:tableview,
-			checkOnSelect:false
-		});
+//		$("#htm_table").datagrid({
+//			view:tableview,
+//			checkOnSelect:false
+//		});
 //		getChannelIdFromCookie();
+		
+		
+		$('#ss-channel').combogrid({
+			panelWidth : 440,
+		    panelHeight : 330,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#search-channel-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'channelName',
+		    url : './admin_op/channel_searchChannel',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'id',align : 'center',width : 80},
+				{field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
+					formatter:function(value,row,index) {
+						return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+					}
+				},
+				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
+		    ]],
+		    queryParams:searchChannelQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > searchChannelMaxId) {
+						searchChannelMaxId = data.maxId;
+						searchChannelQueryParams.maxId = searchChannelMaxId;
+					}
+				}
+		    },
+		});
+		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					searchChannelMaxId = 0;
+					searchChannelQueryParams.maxId = searchChannelMaxId;
+				}
+			}
+		});
 		
 		removePageLoading();
 		$("#main").show();
 		
 	};
-	
 	
 	
 //初始化添加窗口
@@ -821,6 +821,18 @@ function setSyncOperation(){
 		$.messager.alert("提示", data.msg);
 	});
 };
+
+/**
+ * 搜索频道名称
+ */
+function searchChannel() {
+	searchChannelMaxId = 0;
+	maxId = 0;
+	var query = $('#channel-searchbox').searchbox('getValue');
+	searchChannelQueryParams.maxId = searchChannelMaxId;
+	searchChannelQueryParams.query = query;
+	$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
+}
 </script>
 </head>
 <body>
@@ -830,6 +842,7 @@ function setSyncOperation(){
 	  	<div class="container">
 	  		<div id="pagination" style="display:inline-block; vertical-align:middle;">
 			</div>
+			<input id="ss-channel" style="width:150px;" />
 	  	</div>
 	</nav>
 	<!--  	
@@ -977,6 +990,11 @@ function setSyncOperation(){
 			</table>
 		</form>
 	</div>
+	
+	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
+		<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
+	</div>
+	
 	</div>
 </body>
 </html>

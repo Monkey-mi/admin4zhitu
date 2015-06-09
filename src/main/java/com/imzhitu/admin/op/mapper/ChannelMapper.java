@@ -102,5 +102,11 @@ public interface ChannelMapper {
 	 */
 	@DataSource("slave")
 	public Integer queryChildCountBase(Integer id);
+	
+	@DataSource("slave")
+	public List<OpChannel> searchChannel(OpChannel channel);
+
+	@DataSource("slave")
+	public long searchChannelCount(OpChannel channel);
 		
 }

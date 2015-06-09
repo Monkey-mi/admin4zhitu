@@ -52,6 +52,7 @@ public class ChannelAction extends BaseCRUDAction{
 	private Integer childCountBase;
 	private Boolean isAdd = true;
 	private Integer worldId;
+	private String query;
 	
 	/**
 	 * 查询频道缓存
@@ -145,6 +146,20 @@ public class ChannelAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 搜索频道
+	 * 
+	 * @return
+	 */
+	public String searchChannel() {
+		try {
+			channelService.searchChannel(query, maxId, page, rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 	
 	public String queryAllChannel(){
 		PrintWriter out = null;
@@ -883,6 +898,14 @@ public class ChannelAction extends BaseCRUDAction{
 
 	public void setWorldId(Integer worldId) {
 		this.worldId = worldId;
+	}
+
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
 	}
 	
 }
