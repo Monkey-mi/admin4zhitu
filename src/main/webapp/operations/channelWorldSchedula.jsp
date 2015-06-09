@@ -305,6 +305,12 @@
 							<td><input id="schedula" name="schedula" class="easyui-datetimebox"></td>
 						</tr>
 						<tr>
+							<td class="leftTd">时间间隔(分钟)：</td>
+							<td>
+								<input  name="minuteTimeSpan" class="easyui-numberbox" value="5" style="width:171px"/>
+							</td>
+						</tr>
+						<tr>
 							<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
 								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReSortForm();">确定</a>
 								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_resort').window('close');">取消</a>

@@ -131,11 +131,13 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	/**
 	 * 批量添加
 	 */
-	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids, Date schedula,Integer channelId,Integer finish,
+	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
 			Integer valid,Integer operatorId)throws Exception{
 		channelService.addChannelWorldId(channelId,wIds);
 		Date now = new Date();
-		for(String s:wIds){
+		long timeSpan = minuteTimeSpan*60*1000L;
+		for(int i=0;i<wIds.length; i++){
+			String s = wIds[i];
 			if(s.equals(""))continue;
 			Integer worldId = Integer.parseInt(s);
 			
@@ -145,7 +147,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setChannelId(channelId);
 			dto.setModifyDate(now);
 			dto.setAddDate(now);
-			dto.setSchedulaDate(schedula);
+			dto.setSchedulaDate(new Date(schedula.getTime()+timeSpan*i));
 			dto.setFinish(finish);
 			dto.setValid(valid);
 			dto.setOperatorId(operatorId);
@@ -211,11 +213,11 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	@Override
 	public void reSort(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception{
 		long timeSpan = minuteTimeSpan*60*1000L;
-		for(int i= ids.length -1;i >= 0; i--){
+		for(int i=  0;i < ids.length; i++){
 			String idStr = ids[i];
 			if(idStr != null && idStr != ""){
 				int id = Integer.parseInt(ids[i]);
-				long t = schedula.getTime() - i*timeSpan;//用以排序
+				long t = schedula.getTime() + i*timeSpan;//用以排序
 				updateChannelWorldSchedula(id, null, null, null, null, null, operator, new Date(t));
 			}
 		}

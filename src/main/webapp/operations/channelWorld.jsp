@@ -688,6 +688,7 @@ function queryChannelByIdOrName(){
 				maxId = 0;
 				myQueryParams['world.maxId'] = maxId;
 				myQueryParams['world.channelId'] = obj['channelId'];
+				$('#ss-channel').combogrid('setValue',obj['channelId']);
 				$("#htm_table").datagrid("load",myQueryParams);
 			} else {
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
@@ -815,7 +816,7 @@ function queryChannelByIdOrName(){
 					<tr>
 						<td class="leftTd">时间间隔(分钟)：</td>
 						<td>
-							<input  id="minuteTimeSpan" class="easyui-numberbox" value="5" style="width:171px"/>
+							<input  name="minuteTimeSpan" class="easyui-numberbox" value="5" style="width:171px"/>
 						</td>
 					</tr>
 					<tr class="none">

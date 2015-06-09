@@ -122,7 +122,7 @@
 				<![CDATA[ and ocws.id <= #{maxId}]]>
 			</if>
 		</where>
-		order by ocws.id
+		order by ocws.id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
