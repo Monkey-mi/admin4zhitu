@@ -31,22 +31,7 @@
 	};
 
 	//定义工具栏
-	toolbarComponent = [{
-		id: 'delete_btn',
-		text: '删除',
-		iconCls: 'icon-cut',
-		handler: function(){
-			var rows = $('#htm_table').datagrid('getSelections');
-			var channelIds = [];
-			for(var i=0;i<rows.length;i++){	
-				channelIds.push(rows[i].channelId);
-			}
-			$.post(deleteURI, {'channelIds' : channelIds.toString()}, function(data){
-				$.messager.alert("提示", data.msg);
-				$('#htm_table').datagrid('reload');
-			});
-		}
-	}];
+	toolbarComponent = '#tb';
 	
 	columnsFields = [
          {field:'checkbox',checkbox:'true',align:'center'},
@@ -100,6 +85,40 @@
 		}
 		return true;
 	}
+	
+	/*
+	 * 批量删除
+	 */
+	function deleteData(){
+		var rows = $('#htm_table').datagrid('getSelections');
+		if(rows.length==0){
+			$.messager.alert("提示", "请勾选要删除的数据");
+		} else {
+			var channelIds = [];
+			for(var i=0;i<rows.length;i++){	
+				channelIds.push(rows[i].channelId);
+			}
+			$.post(deleteURI, {'channelIds' : channelIds.toString()}, function(data){
+				$.messager.alert("提示", data.msg);
+				$('#htm_table').datagrid('reload');
+			});
+		}
+	}
+	
+	/**
+	 * 根据频道Id或名字查询频道
+	 */
+	function queryChannelByIdOrName(value,name){
+		// 若为非数字值，则输入的为名称
+		if (isNaN(value)) {
+			myQueryParams['baseCountDto.channelName'] = value;
+		} else {
+			myQueryParams['baseCountDto.channelId'] = value;
+		}
+		$('#htm_table').datagrid('load',myQueryParams);
+		// 查询完，条件置空
+		myQueryParams = {};
+	}
 
 </script>
 </head>
@@ -133,5 +152,9 @@
 	</div>
 	<div style="height:10px"></div>
 	<table id="htm_table"></table>
+	<div id="tb" style="padding:10px;height:auto" class="none">
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cut'" onclick="deleteData()">删除</a>
+		<input id="ss-channelSearch" class="easyui-searchbox" style="width:300px;" prompt="输入频道ID或者频道名称（名称支持模糊搜索）" searcher="queryChannelByIdOrName">
+	</div>
 </body>
 </html>

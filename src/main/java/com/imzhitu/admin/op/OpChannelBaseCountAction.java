@@ -110,7 +110,7 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
 	    JSONUtil.optSuccess(OptResult.QUERY_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    log.error(e);
-	    JSONUtil.optFailed(OptResult.QUERY_SUCCESS, jsonMap);;
+	    JSONUtil.optFailed(OptResult.QUERY_FAILED, jsonMap);;
 	}
 	return StrutsKey.JSON;
     }

@@ -60,12 +60,18 @@
 			hts_admin.admin_user_relationship_binding au, 
 			hts.operations_channel c
 		<where>
-			<if test="maxId != null and maxId != 0"><![CDATA[ AND cb.channel_id<=#{maxId}]]></if>
 			c.owner_id = au.user_id
 			and c.id = cb.channel_id
+			<if test="channelName != null">
+			and c.channel_name like CONCAT('%',#{channelName},'%')
+			</if>
 			<if test="adminId != null">
 			and au.admin_user_id = #{adminId}
 			</if>
+			<if test="channelId != null">
+			and cb.channel_id = #{channelId}
+			</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ AND cb.channel_id<=#{maxId}]]></if>
 		</where>
 		order by cb.channel_id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
