@@ -178,6 +178,11 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldSchedula(dto);
 		
 		for (OpChannelWorldSchedulaDto schedulaDto : list) {
+		    
+		    /*
+		     * 优先执行调度表的刷新，若下列更新频道表失败，则人为操作，重新设置有效性与加精
+		     * 因为考虑到若频道表刷新执行失败，那么调度表不会被置为成功，每次都会执行，会加大服务器压力
+		     */
 		    updateChannelWorldSchedula(schedulaDto.getId(),null,null,null,Tag.TRUE,null,null,null);
 		    
 		    OpChannelWorld world = new OpChannelWorld();
