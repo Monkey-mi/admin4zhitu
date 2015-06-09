@@ -341,7 +341,7 @@ function loadAppMsgFormValidate() {
 	
 	$("#content_appmsg")
 	.formValidator({onshow:"请输入消息（必填）",onfocus:"2-140个字符",oncorrect:"输入正确！"})
-	.inputValidator({min:2,max:140,empty:{leftempty:false,rightempty:false,emptyerror:"两边不能输入空格"},onerror:"请输入2-16个字符"});
+	.inputValidator({min:2,empty:{leftempty:false,rightempty:false,emptyerror:"两边不能输入空格"},onerror:"请输入2-140个字符"});
 	
 	$("#link_appmsg")
 	.formValidator({empty:true, onshow:"请输入链接",onfocus:"请输入链接",oncorrect:"正确！"})
