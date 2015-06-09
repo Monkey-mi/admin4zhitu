@@ -120,7 +120,6 @@ function queryChannelById(channelId){
 					$labelwrap.append(nolabel);
 				}
 				
-				
 				baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID",obj['channelId'],10*24*60*60*1000);
 	    		baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME",obj['channelName'],10*24*60*60*1000);
 			} else {
@@ -153,6 +152,24 @@ function searchChannel() {
 		<span id="ss-channel-wrap">
 			<label>请选择频道: </label><input id="ss-channel" />
 		</span>
+	</div>
+	<div id="stat-wrap">
+		<div class="stat" id="world-stat">
+			<div class="stat-count" id="world-count">0</div>
+			<div class="stat-name">织图总数</div>
+		</div>			
+		<div class="stat" id="member-stat">
+			<div class="stat-count" id="member-count">0</div>
+			<div class="stat-name">关注总数</div>
+		</div>
+		<div class="stat" id="new-world-stat">
+			<div class="stat-count" id="new-world-count">0</div>
+			<div class="stat-name">昨日新增织图</div>
+		</div>
+		<div class="stat" id="new-member-stat">
+			<div class="stat-count" id="new-member-count">0</div>
+			<div class="stat-name">昨日新增关注</div>
+		</div>
 	</div>
 	<hr />
 	<div id="channel-info-wrap">
@@ -189,25 +206,9 @@ function searchChannel() {
 			</div>
 		</div>
 	</div>
+	
 	<hr />
-	<div id="stat-wrap">
-		<div class="stat" id="world-stat">
-			<div class="stat-count" id="world-count">0</div>
-			<div class="stat-name">织图总数</div>
-		</div>			
-		<div class="stat" id="member-stat">
-			<div class="stat-count" id="member-count">0</div>
-			<div class="stat-name">关注总数</div>
-		</div>
-		<div class="stat" id="new-world-stat">
-			<div class="stat-count" id="new-world-count">0</div>
-			<div class="stat-name">昨日新增织图</div>
-		</div>
-		<div class="stat" id="new-member-stat">
-			<div class="stat-count" id="new-member-count">0</div>
-			<div class="stat-name">昨日新增关注</div>
-		</div>
-	</div>
+	
 	<div id="link-title">相关频道</div>
 	<div id="link-channel-wrap">
 		<span class="link-channel">暂无相关频道</span>
