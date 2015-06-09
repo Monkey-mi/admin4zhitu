@@ -49,13 +49,17 @@
 	}];
 	
 	columnsFields = [
-	                 {field:'checkbox',checkbox:'true',align:'center'},
-	                 {field:'channelId',title:'频道ID',width:150},      
-	                 {field:'worldBaseCount',title:'织图基数',width:150},
-	                 {field:'childBaseCount',title:'所有图片基数',width:150},
-	                 {field:'memberBaseCount',title:'频道成员基数',width:150},
-	                 {field:'superbBaseCount',title:'加精基数',width:150},
-	                 {field:'trueWorldCount',title:'频道真实织图数',width:150}
+         {field:'checkbox',checkbox:'true',align:'center'},
+         {field:'channelId',title:'频道ID',width:100},      
+         {field:'channelName',title:'频道名称',width:150},      
+         {field:'worldBaseCount',title:'织图基数',width:100},
+         {field:'trueWorldCount',title:'频道真实织图数',width:100},
+         {field:'childBaseCount',title:'所有图片基数',width:100},
+         {field:'trueChildCount',title:'所有图片真实数',width:100},
+         {field:'memberBaseCount',title:'频道成员基数',width:100},
+         {field:'trueMemberCount',title:'频道成员真实数',width:100},
+         {field:'superbBaseCount',title:'加精基数',width:100},
+         {field:'trueSuperbCount',title:'加精真实数',width:100}
 	];
 	
 	

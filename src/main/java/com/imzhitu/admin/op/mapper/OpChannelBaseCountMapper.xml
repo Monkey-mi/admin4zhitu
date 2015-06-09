@@ -3,10 +3,15 @@
 <mapper namespace="com.imzhitu.admin.op.mapper.OpChannelBaseCountMapper">
 	<resultMap id="ChannelBaseCount" type="com.imzhitu.admin.common.pojo.ChannelBaseCountDto">
 		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
 		<result column="world_count" property="worldBaseCount" jdbcType="INTEGER"/>
+		<result column="showWorldCount" property="trueWorldCount" jdbcType="INTEGER"/>
 		<result column="child_count" property="childBaseCount" jdbcType="INTEGER"/>
+		<result column="showChildCount" property="trueChildCount" jdbcType="INTEGER"/>
 		<result column="member_count" property="memberBaseCount" jdbcType="INTEGER"/>
+		<result column="showMemberCount" property="trueMemberCount" jdbcType="INTEGER"/>
 		<result column="superb_count" property="superbBaseCount" jdbcType="INTEGER"/>
+		<result column="showSuperCount" property="trueSuperbCount" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<!-- 插入数据到频道基数管理表 -->
@@ -40,11 +45,16 @@
 	<!-- 查询频道基数管理结果集 -->
 	<select id="queryChannelBaseCountList" resultMap="ChannelBaseCount">
 	    select 
-		    cb.channel_id, 
-		    cb.world_count, 
-		    cb.child_count, 
+		    cb.channel_id,
+		    c.channel_name,
+		    cb.world_count,
+		    c.world_count as showWorldCount,
+		    cb.child_count,
+		    c.child_count as showChildCount, 
 		    cb.member_count, 
-		    cb.superb_count
+		    c.member_count as showMemberCount,
+		    cb.superb_count,
+		    c.superb_count as showSuperCount
 		from 
 			hts.operations_channel_count_base cb, 
 			hts_admin.admin_user_relationship_binding au, 

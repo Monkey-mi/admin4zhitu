@@ -104,6 +104,7 @@ public class OpChannelBaseCountAction extends BaseCRUDAction {
      */
     public String buildChannelBaseCountList() {
 	try {
+	    // 设置当前登陆人员，进行名下查询
 	    baseCountDto.setAdminId(getCurrentLoginUserId());
 	    service.buildChannelBaseCountList(baseCountDto,page,rows,jsonMap);
 	    JSONUtil.optSuccess(OptResult.QUERY_SUCCESS, jsonMap);

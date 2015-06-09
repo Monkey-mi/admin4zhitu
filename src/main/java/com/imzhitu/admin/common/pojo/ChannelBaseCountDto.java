@@ -22,9 +22,19 @@ public class ChannelBaseCountDto extends AbstractNumberDto {
     private Integer channelId;
     
     /**
+     * 频道名称
+     */
+    private String channelName;
+    
+    /**
      * 频道中织图基数
      */
     private Integer worldBaseCount;
+    
+    /**
+     * 频道中真实织图数量
+     */
+    private Integer trueWorldCount;
     
     /**
      * 频道中所有图片基数
@@ -32,9 +42,19 @@ public class ChannelBaseCountDto extends AbstractNumberDto {
     private Integer childBaseCount;
     
     /**
+     * 频道中所有图片真实数
+     */
+    private Integer trueChildCount;
+    
+    /**
      * 频道成员基数
      */
     private Integer memberBaseCount;
+    
+    /**
+     * 频道成员真实数
+     */
+    private Integer trueMemberCount;
     
     /**
      * 频道中加精基数
@@ -42,9 +62,9 @@ public class ChannelBaseCountDto extends AbstractNumberDto {
     private Integer superbBaseCount;
     
     /**
-     * 频道中真实织图数量
+     * 频道中加精真实数
      */
-    private Integer trueWorldCount;
+    private Integer trueSuperbCount;
     
     /**
      * 频道主题id
@@ -71,6 +91,20 @@ public class ChannelBaseCountDto extends AbstractNumberDto {
     }
 
     /**
+     * @return the channelName
+     */
+    public String getChannelName() {
+        return channelName;
+    }
+
+    /**
+     * @param channelName the channelName to set
+     */
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    /**
      * @return the worldBaseCount
      */
     public Integer getWorldBaseCount() {
@@ -82,6 +116,20 @@ public class ChannelBaseCountDto extends AbstractNumberDto {
      */
     public void setWorldBaseCount(Integer worldBaseCount) {
         this.worldBaseCount = worldBaseCount;
+    }
+
+    /**
+     * @return the trueWorldCount
+     */
+    public Integer getTrueWorldCount() {
+        return trueWorldCount;
+    }
+
+    /**
+     * @param trueWorldCount the trueWorldCount to set
+     */
+    public void setTrueWorldCount(Integer trueWorldCount) {
+        this.trueWorldCount = trueWorldCount;
     }
 
     /**
@@ -99,6 +147,20 @@ public class ChannelBaseCountDto extends AbstractNumberDto {
     }
 
     /**
+     * @return the trueChildCount
+     */
+    public Integer getTrueChildCount() {
+        return trueChildCount;
+    }
+
+    /**
+     * @param trueChildCount the trueChildCount to set
+     */
+    public void setTrueChildCount(Integer trueChildCount) {
+        this.trueChildCount = trueChildCount;
+    }
+
+    /**
      * @return the memberBaseCount
      */
     public Integer getMemberBaseCount() {
@@ -110,6 +172,20 @@ public class ChannelBaseCountDto extends AbstractNumberDto {
      */
     public void setMemberBaseCount(Integer memberBaseCount) {
         this.memberBaseCount = memberBaseCount;
+    }
+
+    /**
+     * @return the trueMemberCount
+     */
+    public Integer getTrueMemberCount() {
+        return trueMemberCount;
+    }
+
+    /**
+     * @param trueMemberCount the trueMemberCount to set
+     */
+    public void setTrueMemberCount(Integer trueMemberCount) {
+        this.trueMemberCount = trueMemberCount;
     }
 
     /**
@@ -127,17 +203,17 @@ public class ChannelBaseCountDto extends AbstractNumberDto {
     }
 
     /**
-     * @return the trueWorldCount
+     * @return the trueSuperbCount
      */
-    public Integer getTrueWorldCount() {
-        return trueWorldCount;
+    public Integer getTrueSuperbCount() {
+        return trueSuperbCount;
     }
 
     /**
-     * @param trueWorldCount the trueWorldCount to set
+     * @param trueSuperbCount the trueSuperbCount to set
      */
-    public void setTrueWorldCount(Integer trueWorldCount) {
-        this.trueWorldCount = trueWorldCount;
+    public void setTrueSuperbCount(Integer trueSuperbCount) {
+        this.trueSuperbCount = trueSuperbCount;
     }
 
     /**

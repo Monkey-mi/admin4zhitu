@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.common.service.impl.BaseServiceImpl;
-import com.hts.web.operations.dao.ChannelWorldDao;
 import com.imzhitu.admin.common.pojo.ChannelBaseCountDto;
 import com.imzhitu.admin.op.mapper.OpChannelBaseCountMapper;
 import com.imzhitu.admin.op.service.OpChannelBaseCountService;
@@ -19,6 +18,7 @@ import com.imzhitu.admin.privileges.dao.RoleDao;
 
 /**
  * 频道基数管理实现类
+ * 
  * @author zhangbo 2015年5月29日
  */
 @Service
@@ -26,13 +26,10 @@ public class OpChannelBaseCountServiceImpl extends BaseServiceImpl implements
 	OpChannelBaseCountService {
 
     @Autowired
-    OpChannelBaseCountMapper mapper;
+    private OpChannelBaseCountMapper mapper;
 
     @Autowired
     private RoleDao roleDao;
-    
-    @Autowired
-    private ChannelWorldDao channelWorldDao;
 
     @Override
     public void saveChannelBaseCount(ChannelBaseCountDto dto) throws Exception {
@@ -59,8 +56,13 @@ public class OpChannelBaseCountServiceImpl extends BaseServiceImpl implements
 			    dto.setAdminId(null);
 			}
 			List<ChannelBaseCountDto> resultList = mapper.queryChannelBaseCountList(dto);
+
+			// 后台查询出的trueXX字段，为展示在客户端给用户看的数据，真实数据要减去base值，故做下列循环操作，方便运营端查看真实数据
 			for (ChannelBaseCountDto cbcDto : resultList) {
-			    cbcDto.setTrueWorldCount(channelWorldDao.queryWorldCount(cbcDto.getChannelId()).intValue());
+			    cbcDto.setTrueWorldCount(cbcDto.getTrueWorldCount()-cbcDto.getWorldBaseCount());
+			    cbcDto.setTrueChildCount(cbcDto.getTrueChildCount()-cbcDto.getChildBaseCount());
+			    cbcDto.setTrueMemberCount(cbcDto.getTrueMemberCount()-cbcDto.getMemberBaseCount());
+			    cbcDto.setTrueSuperbCount(cbcDto.getTrueSuperbCount()-cbcDto.getSuperbBaseCount());
 			}
 			return resultList;
 		    }
@@ -80,11 +82,12 @@ public class OpChannelBaseCountServiceImpl extends BaseServiceImpl implements
     public void deleteChannelBaseCount(Integer[] channelIds) throws Exception {
 	mapper.deleteChannelBaseCountByChannelIds(channelIds);
     }
-    
+
     /**
      * 判断s是否存在于频道基数管理表
      *
-     * @param channelId	频道id
+     * @param channelId
+     *            频道id
      * @return
      * @throws Exception
      * @author zhangbo 2015年6月1日
