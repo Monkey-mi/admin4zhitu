@@ -24,7 +24,7 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 	
 	@Autowired
 	private InteractZombieService zombieService;
-	
+		
 	private Logger log = Logger.getLogger(InteractZombieWorldSchedulaService.class);
 	
 	public static Integer ZOMBIE_WORLD_SCHEDULA_TIME_SPAN = 60*60*1000;
@@ -141,11 +141,14 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 		if(list != null && list.size() > 0){
 			totalCount = list.size();
 			for(ZombieWorldSchedulaDto o:list){
-				//zombieService.saveZombieWorldToHtWorld(o.getZombieWorldId());
-				zombieService.saveZombieWorldToChannelAndWorld(o.getZombieWorldId());
-				updateZombieWorldSchedula(o.getId(),null,null,Tag.TRUE,null,0);
-				
-				successCount++;
+				try{
+					//zombieService.saveZombieWorldToHtWorld(o.getZombieWorldId());
+					zombieService.saveZombieWorldToChannelAndWorld(o.getZombieWorldId());
+					updateZombieWorldSchedula(o.getId(),null,null,Tag.TRUE,null,0);
+					successCount++;
+				}catch(Exception e){
+					log.info(e.getMessage());
+				}
 			}
 		}
 		Date end = new Date();
