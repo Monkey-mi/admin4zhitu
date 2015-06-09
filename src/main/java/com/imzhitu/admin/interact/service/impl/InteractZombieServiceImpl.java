@@ -675,4 +675,13 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			}
 		}
 	}
+	
+	/**
+	 * 批量删除
+	 */
+	@Override
+	public void batchDeleteZombieWorld(String idsStr)throws Exception{
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		zombieWorldMapper.batchDeleteZombieWorld(ids);
+	}
 }

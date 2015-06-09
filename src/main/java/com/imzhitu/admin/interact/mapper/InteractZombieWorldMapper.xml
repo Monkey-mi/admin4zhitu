@@ -34,6 +34,15 @@
 		  #{thumbTitlePath},#{longitude},#{locationAddr},#{size},#{complete},#{addDate},#{modifyDate},#{channelId})
 	</insert>
 	
+	<!-- 批量删除 -->
+	<delete id="batchDeleteZombieWorld">
+		delete from hts_admin.zombie_world 
+		where id in 
+		<foreach item="item" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
 	<!-- 更新完成情况 -->
 	<update id="updateComplete">
 		update hts_admin.zombie_world set complete=1,date_modify = #{modifyDate},htworld_id=#{htworldId},short_link=#{shortLink}

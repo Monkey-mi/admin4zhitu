@@ -139,6 +139,20 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 批量删除
+	 * @return
+	 */
+	public String batchDeleteZombieWorld(){
+		try{
+			service.batchDeleteZombieWorld(ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public String getImgPath() {
 		return imgPath;
 	}
