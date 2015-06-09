@@ -341,8 +341,10 @@
 				<tbody>
 					<tr>
 						<td class="leftTd">频道名称：</td>
+						<!-- 
 						<td ><input id="channelId" name="world.channelId" class="easyui-combobox" 
-							data-options="valueField:'id',textField:'channelName',multiple:'true',url:'./admin_op/channel_queryAllChannel'"/></td>
+							data-options="valueField:'id',textField:'channelName',multiple:'true',url:'./admin_op/channel_queryAllChannel'"/></td> -->
+						<td><input id="ss-channel" name="world.channelId" style="width:171px;" /></td>
 					</tr>
 					<tr>
 						<td class="leftTd">织图ID：</td>
@@ -375,6 +377,11 @@
 			</table>
 		</form>
 	</div>
+	
+	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
+		<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
+	</div>
+	
 	</div>
 </body>
 </html>

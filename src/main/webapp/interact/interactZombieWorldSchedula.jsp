@@ -156,7 +156,6 @@
 		var valid = $("#ss_valid").combobox('getValue');
 		var finished = $("#ss_finish").combobox('getValue');
 		var queryParams = {
-				'maxId':0,
 				'valid':valid,
 				'finished':finished
 		};
