@@ -2,6 +2,8 @@ package com.imzhitu.admin.common.pojo;
 
 import java.util.Date;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.hts.web.common.pojo.AbstractNumberDto;
 
 public class ZombieWorldSchedulaDto extends AbstractNumberDto{
@@ -28,12 +30,16 @@ public class ZombieWorldSchedulaDto extends AbstractNumberDto{
 	public void setZombieWorldId(Integer zombieWorldId) {
 		this.zombieWorldId = zombieWorldId;
 	}
+	
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Date getSchedula() {
 		return schedula;
 	}
 	public void setSchedula(Date schedula) {
 		this.schedula = schedula;
 	}
+	
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Date getAddDate() {
 		return addDate;
 	}
