@@ -635,4 +635,44 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		}
 		
 	}
+	
+	/**
+	 * 将马甲织图发布到织图和频道下
+	 * @param zombieWorldId
+	 * @throws Exception
+	 */
+	@Override
+	public void saveZombieWorldToChannelAndWorld(Integer zombieWorldId)throws Exception{
+		ZombieWorld dto = new ZombieWorld();
+		dto.setId(zombieWorldId);
+		Date now = new Date();
+		//检查数据是否合法
+		List<ZombieWorld> zombieWorldList = zombieWorldMapper.queryZombieWorld(dto);
+		if(zombieWorldList != null && zombieWorldList.size() == 1){
+			ZombieWorld zw = zombieWorldList.get(0);
+			//正式发布织图
+			Integer worldId = saveZombieWorldToHtWorld(zombieWorldId);
+			
+			//添加到频道
+			if(zw.getChannelId() != null && zw.getChannelId() != 0){
+				if(channelMapper.queryChannelById(zw.getChannelId()) != null){
+					Integer channelWorldId = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+					OpChannelWorld channelWorld = new OpChannelWorld();
+					channelWorld.setAuthorId(zw.getAuthorId());
+					channelWorld.setChannelId(zw.getChannelId());
+					channelWorld.setDateAdded(now);
+					channelWorld.setId(channelWorldId);
+					channelWorld.setNotified(Tag.TRUE);
+					channelWorld.setValid(Tag.TRUE);
+					channelWorld.setWorldId(worldId);
+					channelWorld.setSuperb(Tag.FALSE);
+					channelWorld.setWeight(0);
+					channelWorld.setSerial(channelWorldId);
+					channelWorlMapper.save(channelWorld);
+					//更新频道图片总数
+					webChannelService.updateWorldAndChildCount(zw.getChannelId());
+				}
+			}
+		}
+	}
 }

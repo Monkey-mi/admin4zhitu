@@ -73,6 +73,9 @@
 			<if test="valid != null">
 				and zws.valid = #{valid}
 			</if>
+			<if test="finished != null">
+				and zws.finished = #{finished}
+			</if>
 		</where>
 		order by zws.id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
@@ -94,6 +97,9 @@
 			</if>
 			<if test="valid != null">
 				and zws.valid = #{valid}
+			</if>
+			<if test="finished != null">
+				and zws.finished = #{finished}
 			</if>
 		</where>
 	</select>

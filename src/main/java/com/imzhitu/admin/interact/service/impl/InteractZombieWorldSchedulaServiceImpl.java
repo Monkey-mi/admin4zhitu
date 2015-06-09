@@ -89,7 +89,7 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 		dto.setValid(valid);
 		dto.setFinished(finished);
 		dto.setMaxId(maxId);
-		dto.setFinished((page-1)*rows);
+		dto.setFirstRow((page-1)*rows);
 		dto.setLimit(rows);
 		long total = zombieWorldSchedulaMapper.queryZombieWorldSchedulaTotalCount(dto);
 		List<ZombieWorldSchedulaDto> list = null;
@@ -98,7 +98,7 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 			list = zombieWorldSchedulaMapper.queryZombieWorldSchedula(dto);
 			reMaxId = list.get(0).getId();
 		}
-		jsonMap.put(OptResult.JSON_KEY_TOTAL_COUNT, total);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, reMaxId);
 	}
@@ -141,8 +141,10 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 		if(list != null && list.size() > 0){
 			totalCount = list.size();
 			for(ZombieWorldSchedulaDto o:list){
-				zombieService.saveZombieWorldToHtWorld(o.getZombieWorldId());
+				//zombieService.saveZombieWorldToHtWorld(o.getZombieWorldId());
+				zombieService.saveZombieWorldToChannelAndWorld(o.getZombieWorldId());
 				updateZombieWorldSchedula(o.getId(),null,null,Tag.TRUE,null,0);
+				
 				successCount++;
 			}
 		}
@@ -163,7 +165,7 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 		Integer[] zombieWorldIds = StringUtil.convertStringToIds(zombieWorldIdsStr);
 		long timeSpan = minuteTimeSpan*60*1000L;
 		for(int i = 0; i < zombieWorldIds.length; i++){
-			insertZombieWorldSchedula(zombieWorldIds[i],new Date(schedula.getTime() - i*timeSpan),operactor);
+			insertZombieWorldSchedula(zombieWorldIds[i],new Date(schedula.getTime() + i*timeSpan),operactor);
 		}
 	}
 

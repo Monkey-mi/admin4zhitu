@@ -13,6 +13,10 @@ var maxId = 0,
 	},
 	today = new Date(),
 	todayStr = baseTools.simpleFormatDate(today),
+	searchChannelMaxId = 0,
+	searchChannelQueryParams = {
+		'maxId':searchChannelMaxId
+	},
 	showWorldAndInteractPage="page_htworld_htworldShow";
 	
 	timeCompare = function(date) {
@@ -526,6 +530,48 @@ var htmTableTitle = "分享列表维护", //表格标题
 	onAfterInit = function() {
 		
 		initWorldBoxWidth();
+		
+		$('#ss-channel').combogrid({
+			panelWidth : 440,
+		    panelHeight : 330,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#search-channel-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'channelName',
+		    url : './admin_op/channel_searchChannel',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'id',align : 'center',width : 80},
+				{field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
+					formatter:function(value,row,index) {
+						return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+					}
+				},
+				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
+		    ]],
+		    queryParams:searchChannelQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > searchChannelMaxId) {
+						searchChannelMaxId = data.maxId;
+						searchChannelQueryParams.maxId = searchChannelMaxId;
+					}
+				}
+		    },
+		});
+		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					searchChannelMaxId = 0;
+					searchChannelQueryParams.maxId = searchChannelMaxId;
+				}
+			}
+		});
 		
 		$("#htm_channel").window({
 			title : '频道织图添加',
@@ -1340,8 +1386,10 @@ var htmTableTitle = "分享列表维护", //表格标题
 	}
 	function saveChannelWorldSubmit(){
 		var index = $("#rowIndex").val();
-		var channelName = $("#channelId").combobox('getText');
-		var channelId = $("#channelId").combobox('getValue');
+//		var channelName = $("#channelId").combobox('getText');
+//		var channelId = $("#channelId").combobox('getValue');
+		var channelName = $("#ss-channel").combogrid('getText');
+		var channelId = $("#ss-channel").combogrid('getValue');
 		var worldId = $("#worldId_channel").val();
 		//成为频道用户
 		$.post("./admin_op/chuser_addChannelUserByWorldId",{
@@ -1424,4 +1472,16 @@ var htmTableTitle = "分享列表维护", //表格标题
 			'worldDesc' : worldDesc
 		};
 		loadData(1, rows);
+	}
+	
+	/**
+	 * 搜索频道名称
+	 */
+	function searchChannel() {
+		searchChannelMaxId = 0;
+		maxId = 0;
+		var query = $('#channel-searchbox').searchbox('getValue');
+		searchChannelQueryParams.maxId = searchChannelMaxId;
+		searchChannelQueryParams.query = query;
+		$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
 	}

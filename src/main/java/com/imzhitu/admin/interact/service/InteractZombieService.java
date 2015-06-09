@@ -52,6 +52,7 @@ public interface InteractZombieService {
 	 * @param begin
 	 * @param timeSpan
 	 */
+	@Deprecated
 	public void batchSaveZombieWorldToHTWorld(final String zombieWorldIds,final Date begin, final Integer timeSpan);
 	
 	/**
@@ -59,4 +60,11 @@ public interface InteractZombieService {
 	 * @throws Exception
 	 */
 	public void batchUpdateZombieWorldLabel(String zombieWorldIds,String labelString)throws Exception;
+	
+	/**
+	 * 将马甲织图发布到织图和频道下
+	 * @param zombieWorldId
+	 * @throws Exception
+	 */
+	public void saveZombieWorldToChannelAndWorld(Integer zombieWorldId)throws Exception;
 }
