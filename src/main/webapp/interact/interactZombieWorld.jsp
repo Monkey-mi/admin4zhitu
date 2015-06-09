@@ -294,12 +294,35 @@ var maxId = 0,
 		}
 		
 	}
+	
+	function del(){
+		var rows = $('#htm_table').datagrid('getSelections');	
+		if(isSelected(rows)){
+			var ids = [];
+			for(var i=0;i<rows.length;i+=1){		
+				ids.push(rows[i]['id']);	
+			}	
+			$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
+			$('#htm_table').datagrid('loading');
+			$.post("./admin_interact/interactZombieWorld_batchDeleteZombieWorld?ids="+ids,function(result){
+				$('#htm_table').datagrid('loaded');
+				if(result['result'] == 0) {
+					$.messager.alert('提示',result['msg']);
+					$("#htm_table").datagrid("reload");
+				} else {
+					$.messager.alert('提示',result['msg']);
+				}
+				
+			});				
+		}	
+	}
 </script>
 
 </head>
 <body>
 	<table id="htm_table"></table>
 	<div id="tb" style="padding:5px;height:auto" class="none">
+		<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="批量删除" plain="true" iconCls="icon-cut" id="delBtn">批量删除</a>
 		<a href="javascript:void(0);" onclick="javascript:batchSaveZombieWorldToHTWorld();" class="easyui-linkbutton" title="批量发图" plain="true" iconCls="icon-add" id="batchSaveBtn">批量发图</a>
 		<a href="javascript:void(0);" onclick="javascript:initBatchUpdateLabel();" class="easyui-linkbutton" title="批量修改标签" plain="true" iconCls="icon-add" id="batchSaveBtn">批量修改标签</a>
 		<select id="ss-complete" class="easyui-combobox" data-options="onSelect:function(rec){queryZombieWorldByComplete(rec.value);}" style="width:100px;" >

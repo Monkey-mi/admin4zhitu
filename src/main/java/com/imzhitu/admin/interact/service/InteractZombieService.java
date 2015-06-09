@@ -67,4 +67,9 @@ public interface InteractZombieService {
 	 * @throws Exception
 	 */
 	public void saveZombieWorldToChannelAndWorld(Integer zombieWorldId)throws Exception;
+	
+	/**
+	 * 批量删除
+	 */
+	public void batchDeleteZombieWorld(String idsStr)throws Exception;
 }
