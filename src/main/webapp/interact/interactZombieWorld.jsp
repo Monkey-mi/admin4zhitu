@@ -12,9 +12,10 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript">
 var maxId = 0,
+	hideIdColumn = false,
 	worldURLPrefix = 'http://www.imzhitu.com/DT',
 	htmTableTitle = "马甲发图计划管理", //表格标题
-	htmTablePageList = [10,30,50,100,150],
+	htmTablePageList = [10,30,50,100,150,300,500],
 	loadDataURL = "./admin_interact/interactZombieWorld_queryZombieWorldForTable", //数据装载请求地址
 	batchSaveURI = "./admin_interact/zombieWorldSchedula_batchInsertZombieWorldSchedula?zombieWorldIdsStr=",
 	batchUpdateLabelsURL = "./admin_interact/interactZombieWorld_batchUpdateZombieWorldlabel?ids=",
@@ -43,7 +44,7 @@ var maxId = 0,
 	//分页组件,可以重载
 	columnsFields = [
 		{field : 'ck',checkbox : true },
-		{field : recordIdKey,title : 'ID',align : 'center', width : 45},
+		{field : 'id',title : 'ID',align : 'center', width : 45},
 		{field : 'authorId',title : '马甲ID',align : 'center',width : 80},
 		{field : 'thumbTitlePath',title : '缩略图',align : 'center',width : 80,
 			formatter: function(value,row,index){
@@ -93,7 +94,7 @@ var maxId = 0,
 			title : '批量发图',
 			modal : true,
 			width : 420,
-			height : 150,
+			height : 190,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -104,6 +105,7 @@ var maxId = 0,
 			onClose : function(){
 				$("#beginSaveTime").datetimebox('clear');
 				$("#timeSpan").numberbox('clear');
+				$("#random_flag").removeAttr('checked');
 			}
 		});
 		
@@ -190,12 +192,22 @@ var maxId = 0,
 	
 	//批量发布马甲织图
 	function submitBatchSaveForm(){
-		var rows = $('#htm_table').datagrid('getSelections');	
+		var rows = $('#htm_table').datagrid('getSelections');
+		var randonNum;
+		var tmp;	
 		if(isSelected(rows)){
 			var ids = [];
 			for(var i=0;i<rows.length;i+=1){		
 				ids.push(rows[i]['id']);	
 				rowIndex = $('#htm_table').datagrid('getRowIndex',rows[i]);				
+			}
+			if($("#random_flag").attr('checked') == 'checked'){
+				for(var i=0;i<ids.length;i++){
+					randomNum = parseInt(Math.random()*ids.length);
+					tmp = ids[i];
+					ids[i] = ids[randomNum];
+					ids[randomNum] = tmp;
+				}
 			}	
 			$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 			$('#htm_table').datagrid('loading');
@@ -354,6 +366,10 @@ var maxId = 0,
 						<td>
 							<input  id="timeSpan" class="easyui-numberbox" value="1" data-options="min:0,max:60,required:true" style="width:171px"/>
 						</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox"  id="random_flag" style="width: 13px; height: 13px; vertical-align: middle;float:right;"/></td>
+						<td>随机排序</td>
 					</tr>
 					<tr>
 						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
