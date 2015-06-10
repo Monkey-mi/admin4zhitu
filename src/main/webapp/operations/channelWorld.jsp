@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>频道织图管理</title>
+<title>频道织图管理-列表模式</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
@@ -42,7 +42,7 @@ var maxId = 0,
 	},
 	hideIdColumn = true,
 	htmTableTitle = "频道织图列表", //表格标题
-	htmTableWidth = 1380,
+	htmTableWidth = 1400,
 	toolbarComponent = '#tb',
 	myIdField = "channelWorldId",
 	recordIdKey = "channelWorldId",
@@ -130,7 +130,7 @@ var maxId = 0,
 	  				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   				}
   				return '';
-  			}   			
+  			} 			
   		},
   		{field : 'isCover',title : '频道封面',align : 'center', width: 45,
   			formatter: function(value,row,index) {
@@ -156,32 +156,16 @@ var maxId = 0,
 	addHeight = 190, //添加信息高度
 	addTitle = "添加频道织图", //添加信息标题
 	
-	pageButtons = [{
-        iconCls:'icon-save',
-        text:'更新封面缓存',
-        handler:function(){
-        	$.messager.confirm('提示', '确定更新封面缓存？', function(r){ 	
-			if(r){				
-				$('#htm_table').datagrid('loading');
-				$.post(updateCoverCacehURL, function(result){
-					$('#htm_table').datagrid('loaded');
-					if(result['result'] == 0) {
-						$.messager.alert('提示',result['msg']);
-					} else {
-						$.messager.alert('提示',result['msg']);
-					}
-				});				
-			}	
-		});	
-        }
-    }],
+	pageButtons = [],
     onBeforeInit = function() {
 		showPageLoading();
 	},
-	
-	channelMaxId = 0,
-	channelQueryParams = {},
-	
+
+	searchChannelMaxId = 0,
+	searchChannelQueryParams = {
+		'maxId':searchChannelMaxId
+	},
+		
 	onAfterInit = function() {
 		
 		$('#htm_indexed').window({
@@ -235,26 +219,37 @@ var maxId = 0,
 		
 		
 		$('#ss-channel').combogrid({
-			panelWidth : 320,
-		    panelHeight : 490,
+			panelWidth : 440,
+		    panelHeight : 330,
 		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#search-channel-tb",
 		    multiple : false,
 		    required : false,
 		   	idField : 'id',
 		    textField : 'channelName',
-		    url : './admin_op/channel_queryChannel',
+		    url : './admin_op/channel_searchChannel',
 		    pagination : true,
-		    remoteSort : false,
 		    columns:[[
-				{field : 'id',title : 'ID', align : 'center',width : 60},
+				{field : 'id',title : 'id',align : 'center',width : 80},
 				{field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
 					formatter:function(value,row,index) {
 						return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
 					}
 				},
-				{field : 'channelName',title : '频道名称',align : 'center',width : 120},
-			]],
-			onSelect:function(index, row) {
+				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
+		    ]],
+		    queryParams:searchChannelQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > searchChannelMaxId) {
+						searchChannelMaxId = data.maxId;
+						searchChannelQueryParams.maxId = searchChannelMaxId;
+					}
+				}
+		    },
+		    onSelect:function(index, row) {
 				$("#htm_opt_btn").show();
 				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 				maxId = 0;
@@ -267,13 +262,12 @@ var maxId = 0,
 				loadPageData(initPage);
 			}
 		});
-		
 		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
 		p.pagination({
 			onBeforeRefresh : function(pageNumber, pageSize) {
 				if(pageNumber <= 1) {
-					channelMaxId = 0;
-					channelQueryParams['channel.maxId'] = userMaxId;
+					searchChannelMaxId = 0;
+					searchChannelQueryParams.maxId = searchChannelMaxId;
 				}
 			}
 		});
@@ -297,6 +291,17 @@ var maxId = 0,
 		
 	};
 	
+/**
+ * 搜索频道名称
+ */
+function searchChannel() {
+	searchChannelMaxId = 0;
+	maxId = 0;
+	var query = $('#channel-searchbox').searchbox('getValue');
+	searchChannelQueryParams.maxId = searchChannelMaxId;
+	searchChannelQueryParams.query = query;
+	$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
+}
 	
 	
 //初始化添加窗口
@@ -706,9 +711,12 @@ function queryChannelByIdOrName(){
 	
 	<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
+			<a href="./page_operations_channelWorldV3" title="瀑布流模式">
+			<img class="switch-icon" src="./htworld/images/grid-icon.png" style="width:15px;vertical-align:middle;"  /></a>
+			<a href="./page_operations_channelWorld" title="列表模式">
+				<img class="switch-icon" src="./htworld/images/list-icon.png" style="width:15px;vertical-align:middle;"  /></a>
 			<span class="search_label">请选择频道：</span>
 			<input id="ss-channel" style="width:100px;" />
-			<input id="ss-channelSearch" prompt="输入频道ID或者频道名称" searcher="queryChannelByIdOrName" class="easyui-searchbox" style="width:100px;">
 			<span id="htm_opt_btn" class="none">
 			<a href="javascript:void(0);" onclick="javascript:htmUI.htmWindowAdd();" class="easyui-linkbutton" title="添加频道红人" plain="true" iconCls="icon-add">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>
@@ -716,7 +724,6 @@ function queryChannelByIdOrName(){
 			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
 			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
 			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
-			<a href="javascript:void(0);" onclick="javascript:refresh();" class="easyui-linkbutton" title="更新图片基数" plain="true" iconCls="icon-reload">更新图片基数</a>
 			<select id="ss-notified" class="easyui-combobox" style="width:100px;">
 		        <option value="">所有通知状态</option>
 		        <option value="0">未通知</option>
@@ -916,7 +923,9 @@ function queryChannelByIdOrName(){
 		</form>
 	</div>
 	
-	
+	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
+		<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
+	</div>
 	</div>
 </body>
 </html>

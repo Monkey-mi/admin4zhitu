@@ -113,23 +113,16 @@ function drawWorldOpt($worldOpt, worlds, index) {
 
 	/*添加操作按钮*/
 	var $opt = $('<div class="world-opt-head-wrap">'
-			+ '<span class="world-opt-head">活动</span>'
+			+ '<span class="world-opt-head">生效</span>'
 			+ '<span>|</span>'
-			+ '<span class="world-opt-head">最新</span>'
+			+ '<span class="world-opt-head">精选</span>'
 			+ '<span>|</span>'
 			+ '<span class="world-opt-head">操作</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">计划</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">完成</span>'
 			+'</div>'
-			+ '<div class="world-opt-btn-wrap">'
-			+ '<span class="world-opt-btn">'
-			+ getActiveOperated(world['activeOperated'], world, index)
-			+ '</span>'+ '<span>|</span>'
-			+ '<span class="world-opt-btn">'
-			+ getLatestValid(world['latestValid'], world, index)
-			+ '</span>'+ '<span>|</span>'
-			+ '<span class="world-opt-btn">'
-			+ shieldColumn.formatter(world['shield'], world, index)
-			+ '</span>'
-			+ '</div>'
 			);
 	
 	$worldOpt.addClass('world-margin');
@@ -137,6 +130,7 @@ function drawWorldOpt($worldOpt, worlds, index) {
 	$worldOpt.append($world);
 	$worldOpt.append($worldInfo);
 	$worldOpt.append($opt);
+	drawWorldOptBtn($worldOpt, worlds, index);
 	$world.appendtour({
 		'width':250,
 		'worldId':worldId,
@@ -146,6 +140,47 @@ function drawWorldOpt($worldOpt, worlds, index) {
 		'url':'./admin_ztworld/ztworld_queryTitleChildWorldPage',
 		'loadMoreURL':'./admin_ztworld/ztworld_queryChildWorldPage'
 	});
+}
+
+/**
+ * 绘制操作按钮
+ * 
+ * @param $worldOpt
+ * @param worlds
+ * @param index
+ * @return
+ */
+function drawWorldOptBtn($worldOpt, worlds, index) {
+	var world = worlds[index];
+	var $optBtn = 
+		$('<div class="world-opt-btn-wrap">'
+		+ '<span class="world-opt-btn">'
+		+ getChannelWorldValid(world['channelWorldValid'], world, index)
+		+ '</span>'+ '<span>|</span>'
+		+ '<span class="world-opt-btn">'
+		+ getSuperb(world['superb'], world, index)
+		+ '</span>'+ '<span>|</span>'
+		+ '<span class="world-opt-btn">'
+		+ getDeleteStatusOpt(world['channelWorldValid'], world, index)
+		+ '</span>'+ '<span>|</span>'
+		+ '<span class="world-opt-btn">'
+		+ getBeSchedulaOpt(world['beSchedula'], world, index)
+		+ '</span>'+ '<span>|</span>'
+		+ '<span class="world-opt-btn">'
+		+ getSchedulaCompleteOpt(world['schedulaComplete'], world, index)
+		+ '</span>'
+		+ '</div>');
+	$worldOpt.append($optBtn);
+}
+
+/**
+ * 移出操作按钮
+ * 
+ * @param $worldOpt
+ * @return
+ */
+function removeWorldOptBtn($worldOpt) {
+	$worldOpt.children('.world-opt-btn-wrap:eq(0)').remove();
 }
 
 /**
@@ -164,81 +199,153 @@ function getAuthorName(value, row, index) {
 	}
 }
 
+/**
+ * 更新记录字段
+ * 
+ * @param index
+ * @param key
+ * @param value
+ * @return
+ */
 function updateValue(index, key, value) {
 	var $worldOpt = $(".world-opt-wrap:eq("+index+")");
-	$worldOpt.empty();
 	dataList[index][key] = value;
-	drawWorldOpt($worldOpt, dataList, index);
+	removeWorldOptBtn($worldOpt);
+	drawWorldOptBtn($worldOpt, dataList, index);
 }
 
+/**
+ * 批量更新记录字段
+ * 
+ * @param index
+ * @param keys
+ * @param values
+ * @return
+ */
 function updateValues(index, keys, values) {
 	var $worldOpt = $(".world-opt-wrap:eq("+index+")");
-	$worldOpt.empty();
 	for(var i = 0; i < keys.length; i++) {
 		dataList[index][keys[i]] = values[i];
 	}
-	drawWorldOpt($worldOpt, dataList, index);
+	removeWorldOptBtn($worldOpt);
+	drawWorldOptBtn($worldOpt, dataList, index);
 }
 
-/* 以下均为示例代码 */
-function getTypeInteract(value, row, index) {
-	img = "./common/images/edit_add.png";
-	return "<a title='添加分类互动' class='updateInfo' href='javascript:typeInteract(\"" + row[worldKey] + "\",\"" + index + "\")'>"+"<img src=\""+img+"\"/></a>";
-}
-
-function getChannelName(value, row, index) {
-	if(value == "NO_EXIST" || value=="") {
-		img = "./common/images/edit_add.png";
-		return "<img title='添加到频道' class='htm_column_img pointer'  src='" + img + "' onclick='saveToChannelWorld(\""+row.worldId+"\",\""+index +"\")'/>";
-	}
-	return value;
-}
-
-function getWorldType(value, row, index) {
-	labelIsExist = row.worldLabel ? 1:0;
-	if(row.valid == 0 || row.shield == 1) {
-		return value;
-	} else if(row.squarerecd == 1) {
-		return "<a title='从精选列表移除' class='updateInfo pointer' onclick='javascript:removeTypeWorld(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")'>"+value+"</a>";
-	} else if(value == '' || value == null) {
-		img = "./common/images/edit_add.png";
-		return "<img title='添加到精选列表' class='htm_column_img pointer' onclick='javascript:initTypeUpdateWindow(\""+ row[worldKey] + "\",\""+ row.typeId + "\",\"" + index + "\",\"" + 'true' + "\",\"" + row.authorId+ "\",\""+labelIsExist+"\")' src='" + img + "'/>";
-	}
-	return "<a title='添加到精选推荐列表' class='updateInfo pointer' onclick='javascript:initTypeUpdateWindow(\""+ row[worldKey] + "\",\""+ row.typeId + "\",\"" + index + "\",\"" + 'false' + "\",\"" + row.authorId+"\",\""+labelIsExist+"\")'>"+value+"</a>";;
-}
-
-function getActiveOperated(value, row, index) {
-	if(row.valid == 0 || row.shield == 1) {
-			return '';
-		}
-		switch(value) {
-			case 0:
-				tip = "等待审核";
-				img = "./common/images/tip.png";
-				break;
-			case 1:
-				tip = "审核通过，点击重新审核";
-				img = "./common/images/ok.png";
-				break;
-			case 2:
-				tip = "已经拒绝，点击重新审核";
-				img = "./common/images/cancel.png";
-				break;
-			default:
-				tip = "添加到活动";
-				img = "./common/images/edit_add.png";
-				break;
-		}
-		return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='javascript:initActivityAddWindow(\""+ row.id + "\",\"" + value + "\",\"" + index + "\")' src='" + img + "'/>";
-}
-
-function getLatestValid(value, row, index) {
-	if(value >= 1) {
-		img = "./common/images/undo.png";
-		return "<img title='从最新移除' class='htm_column_img pointer' onclick='javascript:removeLatestValid(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")' src='" + img + "'/>";
-	} else if(row.valid == 0 || row.shield == 1) {
+/**
+ * 获取织图有效操作
+ * 
+ * @param value
+ * @param row
+ * @param index
+ * @return
+ */
+function getChannelWorldValid(value, row, index) {
+	if(row.valid == 0 || row.shield == 1 || value == 2) {
 		return '';
 	}
-	img = "./common/images/edit_add.png";
-	return "<img title='添加到最新' class='htm_column_img pointer' onclick='javascript:addLatestValid(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")' src='" + img + "'/>";
+	switch(value) {
+		case 1:
+			tip = "已经生效,点击取消";
+			img = "./common/images/ok.png";
+			valid = 0;
+			break;
+		default:
+			tip = "点击生效";
+			img = "./common/images/tip.png";
+			valid = 1;
+			break;
+	}
+	return "<img title='"+ tip + "' class='htm_column_img pointer' " 
+		+ "onclick='javascript:updateValid(\""+ row.channelId + "\",\"" + row.worldId + "\","+ valid + "," + index + ")' " 
+		+ "src='" + img + "'/>";
+}
+
+/**
+ * 获取精选操作
+ * 
+ * @param value
+ * @param row
+ * @param index
+ * @return
+ */
+function getSuperb(value, row, index) {
+	if(row.valid == 0 || row.shield == 1) {
+		return '';
+	}
+	switch(value) {
+	case 1:
+		tip = "已加入精选,点击移出";
+		img = "./common/images/ok.png";
+		superb = 0;
+		break;
+	default:
+		tip = "点击加入精选";
+		img = "./common/images/edit_add.png";
+		superb = 1;
+		break;
+	}
+	return "<img title='"+ tip + "' class='htm_column_img pointer' " 
+		+ "onclick='javascript:updateSuperb(\""+ row.channelId + "\",\"" + row.worldId + "\","+ superb + "," + index + ")' " 
+		+ "src='" + img + "'/>";
+}
+
+/**
+ * 获取删除操作
+ * 
+ * @param value
+ * @param row
+ * @param index
+ * @return
+ */
+function getDeleteStatusOpt(value, row, index) {
+	console.log('getOpt ' + value);
+	if(value != 2) {
+		tip = "从频道删除织图";
+		opt = "删除";
+		valid = 2;
+	} else {
+		tip = "恢复至未生效状态";
+		opt = "恢复";
+		valid = 0;
+	}
+	
+	return "<a href=javascript:void(0); title='"+tip+"' class='updateInfo pointer' " 
+		+ "onclick='javascript:updateDeleteStatus(\""+ row.channelId + "\",\"" + row.worldId + "\","+ valid + "," + index + ")'>"
+		+ opt+"</a>";
+}
+
+/**
+ * 获取被计划状态
+ * 
+ * @param value
+ * @param row
+ * @param index
+ * @return
+ */
+function getBeSchedulaOpt(value, row, index) {
+	if(value == 0) {
+			img = "./common/images/ok.png";
+			return "<img title='已生效' class='htm_column_img'  src='" + img + "'/>";
+		}
+		img = "./common/images/tip.png";
+		return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
+}
+
+/**
+ * 获取计划完成状态
+ * 
+ * @param value
+ * @param row
+ * @param index
+ * @return
+ */
+function getSchedulaCompleteOpt(value, row, index) {
+	if(value == 1 && row.beSchedula == 0) {
+		img = "./common/images/ok.png";
+		return "<img title='已生效' class='htm_column_img'  src='" + img + "'/>";
+	}else if(value == 0 && row.beSchedula == 0){
+		img = "./common/images/tip.png";
+		return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
+	}
+	return '';
 }

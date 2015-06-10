@@ -53,6 +53,7 @@ public class ChannelAction extends BaseCRUDAction{
 	private Boolean isAdd = true;
 	private Integer worldId;
 	private String query;
+	private Integer superb;
 	
 	/**
 	 * 查询频道缓存
@@ -463,6 +464,36 @@ public class ChannelAction extends BaseCRUDAction{
 	public String updateChannelWorldValid() {
 		try {
 			channelService.updateChannelWorldValid(ids, valid);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch(Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 根据织图id更新有效性
+	 * 
+	 * @return
+	 */
+	public String updateWorldValidByWID() {
+		try {
+			channelService.updateChannelWorldValid(channelId, worldId, valid);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch(Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新精选标记
+	 * 
+	 * @return
+	 */
+	public String updateWorldSuperbByWID() {
+		try {
+			channelService.updateChannelWorldSuperb(channelId, worldId, superb);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch(Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -906,6 +937,14 @@ public class ChannelAction extends BaseCRUDAction{
 
 	public void setQuery(String query) {
 		this.query = query;
+	}
+
+	public Integer getSuperb() {
+		return superb;
+	}
+
+	public void setSuperb(Integer superb) {
+		this.superb = superb;
 	}
 	
 }

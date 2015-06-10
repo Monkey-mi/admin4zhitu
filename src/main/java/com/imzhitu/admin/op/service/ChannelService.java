@@ -434,6 +434,27 @@ public interface ChannelService extends BaseService {
 	public void updateChannelWorldValid(Integer[]wids,Integer channelId,Integer valid)throws Exception;
 	
 	/**
+	 * 根据频道id和织图id更新有效性
+	 * 
+	 * @param channelId
+	 * @param worldId
+	 * @param valid
+	 * @throws Exception
+	 */
+	public void updateChannelWorldValid(Integer channelId,
+			Integer worldId, Integer valid) throws Exception;
+	
+	/**
+	 * 更新织图精选标记
+	 * 
+	 * @param superb
+	 * @throws Exception
+	 */
+	public void updateChannelWorldSuperb(Integer channelId,
+			Integer worldId, Integer superb) throws Exception;
+	
+	
+	/**
 	 * 添加频道织图推荐消息
 	 * 
 	 * @param id

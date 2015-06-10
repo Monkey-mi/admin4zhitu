@@ -109,6 +109,8 @@
 			<if test="worldId != null"> AND ocw.world_id=#{worldId}</if>
 			<if test="authorId != null"> AND ocw.author_id=#{authorId}</if>
 			<if test="valid != null"> AND ocw.valid=#{valid}</if>
+			<if test="superb != null"> AND ocw.superb=#{superb}</if>
+			<if test="weight != null"> AND ocw.weight=#{weight}</if>
 			<if test="notified != null"> AND ocw.notified=#{notified}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ AND ocw.id<=#{maxId}]]></if>
 		</where>
@@ -129,6 +131,8 @@
 			<if test="worldId != null"> AND world_id=#{worldId}</if>
 			<if test="authorId != null"> AND author_id=#{authorId}</if>
 			<if test="valid != null"> AND valid=#{valid}</if>
+			<if test="superb != null"> AND superb=#{superb}</if>
+			<if test="weight != null"> AND weight=#{weight}</if>
 			<if test="notified != null"> AND notified=#{notified}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
 		</where>
@@ -229,4 +233,15 @@
 	       		#{item}
 	 	</foreach>
 	</select>
+	
+	<update id="updateValidAndSerialByWID">
+		update hts.operations_channel_world set valid=#{valid}, serial=#{serial}
+		where channel_id=#{channelId} and world_id=#{worldId};
+	</update>
+	
+	<update id="updateSuperbByWID">
+		update hts.operations_channel_world set superb=#{superb} 
+		where channel_id=#{channelId} and world_id=#{worldId};
+	</update>
+	
 </mapper>
