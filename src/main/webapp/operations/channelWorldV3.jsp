@@ -149,11 +149,15 @@ var maxId = 0,
  */
 function queryWorld() {
 	maxId = 0;
+	var channelId = $('#ss-channel').combogrid('getValue');
+	var channelName = $('#ss-channel').combogrid('getText')
 	myQueryParams['world.maxId'] = maxId;
-	myQueryParams['world.channelId'] = $('#ss-channel').combogrid('getValue');
+	myQueryParams['world.channelId'] = channelId;
 	myQueryParams['world.valid'] = $('#ss-valid').combobox('getValue');
 	myQueryParams['world.superb'] = $('#ss-superb').combobox('getValue');
-	loadData(myQueryParams.page, myQueryParams.rows);
+	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID",channelId,10*24*60*60*1000);
+	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME",channelName,10*24*60*60*1000);
+	loadData(1, myQueryParams.rows);
 }
 
 /**
