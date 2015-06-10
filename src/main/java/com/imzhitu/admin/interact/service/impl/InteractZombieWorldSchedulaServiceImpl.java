@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
@@ -27,7 +26,7 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 		
 	private Logger log = Logger.getLogger(InteractZombieWorldSchedulaService.class);
 	
-	public static Integer ZOMBIE_WORLD_SCHEDULA_TIME_SPAN = 60*60*1000;
+	public static long ZOMBIE_WORLD_SCHEDULA_TIME_SPAN = 4*60*60*1000L;
 	
 	@Override
 	public void insertZombieWorldSchedula(Integer zombieWorldId, Date schedula,
@@ -130,14 +129,20 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 	 * @throws Exception
 	 */
 	@Override
-	public void doZombieWorldSchedulaJob()throws Exception{
+	public void doZombieWorldSchedulaJob(){
 		Date begin = new Date();
 		log.info("doZombieWorldSchedulaJob begin:"+begin);
 		Date beginDate = new Date(begin.getTime()-ZOMBIE_WORLD_SCHEDULA_TIME_SPAN);
 		Date endDate = begin;
 		Integer successCount = 0;
 		Integer totalCount = 0 ;
-		List<ZombieWorldSchedulaDto> list = zombieWorldSchedulaMapper.queryZombieWorldSchedulaByTime(beginDate, endDate, Tag.TRUE, Tag.FALSE);
+		List<ZombieWorldSchedulaDto> list = null;
+		try{
+			list = zombieWorldSchedulaMapper.queryZombieWorldSchedulaByTime(beginDate, endDate, Tag.TRUE, Tag.FALSE);
+		}catch(Exception e){
+			log.info(e.getMessage());
+		}
+		 
 		if(list != null && list.size() > 0){
 			totalCount = list.size();
 			for(ZombieWorldSchedulaDto o:list){

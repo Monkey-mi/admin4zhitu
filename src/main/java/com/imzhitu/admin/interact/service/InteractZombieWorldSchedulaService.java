@@ -70,5 +70,5 @@ public interface InteractZombieWorldSchedulaService {
 	 * 马甲发图job
 	 * @throws Exception
 	 */
-	public void doZombieWorldSchedulaJob()throws Exception;
+	public void doZombieWorldSchedulaJob();
 }
