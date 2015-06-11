@@ -122,6 +122,7 @@
 			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id,
 			hts.htworld_htworld as h, hts.user_info as u, hts.operations_channel as c
 		 where cw.world_id=h.id and cw.author_id=u.id and cw.channel_id = c.id
+		 order by cw.weight desc cw.serial desc
 	</select>
 	
 	<select id="queryChannelWorldCount" resultType="long">
