@@ -116,7 +116,7 @@
 		</where>
 		order by serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
-		) as cw left join hts_admin.op_channel_world_schedula ocws
+		) as cw left join hts_admin.op_channel_world_schedula ocws and ocws.channel_id=cw.channel_id
 			on cw.world_id = ocws.world_id
 			left join hts_admin.op_channel_thumbnail oct 
 			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id,
