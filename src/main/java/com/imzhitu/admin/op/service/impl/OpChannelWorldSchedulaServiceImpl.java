@@ -143,8 +143,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
 			dto.setWorldId(worldId);
-			long r = channelWorldSchedulaMapper.queryChannelWorldSchedulaCount(dto);
 			dto.setChannelId(channelId);
+			long r = channelWorldSchedulaMapper.queryChannelWorldSchedulaCount(dto);
+			
 			dto.setModifyDate(now);
 			dto.setAddDate(now);
 			dto.setSchedulaDate(new Date(schedula.getTime()+timeSpan*i));
