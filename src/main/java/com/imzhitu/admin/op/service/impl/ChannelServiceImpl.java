@@ -1307,4 +1307,19 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		});
 	}
 
+	@Override
+	public void updateChannelWorldValid(Integer channelId, Integer worldId,
+			Integer valid) throws Exception {
+		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+		channelWorldMapper.updateValidAndSerialByWID(channelId, worldId, valid, serial);
+		webChannelService.updateWorldAndChildCount(channelId);
+	}
+
+	@Override
+	public void updateChannelWorldSuperb(Integer channelId, Integer worldId,
+			Integer superb) throws Exception {
+		channelWorldMapper.updateSuperbByWID(channelId, worldId, superb);
+		webChannelService.updateSuperbCount(channelId);
+	}
+
 }

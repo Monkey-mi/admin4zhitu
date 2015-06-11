@@ -470,4 +470,14 @@ public class ChannelServiceTest extends BaseTest {
 		service.queryTopOnePeriodList(p, 1, 10, true);
 	}
 	
+	@Test
+	public void updateChannelWorldValidTest() throws Exception {
+		service.updateChannelWorldValid(1, 1, 1);
+	}
+
+	@Test
+	public void updateChannelWorldSuperbTest() throws Exception {
+		service.updateChannelWorldSuperb(1, 1, 1);
+	}
+	
 }

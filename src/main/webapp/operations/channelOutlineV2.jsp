@@ -71,7 +71,10 @@ $(document).ready(function(){
  */
 function getChannelIdFromCookie(){
 	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
+	var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
 	if(channelId){
+		$("#ss-channel").combogrid('setValue', channelId);
+		$("#ss-channel").combogrid('setText', channelName);
 		queryChannelById(channelId);
 	}
 }

@@ -155,6 +155,34 @@ public interface ChannelWorldMapper {
 	@DataSource("slave")
 	public List<String> queryChannelNameByWorldId(Integer worldId);
 	
+	/**
+	 * 根据WID查询其所在的频道名称列表
+	 * 
+	 * @param wids
+	 * @return
+	 */
 	@DataSource("slave")
 	public List<OpChannelNameDto> queryChannelNameByWIDs(Integer[] wids);
+	
+	/**
+	 * 更新有效标记
+	 * 
+	 * @param channelId
+	 * @param worldId
+	 * @param valid
+	 */
+	@DataSource("master")
+	public void updateValidAndSerialByWID(@Param("channelId")Integer channelId,
+			@Param("worldId")Integer worldId, @Param("valid")Integer valid, @Param("serial")Integer serial);
+	
+	/**
+	 * 更新精选标记
+	 * 
+	 * @param channelId
+	 * @param worldId
+	 * @param superb
+	 */
+	@DataSource("master")
+	public void updateSuperbByWID(@Param("channelId")Integer channelId,
+			@Param("worldId")Integer worldId, @Param("superb")Integer superb);
 }

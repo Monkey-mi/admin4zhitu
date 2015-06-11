@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +31,10 @@ public class OpMsgServiceTest extends BaseTest {
 	@Test
 	public void updateStartPageTest() throws Exception {
 		Date beginDate = new Date();
-		Date endDate = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date endDate = df.parse("2015-06-20 00:00:00");
 		service.updateStartPageCache(
-				"http://imzhitu.qiniudn.com/op/notice/2015060901.jpg",
+				"http://imzhitu.qiniudn.com/op/notice/2015061001.png",
 				1,"http://imzhitu.com/operations/2015051501.html",
 				beginDate , endDate, 10);
 	}
