@@ -171,6 +171,10 @@ body {
 	position:fixed;
 }
 
+.messager-window {
+	position:absolute;	
+}
+
 /*解决easyuicombogrid与bootstrap样式冲突*/
 .panel-body {
 	padding:0;

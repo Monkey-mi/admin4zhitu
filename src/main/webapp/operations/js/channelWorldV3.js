@@ -298,7 +298,6 @@ function getSuperb(value, row, index) {
  * @return
  */
 function getDeleteStatusOpt(value, row, index) {
-	console.log('getOpt ' + value);
 	if(value != 2) {
 		tip = "从频道删除织图";
 		opt = "删除";
