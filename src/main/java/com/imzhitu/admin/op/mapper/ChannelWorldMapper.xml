@@ -114,7 +114,7 @@
 			<if test="notified != null"> AND ocw.notified=#{notified}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ AND ocw.id<=#{maxId}]]></if>
 		</where>
-		order by weight desc, serial desc
+		order by serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 		) as cw left join hts_admin.op_channel_world_schedula ocws
 			on cw.world_id = ocws.world_id
@@ -122,7 +122,7 @@
 			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id,
 			hts.htworld_htworld as h, hts.user_info as u, hts.operations_channel as c
 		 where cw.world_id=h.id and cw.author_id=u.id and cw.channel_id = c.id
-		 order by cw.weight desc cw.serial desc
+		 order by cw.serial desc
 	</select>
 	
 	<select id="queryChannelWorldCount" resultType="long">
