@@ -175,7 +175,6 @@
 <body>
 	<div id="main">
 		<div id="tb">
-	   		<a href="javascript:void(0);" onclick="javascript:searchChannelWorldSchedula();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 	   		<input id="ss-userId" class="easyui-searchbox" searcher="searchByUID" prompt="输入用户ID搜索" style="width:150px;" />
 	   		<span class="search_label">频道: </span>
 	  		<input id="ss-channel" style="width:150px;" />
