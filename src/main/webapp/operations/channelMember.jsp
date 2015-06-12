@@ -64,7 +64,7 @@
 								}
 							}	
 						},
-				  		{field : 'subTime', title:'计划时间',align : 'center' ,width : 130,
+				  		{field : 'subTime', title:'加入时间',align : 'center' ,width : 130,
 							formatter:function(value,row,index){
 								var subTime = new Date(value);
 								return subTime.format("yyyy/MM/dd hh:mm:ss");
@@ -116,8 +116,8 @@
 				}
 		    },
 		    onSelect:function(rec){
-		    	tableQueryParams.channelId = rec.id;
-		    	$("#htm_table").datagrid("load",queryParams);
+		    	tableQueryParams.channelId = $("#ss-channel").combogrid('getValue');
+		    	$("#htm_table").datagrid("load",tableQueryParams);
 		    }
 		});
 		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
