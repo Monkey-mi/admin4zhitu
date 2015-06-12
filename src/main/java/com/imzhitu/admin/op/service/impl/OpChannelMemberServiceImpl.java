@@ -1,10 +1,13 @@
 package com.imzhitu.admin.op.service.impl;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.common.pojo.OpChannelMemberDto;
 import com.imzhitu.admin.op.mapper.OpChannelMemberMapper;
@@ -65,6 +68,35 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 		dto.setDegree(degree);
 		dto.setId(id);
 		return channelMemberMapper.queryChannelMemberTotalCount(dto);
+	}
+
+	@Override
+	public void queryChannelMember(Integer id, Integer channelId,
+			Integer userId, Integer degree, Integer maxId, int page, int rows,
+			Map<String, Object> jsonMap) throws Exception {
+		// TODO Auto-generated method stub
+		OpChannelMemberDto dto = new OpChannelMemberDto();
+		dto.setChannelId(channelId);
+		dto.setUserId(userId);
+		dto.setDegree(degree);
+		dto.setId(id);
+		dto.setMaxId(maxId);
+		dto.setFirstRow((page-1)*rows);
+		dto.setLimit(rows);
+		
+		List<OpChannelMemberDto> list = null;
+		Integer reMaxId = 0;
+		long total = channelMemberMapper.queryChannelMemberTotalCount(dto);
+		if(total > 0 ){
+			list = channelMemberMapper.queryChannelMember(dto);
+			reMaxId = list.get(0).getId();
+		}
+		
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, reMaxId);
+		
+		
 	}
 
 }

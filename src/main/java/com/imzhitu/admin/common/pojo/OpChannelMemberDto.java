@@ -37,6 +37,7 @@ public class OpChannelMemberDto extends AbstractNumberDto implements Serializabl
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+	
 	public Long getSubTime() {
 		return subTime;
 	}

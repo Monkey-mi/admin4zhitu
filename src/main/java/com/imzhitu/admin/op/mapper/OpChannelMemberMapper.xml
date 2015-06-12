@@ -4,7 +4,9 @@
 	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelMemberDto" id="OpChannelLinkMapper">
 		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
 		<result column="user_id" property="userId" jdbcType="INTEGER"/>
+		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
 		<result column="sub_time" property="subTime" jdbcType="BIGINT"/>
 		<result column="degree" property="degree" jdbcType="INTEGER"/>
 	</resultMap>
@@ -27,6 +29,32 @@
 		</where>
 	</update>
 	
+	<select id="queryChannelMember" resultMap="OpChannelLinkMapper" >
+		select ocm.*,ui.user_name,oc.channel_name
+		from hts.operations_channel_member ocm
+			left join hts.user_info ui on ocm.user_id = ui.id
+			left join hts.operations_channel oc on ocm.channel_id = oc.id
+		<where>
+			<if test="id != null">
+				ocm.id = #{id}
+			</if>
+			<if test="channelId != null">
+				and ocm.channel_id = #{channelId}
+			</if>
+			<if test="userId != null">
+				and ocm.user_id = #{userId}
+			</if>
+			<if test="degree != null">
+				and ocm.degree = #{degree}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and ocm.id <= #{maxId} ]]>
+			</if>
+		</where>
+		order by ocm.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
 	<select id="queryChannelMemberTotalCount" resultType="long">
 		select count(*) from hts.operations_channel_member ocm
 		<where>
@@ -43,7 +71,7 @@
 				and ocm.degree = #{degree}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[ and ocm.id = #{maxId} ]]>
+				<![CDATA[ and ocm.id <= #{maxId} ]]>
 			</if>
 		</where>
 	</select>
