@@ -138,7 +138,7 @@ public class ZombieWorld  extends AbstractNumberDto{
 		return latitude;
 	}
 	public void setLatitude(Double latitude) {
-		if(null == longitude){
+		if(null == latitude){
 			this.latitude = 0.0;
 		} else {
 			this.latitude = latitude;
