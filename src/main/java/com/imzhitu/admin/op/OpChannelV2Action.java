@@ -1,20 +1,20 @@
 package com.imzhitu.admin.op;
 
 import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
+import com.hts.web.common.pojo.OpChannelLink;
 import com.hts.web.common.util.JSONUtil;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.AdminRole;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
@@ -28,15 +28,13 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	@Autowired
 	private OpChannelV2Service opChannelV2Service;
 	
-	
-	
 	/**
 	 * 插入频道
 	 * @return
 	 */
 	public String insertOpChannel(){
 		try{
-			opChannelV2Service.insertOpChannel(ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, subIcon, channelTypeId,
+			opChannelV2Service.insertOpChannel(ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, channelTypeId,
 					channelLabelNames, channelLabelIds, 0, 0, 0, 0, 0, Tag.FALSE, Tag.FALSE, 0, Tag.FALSE, Tag.FALSE, Tag.TRUE,themeId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
@@ -65,7 +63,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	 */
 	public String updateOpChannel(){
 		try{
-			opChannelV2Service.updateOpChannel(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, subIcon, channelTypeId,
+			opChannelV2Service.updateOpChannel(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, channelTypeId,
 					channelLabelNames, channelLabelIds, worldCount, worldPictureCount, memberCount, superbCount, childCountBase, superb, valid, serial, danmu, moodFlag, worldFlag,themeId);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
@@ -178,6 +176,122 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+    /**
+     * 刷新频道缓存
+     *
+     * @return
+     * @author zhangbo 2015年6月10日
+     */
+    public String refreshCache() {
+	try {
+	    opChannelV2Service.updateChannelCache();
+	    JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
+    /**
+     * 查询关联频道返回集合
+     *
+     * @return
+     * @author zhangbo 2015年6月10日
+     */
+    public String queryRelatedChannel() {
+	try {
+	    List<OpChannelLink> queryRelatedChannelList = opChannelV2Service.queryRelatedChannelList(getChannelId());
+	    JSONUtil.optResult(OptResult.OPT_SUCCESS, queryRelatedChannelList, OptResult.ROWS, jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
+    /**
+     * 添加关联频道
+     *
+     * @return
+     * @author zhangbo 2015年6月11日
+     */
+    public String addRelatedChannel(){
+	try {
+	    opChannelV2Service.addRelatedChannel(getChannelId(),getLinkChannelId());
+	    JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
+    /**
+     * 批量删除关联频道
+     *
+     * @return
+     * @author zhangbo 2015年6月11日
+     */
+    public String deleteRelatedChannels(){
+	try {
+	    Integer[] deleteIds = StringUtil.convertStringToIds(getDeleteIds());
+	    opChannelV2Service.deleteRelatedChannels(getChannelId(),deleteIds);
+	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
+    /**
+     * 批量删除关联频道
+     *
+     * @return
+     * @author zhangbo 2015年6月11日
+     */
+    public String updateRelatedChannelSerial(){
+	String channelId = request.getParameter("reIndexChannelId");
+	String[] linkChannelIds = request.getParameterValues("reIndexlinkId");
+	try {
+	    opChannelV2Service.updateRelatedChannelSerial(Integer.valueOf(channelId),linkChannelIds);
+	    JSONUtil.optSuccess("排序成功", jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
+    /**
+     * 保存频道置顶
+     *
+     * @return
+     * @author zhangbo 2015年6月12日
+     */
+    public String saveChannelTop(){
+	try {
+	    opChannelV2Service.saveChannelTop(getChannelId());
+	    JSONUtil.optSuccess("修改成功", jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
+    /**
+     * 删除频道置顶
+     *
+     * @return
+     * @author zhangbo 2015年6月12日
+     */
+    public String deleteChannelTop(){
+	try {
+	    opChannelV2Service.deleteChannelTop(getChannelId());
+	    JSONUtil.optSuccess("修改成功", jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
+	
 	private Integer channelId;			//id
 	private Integer ownerId;			//拥有者ID
 	private String ownerName;			//拥有者名称
@@ -186,7 +300,6 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	private String subtitle;			//频道副标题
 	private String channelDesc;			//频道描述
 	private String channelIcon;			//频道icon
-	private String subIcon;				//副Icon
 	private Integer channelTypeId;		//频道类型ID
 	private String channelTypeName;		//频道类型名称
 	private String channelLabelNames;	//频道标签名称，eg。label_A,label_B,...
@@ -210,6 +323,9 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	
 	private String worldAndAuthorIdsStr;//worldId and authorId，eg：123-114,124-114
 	private Integer themeId;			//主题ID
+	
+	private Integer linkChannelId;	// 关联频道id
+	private String deleteIds;	// 执行删除操作的id集合
 	
 	
 	public Integer getMoodFlag() {
@@ -265,12 +381,6 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	}
 	public void setChannelIcon(String channelIcon) {
 		this.channelIcon = channelIcon;
-	}
-	public String getSubIcon() {
-		return subIcon;
-	}
-	public void setSubIcon(String subIcon) {
-		this.subIcon = subIcon;
 	}
 	public Integer getChannelTypeId() {
 		return channelTypeId;
@@ -397,6 +507,34 @@ public class OpChannelV2Action extends BaseCRUDAction{
 
 	public void setThemeId(Integer themeId) {
 		this.themeId = themeId;
+	}
+
+	/**
+	 * @return the linkChannelId
+	 */
+	public Integer getLinkChannelId() {
+	    return linkChannelId;
+	}
+
+	/**
+	 * @param linkChannelId the linkChannelId to set
+	 */
+	public void setLinkChannelId(Integer linkChannelId) {
+	    this.linkChannelId = linkChannelId;
+	}
+
+	/**
+	 * @return the deleteIds
+	 */
+	public String getDeleteIds() {
+	    return deleteIds;
+	}
+
+	/**
+	 * @param deleteIds the deleteIds to set
+	 */
+	public void setDeleteIds(String deleteIds) {
+	    this.deleteIds = deleteIds;
 	}
 	
 

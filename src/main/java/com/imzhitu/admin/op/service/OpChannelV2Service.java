@@ -1,10 +1,12 @@
 package com.imzhitu.admin.op.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
 
+import com.hts.web.common.pojo.OpChannelLink;
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 
@@ -14,7 +16,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param dto
 	 */
 	public void insertOpChannel(Integer ownerId,String channelName,String channelTitle,String subtitle,String channelDesc,
-			String channelIcon,String subIcon,Integer channelTypeId,String channelLabelNames,String channelLabelIds,Integer worldCount,
+			String channelIcon,Integer channelTypeId,String channelLabelNames,String channelLabelIds,Integer worldCount,
 			Integer worldPictureCount,Integer memberCount,Integer  superbCount,Integer childCountBase,Integer superb,Integer valid,
 			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId)throws Exception;
 	
@@ -29,7 +31,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param dto
 	 */
 	public void updateOpChannel(Integer channelId,Integer ownerId,String channelName,String channelTitle,String subtitle,String channelDesc,
-			String channelIcon,String subIcon,Integer channelTypeId,String channelLabelNames,String channelLabelIds,Integer worldCount,
+			String channelIcon,Integer channelTypeId,String channelLabelNames,String channelLabelIds,Integer worldCount,
 			Integer worldPictureCount,Integer memberCount,Integer  superbCount,Integer childCountBase,Integer superb,Integer valid,
 			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId)throws Exception;
 	
@@ -115,4 +117,59 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 */
 	public long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId)throws Exception;
+
+	/**
+	 * 刷新频道缓存，同时刷新置顶与加精的频道
+	 * 
+	 * @author zhangbo 2015年6月10日
+	 */
+	public void updateChannelCache() throws Exception;
+
+	/**
+	 * 查询关联频道列表
+	 *
+	 * @author zhangbo 2015年6月10日
+	 */
+	public List<OpChannelLink> queryRelatedChannelList(Integer channelId);
+
+	/**
+	 * 添加关联频道
+	 * 
+	 * @param channelId
+	 * @author zhangbo 2015年6月11日
+	 */
+	public void addRelatedChannel(Integer channelId, Integer linkChannelId);
+
+	/**
+	 * 批量删除关联频道
+	 * @param channelId
+	 * @param deleteIds
+	 * @author zhangbo 2015年6月11日
+	 */
+	public void deleteRelatedChannels(Integer channelId, Integer[] deleteIds);
+
+	/**
+	 * 重新排序关联频道
+	 * 
+	 * @param ids
+	 * @author zhangbo 2015年6月13日
+	 */
+	public void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds);
+	
+	/**
+	 * 保存频道置顶信息到存储表channel_top中，top字段为1
+	 * 
+	 * @param channelId	频道id
+	 * @author zhangbo 2015年6月12日
+	 */
+	public void saveChannelTop(Integer channelId);
+
+	/**
+	 * 删除频道置顶信息
+	 * 
+	 * @param channelId	频道id
+	 * @author zhangbo 2015年6月12日
+	 */
+	public void deleteChannelTop(Integer channelId);
+
 }

@@ -5,8 +5,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -18,9 +20,11 @@ import com.hts.web.aliyun.service.OsChannelService;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpChannel;
+import com.hts.web.common.pojo.OpChannelLink;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.hts.web.common.util.TimeUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
@@ -63,16 +67,27 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	@Autowired
 	private UserInfoMapper userInfoMapper;
 	
+	@Autowired
+	private com.hts.web.operations.dao.ChannelCacheDao channelCacheDao;
+	
+	@Autowired
+	private com.hts.web.operations.dao.ChannelDao channelDao;
+	
+	@Autowired
+	private com.hts.web.operations.dao.ChannelLinkDao channelLinkDao;
+	
+	@Autowired
+	private com.hts.web.operations.dao.ChannelThemeCacheDao webThemeCacheDao;
+	
 	@Override
 	public void insertOpChannel(Integer ownerId, String channelName,
 			String channelTitle, String subtitle, String channelDesc,
-			String channelIcon, String subIcon, Integer channelTypeId,
+			String channelIcon, Integer channelTypeId,
 			String channelLabelNames, String channelLabelIds,
 			Integer worldCount, Integer worldPictureCount, Integer memberCount,
 			Integer superbCount, Integer childCountBase, Integer superb,
 			Integer valid, Integer serial, Integer danmu, Integer moodFlag,
 			Integer worldFlag,Integer themeId) throws Exception{
-		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		Date now = new Date();
 		Integer channelId = keyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
@@ -83,7 +98,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setSubtitle(subtitle);
 		dto.setChannelDesc(channelDesc);
 		dto.setChannelIcon(channelIcon);
-		dto.setSubIcon(subIcon);
 		dto.setChannelTypeId(channelTypeId);
 		dto.setChannelLabelNames(channelLabelNames);
 		dto.setChannelLabelIds(channelLabelIds);
@@ -112,7 +126,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 
 	@Override
 	public void deleteOpChannel(Integer channelId, Integer ownerId) throws Exception{
-		// TODO Auto-generated method stub
 		if(null == channelId && null == ownerId)
 			return;
 		OpChannelV2Dto dto = new OpChannelV2Dto();
@@ -126,14 +139,13 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	@Override
 	public void updateOpChannel(Integer channelId, Integer ownerId,
 			String channelName, String channelTitle, String subtitle,
-			String channelDesc, String channelIcon, String subIcon,
+			String channelDesc, String channelIcon,
 			Integer channelTypeId, String channelLabelNames,
 			String channelLabelIds, Integer worldCount,
 			Integer worldPictureCount, Integer memberCount,
 			Integer superbCount, Integer childCountBase, Integer superb,
 			Integer valid, Integer serial, Integer danmu, Integer moodFlag,
 			Integer worldFlag,Integer themeId) throws Exception{
-		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(channelId);
 		List<OpChannelV2Dto> list = opChannelV2Mapper.queryOpChannel(dto);
@@ -144,7 +156,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setSubtitle(subtitle);
 		dto.setChannelDesc(channelDesc);
 		dto.setChannelIcon(channelIcon);
-		dto.setSubIcon(subIcon);
 		dto.setChannelTypeId(channelTypeId);
 		dto.setChannelLabelNames(channelLabelNames);
 		dto.setChannelLabelIds(channelLabelIds);
@@ -181,7 +192,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			Integer ownerId, Integer superb, Integer valid, Integer serial,
 			Integer danmu, Integer moodFlag, Integer worldFlag,Integer themeId, int start,
 			int rows, Integer maxId,Map<String, Object> jsonMap) throws Exception{
-		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(channelId);
 		dto.setChannelName(channelName);
@@ -200,13 +210,26 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 
 			@Override
 			public List<? extends Serializable> queryList(OpChannelV2Dto dto) {
-				// TODO Auto-generated method stub
-				return opChannelV2Mapper.queryOpChannel(dto);
+			    List<OpChannelV2Dto> opChannelList = opChannelV2Mapper.queryOpChannel(dto);
+			    // 为关联频道赋值
+			    for (OpChannelV2Dto opChannelV2Dto : opChannelList) {
+				StringBuffer relatedChannel = new StringBuffer();
+				List<OpChannelLink> queryRelatedChannelList = queryRelatedChannelList(opChannelV2Dto.getChannelId());
+				for (int i = 0; i < queryRelatedChannelList.size(); i++) {
+				    if ( i == 0 ) {
+					relatedChannel.append(queryRelatedChannelList.get(i).getChannelName());
+				    } else {
+					relatedChannel.append(",");
+					relatedChannel.append(queryRelatedChannelList.get(i).getChannelName());
+				    }
+				}
+				opChannelV2Dto.setRelatedChannel(relatedChannel.toString());
+			    }
+			    return opChannelList;
 			}
 
 			@Override
 			public long queryTotal(OpChannelV2Dto dto) {
-				// TODO Auto-generated method stub
 				return opChannelV2Mapper.queryOpChannelTotalCount(dto);
 			}
 			
@@ -217,7 +240,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	public long queryOpChannelTotalCount(Integer channelId,String channelName, Integer channelTypeId,Integer ownerId,
 			Integer superb, Integer valid, Integer serial, Integer danmu,
 			Integer moodFlag, Integer worldFlag,Integer maxId,Integer themeId) throws Exception{
-		// TODO Auto-generated method stub
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(channelId);
 		dto.setChannelName(channelName);
@@ -339,7 +361,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			opChannel.setChildCount(d.getWorldPictureCount());
 			opChannel.setId(d.getChannelId());
 			opChannel.setSerial(d.getSerial());
-			opChannel.setSubIcon(d.getSubIcon());
 			list.add(opChannel);
 		}
 		
@@ -483,6 +504,95 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			today = today1;
 		}
 		return opChannelV2Mapper.queryYestodayWorldIncreasement(yestoday, today, channelId);
+	}
+
+	@Override
+	public void updateChannelCache() throws Exception {
+	    List<OpChannelV2Dto> topList = opChannelV2Mapper.queryChannelTop();
+	    
+	    // 转换后的置顶 集合
+	    List<OpChannel> topTempList = new ArrayList<OpChannel>();
+	    for (OpChannelV2Dto opChannelV2Dto : topList) {
+		topTempList.add(new OpChannel(opChannelV2Dto.getChannelId(),
+			opChannelV2Dto.getOwnerId(),opChannelV2Dto.getOwnerName(),
+			opChannelV2Dto.getChannelTitle(),opChannelV2Dto.getSubtitle(),
+			opChannelV2Dto.getChannelDesc(),opChannelV2Dto.getChannelIcon(),
+			null,opChannelV2Dto.getChannelTypeId(),opChannelV2Dto.getChannelLabelNames(),
+			opChannelV2Dto.getChannelLabelIds(),opChannelV2Dto.getWorldCount(),
+			opChannelV2Dto.getWorldPictureCount(),opChannelV2Dto.getMemberCount(),
+			opChannelV2Dto.getSuperbCount(),TimeUtil.getDate(opChannelV2Dto.getCreateTime().longValue()),
+			TimeUtil.getDate(opChannelV2Dto.getLastModifiedTime().longValue()),
+			opChannelV2Dto.getSuperb(),opChannelV2Dto.getThemeId(),opChannelV2Dto.getSerial(),
+			opChannelV2Dto.getDanmu(),opChannelV2Dto.getMoodFlag(),opChannelV2Dto.getWorldFlag()
+			));
+	    }
+	    // 置顶频道id集合
+	    List<Integer> topChannelIds = new ArrayList<Integer>();
+	    for (OpChannel top : topTempList) {
+		topChannelIds.add(top.getId());
+	    }
+	    
+	    // 只查询1000条数据
+	    List<OpChannel> superbList = channelDao.querySuperbChannel(1000);
+	    
+	    // 筛选后的精选集合
+	    List<OpChannel> superbTempList = new ArrayList<OpChannel>();
+	    
+	    // 精选集合中不能包含置顶集合中的频道，若有，则移除，即不放入筛选后集合
+	    for (OpChannel superb : superbList) {
+		// 若不存在于置顶频道集合中，则放入筛选后的精选集合
+		if (!topChannelIds.contains(superb.getId())) {
+		    superbTempList.add(superb);
+		}
+	    }
+	    
+	    // 刷新频道redis缓存
+	    channelCacheDao.updateChannel(topTempList, superbTempList);
+	    // 刷新频道主题redis缓存
+	    webThemeCacheDao.updateTheme();
+	    
+	}
+
+	@Override
+	public List<OpChannelLink> queryRelatedChannelList(Integer channelId) {
+	    return channelLinkDao.queryLink(channelId);
+	}
+
+	@Override
+	public void addRelatedChannel(Integer channelId, Integer linkChannelId) {
+	    Integer serial = keyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_LINK_SERIAL);;
+	    opChannelV2Mapper.addRelatedChannel(channelId,linkChannelId,serial);
+	}
+
+	@Override
+	public void deleteRelatedChannels(Integer channelId, Integer[] deleteIds) {
+	    for (Integer linkId : deleteIds) {
+		opChannelV2Mapper.deleteRelatedChannel(channelId,linkId);
+	    }
+	}
+	
+	@Override
+	public void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds) {
+	    // 反向排序，传递过来的集合，第一个是前台想排在前面的，而serial越大排序越靠前，所以要倒序对linkChannelIds进行操作
+	    for(int i = linkChannelIds.length - 1; i >= 0; i--) {
+		if (linkChannelIds[i].isEmpty()) {
+		    continue;
+		} else {
+		    Integer linkCid = Integer.parseInt(linkChannelIds[i]);
+		    Integer serial = keyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_LINK_SERIAL);
+		    opChannelV2Mapper.updateRelatedChannelSerial(channelId,linkCid,serial);
+		}
+	    }
+	}
+
+	@Override
+	public void saveChannelTop(Integer channelId) {
+	    opChannelV2Mapper.insertChannelTop(channelId);
+	}
+
+	@Override
+	public void deleteChannelTop(Integer channelId) {
+	    opChannelV2Mapper.deleteChannelTop(channelId);
 	}
 
 }

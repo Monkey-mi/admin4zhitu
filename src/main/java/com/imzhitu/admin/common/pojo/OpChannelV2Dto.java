@@ -17,7 +17,6 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	private String subtitle;			//频道副标题
 	private String channelDesc;			//频道描述
 	private String channelIcon;			//频道icon
-	private String subIcon;				//副Icon
 	private Integer channelTypeId;		//频道类型ID
 	private String channelTypeName;		//频道类型名称
 	private String channelLabelNames;	//频道标签名称，eg。label_A,label_B,...
@@ -30,6 +29,7 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	private Long createTime;			//创建时间
 	private Long lastModifiedTime;		//最后修改时间
 	private Integer superb;				//精选标记。0非精选。1精选
+	private Integer top;				//置顶标记。0非置顶。1置顶
 	private Integer valid;				//有效性	0无效。1有效
 	private Integer serial;				//序号
 	private Integer danmu;				//弹幕标记。0非弹幕，1弹幕
@@ -47,6 +47,8 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	private String userName;
 	private String userAvatar;
 	private String userAvatarL;
+	
+	private String relatedChannel;	// 关联频道
 	
 	public Long getYestodayMemberIncreasement() {
 		return yestodayMemberIncreasement;
@@ -126,12 +128,6 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	public void setChannelIcon(String channelIcon) {
 		this.channelIcon = channelIcon;
 	}
-	public String getSubIcon() {
-		return subIcon;
-	}
-	public void setSubIcon(String subIcon) {
-		this.subIcon = subIcon;
-	}
 	public Integer getChannelTypeId() {
 		return channelTypeId;
 	}
@@ -179,6 +175,12 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	}
 	public void setSuperbCount(Integer superbCount) {
 		this.superbCount = superbCount;
+	}
+	public Integer getTop() {
+	    return top;
+	}
+	public void setTop(Integer top) {
+	    this.top = top;
 	}
 	public Integer getChildCountBase() {
 		return childCountBase;
@@ -251,6 +253,18 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	}
 	public void setUserAvatarL(String userAvatarL) {
 		this.userAvatarL = userAvatarL;
+	}
+	/**
+	 * @return the relatedChannel
+	 */
+	public String getRelatedChannel() {
+	    return relatedChannel;
+	}
+	/**
+	 * @param relatedChannel the relatedChannel to set
+	 */
+	public void setRelatedChannel(String relatedChannel) {
+	    this.relatedChannel = relatedChannel;
 	}
 	
 }

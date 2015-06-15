@@ -10,7 +10,6 @@
 		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
 		<result column="channel_desc" property="channelDesc" jdbcType="VARCHAR"/>
 		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR"/>
-		<result column="sub_icon" property="subIcon" jdbcType="VARCHAR"/>
 		<result column="channel_type" property="channelTypeId" jdbcType="INTEGER"/>
 		<result column="channel_type_name" property="channelTypeName" jdbcType="VARCHAR"/>
 		<result column="channel_label" property="channelLabelNames" jdbcType="VARCHAR"/>
@@ -21,8 +20,9 @@
 		<result column="superb_count" property="superbCount" jdbcType="INTEGER"/>
 		<result column="child_count_base" property="childCountBase" jdbcType="INTEGER"/>
 		<result column="create_time" property="createTime" jdbcType="BIGINT"/>
-		<result column="last_modified" property="lastModifiedTime" jdbcType="INTEGER"/>
+		<result column="last_modified" property="lastModifiedTime" jdbcType="BIGINT"/>
 		<result column="superb" property="superb" jdbcType="INTEGER"/>
+		<result column="top" property="top" jdbcType="INTEGER"/>
 		<result column="valid" property="valid" jdbcType="INTEGER"/>
 		<result column="serial" property="serial" jdbcType="INTEGER"/>
 		<result column="danmu" property="danmu" jdbcType="INTEGER"/>
@@ -31,15 +31,15 @@
 		<result column="theme_id" property="themeId" jdbcType="INTEGER"/>
 		<result column="theme_name" property="themeName" jdbcType="VARCHAR"/>
 	</resultMap>
-
+	
 	<!-- insert -->
 	<insert id="insertOpChannel">
 		insert into hts.operations_channel (id,owner_id,channel_name,channel_title,subtitle,channel_desc,channel_icon,
-			sub_icon,channel_type,channel_label,label_ids,world_count,child_count,member_count,superb_count,
+			channel_type,channel_label,label_ids,world_count,child_count,member_count,superb_count,
 			child_count_base,create_time,last_modified,superb,valid,serial,danmu,mood,world,theme_id)
 		values
 			(#{channelId},#{ownerId},#{channelName},#{channelTitle},#{subtitle},#{channelDesc},#{channelIcon},
-			#{subIcon},#{channelTypeId},#{channelLabelNames},#{channelLabelIds},#{worldCount},#{worldPictureCount},#{memberCount},#{superbCount},
+			#{channelTypeId},#{channelLabelNames},#{channelLabelIds},#{worldCount},#{worldPictureCount},#{memberCount},#{superbCount},
 			#{childCountBase},#{createTime},#{lastModifiedTime},#{superb},#{valid},#{serial},#{danmu},#{moodFlag},#{worldFlag},#{themeId})
 	</insert>
 	
@@ -76,9 +76,6 @@
 			</if>
 			<if test="channelIcon != null">
 				channel_icon = #{channelIcon},
-			</if>
-			<if test="subIcon != null">
-				sub_icon = #{subIcon},
 			</if>
 			<if test="channelTypeId != null">
 				channel_type = #{channelTypeId},
@@ -134,8 +131,15 @@
 	
 	<!-- 分页查询 -->
 	<select id="queryOpChannel" resultMap="OpChannelV2Mapper">
-		select oc.*,oct.theme_name from hts.operations_channel  oc
+		select 
+			oc.*,
+			u.user_name as owner_name,
+			oct.theme_name,
+			IFNULL(ctop.top,0) as top
+		from hts.operations_channel  oc
 		left join hts.operations_channel_theme  oct on oc.theme_id=oct.id
+		left join hts.user_info u on u.id=oc.owner_id
+		left join hts_admin.op_channel_top ctop on ctop.channel_id=oc.id
 		<where>
 			<if test="channelId != null">
 				oc.id = #{channelId}
@@ -257,5 +261,51 @@
 		
 	</select>
 	
+	<!-- 添加关联频道 -->
+	<insert id="addRelatedChannel">
+		insert into hts.operations_channel_link (channel_id,link_id,serial)
+		values (#{channelId},#{linkChannelId},#{serial})
+	</insert>
+	
+	<!-- 批量删除关联频道 -->
+	<delete id="deleteRelatedChannel">
+		delete from hts.operations_channel_link
+		where channel_id = #{channelId} and link_id = #{linkChannelId}
+	</delete>
+	
+	<!-- 关联频道重新排序，即刷新serial字段 -->
+	<update id="updateRelatedChannelSerial">
+		update hts.operations_channel_link
+		<set>
+			serial = #{serial}
+		</set>
+		where channel_id = #{channelId} and link_id = #{linkChannelId}
+	</update>
+	
+	<!-- 添加频道置顶 -->
+	<insert id="insertChannelTop">
+		insert into hts_admin.op_channel_top (channel_id,top)
+		values (#{channelId},1)
+	</insert>
+	
+	<!-- 删除频道置顶 -->
+	<delete id="deleteChannelTop">
+		delete from hts_admin.op_channel_top
+		where channel_id = #{channelId}
+	</delete>
+	
+	<!-- 查询频道置顶表数据 -->
+	<select id="queryChannelTop" resultMap="OpChannelV2Mapper">
+		select 
+			c0.id,c0.owner_id,c0.channel_name,
+			c0.channel_title,c0.subtitle,c0.channel_desc,
+			c0.channel_icon,c0.channel_type,
+			c0.channel_label,c0.label_ids,c0.world_count,
+			c0.child_count,c0.member_count,c0.superb_count,
+			c0.create_time,c0.last_modified,c0.superb,c0.theme_id,
+			c0.serial,c0.danmu,c0.mood,c0.world
+		from hts.operations_channel  c0, hts_admin.op_channel_top ctop
+		where ctop.channel_id = c0.id
+	</select>
 	
 </mapper>
