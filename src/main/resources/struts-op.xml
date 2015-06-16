@@ -119,7 +119,12 @@
 				<param name="root">jsonMap</param>
 			</result>
 		</action>
-		
+
+		<action name="msgBulletin_*" class="com.imzhitu.admin.op.OpMsgBulletinAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>		
 	</package>
 
 </struts>

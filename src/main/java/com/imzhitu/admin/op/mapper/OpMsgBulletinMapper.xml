@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpMsgBulletinMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpMsgBulletin" id="OpMsgBulletinMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="bulletinPath" column="path" jdbcType="VARCHAR"/>
+		<result property="bulletinType" column="type" jdbcType="INTEGER"/>
+		<result property="link" column="link" jdbcType="VARCHAR"/>
+		<result property="operator" column="operator" jdbcType="INTEGER"/>
+		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertMsgBulletin">
+		insert into hts_admin.op_msg_bulletin
+			(path,type,link,operator,date_add,date_modify,valid)
+		values
+			(#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{valid})
+	</insert>
+	
+	<!-- BATCHDELETE -->
+	<delete id="batchDeleteMsgBulletin">
+		delete from hts_admin.op_msg_bulletin
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- UPDATE -->
+	<update id="updateMsgBulletin">
+		update hts_admin.op_msg_bulletin
+		<set>
+			<if test="bulletinPath != null">path = #{bulletinPath},</if>
+			<if test="bulletinType != null">type = #{bulletinType},</if>
+			<if test="link != null">link = #{link},</if>
+			<if test="valid != null">valid = #{valid},</if>
+			date_modify = #{modifyDate,jdbcType=TIMESTAMP},
+			operator = #{operator}
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- BATCH UPDATE VALID -->
+	<update id="batchUpdateMsgBulletinValid">
+		update 	hts_admin.op_msg_bulletin
+		set valid=#{valid},operator=#{operator},date_modify=NOW()
+		where id in 
+		<foreach collection="ids" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- SELECT -->
+	<select id="queryMsgBulletin" resultMap="OpMsgBulletinMap">
+		select omb.*,aui.user_name as operatorName
+		from hts_admin.op_msg_bulletin omb
+		left join hts_admin.admin_user_info aui on omb.operator=aui.id
+		<where>
+			<if test="id != null">
+				omb.id = #{id}
+			</if>
+			<if test="valid != null">
+				and omb.valid = #{valid}
+			</if>
+			<if test="bulletinType != null">
+				and omb.type = #{bulletinType}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and omb.id <= #{maxId}]]>
+			</if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- SELECT TOTAL COUNT -->
+	<select id="queryMsgBulletinTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.op_msg_bulletin omb
+		<where>
+			<if test="id != null">
+				omb.id = #{id}
+			</if>
+			<if test="valid != null">
+				and omb.valid = #{valid}
+			</if>
+			<if test="bulletinType != null">
+				and omb.type = #{bulletinType}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and omb.id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+	<!-- SELECT BY IDS -->
+	<select id="queryMsgBulletinByIds" resultMap="OpMsgBulletinMap">
+		select * 
+		from hts_admin.op_msg_bulletin 
+		where id in
+		<foreach collection="ids" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</select>
+	
+</mapper>
