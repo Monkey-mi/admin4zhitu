@@ -38,7 +38,7 @@
 		$("#htm_table").datagrid(
 				{
 					title  :"频道启动页管理",
-					width  :1200,
+					width  :1300,
 					pageList : [10,30,50,100],
 					loadMsg:"加载中....",
 					url	   :	loadDateUrl,
@@ -50,8 +50,8 @@
 					toolbar:'#tb',
 					columns: [[
 						{field :'ck',checkbox:true},
-						{field :'id',title:'ID',align:'center',width:80},
-						{field : 'linkPath',title: '链接图片路径',align : 'center',width : 180,
+						{field :'id',title:'ID',align:'center',width:70},
+						{field : 'linkPath',title: '链接图片路径',align : 'center',width : 170,
 							formatter: function(value,row,index) {
 				  				return "<img title='无效' width='150px' height='150px' class='htm_column_img' src='" + value + "'/>";
 				  			}
@@ -157,7 +157,7 @@
 			title : '添加频道精选推荐',
 			modal : true,
 			width : 490,
-			height : 240,
+			height : 320,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -167,6 +167,7 @@
 			resizable : false,
 			onClose : function(){
 				$("#i-path").val('');
+				$("#startpage_img_edit").attr("src", "./base/images/bg_empty.png");
 				$("#s-type").combobox('setValue',0);
 				$("#i-link").val('');
 				$("#i-id").val('');	
@@ -267,6 +268,7 @@
 	
 	function updateInit(id,path,type,link,beginDate,endDate){
 		$("#i-path").val(path);
+		$("#startpage_img_edit").attr('src',path);
 		$("#s-type").combobox('setValue',type);
 		$("#i-link").val(link);
 		$("#i-id").val(id);
@@ -336,7 +338,14 @@
 					<tbody>
 						<tr>
 							<td class="leftTd">链接图片路径：</td>
-							<td><input id="i-path" style="width:220px;" ></td>
+							<td>
+								<input id="i-path" class="none" readonly="readonly" >
+								<a id="startpage_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="startpage_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
+								<div id="startpage_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+									上传中...<span class="upload_progress"></span><span>%</span>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<td class="leftTd">链接类型：</td>
@@ -354,11 +363,11 @@
 						</tr>
 						<tr>
 							<td class="leftTd">开始时间：</td>
-							<td><input id="i-beginDate" class="easyui-datetimebox" style="width:220px;" ></td>
+							<td><input id="i-beginDate" class="easyui-datetimebox" style="width:223px;" ></td>
 						</tr>
 						<tr>
 							<td class="leftTd">结束时间：</td>
-							<td><input id="i-endDate" class="easyui-datetimebox" style="width:220px;" ></td>
+							<td><input id="i-endDate" class="easyui-datetimebox" style="width:223px;" ></td>
 						</tr>
 						<tr>
 							<td class="none"><input id="i-id"></td>
@@ -374,5 +383,61 @@
 			</form>
 		</div>
 	</div>
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
+	<script type="text/javascript">
+	
+	Qiniu.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'startpage_upload_btn',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        chunk_size: '4mb',
+        uptoken_url: './admin_qiniu/uptoken',
+        domain: 'http://imzhitu.qiniudn.com/',
+        unique_names: false,
+        save_key: false,
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+            	$("#startpage_upload_btn").hide();
+            	$("#startpage_img_edit").hide();
+            	var $status = $("#startpage_img_upload_status");
+            	$status.find('.upload_progress:eq(0)').text(0);
+            	$status.show();
+            	
+            },
+            'BeforeUpload': function(up, file) {
+            },
+            
+            'UploadProgress': function(up, file) {
+            	var $status = $("#startpage_img_upload_status");
+            	$status.find('.upload_progress:eq(0)').text(file.percent);
+
+            },
+            'UploadComplete': function() {
+            	$("#startpage_upload_btn").show();
+            	$("#startpage_img_edit").show();
+            	$("#startpage_img_upload_status").hide();
+            },
+            'FileUploaded': function(up, file, info) {
+            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	$("#startpage_img_edit").attr('src', url);
+            	$("#i-path").val(url);
+            },
+            'Error': function(up, err, errTip) {
+                $.messager.alert('上传失败',errTip);  // 提示添加信息失败
+            },
+            'Key': function(up, file) {
+            	var timestamp = Date.parse(new Date());
+            	var suffix = /\.[^\.]+/.exec(file.name);
+                var key = "op/notice/" + timestamp+suffix;
+                return key;
+            }
+        }
+    });
+    
+	</script>
 </body>
 </html>
