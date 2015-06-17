@@ -6,6 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.pojo.OpMsgBulletin;
 
+/**
+ * 
+ * @author zxx
+ *
+ */
 public interface OpMsgBulletinMapper {
 	/**
 	 * 添加

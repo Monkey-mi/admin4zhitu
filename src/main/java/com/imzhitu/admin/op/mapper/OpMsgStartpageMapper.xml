@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpMsgStartpageMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpMsgStartpage" id="OpMsgStartpageMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="linkPath" column="path" jdbcType="VARCHAR"/>
+		<result property="linkType" column="type" jdbcType="INTEGER"/>
+		<result property="link" column="link" jdbcType="VARCHAR"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="operator" column="operator" jdbcType="INTEGER"/>
+		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="lastModified" column="last_modified" jdbcType="TIMESTAMP"/>
+		<result property="beginDate" column="date_begin" jdbcType="TIMESTAMP"/>
+		<result property="endDate" column="date_end" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertMsgStartpage">
+		insert into hts_admin.op_msg_startpage
+			(path,type,link,operator,date_add,last_modified,valid,date_begin,date_end)
+		values
+			(#{linkPath},#{linkType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},
+			 #{lastModified,jdbcType=TIMESTAMP},#{valid},#{beginDate,jdbcType=TIMESTAMP},#{endDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<!-- BATCHDELETE -->
+	<delete id="batchDeleteMsgStartpage">
+		delete from hts_admin.op_msg_startpage
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- UPDATE -->
+	<update id="updateMsgStartpage">
+		update hts_admin.op_msg_startpage
+		<set>
+			<if test="linkPath != null">path = #{linkPath},</if>
+			<if test="linkType != null">type = #{linkType},</if>
+			<if test="link != null">link = #{link},</if>
+			<if test="valid != null">valid = #{valid},</if>
+			<if test="beginDate != null">date_begin = #{beginDate,jdbcType=TIMESTAMP},</if>
+			<if test="endDate != null">date_end = #{endDate,jdbcType=TIMESTAMP},</if>
+			last_modified = #{lastModified,jdbcType=TIMESTAMP},
+			operator = #{operator}
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- BATCH UPDATE VALID -->
+	<update id="batchUpdateMsgStartpageValid">
+		update 	hts_admin.op_msg_startpage
+		set valid=#{valid},operator=#{operator},last_modified=NOW()
+		where id in 
+		<foreach collection="ids" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- SELECT -->
+	<select id="queryMsgStartpage" resultMap="OpMsgStartpageMap">
+		select omb.*,aui.user_name as operatorName
+		from hts_admin.op_msg_startpage omb
+		left join hts_admin.admin_user_info aui on omb.operator=aui.id
+		<where>
+			<if test="id != null">
+				omb.id = #{id}
+			</if>
+			<if test="valid != null">
+				and omb.valid = #{valid}
+			</if>
+			<if test="linkType != null">
+				and omb.type = #{linkType}
+			</if>
+			<if test="beginDate != null">
+				<![CDATA[and omb.date_begin >= #{beginDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="endDate != null">
+				<![CDATA[and omb.date_end <= #{endDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and omb.id <= #{maxId}]]>
+			</if>
+		</where>
+		order by omb.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- SELECT TOTAL COUNT -->
+	<select id="queryMsgStartpageTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.op_msg_startpage omb
+		<where>
+			<if test="id != null">
+				omb.id = #{id}
+			</if>
+			<if test="valid != null">
+				and omb.valid = #{valid}
+			</if>
+			<if test="linkType != null">
+				and omb.type = #{linkType}
+			</if>
+			<if test="beginDate != null">
+				<![CDATA[and omb.date_begin >= #{beginDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="endDate != null">
+				<![CDATA[and omb.date_end <= #{endDate,jdbcType=TIMESTAMP}]]>
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and omb.id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+	<!-- SELECT BY IDS -->
+	<select id="queryMsgBulletinByIds" resultMap="OpMsgStartpageMap">
+		select * 
+		from hts_admin.op_msg_startpage 
+		where id in
+		<foreach collection="ids" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</select>
+	
+</mapper>

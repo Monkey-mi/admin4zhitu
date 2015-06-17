@@ -141,15 +141,23 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 		if(idsStr == null || idsStr.trim().equals("")){
 			throw new Exception("参数不能为空");
 		}
-		List<OpMsgBulletin> list = queryMsgBulletinByIds(idsStr);
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		List<OpMsgBulletin> list = msgBulletinMapper.queryMsgBulletinByIds(ids);
 		List<com.hts.web.common.pojo.OpMsgBulletin> webBulletinList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
-		for(OpMsgBulletin dto:list){
-			com.hts.web.common.pojo.OpMsgBulletin webBulletin = new com.hts.web.common.pojo.OpMsgBulletin();
-			webBulletin.setBulletinPath(dto.getBulletinPath());
-			webBulletin.setBulletinType(dto.getBulletinType());
-			webBulletin.setId(dto.getId());
-			webBulletin.setLink(dto.getLink());
-			webBulletinList.add(webBulletin);
+		
+		for(int i = 0; i < ids.length; i++){
+			for(int j = 0; j < list.size(); j++){
+				if(ids[i] == list.get(j).getId()){
+					OpMsgBulletin dto = list.get(j);
+					com.hts.web.common.pojo.OpMsgBulletin webBulletin = new com.hts.web.common.pojo.OpMsgBulletin();
+					webBulletin.setBulletinPath(dto.getBulletinPath());
+					webBulletin.setBulletinType(dto.getBulletinType());
+					webBulletin.setId(dto.getId());
+					webBulletin.setLink(dto.getLink());
+					webBulletinList.add(webBulletin);
+					break;
+				}
+			}
 		}
 		
 		if(webBulletinList.size() > 0){

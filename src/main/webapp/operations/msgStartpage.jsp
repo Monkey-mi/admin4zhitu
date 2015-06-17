@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>频道banner管理</title>
+<title>频道启动页管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/htmCRUD20131111.css"></link>
 <script type="text/javascript">
 	var maxId=0,
-	loadDateUrl="./admin_op/msgBulletin_queryMsgBulletin",
-	delUrl="./admin_op/msgBulletin_batchDeleteMsgBulletin?idsStr=",
-	addUrl="./admin_op/msgBulletin_insertMsgBulletin",
-	updateUrl = "./admin_op/msgBulletin_updateMsgBulletin?id=",
-	batchUpdateValidUrl = "./admin_op/msgBulletin_batchUpdateMsgBulletinValid",
-	updateCacheUrl = "./admin_op/msgBulletin_updateMsgBulletinCache?idsStr=",
+	loadDateUrl="./admin_op/msgStartpage_queryMsgStartpage",
+	delUrl="./admin_op/msgStartpage_batchDeleteMsgStartpage?idsStr=",
+	addUrl="./admin_op/msgStartpage_insertMsgStartpage",
+	updateUrl = "./admin_op/msgStartpage_updateMsgStartpage?id=",
+	batchUpdateValidUrl = "./admin_op/msgStartpage_batchUpdateMsgStartpageValid",
+	updateCacheUrl = "./admin_op/msgStartpage_updateMsgStartpageCache?idsStr=",
 	tableQueryParams = {},
 	tableInit = function() {
 		tableLoadDate(1);
@@ -37,7 +37,7 @@
 	function tableLoadDate(pageNum){
 		$("#htm_table").datagrid(
 				{
-					title  :"频道banner管理",
+					title  :"频道启动页管理",
 					width  :1200,
 					pageList : [10,30,50,100],
 					loadMsg:"加载中....",
@@ -51,12 +51,12 @@
 					columns: [[
 						{field :'ck',checkbox:true},
 						{field :'id',title:'ID',align:'center',width:80},
-						{field : 'bulletinPath',title: '链接图片路径',align : 'center',width : 180,
+						{field : 'linkPath',title: '链接图片路径',align : 'center',width : 180,
 							formatter: function(value,row,index) {
 				  				return "<img title='无效' width='150px' height='150px' class='htm_column_img' src='" + value + "'/>";
 				  			}
-						},
-						{field : 'bulletinType',title:'链接类型',align:'center',width : 100,
+				  		},
+						{field : 'linkType',title:'链接类型',align:'center',width : 100,
 							formatter:function(value,row,index){
 								switch(value){
 									case 0:
@@ -83,6 +83,24 @@
 				  				return "";
 				  			}
 				  		},
+				  		{field : 'beginDate', title:'开始时间',align : 'center' ,width : 130,
+							formatter:function(value,row,index){
+								if(value){
+									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+								}else{
+									return "";
+								}
+							}
+						},
+						{field : 'endDate', title:'结束时间',align : 'center' ,width : 130,
+							formatter:function(value,row,index){
+								if(value){
+									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+								}else{
+									return "";
+								}
+							}
+						},
 						{field : 'addDate', title:'创建时间',align : 'center' ,width : 130,
 							formatter:function(value,row,index){
 								if(value){
@@ -92,12 +110,13 @@
 								}
 							}
 						},
-						{field : 'modifyDate', title:'最后修改时间',align : 'center' ,width : 130,
+						{field : 'lastModified', title:'最后修改时间',align : 'center' ,width : 130,
 							formatter:function(value,row,index){
-								if(value){
+								if(isNaN(value)){
 									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 								}else{
-									return "";
+									var lastModified = new Date(value);
+									return lastModified.format("yyyy/MM/dd hh:mm:ss");
 								}
 							}
 						},
@@ -106,7 +125,8 @@
 							formatter : function(value, row, index ) {
 								var retStr="";
 								if(row.valid == 0 || row.valid == 1){
-									retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.bulletinPath + "\",\"" + row.bulletinType + "\",\"" + row.link + "\")'>【修改】</a>";
+									retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.linkPath + "\",\"" 
+										+ row.linkType + "\",\"" + row.link + "\",\""+ row.beginDate+ "\",\""+ row.endDate+"\")'>【修改】</a>";
 								}
 								return retStr;
 							}
@@ -137,7 +157,7 @@
 			title : '添加频道精选推荐',
 			modal : true,
 			width : 490,
-			height : 200,
+			height : 240,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -149,7 +169,9 @@
 				$("#i-path").val('');
 				$("#s-type").combobox('setValue',0);
 				$("#i-link").val('');
-				$("#i-id").val('');		
+				$("#i-id").val('');	
+				$("#i-beginDate").datetimebox('clear');
+				$("#i-endDate").datetimebox('clear');	
 			}
 		});
 		
@@ -243,11 +265,13 @@
 		$('#htm_add').window('open');
 	}
 	
-	function updateInit(id,path,type,link){
+	function updateInit(id,path,type,link,beginDate,endDate){
 		$("#i-path").val(path);
 		$("#s-type").combobox('setValue',type);
 		$("#i-link").val(link);
 		$("#i-id").val(id);
+		$("#i-beginDate").datetimebox('setValue',beginDate);
+		$("#i-endDate").datetimebox('setValue',endDate);
 		$('#htm_add').window('open');
 	}
 	
@@ -255,6 +279,8 @@
 		var path = $("#i-path").val();
 		var type = $("#s-type").combobox('getValue');
 		var link = $("#i-link").val();
+		var beginDate = $("#i-beginDate").datetimebox('getValue');
+		var endDate = $("#i-endDate").datetimebox('getValue');
 		var id = $("#i-id").val();
 		var url="";
 		if(id){
@@ -267,7 +293,9 @@
 		$.post(url,{
 			'path':path,
 			'type':type,
-			'link':link
+			'link':link,
+			'beginDate':beginDate,
+			'endDate'  :endDate
 		},function(result){
 			$('#htm_add .opt_btn').show();
 			$('#htm_add .loading').hide();
@@ -300,6 +328,7 @@
 	   		</select>
 		</div>
 		<table id="htm_table"></table>
+		
 		<!-- 添加记录 -->
 		<div id="htm_add">
 			<form id="add_form"  method="post">
@@ -322,6 +351,14 @@
 						<tr>
 							<td class="leftTd">链接：</td>
 							<td><input id="i-link" style="width:220px;" ></td>
+						</tr>
+						<tr>
+							<td class="leftTd">开始时间：</td>
+							<td><input id="i-beginDate" class="easyui-datetimebox" style="width:220px;" ></td>
+						</tr>
+						<tr>
+							<td class="leftTd">结束时间：</td>
+							<td><input id="i-endDate" class="easyui-datetimebox" style="width:220px;" ></td>
 						</tr>
 						<tr>
 							<td class="none"><input id="i-id"></td>

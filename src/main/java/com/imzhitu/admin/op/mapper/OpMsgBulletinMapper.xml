@@ -73,7 +73,7 @@
 				<![CDATA[and omb.id <= #{maxId}]]>
 			</if>
 		</where>
-		order by id desc
+		order by omb.id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
