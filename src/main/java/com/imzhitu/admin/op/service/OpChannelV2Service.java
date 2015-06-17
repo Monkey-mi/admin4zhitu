@@ -40,7 +40,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param dto
 	 * @return
 	 */
-	public void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,
+	public void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,Integer top,
 			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId,int start,int rows,Integer maxId,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
@@ -130,7 +130,7 @@ public interface OpChannelV2Service extends BaseService{
 	 *
 	 * @author zhangbo 2015年6月10日
 	 */
-	public List<OpChannelLink> queryRelatedChannelList(Integer channelId);
+	public List<OpChannelLink> queryRelatedChannelList(Integer channelId) throws Exception;
 
 	/**
 	 * 添加关联频道
@@ -138,7 +138,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId
 	 * @author zhangbo 2015年6月11日
 	 */
-	public void addRelatedChannel(Integer channelId, Integer linkChannelId);
+	public void addRelatedChannel(Integer channelId, Integer linkChannelId) throws Exception;
 
 	/**
 	 * 批量删除关联频道
@@ -146,7 +146,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param deleteIds
 	 * @author zhangbo 2015年6月11日
 	 */
-	public void deleteRelatedChannels(Integer channelId, Integer[] deleteIds);
+	public void deleteRelatedChannels(Integer channelId, Integer[] deleteIds) throws Exception;
 
 	/**
 	 * 重新排序关联频道
@@ -154,7 +154,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param ids
 	 * @author zhangbo 2015年6月13日
 	 */
-	public void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds);
+	public void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds) throws Exception;
 	
 	/**
 	 * 保存频道置顶信息到存储表channel_top中，top字段为1
@@ -162,7 +162,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId	频道id
 	 * @author zhangbo 2015年6月12日
 	 */
-	public void saveChannelTop(Integer channelId);
+	public void saveChannelTop(Integer channelId) throws Exception;
 
 	/**
 	 * 删除频道置顶信息
@@ -170,6 +170,26 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId	频道id
 	 * @author zhangbo 2015年6月12日
 	 */
-	public void deleteChannelTop(Integer channelId);
+	public void deleteChannelTop(Integer channelId) throws Exception;
+
+	/**
+	 * 根据频道查询与该频道关联的所有标签
+	 *
+	 * @param channelId	频道ID
+	 * @return List<Map<Integer, String>>	返回值中，为标签的id与名称键值对list集合，例“id”：“123”，“label_name”：“ChannelLabelName”
+	 * @author zhangbo 2015年6月17日
+	 */
+	public List<Map<String, Object>> queryOpChannelLabelList(Integer channelId) throws Exception;
+
+	/**
+	 * 修改频道标签
+	 * 
+	 * @param channelId		频道ID
+	 * @param channelLabelIds	标签id集合，由“,”号分隔
+	 * @param channelLabelNames	标签名称集合，由“,”号分隔
+	 * @author zhangbo 2015年6月17日
+	 */
+	public void updateOpChannelLabel(Integer channelId,
+		String channelLabelIds, String channelLabelNames) throws Exception;
 
 }

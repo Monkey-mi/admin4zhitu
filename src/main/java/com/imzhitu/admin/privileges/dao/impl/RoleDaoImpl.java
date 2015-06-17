@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.hts.web.common.dao.impl.BaseDaoImpl;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.AdminRole;
+import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.constant.Permission;
 import com.imzhitu.admin.privileges.dao.RoleDao;
 
@@ -137,5 +139,27 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao{
 		}
 	    }
 	    return flag;
+	}
+
+	@Override
+	public boolean isSuperOrOpAdminCurrentLogin() {
+	    
+	    AdminUserDetails user = (AdminUserDetails) SecurityContextHolder
+		    .getContext().getAuthentication().getPrincipal();
+	    List<AdminRole> adminRoleList = (List<AdminRole>) user.getAuthorities();
+	    
+	    boolean bSuperAdmin = false;
+	    boolean bOpAdmin = false;
+	    for (AdminRole role : adminRoleList) {
+		if (Permission.SUPER_ADMIN.equals(role.getRoleName())) {
+		    bSuperAdmin = true;
+		    break;
+		}
+		if (Permission.OP_ADMIN.equals(role.getRoleName())) {
+		    bOpAdmin = true;
+		    break;
+		}
+	    }
+	    return bSuperAdmin || bOpAdmin? true: false;
 	}
 }

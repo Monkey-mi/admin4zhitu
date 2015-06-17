@@ -129,6 +129,15 @@
 		where id = #{channelId}
 	</update>
 	
+	<update id="updateOpChannelLabel">
+		update hts.operations_channel
+		<set>
+			channel_label = #{channelLabelNames},
+			label_ids = #{channelLabelIds},
+		</set>
+		where id = #{channelId}
+	</update>
+	
 	<!-- 分页查询 -->
 	<select id="queryOpChannel" resultMap="OpChannelV2Mapper">
 		select 
@@ -177,52 +186,59 @@
 			<if test="maxId != null and maxId != 0">
 				<![CDATA[and oc.id <= #{maxId}]]>
 			</if>
+			<if test="top != null">
+				and ctop.top = #{top}
+			</if>
 		</where>
 		<if test="orderBy == null">
-			order by oc.id desc
+			order by oc.serial desc
 		</if>
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
 	<!-- 分页查询总数 -->
 	<select id="queryOpChannelTotalCount" resultType="long">
-		select count(*) from hts.operations_channel 
+		select count(*) from hts.operations_channel oc
+		left join hts_admin.op_channel_top ctop on ctop.channel_id=oc.id
 		<where>
 			<if test="channelId != null">
-				id = #{channelId}
+				oc.id = #{channelId}
 			</if>
 			<if test="ownerId != null">
-				and owner_id = #{ownerId}
+				and oc.owner_id = #{ownerId}
 			</if>
 			<if test="channelTypeId != null">
-				and channel_type = #{channelTypeId}
+				and oc.channel_type = #{channelTypeId}
 			</if>
 			<if test="channelName != null">
-				and channel_name like CONCAT('%',#{channelName},'%')
+				and oc.channel_name like CONCAT('%',#{channelName},'%')
 			</if>
 			<if test="superb != null">
-				and superb = #{superb}
+				and oc.superb = #{superb}
 			</if>
 			<if test="valid != null">
-				and valid = #{valid}
+				and oc.valid = #{valid}
 			</if>
 			<if test="serial != null">
-				and serial = #{serial}
+				and oc.serial = #{serial}
 			</if>
 			<if test="danmu != null">
-				and danmu = #{danmu}
+				and oc.danmu = #{danmu}
 			</if>
 			<if test="moodFlag != null">
-				and mood = #{moodFlag}
+				and oc.mood = #{moodFlag}
 			</if>
 			<if test="worldFlag != null">
-				and world = #{worldFlag}
+				and oc.world = #{worldFlag}
 			</if>
 			<if test="themeId != null">
-				and theme_id = #{themeId}
+				and oc.theme_id = #{themeId}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[and id <= #{maxId}]]>
+				<![CDATA[and oc.id <= #{maxId}]]>
+			</if>
+			<if test="top != null">
+				and ctop.top = #{top}
 			</if>
 		</where>
 	</select>
