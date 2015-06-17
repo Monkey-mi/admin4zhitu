@@ -17,6 +17,7 @@ import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.op.dao.NoticeCacheDao;
 import com.imzhitu.admin.op.mapper.SysMsgMapper;
 import com.imzhitu.admin.op.service.OpMsgService;
+import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 
 @Service
 public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
@@ -29,6 +30,9 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	
 	@Autowired
 	private SysMsgMapper sysMsgMapper;
+	
+	@Autowired
+	private UserInfoMapper userInfoMapper;
 
 	@Autowired
 	private com.hts.web.push.service.PushService pushService;
@@ -84,32 +88,50 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		msg.setSenderId(appMsgSenderId);
 		msg.setMsgDate(new Date());
 		msg.setObjId(objId);
-//		if(noticed) {
+		
+//		if(inApp) {
+//			sysMsgMapper.saveMsgByProcedure(msg);
+//		}
+		
+		if(noticed) {
 //			pushService.pushAppMessage(msg.getContent());
 //			if(msg.getObjMeta() == null) {
 //				throw new HTSException("please input link");
 //			}
-//		}
-		
-		if(inApp) {
-			sysMsgMapper.saveMsgByProcedure(msg);
+			batchPushAppMsg(msg.getContent(), 0);
+		}
+
+	}
+	
+	public void batchPushAppMsg(String msg, Integer minId) {
+		List<Integer> uids = userInfoMapper.queryUIDByMinId(minId, 1000);
+		if(uids != null && uids.size() > 0) {
+			for(int i = 0; i < uids.size(); i++) {
+				try { 
+					pushService.pushBulletin(msg, uids.get(i));
+				} catch(Exception e) {
+				}
+				if(i == uids.size() - 1) {
+					minId = uids.get(uids.size() - 1);
+				}
+				batchPushAppMsg(msg, minId);
+			}
 		}
 	}
 
-	@Override
-	public void updateStartPageCache(String linkPath, Integer linkType, String link,
-			Date beginDate, Date endDate, Integer showCount) throws Exception {
-		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_MSG_START_PAGE_ID);
-		com.hts.web.common.pojo.OpMsgStartPage wpage =
-				new com.hts.web.common.pojo.OpMsgStartPage();
-		wpage.setId(id);
-		wpage.setLinkPath(linkPath);
-		wpage.setLinkType(linkType);
-		wpage.setLink(link);
-		wpage.setBeginDate(beginDate);
-		wpage.setEndDate(endDate);
-		wpage.setShowCount(showCount);
-		webStartPageCacheDao.updateStartPage(wpage);
-		
-	}
+//	@Override
+//	public void updateStartPageCache(String linkPath, Integer linkType, String link,
+//			Date beginDate, Date endDate, Integer showCount) throws Exception {
+//		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_MSG_START_PAGE_ID);
+//		com.hts.web.common.pojo.OpMsgStartPage wpage =
+//				new com.hts.web.common.pojo.OpMsgStartPage();
+//		wpage.setId(id);
+//		wpage.setLinkPath(linkPath);
+//		wpage.setLinkType(linkType);
+//		wpage.setLink(link);
+//		wpage.setBeginDate(beginDate);
+//		wpage.setEndDate(endDate);
+//		wpage.setShowCount(showCount);
+//		webStartPageCacheDao.updateStartPage(wpage);
+//	}
 }

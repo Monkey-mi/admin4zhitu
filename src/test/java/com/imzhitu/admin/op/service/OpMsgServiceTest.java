@@ -28,14 +28,15 @@ public class OpMsgServiceTest extends BaseTest {
 		service.saveNotice("http://imzhitu.qiniudn.com/op/notice/2014081101.jpg", "http://www.imzhitu.com", Tag.IOS);
 	}
 
-	@Test
-	public void updateStartPageTest() throws Exception {
-		Date beginDate = new Date();
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date endDate = df.parse("2015-06-20 00:00:00");
-		service.updateStartPageCache(
-				"http://imzhitu.qiniudn.com/op/notice/2015061001.png",
-				1,"http://imzhitu.com/operations/2015051501.html",
-				beginDate , endDate, 10);
-	}
+//	@Test
+//	public void updateStartPageTest() throws Exception {
+//		Date beginDate = new Date();
+//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		Date endDate = df.parse("2015-06-20 00:00:00");
+//		service.updateStartPageCache(
+//				"http://imzhitu.qiniudn.com/op/notice/2015061001.png",
+//				3,"自拍情结",
+//				beginDate , endDate, 10);
+//	}
+	
 }

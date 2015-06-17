@@ -537,5 +537,13 @@
 	  
 	  <update id="updateTrust">
 	  	update hts.user_info set trust=#{trust} where id=#{id}
-	  </update>	
+	  </update>
+	  
+	  <select id="queryUID" resultType="int">
+	  	select id from hts.user_inf order by id asc limit ?;
+	  </select>
+	  
+	  <select id="queryUIDByMinId" resultType="int">
+	  	select id from hts.user_info where id > #{limit} order by id asc limit ?;
+	  </select>
 </mapper>

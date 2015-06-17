@@ -34,4 +34,10 @@ public interface UserInfoMapper {
 	public void updateTrust(@Param("id")Integer id, 
 			@Param("trust")Integer trust);
 	
+	@DataSource("slave")
+	public List<Integer> queryUID(Integer limit);
+	
+	@DataSource("slave")
+	public List<Integer> queryUIDByMinId(Integer minId, Integer limit);
+	
 }
