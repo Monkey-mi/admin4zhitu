@@ -71,6 +71,7 @@
 							}
 						},
 						{field : 'link',title: '链接',align : 'center',width : 130},
+						/*
 						{field : 'valid',title : '有效性',align : 'center', width: 45,
 				  			formatter: function(value,row,index) {
 				  				if(value == 1) {
@@ -82,7 +83,7 @@
 				  				}
 				  				return "";
 				  			}
-				  		},
+				  		},*/
 						{field : 'addDate', title:'创建时间',align : 'center' ,width : 130,
 							formatter:function(value,row,index){
 								if(value){
@@ -137,7 +138,7 @@
 			title : '添加频道精选推荐',
 			modal : true,
 			width : 490,
-			height : 200,
+			height : 260,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -147,6 +148,7 @@
 			resizable : false,
 			onClose : function(){
 				$("#i-path").val('');
+				$("#bulletin_img_edit").attr("src", "./base/images/bg_empty.png");
 				$("#s-type").combobox('setValue',0);
 				$("#i-link").val('');
 				$("#i-id").val('');		
@@ -245,6 +247,7 @@
 	
 	function updateInit(id,path,type,link){
 		$("#i-path").val(path);
+		$("#bulletin_img_edit").attr('src',path);
 		$("#s-type").combobox('setValue',type);
 		$("#i-link").val(link);
 		$("#i-id").val(id);
@@ -291,8 +294,10 @@
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:addInit();" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
+			<!-- 暂时注释掉有效性
 			<a href="javascript:void(0);" onclick="javascript:batchUpdateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok" id="updateTrueBtn">批量生效</a>
 			<a href="javascript:void(0);" onclick="javascript:batchUpdateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip" id="updateFalseBtn">批量失效</a>
+			 -->
 			<a href="javascript:void(0);" onclick="javascript:updateCache();" class="easyui-linkbutton" title="更新缓存" plain="true" iconCls="icon-converter" id="updateCacheBtn">更新缓存</a>
 			<select id="ss_isCache" class="easyui-combobox"  style="width:100px;">
 		        <option value="" selected="selected">全部</option>
@@ -307,7 +312,14 @@
 					<tbody>
 						<tr>
 							<td class="leftTd">链接图片路径：</td>
-							<td><input id="i-path" style="width:220px;" ></td>
+							<td>
+								<input id="i-path" class="none" readonly="readonly" >
+								<a id="bulletin_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="bulletin_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
+								<div id="bulletin_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+									上传中...<span class="upload_progress"></span><span>%</span>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<td class="leftTd">链接类型：</td>
@@ -337,5 +349,62 @@
 			</form>
 		</div>
 	</div>
+	
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
+	<script type="text/javascript">
+	
+	Qiniu.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'bulletin_upload_btn',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        chunk_size: '4mb',
+        uptoken_url: './admin_qiniu/uptoken',
+        domain: 'http://imzhitu.qiniudn.com/',
+        unique_names: false,
+        save_key: false,
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+            	$("#bulletin_upload_btn").hide();
+            	$("#bulletin_img_edit").hide();
+            	var $status = $("#bulletin_img_upload_status");
+            	$status.find('.upload_progress:eq(0)').text(0);
+            	$status.show();
+            	
+            },
+            'BeforeUpload': function(up, file) {
+            },
+            
+            'UploadProgress': function(up, file) {
+            	var $status = $("#bulletin_img_upload_status");
+            	$status.find('.upload_progress:eq(0)').text(file.percent);
+
+            },
+            'UploadComplete': function() {
+            	$("#bulletin_upload_btn").show();
+            	$("#bulletin_img_edit").show();
+            	$("#bulletin_img_upload_status").hide();
+            },
+            'FileUploaded': function(up, file, info) {
+            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	$("#bulletin_img_edit").attr('src', url);
+            	$("#i-path").val(url);
+            },
+            'Error': function(up, err, errTip) {
+                $.messager.alert('上传失败',errTip);  // 提示添加信息失败
+            },
+            'Key': function(up, file) {
+            	var timestamp = Date.parse(new Date());
+            	var suffix = /\.[^\.]+/.exec(file.name);
+                var key = "op/notice/" + timestamp+suffix;
+                return key;
+            }
+        }
+    });
+    
+	</script>
 </body>
 </html>

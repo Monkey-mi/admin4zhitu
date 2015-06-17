@@ -179,6 +179,7 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 		
 		if(webStarpageList.size() > 0){
 			startpageCacheDao.updateStartPage(webStarpageList);
+			startpageMapper.batchUpdateMsgStartpageLastModified(ids);
 		}else{
 			throw new Exception("update 0 rows.reason: no data for update!");
 		}

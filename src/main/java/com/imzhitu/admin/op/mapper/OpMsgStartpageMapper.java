@@ -56,4 +56,10 @@ public interface OpMsgStartpageMapper {
 	 * @return
 	 */
 	public List<OpMsgStartpage> queryMsgBulletinByIds(@Param("ids")Integer[] ids);
+	
+	/**
+	 * 批量更新lastmodifie
+	 * @param ids
+	 */
+	public void batchUpdateMsgStartpageLastModified(Integer[] ids);
 }

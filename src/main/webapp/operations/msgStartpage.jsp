@@ -71,6 +71,7 @@
 							}
 						},
 						{field : 'link',title: '链接',align : 'center',width : 130},
+						/*
 						{field : 'valid',title : '有效性',align : 'center', width: 45,
 				  			formatter: function(value,row,index) {
 				  				if(value == 1) {
@@ -82,7 +83,7 @@
 				  				}
 				  				return "";
 				  			}
-				  		},
+				  		},*/
 				  		{field : 'beginDate', title:'开始时间',align : 'center' ,width : 130,
 							formatter:function(value,row,index){
 								if(value){
@@ -321,8 +322,10 @@
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:addInit();" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
+			<!-- 暂时注释掉有效性
 			<a href="javascript:void(0);" onclick="javascript:batchUpdateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok" id="updateTrueBtn">批量生效</a>
 			<a href="javascript:void(0);" onclick="javascript:batchUpdateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip" id="updateFalseBtn">批量失效</a>
+			 -->
 			<a href="javascript:void(0);" onclick="javascript:updateCache();" class="easyui-linkbutton" title="更新缓存" plain="true" iconCls="icon-converter" id="updateCacheBtn">更新缓存</a>
 			<select id="ss_isCache" class="easyui-combobox"  style="width:100px;">
 		        <option value="" selected="selected">全部</option>

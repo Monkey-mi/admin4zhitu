@@ -59,6 +59,16 @@
 		</foreach>
 	</update>
 	
+	<!-- BATCH UPDATE LAST MODIFIED -->
+	<update id="batchUpdateMsgStartpageLastModified">
+		update 	hts_admin.op_msg_startpage
+		set last_modified=NOW()
+		where id in 
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</update>
+	
 	<!-- SELECT -->
 	<select id="queryMsgStartpage" resultMap="OpMsgStartpageMap">
 		select omb.*,aui.user_name as operatorName
