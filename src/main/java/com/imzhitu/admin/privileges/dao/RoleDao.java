@@ -67,4 +67,12 @@ public interface RoleDao extends BaseDao {
 	 * @return
 	 */
 	public boolean isSuperOrOpAdmin(Integer userId);
+	
+	/**
+	 * 校验当前登陆管理员，是否具有super_admin或op_admin权限
+	 *
+	 * @return
+	 * @author zhangbo 2015年6月16日
+	 */
+	public boolean isSuperOrOpAdminCurrentLogin();
 }

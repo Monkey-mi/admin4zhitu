@@ -5,14 +5,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +39,7 @@ import com.imzhitu.admin.userinfo.service.AdminAndUserRelationshipService;
 
 @Service
 public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannelV2Service{
+	private static final Logger log = Logger.getLogger(OpChannelV2ServiceImpl.class);
 
 	@Autowired
 	private OpChannelV2Mapper opChannelV2Mapper;
@@ -119,9 +120,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		opChannelV2Mapper.insertOpChannel(dto);
 		//新增频道的同时须将该频道拥有着关注该频道
 		channelMemberService.insertChannelMember(channelId, ownerId, Tag.TRUE);
-		
-//		osChannelService.saveChannelAtOnce(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, 
-//				channelIcon, subIcon, channelTypeId, channelLabelNames,channelLabelIds ,danmu, moodFlag, worldFlag);
 	}
 
 	@Override
@@ -189,7 +187,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 
 	@Override
 	public void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,
-			Integer ownerId, Integer superb, Integer valid, Integer serial,
+			Integer ownerId, Integer superb, Integer valid, Integer top,Integer serial,
 			Integer danmu, Integer moodFlag, Integer worldFlag,Integer themeId, int start,
 			int rows, Integer maxId,Map<String, Object> jsonMap) throws Exception{
 		OpChannelV2Dto dto = new OpChannelV2Dto();
@@ -205,25 +203,30 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setWorldFlag(worldFlag);
 		dto.setMaxId(maxId);
 		dto.setThemeId(themeId);
+		dto.setTop(top);
 		
 		buildNumberDtos("getChannelId",dto,start,rows,jsonMap,new NumberDtoListAdapter<OpChannelV2Dto>(){
 
 			@Override
 			public List<? extends Serializable> queryList(OpChannelV2Dto dto) {
 			    List<OpChannelV2Dto> opChannelList = opChannelV2Mapper.queryOpChannel(dto);
-			    // 为关联频道赋值
-			    for (OpChannelV2Dto opChannelV2Dto : opChannelList) {
-				StringBuffer relatedChannel = new StringBuffer();
-				List<OpChannelLink> queryRelatedChannelList = queryRelatedChannelList(opChannelV2Dto.getChannelId());
-				for (int i = 0; i < queryRelatedChannelList.size(); i++) {
-				    if ( i == 0 ) {
-					relatedChannel.append(queryRelatedChannelList.get(i).getChannelName());
-				    } else {
-					relatedChannel.append(",");
-					relatedChannel.append(queryRelatedChannelList.get(i).getChannelName());
-				    }
-				}
-				opChannelV2Dto.setRelatedChannel(relatedChannel.toString());
+			    try {
+					// 为关联频道赋值
+					for (OpChannelV2Dto opChannelV2Dto : opChannelList) {
+						StringBuffer relatedChannel = new StringBuffer();
+						List<OpChannelLink> queryRelatedChannelList = queryRelatedChannelList(opChannelV2Dto.getChannelId());
+						for (int i = 0; i < queryRelatedChannelList.size(); i++) {
+						    if ( i == 0 ) {
+							relatedChannel.append(queryRelatedChannelList.get(i).getChannelName());
+						    } else {
+							relatedChannel.append(",");
+							relatedChannel.append(queryRelatedChannelList.get(i).getChannelName());
+						    }
+						}
+						opChannelV2Dto.setRelatedChannel(relatedChannel.toString());
+					}
+			    } catch (Exception e) {
+			    	log.error(e);
 			    }
 			    return opChannelList;
 			}
@@ -257,7 +260,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 	
 	@Override
-	public JSONArray queryOpChannelLabel(String label)throws Exception{
+	public JSONArray queryOpChannelLabel(String label) throws Exception{
 		if(label == null || "".equals(label.trim()))
 			return null;
 		JSONObject jsonObj = openSearchService.queryChannelLabel(label);
@@ -304,7 +307,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @throws Exception
 	 */
 	@Override
-	public OpChannelV2Dto queryOpChannelByIdOrName(Integer id,String channelName)throws Exception{
+	public OpChannelV2Dto queryOpChannelByIdOrName(Integer id,String channelName) throws Exception{
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		dto.setChannelId(id);
 		dto.setChannelName(channelName);
@@ -375,7 +378,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @throws Exception
 	 */
 	@Override
-	public void queryOpChannelByAdminUserId(Integer channelId,String channelName,Integer channelTypeId,Integer adminUserId,Map<String,Object>jsonMap)throws Exception{
+	public void queryOpChannelByAdminUserId(Integer channelId,String channelName,Integer channelTypeId,Integer adminUserId,Map<String,Object>jsonMap) throws Exception{
 		List<AdminAndUserRelationshipDto> relationshipList = adminAndUserRelationshipService.getAllAdminAndUserRelationshipByRole(adminUserId);
 		Integer[] ownerIdArray = new Integer[relationshipList.size()];
 		for(int i=0; i<relationshipList.size(); i++){
@@ -423,7 +426,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @throws Exception
 	 */
 	@Override
-	public void batchInsertWorldToChannel(Integer channelId,String worldAndAuthorIds)throws Exception{
+	public void batchInsertWorldToChannel(Integer channelId,String worldAndAuthorIds) throws Exception{
 		if(channelId == null || worldAndAuthorIds == null){
 			return;
 		}
@@ -472,7 +475,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @return
 	 * @throws Exception
 	 */
-	public long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId)throws Exception{
+	public long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId) throws Exception{
 		Date now = new Date();
 		DateFormat df = new  SimpleDateFormat("yyyy-MM-dd");
 		Date today = df.parse(df.format(now));
@@ -493,7 +496,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @return
 	 * @throws Exception
 	 */
-	public long queryYestodayWorldIncreasement(Date yestoday, Date today,Integer  channelId)throws Exception{
+	public long queryYestodayWorldIncreasement(Date yestoday, Date today,Integer  channelId) throws Exception{
 		Date now = new Date();
 		DateFormat df = new  SimpleDateFormat("yyyy-MM-dd");
 		Date today1 = df.parse(df.format(now));
@@ -506,6 +509,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		return opChannelV2Mapper.queryYestodayWorldIncreasement(yestoday, today, channelId);
 	}
 
+	/**
+	 * @author zhangbo 2015年6月10日
+	 */
 	@Override
 	public void updateChannelCache() throws Exception {
 	    List<OpChannelV2Dto> topList = opChannelV2Mapper.queryChannelTop();
@@ -554,25 +560,25 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 
 	@Override
-	public List<OpChannelLink> queryRelatedChannelList(Integer channelId) {
+	public List<OpChannelLink> queryRelatedChannelList(Integer channelId) throws Exception{
 	    return channelLinkDao.queryLink(channelId);
 	}
 
 	@Override
-	public void addRelatedChannel(Integer channelId, Integer linkChannelId) {
+	public void addRelatedChannel(Integer channelId, Integer linkChannelId) throws Exception{
 	    Integer serial = keyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_LINK_SERIAL);;
 	    opChannelV2Mapper.addRelatedChannel(channelId,linkChannelId,serial);
 	}
 
 	@Override
-	public void deleteRelatedChannels(Integer channelId, Integer[] deleteIds) {
+	public void deleteRelatedChannels(Integer channelId, Integer[] deleteIds) throws Exception{
 	    for (Integer linkId : deleteIds) {
 		opChannelV2Mapper.deleteRelatedChannel(channelId,linkId);
 	    }
 	}
 	
 	@Override
-	public void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds) {
+	public void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds) throws Exception{
 	    // 反向排序，传递过来的集合，第一个是前台想排在前面的，而serial越大排序越靠前，所以要倒序对linkChannelIds进行操作
 	    for(int i = linkChannelIds.length - 1; i >= 0; i--) {
 		if (linkChannelIds[i].isEmpty()) {
@@ -586,13 +592,48 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 
 	@Override
-	public void saveChannelTop(Integer channelId) {
+	public void saveChannelTop(Integer channelId) throws Exception{
 	    opChannelV2Mapper.insertChannelTop(channelId);
 	}
 
 	@Override
-	public void deleteChannelTop(Integer channelId) {
+	public void deleteChannelTop(Integer channelId) throws Exception{
 	    opChannelV2Mapper.deleteChannelTop(channelId);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryOpChannelLabelList(Integer channelId) throws Exception{
+	    List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+	    // 根据频道ID查询结果集
+	    OpChannelV2Dto dto = new OpChannelV2Dto();
+	    dto.setChannelId(channelId);
+	    List<OpChannelV2Dto> queryOpChannel = opChannelV2Mapper.queryOpChannel(dto);
+	    OpChannelV2Dto resultDto = queryOpChannel.get(0);
+	    
+	    // 获取结果集中标签id与标签名称，都为成对出现，且一一对应，标签id与标签名称都由“,”分隔
+	    String channelLabelIds = resultDto.getChannelLabelIds();
+	    Integer[] labelIds = StringUtil.convertStringToIds(channelLabelIds);
+	    String channelLabelNames = resultDto.getChannelLabelNames();
+	    String[] labelNames = StringUtil.convertStringToStrs(channelLabelNames);
+	    
+	    for (int i = 0; i < labelNames.length; i++) {
+		// 定义存储标签id与标签名称的键值对Map
+		Map<String, Object> retMap = new HashMap<String, Object>();
+		retMap.put("id", labelIds[i]);
+		retMap.put("label_name", labelNames[i]);
+		list.add(retMap);
+	    }
+	    return list;
+	}
+
+	@Override
+	public void updateOpChannelLabel(Integer channelId,
+		String channelLabelIds, String channelLabelNames) throws Exception{
+	    OpChannelV2Dto dto = new OpChannelV2Dto();
+	    dto.setChannelId(channelId);
+	    dto.setChannelLabelIds(channelLabelIds);
+	    dto.setChannelLabelNames(channelLabelNames);
+	    opChannelV2Mapper.updateOpChannelLabel(dto);
 	}
 
 }

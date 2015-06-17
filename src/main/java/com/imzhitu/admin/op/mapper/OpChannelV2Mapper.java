@@ -126,5 +126,12 @@ public interface OpChannelV2Mapper {
 	 * @author zhangbo 2015年6月12日
 	 */
 	public List<OpChannelV2Dto> queryChannelTop();
+	
+	/**
+	 * 修改频道标签
+	 * @param dto
+	 */
+	@DataSource("master")
+	public void updateOpChannelLabel(OpChannelV2Dto dto);
 
 }

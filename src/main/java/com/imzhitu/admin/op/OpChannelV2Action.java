@@ -2,12 +2,12 @@ package com.imzhitu.admin.op;
 
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
@@ -16,10 +16,9 @@ import com.hts.web.common.pojo.OpChannelLink;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.common.pojo.AdminRole;
-import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
+import com.imzhitu.admin.privileges.dao.RoleDao;
 
 public class OpChannelV2Action extends BaseCRUDAction{
 
@@ -27,6 +26,9 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	
 	@Autowired
 	private OpChannelV2Service opChannelV2Service;
+	
+	@Autowired
+	private RoleDao roleDao;
 	
 	/**
 	 * 插入频道
@@ -76,18 +78,22 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	 * 分页查询频道
 	 * @return
 	 */
-	public String queryOpChannel(){
-		try{
-			opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag,themeId, page, rows, maxId, jsonMap);
-			JSONUtil.optSuccess(jsonMap);
-		}catch(Exception e){
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
+    public String queryOpChannel() {
+	try {
+	    // 判断是否置顶，置顶传递1，不置顶传递null，因为是查询，若不置顶，则设置为null，表示不查询top字段
+	    Integer top = isTopFlag() ? 1 : null;
+	    opChannelV2Service.queryOpChannel(channelId, channelName,
+		    channelTypeId, ownerId, superb, valid, top, serial, danmu,
+		    moodFlag, worldFlag, themeId, page, rows, maxId, jsonMap);
+	    JSONUtil.optSuccess(jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
 	}
+	return StrutsKey.JSON;
+    }
 	
 	/**
-	 * 查询频道标签
+	 * 查询频道标签 ，根据名称模糊查询，查询出匹配的所有标签
 	 * @return
 	 */
 	public String queryOpChannelLabel(){
@@ -108,6 +114,20 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			out.close();
 		}
 		return null;
+	}
+	
+	/**
+	 * 根据频道查询与该频道关联的所有标签
+	 * @return
+	 */
+	public String queryOpChannelLabelList(){
+	    try{
+		List<Map<String, Object>> queryOpChannelLabelList = opChannelV2Service.queryOpChannelLabelList(getChannelId());
+		JSONUtil.optResult(OptResult.OPT_SUCCESS, queryOpChannelLabelList, OptResult.ROWS, jsonMap);
+	    }catch(Exception e){
+		JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    }
+	    return StrutsKey.JSON;
 	}
 	
 	/**
@@ -139,32 +159,23 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	}
 	
 	
-	public String queryOpChannelByAdminUserId(){
-		try{
-			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			List<AdminRole> adminRoleList = (List<AdminRole>)user.getAuthorities();
-			boolean bSuperAdmin = false;
-			boolean bOpAdmin = false;
-			for(AdminRole role:adminRoleList){
-				if("super_admin".equals(role.getRoleName())){
-					bSuperAdmin = true;
-					break;
-				}
-				if("op_admin".equals(role.getRoleName())){
-					bOpAdmin = true;
-					break;
-				}
-			}
-			if( bSuperAdmin || bOpAdmin){
-				opChannelV2Service.queryOpChannel(channelId,channelName,channelTypeId, ownerId, superb, valid, serial, danmu, moodFlag, worldFlag,themeId, page, rows, maxId, jsonMap);
-			}else{
-				opChannelV2Service.queryOpChannelByAdminUserId(channelId,channelName,channelTypeId,getCurrentLoginUserId(), jsonMap);
-			}
-		}catch(Exception e ){
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
+    public String queryOpChannelByAdminUserId() {
+	try {
+	    if (roleDao.isSuperOrOpAdminCurrentLogin()) {
+		opChannelV2Service.queryOpChannel(channelId, channelName,
+			channelTypeId, ownerId, superb, valid, null, serial,
+			danmu, moodFlag, worldFlag, themeId, page, rows, maxId,
+			jsonMap);
+	    } else {
+		opChannelV2Service.queryOpChannelByAdminUserId(channelId,
+			channelName, channelTypeId, getCurrentLoginUserId(),
+			jsonMap);
+	    }
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
 	}
+	return StrutsKey.JSON;
+    }
 	
 	public String batchInsertWorldToChannel(){
 		try{
@@ -291,6 +302,24 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	return StrutsKey.JSON;
     }
     
+    /**
+     * 修改频道标签
+     *
+     * @return
+     * @author zhangbo 2015年6月12日
+     */
+    public String updateOpChannelLabel(){
+	try {
+		String labelIds = getChannelLabelIds().equals("") ? null : getChannelLabelIds();
+		String labelNames = getChannelLabelNames().equals("") ? null : getChannelLabelNames();
+	    opChannelV2Service.updateOpChannelLabel(getChannelId(), labelIds, labelNames);
+	    JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    }
+    
 	
 	private Integer channelId;			//id
 	private Integer ownerId;			//拥有者ID
@@ -326,6 +355,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	
 	private Integer linkChannelId;	// 关联频道id
 	private String deleteIds;	// 执行删除操作的id集合
+	private boolean topFlag;			//是否置顶	true置顶，false不置顶
 	
 	
 	public Integer getMoodFlag() {
@@ -536,6 +566,19 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	public void setDeleteIds(String deleteIds) {
 	    this.deleteIds = deleteIds;
 	}
-	
+
+	/**
+	 * @return the topFlag
+	 */
+	public boolean isTopFlag() {
+	    return topFlag;
+	}
+
+	/**
+	 * @param topFlag the topFlag to set
+	 */
+	public void setTopFlag(boolean topFlag) {
+	    this.topFlag = topFlag;
+	}
 
 }

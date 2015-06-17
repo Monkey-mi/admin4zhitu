@@ -7,15 +7,22 @@
 <title>频道维护</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript">
 
 var maxId = 0;
+
 	init = function() {
+		// 以下两个属性由于在onBeforeInit方法中设置不生效，所以设置在这里
+		htmTableHeight = undefined;	// 取消高度设置，然后在datagrid中设置自动高度
+		htmTableWidth = $(document.body).width();	// 表格宽度设置为当前页面宽度
+		
 		loadPageData(initPage);
 	};
 	hideIdColumn = false;
 	htmTableTitle = "频道列表"; // 表格标题
-	htmTableWidth = 1410;
 	toolbarComponent = '#tb';
 	loadDataURL = "./admin_op/v2channel_queryOpChannel"; // 数据装载请求地址
 	saveChannelURL = "./admin_op/v2channel_insertOpChannel"; // 保存频道地址
@@ -40,19 +47,23 @@ var maxId = 0;
 		}
 	};
 	
+	// 拥有者ID搜索中用到的参数
+	var userMaxId = 0;
+	var userQueryParams = {'maxId':userMaxId};
+	
 	columnsFields = [
 		{field : 'ck',checkbox : true},
-		{field : 'channelId',title : 'id',align : 'center',width : 60},
-		{field : 'channelIcon',title : '封面', align : 'center',width : 60, height:60,
+		{field : 'channelId',title : 'id',align : 'center'},
+		{field : 'channelIcon',title : '封面', align : 'center',
 			formatter:function(value,row,index) {
 				return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
 			}
 		},
-		{field : 'ownerName',title : '频道主',align : 'center',width : 80},
-		{field : 'ownerId',title : '频道主ID',align : 'center',width : 80},
-		{field : 'channelName',title : '频道名称',align : 'center',width : 120},
-		{field : 'channelDesc',title : '频道描述',align : 'center',width : 200},
-		{field : 'channelTypeId',title:'频道类型',align : 'center',width : 80,
+		{field : 'ownerName',title : '频道主',align : 'center'},
+		{field : 'ownerId',title : '频道主ID',align : 'center'},
+		{field : 'channelName',title : '频道名称',align : 'center'},
+		{field : 'channelDesc',title : '频道描述',align : 'center'},
+		{field : 'channelTypeId',title:'频道类型',align : 'center',
 			formatter:function(value,row,index){
 				switch(value){
 					case 1 :return "活动频道";
@@ -61,41 +72,67 @@ var maxId = 0;
 					default:return "默认频道";
 				}
 			}},
-		{field : 'themeName',title:'所属专题',align : 'center',width:80},
-		{field : 'channelLabelNames',title:'标签',align : 'center',width:100},
-		{field : 'worldCount',title:'织图数',align : 'center',width : 60},
-		{field : 'worldPictureCount',title:'图片数',align : 'center',width : 60},
-		{field : 'memberCount',title:'关注数',align : 'center',width : 60},
-		{field : 'superbCount',title:'精选数',align : 'center',width : 60},
-  		{field : 'opt',title : '操作',width : 120,align : 'center',rowspan : 1,
-			formatter : function(value, row, index ) {
-				retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.channelId + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
-				retStr = retStr + "<br>";
-				retStr = retStr + "<a title='相关频道编辑' class='updateInfo' href='javascript:void(0);' onclick='relatedChannelEdit("+row.channelId+")'>【相关频道编辑】</a>";
-				return retStr;
-			}
-		},
-		{field : 'relatedChannel',title:'关联频道',align : 'center',width:100,
+		{field : 'themeName',title:'所属专题',align : 'center'},
+		{field : 'channelLabelNames',title:'标签',align : 'center',
 			formatter: function(value,row,index) {
 				var ret = "";
-				var valueArray = value.split(",");
-				for(var i=0;i<valueArray.length;i++){
-					ret = ret + valueArray[i] + "<br>";
+				if (value == "" || value == null) {
+					ret = "<img title='点击打开标签页' class='htm_column_img pointer' onclick='channelLabelEdit("+row.channelId+")' src='./common/images/edit_add.png'/>"
+				} else {
+					ret = ret + "<a title='点击打开标签页' class='updateInfo' href='javascript:void(0);' onclick='channelLabelEdit("+row.channelId+")'>";
+					var valueArray = value.split(",");
+					for(var i=0;i<valueArray.length;i++){
+						ret = ret + valueArray[i] + "<br>";
+					}
+					ret = ret + "</a>";
 				}
   				return ret;
   			}
 		},
-  		{field : 'superb',title : '精选',align : 'center', width: 45,
+		{field : 'worldCount',title:'织图数',align : 'center'},
+		{field : 'worldPictureCount',title:'图片数',align : 'center'},
+		{field : 'memberCount',title:'关注数',align : 'center'},
+		{field : 'superbCount',title:'精选数',align : 'center'},
+  		{field : 'opt',title : '操作',align : 'center',rowspan : 1,
+			formatter : function(value, row, index ) {
+				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.channelId + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
+			}
+		},
+		{field : 'relatedChannel',title:'关联频道',align : 'center',
+			formatter: function(value,row,index) {
+				var ret = "";
+				if (value == "") {
+					ret = "<img title='点击打开关联频道页' class='htm_column_img pointer' onclick='relatedChannelEdit("+row.channelId+")' src='./common/images/edit_add.png'/>"
+				} else {
+					ret = ret + "<a title='点击打开关联频道页' class='updateInfo' href='javascript:void(0);' onclick='relatedChannelEdit("+row.channelId+")'>";
+					var valueArray = value.split(",");
+					for(var i=0;i<valueArray.length;i++){
+						ret = ret + valueArray[i] + "<br>";
+					}
+					ret = ret + "</a>";
+				}
+  				return ret;
+  			}
+		},
+  		{field : 'superb',title : '精选',align : 'center',
   			formatter: function(value,row,index) {
-  				if(value == 1) {
+  				var superb;
+  				switch(value) {
+  				case 1:
+  					tip = "已加精,点击取消加精";
   					img = "./common/images/ok.png";
-  					return "<img title='精选' class='htm_column_img'  src='" + img + "'/>";
+  					superb = 0;
+  					break;
+  				default:
+  					tip = "点击加精";
+  					img = "./common/images/tip.png";
+  					superb = 1;
+  					break;
   				}
-  				img = "./common/images/tip.png";
-  				return "<img title='非精选' class='htm_column_img' src='" + img + "'/>";
+  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateChannelSuperbOp("+ row.channelId +","+ superb +")' src='" + img + "'/>";
   			}
   		},
-  		{field : 'top',title : '置顶推荐',align : 'center', width: 45,
+  		{field : 'top',title : '置顶推荐',align : 'center',
   			formatter: function(value,row,index) {
   				var top;
   				switch(value) {
@@ -110,47 +147,79 @@ var maxId = 0;
   					top = 1;
   					break;
   				}
-  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateChannelTopOp("+ row.channelId +","+ top +","+ index +")' src='" + img + "'/>";
+  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateChannelTopOp("+ row.channelId +","+ top +")' src='" + img + "'/>";
   			}
   		},
-  		{field : 'valid',title : '有效性',align : 'center', width: 45,
+  		{field : 'valid',title : '有效性',align : 'center',
   			formatter: function(value,row,index) {
-  				if(value == 1) {
+  				var valid;
+  				switch(value) {
+  				case 1:
+  					tip = "设置为不生效";
   					img = "./common/images/ok.png";
-  					return "<img title='已生效' class='htm_column_img'  src='" + img + "'/>";
+  					valid = 0;
+  					break;
+  				default:
+  					tip = "点击设为有效";
+  					img = "./common/images/tip.png";
+  					valid = 1;
+  					break;
   				}
-  				img = "./common/images/tip.png";
-  				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
+  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateChannelValidOp("+ row.channelId +","+ valid +")' src='" + img + "'/>";
   			}
   		},
-  		{field : 'danmu',title : '弹幕',align : 'center', width: 45,
+  		{field : 'danmu',title : '弹幕',align : 'center',
   			formatter: function(value,row,index) {
-  				if(value == 1) {
+  				var danmu;
+  				switch(value) {
+  				case 1:
+  					tip = "点击设为非弹幕频道";
   					img = "./common/images/ok.png";
-  					return "<img title='弹幕' class='htm_column_img'  src='" + img + "'/>";
+  					danmu = 0;
+  					break;
+  				default:
+  					tip = "点击设为有弹幕频道";
+  					img = "./common/images/tip.png";
+  					danmu = 1;
+  					break;
   				}
-  				img = "./common/images/tip.png";
-  				return "<img title='非弹幕' class='htm_column_img' src='" + img + "'/>";
+  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateChannelDanmuOp("+ row.channelId +","+ danmu +")' src='" + img + "'/>";
   			}
   		},
-  		{field : 'moodFlag',title : '心情',align : 'center', width: 45,
+  		{field : 'moodFlag',title : '心情',align : 'center',
   			formatter: function(value,row,index) {
-  				if(value == 1) {
+  				var moodFlag;
+  				switch(value) {
+  				case 1:
+  					tip = "点击设为非心情频道";
   					img = "./common/images/ok.png";
-  					return "<img title='心情' class='htm_column_img'  src='" + img + "'/>";
+  					moodFlag = 0;
+  					break;
+  				default:
+  					tip = "点击设为有心情频道";
+  					img = "./common/images/tip.png";
+  					moodFlag = 1;
+  					break;
   				}
-  				img = "./common/images/tip.png";
-  				return "<img title='非心情' class='htm_column_img' src='" + img + "'/>";
+  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateChannelMoodOp("+ row.channelId +","+ moodFlag +")' src='" + img + "'/>";
   			}
   		},
-  		{field : 'worldFlag',title : '织图',align : 'center', width: 45,
+  		{field : 'worldFlag',title : '织图',align : 'center',
   			formatter: function(value,row,index) {
-  				if(value == 1) {
+  				var worldFlag;
+  				switch(value) {
+  				case 1:
+  					tip = "点击设为非织图频道";
   					img = "./common/images/ok.png";
-  					return "<img title='织图' class='htm_column_img'  src='" + img + "'/>";
+  					worldFlag = 0;
+  					break;
+  				default:
+  					tip = "点击设为有织图频道";
+  					img = "./common/images/tip.png";
+  					worldFlag = 1;
+  					break;
   				}
-  				img = "./common/images/tip.png";
-  				return "<img title='非织图' class='htm_column_img' src='" + img + "'/>";
+  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateChannelWorldOp("+ row.channelId +","+ worldFlag +")' src='" + img + "'/>";
   			}
   		}
 		],
@@ -160,13 +229,22 @@ var maxId = 0;
 	},
 	onAfterInit = function() {
 		$('#htm_table').datagrid({
-			fitColumns:true
+			fitColumns:true,
+			autoRowHeight:true,
+			onSelect: function(index,row){
+				// 选择操作时刷新展示重新排序所选择的数量
+				$("#reSerialCount").text($(this).datagrid('getSelections').length);
+			},
+			onUnselect: function(index,row){
+				// 取消选择操作时刷新展示重新排序所选择的数量
+				$("#reSerialCount").text($(this).datagrid('getSelections').length);
+			}
 		});
 		
 		$('#htm_serial').window({
 			title : '重新排序',
 			modal : true,
-			width : 600,
+			width : 650,
 			height : 155,
 			shadow : false,
 			closed : true,
@@ -190,177 +268,64 @@ var maxId = 0;
 			iconCls : 'icon-edit',
 			resizable : false,
 			onClose : function() {
-				var $form = $('#edit_form');
-				clearFormData($form);
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
 				$("#channelImg_edit").attr("src", "./base/images/bg_empty.png");
-				$("#channel_labelNames").val('');
-				$("#channel_labelIds").val('');
-				$("#id_edit").val('');
-				$("#channelLabel").html('');
-				$("#ss_isSuperb").combobox('clear');
-				$("#channelThemeId").combobox('clear');
+				
+				$('#edit_form').form('reset');
+				
 				$("#edit_form").hide();
 				$("#edit_loading").show();
 			}
 		});
 		
-		$('#related_channel_edit').window({
-			title: '相关频道编辑页',
-			modal : true,
-			width : 600,
-			height : 540,
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-edit',
-			resizable : false,
-			onOpen : function(){
-				// 清空关联频道编辑页表格中勾选的缓存
-				$('#related_channel_edit_table').datagrid("clearSelections");
-	    		// 打开时，置空表格的添加按钮触发“添加关联关系”form
-	    		$("#related_channel_add_form").form('reset');
-	    	},
-			onClose : function(){
-				// 清空关联频道编辑页表格中勾选的缓存
-				$('#related_channel_edit_table').datagrid("clearSelections");
-	    		// 打开时，置空表格的添加按钮触发“添加关联关系”form
-	    		$("#related_channel_add_form").form('reset');
-			}
-		});
-		
-	    $('#related_channel_edit_table').datagrid({
-	        url:"./admin_op/v2channel_queryRelatedChannel",
-	        toolbar:[{
-	        	id: 'add_btn',
-	    		text: '添加',
-	    		iconCls: 'icon-add',
-	    		handler: function(){
-	    			$('#related_channel_add_window').window('open');  // 打开添加窗口
-	    		}
-	        },{
-	        	id: 'delete_btn',
-	    		text: '删除',
-	    		iconCls: 'icon-cut',
-	    		handler: function(){
-	    			var rows = $('#related_channel_edit_table').datagrid("getSelections"); 
-	    			var ids = [];
-	    			for (var i=0;i<rows.length;i++) {
-	    				ids.push(rows[i].id);
-	    			}
-	    			if (ids.length == 0) {
-	    				$.messager.alert('提示',"请勾选要删除的关联频道");
-	    			} else {
-	    				var params = {
-	    						channelId:$("#related_channel_add_form input[name=channelId]").val(),
-	    						deleteIds:ids.toString()
-	    				};
-	    				$.post("./admin_op/v2channel_deleteRelatedChannels",params,function(result){
-	    					$.messager.alert('提示',result.msg);
-	    					$('#related_channel_edit_table').datagrid("reload")
-	    				});
-	    			}
-	    		}
-	        },{
-	        	id: 'reIndex_btn',
-	    		text: '排序',
-	    		iconCls: 'icon-converter',
-	    		handler: function(){
-	    			$('#related_channel_serial_window .opt_btn').show();
-	    			$('#related_channel_serial_window .loading').hide();
-	    			$("#related_channel_serial_form").find('input[name="reIndexlinkId"]').val('');
-	    			
-	    			// 获取关联频道表格中勾选的集合
-	    			var rows = $("#related_channel_edit_table").datagrid('getSelections');
-	    			$('#related_channel_serial_form .reindex_column').each(function(i){
-	    				if(i<rows.length)
-	    					$(this).val(rows[i]['id']);
-	    			});
-	    			var obj = $('#related_channel_serial_form');
-	    			// 打开添加窗口
-	    			$("#related_channel_serial_window").window('open');
-	    		}
-	        }],
-	        idField:'id',
-	        columns:[[
-	                  {field : 'ck',checkbox:true},
-	                  {field:'id',title:'关联频道ID',align:'center',width:100},
-	                  {field:'channelName',title:'关联频道',align:'center',width:200}
-	        ]]
-	    });
-	    
-	    $('#related_channel_add_window').window({
-	    	onOpen : function(){
-	    		// 把form中的linkChannelId置空
-	    		$("#related_channel_add_form input[name=linkChannelId]").val("");
-	    	},
-			onClose : function(){
-				// 把form中的linkChannelId置空
-				$("#related_channel_add_form input[name=linkChannelId]").val("");
-			}
-		});
-	    
-		$('#ss_valid').combobox({
-			onSelect:function(record) {
-				maxId = 0;
-				myQueryParams['maxId'] = maxId;
-				myQueryParams['valid'] = record.value;
-				loadPageData(initPage);
-			}
-		});
-		
-		$('#ss_superb').combobox({
-			onSelect:function(record) {
-				maxId = 0;
-				myQueryParams['maxId'] = maxId;
-				myQueryParams['superb'] = record.value;
-				loadPageData(initPage);
-			}
-		});
-		
-		$('#channelLabelSearch').combobox({
-			valueField:'id',
-			textField:'label_name',
-			onChange:function(rec){
-				var url="./admin_op/v2channel_queryOpChannelLabel?channelLabelNames="+$('#channelLabelSearch').combobox('getValue');
-				$('#channelLabelSearch').combobox('reload',url);
-			},
-			onSelect:function(rec){
-				var channelLabelId = rec.id;
-				var channelLabelName = rec.label_name;
-				if(rec.id == -1){
-					channelLabelName = channelLabelName.substring(channelLabelName.indexOf(":")+1);
-					$.messager.confirm('更新记录',"是否创建标签："+channelLabelName,function(r){
-						if(r){
-							$.post("./admin_ztworld/label_saveLabel",{
-								'labelName':channelLabelName
-							},function(result){
-								if(result['result'] == 0){
-									channelLabelId = result['labelId'];
-									var labelSpan = $("<a href='javascript:void(0);' class='easyui-linkbutton l-btn' style='vertical-align:middle;height:24px;width:52px;overflow:hidden;' labelId='"
-											+channelLabelId+"' labelName='"+channelLabelName+"'>"+channelLabelName+"</a>").click(function(){
-										$(this).remove();
-									});
-									$("#channelLabel").append(labelSpan);
-									$('#channelLabelSearch').combobox('clear');
-								}else{
-									$.messager.alert('提示',result['msg']);
-								}
-							},"json");
+		$('#ownerId_edit').combogrid({
+			panelWidth : 340,
+		    panelHeight : 250,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#user_tb",
+		    multiple : false,
+		    required : true,
+		   	idField : 'id',
+		    textField : 'id',
+		    url : './admin_user/user_queryUser',
+		    pagination : true,
+		    columns:[[
+				{field : 'userAvatar',title : '头像',align : 'left',width : 45,
+					formatter: function(value, row, index) {
+						imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg'),
+						content = "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "'/>";
+						if(row.star >= 1) {
+							content = content + "<img title='" + row['verifyName'] + "' class='avatar_tag' src='" + row['verifyIcon'] + "'/>";
 						}
-					});
-				}else{
-					var labelSpan = $("<a href='javascript:void(0);' class='easyui-linkbutton l-btn' style='vertical-align:middle;height:24px;width:52px;overflow:hidden;' labelId='"
-							+channelLabelId+"' labelName='"+channelLabelName+"'>"+channelLabelName+"</a>").click(function(){
-						$(this).remove();
-					});
-					$("#channelLabel").append(labelSpan);
-					$('#channelLabelSearch').combobox('clear');
+						return "<span>" + content + "</span>";	
+					}		
+				},
+				{field : 'id',title : 'ID',align : 'center', width : 60},
+				{field : 'userName',title : '昵称',align : 'center',width : 100
+				},
+				{field : 'sex',title:'性别',align : 'center', width:40, 
+					formatter: function(value, row, index) {
+						if(value == 1) {
+							return "男";
+						} else if(value == 2) {
+							return "女";
+						}
+						return "";
+					}
 				}
-			}
+		    ]],
+		    queryParams:userQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > userMaxId) {
+						userMaxId = data.maxId;
+						userQueryParams.maxId = userMaxId;
+					}
+				}
+		    },
 		});
 		
 		removePageLoading();
@@ -385,28 +350,14 @@ function initEditWindow(id, index, isUpdate) {
 				$("#channelImg_edit").attr('src', obj['channelIcon']);
 				$("#channelName_edit").val(obj['channelName']);
 				$("#channelTitle_edit").val(obj['channelTitle']);
-				
-				if(obj['channelLabelNames'] ){
-					var labelNameArray = obj['channelLabelNames'].split(",");
-					var labelIdArray = obj['channelLabelIds'].split(",");
-					for(i=0;i<labelNameArray.length;i++){
-						if(labelNameArray[i] != "" && labelIdArray[i] != ""){
-							var labelSpan = $("<a href='javascript:void(0);' class='easyui-linkbutton l-btn' style='vertical-align:middle;height:24px;width:52px;overflow:hidden;' labelId='"+labelIdArray[i]
-											+"' labelName='"+labelNameArray[i]+"'>"+labelNameArray[i]+"</a>").click(function(){
-								$(this).remove();
-							});
-							$("#channelLabel").append(labelSpan);
-						}
-					}
-				}
 				$("#id_edit").val(obj['channelId']);
 				$("#valid_edit").val(obj['valid']);
 				$("#serial_edit").val(obj['serial']);
 				$("#ownerId_edit").val(obj['ownerId']);
+				$("#ownerId_edit").combogrid('setValue',obj['ownerId']);
 				$("#channelDesc_edit").val(obj['channelDesc']);
 				$("#channel_type_id").combobox('setValue',obj['channelTypeId']);
 				$("#channelThemeId").combobox('setValue',obj['themeId']);
-				$("#ss_isSuperb").combobox('setValue',obj['superb']);
 				
 				$("#edit_loading").hide();
 				$("#edit_form").show();
@@ -471,15 +422,34 @@ function loadEditFormValidate(index, isUpdate) {
 	
 	$("#channelsubtitle")
 	.formValidator({empty:true,onshow:"标题（必填）",onfocus:"请输入副标题",oncorrect:"设置成功"});
+};
+
+/**
+ * 搜索用户
+ */
+function searchUser() {
+	userMaxId = 0;
+	var userName = $('#ss_user').searchbox('getValue');
+	userQueryParams = {
+		'maxId' : userMaxId,
+		'userName' : userName
+	};
+	$("#ownerId_edit").combogrid('grid').datagrid("load",userQueryParams);
 }
 
 /**
- * 重排活动
+ * 频道重排排序
  */
 function reSerial() {
 	$('#htm_serial .opt_btn').show();
 	$('#htm_serial .loading').hide();
-	$("#serial_form").find('input[name="reIndexId"]').val('');	
+	$("#serial_form").find('input[name="reIndexId"]').val('');
+	// 获取频道表格中勾选的集合
+	var rows = $("#htm_table").datagrid('getSelections');
+	$('#serial_form .reindex_column').each(function(i){
+		if(i<rows.length)
+			$(this).val(rows[i]['channelId']);
+	});
 	// 打开添加窗口
 	$("#htm_serial").window('open');
 }
@@ -502,7 +472,15 @@ function refreshCache() {
 			},"json");				
 		}
 	});
-}
+};
+
+/**
+ * 查看置顶推荐
+ */
+function showTop(){
+	myQueryParams.topFlag = true;
+	$('#htm_table').datagrid('load',myQueryParams);
+};
 
 function submitSerialForm() {
 	var $form = $('#serial_form');
@@ -530,20 +508,6 @@ function submitSerialForm() {
 }
 
 function addChannelSubmit(){
-	var labelnames="";
-	var labelIds="";
-	$("#channelLabel a").each(function(){
-		labelnames += $(this).attr("labelName");
-		labelIds   += $(this).attr("labelId");
-		labelnames +=",";
-		labelIds   +=",";
-	});
-	if(labelnames.length > 0){
-		labelnames = labelnames.substring(0, labelnames.length-1);
-	}
-	if(labelIds.length > 0){
-		labelIds = labelIds.substring(0, labelIds.length-1);
-	}
 	var url;
 	var channelId = $("#id_edit").val();
 	if(channelId == ""){
@@ -553,13 +517,10 @@ function addChannelSubmit(){
 	}
 	var channelIcon = $("#channelIcon_edit").val();
 	var channelName = $("#channelName_edit").val();
-	var channelLabelNames = labelnames;
-	var channelLabelIds = labelIds;
 	var channelTypeId = $("#channel_type_id").combobox('getValue');
-	var ownerId = $("#ownerId_edit").val();
+	var ownerId = $("#ownerId_edit").combogrid('getValue');
 	var channelDesc = $("#channelDesc_edit").val();
 	var themeId = $("#channelThemeId").combobox('getValue');
-	var superb = $("#ss_isSuperb").combobox('getValue');
 	
 	$('#htm_table').datagrid('loading');
 	$.post(url,{
@@ -567,12 +528,9 @@ function addChannelSubmit(){
 		'channelIcon':channelIcon,
 		'channelName':channelName,
 		'channelDesc':channelDesc,
-		'channelLabelNames':channelLabelNames,
-		'channelLabelIds':channelLabelIds,
 		'channelTypeId':channelTypeId,
 		'ownerId':ownerId,
-		'themeId':themeId,
-		'superb' :superb
+		'themeId':themeId
 		},function(result){
 			$('#htm_table').datagrid('loaded');
 			if(result['result'] == 0){
@@ -583,82 +541,78 @@ function addChannelSubmit(){
 			}
 			
 	},"json");
-}
+};
 
-function searchChannelByIdOrName(){
-	var channelSearchFactor = $("#ss_channelName").searchbox('getValue');
-	var myQueryParam = {};
-	if(isNaN(channelSearchFactor)){
-		myQueryParam['channelName'] = channelSearchFactor;
+/**
+ * 按条件查询：精选，有效性，频道ID，频道名称（模糊）
+ */
+function searchChannel(){
+	var channelNameOrId = $("#ss_channelNameOrId").val();
+	var params = {};
+	if(isNaN(channelNameOrId)){
+		params['channelName'] = channelNameOrId;
 	}else{
-		myQueryParam['channelId'] = channelSearchFactor;
+		params['channelId'] = channelNameOrId;
 	}
-	$('#htm_table').datagrid('load',myQueryParam);
-}
+	params['maxId'] = maxId;
+	params['valid'] = $('#ss_valid').combobox('getValue');
+	params['superb'] = $('#ss_superb').combobox('getValue');
+	$('#htm_table').datagrid('load',params);
+};
+
+/**
+ * 标签编辑页
+ */
+function channelLabelEdit(channelId){
+	
+	$.fancybox({
+		'margin'			: 20,
+		'width'				: '75%',
+		'height'			: '80%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe',
+		'href'				: 'page_operations_channelLabelEdit?channelId=' + channelId,
+		onClosed			: function(){}
+	});
+};
 
 /**
  * 相关频道编辑
  */
 function relatedChannelEdit(channelId){
-	$('#related_channel_edit').window('open');
-	var params = {"channelId":channelId};
-	$('#related_channel_edit_table').datagrid("load",params);
 	
-	// 打开相关频道编辑页面，即向“添加相关频道”form中的channelId赋值
-	$("#related_channel_add_form input[name=channelId]").val(channelId);
-	
-	// 打开相关频道编辑页面，即向“相关频道重新排序”form中的reindexChannelId赋值
-	$("#related_channel_serial_form input[name=reIndexChannelId]").val(channelId);
-}
+	$.fancybox({
+		'margin'			: 20,
+		'width'				: '75%',
+		'height'			: '80%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe',
+		'href'				: 'page_operations_relatedChannelEdit?channelId=' + channelId,
+		onClosed			: function(){}
+	});
+};
 
 /**
- * 添加关联频道
+ * 更新频道加精操作
  */
-function submitAddRelatedChannelForm(){
-	if ($("#related_channel_add_form input[name=linkChannelId]").val() == "") {
-		$.messager.alert('提示',"请填写要关联的频道id");
-	} else {
-		$('#related_channel_add_form').form('submit', {
-			url: $(this).attr('action'),
-			success: function(data){
-				var result = $.parseJSON(data);
-				if(result.result == 0) {
-					$('#related_channel_add_window').window('close');  // 关闭添加窗口
-					$('#related_channel_edit_table').datagrid("reload");
-				} else {
-					$.messager.alert('提示',result.msg);  // 提示添加信息失败
-				}
-			}
-		});
-	}
-}
-
-/**
- * 关联频道重新排序
- */
-function submitRelatedChannelSerialForm(){
-	if ($("#related_channel_serial_form input[name=reIndexlinkId]").val() == "") {
-		$.messager.alert('提示',"请填写要关联的频道id");
-	} else {
-		$('#related_channel_serial_form').form('submit', {
-			url: $(this).attr('action'),
-			success: function(data){
-				var result = $.parseJSON(data);
-				if(result.result == 0) {
-					$.messager.alert('提示',"关联频道重新排序成功！");
-					$('#related_channel_serial_window').window('close');  // 关闭添加窗口
-				} else {
-					$.messager.alert('提示',result.msg);  // 提示添加信息失败
-				}
-			}
-		});
-	}
-}
+function updateChannelSuperbOp(channelId,superb) {
+	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,superb:superb}, function(result){
+		if(result['result'] == 0) {
+			$("#htm_table").datagrid("reload");
+		} else {
+			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+		}
+	});
+};
 
 /**
  * 更新频道置顶操作
  */
-function updateChannelTopOp(channelId,top,index) {
+function updateChannelTopOp(channelId,top) {
 	var url = "";
 	// 若置顶，进行保存操作，否则进行删除操作
 	if (top == 1) {
@@ -676,7 +630,59 @@ function updateChannelTopOp(channelId,top,index) {
 			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 		}
 	});
-}
+};
+
+/**
+ * 更新频道有效性操作
+ */
+function updateChannelValidOp(channelId,valid) {
+	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,valid:valid}, function(result){
+		if(result['result'] == 0) {
+			$("#htm_table").datagrid("reload");
+		} else {
+			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+		}
+	});
+};
+
+/**
+ * 更新频道是否有弹幕操作
+ */
+function updateChannelDanmuOp(channelId,danmu) {
+	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,danmu:danmu}, function(result){
+		if(result['result'] == 0) {
+			$("#htm_table").datagrid("reload");
+		} else {
+			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+		}
+	});
+};
+
+/**
+ * 更新频道是否有心情操作
+ */
+function updateChannelMoodOp(channelId,moodFlag) {
+	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,moodFlag:moodFlag}, function(result){
+		if(result['result'] == 0) {
+			$("#htm_table").datagrid("reload");
+		} else {
+			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+		}
+	});
+};
+
+/**
+ * 更新频道是否有织图操作
+ */
+function updateChannelWorldOp(channelId,worldFlag) {
+	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,worldFlag:worldFlag}, function(result){
+		if(result['result'] == 0) {
+			$("#htm_table").datagrid("reload");
+		} else {
+			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+		}
+	});
+};
 
 </script>
 </head>
@@ -686,21 +692,24 @@ function updateChannelTopOp(channelId,top,index) {
 		<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
 			<a href="javascript:void(0);" onclick="javascript:initEditWindow(0,0,false);" class="easyui-linkbutton" title="添加织图到广场" plain="true" iconCls="icon-add" id="addBtn">添加</a>
-			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序</a>
+			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
+			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
 			<a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" plain="true" iconCls="icon-converter" id="refreshCacheBtn">刷新缓存</a>
 			<span class="search_label">有效性过滤：</span>
-			<select id="ss_valid" style="width:80px;">
+			<select id="ss_valid" class="easyui-combobox" style="width:80px;">
 	   			<option value="">所有状态</option>
 	   			<option value="1">生效</option>
 	   			<option value="0">未生效</option>
    			</select>
    			<span class="search_label">加精过滤：</span>
-   			<select id="ss_superb" style="width:80px;">
+   			<select id="ss_superb" class="easyui-combobox" style="width:80px;">
 	   			<option value="">所有状态</option>
 	   			<option value="1">精选</option>
 	   			<option value="0">非精选</option>
 			</select>
-   			<input id="ss_channelName" class="easyui-searchbox" searcher="searchChannelByIdOrName" prompt="请输入频道名或频道ID" style="width:120px;"></input>
+   			<input id="ss_channelNameOrId" type="text" class="easyui-textbox" data-options="prompt:'请填写频道名称或频道ID'" style="width:150px"></input>
+   			<a href="javascript:void(0);" onclick="javascript:searchChannel();" plain="true" class="easyui-linkbutton" iconCls="icon-search" id="search_btn">查询</a>
+   			<a href="javascript:void(0);" onclick="javascript:showTop();" class="easyui-linkbutton" style="float:right;" plain="true" iconCls="icon-search" id="showTop">查看置顶推荐</a>
    		</div>
 		</div> 
 	
@@ -736,31 +745,8 @@ function updateChannelTopOp(channelId,top,index) {
 						 
 						<tr>
 							<td class="leftTd">拥有者ID：</td>
-							<td><input name="ownerId" id="ownerId_edit" onchange="validateSubmitOnce=true;" style="width: 206px;"></input></td>
+							<td><input id="ownerId_edit" name="ownerId" onchange="validateSubmitOnce=true;" style="width:206px;" /></td>
 							<td class="rightTd"><div id="ownerId_editTip" class="tipDIV"></div></td>
-						</tr>
-						
-						<tr>
-							<td class="leftTd">频道标签：</td>
-							<td>
-								<div id="channelLabel" style="width: 206px;height: 60px;background-color: #b8b8b8;"></div>
-								<input id="channelLabelSearch" style="width: 206px;">
-								<input class="none" id="channelLabelNames_edit">
-								<input class="none" id="channelLabelIds_edit">
-							</td>
-							
-							<td class="rightTd"><div id="channelLabel_editTip" class="tipDIV"></div></td>
-						</tr>
-						
-						<tr>
-							<td class="leftTd">是否为精选：</td>
-							<td>
-								<select name="superb" id="ss_isSuperb" style="width:206px;" class="easyui-combobox">
-									<option value="0">非精选</option>
-						   			<option value="1">精选</option>
-					   			</select>
-							</td>
-							<td class="rightTd"><div id="channelLabel_editTip" class="tipDIV"></div></td>
 						</tr>
 						
 						<tr>
@@ -819,7 +805,12 @@ function updateChannelTopOp(channelId,top,index) {
 			</form>
 		</div>
 		
-		<!-- 重排索引 -->
+		<!-- 拥有者IDcombogrid用到的toolbar，用于查找用户 -->
+		<div id="user_tb" style="padding:5px;height:auto" class="none">
+			<input id="ss_user" searcher="searchUser" class="easyui-searchbox" prompt="用户名/ID搜索" style="width:200px;"/>
+		</div>
+		
+		<!-- 频道重新排序 -->
 		<div id="htm_serial">
 			<form id="serial_form" action="./admin_op/channel_updateChannelSerial" method="post">
 				<table class="htm_edit_table" width="580">
@@ -854,6 +845,7 @@ function updateChannelTopOp(channelId,top,index) {
 							<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
 								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitSerialForm();">确定</a>
 								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_serial').window('close');">取消</a>
+								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#serial_form').form('reset');$('#htm_table').datagrid('clearSelections')">清空</a>
 							</td>
 						</tr>
 						<tr class="loading none">
@@ -867,72 +859,7 @@ function updateChannelTopOp(channelId,top,index) {
 			</form>
 		</div>
 	</div>
-	
-	<!-- 相关频道编辑 -->
-	<div id="related_channel_edit">
-		<table id="related_channel_edit_table" width="480"></table>
-	</div>
-	
-	<!-- 相关频道添加 -->
-	<div id="related_channel_add_window" class="easyui-window" title="相关频道编辑页-添加" style="width:300px;height:150px"
-        data-options="iconCls:'icon-edit',closed:true,modal:true,minimizable:false,maximizable:false,collapsible:false">
-		<form id="related_channel_add_form" action="./admin_op/v2channel_addRelatedChannel" method="post">
-			<table style="padding:20px;">
-				<tr>
-					<td>频道ID：</td>
-					<td><input name="linkChannelId"/></td>
-				</tr>
-				<tr>
-					<td class="opt_btn" colspan="2" style="text-align:center;padding-top:10px;">
-						<a class="easyui-linkbutton" iconCls="icon-add" onclick="submitAddRelatedChannelForm()">确定</a>
-					</td>
-				</tr>
-				<tr><td><input name="channelId" class="none"/></td></tr>
-			</table>
-		</form>
-	</div>
-	
-	<!-- 相关频道重新排序 -->
-	<div id="related_channel_serial_window" class="easyui-window" title="相关频道编辑页-重新排序" style="width:500px;height:350px"
-        data-options="iconCls:'icon-converter',closed:true,modal:true,minimizable:false,maximizable:false,collapsible:false">
-		<form id="related_channel_serial_form" action="./admin_op/v2channel_updateRelatedChannelSerial" method="post">
-			<table class="htm_edit_table" width="580">
-				<tbody>
-					<tr>
-						<td class="leftTd">关联频道ID：</td>
-						<td>
-							<input name="reIndexlinkId" class="easyui-validatebox reindex_column" required="true"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<br />
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-							<input name="reIndexlinkId" class="reindex_column"/>
-						</td>
-					</tr>
-					<tr>
-						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitRelatedChannelSerialForm();">确定</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#related_channel_serial_window').window('close');">取消</a>
-						</td>
-					</tr>
-					<tr><td><input name="reIndexChannelId" class="none"/></td></tr>
-					<tr class="loading none">
-						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
-							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-							<span style="vertical-align:middle;">排序中...</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-	</div>
+
 	
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
