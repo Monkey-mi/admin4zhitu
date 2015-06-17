@@ -21,6 +21,7 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpChannel;
 import com.hts.web.common.pojo.OpChannelLink;
+import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
@@ -79,6 +80,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	
 	@Autowired
 	private com.hts.web.operations.dao.ChannelThemeCacheDao webThemeCacheDao;
+	
+	@Autowired
+	private com.hts.web.operations.dao.ChannelThemeDao webChannelThemeDao;
 	
 	@Override
 	public void insertOpChannel(Integer ownerId, String channelName,
@@ -559,17 +563,26 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    
 	}
 
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
 	@Override
 	public List<OpChannelLink> queryRelatedChannelList(Integer channelId) throws Exception{
 	    return channelLinkDao.queryLink(channelId);
 	}
 
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
 	@Override
 	public void addRelatedChannel(Integer channelId, Integer linkChannelId) throws Exception{
 	    Integer serial = keyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_LINK_SERIAL);;
 	    opChannelV2Mapper.addRelatedChannel(channelId,linkChannelId,serial);
 	}
 
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
 	@Override
 	public void deleteRelatedChannels(Integer channelId, Integer[] deleteIds) throws Exception{
 	    for (Integer linkId : deleteIds) {
@@ -577,6 +590,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    }
 	}
 	
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
 	@Override
 	public void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds) throws Exception{
 	    // 反向排序，传递过来的集合，第一个是前台想排在前面的，而serial越大排序越靠前，所以要倒序对linkChannelIds进行操作
@@ -591,16 +607,25 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    }
 	}
 
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
 	@Override
 	public void saveChannelTop(Integer channelId) throws Exception{
 	    opChannelV2Mapper.insertChannelTop(channelId);
 	}
 
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
 	@Override
 	public void deleteChannelTop(Integer channelId) throws Exception{
 	    opChannelV2Mapper.deleteChannelTop(channelId);
 	}
 
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
 	@Override
 	public List<Map<String, Object>> queryOpChannelLabelList(Integer channelId) throws Exception{
 	    List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
@@ -626,6 +651,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    return list;
 	}
 
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
 	@Override
 	public void updateOpChannelLabel(Integer channelId,
 		String channelLabelIds, String channelLabelNames) throws Exception{
@@ -634,6 +662,14 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    dto.setChannelLabelIds(channelLabelIds);
 	    dto.setChannelLabelNames(channelLabelNames);
 	    opChannelV2Mapper.updateOpChannelLabel(dto);
+	}
+
+	/**
+	 * @author zhangbo 2015年6月17日
+	 */
+	@Override
+	public List<OpChannelTheme> queryChannelThemeList() {
+		return webChannelThemeDao.queryAllTheme();
 	}
 
 }

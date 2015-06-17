@@ -13,6 +13,7 @@ import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpChannelLink;
+import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
@@ -308,18 +309,49 @@ public class OpChannelV2Action extends BaseCRUDAction{
      * @return
      * @author zhangbo 2015年6月12日
      */
-    public String updateOpChannelLabel(){
-	try {
-		String labelIds = getChannelLabelIds().equals("") ? null : getChannelLabelIds();
-		String labelNames = getChannelLabelNames().equals("") ? null : getChannelLabelNames();
-	    opChannelV2Service.updateOpChannelLabel(getChannelId(), labelIds, labelNames);
-	    JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	public String updateOpChannelLabel() {
+		try {
+			String labelIds = getChannelLabelIds().equals("") ? null : getChannelLabelIds();
+			String labelNames = getChannelLabelNames().equals("") ? null : getChannelLabelNames();
+			opChannelV2Service.updateOpChannelLabel(getChannelId(), labelIds, labelNames);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
 	}
-	return StrutsKey.JSON;
-    }
-    
+	
+	/**
+	 * 查询频道专题
+	 *
+	 * @return
+	 * @author zhangbo 2015年6月12日
+	 */
+	public void queryChannelThemeList() {
+		PrintWriter out = null;
+		try{
+			out = response.getWriter();
+			List<OpChannelTheme> list = opChannelV2Service.queryChannelThemeList();
+			JSONArray array = new JSONArray();
+			for (OpChannelTheme opChannelTheme : list) {
+				JSONObject obj = new JSONObject();
+				obj.put("themeId", opChannelTheme.getId());
+				obj.put("themeName", opChannelTheme.getThemeName());
+				array.add(obj);
+			}
+			out.print(array.toString());
+			out.flush();
+		}catch(Exception e){
+			jsonMap.clear();
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			JSONObject json = JSONObject.fromObject(jsonMap);
+			out.print(json.toString());
+			out.flush();
+		}finally{
+			out.close();
+		}
+	}
+	
 	
 	private Integer channelId;			//id
 	private Integer ownerId;			//拥有者ID

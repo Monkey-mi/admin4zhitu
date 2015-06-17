@@ -555,6 +555,7 @@ function searchChannel(){
 		params['channelId'] = channelNameOrId;
 	}
 	params['maxId'] = maxId;
+	params['themeId'] = $('#ss_channelTheme').combobox('getValue');
 	params['valid'] = $('#ss_valid').combobox('getValue');
 	params['superb'] = $('#ss_superb').combobox('getValue');
 	$('#htm_table').datagrid('load',params);
@@ -695,6 +696,8 @@ function updateChannelWorldOp(channelId,worldFlag) {
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
 			<a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" plain="true" iconCls="icon-converter" id="refreshCacheBtn">刷新缓存</a>
+			<span class="search_label">所属专题过滤：</span>
+			<input id="ss_channelTheme" class="easyui-combobox" data-options="valueField:'themeId',textField:'themeName',url:'./admin_op/v2channel_queryChannelThemeList'" style="width:150px">
 			<span class="search_label">有效性过滤：</span>
 			<select id="ss_valid" class="easyui-combobox" style="width:80px;">
 	   			<option value="">所有状态</option>
@@ -752,13 +755,9 @@ function updateChannelWorldOp(channelId,worldFlag) {
 						<tr>
 							<td class="leftTd">专属主题：</td>
 							<td>
-								<select name="themeId" id="channelThemeId" class="easyui-combobox" onchange="validateSubmitOnce=true;" style="width: 206px;">
-									<option value="10000">旅行频道</option>
-						   			<option value="10001">美食频道</option>
-						   			<option value="10003">时尚摄影频道</option>
-						   			<option value="10004">生活(情感)频道</option>
-						   			<option value="10006">织图官方频道</option>
-								</select>
+								<input id="channelThemeId" name="themeId" 
+									class="easyui-combobox" onchange="validateSubmitOnce=true;" 
+										data-options="valueField:'themeId',textField:'themeName',url:'./admin_op/v2channel_queryChannelThemeList'" style="width:150px">
 							</td>
 							<td class="rightTd"><div id="channelType_editTip" class="tipDIV"></div></td>
 						</tr>
@@ -844,8 +843,8 @@ function updateChannelWorldOp(channelId,worldFlag) {
 						<tr>
 							<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
 								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitSerialForm();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-remove" onclick="javascript:$('#serial_form').form('reset');$('#htm_table').datagrid('clearSelections');$('#reSerialCount').text(0);">清空</a>
 								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_serial').window('close');">取消</a>
-								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#serial_form').form('reset');$('#htm_table').datagrid('clearSelections')">清空</a>
 							</td>
 						</tr>
 						<tr class="loading none">

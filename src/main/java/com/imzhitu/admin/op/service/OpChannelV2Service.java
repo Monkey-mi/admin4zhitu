@@ -7,6 +7,7 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 
 import com.hts.web.common.pojo.OpChannelLink;
+import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 
@@ -191,5 +192,13 @@ public interface OpChannelV2Service extends BaseService{
 	 */
 	public void updateOpChannelLabel(Integer channelId,
 		String channelLabelIds, String channelLabelNames) throws Exception;
+
+	/**
+	 * 查询频道专题
+	 * 
+	 * @return
+	 * @author zhangbo 2015年6月17日
+	 */
+	public List<OpChannelTheme> queryChannelThemeList();
 
 }
