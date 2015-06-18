@@ -79,12 +79,12 @@ var maxId = 0;
 				if (value == "" || value == null) {
 					ret = "<img title='点击打开标签页' class='htm_column_img pointer' onclick='channelLabelEdit("+row.channelId+")' src='./common/images/edit_add.png'/>"
 				} else {
-					ret = ret + "<a title='点击打开标签页' class='updateInfo' href='javascript:void(0);' onclick='channelLabelEdit("+row.channelId+")'>";
+					ret += "<a title='点击打开标签页' class='updateInfo' href='javascript:void(0);' onclick='channelLabelEdit("+row.channelId+")'>";
 					var valueArray = value.split(",");
-					for(var i=0;i<valueArray.length;i++){
-						ret = ret + valueArray[i] + "<br>";
-					}
-					ret = ret + "</a>";
+//					for(var i=0;i<valueArray.length;i++){
+//						ret = ret + valueArray[i] + "<br>";
+//					}
+					ret += valueArray[0] + "(" + valueArray.length + ")" + "</a>" 
 				}
   				return ret;
   			}
@@ -104,12 +104,12 @@ var maxId = 0;
 				if (value == "") {
 					ret = "<img title='点击打开关联频道页' class='htm_column_img pointer' onclick='relatedChannelEdit("+row.channelId+")' src='./common/images/edit_add.png'/>"
 				} else {
-					ret = ret + "<a title='点击打开关联频道页' class='updateInfo' href='javascript:void(0);' onclick='relatedChannelEdit("+row.channelId+")'>";
+					ret += "<a title='点击打开关联频道页' class='updateInfo' href='javascript:void(0);' onclick='relatedChannelEdit("+row.channelId+")'>";
 					var valueArray = value.split(",");
-					for(var i=0;i<valueArray.length;i++){
-						ret = ret + valueArray[i] + "<br>";
-					}
-					ret = ret + "</a>";
+//					for(var i=0;i<valueArray.length;i++){
+//						ret = ret + valueArray[i] + "<br>";
+//					}
+					ret += valueArray[0] + "(" + valueArray.length + ")" + "</a>" 
 				}
   				return ret;
   			}
@@ -257,7 +257,7 @@ var maxId = 0;
 		$('#htm_edit').window({
 			title: '添加频道',
 			modal : true,
-			width : $(document.body).width()*0.4,
+			width : 600,
 			height : 430,
 			shadow : false,
 			closed : true,
