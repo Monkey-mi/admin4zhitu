@@ -209,7 +209,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setThemeId(themeId);
 		dto.setTop(top);
 		
-		buildNumberDtos("getChannelId",dto,start,rows,jsonMap,new NumberDtoListAdapter<OpChannelV2Dto>(){
+		buildNumberDtos("getSerial",dto,start,rows,jsonMap,new NumberDtoListAdapter<OpChannelV2Dto>(){
 
 			@Override
 			public List<? extends Serializable> queryList(OpChannelV2Dto dto) {
@@ -524,7 +524,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    List<OpChannel> topTempList = new ArrayList<OpChannel>();
 	    for (OpChannelV2Dto opChannelV2Dto : topList) {
 		topTempList.add(new OpChannel(opChannelV2Dto.getChannelId(),
-			opChannelV2Dto.getOwnerId(),opChannelV2Dto.getOwnerName(),
+			opChannelV2Dto.getOwnerId(),opChannelV2Dto.getChannelName(),
 			opChannelV2Dto.getChannelTitle(),opChannelV2Dto.getSubtitle(),
 			opChannelV2Dto.getChannelDesc(),opChannelV2Dto.getChannelIcon(),
 			null,opChannelV2Dto.getChannelTypeId(),opChannelV2Dto.getChannelLabelNames(),

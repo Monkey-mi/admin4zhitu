@@ -331,14 +331,23 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		PrintWriter out = null;
 		try{
 			out = response.getWriter();
+			
 			List<OpChannelTheme> list = opChannelV2Service.queryChannelThemeList();
+			
 			JSONArray array = new JSONArray();
+			// 添加全部选择项，不设置themeid
+			JSONObject object = new JSONObject();
+			object.put("themeId", "");
+			object.put("themeName", "全部");
+			array.add(object);
+			
 			for (OpChannelTheme opChannelTheme : list) {
 				JSONObject obj = new JSONObject();
 				obj.put("themeId", opChannelTheme.getId());
 				obj.put("themeName", opChannelTheme.getThemeName());
 				array.add(obj);
 			}
+			
 			out.print(array.toString());
 			out.flush();
 		}catch(Exception e){
