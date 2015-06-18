@@ -322,6 +322,7 @@
 			c0.serial,c0.danmu,c0.mood,c0.world
 		from hts.operations_channel  c0, hts_admin.op_channel_top ctop
 		where ctop.channel_id = c0.id
+		order by c0.serial desc
 	</select>
 	
 </mapper>
