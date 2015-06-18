@@ -59,7 +59,7 @@ var maxId = 0;
 				return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
 			}
 		},
-		{field : 'ownerName',title : '频道主',align : 'center'},
+		{field : 'ownerName',title : '频道主',align : 'center',width:80},
 		{field : 'ownerId',title : '频道主ID',align : 'center'},
 		{field : 'channelName',title : '频道名称',align : 'center'},
 		{field : 'channelDesc',title : '频道描述',align : 'center'},
@@ -229,7 +229,6 @@ var maxId = 0;
 	},
 	onAfterInit = function() {
 		$('#htm_table').datagrid({
-			fitColumns:true,
 			autoRowHeight:true,
 			onSelect: function(index,row){
 				// 选择操作时刷新展示重新排序所选择的数量
@@ -258,8 +257,8 @@ var maxId = 0;
 		$('#htm_edit').window({
 			title: '添加频道',
 			modal : true,
-			width : 520,
-			height : 540,
+			width : $(document.body).width()*0.3,
+			height : 430,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -349,7 +348,6 @@ function initEditWindow(id, index, isUpdate) {
 				$("#channelIcon_edit").val(obj['channelIcon']);
 				$("#channelImg_edit").attr('src', obj['channelIcon']);
 				$("#channelName_edit").val(obj['channelName']);
-				$("#channelTitle_edit").val(obj['channelTitle']);
 				$("#id_edit").val(obj['channelId']);
 				$("#valid_edit").val(obj['valid']);
 				$("#serial_edit").val(obj['serial']);
@@ -417,11 +415,8 @@ function loadEditFormValidate(index, isUpdate) {
 	$("#channelName_edit")
 	.formValidator({empty:false,onshow:"频道名称（必填）",onfocus:"请输入名称",oncorrect:"设置成功"});
 	
-	$("#channelTitle_edit")
-	.formValidator({empty:true,onshow:"标题（必填）",onfocus:"请输入标题",oncorrect:"设置成功"});
-	
-	$("#channelsubtitle")
-	.formValidator({empty:true,onshow:"标题（必填）",onfocus:"请输入副标题",oncorrect:"设置成功"});
+//	$("#channelsubtitle")
+//	.formValidator({empty:true,onshow:"标题（必填）",onfocus:"请输入副标题",oncorrect:"设置成功"});
 };
 
 /**
@@ -544,20 +539,28 @@ function addChannelSubmit(){
 };
 
 /**
- * 按条件查询：精选，有效性，频道ID，频道名称（模糊）
+ * 按条件查询：频道主题，有效性，精选，频道ID，频道名称（模糊）
  */
 function searchChannel(){
-	var channelNameOrId = $("#ss_channelNameOrId").val();
+	var params = {};
+	params['maxId'] = maxId;
+	params['themeId'] = $('#ss_channelTheme').combobox('getValue');
+	params['valid'] = $('#ss_valid').combobox('getValue');
+	params['superb'] = $('#ss_superb').combobox('getValue');
+	$('#htm_table').datagrid('load',params);
+};
+
+/**
+ * 根据频道id或者名称（支持模糊）查询
+ */
+function searchChannelByNameOrId(){
+	var channelNameOrId = $("#ss_channelNameOrId").searchbox('getValue');
 	var params = {};
 	if(isNaN(channelNameOrId)){
 		params['channelName'] = channelNameOrId;
 	}else{
 		params['channelId'] = channelNameOrId;
 	}
-	params['maxId'] = maxId;
-	params['themeId'] = $('#ss_channelTheme').combobox('getValue');
-	params['valid'] = $('#ss_valid').combobox('getValue');
-	params['superb'] = $('#ss_superb').combobox('getValue');
 	$('#htm_table').datagrid('load',params);
 };
 
@@ -710,8 +713,8 @@ function updateChannelWorldOp(channelId,worldFlag) {
 	   			<option value="1">精选</option>
 	   			<option value="0">非精选</option>
 			</select>
-   			<input id="ss_channelNameOrId" type="text" class="easyui-textbox" data-options="prompt:'请填写频道名称或频道ID'" style="width:150px"></input>
    			<a href="javascript:void(0);" onclick="javascript:searchChannel();" plain="true" class="easyui-linkbutton" iconCls="icon-search" id="search_btn">查询</a>
+   			<input id="ss_channelNameOrId" type="text" class="easyui-searchbox" data-options="searcher:searchChannelByNameOrId,iconCls:'icon-search',prompt:'请填写频道名称或频道ID'" style="width:200px"></input>
    			<a href="javascript:void(0);" onclick="javascript:showTop();" class="easyui-linkbutton" style="float:right;" plain="true" iconCls="icon-search" id="showTop">查看置顶推荐</a>
    		</div>
 		</div> 
@@ -719,7 +722,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
 		<!-- 添加记录 -->
 		<div id="htm_edit">
 			<form id="edit_form" action="./admin_op/v2channel_insertOpChannel" method="post">
-				<table id="htm_edit_table" width="480">
+				<table id="htm_edit_table" style="width:100%;height:100px;">
 					<tbody>
 						<tr>
 							<td class="leftTd">ICON：</td>
@@ -742,14 +745,12 @@ function updateChannelWorldOp(channelId,worldFlag) {
 						</tr>
 						 <tr>
 							<td class="leftTd">频道描述：</td>
-							<td><textarea name="channelDesc" id="channelDesc_edit" onchange="validateSubmitOnce=true;"></textarea></td>
-							<td class="rightTd"><div id="channelDesc_editTip" class="tipDIV"></div></td>
+							<td colspan="2"><textarea name="channelDesc" id="channelDesc_edit" onchange="validateSubmitOnce=true;" style="width:80%;height:100px;"></textarea></td>
 						</tr>
 						 
 						<tr>
 							<td class="leftTd">拥有者ID：</td>
 							<td><input id="ownerId_edit" name="ownerId" onchange="validateSubmitOnce=true;" style="width:206px;" /></td>
-							<td class="rightTd"><div id="ownerId_editTip" class="tipDIV"></div></td>
 						</tr>
 						
 						<tr>
@@ -757,9 +758,8 @@ function updateChannelWorldOp(channelId,worldFlag) {
 							<td>
 								<input id="channelThemeId" name="themeId" 
 									class="easyui-combobox" onchange="validateSubmitOnce=true;" 
-										data-options="valueField:'themeId',textField:'themeName',url:'./admin_op/v2channel_queryChannelThemeList'" style="width:150px">
+										data-options="valueField:'themeId',textField:'themeName',url:'./admin_op/v2channel_queryChannelThemeList'" style="width:206px;">
 							</td>
-							<td class="rightTd"><div id="channelType_editTip" class="tipDIV"></div></td>
 						</tr>
 						
 						<tr>
@@ -772,7 +772,6 @@ function updateChannelWorldOp(channelId,worldFlag) {
 						   			<option value="3">屏蔽频道</option>
 								</select>
 							</td>
-							<td class="rightTd"><div id="channelType_editTip" class="tipDIV"></div></td>
 						</tr>
 						
 						<tr class="none">
