@@ -11,6 +11,7 @@
 		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
 		<result property="schedula" column="schedula" jdbcType="TIMESTAMP"/>
 		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- INSERT -->
@@ -58,8 +59,10 @@
 	
 	<!-- SELECT -->
 	<select id="queryZombieWorldSchedula" resultMap="ZombieWorldMapper">
-		select zws.*,aui.user_name as operatorName from hts_admin.zombie_world_schedula  zws
+		select zws.*,aui.user_name as operatorName,oc.channel_name from hts_admin.zombie_world_schedula  zws
 		left join hts_admin.admin_user_info aui on zws.operator=aui.id
+		left join hts_admin.zombie_world zw on zws.zombie_world_id=zw.id
+		left join hts.operations_channel oc on zw.channel_id=oc.id
 		<where>
 			<if test="id != null">
 				zws.id = #{id}

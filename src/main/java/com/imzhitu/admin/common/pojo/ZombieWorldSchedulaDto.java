@@ -18,6 +18,7 @@ public class ZombieWorldSchedulaDto extends AbstractNumberDto{
 	private Integer finished;
 	private Integer operator;
 	private String operatorName;
+	private String channelName;	// 织图所在频道的名称	zhangbo add by 2015-06-18
 	public Integer getId() {
 		return id;
 	}
@@ -69,6 +70,18 @@ public class ZombieWorldSchedulaDto extends AbstractNumberDto{
 	}
 	public void setOperatorName(String operatorName) {
 		this.operatorName = operatorName;
+	}
+	/**
+	 * @return the channelName
+	 */
+	public String getChannelName() {
+		return channelName;
+	}
+	/**
+	 * @param channelName the channelName to set
+	 */
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
 	}
 
 }

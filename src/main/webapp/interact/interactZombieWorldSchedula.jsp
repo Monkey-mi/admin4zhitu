@@ -78,7 +78,8 @@
 								return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 							}
 						},
-						{field : 'operatorName',title: '最后操作者',align : 'center',width : 80}
+						{field : 'operatorName',title: '最后操作者',align : 'center',width : 80},
+						{field : 'channelName',title: '织图所在频道名称',align : 'center',width : 100}
 						
 					]],
 					onLoadSuccess:myOnLoadSuccess,
