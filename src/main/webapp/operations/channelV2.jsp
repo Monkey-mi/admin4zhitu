@@ -257,7 +257,7 @@ var maxId = 0;
 		$('#htm_edit').window({
 			title: '添加频道',
 			modal : true,
-			width : $(document.body).width()*0.3,
+			width : $(document.body).width()*0.4,
 			height : 430,
 			shadow : false,
 			closed : true,
