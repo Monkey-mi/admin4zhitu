@@ -83,6 +83,7 @@ public interface OpChannelV2Mapper {
 	 * @param serial	序号
 	 * @author zhangbo 2015年6月11日
 	 */
+	@DataSource("master")
 	public void addRelatedChannel(@Param("channelId")Integer channelId, @Param("linkChannelId")Integer linkChannelId, @Param("serial")Integer serial);
 
 	/**
@@ -91,6 +92,7 @@ public interface OpChannelV2Mapper {
 	 * @param linkId	关联频道id
 	 * @author zhangbo 2015年6月11日
 	 */
+	@DataSource("master")
 	public void deleteRelatedChannel(@Param("channelId")Integer channelId, @Param("linkChannelId")Integer linkChannelId);
 
 	/**
@@ -101,6 +103,7 @@ public interface OpChannelV2Mapper {
 	 * @param serial
 	 * @author zhangbo 2015年6月13日
 	 */
+	@DataSource("master")
 	public void updateRelatedChannelSerial(@Param("channelId")Integer channelId, @Param("linkChannelId")Integer linkCid, @Param("serial")Integer serial);
 	
 	/**
@@ -109,6 +112,7 @@ public interface OpChannelV2Mapper {
 	 * @param channelId	频道id
 	 * @author zhangbo 2015年6月12日
 	 */
+	@DataSource("master")
 	public void insertChannelTop(Integer channelId);
 
 	/**
@@ -117,6 +121,7 @@ public interface OpChannelV2Mapper {
 	 * @param channelId	频道id
 	 * @author zhangbo 2015年6月12日
 	 */
+	@DataSource("master")
 	public void deleteChannelTop(Integer channelId);
 
 	/**
@@ -125,6 +130,7 @@ public interface OpChannelV2Mapper {
 	 * @return
 	 * @author zhangbo 2015年6月12日
 	 */
+	@DataSource("slave")
 	public List<OpChannelV2Dto> queryChannelTop();
 	
 	/**
