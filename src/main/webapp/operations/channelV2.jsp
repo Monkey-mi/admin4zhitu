@@ -59,10 +59,22 @@ var maxId = 0;
 				return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
 			}
 		},
-		{field : 'ownerName',title : '频道主',align : 'center',width:80},
+		{field : 'ownerName',title : '频道主',align : 'center',width:80,
+			formatter: function(value,row,index) {
+  				return "<span title='" + value + "'>" + value + "</span>";
+  			}
+		},
 		{field : 'ownerId',title : '频道主ID',align : 'center'},
-		{field : 'channelName',title : '频道名称',align : 'center'},
-		{field : 'channelDesc',title : '频道描述',align : 'center'},
+		{field : 'channelName',title : '频道名称',align : 'center',width:120,
+			formatter: function(value,row,index) {
+  				return "<span title='" + value + "'>" + value + "</span>";
+  			}
+		},
+		{field : 'channelDesc',title : '频道描述',align : 'center',width:100,
+			formatter: function(value,row,index) {
+  				return "<span title='" + value + "'>" + value + "</span>";
+  			}
+		},
 		{field : 'channelTypeId',title:'频道类型',align : 'center',
 			formatter:function(value,row,index){
 				switch(value){
@@ -81,10 +93,7 @@ var maxId = 0;
 				} else {
 					ret += "<a title='点击打开标签页' class='updateInfo' href='javascript:void(0);' onclick='channelLabelEdit("+row.channelId+")'>";
 					var valueArray = value.split(",");
-//					for(var i=0;i<valueArray.length;i++){
-//						ret = ret + valueArray[i] + "<br>";
-//					}
-					ret += valueArray[0] + "(" + valueArray.length + ")" + "</a>" 
+					ret += "(" + valueArray.length + ")" + valueArray[0] + "</a>";
 				}
   				return ret;
   			}
@@ -106,10 +115,7 @@ var maxId = 0;
 				} else {
 					ret += "<a title='点击打开关联频道页' class='updateInfo' href='javascript:void(0);' onclick='relatedChannelEdit("+row.channelId+")'>";
 					var valueArray = value.split(",");
-//					for(var i=0;i<valueArray.length;i++){
-//						ret = ret + valueArray[i] + "<br>";
-//					}
-					ret += valueArray[0] + "(" + valueArray.length + ")" + "</a>" 
+					ret += "(" + valueArray.length + ")" + valueArray[0] + "</a>";
 				}
   				return ret;
   			}
