@@ -143,7 +143,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	private static final int CHANNEL_CACHE_LIMIT_2_9_89 = 8;
 	
-	private Integer channeCachelLimit = 1000;
+//	private Integer channeCachelLimit = 1000;
 	
 	private Integer channelCoverLimit = 5;
 
@@ -157,14 +157,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		this.channelStarLimit = channelStarLimit;
 	}
 	
-	public Integer getChanneCachelLimit() {
-		return channeCachelLimit;
-	}
-
-	public void setChanneCachelLimit(Integer channeCachelLimit) {
-		this.channeCachelLimit = channeCachelLimit;
-	}
-
 	public Integer getChannelCoverLimit() {
 		return channelCoverLimit;
 	}
@@ -175,7 +167,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateChannelCache() throws Exception {
-		channelCacheDao.updateChannel(channeCachelLimit);
+//		channelCacheDao.updateChannel(channeCachelLimit);
 		webThemeCacheDao.updateTheme();
 		channelCacheDao.updateOldChannel();
 		updateChannelCoverCache();
@@ -236,7 +228,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		channel.setChildCountBase(childCountBase);
 		channelMapper.update(channel);
 		
-		channelCacheDao.updateChannel(channeCachelLimit);
 	}
 
 	@Override
