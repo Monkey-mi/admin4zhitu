@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpMsgBulletin;
 
 /**
@@ -16,24 +17,28 @@ public interface OpMsgBulletinMapper {
 	 * 添加
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void insertMsgBulletin(OpMsgBulletin dto);
 	
 	/**
 	 * 批量删除
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void batchDeleteMsgBulletin(Integer[] ids);
 	
 	/**
 	 * 更新
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void updateMsgBulletin(OpMsgBulletin dto);
 	
 	/**
 	 * 批量更新有效性
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void batchUpdateMsgBulletinValid(@Param("ids")Integer[] ids,@Param("valid")Integer valid,@Param("operator")Integer operator);
 	
 	/**
@@ -41,6 +46,7 @@ public interface OpMsgBulletinMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpMsgBulletin> queryMsgBulletin(OpMsgBulletin dto);
 	
 	/**
@@ -48,6 +54,7 @@ public interface OpMsgBulletinMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryMsgBulletinTotalCount(OpMsgBulletin dto);
 	
 	/**
@@ -55,5 +62,6 @@ public interface OpMsgBulletinMapper {
 	 * @param ids
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<OpMsgBulletin> queryMsgBulletinByIds(@Param("ids")Integer[] ids);
 }
