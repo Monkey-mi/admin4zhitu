@@ -65,6 +65,8 @@
 										return "网页连接";
 									case 2:
 										return "频道id";
+									case 3:
+										return "用户id";
 									default:
 										return ""; 
 								}
@@ -328,6 +330,7 @@
 									<option value="0" selected="selected">无需跳转</option>
 		        					<option value="1">网页连接</option>
 		        					<option value="2">频道id</option>
+		        					<option value="3">用户id</option>
 								</select>
 							</td>
 						</tr>

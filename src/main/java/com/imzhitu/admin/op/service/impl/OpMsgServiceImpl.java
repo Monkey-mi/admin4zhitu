@@ -92,7 +92,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	}
 
 	@Override
-	public void pushAppMsg(OpSysMsg msg, Boolean inApp, Boolean noticed)
+	public void pushAppMsg(final OpSysMsg msg, Boolean inApp, Boolean noticed)
 			throws Exception {
 		if(msg.getObjId() == null || msg.getObjId() == 0) {
 			Integer objId = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
@@ -107,22 +107,50 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			sysMsgMapper.saveMsgByProcedure(msg);
 		}
 
-		long pushStartTime = System.currentTimeMillis();
 		// 向所有人推送消息
 		if(noticed) {
-			batchPushAppMsg(msg.getContent(), -1);
-		}
-		long pushEndTime = System.currentTimeMillis();
-		appPushLogger.info("finish push app msg, cost " + (pushEndTime - pushStartTime) / 1000 + " seconds"); 
+			int factor = 300000;
+			int maxUID = userInfoMapper.queryMaxId();
+			int parts = 0;
+			if(maxUID % factor == 0) {
+				parts = maxUID / factor;
+			} else {
+				parts = maxUID / factor + 1;
+			}
+			for(int i = 0; i < parts; i++) {
+				int maxId = 0;
+				int minId = 0;
+				if(i == 0) {
+					maxId = -1;
+				} else {
+					maxId = maxUID;
+				}
+				if(i == (parts - 1)) {
+					minId = 1;
+				} else {
+					maxUID -= factor;
+					minId = maxUID;
+				}
+				final int maxId4Thread = maxId;
+				final int minId4Thread = minId;
+				pushService.getPushExecutor().execute(new Runnable() {
 
+					@Override
+					public void run() {
+						batchPushAppMsg(msg.getContent(), minId4Thread, maxId4Thread);
+					}
+				});
+			}
+		}
 	}
 	
-	public void batchPushAppMsg(String msg, Integer maxId) {
+	
+	public void batchPushAppMsg(String msg, Integer minId, Integer maxId) {
 		List<Integer> uids = null;
 		if(maxId == -1) {
-			uids = userInfoMapper.queryUID(appPushLimit); // 第一次推送
+			uids = userInfoMapper.queryUID(minId, appPushLimit); // 第一次推送
 		} else if(maxId != 0){
-			uids = userInfoMapper.queryUIDByMaxId(maxId, appPushLimit); // 递归推送
+			uids = userInfoMapper.queryUIDByMaxId(minId, maxId, appPushLimit); // 递归推送
 		}
 		
 		if(uids != null && uids.size() > 0) {
@@ -134,7 +162,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 				appPushLogger.warn("push app msg error : " + e.getMessage());
 			}
 			appPushLogger.info("push app msg from " + startId + "-" + endId);
-			batchPushAppMsg(msg, endId);
+			batchPushAppMsg(msg, minId, endId);
 		}
 	}
 

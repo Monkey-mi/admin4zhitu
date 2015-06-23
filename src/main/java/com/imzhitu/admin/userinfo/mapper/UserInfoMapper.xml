@@ -540,11 +540,15 @@
 	  </update>
 	  
 	  <select id="queryUID" resultType="int">
-	  	select id from hts.user_info order by id desc limit #{limit};
+	  	select id from hts.user_info where id>=#{minId} order by id desc limit #{limit};
 	  </select>
 	  
 	  <select id="queryUIDByMaxId" resultType="int">
-	  	select id from hts.user_info where id <![CDATA[ < ]]> #{maxId} order by id desc limit #{limit};
+	  	select id from hts.user_info where id>=#{minId} and id <![CDATA[ < ]]> #{maxId} order by id desc limit #{limit};
+	  </select>
+	  
+	  <select id="queryMaxId" resultType="int">
+	  	select max(id) from hts.user_info;
 	  </select>
 	  
 </mapper>
