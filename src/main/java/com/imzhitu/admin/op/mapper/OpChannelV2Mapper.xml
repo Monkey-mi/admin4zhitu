@@ -184,7 +184,7 @@
 				and oc.theme_id = #{themeId}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[and oc.id <= #{maxId}]]>
+				<![CDATA[and oc.serial <= #{maxId}]]>
 			</if>
 			<if test="top != null">
 				and ctop.top = #{top}
