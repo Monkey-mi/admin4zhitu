@@ -111,6 +111,7 @@
 		select * from hts_admin.zombie_world_schedula  zws
 		where zws.schedula between #{beginDate} and #{endDate} 
 		and valid=#{valid} and finished=#{finished} 
+		order by zws.schedula
 	</select>
 	
 	
