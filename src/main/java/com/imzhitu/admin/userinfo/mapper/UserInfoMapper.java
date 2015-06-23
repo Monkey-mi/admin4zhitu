@@ -35,9 +35,9 @@ public interface UserInfoMapper {
 			@Param("trust")Integer trust);
 	
 	@DataSource("slave")
-	public List<Integer> queryUID(Integer limit);
+	public List<Integer> queryUID(@Param("limit")Integer limit);
 	
 	@DataSource("slave")
-	public List<Integer> queryUIDByMinId(Integer minId, Integer limit);
+	public List<Integer> queryUIDByMaxId(@Param("maxId")Integer maxId, @Param("limit")Integer limit);
 	
 }

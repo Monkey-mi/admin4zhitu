@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
+import com.imzhitu.admin.constant.LoggerKeies;
 import com.imzhitu.admin.op.dao.NoticeCacheDao;
 import com.imzhitu.admin.op.mapper.SysMsgMapper;
 import com.imzhitu.admin.op.service.OpMsgService;
@@ -22,6 +24,8 @@ import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 @Service
 public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 
+	private static Logger appPushLogger = Logger.getLogger(LoggerKeies.PUSH_APP);
+	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
@@ -43,6 +47,11 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	@Value("${push.appMsgSenderId}")
 	private Integer appMsgSenderId = 2063;
 	
+	/**
+	 * app推送限定条数
+	 */
+	private Integer appPushLimit = 300;
+	
 	public Integer getAppMsgSenderId() {
 		return appMsgSenderId;
 	}
@@ -50,6 +59,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	public void setAppMsgSenderId(Integer appMsgSenderId) {
 		this.appMsgSenderId = appMsgSenderId;
 	}
+	
 
 	@Override
 	public void updateNotice(Integer id, String path, String link, Integer phoneCode) {
@@ -84,54 +94,48 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	@Override
 	public void pushAppMsg(OpSysMsg msg, Boolean inApp, Boolean noticed)
 			throws Exception {
-		Integer objId = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
+		if(msg.getObjId() == null || msg.getObjId() == 0) {
+			Integer objId = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
+			msg.setObjId(objId);
+		}
 		msg.setSenderId(appMsgSenderId);
 		msg.setMsgDate(new Date());
-		msg.setObjId(objId);
 		
-//		if(inApp) {
-//			sysMsgMapper.saveMsgByProcedure(msg);
-//		}
 		
-		if(noticed) {
-//			pushService.pushAppMessage(msg.getContent());
-//			if(msg.getObjMeta() == null) {
-//				throw new HTSException("please input link");
-//			}
-			batchPushAppMsg(msg.getContent(), 0);
+		// 向数据库插入消息
+		if(inApp) {
+			sysMsgMapper.saveMsgByProcedure(msg);
 		}
+
+		long pushStartTime = System.currentTimeMillis();
+		// 向所有人推送消息
+		if(noticed) {
+			batchPushAppMsg(msg.getContent(), -1);
+		}
+		long pushEndTime = System.currentTimeMillis();
+		appPushLogger.info("finish push app msg, cost " + (pushEndTime - pushStartTime) / 1000 + " seconds"); 
 
 	}
 	
-	public void batchPushAppMsg(String msg, Integer minId) {
-		List<Integer> uids = userInfoMapper.queryUIDByMinId(minId, 1000);
+	public void batchPushAppMsg(String msg, Integer maxId) {
+		List<Integer> uids = null;
+		if(maxId == -1) {
+			uids = userInfoMapper.queryUID(appPushLimit); // 第一次推送
+		} else if(maxId != 0){
+			uids = userInfoMapper.queryUIDByMaxId(maxId, appPushLimit); // 递归推送
+		}
+		
 		if(uids != null && uids.size() > 0) {
-			for(int i = 0; i < uids.size(); i++) {
-				try { 
-					pushService.pushBulletin(msg, uids.get(i));
-				} catch(Exception e) {
-				}
-				if(i == uids.size() - 1) {
-					minId = uids.get(uids.size() - 1);
-				}
-				batchPushAppMsg(msg, minId);
+			int startId = uids.get(0);
+			int endId = uids.get(uids.size() - 1);
+			try { 
+				pushService.pushBulletin(msg, uids);
+			} catch(Exception e) {
+				appPushLogger.warn("push app msg error : " + e.getMessage());
 			}
+			appPushLogger.info("push app msg from " + startId + "-" + endId);
+			batchPushAppMsg(msg, endId);
 		}
 	}
 
-//	@Override
-//	public void updateStartPageCache(String linkPath, Integer linkType, String link,
-//			Date beginDate, Date endDate, Integer showCount) throws Exception {
-//		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_MSG_START_PAGE_ID);
-//		com.hts.web.common.pojo.OpMsgStartPage wpage =
-//				new com.hts.web.common.pojo.OpMsgStartPage();
-//		wpage.setId(id);
-//		wpage.setLinkPath(linkPath);
-//		wpage.setLinkType(linkType);
-//		wpage.setLink(link);
-//		wpage.setBeginDate(beginDate);
-//		wpage.setEndDate(endDate);
-//		wpage.setShowCount(showCount);
-//		webStartPageCacheDao.updateStartPage(wpage);
-//	}
 }

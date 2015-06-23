@@ -1,7 +1,5 @@
 package com.imzhitu.admin.op.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.constant.Tag;
 import com.imzhitu.admin.base.BaseTest;
+import com.imzhitu.admin.common.pojo.OpSysMsg;
 
 public class OpMsgServiceTest extends BaseTest {
 
@@ -26,6 +25,13 @@ public class OpMsgServiceTest extends BaseTest {
 	@Test
 	public void testSaveNotice() throws Exception {
 		service.saveNotice("http://imzhitu.qiniudn.com/op/notice/2014081101.jpg", "http://www.imzhitu.com", Tag.IOS);
+	}
+	
+	@Test
+	public void testPushAppMsg() throws Exception {
+//		OpSysMsg msg = new OpSysMsg();
+//		msg.setContent("推送消息测试");
+//		service.pushAppMsg(msg, false, true);
 	}
 
 //	@Test

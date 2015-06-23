@@ -177,7 +177,7 @@ var maxId = 0,
 		$('#htm_appmsg').window({
 			modal : true,
 			width : 820,
-			height : 340,
+			height : 440,
 			top: 10,
 			title : '推送App消息',
 			shadow : false,
@@ -343,10 +343,6 @@ function loadAppMsgFormValidate() {
 	.formValidator({onshow:"请输入消息（必填）",onfocus:"2-140个字符",oncorrect:"输入正确！"})
 	.inputValidator({min:2,empty:{leftempty:false,rightempty:false,emptyerror:"两边不能输入空格"},onerror:"请输入2-140个字符"});
 	
-	$("#link_appmsg")
-	.formValidator({empty:true, onshow:"请输入链接",onfocus:"请输入链接",oncorrect:"正确！"})
-	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
-	
 }
 
 function appmsgObjTypeSelect(rec){
@@ -417,29 +413,39 @@ function searchBySenderId(){
 						<td class="leftTd">消息类型：</td>
 						<td colspan="2">
 							<select id="objType_appmsg" name="sysMsg.objType" class="easyui-combobox" 
-								data-options="onSelect:appmsgObjTypeSelect" style="width:100px;">
+								 style="width:100px;">
 						        <option value="4">普通文本</option>
 						        <option value="9">链接</option>
+						        <option value="8">频道</option>
 					   		</select>
 						</td>
 					</tr>
-					<tr id="tr_link_appmsg" class="none">
-						<td class="leftTd">链接：</td>
+					<tr>
+						<td class="leftTd">缩略图路径：</td>
 						<td>
-							<input type="text" id="link_appmsg" name="sysMsg.objMeta"/>
+							<textarea name="sysMsg.thumbPath" style="width:500px;"></textarea>
 						</td>
-						<td class="rightTd"><div id="link_appmsgTip" class="tipDIV"></div></td>
+					</tr>
+					<tr>
+						<td class="leftTd">objMeta：</td>
+						<td>
+							<textarea name="sysMsg.objMeta" style="width:500px;"></textarea>
+						</td>
 					</tr>
 					
-					<!-- 
 					<tr>
-						<td class="leftTd">ObjID：</td>
+						<td class="leftTd">objMeta2：</td>
 						<td>
-							<input type="text" id="objId_appmsg" name="sysMsg.objId"/>
+							<input type="text" name="sysMsg.objMeta2"/>
 						</td>
-						<td class="rightTd"><div id="objId_appmsgTip" class="tipDIV"></div></td>
 					</tr>
-					 -->
+					
+					<tr>
+						<td class="leftTd">objId：</td>
+						<td>
+							<input type="text" name="sysMsg.objId"/>
+						</td>
+					</tr>
 					<tr>
 						<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="$('#appmsg_form').submit();">发送</a> 
