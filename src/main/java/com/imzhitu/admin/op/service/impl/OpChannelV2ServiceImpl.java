@@ -212,13 +212,10 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 
 			@Override
 			public List<? extends Serializable> queryList(OpChannelV2Dto dto) {
-				log.info("zhangbotest>>>>>>>>>>>>>>>>>>>>start");
 			    List<OpChannelV2Dto> opChannelList = opChannelV2Mapper.queryOpChannel(dto);
-			    log.info("查询结果长度：" + opChannelList.size());
 			    try {
 					// 为关联频道赋值
 					for (OpChannelV2Dto opChannelV2Dto : opChannelList) {
-						log.info("++++++++++++++++++++++++++++");
 						StringBuffer relatedChannel = new StringBuffer();
 						List<OpChannelLink> queryRelatedChannelList = queryRelatedChannelList(opChannelV2Dto.getChannelId());
 						for (int i = 0; i < queryRelatedChannelList.size(); i++) {
@@ -230,14 +227,10 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 						    }
 						}
 						opChannelV2Dto.setRelatedChannel(relatedChannel.toString());
-						log.info("名称：" + opChannelV2Dto.getChannelName());
-						log.info("描述：" + opChannelV2Dto.getChannelDesc());
-						log.info("++++++++++++++++++++++++++++");
 					}
 			    } catch (Exception e) {
 			    	log.error(e);
 			    }
-			    log.info("zhangbotest>>>>>>>>>>>>>>>>>>>>end");
 			    return opChannelList;
 			}
 
