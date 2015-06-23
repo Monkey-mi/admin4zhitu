@@ -335,11 +335,6 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			List<OpChannelTheme> list = opChannelV2Service.queryChannelThemeList();
 			
 			JSONArray array = new JSONArray();
-			// 添加全部选择项，不设置themeid
-			JSONObject object = new JSONObject();
-			object.put("themeId", "");
-			object.put("themeName", "全部");
-			array.add(object);
 			
 			for (OpChannelTheme opChannelTheme : list) {
 				JSONObject obj = new JSONObject();
