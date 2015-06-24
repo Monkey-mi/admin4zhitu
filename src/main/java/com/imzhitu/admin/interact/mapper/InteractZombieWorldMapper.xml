@@ -97,7 +97,10 @@
 	<!-- 分页查询 -->
 	<select id="queryZombieWorldForTable" resultMap="ZombieWorldMapper">
 		select zw.*,oc.channel_name from hts_admin.zombie_world zw
-		left join hts.operations_channel oc on zw.channel_id=oc.id
+		left join hts.operations_channel oc on zw.channel_id=oc.id 
+		<if test="schedulaFlag != null">
+			left join hts_admin.zombie_world_schedula zws on zw.id=zws.zombie_world_id
+		</if>
 		<where>
 			<if test="id != null">
 				zw.id = #{id}
@@ -114,6 +117,9 @@
 			<if test="channelId != null">
 				and zw.channel_id = #{channelId}
 			</if>
+			<if test="schedulaFlag != null">
+				and zws.id is not null
+			</if>
 		</where>
 		order by id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
@@ -122,21 +128,27 @@
 	<!-- 分页查询总数 -->
 	<select id="queryZombieWorldTotalCountForTable" resultType="long">
 		select count(*) from hts_admin.zombie_world zw
+		<if test="schedulaFlag != null">
+			left join hts_admin.zombie_world_schedula zws on zw.id=zws.zombie_world_id
+		</if>
 		<where>
 			<if test="id != null">
-				id = #{id}
+				zw.id = #{id}
 			</if>
 			<if test="complete != null">
-				and complete = #{complete}
+				and zw.complete = #{complete}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[and id <= #{maxId}]]>
+				<![CDATA[and zw.id <= #{maxId}]]>
 			</if>
 			<if test="modifyDate != null and addDate != null">
-				and date_modify between #{addDate} and #{modifyDate}
+				and zw.date_modify between #{addDate} and #{modifyDate}
 			</if>
 			<if test="channelId != null">
 				and zw.channel_id = #{channelId}
+			</if>
+			<if test="schedulaFlag != null">
+				and zws.id is not null
 			</if>
 		</where>
 	</select>

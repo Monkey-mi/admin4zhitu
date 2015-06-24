@@ -38,6 +38,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 	private Date begin;//开始执行计划的时间
 	private Integer timeSpan;//
 	
+	private Integer schedulaFlag;
 	
 
 	@Autowired
@@ -48,7 +49,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 	 */
 	public String queryZombieWorldForTable(){
 		try{
-			service.queryZombieWorldForTable(channelId,maxId, addDate, modifyDate, page, rows, complete, jsonMap);
+			service.queryZombieWorldForTable(channelId,maxId, addDate, modifyDate, page, rows, complete,schedulaFlag, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -306,5 +307,13 @@ public class InteractZombieWorldAction extends BaseCRUDAction{
 
 	public void setChannelId(Integer channelId) {
 		this.channelId = channelId;
+	}
+
+	public Integer getSchedulaFlag() {
+		return schedulaFlag;
+	}
+
+	public void setSchedulaFlag(Integer schedulaFlag) {
+		this.schedulaFlag = schedulaFlag;
 	}
 }

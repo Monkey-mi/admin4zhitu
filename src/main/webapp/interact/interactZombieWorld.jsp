@@ -13,6 +13,7 @@
 <script type="text/javascript">
 var maxId = 0,
 	hideIdColumn = false,
+	htmTableWidth = 1300,
 	worldURLPrefix = 'http://www.imzhitu.com/DT',
 	htmTableTitle = "马甲发图计划管理", //表格标题
 	htmTablePageList = [10,30,50,100,150,300,500],
@@ -176,11 +177,15 @@ var maxId = 0,
 	
 	//根据complete查询马甲织图
 	function queryZombieWorldByComplete(complete){
-		myQueryParams.maxId=0;
 		myQueryParams.complete = complete;
 		$("#htm_table").datagrid('load',myQueryParams);
 	}
 	
+	//根据schedulaFlag查询马甲织图
+	function queryZombieWorldBySchedulaFlag(schedulaFlag){
+		myQueryParams.schedulaFlag = schedulaFlag;
+		$("#htm_table").datagrid('load',myQueryParams);
+	}
 	//批量发布马甲织图窗口
 	function batchSaveZombieWorldToHTWorld(){
 		$('#batch-save .opt_btn').hide();
@@ -341,6 +346,10 @@ var maxId = 0,
 		        <option value="">所有完成状态</option>
 		        <option value="0">未完成</option>
 		        <option value="1">已完成</option>
+	   	</select>
+	   	<select id="ss-schedulaFlag" class="easyui-combobox" data-options="onSelect:function(rec){queryZombieWorldBySchedulaFlag(rec.value);}" style="width:100px;" >
+		        <option value="">未计划</option>
+		        <option value="1">已计划</option>
 	   	</select>
 	   	<span>起始时间：</span>
    		<input id="beginDate"  class="easyui-datetimebox"/>

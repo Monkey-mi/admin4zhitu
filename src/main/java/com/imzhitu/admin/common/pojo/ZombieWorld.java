@@ -26,6 +26,9 @@ public class ZombieWorld  extends AbstractNumberDto{
 	private Date addDate;
 	private Date modifyDate;
 	private Integer channelId;
+	
+	private Integer schedulaFlag;	//计划标志，用以查询的过滤条件
+	
 	public Integer getChannelId() {
 		return channelId;
 	}
@@ -161,6 +164,12 @@ public class ZombieWorld  extends AbstractNumberDto{
 	}
 	public void setComplete(Integer complete) {
 		this.complete = complete;
+	}
+	public Integer getSchedulaFlag() {
+		return schedulaFlag;
+	}
+	public void setSchedulaFlag(Integer schedulaFlag) {
+		this.schedulaFlag = schedulaFlag;
 	}
 
 }

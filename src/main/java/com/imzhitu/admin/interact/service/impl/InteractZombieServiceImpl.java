@@ -332,13 +332,14 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	 * @throws Exception
 	 */
 	@Override
-	public void queryZombieWorldForTable(Integer channelId,int maxId,Date addDate,Date modifyDate,int page,int rows,Integer complete,Map<String,Object>jsonMap)throws Exception{
+	public void queryZombieWorldForTable(Integer channelId,int maxId,Date addDate,Date modifyDate,int page,int rows,Integer complete,Integer schedulaFlag,Map<String,Object>jsonMap)throws Exception{
 		ZombieWorld dto = new ZombieWorld();
 		dto.setComplete(complete);
 		dto.setMaxId(maxId);
 		dto.setModifyDate(modifyDate);
 		dto.setAddDate(addDate);
 		dto.setChannelId(channelId);
+		dto.setSchedulaFlag(schedulaFlag);
 		buildNumberDtos(dto,page,rows,jsonMap,new NumberDtoListAdapter<ZombieWorld>(){
 			@Override
 			public long queryTotal(ZombieWorld dto){
