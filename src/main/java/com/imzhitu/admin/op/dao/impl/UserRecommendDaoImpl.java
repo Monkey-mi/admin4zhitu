@@ -363,7 +363,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 		if(birthdayObj != null) {
 			birthday = (Date)birthdayObj;
 		}
-		return new OpUserRecommendDto(
+		OpUserRecommendDto dto = new OpUserRecommendDto(
 				rs.getInt("id"), 
 				rs.getInt("user_id"), 
 				rs.getString("recommend_desc"),
@@ -403,6 +403,8 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 				rs.getFloat("ver"),
 				rs.getInt("star"),
 				rs.getInt("trust"));
+		dto.setLoginCode(rs.getString("login_code"));
+		return dto;
 	}
 	
 	public OpUserRecommend buildUserRecommend(ResultSet rs) throws SQLException {

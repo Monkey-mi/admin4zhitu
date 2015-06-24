@@ -68,6 +68,7 @@ public class OpUserRecommendDto implements Serializable, UserWithInteract,
 	private Integer shield; // 是否屏蔽
 	private Integer star = Tag.FALSE; // 明星标记
 	private Integer trust = Tag.FALSE; // 信任标记
+	private String loginCode;
 
 	private Integer interacted = Tag.FALSE;
 
@@ -461,6 +462,14 @@ public class OpUserRecommendDto implements Serializable, UserWithInteract,
 
 	public void setWeight(Integer weight) {
 		this.weight = weight;
+	}
+
+	public String getLoginCode() {
+		return loginCode;
+	}
+
+	public void setLoginCode(String loginCode) {
+		this.loginCode = loginCode;
 	}
 	
 }
