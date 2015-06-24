@@ -184,6 +184,7 @@
 				<![CDATA[ and ocws.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
 			</if>
 		</where>
+		order by ocws.date_schedula
 	</select>
 	
 </mapper>
