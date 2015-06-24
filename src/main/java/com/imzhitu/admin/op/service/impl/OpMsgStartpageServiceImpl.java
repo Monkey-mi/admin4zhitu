@@ -151,9 +151,9 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 
 	@Override
 	public void updateMsgStartpageCache(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		if(idsStr == null || idsStr.trim().equals("")){
-			throw new Exception("idsStr cannot be null");
+			startpageCacheDao.updateStartPage(new ArrayList<com.hts.web.common.pojo.OpMsgStartPage>());
+			return;
 		}
 		Integer[]ids = StringUtil.convertStringToIds(idsStr);
 		List<OpMsgStartpage> list = startpageMapper.queryMsgBulletinByIds(ids);

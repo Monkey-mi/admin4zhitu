@@ -137,9 +137,9 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 
 	@Override
 	public void updateMsgBulletinCache(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		if(idsStr == null || idsStr.trim().equals("")){
-			throw new Exception("参数不能为空");
+			bulletinCacheDao.updateBulletin(new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>());
+			return;
 		}
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		List<OpMsgBulletin> list = msgBulletinMapper.queryMsgBulletinByIds(ids);
