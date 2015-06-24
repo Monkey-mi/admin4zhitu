@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=320,target-densitydpi=320,user-scalable=no">
+<meta http-equiv="refresh" content="0; url=${webRootPath }/login">
 <title>提示:服务器异常</title>
 <link rel="stylesheet" type="text/css" href="${webRootPath }/error/css/style.css" />
 </head>

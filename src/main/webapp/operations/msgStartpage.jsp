@@ -35,112 +35,109 @@
 	};
 	
 	function tableLoadDate(pageNum){
-		$("#htm_table").datagrid(
-				{
-					title  :"频道启动页管理",
-					width  :1300,
-					pageList : [10,30,50,100],
-					loadMsg:"加载中....",
-					url	   :	loadDateUrl,
-					queryParams : tableQueryParams,
-					remoteSort: true,
-					pagination: true,
-					idField   :'id',
-					pageNumber: pageNum,
-					toolbar:'#tb',
-					columns: [[
-						{field :'ck',checkbox:true},
-						{field :'id',title:'ID',align:'center',width:70},
-						{field : 'linkPath',title: '链接图片路径',align : 'center',width : 170,
-							formatter: function(value,row,index) {
-				  				return "<img title='无效' width='150px' height='150px' class='htm_column_img' src='" + value + "'/>";
-				  			}
-				  		},
-						{field : 'linkType',title:'链接类型',align:'center',width : 100,
-							formatter:function(value,row,index){
-								switch(value){
-									case 0:
-										return "无需跳转";
-									case 1:
-										return "网页连接";
-									case 2:
-										return "频道id";
-									case 3:
-										return "用户id";
-									default:
-										return ""; 
-								}
-							}
-						},
-						{field : 'link',title: '链接',align : 'center',width : 130},
-						/*
-						{field : 'valid',title : '有效性',align : 'center', width: 45,
-				  			formatter: function(value,row,index) {
-				  				if(value == 1) {
-				  					img = "./common/images/ok.png";
-				  					return "<img title='有效' class='htm_column_img'  src='" + img + "'/>";
-				  				}else if(value == 0){
-					  				img = "./common/images/tip.png";
-					  				return "<img title='无效' class='htm_column_img' src='" + img + "'/>";
-				  				}
-				  				return "";
-				  			}
-				  		},*/
-				  		{field : 'beginDate', title:'开始时间',align : 'center' ,width : 130,
-							formatter:function(value,row,index){
-								if(value){
-									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-								}else{
-									return "";
-								}
-							}
-						},
-						{field : 'endDate', title:'结束时间',align : 'center' ,width : 130,
-							formatter:function(value,row,index){
-								if(value){
-									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-								}else{
-									return "";
-								}
-							}
-						},
-						{field : 'addDate', title:'创建时间',align : 'center' ,width : 130,
-							formatter:function(value,row,index){
-								if(value){
-									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-								}else{
-									return "";
-								}
-							}
-						},
-						{field : 'lastModified', title:'最后修改时间',align : 'center' ,width : 130,
-							formatter:function(value,row,index){
-								if(isNaN(value)){
-									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-								}else{
-									var lastModified = new Date(value);
-									return lastModified.format("yyyy/MM/dd hh:mm:ss");
-								}
-							}
-						},
-						{field : 'operatorName',title: '最后操作者',align : 'center',width : 80},
-						{field : 'opt',title : '操作',width : 120,align : 'center',rowspan : 1,
-							formatter : function(value, row, index ) {
-								var retStr="";
-								if(row.valid == 0 || row.valid == 1){
-									retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.linkPath + "\",\"" 
-										+ row.linkType + "\",\"" + row.link + "\",\""+ row.beginDate+ "\",\""+ row.endDate+"\")'>【修改】</a>";
-								}
-								return retStr;
-							}
-						},
-						
-					]],
-					onLoadSuccess:myOnLoadSuccess,
-					onBeforeRefresh : myOnBeforeRefresh
+		$("#htm_table").datagrid({
+			title  :"频道启动页管理",
+			width  :1300,
+			pageList : [10,30,50,100],
+			loadMsg:"加载中....",
+			url	   :	loadDateUrl,
+			queryParams : tableQueryParams,
+			remoteSort: true,
+			pagination: true,
+			idField   :'id',
+			pageNumber: pageNum,
+			toolbar:'#tb',
+			columns: [[
+				{field :'ck',checkbox:true},
+				{field :'id',title:'ID',align:'center',width:70},
+				{field : 'linkPath',title: '链接图片路径',align : 'center',width : 110,
+					formatter: function(value,row,index) {
+		  				return "<img title='无效' width='60px' height='87px' class='htm_column_img' src='" + value + "'/>";
+		  			}
+		  		},
+				{field : 'linkType',title:'链接类型',align:'center',width : 100,
+					formatter:function(value,row,index){
+						switch(value){
+							case 0:
+								return "无需跳转";
+							case 1:
+								return "网页连接";
+							case 2:
+								return "频道id";
+							case 3:
+								return "用户id";
+							default:
+								return ""; 
+						}
+					}
+				},
+				{field : 'link',title: '链接',align : 'center',width : 130},
+				/*
+				{field : 'valid',title : '有效性',align : 'center', width: 45,
+		  			formatter: function(value,row,index) {
+		  				if(value == 1) {
+		  					img = "./common/images/ok.png";
+		  					return "<img title='有效' class='htm_column_img'  src='" + img + "'/>";
+		  				}else if(value == 0){
+			  				img = "./common/images/tip.png";
+			  				return "<img title='无效' class='htm_column_img' src='" + img + "'/>";
+		  				}
+		  				return "";
+		  			}
+		  		},*/
+		  		{field : 'beginDate', title:'开始时间',align : 'center' ,width : 130,
+					formatter:function(value,row,index){
+						if(value){
+							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+						}else{
+							return "";
+						}
+					}
+				},
+				{field : 'endDate', title:'结束时间',align : 'center' ,width : 130,
+					formatter:function(value,row,index){
+						if(value){
+							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+						}else{
+							return "";
+						}
+					}
+				},
+				{field : 'addDate', title:'创建时间',align : 'center' ,width : 130,
+					formatter:function(value,row,index){
+						if(value){
+							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+						}else{
+							return "";
+						}
+					}
+				},
+				{field : 'lastModified', title:'最后修改时间',align : 'center' ,width : 130,
+					formatter:function(value,row,index){
+						if(isNaN(value)){
+							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+						}else{
+							var lastModified = new Date(value);
+							return lastModified.format("yyyy/MM/dd hh:mm:ss");
+						}
+					}
+				},
+				{field : 'operatorName',title: '最后操作者',align : 'center',width : 80},
+				{field : 'opt',title : '操作',width : 120,align : 'center',rowspan : 1,
+					formatter : function(value, row, index ) {
+						var retStr="";
+						if(row.valid == 0 || row.valid == 1){
+							retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.linkPath + "\",\"" 
+								+ row.linkType + "\",\"" + row.link + "\",\""+ row.beginDate+ "\",\""+ row.endDate+"\")'>【修改】</a>";
+						}
+						return retStr;
+					}
+				},
 				
-				}	
-		);
+			]],
+			onLoadSuccess:myOnLoadSuccess,
+			onBeforeRefresh : myOnBeforeRefresh
+		});
 		var p = $("#htm_table").datagrid("getPager");
 		p.pagination({
 		});
@@ -160,7 +157,7 @@
 			title : '添加频道精选推荐',
 			modal : true,
 			width : 490,
-			height : 320,
+			height : 380,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -232,24 +229,21 @@
 	
 	function update(url){
 		var rows = $('#htm_table').datagrid('getSelections');	
-		if(isSelected(rows)){
-			var ids = [];
-			for(var i=0;i<rows.length;i+=1){		
-				ids.push(rows[i]['id']);	
-			}	
-			$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
-			$('#htm_table').datagrid('loading');
-			$.post(url+ids,function(result){
-				$('#htm_table').datagrid('loaded');
-				if(result['result'] == 0) {
-					$.messager.alert('提示',result['msg']);
-					$("#htm_table").datagrid("reload");
-				} else {
-					$.messager.alert('提示',result['msg']);
-				}
-				
-			});				
+		var ids = [];
+		for(var i=0;i<rows.length;i+=1){		
+			ids.push(rows[i]['id']);	
 		}	
+		$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
+		$('#htm_table').datagrid('loading');
+		$.post(url+ids,function(result){
+			$('#htm_table').datagrid('loaded');
+			if(result['result'] == 0) {
+				$.messager.alert('提示',result['msg']);
+				$("#htm_table").datagrid("reload");
+			} else {
+				$.messager.alert('提示',result['msg']);
+			}
+		});
 	}
 	
 	/**
@@ -320,7 +314,7 @@
 </script>
 </head>
 <body>
-	<div id="main">
+	<div id="main" class="none">
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:addInit();" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
@@ -346,7 +340,7 @@
 							<td>
 								<input id="i-path" class="none" readonly="readonly" >
 								<a id="startpage_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-								<img id="startpage_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
+								<img id="startpage_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="130px">
 								<div id="startpage_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
 									上传中...<span class="upload_progress"></span><span>%</span>
 								</div>

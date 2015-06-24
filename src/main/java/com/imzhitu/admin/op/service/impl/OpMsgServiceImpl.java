@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.pojo.OpNotice;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
+import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.constant.LoggerKeies;
@@ -51,6 +53,8 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	 * app推送限定条数
 	 */
 	private Integer appPushLimit = 300;
+	
+	private Integer appPushGroup = 300000;
 	
 	public Integer getAppMsgSenderId() {
 		return appMsgSenderId;
@@ -109,7 +113,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 
 		// 向所有人推送消息
 		if(noticed) {
-			int factor = 300000;
+			int factor = appPushGroup;
 			int maxUID = userInfoMapper.queryMaxId();
 			int parts = 0;
 			if(maxUID % factor == 0) {
@@ -143,6 +147,24 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			}
 		}
 	}
+	
+//	private static List<Integer> queryUID(Integer minId, Integer limit) {
+//		List<Integer> list = new ArrayList<Integer>();
+//		for(int i = 10000; i > 10000 - limit && i >= minId; i--) {
+//			if(i != 1948 && i != 16)
+//				list.add(i);
+//		}
+//		return list;
+//	}
+//	
+//	private static List<Integer> queryUID(Integer minId, Integer maxId, Integer limit) {
+//		List<Integer> list = new ArrayList<Integer>();
+//		for(int i = maxId - 1; i >= maxId - limit && i >= minId; i--) {
+//			if(i != 1948 && i != 16)
+//				list.add(i);
+//		}
+//		return list;
+//	}
 	
 	
 	public void batchPushAppMsg(String msg, Integer minId, Integer maxId) {

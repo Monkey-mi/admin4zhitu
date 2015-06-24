@@ -35,92 +35,90 @@
 	};
 	
 	function tableLoadDate(pageNum){
-		$("#htm_table").datagrid(
-				{
-					title  :"频道banner管理",
-					width  :1200,
-					pageList : [10,30,50,100],
-					loadMsg:"加载中....",
-					url	   :	loadDateUrl,
-					queryParams : tableQueryParams,
-					remoteSort: true,
-					pagination: true,
-					idField   :'id',
-					pageNumber: pageNum,
-					toolbar:'#tb',
-					columns: [[
-						{field :'ck',checkbox:true},
-						{field :'id',title:'ID',align:'center',width:80},
-						{field : 'bulletinPath',title: '链接图片路径',align : 'center',width : 180,
-							formatter: function(value,row,index) {
-				  				return "<img title='无效' width='150px' height='150px' class='htm_column_img' src='" + value + "'/>";
-				  			}
-						},
-						{field : 'bulletinType',title:'链接类型',align:'center',width : 100,
-							formatter:function(value,row,index){
-								switch(value){
-									case 0:
-										return "无需跳转";
-									case 1:
-										return "网页连接";
-									case 2:
-										return "频道id";
-									case 3:
-										return "用户id";
-									default:
-										return ""; 
-								}
-							}
-						},
-						{field : 'link',title: '链接',align : 'center',width : 130},
-						/*
-						{field : 'valid',title : '有效性',align : 'center', width: 45,
-				  			formatter: function(value,row,index) {
-				  				if(value == 1) {
-				  					img = "./common/images/ok.png";
-				  					return "<img title='有效' class='htm_column_img'  src='" + img + "'/>";
-				  				}else if(value == 0){
-					  				img = "./common/images/tip.png";
-					  				return "<img title='无效' class='htm_column_img' src='" + img + "'/>";
-				  				}
-				  				return "";
-				  			}
-				  		},*/
-						{field : 'addDate', title:'创建时间',align : 'center' ,width : 130,
-							formatter:function(value,row,index){
-								if(value){
-									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-								}else{
-									return "";
-								}
-							}
-						},
-						{field : 'modifyDate', title:'最后修改时间',align : 'center' ,width : 130,
-							formatter:function(value,row,index){
-								if(value){
-									return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-								}else{
-									return "";
-								}
-							}
-						},
-						{field : 'operatorName',title: '最后操作者',align : 'center',width : 80},
-						{field : 'opt',title : '操作',width : 120,align : 'center',rowspan : 1,
-							formatter : function(value, row, index ) {
-								var retStr="";
-								if(row.valid == 0 || row.valid == 1){
-									retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.bulletinPath + "\",\"" + row.bulletinType + "\",\"" + row.link + "\")'>【修改】</a>";
-								}
-								return retStr;
-							}
-						},
-						
-					]],
-					onLoadSuccess:myOnLoadSuccess,
-					onBeforeRefresh : myOnBeforeRefresh
+		$("#htm_table").datagrid({
+			title  :"频道banner管理",
+			width  :1200,
+			pageList : [5,10,30,50],
+			pageSize : 5,
+			loadMsg:"加载中....",
+			url	   :	loadDateUrl,
+			queryParams : tableQueryParams,
+			remoteSort: true,
+			pagination: true,
+			idField   :'id',
+			pageNumber: pageNum,
+			toolbar:'#tb',
+			columns: [[
+				{field :'ck',checkbox:true},
+				{field :'id',title:'ID',align:'center',width:80},
+				{field : 'bulletinPath',title: '链接图片路径',align : 'center',width : 180,
+					formatter: function(value,row,index) {
+		  				return "<img title='无效' width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+		  			}
+				},
+				{field : 'bulletinType',title:'链接类型',align:'center',width : 100,
+					formatter:function(value,row,index){
+						switch(value){
+							case 0:
+								return "无需跳转";
+							case 1:
+								return "网页连接";
+							case 2:
+								return "频道id";
+							case 3:
+								return "用户id";
+							default:
+								return ""; 
+						}
+					}
+				},
+				{field : 'link',title: '链接',align : 'center',width : 130},
+				/*
+				{field : 'valid',title : '有效性',align : 'center', width: 45,
+		  			formatter: function(value,row,index) {
+		  				if(value == 1) {
+		  					img = "./common/images/ok.png";
+		  					return "<img title='有效' class='htm_column_img'  src='" + img + "'/>";
+		  				}else if(value == 0){
+			  				img = "./common/images/tip.png";
+			  				return "<img title='无效' class='htm_column_img' src='" + img + "'/>";
+		  				}
+		  				return "";
+		  			}
+		  		},*/
+				{field : 'addDate', title:'创建时间',align : 'center' ,width : 130,
+					formatter:function(value,row,index){
+						if(value){
+							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+						}else{
+							return "";
+						}
+					}
+				},
+				{field : 'modifyDate', title:'最后修改时间',align : 'center' ,width : 130,
+					formatter:function(value,row,index){
+						if(value){
+							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+						}else{
+							return "";
+						}
+					}
+				},
+				{field : 'operatorName',title: '最后操作者',align : 'center',width : 80},
+				{field : 'opt',title : '操作',width : 120,align : 'center',rowspan : 1,
+					formatter : function(value, row, index ) {
+						var retStr="";
+						if(row.valid == 0 || row.valid == 1){
+							retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.bulletinPath + "\",\"" + row.bulletinType + "\",\"" + row.link + "\")'>【修改】</a>";
+						}
+						return retStr;
+					}
+				},
 				
-				}	
-		);
+			]],
+			onLoadSuccess:myOnLoadSuccess,
+			onBeforeRefresh : myOnBeforeRefresh
+		});
 		var p = $("#htm_table").datagrid("getPager");
 		p.pagination({
 		});
@@ -146,7 +144,7 @@
 			minimizable : false,
 			maximizable : false,
 			collapsible : false,
-			iconCls : 'icon-tip',
+			iconCls : 'icon-edit',
 			resizable : false,
 			onClose : function(){
 				$("#i-path").val('');
@@ -205,29 +203,26 @@
 				update(updateCacheUrl);
 			}
 		});
-		
 	}
 	
 	function update(url){
 		var rows = $('#htm_table').datagrid('getSelections');	
-		if(isSelected(rows)){
-			var ids = [];
-			for(var i=0;i<rows.length;i+=1){		
-				ids.push(rows[i]['id']);	
-			}	
-			$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
-			$('#htm_table').datagrid('loading');
-			$.post(url+ids,function(result){
-				$('#htm_table').datagrid('loaded');
-				if(result['result'] == 0) {
-					$.messager.alert('提示',result['msg']);
-					$("#htm_table").datagrid("reload");
-				} else {
-					$.messager.alert('提示',result['msg']);
-				}
-				
-			});				
+		var ids = [];
+		for(var i=0;i<rows.length;i+=1){		
+			ids.push(rows[i]['id']);	
 		}	
+		$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
+		$('#htm_table').datagrid('loading');
+		$.post(url+ids,function(result){
+			$('#htm_table').datagrid('loaded');
+			if(result['result'] == 0) {
+				$.messager.alert('提示',result['msg']);
+				$("#htm_table").datagrid("reload");
+			} else {
+				$.messager.alert('提示',result['msg']);
+			}
+			
+		});	
 	}
 	
 	/**
@@ -292,7 +287,7 @@
 </script>
 </head>
 <body>
-	<div id="main">
+	<div id="main" class="none">
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:addInit();" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
@@ -316,8 +311,8 @@
 							<td class="leftTd">链接图片路径：</td>
 							<td>
 								<input id="i-path" class="none" readonly="readonly" >
-								<a id="bulletin_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-								<img id="bulletin_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
+								<a id="bulletin_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="bulletin_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
 								<div id="bulletin_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
 									上传中...<span class="upload_progress"></span><span>%</span>
 								</div>
