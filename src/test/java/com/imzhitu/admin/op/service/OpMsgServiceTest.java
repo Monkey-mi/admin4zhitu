@@ -30,7 +30,7 @@ public class OpMsgServiceTest extends BaseTest {
 	@Test
 	public void testPushAppMsg() throws Exception {
 //		OpSysMsg msg = new OpSysMsg();
-//		msg.setContent("推送消息测试");
+//		msg.setContent("消息推送修复,不影响用户");
 //		service.pushAppMsg(msg, false, true);
 	}
 
