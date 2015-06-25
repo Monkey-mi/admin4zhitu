@@ -177,7 +177,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		opChannelV2Mapper.updateOpChannel(dto);
 		
 		//若是修改了所有者，则修妖修改原拥有着的degree，和现拥有者的degree
-		if(list.size() == 1){
+		if(list.size() == 1 && ownerId != null){
 			if(list.get(0).getOwnerId() == ownerId){
 				return;
 			}
