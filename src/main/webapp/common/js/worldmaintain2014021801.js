@@ -838,7 +838,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 		},
 	
 	
-	worldIdColumn = {field : 'worldId',title : '织图ID',align : 'center', sortable: true, width : 60, 
+	worldIdColumn = {field : 'worldId',title : '织图ID',align : 'center', sortable: true, 
 			formatter : function(value, row, index) {
 				return "<a title='添加互动' class='updateInfo' href='javascript:interact(\"" + value + "\",\"" + index + "\")'>"+value+"</a>";
 			},
@@ -848,7 +848,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				}
 			}
 		},
-	worldDescColumn = {field : 'worldDesc',title : '织图描述',align : 'center', 
+	worldDescColumn = {field : 'worldDesc',title : '织图描述',align : 'center', width : 100,
 			formatter: function(value,row,index){
 				if(value != null && value != '') {
 					return "<a href='#' title=" + value + " class='viewInfo easyui-tooltip'>" + value + "</a>";
@@ -856,7 +856,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				return '';
 			}
 		},
-	worldLabelColumn = {field : 'worldLabel',title : '标签',align : 'center', 
+	worldLabelColumn = {field : 'worldLabel',title : '标签',align : 'center', width : 100, 
 		formatter: function(value,row,index){
 			if(value != null && value != '') {
 				return "<a href='#' title=" + value + " class='viewInfo easyui-tooltip'>" + value + "</a>";
@@ -867,7 +867,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 	titleThumbPathColumn = {field : 'titleThumbPath',title : '预览',align : 'center',
 		formatter: function(value,row,index){
 			var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png');
-			return "<a style='cursor: hand;cursor: pointer;' onclick='javascript:tobeChannelWorld(\""+row.worldId+"\")'> <img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "' /></a>";
+			return "<a style='cursor: hand;cursor: pointer;' onclick='javascript:tobeChannelWorld(\""+row.worldId+"\")'> <img width='60px' height='60px' class='htm_column_img' src='" + imgSrc + "' /></a>";
 		}
 	},
 	dateAddedFormatter = function(value,row,index){
