@@ -286,9 +286,15 @@ var htmTableTitle = "分享列表维护", //表格标题
 	htmTableWidth = 1380,
 	htmTablePageList = [10,20,50,100],
 	worldKey = 'id',
+	
 	loadDataURL = "./admin_ztworld/ztworld_queryHTWorldList", //数据装载请求地址
 	deleteURI = "./admin_ztworld/ztworld_deleteWorld?ids="; //删除请求地址
 	init = function() {
+		myIdField = 'id';
+		// 以下两个属性由于在onBeforeInit方法中设置不生效，所以设置在这里
+		htmTableHeight = undefined;	// 取消高度设置，然后在datagrid中设置自动高度
+		htmTableWidth = $(document.body).width();	// 表格宽度设置为当前页面宽度
+		
 		toolbarComponent = '#tb';
 		myQueryParams = {
 			'maxId' : maxId,
@@ -321,12 +327,12 @@ var htmTableTitle = "分享列表维护", //表格标题
 	},
 	//分页组件,可以重载
 	columnsFields = [
-		//{field : 'ck',checkbox : true},
-		{field : recordIdKey,title : 'id',align : 'center', width : 120},
+		{field : 'ck',checkbox : true},
+		{field : recordIdKey,title : 'id',align : 'center'},
 		phoneCodeColumn,
 		authorAvatarColumn,
 		authorIdColumn,
-		{field : 'authorName',title : '作者',align : 'center',width : 100,formatter: function(value, row, index) {
+		{field : 'authorName',title : '作者',align : 'center',formatter: function(value, row, index) {
 			if(row.authorId != 0) {
 				if(row.trust == 1) {
 					return "<a title='移出信任列表.\n推荐人:"
@@ -360,7 +366,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 		worldDescColumn,
 		titleThumbPathColumn,
 		worldLabelColumn,
-		{field : 'typeInteract',title : '分类互动',align : 'center', sortable: true, width : 60, 
+		{field : 'typeInteract',title : '分类互动',align : 'center', sortable: true, 
 			formatter : function(value, row, index) {
 				img = "./common/images/edit_add.png";
 				return "<a title='添加分类互动' class='updateInfo' href='javascript:typeInteract(\"" + row[worldKey] + "\",\"" + index + "\")'>"+"<img src=\""+img+"\"/></a>";
@@ -371,7 +377,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 				}
 			}
 		},
-		{field : 'channelName',title :'频道',align : 'center',width:60,
+		{field : 'channelName',title :'频道',align : 'center',
   			formatter: function(value,row,index) {
   				if(value == "NO_EXIST" || value=="") {
   					img = "./common/images/edit_add.png";
@@ -381,7 +387,7 @@ var htmTableTitle = "分享列表维护", //表格标题
   				return value;
   			}
 		},
-		{field : 'worldType',title : '精选',align : 'center',width : 45,
+		{field : 'worldType',title : '精选',align : 'center',
 			formatter: function(value,row,index){
 				labelIsExist = row.worldLabel ? 1:0;
 				if(row.valid == 0 || row.shield == 1) {
@@ -400,7 +406,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 				}
 			}
 		},
-		{field : 'activeOperated',title : '活动',align : 'center',width : 45,
+		{field : 'activeOperated',title : '活动',align : 'center',
 			formatter: function(value,row,index) {
 				if(row.valid == 0 || row.shield == 1) {
 					return '';
@@ -426,7 +432,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='javascript:initActivityAddWindow(\""+ row.id + "\",\"" + value + "\",\"" + index + "\")' src='" + img + "'/>";
 			}
 		},
-		{field : 'latestValid',title : '最新',align : 'center',width : 45,
+		{field : 'latestValid',title : '最新',align : 'center',
 			formatter: function(value,row,index) {
 				if(value >= 1) {
 					img = "./common/images/undo.png";
@@ -445,6 +451,11 @@ var htmTableTitle = "分享列表维护", //表格标题
 		showPageLoading();
 	},
 	onAfterInit = function() {
+		
+		$('#htm_table').datagrid({
+			fitColumns:true,
+			autoRowHeight:true
+		});
 	
 		$('#ss-channel').combogrid({
 			panelWidth : 440,
@@ -478,8 +489,52 @@ var htmTableTitle = "分享列表维护", //表格标题
 				}
 		    },
 		});
+		
 		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
 		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					searchChannelMaxId = 0;
+					searchChannelQueryParams.maxId = searchChannelMaxId;
+				}
+			}
+		});
+		
+		$('#ss_batch_channel').combogrid({
+			panelWidth : 440,
+			panelHeight : 330,
+			loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#search-channel-tb",
+			multiple : false,
+			required : false,
+			idField : 'id',
+			textField : 'channelName',
+			url : './admin_op/channel_searchChannel',
+			pagination : true,
+			columns:[[
+			          {field : 'id',title : 'id',align : 'center',width : 80},
+			          {field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
+			        	  formatter:function(value,row,index) {
+			        		  return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+			        	  }
+			          },
+			          {field : 'channelName',title : '频道名称',align : 'center',width : 280}
+			          ]],
+			          queryParams:searchChannelQueryParams,
+			          onLoadSuccess:function(data) {
+			        	  if(data.result == 0) {
+			        		  if(data.maxId > searchChannelMaxId) {
+			        			  searchChannelMaxId = data.maxId;
+			        			  searchChannelQueryParams.maxId = searchChannelMaxId;
+			        		  }
+			        	  }
+			          },
+		});
+		
+		var pp = $('#ss_batch_channel').combogrid('grid').datagrid('getPager');
+		pp.pagination({
 			onBeforeRefresh : function(pageNumber, pageSize) {
 				if(pageNumber <= 1) {
 					searchChannelMaxId = 0;
@@ -504,6 +559,23 @@ var htmTableTitle = "分享列表维护", //表格标题
 				$("#channelId").combobox('clear');
 				$("#worldId_channel").val('');
 				$("#rowIndex").val('');
+			}
+		});
+		
+		$("#htm_batch_channel").window({
+			title : '批量频道织图添加',
+			modal : true,
+			width : 450,
+			height : 150,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-add',
+			resizable : false,
+			onClose : function(){
+				$("#ss_batch_channel").combobox('clear');
 			}
 		});
 		
@@ -1317,6 +1389,34 @@ var htmTableTitle = "分享列表维护", //表格标题
 		
 	}
 	
+	function saveBatchChannelWorldSubmit(){
+		var channelName = $("#ss_batch_channel").combogrid('getText');
+		var channelId = $("#ss_batch_channel").combogrid('getValue');
+		
+		var rows = $("#htm_table").datagrid('getSelections');
+		for (var i=0;i<rows.length;i++) {
+			var indx = $("#htm_table").datagrid('getRowIndex',rows[i]);
+			//成为频道用户
+			$.post("./admin_op/chuser_addChannelUserByWorldId",{
+				'worldId':rows[i].worldId,
+				'channelId':channelId
+			},function(result){},"json");
+			//该织图进入频道
+			$.post("./admin_op/channel_saveChannelWorld",{
+				'world.channelId':channelId,
+				'world.worldId'  :rows[i].worldId,
+				'world.valid'	 :0,
+				'world.notified' :0
+			},function(result){
+				if(result['result'] != 0){
+					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+				}
+			},"json");
+		}
+		$("#htm_table").datagrid('reload');
+		$("#htm_batch_channel").window('close');
+	}
+	
 	/**
 	 * 搜索频道名称
 	 */
@@ -1326,7 +1426,17 @@ var htmTableTitle = "分享列表维护", //表格标题
 		var query = $('#channel-searchbox').searchbox('getValue');
 		searchChannelQueryParams.maxId = searchChannelMaxId;
 		searchChannelQueryParams.query = query;
+		// 搜索频道用于两个搜索combogrid
 		$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
+		$("#ss_batch_channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
+	}
+	
+	/**
+	 * 批量添加织图到频道
+	 */
+	function batchToChannel(){
+		$("#htm_batch_channel").window('open');
+		$("htm_table").datagrid('clearSelections');
 	}
 
 </script>
@@ -1373,6 +1483,11 @@ var htmTableTitle = "分享列表维护", //表格标题
 				    <div id="searchLastMonthBtn">上月分享</div>
 				</div>
 	   		</div>
+	   		
+	   		<div style="display:inline-block; vertical-align:middle;">
+	   			<a href="javascript:void(0);" onclick="javascript:batchToChannel();" class="easyui-linkbutton" plain="true" iconCls="icon-add" id="refreshCacheBtn">批量添加到频道</a>
+	   		</div>
+	   		
 			<div style="display: inline-block;float: right; margin-right: 5px; margin-top:3px;">
 				<input id="ss_shortLink" searcher="searchByShortLink" class="easyui-searchbox" prompt="输入织图ID或短链搜索" style="width:100px;" />
 				<input id="ss_authorName" searcher="searchByAuthorName" class="easyui-searchbox" prompt="输入用户昵称或ID搜索" style="width:100px;" />
@@ -1687,6 +1802,24 @@ var htmTableTitle = "分享列表维护", //表格标题
 				</tbody>
 			</table>
 		</form>
+	</div>
+	
+	<!-- 批量添加到频道 -->
+	<div id="htm_batch_channel">
+		<table class="htm_edit_table" width="450">
+			<tbody>
+				<tr>
+					<td class="leftTd">频道名称：</td>
+					<td><input id="ss_batch_channel" name="channelId" style="width:200px;" /></td>
+				</tr>
+				<tr>
+					<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+						<a class="easyui-linkbutton" iconCls="icon-ok" onclick="saveBatchChannelWorldSubmit();">确定</a>
+						<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_batch_channel').window('close');">取消</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 	
 	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">

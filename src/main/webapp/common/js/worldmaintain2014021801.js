@@ -719,7 +719,7 @@ function submitChannelWorld(){
 }
 
 
-var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',width : 50,
+var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 		formatter: function(value,row,index){
 			var phone = "IOS";
 			if(value == 1) {
@@ -739,8 +739,8 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 			return "织图用户";
 		}
 	},
-	authorNameColumn = {field : 'authorName',title : '作者',align : 'center',width : 100,formatter: authorNameFormatter},
-	authorAvatarColumn = {field : 'authorAvatar',title : '头像',align : 'left',width : 45, 
+	authorNameColumn = {field : 'authorName',title : '作者',align : 'center',formatter: authorNameFormatter},
+	authorAvatarColumn = {field : 'authorAvatar',title : '头像',align : 'left', 
 			formatter: function(value, row, index) {
 				userId = row['authorId'];
 				var uri = 'page_user_userInfo?userId='+ userId;
@@ -752,32 +752,32 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				return "<a onmouseover='setAuthorAvatarTimer(" + userId + ",event);' onmouseout='javascript:clearAuthorAvatarTimer();'  class='updateInfo' href='javascript:showUserInfo(\""+uri+"\")'>"+"<span>" + content + "</span>"+"</a>";	
 			}
 		},
-	authorIdColumn = {field:'authorId', title:'作者id',align:'center',width:60,
+	authorIdColumn = {field:'authorId', title:'作者id',align:'center',
 			formatter:function(value,row,index){
 				return "<a title='添加等级用户' class='updateInfo' href='javascript:initUserLevelAddWindow(\""+ value + "\",\"" + index + "\")'>"+value+"</a>";
 			}
 		},
-	clickCountColumn = {field : 'clickCount',title:'播放数',align : 'center', sortable: true, width:60, editor:'text'},
-	commentCountColumn = {field : 'commentCount',title : '评论数',width : 60,align : 'center',sortable: true,
+	clickCountColumn = {field : 'clickCount',title:'播放数',align : 'center', sortable: true, editor:'text'},
+	commentCountColumn = {field : 'commentCount',title : '评论数',align : 'center',sortable: true,
 			formatter : function(value, row, rowIndex ) {
 				var uri = 'page_interact_interactWCommentAutoComment?worldId='+row[worldKey];
 				return "<a title='显示评论' class='updateInfo' href='javascript:showComment(\""
 						+ uri + "\",\""+row[worldKey]+"\")'>"+value+"</a>";
 			}
 		},
-	likeCountColumn = {field : 'likeCount',title:'喜欢数',align : 'center', sortable: true, width:60,
+	likeCountColumn = {field : 'likeCount',title:'喜欢数',align : 'center', sortable: true,
 		formatter : function(value, row, rowIndex) {
 			var uri = 'page_htworld_htworldLiked?worldId='+ row[worldKey]; //喜欢管理地址			
 			return "<a title='显示喜欢用户' class='updateInfo' href='javascript:showURI(\"" + uri + "\")'>"+value+"</a>";
 		}
 	},
-	keepCountColumn = {field : 'keepCount',title:'收藏数',align : 'center', sortable: true, width:60, 
+	keepCountColumn = {field : 'keepCount',title:'收藏数',align : 'center', sortable: true, 
 		formatter : function(value, row, rowIndex) {
 			var uri = 'page_htworld_htworldKeep?worldId='+ row[worldKey]; //收藏管理地址			
 			return "<a title='显示喜欢用户' class='updateInfo' href='javascript:showURI(\"" + uri + "\")'>"+value+"</a>";
 		}
 	},
-	worldURLColumn = {field : 'worldURL',title : '链接',align : 'center',width : 120,
+	worldURLColumn = {field : 'worldURL',title : '链接',align : 'center',
 		styler: function(value,row,index){ return 'cursor:pointer;';},
 		formatter : function(value, row, rowIndex ) {
 			var url = value;
@@ -794,7 +794,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 
 		}
 	},
-	worldIdAndShowWorldColumn = {field : 'worldId',title : '织图ID',align : 'center', sortable: true, width : 60, 
+	worldIdAndShowWorldColumn = {field : 'worldId',title : '织图ID',align : 'center', sortable: true, 
 			formatter : function(value, row, index) {
 				//精品按钮控制
 				var superbFlag = 2;//显示添加精品按钮
@@ -848,7 +848,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				}
 			}
 		},
-	worldDescColumn = {field : 'worldDesc',title : '织图描述',align : 'center',width : 80, 
+	worldDescColumn = {field : 'worldDesc',title : '织图描述',align : 'center', 
 			formatter: function(value,row,index){
 				if(value != null && value != '') {
 					return "<a href='#' title=" + value + " class='viewInfo easyui-tooltip'>" + value + "</a>";
@@ -856,7 +856,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				return '';
 			}
 		},
-	worldLabelColumn = {field : 'worldLabel',title : '标签',align : 'center',width : 80, 
+	worldLabelColumn = {field : 'worldLabel',title : '标签',align : 'center', 
 		formatter: function(value,row,index){
 			if(value != null && value != '') {
 				return "<a href='#' title=" + value + " class='viewInfo easyui-tooltip'>" + value + "</a>";
@@ -864,7 +864,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 			return '';
 		}
 	},
-	titleThumbPathColumn = {field : 'titleThumbPath',title : '预览',align : 'center',width : 40,
+	titleThumbPathColumn = {field : 'titleThumbPath',title : '预览',align : 'center',
 		formatter: function(value,row,index){
 			var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png');
 			return "<a style='cursor: hand;cursor: pointer;' onclick='javascript:tobeChannelWorld(\""+row.worldId+"\")'> <img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "' /></a>";
@@ -873,9 +873,9 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 	dateAddedFormatter = function(value,row,index){
 		return baseTools.parseDate(value).format("MM/dd hh:mm");
 	},
-	dateAdded = {field : 'dateAdded', title: '分享日期', align : 'center',width:80,formatter:dateAddedFormatter},
-	dateModified = {field : 'dateModified', title:'分享日期', align : 'center',width : 80, formatter: dateAddedFormatter},
-	shieldColumn = {field : 'shield',title : '操作',align : 'center',width : 45,
+	dateAdded = {field : 'dateAdded', title: '分享日期', align : 'center',formatter:dateAddedFormatter},
+	dateModified = {field : 'dateModified', title:'分享日期', align : 'center', formatter: dateAddedFormatter},
+	shieldColumn = {field : 'shield',title : '操作',align : 'center',
 		formatter: function(value,row,index){
 			if(value == 1) {
 				img = "./common/images/undo.png";
@@ -897,7 +897,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 			return baseTools.parseDate(value).format("MM/dd");
 		}	
 	},
-	userLevelColumn = {field : 'level_description',title:'用户等级',align : 'center',width:60,
+	userLevelColumn = {field : 'level_description',title:'用户等级',align : 'center',
 		formatter:function(value,row,index){
 			if(value){
 //				return value.level_description;
