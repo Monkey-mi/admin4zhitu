@@ -46,7 +46,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -61,7 +61,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -77,7 +77,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -96,7 +96,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess(jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -119,7 +119,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONObject json = JSONObject.fromObject(jsonMap);
 			out.print(json.toString());
 			out.flush();
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}finally{
 			out.close();
 		}
@@ -136,7 +136,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		JSONUtil.optResult(OptResult.OPT_SUCCESS, queryOpChannelLabelList, OptResult.ROWS, jsonMap);
 	    }catch(Exception e){
 		JSONUtil.optFailed(e.getMessage(), jsonMap);
-		log.error(e);
+		log.error(e.getMessage(),e);
 	    }
 	    return StrutsKey.JSON;
 	}
@@ -151,7 +151,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optResult(OptResult.OPT_SUCCESS, dto, OptResult.JSON_KEY_OBJ, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -166,7 +166,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -186,7 +186,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    }
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -197,7 +197,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -214,7 +214,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -231,7 +231,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optResult(OptResult.OPT_SUCCESS, queryRelatedChannelList, OptResult.ROWS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -248,7 +248,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -266,7 +266,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -285,7 +285,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess("排序成功", jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -302,7 +302,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess("修改成功", jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -319,7 +319,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess("修改成功", jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	    log.error(e);
+	    log.error(e.getMessage(),e);
 	}
 	return StrutsKey.JSON;
     }
@@ -338,7 +338,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -373,7 +373,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONObject json = JSONObject.fromObject(jsonMap);
 			out.print(json.toString());
 			out.flush();
-			log.error(e);
+			log.error(e.getMessage(),e);
 		}finally{
 			out.close();
 		}
