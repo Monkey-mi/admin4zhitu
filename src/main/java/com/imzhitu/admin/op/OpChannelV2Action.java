@@ -7,6 +7,7 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
@@ -18,12 +19,15 @@ import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
+import com.imzhitu.admin.constant.LoggerKeies;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
 import com.imzhitu.admin.privileges.dao.RoleDao;
 
 public class OpChannelV2Action extends BaseCRUDAction{
 
 	private static final long serialVersionUID = -8394229282973325347L;
+	
+	private static Logger log = Logger.getLogger(LoggerKeies.CHANNEL_V2);
 	
 	@Autowired
 	private OpChannelV2Service opChannelV2Service;
@@ -42,6 +46,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -56,6 +61,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -71,6 +77,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -89,6 +96,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess(jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -111,6 +119,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONObject json = JSONObject.fromObject(jsonMap);
 			out.print(json.toString());
 			out.flush();
+			log.error(e);
 		}finally{
 			out.close();
 		}
@@ -127,6 +136,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		JSONUtil.optResult(OptResult.OPT_SUCCESS, queryOpChannelLabelList, OptResult.ROWS, jsonMap);
 	    }catch(Exception e){
 		JSONUtil.optFailed(e.getMessage(), jsonMap);
+		log.error(e);
 	    }
 	    return StrutsKey.JSON;
 	}
@@ -141,6 +151,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optResult(OptResult.OPT_SUCCESS, dto, OptResult.JSON_KEY_OBJ, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -155,6 +166,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -174,6 +186,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    }
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -184,6 +197,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -200,6 +214,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -216,6 +231,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optResult(OptResult.OPT_SUCCESS, queryRelatedChannelList, OptResult.ROWS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -232,6 +248,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -249,6 +266,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -267,6 +285,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess("排序成功", jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -283,6 +302,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess("修改成功", jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -299,6 +319,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	    JSONUtil.optSuccess("修改成功", jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	    log.error(e);
 	}
 	return StrutsKey.JSON;
     }
@@ -317,6 +338,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -351,6 +373,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 			JSONObject json = JSONObject.fromObject(jsonMap);
 			out.print(json.toString());
 			out.flush();
+			log.error(e);
 		}finally{
 			out.close();
 		}

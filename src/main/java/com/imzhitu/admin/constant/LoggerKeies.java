@@ -9,5 +9,11 @@ public class LoggerKeies {
 	 * 群发日志
 	 */
 	public static final String PUSH_APP = MODULE_PUSH + "apppush";
+	
+	/**
+	 * 频道V2记录日志
+	 */
+	public static final String CHANNEL_V2 = PREFIX + "channelV2";
+	
 
 }
