@@ -1414,6 +1414,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 			},"json");
 		}
 		$("#htm_table").datagrid('reload');
+		$("#htm_table").datagrid('clearSelections');
 		$("#htm_batch_channel").window('close');
 	}
 	
