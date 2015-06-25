@@ -98,9 +98,6 @@
 	<select id="queryZombieWorldForTable" resultMap="ZombieWorldMapper">
 		select zw.*,oc.channel_name from hts_admin.zombie_world zw
 		left join hts.operations_channel oc on zw.channel_id=oc.id 
-		<if test="schedulaFlag != null">
-			left join hts_admin.zombie_world_schedula zws on zw.id=zws.zombie_world_id
-		</if>
 		<where>
 			<if test="id != null">
 				zw.id = #{id}
@@ -118,19 +115,21 @@
 				and zw.channel_id = #{channelId}
 			</if>
 			<if test="schedulaFlag != null">
-				and zws.id is not null
+				and exists(select zws.id from hts_admin.zombie_world_schedula zws where zws.zombie_world_id=zw.id)
 			</if>
+			<if test="schedulaFlag == null">
+				and not exists(select zws.id from hts_admin.zombie_world_schedula zws where zws.zombie_world_id=zw.id)
+			</if>
+			
 		</where>
-		order by id desc
+		order by zw.id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
 	<!-- 分页查询总数 -->
 	<select id="queryZombieWorldTotalCountForTable" resultType="long">
 		select count(*) from hts_admin.zombie_world zw
-		<if test="schedulaFlag != null">
-			left join hts_admin.zombie_world_schedula zws on zw.id=zws.zombie_world_id
-		</if>
+		left join hts_admin.zombie_world_schedula zws on zw.id=zws.zombie_world_id
 		<where>
 			<if test="id != null">
 				zw.id = #{id}
@@ -148,7 +147,10 @@
 				and zw.channel_id = #{channelId}
 			</if>
 			<if test="schedulaFlag != null">
-				and zws.id is not null
+				and exists(select zws.id from hts_admin.zombie_world_schedula zws where zws.zombie_world_id=zw.id)
+			</if>
+			<if test="schedulaFlag == null">
+				and not exists(select zws.id from hts_admin.zombie_world_schedula zws where zws.zombie_world_id=zw.id)
 			</if>
 		</where>
 	</select>
