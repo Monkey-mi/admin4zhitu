@@ -66,6 +66,8 @@
 								return "频道id";
 							case 3:
 								return "用户id";
+							case 4:
+								return "活动标签";
 							default:
 								return ""; 
 						}
@@ -354,6 +356,7 @@
 		        					<option value="1">网页连接</option>
 		        					<option value="2">频道id</option>
 		        					<option value="3">用户id</option>
+		        					<option value="4">活动标签</option>
 								</select>
 							</td>
 						</tr>

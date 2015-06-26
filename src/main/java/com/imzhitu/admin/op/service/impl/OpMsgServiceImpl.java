@@ -1,6 +1,5 @@
 package com.imzhitu.admin.op.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.pojo.OpNotice;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
-import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.constant.LoggerKeies;
