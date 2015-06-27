@@ -31,7 +31,6 @@ var maxId = 0,
 		}
 	},
 	htmTableTitle = "用户操作记录列表", //表格标题
-	htmTableWidth = 1170,
 	toolbarComponent = '#tb',
 	loadDataURL = "./admin_logger/operation_queryUserOperation", //数据装载请求地址
 	columnsFields = [

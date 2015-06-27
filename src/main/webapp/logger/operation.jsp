@@ -35,7 +35,6 @@ var maxSerial = 0,
 		}
 	},
 	htmTableTitle = "标签列表", //表格标题
-	htmTableWidth = 1170,
 	loadDataURL = "./admin_logger/operation_queryOperation", //数据装载请求地址
 	deleteURI = "./admin_logger/operation_deleteOperation?ids=", //删除请求地址
 	updateSerialRL = "./admin_logger/operation_updateOperationSerial?ids=", // 更新有效新请求地址
