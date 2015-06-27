@@ -43,7 +43,6 @@
 		}
 	},
 	htmTableTitle = "分类织图计划列表", //表格标题
-	htmTableWidth = 1170,
 	loadDataURL = "./admin_ztworld/typeSchedula_queryTypeWorldSchedula", //数据装载请求地址
 	deleteURI = "./admin_ztworld/typeSchedula_delTypeWorldSchedulaByIds?idStr=", //删除请求地址
 
