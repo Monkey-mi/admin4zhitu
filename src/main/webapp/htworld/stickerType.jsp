@@ -15,7 +15,6 @@ var maxId = 0,
 	},
 	hideIdColumn = false,
 	htmTableTitle = "贴纸分类列表", //表格标题
-	htmTableWidth = 1170,
 	batchEnableTip = "您确定要使已选中的分类生效吗？",
 	batchDisableTip = "您确定要使已选中的分类失效吗？",
 	toolbarComponent = '#tb',
