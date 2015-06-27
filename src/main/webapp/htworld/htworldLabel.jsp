@@ -41,7 +41,6 @@ var maxSerial = 0,
 		}
 	},
 	htmTableTitle = "标签列表", //表格标题
-	htmTableWidth = 1170,
 	worldKey = "worldId",
 	loadDataURL = "./admin_ztworld/label_queryLabel", //数据装载请求地址
 	deleteURI = "./admin_ztworld/label_deleteLabels?ids=", //删除请求地址
