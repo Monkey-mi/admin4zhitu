@@ -19,7 +19,6 @@ var maxId = 0,
 	},
 	hideIdColumn = false,
 	htmTableTitle = "系统弹幕列表", //表格标题
-	htmTableWidth = 1170,
 	toolbarComponent = '#tb',
 	loadDataURL = "./admin_op/danmu_querySysDanmu", //数据装载请求地址
 	deleteURI = "./admin_op/danmu_deleteSysDanmus?ids=", //删除请求地址

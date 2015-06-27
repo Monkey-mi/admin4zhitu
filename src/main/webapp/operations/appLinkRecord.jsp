@@ -21,7 +21,6 @@ var maxId = 0,
 		loadPageData(initPage);
 	},
 	htmTableTitle = "点击记录列表", //表格标题
-	htmTableWidth = 500,
 	loadDataURL = "./admin_op/ad_queryAppLinkRecord", //数据装载请求地址
 	
 	columnsFields = [

@@ -13,7 +13,6 @@
 <script type="text/javascript" src="${webRootPath }/common/js/user2014022101.js"></script>
 <script type="text/javascript">
 var htmTableTitle = "马甲用户维护", //表格标题
-	htmTableWidth = 1150,
 	recordIdKey = "recommendId",
 	uidKey = "id",
 	loadDataURL = "./admin_op/user_queryZombieUser", //数据装载请求地址

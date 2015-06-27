@@ -48,7 +48,6 @@ var maxId = 0,
 		}
 	},
 	htmTableTitle = "推荐用户列表", //表格标题
-	htmTableWidth = 1350,
 	toolbarComponent = '#tb',
 	recordIdKey = "id",
 	uidKey = "userId",

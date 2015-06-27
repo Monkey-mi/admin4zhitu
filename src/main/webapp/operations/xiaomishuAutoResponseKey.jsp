@@ -15,7 +15,6 @@
 var maxId = 0,
 	myRowStyler= 0,
 	htmTableTitle = "自动回复列表", //表格标题
-	htmTableWidth =1240,
 	myIdField='keyId',
 	hideIdColumn = false,
 	loadDataURL = "./admin_op/xmsResponse_queryXiaoMiShuResponseForTable", //数据装载请求地址

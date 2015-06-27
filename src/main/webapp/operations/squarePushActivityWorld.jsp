@@ -45,7 +45,6 @@ var maxId = 0,
 		return null;
 	},
 	htmTableTitle = "活动织图列表", //表格标题
-	htmTableWidth = 1160,
 	loadDataURL = "./admin_op/op_querySquarePushActivityWorld", //数据装载请求地址
 	deleteURI = "./admin_op/op_deleteSquarePushs?ids=", //删除请求地址
 	updatePageURL = "./admin_op/op_updateSquarePushByJSON",

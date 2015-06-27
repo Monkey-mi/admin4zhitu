@@ -38,7 +38,6 @@ var maxId = 0,
 	},
 	hideIdColumn = true,
 	htmTableTitle = "频道红人列表", //表格标题
-	htmTableWidth = 1300,
 	toolbarComponent = '#tb',
 	myIdField = "channelStarId",
 	recordIdKey = "channelStarId",

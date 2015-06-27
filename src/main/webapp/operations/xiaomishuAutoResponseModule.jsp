@@ -15,7 +15,6 @@
 var maxId = 0,
 	myRowStyler= 0,
 	htmTableTitle = "小秘书模块列表", //表格标题
-	htmTableWidth =1240,
 	recordIdKey='moduleId',
 	hideIdColumn = false,
 	loadDataURL = "./admin_op/xmsResponse_queryXiaoMiShuResponseModuleForTable", //数据装载请求地址

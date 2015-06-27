@@ -37,7 +37,6 @@ var maxSerial = 0,
 		}
 	},
 	htmTableTitle = "活动Logo列表", //表格标题
-	htmTableWidth = 960,
 	loadDataURL = "./admin_op/op_queryActivityLogo", //数据装载请求地址
 	deleteURI = "./admin_op/op_deleteActivityLogo?ids=", //删除请求地址
 	updateValidURL = "./admin_op/op_updateActivityLogoValid?ids=", // 更新有效性地址

@@ -19,7 +19,6 @@ var maxId = 0,
 	batchEnableTip = "您确定要使已选中的织图生效吗？",
 	batchDisableTip = "您确定要使已选中的织图失效吗？",
 	channelQueryParam = {},
-//	channelMaxId=0,
 	init = function() {
 		loadPageData(initPage);
 	},
@@ -44,8 +43,6 @@ var maxId = 0,
 	},
 	hideIdColumn = true,
 	htmTableTitle = "频道织图列表", //表格标题
-	htmTableWidth = 1180,
-	htmTableHeight = 600;
 	toolbarComponent = '#tb',
 	myIdField = "channelWorldId",
 	recordIdKey = "channelWorldId",
@@ -125,9 +122,7 @@ var maxId = 0,
 		var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
 		if(channelName)
 			$("#channelNameTitle").text(channelName);
-	},
-	
-//	channelQueryParams = {},
+	};
 	
 	myQueryParams['world.channelId'] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") ? baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") : "";
 	myQueryParams['world.valid'] = 1;

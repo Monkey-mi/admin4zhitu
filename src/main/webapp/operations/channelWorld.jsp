@@ -42,7 +42,6 @@ var maxId = 0,
 	},
 	hideIdColumn = true,
 	htmTableTitle = "频道织图列表", //表格标题
-	htmTableWidth = 1400,
 	toolbarComponent = '#tb',
 	myIdField = "channelWorldId",
 	recordIdKey = "channelWorldId",

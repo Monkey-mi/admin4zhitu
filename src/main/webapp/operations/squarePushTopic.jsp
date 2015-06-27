@@ -11,8 +11,6 @@
 <link rel="stylesheet" type="text/css" href="${webRootPath }/base/js/jquery/uploadify/uploadify.css">
 <script type="text/javascript">
 var htmTableTitle = "广场话题维护", //表格标题
-	htmTableWidth = 630,
-	htmTableHeight = 450,
 	loadDataURL = "./admin_op/op_querySquarePushTopic", //数据装载请求地址
 	deleteURI = "./admin_op/op_deleteSquarePushTopics?ids=", //删除请求地址
 	columnsFields = [

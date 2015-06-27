@@ -23,7 +23,6 @@ var maxId = 0,
 		myLoadDataPage(initPage);
 	},
 	htmTableTitle = "达人推荐维护", //表格标题
-	htmTableWidth = 1150,
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
 			maxId = 0;

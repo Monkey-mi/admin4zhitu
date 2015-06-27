@@ -12,7 +12,6 @@
 <script type="text/javascript">
 	var maxId = 0,
 	htmTableTitle = "频道关联管理", //表格标题
-	htmTableWidth = 1140,
 	myPageSize = 10,
 	myRowStyler= 0,
 	loadDataURL = "./admin_op/channelLink_queryOpChannelLink", //数据装载请求地址
