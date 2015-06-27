@@ -26,7 +26,6 @@ var maxId = 0,
 	labelQueryParams = {},
 	hideIdColumn = false,
 	htmTableTitle = "贴纸列表", //表格标题
-	htmTableWidth = 1170,
 	batchEnableTip = "您确定要使已选中的贴纸生效吗？",
 	batchDisableTip = "您确定要使已选中的贴纸失效吗？",
 	toolbarComponent = '#tb',
