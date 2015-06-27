@@ -57,7 +57,6 @@ var	maxId = 0,
 		loadPageData(initPage);
 	},
 	htmTableTitle = "评论列表维护", //表格标题
-	htmTableWidth = 980,
 	loadDataURL = "./admin_ztworld/interact_queryComment", //数据装载请求地址
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
