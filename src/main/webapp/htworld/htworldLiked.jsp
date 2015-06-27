@@ -37,7 +37,6 @@ var maxId = 0,
 		}
 	},
 	htmTableTitle = "喜欢用户维护", //表格标题
-	htmTableWidth = 980,
 	recordIdKey = "recommendId",
 	worldKey = "id",
 	loadDataURL = "./admin_ztworld/interact_queryLikedUser", //数据装载请求地址
