@@ -9,7 +9,6 @@
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 <script type="text/javascript">
 var htmTableTitle = "互动跟踪信息列表", //表格标题
-	htmTableWidth = 960,
 	hideIdColumn = false,
 	loadDataURL = "./admin_interact/interact_queryTrackerList", //数据装载请求地址
 	init = function() {

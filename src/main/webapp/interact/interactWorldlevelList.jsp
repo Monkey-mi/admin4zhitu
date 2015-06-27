@@ -38,7 +38,6 @@
 		}
 	},
 	htmTableTitle = "等级织图列表", //表格标题
-	htmTableWidth = 860,
 	worldKey = "worldId",
 	loadDataURL = "./admin_interact/worldlevelList_queryWorldlevelList", //数据装载请求地址
 	deleteURI = "./admin_interact/worldlevelList_delWorldlevelListByWIds?widsStr=", //删除请求地址

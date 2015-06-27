@@ -12,7 +12,6 @@
 var maxId = 0,
 	interactId = <%=interactId%>,
 	htmTableTitle = "播放互动列表", //表格标题
-	htmTableWidth = 520,
 	loadDataURL = "./admin_interact/interact_queryClickList", //数据装载请求地址
 	init = function() {
 		console.log(interactId);

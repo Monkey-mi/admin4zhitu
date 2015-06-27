@@ -12,7 +12,6 @@
 var maxId = 0,
 	worldId = 0,
 	htmTableTitle = "评论列表", //表格标题
-	htmTableWidth = 680,
 	loadDataURL = "./admin_interact/comment_queryCommentListByLabel", //数据装载请求地址
 	deleteURI = "./admin_interact/comment_deleteCommentByIds?ids=",
 	init = function() {

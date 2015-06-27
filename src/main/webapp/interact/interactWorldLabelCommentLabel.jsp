@@ -14,7 +14,6 @@
 var maxId = 0,
 	worldId = 0,
 	htmTableTitle = "用户标签--评论标签关联列表", //表格标题
-	htmTableWidth = 560,
 	loadDataURL = "./admin_interact/worldlabelcommentlabel_QueryWorldLabelCommentLabelList", //数据装载请求地址
 	deleteURI = "./admin_interact/worldlabelcommentlabel_DeleteWorldLabeCommentLabel?ids=",//删除请求地址
 	init = function() {

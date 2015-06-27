@@ -13,7 +13,6 @@
 	var maxId = 0,
 	worldId = 0,
 	htmTableTitle = "计划评论", //表格标题
-	htmTableWidth = 1140,
 	myPageSize = 10,
 	myRowStyler= 0,
 	loadDataURL = "./admin_interact/planComment_queryPlanCommentForPage", //数据装载请求地址

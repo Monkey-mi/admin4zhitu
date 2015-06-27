@@ -13,7 +13,6 @@
 <script type="text/javascript">
 var maxId = 0,
 	hideIdColumn = false,
-	htmTableWidth = 1300,
 	worldURLPrefix = 'http://www.imzhitu.com/DT',
 	htmTableTitle = "马甲发图计划管理", //表格标题
 	htmTablePageList = [10,30,50,100,150,300,500],

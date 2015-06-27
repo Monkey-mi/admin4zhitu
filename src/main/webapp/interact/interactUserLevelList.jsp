@@ -15,7 +15,6 @@ var maxId = 0,
 	worldId = 0,
 	myRowStyler = 0,
 	htmTableTitle = "用户等级列表", //表格标题
-	htmTableWidth = 1160,
 	loadDataURL = "./admin_interact/userlevelList_QueryUserlevelList", //数据装载请求地址
 	deleteURI = "./admin_interact/userlevelList_DeleteUserlevelByIds?ids=",
 	init = function() {

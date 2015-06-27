@@ -12,7 +12,6 @@
 	var maxId = 0,
 	worldId = 0,
 	htmTableTitle = "计划评论标签", //表格标题
-	htmTableWidth = 1140,
 	myPageSize = 10,
 	myRowStyler= 0,
 	loadDataURL = "./admin_interact/planCommentLabel_queryPlanCommentLabelForTable", //数据装载请求地址

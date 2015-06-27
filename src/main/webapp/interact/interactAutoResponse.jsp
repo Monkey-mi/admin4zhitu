@@ -15,7 +15,6 @@
 var maxId = 0,
 	myRowStyler= 0,
 	htmTableTitle = "自动回复列表", //表格标题
-	htmTableWidth =1240,
 	loadDataURL = "./admin_interact/autoResponse_queryUncompleteResponse", //数据装载请求地址
 	deleteURI = "./admin_interact/autoResponse_delAutoResponseByIds?idsStr=",
 	updateValidURL = "./admin_interact/autoResponse_updateResponseCompleteByIds?idsStr=",

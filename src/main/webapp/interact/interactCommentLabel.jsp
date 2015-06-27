@@ -13,7 +13,6 @@ var maxId = 0,
 	groupIds = {},
 	groupMap = {},
 	htmTableTitle = "标签列表", //表格标题
-	htmTableWidth = 500,
 	loadDataURL = "./admin_interact/comment_queryLabel", //数据装载请求地址
 	deleteURI = "./admin_interact/comment_deleteLabelByIds?ids=",
 	updatePageURL = "./admin_interact/comment_updateLabelByJSON",

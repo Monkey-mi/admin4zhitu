@@ -43,7 +43,6 @@ var maxId = 0,
 		}
 	},
 	htmTableTitle = "分类织图列表", //表格标题
-	htmTableWidth = 1410,
 	worldKey = "worldId",
 	loadDataURL = "./admin_interact/typeOptionWorld_queryTypeOptionWorldForList", //数据装载请求地址
 	deleteURI = "./admin_interact/typeOptionWorld_delTypeOptionWorldByIds?idsStr=", //删除请求地址

@@ -11,7 +11,6 @@
 var maxId = 0,
 	worldId = 0,
 	htmTableTitle = "标签分组列表", //表格标题
-	htmTableWidth = 500,
 	loadDataURL = "./admin_interact/comment_queryLabelGroup", //数据装载请求地址
 	deleteURI = "./admin_interact/comment_deleteLabelGroupByIds?ids=",
 	updatePageURL = "./admin_interact/comment_updateLabelByJSON",

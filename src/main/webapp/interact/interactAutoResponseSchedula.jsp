@@ -39,7 +39,6 @@
 		}
 	},
 	htmTableTitle = "自动回复计划列表", //表格标题
-	htmTableWidth = 1170,
 	loadDataURL = "./admin_interact/autoResponseSchedula_queryAutoResponseSchedulaForTable", //数据装载请求地址
 	deleteURI = "./admin_interact/autoResponseSchedula_delAutoResponseByIds?ids=", //删除请求地址
 

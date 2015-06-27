@@ -12,7 +12,6 @@
 var maxId = 0,
 	interactId = <%=interactId%>,
 	htmTableTitle = "粉丝互动列表", //表格标题
-	htmTableWidth = 600,
 	loadDataURL = "./admin_interact/interact_queryFollowList", //数据装载请求地址
 	init = function() {
 		toolbarComponent = [];

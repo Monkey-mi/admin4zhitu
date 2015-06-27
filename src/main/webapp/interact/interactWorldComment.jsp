@@ -12,7 +12,6 @@
 var maxId = 0,
 	interactId = <%=interactId%>,
 	htmTableTitle = "评论互动列表", //表格标题
-	htmTableWidth = 950,
 	loadDataURL = "./admin_interact/interact_queryCommentList", //数据装载请求地址
 	init = function() {
 		toolbarComponent = [];

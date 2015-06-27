@@ -14,7 +14,6 @@
 var maxId = 0,
 	worldId = 0,
 	htmTableTitle = "互动信息列表", //表格标题
-	htmTableWidth = 760,
 	loadDataURL = "./admin_interact/interact_queryInteractList", //数据装载请求地址
 	deleteURI = "./admin_interact/interact_deleteInteract?ids=",
 	init = function() {

@@ -18,7 +18,6 @@
 <script type="text/javascript">
 	var maxId=0;
 	htmTableTitle = "织图等级管理",
-	htmTableWidth = 870,
 	htmTablePageList = [5,10,20,30],
 	myPageSize = 10,
 	myRowStyler= 0,
