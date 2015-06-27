@@ -19,7 +19,6 @@ var maxId = 0,
 	},
 	hideIdColumn = false,
 	htmTableTitle = "字幕列表", //表格标题
-	htmTableWidth = 1170,
 	toolbarComponent = '#tb',
 	loadDataURL = "./admin_ztworld/subtitle_queryTitle", //数据装载请求地址
 	deleteURI = "./admin_ztworld/subtitle_deleteTitles?ids=", //删除请求地址
