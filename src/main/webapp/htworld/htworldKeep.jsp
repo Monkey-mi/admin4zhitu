@@ -39,7 +39,6 @@ var maxId = 0,
 		}
 	},
 	htmTableTitle = "收藏用户列表", //表格标题
-	htmTableWidth = 980,
 	recordIdKey = "recommendId",
 	worldKey = "id",
 	loadDataURL = "./admin_ztworld/interact_queryKeepUser", //数据装载请求地址
