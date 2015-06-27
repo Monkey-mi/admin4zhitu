@@ -487,7 +487,6 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 }
 
 var htmTableTitle = "分享列表维护", //表格标题
-	htmTableWidth = 1380,
 	htmTablePageList = [10,20,50,100],
 	worldKey = 'id',
 	loadDataURL = "./admin_ztworld/ztworld_queryHTWorldList", //数据装载请求地址
