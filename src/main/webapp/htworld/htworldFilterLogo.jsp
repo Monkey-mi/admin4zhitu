@@ -10,7 +10,6 @@
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 <script type="text/javascript">
 var htmTableTitle = "滤镜logo", //表格标题
-	htmTableWidth = 580,
 	init = function() {
 		toolbarComponent = '#tb';
 		loadPageData(initPage);
