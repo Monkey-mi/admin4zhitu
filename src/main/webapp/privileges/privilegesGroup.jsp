@@ -11,7 +11,6 @@
 <link rel="stylesheet" type="text/css" href="${webRootPath }/base/js/jquery/uploadify/uploadify.css">
 <script type="text/javascript">
 var htmTableTitle = "权限分组信息维护", //表格标题
-	htmTableWidth = 950,
 	loadDataURL = "./admin/privileges_queryPrivilegesGroup", //数据装载请求地址
 	deleteURI = "./admin/privileges_deletePrivilegesGroup?ids=", //删除请求地址
 	columnsFields = [

@@ -36,7 +36,6 @@ $(document).ready(function() {
 	
 });
 var htmTableTitle = "系统角色信息维护", //表格标题
-	htmTableWidth = 950,
 	loadDataURL = "./admin/privileges_queryRole", //数据装载请求地址
 	deleteURI = "./admin/privileges_deleteRole?ids=", //删除请求地址
 	columnsFields = [

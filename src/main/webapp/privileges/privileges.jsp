@@ -53,7 +53,6 @@ $(document).ready(function() {
 
 var htmTableTitle = "权限维护", //表格标题
 	toolbarComponent = '#tb',
-	htmTableWidth = 950,
 	loadDataURL = "./admin/privileges_queryPrivileges", //数据装载请求地址
 	deleteURI = "./admin/privileges_deletePrivileges?ids=", //删除请求地址
 	columnsFields = [
