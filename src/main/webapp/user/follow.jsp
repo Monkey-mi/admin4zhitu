@@ -23,7 +23,6 @@ var maxId = 0,
 		loadPageData(initPage);
 	},
 	htmTableTitle = "粉丝列表", //表格标题
-	htmTableWidth = 980,
 	loadDataURL = "./admin_user/interact_queryFollow", //数据装载请求地址
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {

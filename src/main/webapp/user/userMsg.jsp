@@ -66,8 +66,6 @@ var userId = <%=userId%>,
 		loadPageData(1);
 	},
 	htmTableTitle = "对话列表", //表格标题
-	htmTableWidth = 980,
-	htmTableHeight = 440;
 	loadDataURL = "./admin_user/msg_queryMsg",
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {

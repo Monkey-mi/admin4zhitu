@@ -40,7 +40,6 @@ var maxSerial = 0,
 		}
 	},
 	htmTableTitle = "认证列表", //表格标题
-	htmTableWidth = 1170,
 	loadDataURL = "./admin_user/verify_queryVerify", //数据装载请求地址
 	deleteURI = "./admin_user/verify_deleteVerify?ids=", //删除请求地址
 	updateSerialRL = "./admin_user/verify_updateVerifySerial?ids=", // 更新有效新请求地址

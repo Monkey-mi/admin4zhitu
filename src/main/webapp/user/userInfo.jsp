@@ -32,7 +32,6 @@ var maxId = 0,
 		}
 	},
 	htmTableTitle = "织图用户维护", //表格标题
-	htmTableWidth = 1150,
 	loadDataURL = userId==null?loadAllDataURL:loadOneDataURL, //数据装载请求地址,若userId为空的时候，就显示全部用户，若userId不为空，则显示该用户
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
@@ -487,8 +486,9 @@ function myLoadDataPage(pageNum){
 	$('#htm_table').datagrid({
 		title: htmTableTitle,
 		iconCls: htmTableIcon,
-		width: htmTableWidth,
-		height: htmTableHeight,
+		width: $(document.body).width(),
+		fitColumns: true,
+		autoRowHeight: true,
 		url:loadDataURL, //加载数据的URL
 		rowStyler:myRowStyler,
 		pageList: htmTablePageList,

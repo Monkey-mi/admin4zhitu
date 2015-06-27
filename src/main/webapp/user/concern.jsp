@@ -24,7 +24,6 @@ var maxId = 0,
 		loadPageData(initPage);
 	},
 	htmTableTitle = "关注列表", //表格标题
-	htmTableWidth = 980,
 	loadDataURL = "./admin_user/interact_queryConcern", //数据装载请求地址
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
