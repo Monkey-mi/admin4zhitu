@@ -19,7 +19,6 @@
 var maxId = 0,
 	labelId = <%=labelId%>,
 	htmTableTitle = "<%=labelName%>", //表格标题
-	htmTableWidth = 1070,
 	worldKey = 'id',
 	channelQueryParam={},
 	loadDataURL = "./admin_ztworld/label_queryLabelWorld?valid=1", //数据装载请求地址
