@@ -50,7 +50,6 @@
 		'maxSerial':maxActivitySerial
 	}; 
 	htmTableTitle = "举报管理", //表格标题
-	htmTableWidth = 1130,
 	loadDataURL = "./admin_ztworld/interact_queryReport",
 	deleteURI = "./admin_ztworld/interact_deleteReportById?ids=",	//删除		
 	htmTablePageList = [10,20,30],
