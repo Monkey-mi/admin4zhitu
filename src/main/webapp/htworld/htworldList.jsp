@@ -283,7 +283,6 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 }
 
 var htmTableTitle = "分享列表维护", //表格标题
-	htmTableWidth = 1380,
 	htmTablePageList = [10,20,50,100],
 	worldKey = 'id',
 	
@@ -291,9 +290,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 	deleteURI = "./admin_ztworld/ztworld_deleteWorld?ids="; //删除请求地址
 	init = function() {
 		myIdField = 'id';
-		// 以下两个属性由于在onBeforeInit方法中设置不生效，所以设置在这里
-		htmTableHeight = undefined;	// 取消高度设置，然后在datagrid中设置自动高度
-		htmTableWidth = $(document.body).width();	// 表格宽度设置为当前页面宽度
 		
 		toolbarComponent = '#tb';
 		myQueryParams = {
@@ -451,11 +447,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 		showPageLoading();
 	},
 	onAfterInit = function() {
-		
-		$('#htm_table').datagrid({
-			fitColumns:true,
-			autoRowHeight:true
-		});
 	
 		$('#ss-channel').combogrid({
 			panelWidth : 440,
