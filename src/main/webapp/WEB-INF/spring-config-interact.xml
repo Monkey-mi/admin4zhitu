@@ -596,7 +596,7 @@
             <ref bean="dailyDataStatisticsSchedulaJobDetail" />
         </property>
         <property name="cronExpression">
-            <value>0 01 00 * * ?</value><!-- 每日00点10分触发，统计前一日相关数据 -->
+            <value>0 01 00 * * ?</value><!-- 每日00点01分触发，统计前一日相关数据 -->
         </property>
     </bean>
 	
