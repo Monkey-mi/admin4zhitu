@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.statistics.mapper.DailyDataStatisticsMapper">
+
+	<!-- 数据统计结果集 -->
+	<resultMap id="DataStatisticsDtoMap" type="com.imzhitu.admin.common.pojo.OpDataStatisticsDto">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="dataCollect_date" property="dataCollectDate" jdbcType="TIMESTAMP"/>
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+		<result column="pv_count" property="pvCount" jdbcType="INTEGER"/>
+		<result column="htworld_add_count" property="worldAddCount" jdbcType="INTEGER"/>
+		<result column="member_add_count" property="memberAddCount" jdbcType="INTEGER"/>
+		<result column="comment_add_count" property="commentAddCount" jdbcType="INTEGER"/>
+		<result column="liked_add_count" property="likedAddCount" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<!-- 在数据统计表中插入每日频道下相关的数据 -->
+	<insert id="insertData" parameterType="com.imzhitu.admin.common.pojo.OpDataStatisticsDto">
+		insert into hts_admin.op_data_statistics
+			(dataCollect_date, channel_id, pv_count, htworld_add_count, member_add_count, comment_add_count, liked_add_count)
+		values
+			(#{dataCollectDate,jdbcType=TIMESTAMP}, #{channelId,jdbcType=INTEGER}, #{pvCount,jdbcType=INTEGER},
+			#{worldAddCount,jdbcType=INTEGER}, #{memberAddCount,jdbcType=INTEGER}, 
+			#{commentAddCount,jdbcType=INTEGER}, #{likedAddCount,jdbcType=INTEGER})
+	</insert>
+	
+	<!-- 查询每日频道新增织图数量，去除马甲号的结果-->
+	<select id="queryDailyAddedChannelWorldCount" resultMap="DataStatisticsDtoMap">
+		select 
+			ocw.channel_id,
+       		count(*) as htworld_add_count
+		from hts.operations_channel_world ocw
+		where 
+			ocw.date_added between #{startTime} and #{endTime}
+			and ocw.author_id not in (select ouz.user_id from hts.operations_user_zombie ouz)
+		group by ocw.channel_id
+	</select>
+	
+	<!-- 查询每日频道新增订阅数量 -->
+	<select id="queryDailyAddedChannelMemberCount" resultMap="DataStatisticsDtoMap">
+		select
+			ocm.channel_id,
+			count(*) as member_add_count
+		from
+			hts.operations_channel_member ocm
+		where
+			ocm.sub_time BETWEEN #{startTime} and #{endTime}
+		and ocm.user_id not in (select ouz.user_id from hts.operations_user_zombie ouz)
+		group by ocm.channel_id
+	</select>
+	
+	<!-- 查询每日频道新增织图的评论数量，去除马甲号的结果 -->
+	<select id="queryDailyAddedChannelWorldCommentCount" resultMap="DataStatisticsDtoMap">
+		select
+			ocw.channel_id,
+			count(*) as comment_add_count
+		from
+			hts.htworld_comment hc,
+			hts.operations_channel_world ocw
+		where
+			hc.comment_date between #{startTime} and #{endTime}
+		and hc.author_id not in (select ouz.user_id from hts.operations_user_zombie ouz)
+		and hc.world_id = ocw.world_id
+		group by ocw.channel_id
+	</select>
+	
+	<!-- 查询每日频道新增织图的点赞数量，去除马甲号的结果 -->
+	<select id="queryDailyAddedChannelWorldLikedCount" resultMap="DataStatisticsDtoMap">
+		select
+			ocw.channel_id,
+			count(*) as liked_add_count
+		from
+			hts.htworld_liked hl,
+			hts.operations_channel_world ocw
+		where
+			hl.liked_date between #{startTime} and #{endTime}
+		and hl.user_id not in (select ouz.user_id from hts.operations_user_zombie ouz)
+		and hl.world_id = ocw.world_id
+		group by ocw.channel_id
+	</select>
+	
+	<!-- 分页查询每日数据统计结果集 -->
+	<select id="queryDailyData" resultMap="DataStatisticsDtoMap">
+		select ods.id,
+				date(ods.dataCollect_date) as dataCollect_date,
+				ods.channel_id,
+				ods.pv_count,
+				ods.htworld_add_count,
+				ods.member_add_count,
+				ods.comment_add_count,
+				ods.liked_add_count,
+				oc.channel_name
+		from
+			hts_admin.op_data_statistics ods,
+			hts.operations_channel oc
+		<where>
+			<if test="startTime != null and endTime != null">
+				and ods.dataCollect_date between #{startTime} and #{endTime}
+			</if>
+			<if test="channelName != null">
+				and oc.channel_name like CONCAT('%',#{channelName},'%')
+			</if>
+			<if test="channelId != null">
+				and ods.channel_id = #{channelId}
+			</if>
+			<if test="themeId != null">
+				and oc.theme_id = #{themeId}
+			</if>
+			and ods.channel_id = oc.id
+		</where>
+		<choose>
+			<when test="sortKey == 'pvCount' and order == 'desc'">
+				order by ods.pv_count desc
+			</when>
+			<when test="sortKey == 'pvCount' and order == 'asc'">
+				order by ods.pv_count asc
+			</when>
+			<when test="sortKey == 'worldAddCount' and order == 'desc'">
+				order by ods.htworld_add_count desc
+			</when>
+			<when test="sortKey == 'worldAddCount' and order == 'asc'">
+				order by ods.htworld_add_count asc
+			</when>
+			<when test="sortKey == 'memberAddCount' and order == 'desc'">
+				order by ods.member_add_count desc
+			</when>
+			<when test="sortKey == 'memberAddCount' and order == 'asc'">
+				order by ods.member_add_count asc
+			</when>
+			<when test="sortKey == 'commentAddCount' and order == 'desc'">
+				order by ods.comment_add_count desc
+			</when>
+			<when test="sortKey == 'commentAddCount' and order == 'asc'">
+				order by ods.comment_add_count asc
+			</when>
+			<when test="sortKey == 'likedAddCount' and order == 'desc'">
+				order by ods.liked_add_count desc
+			</when>
+			<when test="sortKey == 'likedAddCount' and order == 'asc'">
+				order by ods.liked_add_count asc
+			</when>
+			<otherwise>
+		 		order by ods.dataCollect_date desc
+			</otherwise>
+		</choose>
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 每日数据统计总数 -->
+	<select id="queryDailyDataTotalCount" resultType="long">
+		select count(*)
+		from
+			hts_admin.op_data_statistics ods,
+			hts.operations_channel oc
+		<where>
+			<if test="startTime != null and endTime != null">
+				and ods.dataCollect_date between #{startTime} and #{endTime}
+			</if>
+			<if test="channelName != null">
+				and oc.channel_name like CONCAT('%',#{channelName},'%')
+			</if>
+			<if test="channelId != null">
+				ods.channel_id = #{channelId}
+			</if>
+			and ods.channel_id = oc.id
+		</where>
+	</select>
+	
+</mapper>

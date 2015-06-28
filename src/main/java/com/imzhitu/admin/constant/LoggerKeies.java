@@ -4,6 +4,7 @@ public class LoggerKeies {
 
 	private static final String PREFIX = "com.imzhitu.admin.";
 	private static final String MODULE_PUSH = PREFIX + "push.";
+	private static final String STATISTICS = PREFIX + "statistics.";
 	
 	/**
 	 * 群发日志
@@ -15,5 +16,6 @@ public class LoggerKeies {
 	 */
 	public static final String CHANNEL_V2 = PREFIX + "channelV2";
 	
+	public static final String DAILY_DATA_STATISTICS = STATISTICS + "dailyDataStatistics";
 
 }

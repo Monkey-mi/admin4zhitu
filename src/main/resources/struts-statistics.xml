@@ -4,10 +4,18 @@
 
 <struts>
 	<package name="admin_statistics" namespace="/admin_statistics" extends="admin-package">
+	
 		<action name="summary_*" class="com.imzhitu.admin.statistics.SummaryAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>
 		</action>
+		
+		<action name="daily_*" class="com.imzhitu.admin.statistics.DailyDataStatisticsAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 </struts>

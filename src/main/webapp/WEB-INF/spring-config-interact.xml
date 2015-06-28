@@ -142,6 +142,7 @@
 	<bean id="opStarRecommendSchedulaService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendSchedulaServiceImpl" />
 	<bean id="opStarRecommendCacheService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendCacheServiceImpl" />
 	<bean id="interactZombieWorldSchedulaService" class="com.imzhitu.admin.interact.service.impl.InteractZombieWorldSchedulaServiceImpl"/>
+	<bean id="dailyDataStatisticsService" class="com.imzhitu.admin.statistics.service.impl.DailyDataStatisticsServiceImpl"/>
 
 		
 	<!-- 互动播放定时任务 -->
@@ -577,6 +578,27 @@
             <value>0 0/5 * * * ?</value><!-- 每隔5分钟 -->
         </property>
     </bean>
+    
+	<!-- 每日00点获取前一日数据的统计，数据包括：频道新增织图数、频道新增订阅数、频道新增评论数、频道新增点赞数 -->
+    <bean id="dailyDataStatisticsSchedulaJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="dailyDataStatisticsService"/>
+        </property>
+        <property name="targetMethod">
+            <value>doDataStatisticsSchedulaJob</value>
+        </property>
+    </bean>
+    
+	<!-- 每日数据统计Job配置 -->
+    <bean id="dailyDataStatisticsSchedulaJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="dailyDataStatisticsSchedulaJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 01 00 * * ?</value><!-- 每日00点10分触发，统计前一日相关数据 -->
+        </property>
+    </bean>
 	
 	<!--
     <bean name="startQuertz" lazy-init="false"
@@ -604,6 +626,7 @@
                 <ref bean="starRecommendCacheTrigger" />
                 
                 <ref bean="zombieWorldSchedulaJobTrigger" />
+                <ref bean="dailyDataStatisticsSchedulaJobTrigger" />
             </list>
         </property>
     </bean>
