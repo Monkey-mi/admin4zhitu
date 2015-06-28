@@ -100,7 +100,8 @@ public class DailyDataStatisticsServiceImpl extends BaseServiceImpl implements D
 		
 		// 定义频道ID集合，要去重，得到一个最大的频道ID集合
 		Set<Integer> channelIdSet = new HashSet<Integer>();
-		// 把四个结果集中的频道ID取出，放入频道ID集合
+		// 把五个结果集中的频道ID取出，放入频道ID集合
+		channelIdSet.addAll(allPVMap.keySet());
 		for (OpDataStatisticsDto dto : worldCountList) {
 			channelIdSet.add(dto.getChannelId());
 		}
@@ -114,39 +115,43 @@ public class DailyDataStatisticsServiceImpl extends BaseServiceImpl implements D
 			channelIdSet.add(dto.getChannelId());
 		}
 		
-		// 循环设置每日频道的相关数据
-		for (Integer channelId : channelIdSet) {
-			OpDataStatisticsDto saveDTO = new OpDataStatisticsDto();
-			saveDTO.setChannelId(channelId);		// 设置频道ID
-			saveDTO.setDataCollectDate(startTime);	// 设置收集数据日期，是前一天的数据
-			saveDTO.setPvCount(allPVMap.get(channelId) == null ? 0:allPVMap.get(channelId));	// 设置频道每日PV数
-			
-			for (OpDataStatisticsDto worldCount : worldCountList) {
-				if (worldCount.getChannelId().equals(channelId)) {
-					saveDTO.setWorldAddCount(worldCount.getWorldAddCount());
-					break;
+		if (channelIdSet.size() == 0) {
+			log.warn("日期：" + startTime + "----------本日没有收集到相关数据！");
+		} else {
+			// 循环设置每日频道的相关数据
+			for (Integer channelId : channelIdSet) {
+				OpDataStatisticsDto saveDTO = new OpDataStatisticsDto();
+				saveDTO.setChannelId(channelId);		// 设置频道ID
+				saveDTO.setDataCollectDate(startTime);	// 设置收集数据日期，是前一天的数据
+				saveDTO.setPvCount(allPVMap.get(channelId) == null ? 0:allPVMap.get(channelId));	// 设置频道每日PV数
+				
+				for (OpDataStatisticsDto worldCount : worldCountList) {
+					if (worldCount.getChannelId().equals(channelId)) {
+						saveDTO.setWorldAddCount(worldCount.getWorldAddCount());
+						break;
+					}
 				}
-			}
-			for (OpDataStatisticsDto memberCount : memberCountList) {
-				if (memberCount.getChannelId().equals(channelId)) {
-					saveDTO.setMemberAddCount(memberCount.getMemberAddCount());
-					break;
+				for (OpDataStatisticsDto memberCount : memberCountList) {
+					if (memberCount.getChannelId().equals(channelId)) {
+						saveDTO.setMemberAddCount(memberCount.getMemberAddCount());
+						break;
+					}
 				}
-			}
-			for (OpDataStatisticsDto commentCount : commentCountList) {
-				if (commentCount.getChannelId().equals(channelId)) {
-					saveDTO.setCommentAddCount(commentCount.getCommentAddCount());
-					break;
+				for (OpDataStatisticsDto commentCount : commentCountList) {
+					if (commentCount.getChannelId().equals(channelId)) {
+						saveDTO.setCommentAddCount(commentCount.getCommentAddCount());
+						break;
+					}
 				}
-			}
-			for (OpDataStatisticsDto likedCount : likedCountList) {
-				if (likedCount.getChannelId().equals(channelId)) {
-					saveDTO.setLikedAddCount(likedCount.getLikedAddCount());
-					break;
+				for (OpDataStatisticsDto likedCount : likedCountList) {
+					if (likedCount.getChannelId().equals(channelId)) {
+						saveDTO.setLikedAddCount(likedCount.getLikedAddCount());
+						break;
+					}
 				}
+				
+				dataMapper.insertData(saveDTO);
 			}
-			
-			dataMapper.insertData(saveDTO);
 		}
 		
 		// 每日执行完，则清空缓存
