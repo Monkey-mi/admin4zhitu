@@ -168,7 +168,7 @@ var maxId = 0,
 	onAfterInit = function() {
 		
 		$('#htm_indexed').window({
-			title : '重新排序',
+			title : '按照时间重新排序',
 			modal : true,
 			width : 660,
 			height : 235,
@@ -722,7 +722,7 @@ function queryChannelByIdOrName(){
 			<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
 			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
-			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
+			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">按照时间重新排序</a>
 			<select id="ss-notified" class="easyui-combobox" style="width:100px;">
 		        <option value="">所有通知状态</option>
 		        <option value="0">未通知</option>

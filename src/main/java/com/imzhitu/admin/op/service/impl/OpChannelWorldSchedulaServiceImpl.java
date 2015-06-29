@@ -133,7 +133,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	 */
 	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
 			Integer valid,Integer operatorId)throws Exception{
-		channelService.addChannelWorldId(channelId,wIds);
 		Date now = new Date();
 		long timeSpan = minuteTimeSpan*60*1000L;
 		for(int i=0;i<wIds.length; i++){
@@ -176,6 +175,8 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		dto.setAddDate(new Date(begin.getTime() - workingTime));
 		dto.setValid(Tag.TRUE);
 		dto.setFinish(Tag.FALSE);
+		
+		// 获取出的集合是按照调度时间的正序来排列的，如：第一个数据为10:00，最后一个数据为10:50
 		List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldSchedula(dto);
 		
 		for (OpChannelWorldSchedulaDto schedulaDto : list) {
@@ -192,6 +193,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    world.setValid(schedulaDto.getValid());
 		    world.setSuperb(schedulaDto.getSuperb());
 		    channelService.updateChannelWorld(world);
+		    
+		    // 刷新频道织图的serial，让10:50的织图排在最新，即serial最大
+		    channelService.addChannelWorldId(schedulaDto.getChannelId(), schedulaDto.getWorldId());
 		    
         	    /*
         	     * 下列注释，是针对以前频道的玩法：一张织图添加到频道中，会推送消息给用户 现在频道玩法变化，故先注释
