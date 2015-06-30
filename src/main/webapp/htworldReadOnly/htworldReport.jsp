@@ -35,7 +35,6 @@ var maxId = 0,
 		}
 	};
 	htmTableTitle = "举报管理", //表格标题
-	htmTableWidth = 850,
 	loadDataURL = "./admin_ztworld/interact_queryReport",
 	deleteURI = "./admin_ztworld/interact_deleteReportById?ids=",	//删除		
 	htmTablePageList = [10,20,30],

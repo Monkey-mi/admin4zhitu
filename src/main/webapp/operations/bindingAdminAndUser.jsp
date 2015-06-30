@@ -14,8 +14,6 @@
 	loadDataURL = "./admin_user/admin_user_queryAdminAndUserRelationship";	//数据装载请求地址
 	deleteURI = "./admin_user/admin_user_deleteAdminAndUserRelationship";	//删除数据请求URI
 	
-//	htmTableHeight = 400;
-		
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
 			maxId = 0;

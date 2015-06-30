@@ -16,7 +16,6 @@
 	loadDataURL = "./admin_ztworld/zhituxiaomishu_queryWorld",
 	deleteURI = "./admin_ztworld/zhituxiaomishu_delWorldByWId?idsStr=",
 	htmTableTitle = "小秘书维护", //表格标题
-	htmTableWidth = 600,
 	addWidth = 500, //添加信息宽度
 	addHeight = 170, //添加信息高度
 	addTitle = "添加小秘书织图", //添加信息标题

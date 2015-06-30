@@ -38,7 +38,6 @@ var maxSerial = 0,
 	},
 	
 	htmTableTitle = "App链接维护", //表格标题
-	htmTableWidth = 720,
 	recordIdKey = "serial",
 	loadDataURL = "./admin_op/ad_queryAppLink", //数据装载请求地址
 	deleteURI = "./admin_op/ad_deleteAppLinks?ids=", //删除请求地址

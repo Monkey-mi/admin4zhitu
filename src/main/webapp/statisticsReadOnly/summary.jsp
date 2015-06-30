@@ -29,7 +29,6 @@ var maxDate,
 		}
 	},
 	htmTableTitle = "汇总列表", //表格标题
-	htmTableWidth = 600,
 	loadDataURL = "./admin_statistics/summary_querySummary", //数据装载请求地址
 	columnsFields = [
 		{field : 'date',title : '日期',align : 'center', width : 180},

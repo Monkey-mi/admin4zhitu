@@ -39,7 +39,6 @@ var maxSerial = 0,
 		}
 	},
 	htmTableTitle = "活动维护", //表格标题
-	htmTableWidth = 1120,
 	recordIdKey = "serial",
 	loadDataURL = "./admin_op/op_querySquarePushActivity", //数据装载请求地址
 	updatePageURL = "./admin_op/op_updateSquarePushActivityByJSON",		

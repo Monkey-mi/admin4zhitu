@@ -25,7 +25,6 @@ var maxId = 0,
 		loadPageData(1);
 	},
 	htmTableTitle = "收件箱信息列表", //表格标题
-	htmTableWidth = 950,
 	loadDataURL = "./admin_user/msg_queryRecipientMsgBox?userId="+userId,
 	deleteURI = "./admin_user/msg_deleteRecipientMsgBox?userId="+userId+"&ids=", //删除请求地址
 	myOnBeforeRefresh = function(pageNumber, pageSize) {

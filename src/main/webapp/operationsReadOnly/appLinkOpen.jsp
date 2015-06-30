@@ -48,7 +48,6 @@ var maxSerial = 0,
 		}
 	},
 	htmTableTitle = "织图开放链接维护", //表格标题
-	htmTableWidth = 700,
 	recordIdKey = "serial",
 	loadDataURL = "./admin_op/ad_queryAppLink", //数据装载请求地址
 	//deleteURI = "operations_deleteSquarePushs?ids=", //删除请求地址

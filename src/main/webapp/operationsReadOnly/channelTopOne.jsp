@@ -39,7 +39,6 @@ var refreshTitleInterval = 3*24*60*60*1000,
 	},
 	hideIdColumn = false,
 	htmTableTitle = "Top One红人列表", //表格标题
-	htmTableWidth = 1080,
 	toolbarComponent = '#tb',
 	myIdField = "topOneId",
 	recordIdKey = "topOneId",

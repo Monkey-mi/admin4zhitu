@@ -15,7 +15,6 @@ var maxId = 0,
 	},
 	hideIdColumn = false,
 	htmTableTitle = "频道列表", //表格标题
-	htmTableWidth = 750,
 	batchEnableTip = "您确定要使已选中的频道生效吗？",
 	batchDisableTip = "您确定要使已选中的频道失效吗？",
 	toolbarComponent = '#tb',

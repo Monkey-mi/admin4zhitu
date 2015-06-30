@@ -37,7 +37,6 @@ var activityId = <%=activityId%>,
 		}
 	},
 	htmTableTitle = "#"+activityName+"#奖品列表", //表格标题
-	htmTableWidth = 960,
 	loadDataURL = "./admin_op/op_queryActivityAward?activityId="+activityId, //数据装载请求地址
 	deleteURI = "./admin_op/op_deleteActivityAward?ids=", //删除请求地址
 	queryAwardURL = "./admin_op/op_queryActivityAwardById", // 根据id查询奖品

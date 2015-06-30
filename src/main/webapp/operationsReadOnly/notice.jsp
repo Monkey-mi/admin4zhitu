@@ -19,7 +19,6 @@ var maxSerial = 0,
 		interacts = {};
 	},
 	htmTableTitle = "公告列表", //表格标题
-	htmTableWidth = 1170,
 	loadDataURL = "./admin_op/msg_queryNotice", //数据装载请求地址
 	deleteURI = "./admin_op/msg_deleteNotice?ids=", //删除请求地址
 	queryNoticeByIdURL = "./admin_op/msg_queryNoticeByPhoneCode",  // 根据id查询活动

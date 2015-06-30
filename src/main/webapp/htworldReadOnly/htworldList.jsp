@@ -238,7 +238,6 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 }
 
 var htmTableTitle = "分享列表维护", //表格标题
-	htmTableWidth = 900,
 	mySortName = 'dateModified',
 	worldKey = 'id',
 	loadDataURL = "./admin_ztworld/ztworld_queryHTWorldList", //数据装载请求地址
