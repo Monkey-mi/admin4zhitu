@@ -25,7 +25,7 @@ var maxId = 0,
 	},
 	hideIdColumn = false,
 	toolbarComponent = '#tb',
-	htmTablePageList = [50,100,200,250];
+	htmTablePageList = [15,10,20,30,50],
 	htmTableTitle = "系列列表", //表格标题
 	loadDataURL = "./admin_ztworld/sticker_querySet", //数据装载请求地址
 	deleteURI = "./admin_ztworld/sticker_deleteSets?ids=", //删除请求地址

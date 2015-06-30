@@ -60,7 +60,7 @@ var maxId = 0,
 	queryStickerByIdURL = "./admin_ztworld/sticker_queryStickerById", // 根据id查询贴纸
 	updateValidURL = "./admin_ztworld/sticker_updateStickerValid?ids=",
 	
-	htmTablePageList = [30,100,150],
+	htmTablePageList = [15,10,20,30,50],
 	myPageSize = 6,
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
