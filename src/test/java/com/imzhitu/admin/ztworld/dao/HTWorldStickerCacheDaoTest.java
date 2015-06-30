@@ -12,7 +12,7 @@ public class HTWorldStickerCacheDaoTest extends BaseTest {
 	
 	@Test
 	public void updateTopStickerTest() throws Exception {
-		dao.updateTopSticker();
+//		dao.updateTopSticker();
 	}
 //	
 //	@Test

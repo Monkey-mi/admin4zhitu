@@ -13,6 +13,7 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.ZTWorldSticker;
+import com.imzhitu.admin.common.pojo.ZTWorldStickerSet;
 import com.imzhitu.admin.common.pojo.ZTWorldStickerType;
 import com.imzhitu.admin.ztworld.service.ZTWorldStickerService;
 
@@ -37,6 +38,7 @@ public class ZTWorldStickerAction extends BaseCRUDAction {
 	
 	private ZTWorldStickerType type = new ZTWorldStickerType();
 	private ZTWorldSticker sticker = new ZTWorldSticker();
+	private ZTWorldStickerSet stickerSet = new ZTWorldStickerSet();
 	
 	private Integer id;
 	private String ids;
@@ -55,7 +57,6 @@ public class ZTWorldStickerAction extends BaseCRUDAction {
 			stickerService.buildTypes(type, page, rows, jsonMap, addAllTag);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
-			e.printStackTrace();
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
@@ -162,7 +163,6 @@ public class ZTWorldStickerAction extends BaseCRUDAction {
 			Integer res = stickerService.updateTypeWeight(id, weight);
 			JSONUtil.optResult(OptResult.OPT_SUCCESS, res, OptResult.JSON_KEY_WEIGHT, jsonMap);
 		} catch (Exception e) {
-			e.printStackTrace();
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
@@ -199,6 +199,11 @@ public class ZTWorldStickerAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 查询所有贴纸分类
+	 * 
+	 * @return
+	 */
 	public String queryAllType(){
 		PrintWriter out = null;
 		try{
@@ -339,7 +344,113 @@ public class ZTWorldStickerAction extends BaseCRUDAction {
 		}
 		return StrutsKey.JSON;
 	}
-
+	
+	/**
+	 * 查询系列列表
+	 * 
+	 * @return
+	 */
+	public String querySet() {
+		try {
+			stickerService.buildSet(stickerSet, page, rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 根据id查询set
+	 * 
+	 * @return
+	 */
+	public String querySetById() {
+		try {
+			ZTWorldStickerSet set = stickerService.querySetById(id);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, set, OptResult.JSON_KEY_OBJ, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 保存系列
+	 * 
+	 * @return
+	 */
+	public String saveSet() {
+		try {
+			stickerService.saveSet(stickerSet);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新系列
+	 * 
+	 * @return
+	 */
+	public String updateSet() {
+		try {
+			stickerService.updateSet(stickerSet);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 删除贴纸
+	 * 
+	 * @return
+	 */
+	public String deleteSets() {
+		try {
+			stickerService.deleteSets(ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新贴纸分类排序
+	 * 
+	 * @return
+	 */
+	public String updateSetSerial() {
+		String[] ids = request.getParameterValues("reIndexId");
+		try {
+			stickerService.updateSetSerial(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新分类权重
+	 * 
+	 * @return
+	 */
+	public String updateSetWeight() {
+		try {
+			Integer res = stickerService.updateSetWeight(id, weight);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, res, OptResult.JSON_KEY_WEIGHT, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public ZTWorldStickerType getType() {
 		return type;
 	}
@@ -395,6 +506,13 @@ public class ZTWorldStickerAction extends BaseCRUDAction {
 	public void setAddAllTag(Boolean addAllTag) {
 		this.addAllTag = addAllTag;
 	}
-	
+
+	public ZTWorldStickerSet getStickerSet() {
+		return stickerSet;
+	}
+
+	public void setStickerSet(ZTWorldStickerSet stickerSet) {
+		this.stickerSet = stickerSet;
+	}
 	
 }

@@ -10,14 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.common.pojo.HTWorldStickerSet;
 import com.hts.web.common.pojo.HTWorldStickerTypeDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.ZTWorldSticker;
+import com.imzhitu.admin.common.pojo.ZTWorldStickerSet;
 import com.imzhitu.admin.common.pojo.ZTWorldStickerType;
 import com.imzhitu.admin.ztworld.dao.HTWorldStickerCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldStickerTypeCacheDao;
+import com.imzhitu.admin.ztworld.dao.StickerTopCacheDao;
+import com.imzhitu.admin.ztworld.mapper.StickerSetMapper;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldStickerMapper;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldStickerTypeMapper;
 import com.imzhitu.admin.ztworld.service.ZTWorldStickerService;
@@ -37,6 +41,12 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private HTWorldStickerCacheDao stickerCacheDao;
+	
+	@Autowired
+	private StickerTopCacheDao stickerTopCacheDao;
+	
+	@Autowired
+	private StickerSetMapper stickerSetMapper;
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
@@ -142,7 +152,7 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public void buildStickers(ZTWorldSticker sticker, int start, int limit, 
+	public void buildStickers(final ZTWorldSticker sticker, int start, int limit, 
 			Map<String, Object> jsonMap) throws Exception {
 		buildNumberDtos(OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID, 
 				"getSerial", sticker, start, limit, jsonMap, new NumberDtoListAdapter<ZTWorldSticker>(){
@@ -150,11 +160,21 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 					@Override
 					public List<? extends Serializable> queryList(
 							ZTWorldSticker dto) {
+						if(!StringUtil.checkIsNULL(dto.getStickerName())) {
+							dto.setStickerName("%" + dto.getStickerName() + "%");
+						} else {
+							dto.setStickerName(null);
+						}
 						return stickerMapper.queryStickers(dto);
 					}
 
 					@Override
 					public long queryTotal(ZTWorldSticker dto) {
+						if(!StringUtil.checkIsNULL(dto.getStickerName())) {
+							dto.setStickerName("%" + dto.getStickerName() + "%");
+						} else {
+							dto.setStickerName(null);
+						}
 						return stickerMapper.queryTotal(dto);
 					}
 			
@@ -236,21 +256,6 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 		}
 		
 		List<HTWorldStickerTypeDto> recTypes = new ArrayList<HTWorldStickerTypeDto>();
-//		Integer[] typeIds = null;
-//		
-//		if(typeIdStrs.length > 0 && typeIdStrs[0].equals("0")) {
-//			recTypes = stickerTypeMapper.queryCacheRecommendType();
-//			typeIds = new Integer[recTypes.size()];
-//			for(int i = 0; i < typeIds.length; i++) {
-//				typeIds[i] = recTypes.get(i).getId();
-//			}
-//		} else {
-//			typeIds = new Integer[typeIdStrs.length];
-//			for(int i = 0; i < typeIdStrs.length; i++) {
-//				typeIds[i] = Integer.parseInt(typeIdStrs[i]);
-//			}
-//			recTypes = stickerTypeMapper.queryCacheRecommendTypeByIds(typeIds);
-//		}
 		
 		int res = stickerCacheDao.updateRecommendSticker(REC_TYPE_SUPERB, recommendStickerLimit);
 		if(res == 0) {
@@ -265,8 +270,10 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 		}
 		
 		typeCacheDao.updateRecommendType(recTypes);
-		stickerCacheDao.updateTopSticker();
 		typeCacheDao.updateStickerType();
+		
+		List<HTWorldStickerSet> cacheSets = stickerSetMapper.queryCacheSet();
+		stickerTopCacheDao.updateTopSticker(cacheSets);
 	}
 
 	@Override
@@ -287,5 +294,84 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 		return list;
 	}
 
+	@Override
+	public void buildSet(ZTWorldStickerSet set, int start, int limit,
+			Map<String, Object> jsonMap) throws Exception {
+		
+		buildNumberDtos(OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID, 
+				"getSerial", set, start, limit, jsonMap, 
+				new NumberDtoListAdapter<ZTWorldStickerSet>(){
+
+					@Override
+					public List<? extends Serializable> queryList(
+							ZTWorldStickerSet dto) {
+						if(!StringUtil.checkIsNULL(dto.getSetName())) {
+							dto.setSetName("%" + dto.getSetName() + "%");
+						} else {
+							dto.setSetName(null);
+						}
+						return stickerSetMapper.querySets(dto);
+					}
+
+					@Override
+					public long queryTotal(ZTWorldStickerSet dto) {
+						if(!StringUtil.checkIsNULL(dto.getSetName())) {
+							dto.setSetName("%" + dto.getSetName() + "%");
+						} else {
+							dto.setSetName(null);
+						}
+						return stickerSetMapper.queryTotal(dto);
+					}
+		});
+	}
+	
+	@Override
+	public void saveSet(ZTWorldStickerSet set) throws Exception {
+		Integer serial = webKeyGenService.generateId(
+				KeyGenServiceImpl.HTWORLD_STICKER_SET_SERIAL);
+		set.setSerial(serial);
+		stickerSetMapper.save(set);
+	}
+
+	@Override
+	public void updateSet(ZTWorldStickerSet set) throws Exception {
+		stickerSetMapper.update(set);
+	}
+
+	@Override
+	public void deleteSets(String idsStr) throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		if(ids != null && ids.length > 0)
+			stickerSetMapper.deleteByIds(ids);
+	}
+
+	@Override
+	public void updateSetSerial(String[] idStrs) throws Exception {
+		for(int i = idStrs.length - 1; i >= 0; i--) {
+			if(StringUtil.checkIsNULL(idStrs[i]))
+				continue;
+			int id = Integer.parseInt(idStrs[i]);
+			Integer serial = webKeyGenService.generateId(
+					KeyGenServiceImpl.HTWORLD_STICKER_SET_SERIAL);
+			ZTWorldStickerSet set = new ZTWorldStickerSet();
+			set.setId(id);
+			set.setSerial(serial);
+			stickerSetMapper.update(set);
+		}
+	}
+
+	@Override
+	public Integer updateSetWeight(Integer id, Integer weight) throws Exception {
+		ZTWorldStickerSet set = new ZTWorldStickerSet();
+		set.setId(id);
+		set.setWeight(weight);
+		stickerSetMapper.update(set);
+		return weight;
+	}
+
+	@Override
+	public ZTWorldStickerSet querySetById(Integer id) throws Exception {
+		return stickerSetMapper.querySetById(id);
+	}
 
 }

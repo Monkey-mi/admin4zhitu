@@ -21,31 +21,16 @@ public class HTWorldStickerCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStickerD
 	@Autowired
 	private ZTWorldStickerMapper stickerMapper;
 	
-	@Override
-	public void updateTopSticker() {
-		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_TOP)) {
-			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_TOP);
-		}
-		List<HTWorldStickerDto> list = stickerMapper.queryCacheTopStickerDto();
-		if(list.size() > 0) {
-			HTWorldStickerDto[] objs = new HTWorldStickerDto[list.size()];
-			getRedisTemplate().opsForList().rightPushAll(CacheKeies.ZTWORLD_STICKER_TOP, 
-					list.toArray(objs));
-		}
-	}
-//
 //	@Override
-//	public void updateRecommendSticker(Integer[] typeIds, Integer limit) {
-//		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_RECOMMEND)) {
-//			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_RECOMMEND);
+//	public void updateTopSticker() {
+//		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_TOP)) {
+//			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_TOP);
 //		}
-//		for(Integer typeId : typeIds) {
-//			List<HTWorldStickerDto> list = stickerMapper.queryCacheRecommendStickerDto(limit);
-//			if(list.size() > 0) {
-//				HTWorldStickerDto[] objs = new HTWorldStickerDto[list.size()];
-//				getRedisTemplate().opsForList().rightPushAll(CacheKeies.ZTWORLD_STICKER_RECOMMEND, 
-//						list.toArray(objs));
-//			}
+//		List<HTWorldStickerDto> list = stickerMapper.queryCacheTopStickerDto();
+//		if(list.size() > 0) {
+//			HTWorldStickerDto[] objs = new HTWorldStickerDto[list.size()];
+//			getRedisTemplate().opsForList().rightPushAll(CacheKeies.ZTWORLD_STICKER_TOP, 
+//					list.toArray(objs));
 //		}
 //	}
 
@@ -68,9 +53,6 @@ public class HTWorldStickerCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStickerD
 
 	@Override
 	public int updateHotSticker(long startTime, long endTime, Integer typeId, Integer limit) {
-//		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_HOT)) {
-//			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_HOT);
-//		}
 		List<HTWorldStickerDto> list = stickerMapper.queryCacheHotStickerDto(startTime, endTime, limit);
 		if(list.size() > 0) {
 			for(HTWorldStickerDto dto : list) {

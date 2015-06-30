@@ -16,7 +16,8 @@ public interface ZTWorldStickerMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<HTWorldStickerDto> queryCacheTopStickerDto();
+	public List<HTWorldStickerDto> queryCacheTopSticker(@Param("setId")Integer setId);
+	
 	
 	/**
 	 * 查询推荐贴纸

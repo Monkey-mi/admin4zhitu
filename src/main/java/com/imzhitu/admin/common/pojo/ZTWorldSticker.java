@@ -23,6 +23,7 @@ public class ZTWorldSticker extends AbstractNumberDto implements Serializable {
 
 	private Integer id;
 	private Integer typeId;
+	private Integer setId;
 	private String stickerPath;
 	private String stickerThumbPath;
 	private String stickerDemoPath;
@@ -36,6 +37,7 @@ public class ZTWorldSticker extends AbstractNumberDto implements Serializable {
 	private Integer labelId;
 	private Integer fill;
 	private String typeName;
+	private String setName;
 	
 	public Integer getId() {
 		return id;
@@ -155,6 +157,22 @@ public class ZTWorldSticker extends AbstractNumberDto implements Serializable {
 
 	public void setHasLock(Integer hasLock) {
 		this.hasLock = hasLock;
+	}
+
+	public Integer getSetId() {
+		return setId;
+	}
+
+	public void setSetId(Integer setId) {
+		this.setId = setId;
+	}
+
+	public String getSetName() {
+		return setName;
+	}
+
+	public void setSetName(String setName) {
+		this.setName = setName;
 	}
 	
 }

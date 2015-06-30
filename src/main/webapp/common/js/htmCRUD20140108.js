@@ -74,6 +74,8 @@ var myRowStyler = function(index,row) {};
 var myOnClickCell = function(rowIndex, field, value){};
 var myOnCheck = function(rowIndex, rowData){};
 var myOnCheckAll = function(rows){};
+var myOnUncheck = function(rowIndex, rowData){};
+var myOnUncheckAll = function(rows){};
 var pageButtons = [];
 var myPageSize = 10;
 
@@ -218,7 +220,9 @@ function loadPageData(pageNum) {
 		onBeforeLoad : myOnLoadBefore,
 		onLoadSuccess : myOnLoadSuccess,
 		onCheck : myOnCheck,
-		onCheckAll : myOnCheckAll
+		onCheckAll : myOnCheckAll,
+		onUncheck : myOnUncheck,
+		onUncheckAll : myOnUncheckAll
 	});
 	if(hideIdColumn) {
 		$('#htm_table').datagrid('hideColumn', recordIdKey); //隐藏id字段

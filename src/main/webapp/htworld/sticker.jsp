@@ -7,6 +7,9 @@
 <title>贴纸维护</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <style type="text/css">
 	.circle-btn {
 		border-radius: 50px;
@@ -18,12 +21,32 @@
 		display:inline-block;
 		vertical-align:middle;
 	}
+	
+	.window {
+		position:fixed;
+	}
+	.messager-window {
+		position:absolute;	
+	}
+	
+	#fancybox-content {
+		background:#4f4f4f;
+	}
+	
 </style>
 <script type="text/javascript">
 
 var maxId = 0,
+	selectedIds = [],
 	labelMaxId = 0,
 	labelQueryParams = {},
+	
+	setMaxId = 0,
+	setQueryParams = {},
+	
+	editSetMaxId = 0,
+	editSetQueryParams = {},
+	
 	hideIdColumn = false,
 	htmTableTitle = "贴纸列表", //表格标题
 	batchEnableTip = "您确定要使已选中的贴纸生效吗？",
@@ -37,7 +60,7 @@ var maxId = 0,
 	queryStickerByIdURL = "./admin_ztworld/sticker_queryStickerById", // 根据id查询贴纸
 	updateValidURL = "./admin_ztworld/sticker_updateStickerValid?ids=",
 	
-	htmTablePageList = [6,10,20],
+	htmTablePageList = [30,100,150],
 	myPageSize = 6,
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
@@ -52,36 +75,52 @@ var maxId = 0,
 				myQueryParams['sticker.maxId'] = maxId;
 			}
 		}
+		$(".sticker-img").fancybox({
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'titleShow':false
+		});
 	},
+	myOnCheck = function(rowIndex, rowData) {
+		selectedIds.push(rowData.id);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnUncheck = function(rowIndex, rowData) {
+		for(var i = 0; i < selectedIds.length; i++)
+			if(rowData.id == selectedIds[i])
+				selectedIds.splice(i,1);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnCheckAll = function(rows) {
+		selectedIds = [];
+		for(var i = 0; i < rows.length; i++)
+			selectedIds.push(rows[i]['id']);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnUncheckAll = function(rows) {
+		selectedIds = [];
+		updateSortingCount(0);
+	}
 	stickerBgColor = "#4f4f4f";
 	columnsFields = [
 		{field : 'ck',checkbox : true},
 		{field : 'id',title : 'id',align : 'center',width : 60},
-		{field : 'stickerPath',title : '贴纸', align : 'center',width : 60, height:60,
-			formatter:function(value,row,index) {
-				return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
-			},
-			styler: function(value,row,index){
-				return 'background-color:' + stickerBgColor;
-			}
-		},
 		{field : 'stickerThumbPath',title : '缩略图', align : 'center',width : 60, height:60,
 			formatter:function(value,row,index) {
-				if(value == '' || value == undefined)
-					return '';
-				else
-					return "<img width='30px' height='30px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+				return "<a class='sticker-img' target='_blank' rel='sticker-group' title='点击放大' href="+row.stickerPath+"><img width='50px' height='50px' alt='' class='htm_column_img' src='" + value + "'/></a>";
 			},
 			styler: function(value,row,index){
 				return 'background-color:' + stickerBgColor;
 			}
 		},
+		{field : 'typeName',title : '分类', align : 'center',width : 60},
+		{field : 'setName',title : '系列', align : 'center',width : 60},
 		{field : 'stickerDemoPath',title : '示例', align : 'center',width : 60, height:60,
 			formatter:function(value,row,index) {
 				if(value == '' || value == undefined)
 					return '无';
 				else
-					return "<img width='30px' height='30px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+					return "<a class='sticker-img' target='_blank' rel='sticker-demo-group' href="+value+"><img height='60px' alt='' class='htm_column_img' src='" + value + "'/></a>";
 			},
 			styler: function(value,row,index){
 				if(value == '' || value == undefined)
@@ -109,7 +148,11 @@ var maxId = 0,
   		},
   		{field : 'stickerName',title : '名字',align : 'center',width : 120},
   		{field : 'stickerDesc',title : '描述',align : 'center',width : 220},
-		{field : 'typeName',title : '分类', align : 'center',width : 60},
+  		{field : 'opt',title : '操作',width : 80,align : 'center',rowspan : 1,
+			formatter : function(value, row, index ) {
+				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.id + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
+			}
+		},
 		{field : 'weight',title : '推荐状态',align : 'center', width : 60,
 			formatter: function(value,row,index) {
 				img = "./common/images/edit_add.png";
@@ -121,23 +164,6 @@ var maxId = 0,
   				}
   				return "<img title='" + title +  "' class='htm_column_img pointer' onclick='updateWeight(\"" + index + "\",\"" + row[recordIdKey] + "\",\"" + 1 + "\")' src='" + img + "'/>";
   			}
-		},
-		{field : 'topWeight',title : '置顶状态',align : 'center', width : 60,
-			formatter: function(value,row,index) {
-				img = "./common/images/edit_add.png";
-  				title = "点击置顶";
-  				if(value > 0) {
-  					img = "./common/images/undo.png";
-  					title = "已置顶，数字越大越靠前，点击撤销";
-  					return "<img title='" + title +  "' class='htm_column_img pointer' onclick='updateTopWeight(\"" + index + "\",\"" + row[recordIdKey] + "\",\"" + 0 + "\")' src='" + img + "'/>+"+value;
-  				}
-  				return "<img title='" + title +  "' class='htm_column_img pointer' onclick='updateTopWeight(\"" + index + "\",\"" + row[recordIdKey] + "\",\"" + 1 + "\")' src='" + img + "'/>";
-  			}
-		},
-  		{field : 'opt',title : '操作',width : 80,align : 'center',rowspan : 1,
-			formatter : function(value, row, index ) {
-				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.id + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
-			}
 		},
   		{field : 'valid',title : '有效性',align : 'center', width: 45,
   			formatter: function(value,row,index) {
@@ -159,7 +185,7 @@ var maxId = 0,
 			title : '重新排序',
 			modal : true,
 			width : 600,
-			height : 155,
+			height : 255,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -174,7 +200,6 @@ var maxId = 0,
 			modal : true,
 			width : 1040,
 			height : 455,
-			top : 10,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -193,6 +218,43 @@ var maxId = 0,
 				$("#labelId_edit").combogrid('clear');
 				$("#edit_form").hide();
 				$("#edit_loading").show();
+			}
+		});
+		
+		$('#labelId_edit').combogrid({
+			panelWidth : 340,
+		    panelHeight : 250,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#user_tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'id',
+		    url : './admin_ztworld/label_queryLabel',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'ID',align : 'center', width : 60},
+				{field : 'labelName',title : '名称',align : 'center', width : 120},
+		    ]],
+		    queryParams:labelQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxSerial > labelMaxId) {
+						labelMaxId = data.maxSerial;
+						labelQueryParams.maxSerial = labelMaxId;
+					}
+				}
+		    },
+		});
+		var p = $('#labelId_edit').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					labelMaxId = 0;
+					labelQueryParams.maxId = labelMaxId;
+				}
 			}
 		});
 		
@@ -268,6 +330,80 @@ var maxId = 0,
 			}
 		});
 		
+		$('#ss-setId').combogrid({
+			panelWidth : 440,
+		    panelHeight : 350,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [10,30,50],
+			pageSize : 10,
+			toolbar:"#search-set-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'setName',
+		    url : './admin_ztworld/sticker_querySet',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'id',align : 'center',width : 80},
+				{field : 'setName',title : '系列名称',align : 'center',width : 280}
+		    ]],
+		    queryParams:setQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > setMaxId) {
+						setMaxId = data.maxId;
+						setQueryParams['stickerSet.maxId'] = setMaxId;
+					}
+				}
+		    },
+		});
+		var p = $('#ss-setId').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					setMaxId = 0;
+					setQueryParams['stickerSet.maxId'] = setMaxId;
+				}
+			}
+		});
+		
+		$('#setId_edit').combogrid({
+			panelWidth : 440,
+		    panelHeight : 350,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [10,30,50],
+			pageSize : 10,
+			toolbar:"#edit-search-set-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'setName',
+		    url : './admin_ztworld/sticker_querySet',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'id',align : 'center',width : 80},
+				{field : 'setName',title : '系列名称',align : 'center',width : 280}
+		    ]],
+		    queryParams:editSetQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > editSetMaxId) {
+						editSetMaxId = data.maxId;
+						editSetQueryParams['stickerSet.maxId'] = editSetMaxId;
+					}
+				}
+		    },
+		});
+		var p2 = $('#setId_edit').combogrid('grid').datagrid('getPager');
+		p2.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					editSetMaxId = 0;
+					editSetQueryParams['stickerSet.maxId'] = editSetMaxId;
+				}
+			}
+		});
+		
 		removePageLoading();
 		$("#main").show();
 	};
@@ -292,6 +428,7 @@ function initEditWindow(id, index, isUpdate) {
 				$("#stickerDemoPath_edit").val(obj['stickerDemoPath']);
 				$("#stickerDemoImg_edit").attr('src', obj['stickerDemoPath']);
 				$("#typeId_edit").combobox('setValue', obj['typeId']);
+				$("#setId_edit").combogrid('setValue', obj['setId']);
 				if(obj['hasLock'] == 0) {
 					$("#unlock_edit").attr('checked', 'checked');
 				} else {
@@ -336,6 +473,14 @@ function initEditWindow(id, index, isUpdate) {
 			var data = $("#typeId_edit").combobox('getData');
 			$("#typeId_edit").combobox('select', data[0]['id']);
 		}
+		
+		var currSetId = $('#ss-setId').combogrid('getValue');
+		if(currSetId != '' && currSetId != 0) {
+			$("#setId_edit").combogrid('setValue', currSetId);
+		} else {
+			$("#setId_edit").combogrid('setValue', 1);
+		}
+		
 		$("#lock_edit").attr('checked', 'checked');
 		$("#unfill_edit").attr('checked', 'checked');
 		$("#un_edit").attr('checked', 'checked');
@@ -370,10 +515,14 @@ function loadEditFormValidate(index, isUpdate) {
 						$("#edit_form .loading").hide();
 						if(result['result'] == 0) {
 							$('#htm_edit').window('close');  //关闭添加窗口
-							maxId = 0;
-							myQueryParams['sticker.maxId'] = maxId;
-							loadPageData(initPage);
-							$.messager.alert('提示',result['msg']);  //提示添加信息成功
+							
+							if(isUpdate) {
+								$("#htm_table").datagrid('reload');
+							} else {
+								maxId = 0;
+								myQueryParams['sticker.maxId'] = maxId;
+								$("#htm_table").datagrid('load',myQueryParams);
+							}
 						} else {
 							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 						}
@@ -398,6 +547,9 @@ function loadEditFormValidate(index, isUpdate) {
 	
 	$("#typeId_edit")
 	.formValidator({empty:false, onshow:"请选分类（必填）",onfocus:"请选分类",oncorrect:"该分类可用！"});
+	
+	$("#setId_edit")
+	.formValidator({empty:false, onshow:"请选系列（必填）",onfocus:"请选系列",oncorrect:"该系列可用！"});
 	
 	$("#stickerName_edit")
 	.formValidator({empty:false, onshow:"请输入名字（可选）",onfocus:"最多15个字符",oncorrect:"正确！"})
@@ -450,7 +602,13 @@ function updateValid(valid) {
 function reSerial() {
 	$('#htm_serial .opt_btn').show();
 	$('#htm_serial .loading').hide();
-	$("#serial_form").find('input[name="reIndexId"]').val('');	
+	$("#serial_form").find('input[name="reIndexId"]').val('');
+	if(selectedIds.length > 0) {
+		for(var i = 0; i < selectedIds.length; i++) {
+			$("#serial_form").find('input[name="reIndexId"]').eq(i).val(selectedIds[i]);
+			$("#serial_form").form('validate');
+		}
+	}
 	// 打开添加窗口
 	$("#htm_serial").window('open');
 }
@@ -521,11 +679,12 @@ function updateTopWeight(index, id, isAdd) {
 function searchSticker() {
 	maxId = 0;
 	myQueryParams['sticker.maxId'] = maxId;
-	myQueryParams['sticker.valid'] = $('#ss-valid').combobox('getValue');
 	myQueryParams['sticker.weight'] = $('#ss-weight').combobox('getValue');
 	myQueryParams['sticker.typeId'] = $('#ss-typeId').combobox('getValue');
-	myQueryParams['sticker.hasLock'] = $('#ss-hasLock').combobox('getValue');
-	myQueryParams['sticker.fill'] = $('#ss-fill').combobox('getValue');
+	myQueryParams['sticker.setId'] = $('#ss-setId').combogrid('getValue');
+	//myQueryParams['sticker.valid'] = $('#ss-valid').combobox('getValue');
+	//myQueryParams['sticker.hasLock'] = $('#ss-hasLock').combobox('getValue');
+	//myQueryParams['sticker.fill'] = $('#ss-fill').combobox('getValue');
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
@@ -579,6 +738,38 @@ function submitRefreshForm() {
 			},"json");		
 	}
 }
+
+function updateSortingCount(count) {
+	$("#sorting-count").text(count);
+}
+
+function searchSet() {
+	setMaxId = 0;
+	setQueryParams['stickerSet.maxId'] = setMaxId;
+	setQueryParams['stickerSet.setName'] = $('#set-searchbox').searchbox('getValue');
+	$("#ss-setId").combogrid('grid').datagrid("load",setQueryParams);
+}
+
+function searchEditSet() {
+	editSetMaxId = 0;
+	editSetQueryParams['stickerSet.maxId'] = editSetMaxId;
+	editSetQueryParams['stickerSet.setName'] = $('#edit-set-searchbox').searchbox('getValue');
+	$("#setId_edit").combogrid('grid').datagrid("load",editSetQueryParams);
+}
+
+function searchStickerByName() {
+	maxId = 0;
+	myQueryParams['sticker.maxId'] = maxId;
+	myQueryParams['sticker.stickerName'] = $('#ss-stickerName').searchbox('getValue');
+	myQueryParams['sticker.weight'] = '';
+	myQueryParams['sticker.typeId'] = '';
+	myQueryParams['sticker.setId'] = '';
+	//myQueryParams['sticker.valid'] = '';
+	//myQueryParams['sticker.hasLock'] = '';
+	//myQueryParams['sticker.fill'] = '';
+	$("#htm_table").datagrid("load",myQueryParams);
+}
+
 </script>
 </head>
 <body>
@@ -589,20 +780,26 @@ function submitRefreshForm() {
 			<a href="javascript:void(0);" onclick="javascript:initEditWindow(0,0,false);" class="easyui-linkbutton" title="添加织图到广场" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效贴纸！" plain="true" iconCls="icon-ok">批量生效</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效贴纸！" plain="true" iconCls="icon-tip">批量失效</a>
-			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序</a>
+			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" 
+			title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序+<span id="sorting-count">0</span></a>
 			<a href="javascript:void(0);" onclick="javascript:refresh();" class="easyui-linkbutton" title="刷新缓存" plain="true" iconCls="icon-reload">刷新缓存</a>
-			<span class="search_label">有效性过滤：</span>
-			<select id="ss-valid" class="easyui-combobox" style="width:80px;">
-	   			<option value="">所有状态</option>
-	   			<option value="1">生效</option>
-	   			<option value="0">未生效</option>
-   			</select>
+			<span class="search_label">分类：</span>
+			<input id="ss-typeId" />
+			<span class="search_label">系列：</span>
+			<input id="ss-setId" />
+			<span class="search_label">推荐：</span>
    			<select id="ss-weight" class="easyui-combobox" style="width:100px;">
 	   			<option value="">所有推荐状态</option>
 	   			<option value="1">推荐</option>
 	   			<option value="0">未推荐</option>
    			</select>
-   			<input id="ss-typeId" style="width:100px;" />
+   			<!-- 
+   			<select id="ss-valid" class="easyui-combobox" style="width:80px;">
+	   			<option value="">所有状态</option>
+	   			<option value="1">生效</option>
+	   			<option value="0">未生效</option>
+   			</select>
+   			
    			<select id="ss-hasLock" class="easyui-combobox" style="width:100px;">
 	   			<option value="">所有锁状态</option>
 	   			<option value="1">有锁</option>
@@ -613,7 +810,9 @@ function submitRefreshForm() {
 	   			<option value="0">no全屏</option>
 	   			<option value="1">全屏</option>
    			</select>
+   			 -->
    			<a href="javascript:void(0);" onclick="javascript:searchSticker();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
+   			<input id="ss-stickerName" searcher="searchStickerByName" class="easyui-searchbox" prompt="输入名字搜索" />
    			<div style="display: inline-block;float: right; margin-right: 5px; margin-top:3px;">
    				<a href="javascript:void(0);" title="白色背景" onclick="javascript:bgWhite();" class="circle-btn" id="btn-bg-white"
 	   				style="background:#ffffff;"></a>
@@ -642,13 +841,19 @@ function submitRefreshForm() {
 								<div id="stickerPath_editTip" style="display: inline-block;" class="tipDIV"></div>
 							</td>
 							
-							<td class="leftTd">贴纸名：</td>
-							<td>
-								<input type="text" name="sticker.stickerName" id="stickerName_edit"  onchange="validateSubmitOnce=true;"/>
+							<td class="leftTd">示例图：</td>
+							<td style="height: 90px; background: #4f4f4f;">
+								<input class="none" type="text" name="sticker.stickerDemoPath" id="stickerDemoPath_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+								<a id="stickerDemoPath_edit_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="stickerDemoImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
+								<div id="stickerDemoPath_edit_upload_status" class="update_status none" style="text-align: left; padding-left: 97px;">
+									上传中...<span class="upload_progress"></span><span>%</span>
+								</div>
 							</td>
 							<td class="rightTd">
-								<div id="stickerName_editTip" class="tipDIV"></div>
+								<div id="stickerDemoPath_editTip" style="display: inline-block;" class="tipDIV"></div>
 							</td>
+							
 						</tr>
 						<tr>
 							<td class="leftTd">缩略图：</td>
@@ -664,35 +869,12 @@ function submitRefreshForm() {
 								<div id="stickerThumbPath_editTip" style="display: inline-block;" class="tipDIV"></div>
 							</td>
 							
-							<td class="leftTd">描述：</td>
+							<td class="leftTd">贴纸名：</td>
 							<td>
-								<textarea name="sticker.stickerDesc" id="stickerDesc_edit"  onchange="validateSubmitOnce=true;"></textarea>
+								<input type="text" name="sticker.stickerName" id="stickerName_edit"  onchange="validateSubmitOnce=true;"/>
 							</td>
 							<td class="rightTd">
-								<div id="stickerDesc_editTip" class="tipDIV"></div>
-							</td>
-						</tr>
-						
-						<tr>
-							<td class="leftTd">示例图：</td>
-							<td style="height: 90px; background: #4f4f4f;">
-								<input class="none" type="text" name="sticker.stickerDemoPath" id="stickerDemoPath_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-								<a id="stickerDemoPath_edit_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-								<img id="stickerDemoImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
-								<div id="stickerDemoPath_edit_upload_status" class="update_status none" style="text-align: left; padding-left: 97px;">
-									上传中...<span class="upload_progress"></span><span>%</span>
-								</div>
-							</td>
-							<td class="rightTd">
-								<div id="stickerDemoPath_editTip" style="display: inline-block;" class="tipDIV"></div>
-							</td>
-							
-							<td class="leftTd">活动：</td>
-							<td>
-								<input type="text" name="sticker.labelId" id="labelId_edit"  onchange="validateSubmitOnce=true;"/>
-							</td>
-							<td class="rightTd">
-								<div id="labelId_editTip" class="tipDIV"></div>
+								<div id="stickerName_editTip" class="tipDIV"></div>
 							</td>
 							
 						</tr>
@@ -703,9 +885,32 @@ function submitRefreshForm() {
 								<input name="sticker.typeId" id="typeId_edit" class="easyui-combobox" 
 									data-options="valueField:'id',textField:'typeName',url:'./admin_ztworld/sticker_queryAllType' "/>
 							</td>
-							<td class="rightTd" colspan="4">
+							<td class="rightTd">
 								<div id="typeId_editTip" style="display: inline-block;" class="tipDIV"></div>
 							</td>
+							
+							<td class="leftTd">描述：</td>
+							<td>
+								<textarea name="sticker.stickerDesc" id="stickerDesc_edit"  onchange="validateSubmitOnce=true;"></textarea>
+							</td>
+							<td class="rightTd">
+								<div id="stickerDesc_editTip" class="tipDIV"></div>
+							</td>
+							
+							
+						</tr>
+						
+						<tr>
+							<td class="leftTd">系列：</td>
+							<td>
+								<input type="text" name="sticker.setId" id="setId_edit"  onchange="validateSubmitOnce=true;"/>
+							</td>
+							<td class="rightTd">
+								<div id="setId_editTip" class="tipDIV"></div>
+							</td>
+							<td class="rightTd" colspan="4">
+							</td>
+							
 						</tr>
 						<tr>
 							<td class="leftTd">锁状态：</td>
@@ -713,7 +918,15 @@ function submitRefreshForm() {
 								<input id="lock_edit" class="radio" type="radio" name="sticker.hasLock" value="1" checked="checked" />加锁
 								<input id="unlock_edit" class="radio" type="radio" name="sticker.hasLock" value="0" />无锁
 							</td>
-							<td class="rightTd" colspan="4">
+							<td class="rightTd">
+							</td>
+							
+							<td class="leftTd">活动：</td>
+							<td>
+								<input type="text" name="sticker.labelId" id="labelId_edit"  onchange="validateSubmitOnce=true;"/>
+							</td>
+							<td class="rightTd">
+								<div id="labelId_editTip" class="tipDIV"></div>
 							</td>
 						</tr>
 						<tr>
@@ -790,6 +1003,50 @@ function submitRefreshForm() {
 								<input name="reIndexId" class="reindex_column"/>
 								<input name="reIndexId" class="reindex_column"/>
 								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
 							</td>
 						</tr>
 						<tr>
@@ -839,6 +1096,14 @@ function submitRefreshForm() {
 		
 		<div id="user_tb" style="padding:5px;height:auto" class="none">
 			<input id="ss_label" searcher="searchLabel" class="easyui-searchbox" prompt="名称搜索" style="width:200px;"/>
+		</div>
+		
+		<div id="search-set-tb" style="padding:5px;height:auto" class="none">
+			<input id="set-searchbox" searcher="searchSet" class="easyui-searchbox" prompt="系列名搜索" style="width:200px;"/>
+		</div>
+		
+		<div id="edit-search-set-tb" style="padding:5px;height:auto" class="none">
+			<input id="edit-set-searchbox" searcher="searchEditSet" class="easyui-searchbox" prompt="系列名搜索" style="width:200px;"/>
 		</div>
 	</div>
 	
