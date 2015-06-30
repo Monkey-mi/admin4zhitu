@@ -13,6 +13,7 @@
 	
 	// 下列为获取昨天的日期
 	var today = new Date();
+	var todaystr = baseTools.simpleFormatDate(today);
 	var year = today.getFullYear();
 	var month = (today.getMonth() + 1);
 	var day = today.getDate() - 1;
@@ -70,7 +71,7 @@
 		});
 		
 		$("#endTime").datebox({
-			value:yesterdayStr,
+			value:todaystr,
 			onSelect:timeCompare
 		});
 	};
