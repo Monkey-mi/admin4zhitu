@@ -51,7 +51,9 @@ public class StickerTopCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStickerTop> 
 				sticker.getLabelId(),
 				sticker.getFill());
 				
-				top.setSets(list);
+				if(list.size() > 1) { // 大于一个贴纸才设置系列
+					top.setSets(list);
+				}
 				cacheList.add(top);
 			}
 			

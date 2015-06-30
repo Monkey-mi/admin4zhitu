@@ -81,17 +81,18 @@ public class ZTWorldStickerServiceTest extends BaseTest {
 	
 	@Test
 	public void saveStickerTest() throws Exception {
-		ZTWorldSticker sticker = new ZTWorldSticker();
-		sticker.setStickerPath("http://imzhitu.qiniudn.com/world/sticker/fart-L.png");
-		sticker.setStickerThumbPath("http://imzhitu.qiniudn.com/world/sticker/fart-S.png");
-		sticker.setTypeId(8);
-		sticker.setValid(0);
-		sticker.setTopWeight(0);
-		sticker.setWeight(1);
-		sticker.setHasLock(1);
-		sticker.setLabelId(0);
-		sticker.setFill(0);
-		service.saveSticker(sticker);
+//		ZTWorldSticker sticker = new ZTWorldSticker();
+//		sticker.setStickerPath("http://imzhitu.qiniudn.com/world/sticker/fart-L.png");
+//		sticker.setStickerThumbPath("http://imzhitu.qiniudn.com/world/sticker/fart-S.png");
+//		sticker.setTypeId(8);
+//		sticker.setSetId(1);
+//		sticker.setValid(0);
+//		sticker.setTopWeight(0);
+//		sticker.setWeight(1);
+//		sticker.setHasLock(1);
+//		sticker.setLabelId(0);
+//		sticker.setFill(0);
+//		service.saveSticker(sticker);
 	}
 	
 	@Test

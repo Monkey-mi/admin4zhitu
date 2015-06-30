@@ -202,7 +202,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void updateChannelWorldCache(OpChannelWorld world, Integer childCountBase) throws Exception {
-		updateChannelWorldCache(world.getChannelId(), childCountBase);
+//		updateChannelWorldCache(world.getChannelId(), childCountBase);
+		webChannelService.updateWorldAndChildCount(world.getChannelId());
 	}
 	
 	/**
@@ -212,23 +213,23 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	 * @param childCountBase
 	 * @throws Exception
 	 */
-	private void updateChannelWorldCache(Integer channelId, Integer childCountBase) throws Exception {
-		Integer count = 0;
-		if(childCountBase == null || childCountBase.equals(0)) {
-			childCountBase = channelMapper.queryChildCountBase(channelId);
-		} else if(childCountBase.equals(-1)) {
-			childCountBase = 0;
-		}
-		count = channelWorldMapper.querySumChildCountByChannelId(channelId);
-		count += childCountBase;
-		
-		OpChannel channel = new OpChannel();
-		channel.setId(channelId);
-		channel.setChildCount(count);
-		channel.setChildCountBase(childCountBase);
-		channelMapper.update(channel);
-		
-	}
+//	private void updateChannelWorldCache(Integer channelId, Integer childCountBase) throws Exception {
+//		Integer count = 0;
+//		if(childCountBase == null || childCountBase.equals(0)) {
+//			childCountBase = channelMapper.queryChildCountBase(channelId);
+//		} else if(childCountBase.equals(-1)) {
+//			childCountBase = 0;
+//		}
+//		count = channelWorldMapper.querySumChildCountByChannelId(channelId);
+//		count += childCountBase;
+//		
+//		OpChannel channel = new OpChannel();
+//		channel.setId(channelId);
+//		channel.setChildCount(count);
+//		channel.setChildCountBase(childCountBase);
+//		channelMapper.update(channel);
+//		
+//	}
 
 	@Override
 	public void buildChannel(final OpChannel channel, int page, int rows, 
@@ -616,7 +617,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			} catch(DuplicateKeyException e) {
 			}
 		}
-		updateChannelWorldCache(world.getChannelId(), 0);
+//		updateChannelWorldCache(world.getChannelId(), 0);
+		webChannelService.updateWorldAndChildCount(world.getChannelId());
 	}
 
 	@Override
@@ -635,7 +637,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			OpChannelWorld world = channelWorldMapper.queryChannelWorldById(ids[0]);
 			channelWorldMapper.deleteByIds(ids);
 			if(world != null) {
-				updateChannelWorldCache(world.getChannelId(), 0);
+//				updateChannelWorldCache(world.getChannelId(), 0);
+				webChannelService.updateWorldAndChildCount(world.getChannelId());
 			}
 		}
 	}
@@ -709,7 +712,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			channelWorldMapper.updateValidByWIds(wids, valid);
 			if(valid != null && valid.equals(Tag.TRUE)) // 生效时同时重新排序 
 				addChannelWorldId(channelId, wids);
-			updateChannelWorldCache(channelId, 0);
+//			updateChannelWorldCache(channelId, 0);
+			webChannelService.updateWorldAndChildCount(channelId);
 		}
 	}
 

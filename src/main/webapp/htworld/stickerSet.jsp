@@ -29,9 +29,9 @@ var maxId = 0,
 	htmTableTitle = "系列列表", //表格标题
 	loadDataURL = "./admin_ztworld/sticker_querySet", //数据装载请求地址
 	deleteURI = "./admin_ztworld/sticker_deleteSets?ids=", //删除请求地址
-	saveURL = "./admin_ztworld/sticker_saveSet", // 保存分类地址
-	updateByIdURL = "./admin_ztworld/sticker_updateSet", // 更新分类地址
-	queryByIdURL = "./admin_ztworld/sticker_querySetById", // 根据id查询分类
+	saveURL = "./admin_ztworld/sticker_saveSet", // 保存系列地址
+	updateByIdURL = "./admin_ztworld/sticker_updateSet", // 更新系列地址
+	queryByIdURL = "./admin_ztworld/sticker_querySetById", // 根据id查询系列
 	
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
@@ -116,7 +116,7 @@ var maxId = 0,
 		});
 		
 		$('#htm_edit').window({
-			title: '添加分类',
+			title: '添加系列',
 			modal : true,
 			width : 520,
 			height : 180,
@@ -225,7 +225,7 @@ function loadEditFormValidate(index, isUpdate) {
 	});
 	
 	$("#setName_edit")
-	.formValidator({empty:false,onshow:"分类名称（必填）",onfocus:"请输入名称",oncorrect:"设置成功"});
+	.formValidator({empty:false,onshow:"系列名称（必填）",onfocus:"请输入名称",oncorrect:"设置成功"});
 	
 }
 
@@ -316,7 +316,7 @@ function updateSortingCount(count) {
 				<table id="htm_edit_table" width="480">
 					<tbody>
 						<tr>
-							<td class="leftTd">分类名称：</td>
+							<td class="leftTd">系列名称：</td>
 							<td><textarea id="setName_edit" name="stickerSet.setName" onchange="validateSubmitOnce=true;"></textarea></td>
 							<td class="rightTd"><div id="setName_editTip" class="tipDIV"></div></td>
 						</tr>
