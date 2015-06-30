@@ -5,8 +5,6 @@ package com.imzhitu.admin.op.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.ChannelBaseCountDto;
 

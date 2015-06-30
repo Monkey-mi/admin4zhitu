@@ -73,6 +73,7 @@
 			</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ AND cb.channel_id<=#{maxId}]]></if>
 		</where>
+		group by cb.channel_id
 		order by cb.channel_id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
