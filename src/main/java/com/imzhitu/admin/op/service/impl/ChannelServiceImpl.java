@@ -1238,43 +1238,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public List<String> saveChannelWorlds(Integer worldId, String[] channelIdsStr)
-			throws Exception {
-		if(channelIdsStr == null || channelIdsStr.length == 0) {
-			throw new HTSException("please set channelids");
-		}
-		for(String s : channelIdsStr) {
-			if(StringUtil.checkIsNULL(s)) {
-				continue;
-			}
-			Integer cid = Integer.parseInt(s);
-			OpChannelWorld world = new OpChannelWorld();
-			world.setChannelId(cid);
-			world.setWorldId(worldId);
-			OpChannelWorld worldExists = channelWorldMapper.queryWorldByChannelId(world);
-			if(worldExists == null) {
-				world.setNotified(Tag.TRUE);
-				world.setDateAdded(new Date());
-				world.setSuperb(Tag.FALSE);
-				world.setWeight(0);
-				Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
-				world.setSerial(id);
-				world.setId(id);
-				world.setValid(Tag.TRUE);
-				if(world.getAuthorId() == null) {
-					Integer authorId = webWorldDao.queryAuthorId(world.getWorldId());
-					world.setAuthorId(authorId);
-				}
-				try {
-					channelWorldMapper.save(world);
-				} catch(DuplicateKeyException e) {
-				}
-			}
-		}
-		return channelWorldMapper.queryChannelNameByWorldId(worldId);
-	}
-
-	@Override
 	public void searchChannel(String query, Integer maxId, Integer start, Integer limit,
 			Map<String, Object> jsonMap) throws Exception {
 		final OpChannel channel = new OpChannel();

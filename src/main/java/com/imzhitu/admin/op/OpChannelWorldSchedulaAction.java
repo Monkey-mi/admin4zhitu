@@ -89,7 +89,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	
 	public String batchAddChannelWorldSchedula(){
 		try{
-			String[] wids = request.getParameterValues("reIndexId");
+			String[] wids = StringUtil.convertStringToStrs(request.getParameter("wids"));
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			service.batchAddChannelWorldSchedula(wids, getSuperbWids(), schedula,minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);

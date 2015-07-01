@@ -770,23 +770,6 @@ public class ChannelAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	/**
-	 * 保存频道织图
-	 * 
-	 * @return
-	 */
-	public String saveChannelWorlds() {
-		String[] channelIds = request.getParameterValues("batchCID");
-		try {
-			List<String> names = channelService.saveChannelWorlds(worldId, channelIds);
-			JSONUtil.optResult(OptResult.OPT_SUCCESS, names,
-					OptResult.JSON_KEY_OBJ, jsonMap);
-		} catch(Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
 	public ChannelService getChannelService() {
 		return channelService;
 	}

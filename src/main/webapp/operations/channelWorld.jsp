@@ -143,12 +143,7 @@ var maxId = 0,
   					+ "' onclick='javascript:addCover(\""+ row['channelId'] + "\",\""+ row['worldId'] + "\",\"" + index + "\")' />";
   			}
   		},
-  		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160,
-			formatter: function(value,row,index) {
-				return "<a href='javascript:void(0);' class='pointer updateInfo' title='"+value+"'"
-				+" onclick='javascript:multiple(\""+ row['worldId'] + "\",\"" + index + "\")'>"+value+"</a>";
-  			}
-		},
+  		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160},
   		dateModified,
 		],
 	addWidth = 520, //添加信息宽度
@@ -178,10 +173,7 @@ var maxId = 0,
 			maximizable : false,
 			collapsible : false,
 			iconCls : 'icon-converter',
-			resizable : false,
-			onClose : function() {
-				$(".reindex_column").val('');
-			}
+			resizable : false
 		});
 		
 		$('#htm_refresh').window({
@@ -273,20 +265,6 @@ var maxId = 0,
 		
 		removePageLoading();
 		$("#main").show();
-		
-		$('#htm_multiple').window({
-			title : '添加到多个频道',
-			modal : true,
-			width : 660,
-			height : 165,
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-converter',
-			resizable : false
-		});
 		
 	};
 	
@@ -405,33 +383,25 @@ function reIndexed() {
 	$('#htm_indexed .loading').hide();
 	var channelId = $('#ss-channel').combogrid('getValue');
 	$("#channelId_indexed").val(channelId);
-	clearReIndexedForm();
 	
 	var rows = $("#htm_table").datagrid('getSelections');
-	$('#indexed_form .reindex_column').each(function(i){
-		if(i<rows.length)
-			$(this).val(rows[i]['worldId']);
-	});
+	// 定义重新排序织图id集合
+	var wids = [];
 	// 定义存储加精织图id集合
 	var superbWids = [];
 	for(var i=0;i<rows.length;i++){
+		wids.push(rows[i].worldId);
+		
 		if (rows[i].channelWorldSchedulaSuperb==1){
 			superbWids.push(rows[i].worldId);
 		}
 	}
 	
+	$("#wids_indexed").val(wids);
 	$("#superbWids_indexed").val(superbWids);
 	
 	// 打开添加窗口
 	$("#htm_indexed").window('open');
-}
-
-/**
- * 清空索引排序
- */
-function clearReIndexedForm() {
-	$("#indexed_form").find('input[name="reIndexId"]').val('');
-	$("#superbWids_indexed").val('');
 }
 
 function submitReIndexForm() {
@@ -454,43 +424,6 @@ function submitReIndexForm() {
 					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 				}
 				$('#htm_table').datagrid('clearSelections');
-			}
-		});
-	}
-}
-
-/**
- * 添加到多个频道
- */
-function multiple(worldId, index) {
-	currentIndex = index;
-	$('#htm_multiple .opt_btn').show();
-	$('#htm_multiple .loading').hide();
-	$("#worldId_multiple").val(worldId);
-	
-	// 打开添加窗口
-	$("#htm_multiple").window('open');
-}
-
-
-function submitMutipleForm() {
-	var $form = $('#multiple_form');
-	if($form.form('validate')) {
-		$('#htm_multiple .opt_btn').hide();
-		$('#htm_multiple .loading').show();
-		$form.form('submit', {
-			url: $form.attr('action'),
-			success: function(data){
-				var result = $.parseJSON(data);
-				$('#htm_multiple .opt_btn').show();
-				$('#htm_multiple .loading').hide();
-				if(result['result'] == 0) { 
-					$('#htm_multiple').window('close');  //关闭添加窗口
-					updateValue(currentIndex,'multiple',result['obj']);	
-				} else {
-					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-				}
-				
 			}
 		});
 	}
@@ -722,7 +655,7 @@ function queryChannelByIdOrName(){
 			<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
 			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
-			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">按照时间重新排序</a>
+			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照时间重新排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">按照时间重新排序</a>
 			<select id="ss-notified" class="easyui-combobox" style="width:100px;">
 		        <option value="">所有通知状态</option>
 		        <option value="0">未通知</option>
@@ -790,32 +723,6 @@ function queryChannelByIdOrName(){
 			<table class="htm_edit_table" width="660">
 				<tbody>
 					<tr>
-						<td class="leftTd">织图ID：</td>
-						<td>
-							<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<br />
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-						</td>
-					</tr>
-					<tr>
 						<td class="leftTd">计划更新时间：</td>
 						<td><input id="schedula" name="schedula" class="easyui-datetimebox" required="true"></td>
 					</tr>
@@ -829,13 +736,15 @@ function queryChannelByIdOrName(){
 						<td colspan="2"><input type="text" name="channelId" id="channelId_indexed" /></td>
 					</tr>
 					<tr class="none">
+					<td colspan="2"><input type="text" name="wids" id="wids_indexed" /></td>
+					</tr>
+					<tr class="none">
 						<td colspan="2"><input type="text" name="superbWids" id="superbWids_indexed" /></td>
 					</tr>
 					<tr>
 						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReIndexForm();">确定</a>
-							<a class="easyui-linkbutton" iconCls="icon-redo" onclick="clearReIndexedForm();">清空</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_indexed').window('close');">取消</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_indexed').window('close');$('#htm_table').datagrid('clearSelections');">取消</a>
 						</td>
 					</tr>
 					<tr class="loading none">
@@ -873,48 +782,6 @@ function queryChannelByIdOrName(){
 						<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
 							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
 							<span style="vertical-align:middle;">请稍后...</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-	</div>
-	
-	
-	<!-- 重排索引 -->
-	<div id="htm_multiple">
-		<form id="multiple_form" action="./admin_op/channel_saveChannelWorlds" method="post">
-			<table class="htm_edit_table" width="660">
-				<tbody>
-					<tr>
-						<td class="leftTd">频道ID：</td>
-						<td>
-							<input name="batchCID" class="easyui-validatebox reindex_column" required="true"/>
-							<input name="batchCID" class="reindex_column"/>
-							<input name="batchCID" class="reindex_column"/>
-							<input name="batchCID" class="reindex_column"/>
-							<input name="batchCID" class="reindex_column"/>
-							<input name="batchCID" class="reindex_column"/>
-							<input name="batchCID" class="reindex_column"/>
-							<input name="batchCID" class="reindex_column"/>
-							<input name="batchCID" class="reindex_column"/>
-							<input name="batchCID" class="reindex_column"/>
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">织图ID：</td>
-						<td><input type="text" name="worldId" id="worldId_multiple"  readonly="readonly"/></td>
-					</tr>
-					<tr>
-						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitMutipleForm();">确定</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_multiple').window('close');">取消</a>
-						</td>
-					</tr>
-					<tr class="loading none">
-						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
-							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-							<span style="vertical-align:middle;">排序中...</span>
 						</td>
 					</tr>
 				</tbody>
