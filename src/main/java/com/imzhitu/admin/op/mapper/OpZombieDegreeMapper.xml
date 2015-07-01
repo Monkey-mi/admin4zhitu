@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpZombieDegreeMapper">
+	
+	<resultMap id="ZombieDegreeMap" type="com.imzhitu.admin.common.pojo.OpZombieDegree">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="degree_name" property="degreeName" jdbcType="VARCHAR"/>
+		<result column="weight" property="weight" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertZombieDegree">
+		insert into hts_admin.op_zombie_degree
+		(degree_name,weight) values (#{degreeName},#{weight})
+	</insert>
+	
+	<!--  BATCH DELETE -->
+	<delete id="batchDeleteZombieDegree">
+		delete from hts_admin.op_zombie_degree
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- UPDATE -->
+	<update id="updateZombieDegree">
+		update hts_admin.op_zombie_degree
+		<set>
+			<if test="weight != null">
+				weight = #{weight},
+			</if>
+			<if test="degreeName != null">
+				degree_name = #{degreeName}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- QUERY ALL RECORD -->
+	<select id="queryAllZombieDegree" resultMap="ZombieDegreeMap">
+		select * from hts_admin.op_zombie_degree
+		order by weight asc
+	</select>
+	
+	<!-- QUERY -->
+	<select id="queryZombieDegree" resultMap="ZombieDegreeMap">
+		select * from hts_admin.op_zombie_degree
+		<where>
+			<if test="id != null ">
+				id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and id <= #{maxId}]]>
+			</if>
+			<if test="weight != null">
+				and weight = #{weight}
+			</if>
+			
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- QUERY TOTAL COUNT -->
+	<select id="queryZombieDegreeTotalCount" resultType="long">
+		select count(*) from hts_admin.op_zombie_degree
+		<where>
+			<if test="id != null ">
+				id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and id <= #{maxId}]]>
+			</if>
+			<if test="weight != null">
+				and weight = #{weight}
+			</if>
+		</where>
+	</select>
+</mapper>

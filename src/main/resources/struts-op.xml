@@ -131,6 +131,31 @@
 				<param name="root">jsonMap</param>
 			</result>
 		</action>
+		
+		<action name="zombie_*" class="com.imzhitu.admin.op.OpZombieAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="zbDegree_*" class="com.imzhitu.admin.op.OpZombieDegreeAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="zbChannel_*" class="com.imzhitu.admin.op.OpZombieChannelAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+		<action name="zbDUL_*" class="com.imzhitu.admin.op.OpZombieDegreeUserLevelAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 
 </struts>

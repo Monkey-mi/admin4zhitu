@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpZombieChannelMapper">
+	
+	<resultMap id="ZombieChannelMap" type="com.imzhitu.admin.common.pojo.OpZombieChannel">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="user_id" property="userId" jdbcType="INTEGER"/>
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertZombieChannel">
+		insert into hts_admin.op_zombie_channel 
+		(user_id,channel_id) values (#{userId},#{channelId})
+	</insert>
+	
+	<!-- BATCH DELETE ZOMBIE CHANNEL -->
+	<delete id="batchDeleteZombieChannel">
+		delete from hts_admin.op_zombie_channel
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- SELECT -->
+	<select id="queryZombieChannel" resultMap="ZombieChannelMap">
+		select ozc.*,oc.channel_name,ui.user_name
+		from hts_admin.op_zombie_channel ozc
+		left join hts.operations_channel oc on ozc.channel_id=oc.id,
+		hts.user_info ui
+		<where>
+			<if test="id != null">
+				ozc.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+			  	<![CDATA[and  ozc.id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and ozc.user_id = #{userId}
+			</if>
+			<if test="channelId != null">
+				and ozc.channel_id = #{channelId}
+			</if>
+			and ozc.user_id=ui.id
+		</where>
+		order by ozc.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- SELECT TOTAL COUNT -->
+	<select id="queryZombieChannelTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.op_zombie_channel ozc
+		<where>
+			<if test="id != null">
+				ozc.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+			  	<![CDATA[and  ozc.id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and ozc.user_id = #{userId}
+			</if>
+			<if test="channelId != null">
+				and ozc.channel_id = #{channelId}
+			</if>
+		</where>
+	</select>
+</mapper>

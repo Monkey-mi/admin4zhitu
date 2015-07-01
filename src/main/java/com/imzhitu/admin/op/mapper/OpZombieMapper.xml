@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpZombieMapper">
+	
+	<resultMap id="ZombieMap" type="com.imzhitu.admin.common.pojo.OpZombie">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="user_id" property="userId" jdbcType="INTEGER"/>
+		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
+		<result column="degree_id" property="degreeId" jdbcType="INTEGER"/>
+		<result column="degree_name" property="degreeName" jdbcType="VARCHAR"/>
+		<result column="comment_count" property="commentCount" jdbcType="INTEGER"/>
+		<result column="concern_count" property="concernCount" jdbcType="INTEGER"/>
+		<result column="last_modify" property="lastModify" jdbcType="BIGINT"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertZombie">
+		insert into hts_admin.op_zombie (user_id,degree_id,comment_count,concern_count,last_modify)
+		values (#{userId},#{degreeId},#{commentCount},#{concernCount},#{lastModify})
+	</insert>
+	
+	<!-- BATCH DELETE ZOMBIE -->
+	<delete id="batchDeleteZombie">
+		delete from hts_admin.op_zombie 
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- BATCH UPDATE ZOMBIE  -->
+	<update id="batchUpdateZombie">
+		update hts_admin.op_zombie set last_modify = #{lastModify},
+		<if test="concernCount != null and concernCount != 0">
+			, concern_count = concern_count + #{concernCount}
+		</if>
+		<if test="commentCount != null and commentCount != 0">
+			, comment_count = comment_count + #{commentCount}
+		</if>
+		where id in 
+		<foreach collection="ids" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 分页查询 -->
+	<select id="queryZombie" resultMap="ZombieMap">
+		select ozb.*,ozd.degree_name,ui.user_name
+		from hts_admin.op_zombie ozb
+		left join hts_admin.op_zombie_degree ozd on ozb.degree_id = ozd.id,hts.user_info ui
+		<where>
+			<if test="id != null">
+				ozb.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and ozb.id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and ozb.user_id = #{userId}
+			</if>
+			<if test="degreeId != null">
+				and ozb.degree_id = #{degreeId}
+			</if>
+			and ozb.user_id=ui.id
+		</where>
+		order by ozb.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryZombieTotalCount" resultType="long">
+		select count(*) 
+		from hts_admin.op_zombie ozb
+		<where>
+			<if test="id != null">
+				ozb.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and ozb.id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and ozb.user_id = #{userId}
+			</if>
+			<if test="degreeId != null">
+				and ozb.degree_id = #{degreeId}
+			</if>
+		</where>
+	</select>
+	
+	
+	
+	
+</mapper>
