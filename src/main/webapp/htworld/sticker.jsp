@@ -677,6 +677,7 @@ function updateTopWeight(index, id, isAdd) {
 }
 
 function searchSticker() {
+	myQueryParams['sticker.stickerName'] = '';
 	maxId = 0;
 	myQueryParams['sticker.maxId'] = maxId;
 	myQueryParams['sticker.weight'] = $('#ss-weight').combobox('getValue');

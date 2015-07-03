@@ -161,7 +161,12 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 					public List<? extends Serializable> queryList(
 							ZTWorldSticker dto) {
 						if(!StringUtil.checkIsNULL(dto.getStickerName())) {
-							dto.setStickerName("%" + dto.getStickerName() + "%");
+							try {
+								Integer id = Integer.parseInt(dto.getStickerName());
+								dto.setId(id);
+							} catch(NumberFormatException e) {
+								dto.setStickerName("%" + dto.getStickerName() + "%");
+							}
 						} else {
 							dto.setStickerName(null);
 						}
@@ -171,7 +176,12 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 					@Override
 					public long queryTotal(ZTWorldSticker dto) {
 						if(!StringUtil.checkIsNULL(dto.getStickerName())) {
-							dto.setStickerName("%" + dto.getStickerName() + "%");
+							try {
+								Integer id = Integer.parseInt(dto.getStickerName());
+								dto.setId(id);
+							} catch(NumberFormatException e) {
+								dto.setStickerName("%" + dto.getStickerName() + "%");
+							}
 						} else {
 							dto.setStickerName(null);
 						}
