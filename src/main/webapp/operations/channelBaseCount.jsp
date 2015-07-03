@@ -115,6 +115,7 @@
 		} else {
 			myQueryParams['baseCountDto.channelId'] = value;
 		}
+		myQueryParams['maxId'] = 0;
 		$('#htm_table').datagrid('load',myQueryParams);
 		// 查询完，条件置空
 		myQueryParams = {};
