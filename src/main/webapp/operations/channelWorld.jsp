@@ -18,6 +18,7 @@ var maxId = 0,
 	currentIndex = 0,
 	batchEnableTip = "您确定要使已选中的织图生效吗？",
 	batchDisableTip = "您确定要使已选中的织图失效吗？",
+	htmTablePageList = [10,30,50,100],
 	init = function() {
 		loadPageData(initPage);
 	},
@@ -415,11 +416,11 @@ function submitReIndexForm() {
 				var result = $.parseJSON(data);
 				$('#htm_indexed .opt_btn').show();
 				$('#htm_indexed .loading').hide();
-				if(result['result'] == 0) { 
+				if(result['result'] == 0) {
 					$('#htm_indexed').window('close');  //关闭添加窗口
 					maxId = 0;
 					myQueryParams['world.maxId'] = maxId;
-					loadPageData(1);
+					$('#htm_table').datagrid('load',myQueryParams);
 				} else {
 					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 				}
