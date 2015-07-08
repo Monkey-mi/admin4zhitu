@@ -50,7 +50,16 @@ var maxId = 0,
 	columnsFields = [
 		{field : recordIdKey,title : 'id',align : 'center',width : 120},
 		phoneCodeColumn,
-		userAvatarColumn,
+		{field : 'userAvatar',title : '头像',align : 'left',width : 40,
+			formatter: function(value, row, index) {
+				imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg'),
+					content = "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "'/>";
+				if(row.star >= 1) {
+					content = content + "<img title='" + row['verifyName'] + "' class='avatar_tag' src='" + row['verifyIcon'] + "'/>";
+				}
+				return "<span>" + content + "</span>";	
+			}		
+		},
 		userIdColumn,
 		userNameColumn,
 		sexColumn,
@@ -136,13 +145,14 @@ var maxId = 0,
 			}
 			return platformCode;
 		}},
-		registerDateColumn		
-//		{field : 'msg',title : '发消息',align : 'center',width : 45,
-//			formatter: function(value,row,index){
-//				img = "./common/images/edit_add.png";
-//				return "<img title='发消息' class='htm_column_img pointer' onclick='javascript:initMsgWindow(\""+ row.id + "\")' src='" + img + "'/>";
-//			}
-//		}
+		registerDateColumn,
+		{field : 'userAvatarL',title : '大头像',align : 'left',width : 70,
+			formatter: function(value, row, index) {
+				imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg'),
+					content = "<img width='60px' height='60px' class='htm_column_img' src='" + imgSrc + "'/>";
+				return "<span>" + content + "</span>";	
+			}		
+		},
 	
 		],
 	htmTablePageList = [50,100,300],

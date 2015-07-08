@@ -871,7 +871,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 		}
 	},
 	dateAddedFormatter = function(value,row,index){
-		return baseTools.parseDate(value).format("MM/dd hh:mm");
+		return baseTools.parseDate(value).format("yy/MM/dd hh:mm");
 	},
 	dateAdded = {field : 'dateAdded', title: '分享日期', align : 'center',formatter:dateAddedFormatter},
 	dateModified = {field : 'dateModified', title:'分享日期', align : 'center', formatter: dateAddedFormatter},
