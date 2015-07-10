@@ -3,9 +3,8 @@ package com.imzhitu.admin.aliyun.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import uk.ltd.getahead.dwr.util.Logger;
 
 import com.hts.web.aliyun.dao.OsUserInfoCacheDao;
 import com.hts.web.aliyun.dao.OsUserLoginCacheDao;
