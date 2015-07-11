@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=320,target-densitydpi=320,user-scalable=no">
-<meta http-equiv="refresh" content="0; url=${webRootPath }/login">
+<meta http-equiv="refresh" content="3; url=${webRootPath }/login">
 <title>提示:找不到指定路径</title>
 <link rel="stylesheet" type="text/css" href="${webRootPath }/error/css/style.css" />
 </head>
