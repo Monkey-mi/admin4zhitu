@@ -58,13 +58,37 @@
 		</aop:aspect>
 	</aop:config>
 	
-	
 	<!-- 
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	 -->
+	
+	<!-- 
+   	<bean id="webSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
+    	<property name="configLocation" value="classpath:mybatis-config-web.xml" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="webMapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
+  		<property name="basePackage" value="com.hts.web.**.mapper" /> 
+  		<property name="sqlSessionFactoryBeanName" value="webSqlSessionFactory" /> 
+  	</bean>
+  	 -->
+	
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <!-- 
+        <property name="dataSource" ref="masterDataSource" /> -->
+         <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.imzhitu.admin.**.mapper" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> 
+    </bean>
+	
 	
 	<bean id="masterJdbcTemplate" class="com.hts.web.base.database.ZTJdbcTemplate">
 		<constructor-arg ref="masterDataSource" />
@@ -102,30 +126,6 @@
 		class="org.springframework.data.redis.core.StringRedisTemplate" 
 	    p:connection-factory-ref="jedisConnFactory" >
 	</bean>
-	
-	<bean id="webSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
-        <property name="configLocation" value="classpath:mybatis-config-web.xml" />
-        <!-- 
-        <property name="dataSource" ref="masterDataSource" /> -->
-         <property name="dataSource" ref="dataSource" />
-    </bean>
- 
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" autowire="byName">
-        <property name="configLocation" value="classpath:mybatis-config.xml" />
-        <!-- 
-        <property name="dataSource" ref="masterDataSource" /> -->
-         <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.imzhitu.admin.**.mapper" />
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> 
-    </bean>
-    
-    <bean id="webMapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
-  		<property name="basePackage" value="com.hts.web.**.mapper" /> 
-  		<property name="sqlSessionFactoryBeanName" value="webSqlSessionFactory" /> 
-  	</bean>
 	
     <import resource="spring-config-web.xml" />
     <import resource="spring-config-interact.xml"/>
