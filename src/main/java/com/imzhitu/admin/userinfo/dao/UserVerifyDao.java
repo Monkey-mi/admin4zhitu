@@ -88,4 +88,11 @@ public interface UserVerifyDao extends BaseDao {
 	 */
 	public void updateVerifySerial(Integer id, Integer serial);
 	
+	/**
+	 * 查询所有分类
+	 * 
+	 * @return
+	 */
+	public List<UserVerify> queryAllVerify();
+	
 }

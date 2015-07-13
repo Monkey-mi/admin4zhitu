@@ -73,6 +73,18 @@ public class UserVerifyDaoImpl extends BaseDaoImpl implements UserVerifyDao {
 	private static final String QUERY_VERIFY_BY_ID = "select * from " + table
 			+ " where id=?";
 	
+	private static final String QUERY_ALL_VERIFY = "select * from " + table 
+			+ " order by serial desc";
+	
+
+	public UserVerify buildVerify(ResultSet rs) throws SQLException {
+		return new UserVerify(
+				rs.getInt("id"),
+				rs.getString("verify_name"),
+				rs.getString("verify_desc"),
+				rs.getString("verify_icon"),
+				rs.getInt("serial"));
+	}
 	
 	@Override
 	public void saveVerify(UserVerify verify) {
@@ -167,14 +179,18 @@ public class UserVerifyDaoImpl extends BaseDaoImpl implements UserVerifyDao {
 				verify.getId()
 		});
 	}
-	
-	public UserVerify buildVerify(ResultSet rs) throws SQLException {
-		return new UserVerify(
-				rs.getInt("id"),
-				rs.getString("verify_name"),
-				rs.getString("verify_desc"),
-				rs.getString("verify_icon"),
-				rs.getInt("serial"));
+
+	@Override
+	public List<UserVerify> queryAllVerify() {
+		return getJdbcTemplate().query(QUERY_ALL_VERIFY, new RowMapper<UserVerify>() {
+
+			@Override
+			public UserVerify mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+				return buildVerify(rs);
+			}
+			
+		});
 	}
 
 }

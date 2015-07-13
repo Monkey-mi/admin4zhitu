@@ -868,29 +868,29 @@ function updateWeight(index, id, isAdd) {
 			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
 			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量提醒" plain="true" iconCls="icon-converter" id="batchNotifyBtn">批量提醒</a>
 			<input id="ss-verifyId" value="所有认证类型" style="width:100px" />
-			<select id="ss-sysAccept" class="easyui-combobox" style="width:80px;">
+			<select id="ss-sysAccept" class="easyui-combobox" style="width:120px;">
 		        <option value="">所有系统状态</option>
 		        <option value="0">待定</option>
 		        <option value="1">通过</option>
 		        <option value="2">拒绝</option>
 	   		</select>
-	   		<select id="ss-userAccept" class="easyui-combobox" style="width:90px;">
+	   		<select id="ss-userAccept" class="easyui-combobox" style="width:120px;">
 		        <option value="">所有用户状态</option>
 		        <option value="0">待定</option>
 		        <option value="1">通过</option>
 		        <option value="2">拒绝</option>
 	   		</select>
-	   		<select id="ss-notified" class="easyui-combobox" style="width:90px;">
+	   		<select id="ss-notified" class="easyui-combobox" style="width:120px;">
 		        <option value="">所有通知状态</option>
 		        <option value="0">未通知</option>
 		        <option value="1">已通知</option>
 	   		</select>
-	   		<select id="ss-weight" class="easyui-combobox" style="width:90px;">
+	   		<select id="ss-weight" class="easyui-combobox" style="width:120px;">
 	   			<option value="">置顶和未置顶</option>
 	   			<option value="1">已置顶</option>
 	   			<option value="0">未置顶</option>
 	   		</select>
-	   		<select id="ss-lastUsed" class="easyui-combobox" style="width:90px;">
+	   		<select id="ss-lastUsed" class="easyui-combobox" style="width:120px;">
 	   			<option value="">所有登录时间</option>
 	   			<option value="1">一个月没登录</option>
 	   		</select>

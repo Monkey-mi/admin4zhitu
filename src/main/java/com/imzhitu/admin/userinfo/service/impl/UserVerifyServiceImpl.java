@@ -71,7 +71,7 @@ public class UserVerifyServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void buildVerify(Boolean addAllTag, Map<String, Object> jsonMap) throws Exception {
-		List<UserVerify> list = userVerifyCacheDao.queryAllVerify();
+		List<UserVerify> list = userVerifyDao.queryAllVerify();
 		if(addAllTag) {
 			list.add(0, new UserVerify(0, "所有认证", "所有认证", null, 9999));
 		}
