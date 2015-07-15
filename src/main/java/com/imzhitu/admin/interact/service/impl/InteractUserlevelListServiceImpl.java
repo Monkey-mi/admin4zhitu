@@ -20,6 +20,7 @@ import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.InteractPlanComment;
 import com.imzhitu.admin.common.pojo.InteractPlanCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractWorldLabelDto;
+import com.imzhitu.admin.common.pojo.OpZombieDegreeUserLevel;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserLevelListDto;
@@ -31,6 +32,7 @@ import com.imzhitu.admin.interact.service.InteractPlanCommentService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldMapper;
@@ -53,6 +55,9 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	
 	@Value("${plan.comment.super.star.userlevel.id}")
 	private Integer superStarUserLevelId;
+	
+	@Value("${admin.interact.zombie.common.degree.id}")
+	private Integer commonZombieDegreeId;
 	
 	@Autowired
 	private InteractUserlevelListDao interactUserlevelListDao;
@@ -84,6 +89,16 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	@Autowired
 	private ZTWorldMapper ztworldMapper;
 	
+	@Autowired
+	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
+	
+	public Integer getCommonZombieDegreeId() {
+		return commonZombieDegreeId;
+	}
+
+	public void setCommonZombieDegreeId(Integer commonZombieDegreeId) {
+		this.commonZombieDegreeId = commonZombieDegreeId;
+	}
 	
 	public Integer getStarUserLevelId() {
 		return starUserLevelId;
@@ -123,12 +138,16 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 		SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
 		List<UserLevelDto> userlevelDtoList=null;
 		List<InteractWorldLabelDto> interactWorldLabel=null;
+		List<OpZombieDegreeUserLevel> zombieDegreeUserLevelList = null;
+		Integer needZombieDegreeId = null;
 		try{
 			userlevelDtoList = interactUserlevelDao.QueryUserlevelList();
 			//已经没有查询userlevelId
 			interactWorldLabel = interactUserlevelListDao.QueryNewWorldUserlevelListByTime(startTime, currentDate);
+			
+			zombieDegreeUserLevelList = zombieDegreeUserLevelService.queryZombieDegree(null, null, null);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn(e.getStackTrace());
 		}
 		for(InteractWorldLabelDto o:interactWorldLabel){//新发织图遍历
 			
@@ -212,8 +231,25 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 			for(UserLevelDto userlevel:userlevelDtoList){//等级遍历，匹配新发织图的用户对于的用户等级
 				if(userlevel.getId().equals(o.getUser_level_id())){
 					try{
-						interactWorldService.saveUserInteract(o.getUser_id(),GetLongRandamNum(userlevel.getMin_fans_count(),userlevel.getMax_fans_count()),userlevel.getTime());//添加粉丝
+						needZombieDegreeId = null;
+						for(OpZombieDegreeUserLevel oz:zombieDegreeUserLevelList){
+							if(oz.getUserLevelId() == userLevelMap.get(o.getUser_id())){
+								needZombieDegreeId = oz.getZombieDegreeId();
+								break;
+							}
+						}
 						
+						if(null == needZombieDegreeId){
+							needZombieDegreeId = commonZombieDegreeId;
+						}
+						
+						try{
+							interactWorldService.saveUserInteract(o.getUser_id(),needZombieDegreeId,GetLongRandamNum(userlevel.getMin_fans_count(),userlevel.getMax_fans_count()),userlevel.getTime());//添加粉丝
+						}catch(Exception e){
+							logger.warn("ScanNewWorldAndJoinIntoInteract:interactWorldService.saveUserInteract.\nuserId="+o.getUser_id()+"\nneedZombieDegreeId="+needZombieDegreeId);
+						}
+						/*
+						 * *暂时先将这个评论的去掉
 						StringBuilder strb = new StringBuilder();
 						List<InteractPlanCommentLabel> list = interactPlanCommentLabelService.queryInteractPlanCommentLabelByDateAndTime(df.parse(df.format(currentDate)), df2.parse(df2.format(currentDate)));//查询当前有效标签
 						if(list != null && list.size() > 0){
@@ -241,20 +277,19 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						String[] commentsArray = null;
 						if(strb.length()>0){
 							commentsArray = strb.toString().split(",");
-						}
+						}*/
 						
-						interactWorldService.saveInteractV2(o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
-								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), commentsArray, userlevel.getTime());//添加互动
-						
+						interactWorldService.saveInteractV3(o.getUser_id(),needZombieDegreeId,o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
+								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), null, userlevel.getTime());//添加互动
 					}catch(Exception e){
-						e.printStackTrace();
+						logger.info(e.getStackTrace());
 					}
 					break;
 				}
 			}
 		}
 		Date end = new Date();
-		logger.info("织图添加互动 end , 共花费：" + (end.getTime() - currentDate.getTime())+" . total:"+interactWorldLabel.size()+". success:"+successTotalCount);
+		logger.info("织图添加互动 end , 共花费：" + (end.getTime() - currentDate.getTime())+"ms . total:"+interactWorldLabel.size()+". success:"+successTotalCount);
 	}
 	
 	/**

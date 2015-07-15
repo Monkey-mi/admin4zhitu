@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractWorldLikedMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractWorldLiked" id="WorldLikedMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="interactId" column="interact_id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="userId" column="user_id" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="finished" column="finished" jdbcType="INTEGER"/>
+		<result property="dateAdded" column="date_added" jdbcType="TIMESTAMP"/>
+		<result property="dateSchedule" column="date_schedule" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- BATCH SAVE LIKED -->
+	<insert id="batchSaveWorldLiked">
+		insert into hts_admin.interact_world_liked
+		(interact_id,world_id,user_id,date_added,date_schedule,valid,finished)
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.interactId},#{item.worldId},#{item.userId},#{item.dateAdded},#{item.dateSchedule},#{item.valid},#{item.finished})
+		</foreach>
+	</insert>
+	
+	<!--BATCH DELETE By ID-->
+	<delete id="batchDeleteWorldLikedById">
+		delete from hts_admin.interact_world_liked
+		where id in
+		<foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!--BATCH DELETE By INTERACT_ID-->
+	<delete id="batchDeleteWorldLikedByInteractId">
+		delete from hts_admin.interact_world_liked
+		where interact_id in
+		<foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- BATCH UPDATE VALID -->
+	<update id="batchUpdateWorldLikedValid">
+		update hts_admin.interact_world_liked set valid=#{valid}
+		where id in
+		<foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- BATCH UPDATE FINISHED -->
+	<update id="batchUpdateWorldLikedFinished">
+		update hts_admin.interact_world_liked  set finished=#{finished}
+		where id in
+		<foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!--UPDATE  -->
+	<update id="updateWorldLiked">
+		update hts_admin.interact_world_liked
+		<set>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="finished != null">
+				finished = #{finished},
+			</if>
+			<if test="dateSchedule != null">
+				date_schedule = #{dateSchedule}
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="interactId != null">
+				and interact_id = #{interactId}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[ id <= #{maxId}]]>
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+		</where>
+	</update>
+	
+	
+	<!-- SELECT -->
+	<select id="queryWorldLiked" resultMap="WorldLikedMap">
+		select * from hts_admin.interact_world_liked
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="interactId != null">
+				and interact_id = #{interactId}
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+			<if test="valid != null">
+				and valid = #{valid}
+			</if>
+			<if test="finished != null">
+				and finished = #{finished}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and id <= #{maxId}]]>
+			</if>
+			<if test="dateSchedule != null and dateAdded != null">
+				and date_schedule between #{dateAdded} and #{dateSchedule}
+			</if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- SELECT COUNT -->
+	<select id="queryWorldLikedTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.interact_world_liked
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="interactId != null">
+				and interact_id = #{interactId}
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+			<if test="valid != null">
+				and valid = #{valid}
+			</if>
+			<if test="finished != null">
+				and finished = #{finished}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and id <= #{maxId}]]>
+			</if>
+			<if test="dateSchedule != null and dateAdded != null">
+				and date_schedule between #{dateAdded} and #{dateSchedule}
+			</if>
+		</where>
+	</select>
+	
+	<!-- update by interactId -->
+	<update id="updateWorldLikedValidByMaxInteractId">
+		update hts_admin.interact_world_liked set valid=#{valid}
+		where valid = 1-#{valid} and 
+		<![CDATA[interact_id <= #{interactId}]]>
+	</update>
+	
+</mapper>

@@ -166,7 +166,7 @@
         </property>
         <property name="cronExpression">
         	<!-- <value>*/5 * 0,9-23 * * ?</value> -->
-            <value>0 0/5 * * * ?</value><!-- 每隔5分钟 -->
+            <value>0 0/3 * * * ?</value><!-- 每隔5分钟 -->
         </property>
     </bean>
 		
@@ -191,7 +191,7 @@
         </property>
         <property name="cronExpression">
             <!--<value>*/5 * 0,9-23 * * ?</value>--> 
-            <value>0 0/5 * * * ?</value><!-- 每隔5分钟 -->
+            <value>0 0/3 * * * ?</value><!-- 每隔5分钟 -->
         </property>
     </bean>
     
@@ -216,7 +216,7 @@
         </property>
         <property name="cronExpression">
             <!-- <value>*/5 * 0,9-23 * * ?</value> -->
-            <value>0 0/5 * * * ?</value><!-- 9点到12点每隔5分钟 -->
+            <value>0 0/3 * * * ?</value><!-- 9点到12点每隔5分钟 -->
         </property>
     </bean>
     
@@ -241,12 +241,13 @@
         </property>
         <property name="cronExpression">
             <!-- <value>*/5 * 0,9-23 * * ?</value> -->
-            <value>0 0/10 * * * ?</value><!-- 9点到12点每隔10分钟 -->
+            <value>0 0/3 * * * ?</value><!-- 9点到12点每隔10分钟 -->
         </property>
     </bean>
     
     
     <!-- 互动跟踪定时任务 -->
+    <!-- 
     <bean id="trackInteractJobDetail"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject">
@@ -258,20 +259,22 @@
         <property name="concurrent"> 
 			<value>true</value>
 		</property> 
-    </bean>
+    </bean> -->
 
 	<!-- 互动跟踪定时任务周期 -->
+	<!--
     <bean id="trackInteractJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail">
             <ref bean="trackInteractJobDetail" />
         </property>
         <property name="cronExpression">
-        	<!-- <value>*/5 * 0,9-23 * * ?</value> -->
-            <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
+            <value>0 0/20 * * * ?</value>
         </property>
-    </bean>
+    </bean> 
+    -->
     
     <!-- 更新未完成互动定时任务 -->
+    <!-- 
     <bean id="updateInteractScheduleJobDetail"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject">
@@ -290,10 +293,10 @@
             <ref bean="updateInteractScheduleJobDetail" />
         </property>
         <property name="cronExpression">
-            <value>0 0 2 * * ?</value><!-- 每天凌晨2点更新 -->
+            <value>0 0 2 * * ?</value>
         </property>
     </bean>
-    
+     -->
     
      <!-- 删除最新织图多余缓存定时任务 -->
     <bean id="deleteOverFlowLatestCacheScheduleJobDetail"
@@ -609,8 +612,6 @@
                 <ref bean="interactClickJobTrigger"/>
                 <ref bean="interactLikedJobTrigger" />
                 <ref bean="interactFollowJobTrigger" />
-                <ref bean="trackInteractJobTrigger" />
-                <ref bean="updateInteractScheduleJobTrigger" />
                 <ref bean="deleteOverFlowLatestCacheScheduleJobTrigger" />
                 <ref bean="interactByUserLevelJobTrigger" />
                 <ref bean="updateTypeWorldSchedulaTrigger" /> 
@@ -624,7 +625,6 @@
                 <ref bean="platConcernJobTrigger" />
                 <ref bean="starRecommendSchedulaTrigger" />
                 <ref bean="starRecommendCacheTrigger" />
-                
                 <ref bean="zombieWorldSchedulaJobTrigger" />
                 <ref bean="dailyDataStatisticsSchedulaJobTrigger" />
             </list>

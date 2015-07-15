@@ -17,6 +17,7 @@ import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
  * @author ztj
  *
  */
+@Deprecated
 public interface InteractWorldCommentDao extends BaseDao {
 	
 	/**

@@ -7,13 +7,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.hts.web.base.HTSException;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
@@ -24,30 +24,33 @@ import com.hts.web.common.util.Log;
 import com.hts.web.common.util.NumberUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
-import com.hts.web.push.yunba.YunbaException;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.InteractTracker;
 import com.imzhitu.admin.common.pojo.InteractUser;
 import com.imzhitu.admin.common.pojo.InteractUserFollow;
 import com.imzhitu.admin.common.pojo.InteractWorld;
 import com.imzhitu.admin.common.pojo.InteractWorldClick;
-import com.imzhitu.admin.common.pojo.InteractWorldComment;
 import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
 import com.imzhitu.admin.common.pojo.InteractWorldLiked;
-import com.imzhitu.admin.common.pojo.UserInfo;
+import com.imzhitu.admin.common.pojo.OpZombieDegreeUserLevel;
+import com.imzhitu.admin.common.pojo.UserLevelListDto;
 import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.interact.dao.InteractCommentDao;
 import com.imzhitu.admin.interact.dao.InteractTrackerDao;
 import com.imzhitu.admin.interact.dao.InteractUserDao;
-import com.imzhitu.admin.interact.dao.InteractUserFollowDao;
-import com.imzhitu.admin.interact.dao.InteractWorldClickDao;
-import com.imzhitu.admin.interact.dao.InteractWorldCommentDao;
 import com.imzhitu.admin.interact.dao.InteractWorldDao;
-import com.imzhitu.admin.interact.dao.InteractWorldLikedDao;
+import com.imzhitu.admin.interact.dao.InteractWorldlevelDao;
+import com.imzhitu.admin.interact.mapper.InteractUserFollowMapper;
+import com.imzhitu.admin.interact.mapper.InteractWorldClickMapper;
+import com.imzhitu.admin.interact.mapper.InteractWorldCommentMapper;
+import com.imzhitu.admin.interact.mapper.InteractWorldLikedMapper;
 import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.dao.UserZombieDao;
+import com.imzhitu.admin.op.mapper.OpZombieMapper;
 import com.imzhitu.admin.op.service.OpUserService;
+import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
 import com.imzhitu.admin.op.service.impl.OpServiceImpl;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 
@@ -90,7 +93,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	/**
 	 * 工作频率，毫秒级
 	 */
-	public static final int WORKING_INTERVAL_MILLISECOND = WORKING_INTERVAL*60*1000;
+	public static final int WORKING_INTERVAL_MILLISECOND = WORKING_INTERVAL*2*60*1000;
 	/**
 	 * 不工作时长，毫秒级
 	 */
@@ -122,21 +125,16 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	
 	@Value("${admin.interact.maxConcernCount}")
 	private Integer maxConcernCount;
-
+	
+	@Value("${admin.interact.zombie.common.degree.id}")
+	private Integer commonZombieDegreeId;
+	
+	
 	@Autowired
 	private KeyGenService keyGenService;
 	
 	@Autowired
 	private OpUserService opUserService;
-	
-	@Autowired
-	private InteractWorldLikedDao interactWorldLikedDao;
-	
-	@Autowired
-	private InteractWorldCommentDao interactWorldCommentDao;
-	
-	@Autowired
-	private InteractWorldClickDao interactWorldClickDao;
 	
 	@Autowired
 	private InteractWorldDao interactWorldDao;
@@ -149,9 +147,6 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private InteractUserDao interactUserDao;
-	
-	@Autowired
-	private InteractUserFollowDao interactUserFollowDao;
 	
 	@Autowired
 	private InteractTrackerDao interactTrackerDao;
@@ -180,6 +175,37 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	@Autowired
 	private com.hts.web.push.service.PushService pushService;
 	
+	@Autowired
+	private InteractWorldClickMapper worldClickMapper;
+	
+	@Autowired
+	private OpZombieMapper zombieMapper;
+	
+	@Autowired
+	private InteractWorldLikedMapper worldLikedMapper;
+	
+	@Autowired
+	private InteractWorldCommentMapper worldCommentMapper;
+	
+	@Autowired
+	private InteractUserFollowMapper userFollowMapper;
+	
+	@Autowired
+	private InteractWorldlevelDao interactWorldlevelDao;
+	
+	@Autowired
+	private InteractUserlevelListService userLevelListService;
+	
+	@Autowired
+	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
+	
+	public Integer getCommonZombieDegreeId() {
+		return commonZombieDegreeId;
+	}
+
+	public void setCommonZombieDegreeId(Integer commonZombieDegreeId) {
+		this.commonZombieDegreeId = commonZombieDegreeId;
+	}
 	
 	public Integer getAdminId() {
 		return adminId;
@@ -272,143 +298,205 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void buildComments(final Integer interactId, int maxId, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception {
-		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<InteractWorldCommentDto>() {
-
-			@Override
-			public List<InteractWorldCommentDto> getSerializables(
-					RowSelection rowSelection) {
-				return interactWorldCommentDao.queryComment(interactId, rowSelection);
+		InteractWorldCommentDto dto = new InteractWorldCommentDto();
+		dto.setFirstRow(limit * (start -1));
+		dto.setLimit(limit);
+		dto.setInteractId(interactId);
+		dto.setMaxId(maxId);
+		long total = 0;
+		Integer reMaxId = 0;
+		List<InteractWorldCommentDto> list = null;
+		
+		total = worldCommentMapper.queryWorldCommentTotalCount(dto);
+		
+		if (total > 0) {
+			list = worldCommentMapper.queryWorldComment(dto);
+			if ( list != null && list.size() > 0) {
+				reMaxId = list.get(0).getId();
 			}
-
-			@Override
-			public List<InteractWorldCommentDto> getSerializableByMaxId(int maxId,
-					RowSelection rowSelection) {
-				return interactWorldCommentDao.queryComment(interactId, maxId, rowSelection);
-			}
-
-			@Override
-			public long getTotalByMaxId(int maxId) {
-				return interactWorldCommentDao.queryCommentTotal(interactId, maxId);
-			}
-			
-		}, OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID);
+		}
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, reMaxId);
 		
 	}
 
 	@Override
 	public void buildLikeds(final Integer interactId, int maxId, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception {
-		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<InteractWorldLiked>() {
-
-			@Override
-			public List<InteractWorldLiked> getSerializables(
-					RowSelection rowSelection) {
-				return interactWorldLikedDao.queryLiked(interactId, rowSelection);
+		
+		InteractWorldLiked dto = new InteractWorldLiked();
+		dto.setFirstRow(limit * (start -1));
+		dto.setLimit(limit);
+		dto.setInteractId(interactId);
+		dto.setMaxId(maxId);
+		long total = 0;
+		Integer reMaxId = 0;
+		List<InteractWorldLiked> list = null;
+		
+		total = worldLikedMapper.queryWorldLikedTotalCount(dto);
+		
+		if (total > 0) {
+			list = worldLikedMapper.queryWorldLiked(dto);
+			if ( list != null && list.size() > 0) {
+				reMaxId = list.get(0).getId();
 			}
-
-			@Override
-			public List<InteractWorldLiked> getSerializableByMaxId(int maxId,
-					RowSelection rowSelection) {
-				return interactWorldLikedDao.queryLiked(interactId, maxId, rowSelection);
-			}
-
-			@Override
-			public long getTotalByMaxId(int maxId) {
-				return interactWorldLikedDao.queryLikedTotal(interactId, maxId);
-			}
-			
-		}, OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID);
+		}
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, reMaxId);
 	}
 
 	@Override
 	public void buildClicks(final Integer interactId, int maxId, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception {
-		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<InteractWorldClick>() {
-
-			@Override
-			public List<InteractWorldClick> getSerializables(
-					RowSelection rowSelection) {
-				return interactWorldClickDao.queryClick(interactId, rowSelection);
+		InteractWorldClick dto = new InteractWorldClick();
+		dto.setFirstRow(limit * (start -1));
+		dto.setLimit(limit);
+		dto.setInteractId(interactId);
+		dto.setMaxId(maxId);
+		long total = 0;
+		Integer reMaxId = 0;
+		List<InteractWorldClick> list = null;
+		
+		total = worldClickMapper.queryWorldClickTotalCount(dto);
+		
+		if (total > 0) {
+			list = worldClickMapper.queryWorldClick(dto);
+			if ( list != null && list.size() > 0) {
+				reMaxId = list.get(0).getId();
 			}
-
-			@Override
-			public List<InteractWorldClick> getSerializableByMaxId(int maxId,
-					RowSelection rowSelection) {
-				return interactWorldClickDao.queryClick(interactId, maxId, rowSelection);
-			}
-
-			@Override
-			public long getTotalByMaxId(int maxId) {
-				return interactWorldClickDao.queryClickTotal(interactId, maxId);
+		}
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, reMaxId);
+	}
+	
+	
+	/**
+	 * 获取时间列表
+	 * 特殊时间2点、，这两个时间段。
+	 * 		算法：2点时间比例为每5分钟12%，11%，。。。，，并且让这些比例 乘以   （1-当前分钟/60） 。 未能完成的部分推迟到7点钟来完成。这样能有效避免2点59分发的图，3点钟还有一堆人点赞
+	 * 特殊时间3点到7点：
+	 *      算法：3点到6点没有人，不实施互动。7点钟开始，比例1%，2%。。。12%，11%。。。1%。
+	 * 正常时间段8点到凌晨2点：
+	 * 		算法：比例为12%，11%。。。1%,1%
+	 */
+	public List<Date> getScheduleV3(Date begin,Integer minuteDuration, Integer total){
+		List<Date> dateList = new ArrayList<Date>();
+		int tt = total;
+		int hasBeenProcess = 0;
+		long beginTime = begin.getTime();
+		long interval = minuteDuration*2000L;
+		Calendar ca = Calendar.getInstance(Locale.CHINA);
+		ca.setTime(begin);
+		int hourOfDay = ca.get(Calendar.HOUR_OF_DAY);
+		int minuteOfHour = ca.get(Calendar.MINUTE);
+		if(hourOfDay == 2){//凌晨2点钟,比例为12*(60-minuteOfHour)/60，11*(60-minuteOfHour)/60。。。
+			for(int i=0;minuteOfHour < 60 && tt > hasBeenProcess;i++){
+				int t = tt *((12-i)>0?(12-i):1)*(60-minuteOfHour)/6000;
+				minuteOfHour += 5;
+				hasBeenProcess += t;
+				
+				if(t>0){
+					long span = interval / t;
+					long tmpBeginTime = beginTime;
+					for(int j=0; j < t; j++){						
+						beginTime += (long)((Math.random()+1)*span);
+						dateList.add(new Date(beginTime));
+					}
+					beginTime = tmpBeginTime + 300000L;
+				}else{
+					break;
+				}
 			}
 			
-		}, OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID);
-		
+			//剩下的7点钟来完成
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			try{
+				String str = df.format(begin);
+				Date tmpDate = df.parse(str);
+				beginTime = tmpDate.getTime() + 7*3600000L;
+			}catch(Exception e){
+				Log.warn("getScheduleV3: convert time failed!");
+			}
+			
+			for(int k=1;tt > hasBeenProcess;k++){
+				int t = tt *(k>12?(24-k):k)/100;
+				if(t <= 0){
+					t = 1;
+				}
+				hasBeenProcess += t;
+				if(t>0){
+					long span = interval / t;
+					long tmpBeginTime = beginTime;
+					for(int j=0; j < t; j++){						
+						beginTime += (long)((Math.random()+1)*span);
+						dateList.add(new Date(beginTime));
+					}
+					beginTime = tmpBeginTime + 300000L;
+				}else{
+					break;
+				}
+					
+			}
+		}else if(hourOfDay > 2 && hourOfDay < 8){//凌晨3点到早上八点基本很少人
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			try{
+				String str = df.format(begin);
+				Date tmpDate = df.parse(str);
+				beginTime = tmpDate.getTime() + 7*3600000L;
+			}catch(Exception e){
+				Log.warn("getScheduleV3: convert time failed!");
+			}
+			
+			for(int k=1;tt > hasBeenProcess;k++){
+				int t = tt *(k>12?(24-k):k)/100;
+				if(t <= 0){
+					t = 1;
+				}
+				hasBeenProcess += t;
+				if(t>0){
+					long span = interval / t;
+					long tmpBeginTime = beginTime;
+					for(int j=0; j < t; j++){						
+						beginTime += (long)((Math.random()+1)*span);
+						dateList.add(new Date(beginTime));
+					}
+					beginTime = tmpBeginTime + 300000L;
+				}else{
+					break;
+				}
+					
+			}
+		}else{//正常时间.
+			//比例12、11、10、9、8、7、6、5、4、3、2、1、1。。。
+			for(int i=0; tt > hasBeenProcess; i++){
+				int t = tt *((12-i)>0?(12-i):1)/100;
+				if(t <= 0){
+					t = 1;
+				}
+				hasBeenProcess += t;
+				if(t>0){
+					long span = interval / t;
+					long tmpBeginTime = beginTime;
+					for(int j=0; j < t; j++){						
+						beginTime += (long)((Math.random()+1)*span);
+						dateList.add(new Date(beginTime));
+					}
+					beginTime = tmpBeginTime + 300000L;
+				}else{
+					break;
+				}
+			}
+			
+		}
+		return dateList;
 	}
-
-	@Override
-	public void saveInteract(Integer worldId, Integer clickCount,
-			Integer likedCount, String[] commentIds, Integer duration) throws Exception {
-		
-		duration = duration == null ? 0 : duration; 
-		clickCount = clickCount == null ? 0 : clickCount;
-		likedCount = likedCount == null ? 0 : likedCount;
-		int commentCount = commentIds == null ? 0 : commentIds.length;
-		
-		Integer interactId = 0;
-		Date dateAdded = new Date();
-		InteractWorld interact = interactWorldDao.queryInteractByWorldId(worldId);
-		
-		if(interact != null) {
-			interactId = interact.getId();
-			interactWorldDao.updateInteract(
-					interactId, 
-					interact.getClickCount()+clickCount,
-					interact.getCommentCount()+commentCount,
-					interact.getLikedCount()+likedCount,
-					interact.getDuration()+duration);
-		} else {
-			interactId = keyGenService.generateId(Admin.KEYGEN_INTERACT_WORLD_ID);
-			interactWorldDao.saveInteract(new InteractWorld(interactId, worldId, clickCount,
-					commentCount, likedCount, duration,
-					dateAdded, Tag.TRUE));
-		}
-		
-		// 保存播放
-		if(clickCount > 0) {
-			List<Integer> countList = getScheduleCount(clickCount, duration);
-			List<Date> scheduleDateList = getScheduleDates(dateAdded, duration, countList.size());
-			for(int i = 0; i < countList.size(); i++) {
-				saveClick(interactId, worldId, countList.get(i), dateAdded, scheduleDateList.get(i));
-			}
-		}
-		
-		// 保存评论
-		if(commentCount > 0) {
-			String idStr = Arrays.toString(commentIds);
-			Integer[] cids = StringUtil.convertStringToIds(idStr.substring(1, idStr.length() - 1));
-			List<Date> scheduleDateList = getScheduleDates(dateAdded, duration, cids.length);
-			List<Integer> uids = opUserService.getRandomUserZombieIds(cids.length);
-			for(int i = 0; i < cids.length; i++) {
-				saveComment(interactId, worldId, uids.get(i), cids[i], dateAdded,scheduleDateList.get(i));
-			}
-		}
-		
-		// 保存喜欢
-		if(likedCount > 0) {
-			List<Integer> uids = opUserService.getRandomUserZombieIds(likedCount);
-			List<Date> scheduleDateList = getScheduleDates(dateAdded, duration, likedCount);
-			for(int i = 0; i < uids.size(); i++) {
-				saveLiked(interactId, worldId, uids.get(i), dateAdded, scheduleDateList.get(i));
-			}
-		}
-	
-	}
 	
 	@Override
-	public void saveInteractV2(Integer worldId, Integer clickCount,
-			Integer likedCount, String[] commentIds, Integer minuteDuration) throws Exception {
-		
+	public void saveInteractV3(Integer userId,Integer degreeId,Integer worldId,Integer clickCount,
+			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception {
 		minuteDuration = minuteDuration == null ? 0 : minuteDuration; 
 		clickCount = clickCount == null ? 0 : clickCount;
 		likedCount = likedCount == null ? 0 : likedCount;
@@ -417,7 +505,6 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		Integer interactId = 0;
 		Date dateAdded = new Date();
 		InteractWorld interact = interactWorldDao.queryInteractByWorldId(worldId);
-		UserInfo userInfo = worldDao.queryAuthorInfoByWorldId(worldId);
 		if(interact != null) {
 			interactId = interact.getId();
 			interactWorldDao.updateInteract(
@@ -436,68 +523,89 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		// 保存播放
 		if(clickCount > 0) {
 			List<Integer> countList = getScheduleCountV2(clickCount, minuteDuration);
-			List<Date> scheduleDateList = getScheduleDatesV2(dateAdded, minuteDuration, countList.size());
-			for(int i = 0; i < countList.size(); i++) {
-				saveClick(interactId, worldId, countList.get(i), dateAdded, scheduleDateList.get(i));
-			}
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, countList.size());
+			batchSaveClick(interactId, worldId, countList, dateAdded, scheduleDateList);
 		}
 		
+		//
 		//获取非粉僵尸用户、和用户僵尸粉所需总数
 		//因为*Rate是整数，范围在0-100代表0%-100%
 		//
-		long hasFollowZombies = userZombieDao.queryZombieFollowCountByUserIdForInteractForInteract(userInfo.getId(),worldId);
-		int followZombiesTotal = likedCount * likeFromFollowRate + likedCount * ( 100 -  likeFromFollowRate)* likeToFollowRate
-							> commentCount * commentFromFollowRate ? likedCount * likeFromFollowRate : commentCount * commentFromFollowRate;
-		followZombiesTotal = followZombiesTotal % 100 == 0 ? followZombiesTotal / 100 : followZombiesTotal / 100 +1;
-		followZombiesTotal = (int)(followZombiesTotal> hasFollowZombies ? hasFollowZombies : followZombiesTotal);
-		int unFollowZombiesTotal = likedCount > commentCount ? likedCount - followZombiesTotal : commentCount - followZombiesTotal;
-		List<Integer> fzList =null;
+		List<Integer> fzList = null;
+		List<Integer> unFzList = null;
 		int fzListLength=0;
-		try{
-			if(followZombiesTotal >0 ){
-				fzList = opUserService.getRandomFollowUserZombieIds(userInfo.getId(),worldId, 1, followZombiesTotal);
-				fzListLength = fzList.size();
-			}else{
+		
+		//计算粉丝马甲数
+		int followZombiesTotal = likedCount * likeFromFollowRate + likedCount * ( 100 -  likeFromFollowRate)* likeToFollowRate
+				> commentCount * commentFromFollowRate ? likedCount * likeFromFollowRate : commentCount * commentFromFollowRate;
+		followZombiesTotal = Math.round(followZombiesTotal / 100.00f);
+		int unFollowZombiesTotal = likedCount > commentCount ? likedCount - followZombiesTotal : commentCount - followZombiesTotal;
+		
+		//查询粉丝马甲
+		if ( followZombiesTotal > 0){
+			try{
+				fzList = zombieMapper.queryNotInteractNRandomFollowZombie(userId, worldId,followZombiesTotal);
+				if(fzList != null){
+					fzListLength = fzList.size();
+				}
+			}catch(Exception e){
+				logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".worldId="+worldId+".\nnow set fzList is null.\ncause:"+e.getMessage());
+				fzList = null;
 				fzListLength = 0;
 			}
-		}catch(IndexOutOfBoundsException e){
-			logger.info(e.getMessage());
 		}
-		List<Integer> unFzList = opUserService.getRandomUnFollowUserZombieIds(userInfo.getId(),worldId, followZombiesTotal+unFollowZombiesTotal-fzListLength);
 		
-		// 保存喜欢
-		if(likedCount > 0) {
+		//非粉丝马甲
+		try{
+			int unFollowZombieNeedTotal = followZombiesTotal + unFollowZombiesTotal - fzListLength;
+			if(unFollowZombieNeedTotal > 0){
+				unFzList = zombieMapper.queryNotInteractNRandomNotFollowZombie(userId, degreeId,unFollowZombieNeedTotal);
+				if( null == unFzList){
+					logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
+					throw new Exception("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
+				}
+			}
 			
-			List<Date> scheduleDateList = getScheduleDatesV2(dateAdded, minuteDuration, likedCount);
-			int likeSize = likedCount * likeFromFollowRate % 100 == 0 ? likedCount * likeFromFollowRate / 100 : likedCount * likeFromFollowRate / 100 +1;
+		}catch(Exception e){
+			logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+(followZombiesTotal + unFollowZombiesTotal - fzListLength)+".\nnow set fzList is null.\ncause:"+e.getMessage());
+		}
+		//保存喜欢
+		if(likedCount > 0) {
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, likedCount);
+			List<Integer> zombieIdList = new ArrayList<Integer>();
+			int likeSize = Math.round(likedCount * likeFromFollowRate/100.00f);
 			int i,j;
 			for(i = 0; i < likeSize && i < fzListLength; i++) {
-				saveLiked(interactId, worldId, fzList.get(i), dateAdded, scheduleDateList.get(i));
+				zombieIdList.add(fzList.get(i));
 			}
 			for(j = 0; j < likedCount - i && j < unFzList.size(); j++){
-				saveLiked(interactId, worldId, unFzList.get(j), dateAdded, scheduleDateList.get(i+j));
+				zombieIdList.add(unFzList.get(j));
 			}
+			batchSaveLiked(interactId, worldId, zombieIdList, dateAdded, scheduleDateList);
 		}
 		
 		// 保存评论
 		if(commentCount > 0) {
 			String idStr = Arrays.toString(commentIds);
 			Integer[] cids = StringUtil.convertStringToIds(idStr.substring(1, idStr.length() - 1));
-			List<Date> scheduleDateList = getScheduleDatesV2(dateAdded, minuteDuration, cids.length);
-			int followCommentSize = commentCount * commentFromFollowRate % 100 == 0 ? commentCount * commentFromFollowRate / 100 : commentCount * commentFromFollowRate / 100 + 1;
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, cids.length);
+			List<Integer> zombieIdList = new ArrayList<Integer>();
+			int followCommentSize = Math.round(commentCount * commentFromFollowRate);
 			int i,j;
 			for( i = 0; i < followCommentSize && i < fzListLength ; i++) {
-				saveComment(interactId, worldId, fzList.get(i), cids[i], dateAdded,scheduleDateList.get(i));
+				zombieIdList.add(fzList.get(i));
 			}
 			for(j = 0; j < commentCount - i && j < unFzList.size(); j++){
-				saveComment(interactId, worldId, unFzList.get(j), cids[i+j], dateAdded, scheduleDateList.get(i+j));
+				zombieIdList.add(unFzList.get(j));
 			}
+			batchSaveComment(interactId, worldId, zombieIdList, cids, dateAdded, scheduleDateList);
 		}
+		
 		
 		//加粉
 		if(likedCount > 0){
-			int followSize = likedCount * likeToFollowRate % 100 == 0 ? likedCount * likeToFollowRate / 100 : likedCount * likeToFollowRate / 100 + 1;
-			InteractUser userInteract = interactUserDao.queryUserInteractByUID(userInfo.getId());
+			int followSize = Math.round(likedCount * likeToFollowRate / 100.0f);
+			InteractUser userInteract = interactUserDao.queryUserInteractByUID(userId);
 			if(userInteract != null) {
 				interactId = userInteract.getId();
 				// 更新用户互动
@@ -507,152 +615,125 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 				interactId = keyGenService.generateId(Admin.KEYGEN_INTERACT_USER_ID);
 				// 保存用户互动
 				interactUserDao.saveInteract(new InteractUser(interactId, 
-						userInfo.getId(), followSize, minuteDuration/60>0?minuteDuration/60:1, dateAdded, Tag.TRUE));
+						userId, followSize, minuteDuration/60>0?minuteDuration/60:1, dateAdded, Tag.TRUE));
 			}
 			
 			// 保存粉丝互动
-			
-			List<Date> scheduleDateList = getScheduleDatesV2(dateAdded, minuteDuration, followSize);
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, followSize);
+			List<InteractUserFollow> list = new ArrayList<InteractUserFollow>();
 			for(int i = 0; i < followSize && i < unFzList.size(); i++) {
-				interactUserFollowDao.saveFollow(new InteractUserFollow(interactId, userInfo.getId(), unFzList.get(i),
+				list.add(new InteractUserFollow(interactId, userId, unFzList.get(i),
 						dateAdded, scheduleDateList.get(i), Tag.TRUE, Tag.FALSE));
 			}
-		}
-	}
-	
-	/**
-	 * 第二版本的时间调度算法，主要是使用分钟来进行调度
-	 * @param start
-	 * @param minuteDuration
-	 * @param size
-	 * @return
-	 * @author zxx
-	 */
-	@Override
-	public List<Date> getScheduleDatesV2(Date start,int minuteDuration,int size  ){
-		List<Date> list = new ArrayList<Date>();
-		//计算正确的开始时间，若是当前时间为不工作时间，则开始时间为最早开始时间
-//		Calendar ca = Calendar.getInstance(Locale.CHINA);
-//		ca.setTime(start);
-//		int hour = ca.get(Calendar.HOUR_OF_DAY);
-//		if(MAX_WORKING_HOUR > MIN_WORKING_HOUR){
-//			if(!(hour>=MIN_WORKING_HOUR && hour<=MAX_WORKING_HOUR)){
-//				ca.set(Calendar.HOUR_OF_DAY, MIN_WORKING_HOUR);
-//			}
-//		}else{
-//			if(hour < MIN_WORKING_HOUR && hour > MAX_WORKING_HOUR) {
-//				ca.set(Calendar.HOUR_OF_DAY, MIN_WORKING_HOUR);
-//			}
-//		}
-//		long interval = (long)((double)minuteDuration / (double)WORKING_MINUTE * WORKING_TIME / size);
-//		long interval = (long)((double)minuteDuration / (double)WORKING_MINUTE * WORKING_TIME / size);
-//		long startTime = ca.getTimeInMillis();
-		long interval = (long)((double)minuteDuration *60*1000 / size);
-		long startTime = start.getTime();
-		for(int i = 0; i < size; i++) {
-			long nextTime = (long)(startTime + Math.random() * interval);
-			Date nextDate = getCorrectDate(new Date(nextTime));
 			
-			long tmpTime = (long)(startTime + interval);
-			startTime = getCorrectDate(new Date(tmpTime)).getTime();
-			list.add(nextDate);
+			try{
+				userFollowMapper.batchSaveUserFollow(list);
+			}catch(Exception e){
+				logger.warn("saveInteractV3:userFollowMapper.batchSaveUserFollow failed.List<InteractUserFollow> list:"+list+"\ncause:"+e.getMessage());
+				throw e;
+			}
 		}
-		return list;
+		
+		//更新op_zombie表中的lastmodify字段
+		if(unFzList != null && unFzList.size() > 0){
+			try{
+				zombieMapper.batchUpdateZombie(dateAdded.getTime(), 1, 1, (Integer[])unFzList.toArray());
+			}catch(Exception e){
+				logger.warn("saveInteractV3:zombieMapper.batchUpdateZombie failed.List<InteractUserFollow> unFzList:"+unFzList+"\ncause:"+e.getMessage());
+				throw e;
+			}
+		}
+		
+	}
+
+	
+
+	@Override
+	public void batchSaveComment(Integer interactId, Integer worldId, List<Integer> zombieIdList, Integer[] commentIdList,
+			Date dateAdded, List<Date>dateSheduleList) throws Exception {
+		try{
+			List<InteractWorldCommentDto> list = new ArrayList<InteractWorldCommentDto>();
+			for(int i=0; i < commentIdList.length; i++){
+				InteractWorldCommentDto dto = new InteractWorldCommentDto();
+				dto.setInteractId(interactId);
+				dto.setWorldId(worldId);
+				dto.setUserId(zombieIdList.get(i));
+				dto.setCommentId(commentIdList[i]);
+				dto.setDateAdded(dateAdded);
+				dto.setDateSchedule(dateSheduleList.get(i));
+				dto.setValid(Tag.TRUE);
+				dto.setFinished(Tag.FALSE);
+				list.add(dto);
+			}
+			worldCommentMapper.batchSaveWorldComment(list);
+		}catch(Exception e){
+			logger.warn("batchSaveClick failed\ninteractId="+interactId+"\nworldId="+worldId+"\nzombieIdList="+zombieIdList+"\ncommentIdList="+commentIdList+"\ndateAdded="+dateAdded
+					+"\ndateSheduleList="+dateSheduleList+"\nCause:"+e.getMessage());
+			throw e;
+		}
 	}
 	
 	@Override
-	public void saveComment(Integer interactId, Integer worldId, Integer userId, Integer commentId,
-			Date dateAdded, Date dateShedule) throws Exception {
-		interactWorldCommentDao.saveComment(new InteractWorldComment(interactId, worldId,userId,commentId,dateAdded,dateShedule, Tag.TRUE, Tag.FALSE));
+	public void batchSaveClick(Integer interactId,Integer worldId,List<Integer>clickCountList,Date dateAdded,List<Date>dateSheduleList)throws Exception{
+		try{
+			List<InteractWorldClick> list = new ArrayList<InteractWorldClick>();
+			for(int i=0; i < clickCountList.size(); i++){
+				list.add(new InteractWorldClick(interactId, worldId,clickCountList.get(i),dateAdded,dateSheduleList.get(i),Tag.TRUE, Tag.FALSE));
+			}
+			worldClickMapper.batchSaveWorldClick(list);
+		}catch(Exception e){
+			logger.warn("batchSaveClick failed\ninteractId="+interactId+"\nworldId="+worldId+"\nclickCountList="+clickCountList+"\ndateAdded="+dateAdded
+					+"\ndateSheduleList="+dateSheduleList+"\nCause:"+e.getMessage());
+			throw e;
+		}
 	}
-
+	
 	@Override
-	public void saveLiked(Integer interactId, Integer worldId, Integer userId, Date dateAdded,
-			Date dateShedule) throws Exception {
-		interactWorldLikedDao.saveLiked(new InteractWorldLiked(interactId, worldId,userId,dateAdded,dateShedule, Tag.TRUE, Tag.FALSE));
-	}
-
-	@Override
-	public void saveClick(Integer interactId, Integer worldId, Integer clickCount, Date dateAdded,
-			Date dateShedule) throws Exception {
-		interactWorldClickDao.saveClick(new InteractWorldClick(interactId, worldId,clickCount,dateAdded,dateShedule,Tag.TRUE, Tag.FALSE));
+	public void batchSaveLiked(Integer interactId,Integer worldId,List<Integer>zombieIdList,Date dateAdded,List<Date>dateSheduleList)throws Exception{
+		try{
+			List<InteractWorldLiked> list = new ArrayList<InteractWorldLiked>();
+			for(int i=0; i < zombieIdList.size(); i++){
+				list.add(new InteractWorldLiked(interactId, worldId,zombieIdList.get(i),dateAdded,dateSheduleList.get(i),Tag.TRUE, Tag.FALSE));
+			}
+			worldLikedMapper.batchSaveWorldLiked(list);
+		}catch(Exception e ){
+			logger.warn("batchSaveClick failed\ninteractId="+interactId+"\nworldId="+worldId+"\nzombieIdList="+zombieIdList+"\ndateAdded="+dateAdded
+					+"\ndateSheduleList="+dateSheduleList+"\nCause:"+e.getMessage());
+			throw e;
+		}
 	}
 	
 	
 	@Override
 	public void updateInteractValid(Integer maxId) throws Exception {
+		InteractWorldClick worldClickDto = new InteractWorldClick();
+		worldClickDto.setInteractId(maxId);
+		worldClickDto.setValid(Tag.TRUE);
+		
+		InteractWorldLiked worldLikeDto = new InteractWorldLiked();
+		worldLikeDto.setInteractId(maxId);
+		worldLikeDto.setValid(Tag.TRUE);
+		
+		InteractWorldCommentDto worldCommentDto = new InteractWorldCommentDto();
+		worldCommentDto.setInteractId(maxId);
+		worldCommentDto.setValid(Tag.TRUE);
+		
 		interactWorldDao.updateValid(maxId, Tag.TRUE);
-		interactWorldClickDao.updateValid(maxId, Tag.TRUE);
-		interactWorldCommentDao.updateValid(maxId, Tag.TRUE);
-		interactWorldLikedDao.updateValid(maxId, Tag.TRUE);
+		worldClickMapper.updateWorldClickValidByMaxInteractId(worldClickDto);
+		worldLikedMapper.updateWorldLikedValidByMaxInteractId(worldLikeDto);
+		worldCommentMapper.updateWorldCommentValidByMaxInteractId(worldCommentDto);
 	}
 	
 	@Override
 	public void deleteInteract(String idsStr) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		interactWorldDao.deleteInteract(ids);
-		interactWorldClickDao.deleteByInteractIds(ids);
-		interactWorldCommentDao.deleteByInteractIds(ids);
-		interactWorldLikedDao.deleteByInteractIds(ids);
-	}
-	
-	@Override
-	public List<Date> getScheduleDates(Date start, int duration, int size) {
-		List<Date> list = new ArrayList<Date>();
-		long interval = (long)((double)duration / (double)WORKING_HOUR * WORKING_TIME / size);
-		//计算正确的开始时间，若是当前时间为不工作时间，则开始时间为最早开始时间
-//		Calendar ca = Calendar.getInstance(Locale.CHINA);
-//		ca.setTime(start);
-//		int hour = ca.get(Calendar.HOUR_OF_DAY);
-//		if(MAX_WORKING_HOUR > MIN_WORKING_HOUR){
-//			if(!(hour>=MIN_WORKING_HOUR && hour<=MAX_WORKING_HOUR)){
-//				ca.set(Calendar.HOUR_OF_DAY, MIN_WORKING_HOUR);
-//			}
-//		}else{
-//			if(hour < MIN_WORKING_HOUR && hour > MAX_WORKING_HOUR) {
-//				ca.set(Calendar.HOUR_OF_DAY, MIN_WORKING_HOUR);
-//			}
-//		}
-//		long startTime = ca.getTimeInMillis();
-		long startTime = start.getTime();
-		for(int i = 0; i < size; i++) {
-			long nextTime = (long)(startTime + Math.random() * interval);
-			Date nextDate = getCorrectDate(new Date(nextTime));
-			
-			long tmpTime = (long)(startTime + interval);
-			startTime = getCorrectDate(new Date(tmpTime)).getTime();
-			list.add(nextDate);
-		}
-		return list;
+		worldClickMapper.batchDeleteWorldClickByInteractId(ids);
+		worldLikedMapper.batchDeleteWorldLikedByInteractId(ids);
+		worldCommentMapper.batchDeleteWorldCommentByInteractId(ids);
 	}
 	
 	
-	
-	@Override
-	public List<Integer> getScheduleCount(int total, int duration) {
-		List<Integer> countList = new ArrayList<Integer>();
-		int workingMinutes = duration*60;
-		int times = workingMinutes / WORKING_INTERVAL;
-		if(times < total){//若总量大于分钟数，能够被均分
-			int pre = total / times;
-			int mod = total % times;
-			for(int i = 0; i < times; i++) {
-				if(i == times - 1 && mod > 0) {
-					countList.add(mod);
-				} else {
-					countList.add(pre);
-				}
-			}
-		}else{//不能均分，则每个都为1，不足补0
-			for(int i = 0; i < times; i++){
-				if(i < total){
-					countList.add(1);
-				}
-			}
-		}
-		
-		return countList;
-	}
 	
 	/**
 	 * 根据总数total，和分钟来分配一次互动要添加多少次点击数。
@@ -681,37 +762,6 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		return countList;
 	}
 	
-	/**
-	 * 获取工作时间
-	 * 
-	 * @param start
-	 * @return
-	 */
-	private static Date getCorrectDate(Date start) {
-//		Calendar ca = Calendar.getInstance(Locale.CHINA);
-//		ca.setTime(start);
-//		int hour = ca.get(Calendar.HOUR_OF_DAY);
-//		
-//		//该段代码是为了兼容max_working_hour为第二天的时间，也就是max_working_hour<min_working_hour
-//		//
-//		//请不要删掉该段代码
-//		//
-//		if(MAX_WORKING_HOUR > MIN_WORKING_HOUR){
-//			if(!(hour>=MIN_WORKING_HOUR && hour<=MAX_WORKING_HOUR)){
-//				int collectHour = hour-MAX_WORKING_HOUR;
-//				collectHour = collectHour < 0 ? collectHour + 24 : collectHour;
-//				ca.set(Calendar.HOUR_OF_DAY, MIN_WORKING_HOUR+collectHour-1);
-//			}
-//		}else{
-//			if(hour < MIN_WORKING_HOUR && hour > MAX_WORKING_HOUR) {
-//				int collectHour = hour-MAX_WORKING_HOUR;
-//				collectHour = collectHour < 0 ? collectHour + 24 : collectHour;
-//				ca.set(Calendar.HOUR_OF_DAY, MIN_WORKING_HOUR+collectHour-1);
-//			}
-//		}
-//		return ca.getTime();
-		return start;
-	}
 
 	@Override
 	public void buildInteractSum(Integer worldId, Map<String, Object> jsonMap)
@@ -763,13 +813,13 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	}
 	
 	@Override
-	public void saveUserInteract(Integer userId, Integer followCount,
-			Integer duration) throws Exception {
+	public void saveUserInteract(Integer userId, Integer degreeId,Integer followCount,
+			Integer minuteDuration) throws Exception {
 		Date dateAdded = new Date();
 		Integer interactId = null;
 		
 		// 过滤null
-		duration = duration == null ? 0 : duration; 
+		minuteDuration = minuteDuration == null ? 0 : minuteDuration; 
 		followCount = followCount == null ? 0 : followCount;
 		
 		InteractUser interact = interactUserDao.queryUserInteractByUID(userId);
@@ -777,22 +827,25 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			interactId = interact.getId();
 			// 更新用户互动
 			interactUserDao.updateInteract(interactId, followCount+interact.getFollowCount(),
-					duration+interact.getDuration());
+					Math.round(minuteDuration/60.0f)+interact.getDuration());
 		} else {
 			interactId = keyGenService.generateId(Admin.KEYGEN_INTERACT_USER_ID);
 			// 保存用户互动
 			interactUserDao.saveInteract(new InteractUser(interactId, 
-					userId, followCount, duration, dateAdded, Tag.TRUE));
+					userId, followCount, Math.round(minuteDuration/60.0f), dateAdded, Tag.TRUE));
 		}
 		
 		// 保存粉丝互动
 		if(followCount > 0) {
-			List<Integer> uids = opUserService.getRandomUnFollowUserZombieIds(userId, followCount);
-			List<Date> scheduleDateList = getScheduleDates(dateAdded, duration, followCount);
+			List<Integer> uids = zombieMapper.queryNotInteractNRandomNotFollowZombie(userId, degreeId, followCount);
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, followCount);
+			List<InteractUserFollow> list = new ArrayList<InteractUserFollow>();
 			for(int i = 0; i < uids.size(); i++) {
-				interactUserFollowDao.saveFollow(new InteractUserFollow(interactId, userId, uids.get(i),
+				list.add(new InteractUserFollow(interactId, userId, uids.get(i),
 						dateAdded, scheduleDateList.get(i), Tag.TRUE, Tag.FALSE));
 			}
+			//批量插入
+			userFollowMapper.batchSaveUserFollow(list);
 		}
 	}
 	
@@ -800,30 +853,33 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	public void deleteUserInteract(String idsStr) throws Exception {
 		Integer[] interactIds = StringUtil.convertStringToIds(idsStr);
 		interactUserDao.deleteByIds(interactIds);
-		interactUserFollowDao.deleteByInteractId(interactIds);
+		userFollowMapper.batchDeleteUserFollowByInteractId(interactIds);
 	}
 	
 	@Override
 	public void buildFollow(final Integer interactId, int maxId, int start,
 			int limit, Map<String, Object> jsonMap) throws Exception {
-		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<InteractUserFollow>() {
-
-			@Override
-			public List<InteractUserFollow> getSerializables(RowSelection rowSelection) {
-				return interactUserFollowDao.queryFollow(interactId, rowSelection);
+		
+		InteractUserFollow dto = new InteractUserFollow();
+		dto.setFirstRow(limit * (start -1));
+		dto.setLimit(limit);
+		dto.setInteractId(interactId);
+		dto.setMaxId(maxId);
+		long total = 0;
+		Integer reMaxId = 0;
+		List<InteractUserFollow> list = null;
+		
+		total = userFollowMapper.queryUserFollowTotalCount(dto);
+		
+		if (total > 0) {
+			list = userFollowMapper.queryUserFollow(dto);
+			if ( list != null && list.size() > 0) {
+				reMaxId = list.get(0).getId();
 			}
-
-			@Override
-			public List<InteractUserFollow> getSerializableByMaxId(int maxId,
-					RowSelection rowSelection) {
-				return interactUserFollowDao.queryFollow(interactId, maxId, rowSelection);
-			}
-
-			@Override
-			public long getTotalByMaxId(int maxId) {
-				return interactUserFollowDao.queryFollowCount(interactId, maxId);
-			}
-		}, OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID);
+		}
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, reMaxId);
 	}
 	
 	
@@ -835,20 +891,45 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		Date startDate = new Date(currentDate.getTime() - WORKING_INTERVAL_MILLISECOND);
 		
 		// 提交播放互动队列
-		List<InteractWorldClick> clickList = interactWorldClickDao.queryUnFinishedClick(startDate, currentDate);
+		InteractWorldClick worldClickDto = new InteractWorldClick();
+		worldClickDto.setDateSchedule(currentDate);
+		worldClickDto.setDateAdded(startDate);
+		worldClickDto.setValid(Tag.TRUE);
+		worldClickDto.setFinished(Tag.FALSE);
+		List<InteractWorldClick> clickList = null;
+		try{
+			clickList = worldClickMapper.queryWorldClick(worldClickDto);//查询未完成的播放计划
+			if(null == clickList){
+				logger.warn("commitClick:worldClickMapper.queryWorldClick is null");
+				return;
+			}
+		}catch(Exception e){
+			logger.warn("commitClick:worldClickMapper.queryWorldClick failed.cause:"+e.getMessage());
+		}
+				
+		
+		//更新htworld_htworld的播放数据
+		List<Integer> successId = new ArrayList<Integer>();
 		for(InteractWorldClick click : clickList) {
 			try {
 				successfullyFinishCount++;
 				webWorldService.addClickCount(click.getWorldId(), click.getClick());
-				interactWorldClickDao.updateFinished(click.getId(), Tag.TRUE);
-			} catch (HTSException e) {
-				interactWorldClickDao.updateFinished(click.getId(), Tag.TRUE);
+				successId.add(click.getId());
 			} catch (Exception e) {
+				logger.warn("commitClick failed. commitClick Id = "+click.getWorldId()+".click="+click.getClick()+".id="+click.getId());
 			}
 		}
+		
+		//统一更新hts_admin.interact_world_click里面的完成情况
+		try{
+			worldClickMapper.batchUpdateWorldClickFinished(Tag.TRUE, successId);
+		}catch(Exception e){
+			logger.warn("commitClick:worldClickMapper.batchUpdateWorldClickValid failed. ids="+successId+"\n.cause:"+e.getMessage());
+		}
+		
+		
 		Date endDate = new Date();
-		interactTrackerDao.updateLastInteractDate(INTERACT_TYPE_CLICK, endDate);
-		logger.info("click finished：" + endDate + "," + "cost：" + (endDate.getTime() - currentDate.getTime()) + "ms.总共："+clickList.size() + ". 成功："+successfullyFinishCount);
+		logger.info("click finished：" + endDate + "," + "cost：" + (endDate.getTime() - currentDate.getTime()) + "ms.total："+clickList.size() + ". success："+successfullyFinishCount);
 	}
 	
 	@Override
@@ -858,84 +939,145 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		logger.info("comment begin ：" + currentDate);
 		Date startDate = new Date(currentDate.getTime() - WORKING_INTERVAL_MILLISECOND);
 		
-		// 提交评论互动队列
-		List<InteractWorldCommentDto> commentList = interactWorldCommentDao.queryUnFinishedComment(startDate, currentDate);
+		InteractWorldCommentDto dto = new InteractWorldCommentDto();
+		dto.setDateAdded(startDate);
+		dto.setDateSchedule(currentDate);
+		dto.setValid(Tag.TRUE);
+		dto.setFinished(Tag.FALSE);
+		List<InteractWorldCommentDto> commentList = null;
+		try{
+			commentList = worldCommentMapper.queryWorldComment(dto);
+			if( null == commentList){
+				logger.info("commitComment:worldCommentMapper.queryWorldComment is null.");
+				return;
+			}
+		}catch(Exception e){
+			logger.warn("commitComment:worldCommentMapper.queryWorldComment failed.cause:"+e.getMessage());
+		}
 		
+		// 提交评论互动队列
+		List<Integer> successId = new ArrayList<Integer>();
 		for(InteractWorldCommentDto comment : commentList) {
 			try {
+				successId.add(comment.getId());
 				webWorldInteractService.saveComment(false, comment.getWorldId(), null,
 						comment.getUserId(), " : " + comment.getContent());
-				interactWorldCommentDao.updateFinished(comment.getId(), Tag.TRUE);
 				successfullyFinishCount++;
-			} catch (HTSException e) {
-				interactWorldCommentDao.updateFinished(comment.getId(), Tag.TRUE);
-			} catch(YunbaException e2){
-				interactWorldCommentDao.updateFinished(comment.getId(), Tag.TRUE);
 			} catch (Exception e3) {
-				logger.info(e3.getMessage());
+				logger.info("commitComment:webWorldInteractService.saveComment\n"+e3.getMessage());
 			}
 			
 		}
+		
+		//统一更新interact_world_comment这张表的finish
+		try{
+			worldCommentMapper.batchUpdateWorldCommentFinished(Tag.TRUE, successId);
+		}catch(Exception e){
+			logger.warn("commitComment:worldCommentMapper.batchUpdateWorldClickValid failed. ids="+successId+"\n.cause:"+e.getMessage());
+		}
+		
 		Date endDate = new Date();
-		interactTrackerDao.updateLastInteractDate(INTERACT_TYPE_COMMENT, endDate);
 		logger.info("comment finished：" + endDate + "," + "cost：" + (endDate.getTime() - currentDate.getTime()) + "ms.总共："+commentList.size() + ". 成功："+successfullyFinishCount);
 		
 	}
 	
 	@Override
 	public void commitLiked() {
+		Integer successfullyFinishCount = 0;
 		Date currentDate = new Date();
 		logger.info("liked begin ：" + currentDate);
 		Date startDate = new Date(currentDate.getTime() - WORKING_INTERVAL_MILLISECOND);
 		
+		InteractWorldLiked dto = new InteractWorldLiked();
+		dto.setDateAdded(startDate);
+		dto.setDateSchedule(currentDate);
+		dto.setValid(Tag.TRUE);
+		dto.setFinished(Tag.FALSE);
+		List<InteractWorldLiked> likedList = null;
+		try{
+			likedList = worldLikedMapper.queryWorldLiked(dto);
+			if( null == likedList){
+				logger.info("commitLiked:worldLikedMapper.queryWorldLiked is null.");
+				return;
+			}
+		}catch(Exception e){
+			logger.warn("commitLiked:worldLikedMapper.queryWorldLiked failed.cause:"+e.getMessage());
+		}
+		
 		// 提交喜欢互动队列
-		List<InteractWorldLiked> likedList = interactWorldLikedDao.queryUnfinishedLiked(startDate, currentDate);
+		List<Integer> successId = new ArrayList<Integer>();
 		for(InteractWorldLiked liked : likedList) {
 			try {
+				successId.add(liked.getId());
 				webWorldInteractService.saveLiked(false, liked.getUserId(), liked.getWorldId(), null);
-				interactWorldLikedDao.updateFinished(liked.getId(), Tag.TRUE);
-			} catch (HTSException e) {
-				interactWorldLikedDao.updateFinished(liked.getId(), Tag.TRUE);
-			} catch(YunbaException e2){
-				interactWorldLikedDao.updateFinished(liked.getId(), Tag.TRUE);
+				successfullyFinishCount++;
 			}catch (Exception e) {
+				logger.warn("commitLiked:webWorldInteractService.saveLiked failed.\nuserId="+liked.getUserId()+"\nworldId="+liked.getWorldId()+"\ncause:"+e.getMessage());
 			}
 		}
+		
+		//批量更新完成情况
+		try{
+			worldLikedMapper.batchUpdateWorldLikedFinished(Tag.TRUE, successId);
+		}catch(Exception e){
+			logger.warn("worldLikedMapper.batchUpdateWorldLikedFinished failed. ids="+successId+"\n.cause:"+e.getMessage());
+		}
 		Date endDate = new Date();
-		interactTrackerDao.updateLastInteractDate(INTERACT_TYPE_LIKED, endDate);
-		logger.info("liked finished：" + endDate + "," + "cost：" + (endDate.getTime() - currentDate.getTime())/1000 + "seconds");
+		
+		logger.info("liked finished：" + endDate + "," + "cost：" + (endDate.getTime() - currentDate.getTime()) + "ms.success:"+successfullyFinishCount);
 		
 	}
 	
 	@Override
 	public void commitFollow() {
+		Integer successfullyFinishCount = 0;
 		Date currentDate = new Date();
 		logger.info("follow begin ：" + currentDate);
 		Date startDate = new Date(currentDate.getTime() - WORKING_INTERVAL_MILLISECOND);
 		
+		InteractUserFollow dto = new InteractUserFollow();
+		dto.setDateAdded(startDate);
+		dto.setDateSchedule(currentDate);
+		dto.setValid(Tag.TRUE);
+		dto.setFinished(Tag.FALSE);
+		List<InteractUserFollow> followList = null;
+		try{
+			followList = userFollowMapper.queryUserFollow(dto);
+			if( null == followList){
+				logger.info("commitFollow:userFollowMapper.queryUserFollow is null.");
+				return;
+			}
+		}catch(Exception e){
+			logger.warn("commitFollow:userFollowMapper.queryUserFollow failed.cause:"+e.getMessage());
+		}
+		
 		// 提交粉丝互动队列
-		List<InteractUserFollow> followList = interactUserFollowDao.queryUnFinishedFollow(startDate, currentDate);
+		List<Integer> successId = new ArrayList<Integer>();
 		for(InteractUserFollow follow : followList) {
 			try {
+				successId.add(follow.getId());
 				int concernCount = NumberUtil.getRandomNum(minConcernCount, maxConcernCount);
 				webUserInteractService.saveConcern(false, follow.getFollowId(), follow.getUserId(), concernCount);
-				interactUserFollowDao.updateFinished(follow.getId(), Tag.TRUE);
-			} catch (HTSException e) {
-				interactUserFollowDao.updateFinished(follow.getId(), Tag.TRUE);
-			} catch(YunbaException e2){
-				interactUserFollowDao.updateFinished(follow.getId(), Tag.TRUE);
-			} catch (Exception e) {
+				successfullyFinishCount++;
+			}  catch (Exception e) {
+				logger.warn("commitFollow:webUserInteractService.saveConcern failed.\nuserId="+follow.getUserId()+"\nFollowId="+follow.getFollowId()+"\ncause:"+e.getMessage());
 			}
 		}
+		
+		//批量更新完成情况
+		try{
+			userFollowMapper.batchUpdateUserFollowFinished(Tag.TRUE, successId);
+		}catch(Exception e){
+			logger.warn("commitFollow:userFollowMapper.batchUpdateWorldLikedFinished failed. ids="+successId+"\n.cause:"+e.getMessage());
+		}
+		
 		Date endDate = new Date();
-		interactTrackerDao.updateLastInteractDate(INTERACT_TYPE_FOLLOW, endDate);
 		logger.info("follow finished：" + endDate + "," + "cost：" + (endDate.getTime() - currentDate.getTime())/1000 + "seconds");
 		
 	}
 
 	@Override
 	public void updateUnFinishedInteractSchedule() throws Exception {
-		Date now = new Date();
 		interactTrackerDao.updateTrackValid(Tag.FALSE);
 		//取消掉评论、点赞、播放的延时
 //		interactWorldClickDao.updateUnFinishedSchedule(now);
@@ -1039,7 +1181,14 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void updateClickValidAndSCHTimeById(Integer valid,Date date_schedule,Integer id) throws Exception{
 		try{
-			interactWorldClickDao.updateValidAndSCHTimeById(valid, date_schedule, id);
+			if(null == id){
+				return;
+			}
+			InteractWorldClick dto = new InteractWorldClick();
+			dto.setValid(valid);
+			dto.setDateSchedule(date_schedule);
+			dto.setId(id);
+			worldClickMapper.updateWorldClick(dto);
 		}catch(Exception e){
 			throw e;
 		}
@@ -1056,7 +1205,14 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void updateLikedValidAndSCHTimeById(Integer valid,Date date_schedule,Integer id) throws Exception{
 		try{
-			interactWorldLikedDao.updateValidAndSCHTimeById(valid, date_schedule, id);
+			if(null == id){
+				return;
+			}
+			InteractWorldLiked dto = new InteractWorldLiked();
+			dto.setValid(valid);
+			dto.setDateSchedule(date_schedule);
+			dto.setId(id);
+			worldLikedMapper.updateWorldLiked(dto);
 		}catch(Exception e){
 			throw e;
 		}
@@ -1073,7 +1229,14 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void updateCommentValidAndSCHTimeById(Integer valid,Date date_schedule,Integer id) throws Exception{
 		try{
-			interactWorldCommentDao.updateValidAndSCHTimeById(valid, date_schedule, id);
+			if(null == id){
+				return;
+			}
+			InteractWorldCommentDto dto = new InteractWorldCommentDto();
+			dto.setValid(valid);
+			dto.setDateSchedule(date_schedule);
+			dto.setId(id);
+			worldCommentMapper.updateWorldComment(dto);
 		}catch(Exception e){
 			throw e;
 		}
@@ -1089,7 +1252,11 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void updateClickValidAndSCHTimeByInteractId(Integer interactId,Date date_add)throws Exception{
 		try{
-			List<InteractWorldClick> interactWorldClickList = interactWorldClickDao.queryClickbyInteractId(interactId);
+			InteractWorldClick dto = new InteractWorldClick();
+			dto.setInteractId(interactId);
+			dto.setFinished(Tag.FALSE);
+			List<InteractWorldClick> interactWorldClickList = worldClickMapper.queryWorldClick(dto);
+			
 			if(interactWorldClickList != null){
 				Date now = new Date();
 				SimpleDateFormat dft = new SimpleDateFormat("yyMMdd");
@@ -1123,7 +1290,10 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void updateLikedValidAndSCHTimeByInteractId(Integer interactId,Date date_add)throws Exception{
 		try{
-			List<InteractWorldLiked> interactWorldLikedList = interactWorldLikedDao.queryLikedByInteractId(interactId);		
+			InteractWorldLiked dto = new InteractWorldLiked();
+			dto.setInteractId(interactId);
+			dto.setFinished(Tag.FALSE);
+			List<InteractWorldLiked> interactWorldLikedList = worldLikedMapper.queryWorldLiked(dto);
 			if(interactWorldLikedList != null){
 				Date now = new Date();
 				SimpleDateFormat dft = new SimpleDateFormat("yyMMdd");
@@ -1157,7 +1327,10 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void updateCommentValidAndSCHTimeByInteractId(Integer interactId,Date date_add)throws Exception{
 		try{
-			List<InteractWorldCommentDto> interactWorldCommentList = interactWorldCommentDao.queryCommentByInteractId(interactId);
+			InteractWorldCommentDto dto = new InteractWorldCommentDto();
+			dto.setInteractId(interactId);
+			dto.setFinished(Tag.FALSE);
+			List<InteractWorldCommentDto> interactWorldCommentList = worldCommentMapper.queryWorldComment(dto);
 			if(interactWorldCommentList != null){
 				Date now = new Date();
 				SimpleDateFormat dft = new SimpleDateFormat("yyMMdd");
@@ -1232,7 +1405,57 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	public void deleteInteractCommentByids(String idsStr)throws Exception{
 		if(idsStr == null || idsStr.equals(""))return ;
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		interactWorldCommentDao.deleteInteractCommentByids(ids);
+		worldCommentMapper.batchDeleteWorldCommentById(ids);
 	}
 	
+	/**
+	 * 若是只有userId没有degreeId，就调用这个接口，否则就调用另外一个接口
+	 * @param userId
+	 * @param followCount
+	 * @param minuteDuration
+	 * @throws Exception
+	 */
+	@Override
+	public void saveUserInteract(Integer userId,Integer followCount,Integer minuteDuration)throws Exception{
+		UserLevelListDto userLevelDto = userLevelListService.QueryUserlevelByUserId(userId);
+		Integer needZombieDegreeId = null;
+		if( null != userLevelDto){
+			try{
+				List<OpZombieDegreeUserLevel> zombieDegreeUserLevelList = zombieDegreeUserLevelService.queryZombieDegree(null, null, userLevelDto.getUser_level_id());
+				if(zombieDegreeUserLevelList != null && zombieDegreeUserLevelList.size() == 1){
+					needZombieDegreeId = zombieDegreeUserLevelList.get(0).getZombieDegreeId();
+				}else{
+					needZombieDegreeId = commonZombieDegreeId;
+				}
+			}catch(Exception e){
+				needZombieDegreeId = commonZombieDegreeId;
+			}
+		}else{
+			throw new Exception("saveUserInteract:userLevelListService.QueryUserlevelByUserId is null.\nuserId="+userId);
+		}
+		saveUserInteract(userId,needZombieDegreeId,followCount,minuteDuration);
+	}
+	
+	@Override
+	public void saveInteractV3(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception{
+		//查询对应的马甲zombieDegreeId
+		Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
+		UserLevelListDto userLevelDto = userLevelListService.QueryUserlevelByUserId(uid);
+		Integer needZombieDegreeId = null;
+		if( null != userLevelDto){
+			try{
+				List<OpZombieDegreeUserLevel> zombieDegreeUserLevelList = zombieDegreeUserLevelService.queryZombieDegree(null, null, userLevelDto.getUser_level_id());
+				if(zombieDegreeUserLevelList != null && zombieDegreeUserLevelList.size() == 1){
+					needZombieDegreeId = zombieDegreeUserLevelList.get(0).getZombieDegreeId();
+				}else{
+					needZombieDegreeId = commonZombieDegreeId;
+				}
+			}catch(Exception e){
+				needZombieDegreeId = commonZombieDegreeId;
+			}
+		}else{
+			throw new Exception("saveInteractV3:userLevelListService.QueryUserlevelByUserId is null.\nuserId="+uid);
+		}
+		saveInteractV3(uid,needZombieDegreeId,worldId,clickCount,likeCount,commentIds,minuteDuration);
+	}
 }

@@ -26,6 +26,8 @@ public class InteractWorldClickDaoImpl extends BaseDaoImpl implements
 
 	private static final String SAVE_CLICK = "insert into " + table
 			+ " (interact_id,world_id,click,date_added,date_schedule,valid,finished) values (?,?,?,?,?,?,?)";
+	private static final String BATCH_SAVE_CLICK_HEAD = "insert into " + table
+			+ " (interact_id,world_id,click,date_added,date_schedule,valid,finished)";
 	
 	private static final String QUERY_CLICK_BY_ID_HEAD = "select * from " + table + " where interact_id=?";
 	
@@ -184,6 +186,7 @@ public class InteractWorldClickDaoImpl extends BaseDaoImpl implements
 //		return getJdbcTemplate().queryForList(QUERY_UNDO_CLICK_BY_INTERACT_ID, InteractWorldClick.class, interactId);
 //		return getJdbcTemplate().query(QUERY_UNDO_CLICK_BY_INTERACT_ID, interactId, rowMapper)
 	}
+	
 
 
 }

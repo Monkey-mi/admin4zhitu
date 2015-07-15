@@ -407,7 +407,7 @@ $(document).ready(function() {
 						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">为期：</td>
+						<td class="leftTd">为期(分钟)：</td>
 						<td><input id="duration_add" name="duration"  /></td>
 						<td class="rightTd"><div id="duration_addTip" class="tipDIV"></div></td>
 					</tr>

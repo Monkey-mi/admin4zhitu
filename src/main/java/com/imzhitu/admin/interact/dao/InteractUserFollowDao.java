@@ -18,6 +18,7 @@ import com.imzhitu.admin.common.pojo.InteractUserFollow;
  * @author tianjie
  *
  */
+@Deprecated
 public interface InteractUserFollowDao extends BaseDao {
 
 	/**

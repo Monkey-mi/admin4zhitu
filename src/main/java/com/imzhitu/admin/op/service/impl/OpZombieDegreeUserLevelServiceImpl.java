@@ -79,5 +79,15 @@ public class OpZombieDegreeUserLevelServiceImpl extends BaseServiceImpl implemen
 		dto.setMaxId(maxId);
 		return zombieDegreeUserLevelMapper.queryZombieDegreeUserLevelTotalCount(dto);
 	}
+	
+	@Override
+	public List<OpZombieDegreeUserLevel> queryZombieDegree(Integer id, Integer zombieDegreeId,
+			Integer userLevelId)throws Exception{
+		OpZombieDegreeUserLevel dto = new OpZombieDegreeUserLevel();
+		dto.setZombieDegreeId(zombieDegreeId);
+		dto.setUserLevelId(userLevelId);
+		dto.setId(id);
+		return zombieDegreeUserLevelMapper.queryZombieDegreeUserLevel(dto);
+	}
 
 }

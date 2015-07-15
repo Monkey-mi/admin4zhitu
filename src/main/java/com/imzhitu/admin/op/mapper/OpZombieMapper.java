@@ -48,4 +48,35 @@ public interface OpZombieMapper {
 	 */
 	@DataSource("slave")
 	public long queryZombieTotalCount(OpZombie dto);
+	
+	/**
+	 * 根据最后修改时间 查询n个马甲
+	 * @param limit
+	 * @param degreeId
+	 * @return
+	 */
+	@DataSource("master")
+	public List<OpZombie> queryZombieByLastModifyASC(@Param("degreeId")Integer degreeId,@Param("limit")Integer limit);
+	
+	/**
+	 * 随机查询n个没有互动的粉丝马甲
+	 * @param userId
+	 * @param worldId
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<Integer> queryNotInteractNRandomFollowZombie(@Param("userId")Integer userId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
+	
+	/**
+	 * 随机查询n个没有互动的非粉丝马甲
+	 * @param concernId 被关注的人的id,即非马甲
+	 * @param degreeId
+	 * @return
+	 */
+	@DataSource("master")
+	public List<Integer> queryNotInteractNRandomNotFollowZombie(@Param("concernId")Integer concernId,@Param("degreeId")Integer degreeId,@Param("limit")Integer limit);
+	
+	
+	
+	
 }

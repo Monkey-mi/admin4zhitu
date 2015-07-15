@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractWorldCommentMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractWorldCommentDto" id="WorldCommentMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="interactId" column="interact_id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="userId" column="user_id" jdbcType="INTEGER"/>
+		<result property="commentId" column="comment_id" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="finished" column="finished" jdbcType="INTEGER"/>
+		<result property="dateAdded" column="date_added" jdbcType="TIMESTAMP"/>
+		<result property="dateSchedule" column="date_schedule" jdbcType="TIMESTAMP"/>
+		<result property="commentValid" column="comment_valid" jdbcType="INTEGER"/>
+		<result property="content" column="content" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<!-- BATCH SAVE LIKED -->
+	<insert id="batchSaveWorldComment">
+		insert into hts_admin.interact_world_comment
+		(interact_id,world_id,user_id,comment_id,date_added,date_schedule,valid,finished)
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.interactId},#{item.worldId},#{item.userId},#{item.commentId},#{item.dateAdded},#{item.dateSchedule},#{item.valid},#{item.finished})
+		</foreach>
+	</insert>
+	
+	<!--BATCH DELETE By ID-->
+	<delete id="batchDeleteWorldCommentById">
+		delete from hts_admin.interact_world_comment
+		where id in
+		<foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!--BATCH DELETE By INTERACT_ID-->
+	<delete id="batchDeleteWorldCommentByInteractId">
+		delete from hts_admin.interact_world_comment
+		where interact_id in
+		<foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- BATCH UPDATE VALID -->
+	<update id="batchUpdateWorldCommentValid">
+		update hts_admin.interact_world_comment set valid=#{valid}
+		where id in
+		<foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- BATCH UPDATE FINISHED -->
+	<update id="batchUpdateWorldCommentFinished">
+		update hts_admin.interact_world_comment  set finished=#{finished}
+		where id in
+		<foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!--UPDATE  -->
+	<update id="updateWorldComment">
+		update hts_admin.interact_world_comment
+		<set>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="finished != null">
+				finished = #{finished},
+			</if>
+			<if test="dateSchedule != null">
+				date_schedule = #{dateSchedule},
+			</if>
+			<if test="commentId != null">
+				comment_id = #{commentId}
+			</if>
+		</set>
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="interactId != null">
+				and interact_id = #{interactId}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[ id <= #{maxId}]]>
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+		</where>
+	</update>
+	
+	
+	<!-- SELECT -->
+	<select id="queryWorldComment" resultMap="WorldCommentMap">
+		select wc.* ,ic.valid as comment_valid,ic.content
+		from hts_admin.interact_world_comment wc,hts_admin.interact_comment ic
+		<where>
+			<if test="id != null">
+				wc.id = #{id}
+			</if>
+			<if test="interactId != null">
+				and wc.interact_id = #{interactId}
+			</if>
+			<if test="worldId != null">
+				and wc.world_id = #{worldId}
+			</if>
+			<if test="valid != null">
+				and wc.valid = #{valid}
+			</if>
+			<if test="finished != null">
+				and wc.finished = #{finished}
+			</if>
+			<if test="commentId != null">
+				and wc.comment_id = #{commentId}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and wc.id <= #{maxId}]]>
+			</if>
+			<if test="dateSchedule != null and dateAdded != null">
+				and wc.date_schedule between #{dateAdded} and #{dateSchedule}
+			</if>
+			and wc.comment_id=ic.id
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- SELECT COUNT -->
+	<select id="queryWorldCommentTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.interact_world_comment
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="interactId != null">
+				and interact_id = #{interactId}
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+			<if test="valid != null">
+				and valid = #{valid}
+			</if>
+			<if test="finished != null">
+				and finished = #{finished}
+			</if>
+			<if test="commentId != null">
+				and comment_id = #{commentId}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and id <= #{maxId}]]>
+			</if>
+			<if test="dateSchedule != null and dateAdded != null">
+				and date_schedule between #{dateAdded} and #{dateSchedule}
+			</if>
+		</where>
+	</select>
+	
+	<!-- update by interactId -->
+	<update id="updateWorldCommentValidByMaxInteractId">
+		update hts_admin.interact_world_comment set valid=#{valid}
+		where valid = 1-#{valid} and 
+		<![CDATA[interact_id <= #{interactId}]]>
+	</update>
+	
+</mapper>

@@ -1,11 +1,12 @@
 package com.imzhitu.admin.common.pojo;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class InteractWorldComment implements Serializable {
+import com.hts.web.common.pojo.AbstractNumberDto;
+
+public class InteractWorldComment  extends AbstractNumberDto{
 
 	/**
 	 * 

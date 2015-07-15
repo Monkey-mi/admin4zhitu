@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
@@ -52,4 +53,13 @@ public interface OpZombieService extends BaseService{
 	 * @throws Exception
 	 */
 	public long queryZombieTotalCount(Integer userId,Integer degree,Integer maxId)throws Exception;
+	
+	/**
+	 * 查询n个马甲
+	 * @param degreeId
+	 * @param n
+	 * @return
+	 * @throws Exception
+	 */
+	public List<OpZombie> queryNZombie(Integer degreeId,Integer n)throws Exception;
 }

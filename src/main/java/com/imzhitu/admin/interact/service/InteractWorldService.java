@@ -80,72 +80,43 @@ public interface InteractWorldService extends BaseService {
 	 */
 	public void buildClicks(Integer interactId, int maxId, int start, int limit, Map<String, Object> jsonMap) throws Exception;
 	
-	/**
-	 * 获取计划时间列表
-	 * 
-	 * @param start
-	 * @param duration 为期
-	 * @param size
-	 * @return
-	 */
-	public List<Date> getScheduleDates(Date start, int duration, int size);
-	
-	/**
-	 * 获取计划次数列表
-	 * 
-	 * @param size
-	 * @return
-	 */
-	public List<Integer> getScheduleCount(int size, int duration);
 	
 	
 	/**
-	 * 添加互动信息 
-	 * 
+	 * 批量添加评论
+	 * @param interactId
 	 * @param worldId
-	 * @param clickCount
-	 * @param likedCount
-	 * @param commentIds
-	 * @param duration
-	 * @throws Exception
-	 */
-	public void saveInteract(Integer worldId, Integer clickCount, Integer likedCount, 
-			String[] commentIds, Integer duration) throws Exception;
-	
-	/**
-	 * 添加评论
-	 * 
-	 * @param worldId
-	 * @param userId
-	 * @param commentId
+	 * @param zombieIdList
+	 * @param commentIdList
 	 * @param dateAdded
-	 * @param dateShedule
+	 * @param dateSheduleList
 	 * @throws Exception
 	 */
-	public void saveComment(Integer interactId, Integer worldId, Integer userId, Integer commentId,
-			Date dateAdded, Date dateShedule) throws Exception;
+	public void batchSaveComment(Integer interactId, Integer worldId, List<Integer> zombieIdList, Integer[] commentIdList,
+			Date dateAdded, List<Date>dateSheduleList) throws Exception;
+	
 	
 	/**
-	 * 添加喜欢
-	 * 
+	 * 批量添加播放
+	 * @param interactId
 	 * @param worldId
-	 * @param userId
+	 * @param zombieIdList
 	 * @param dateAdded
-	 * @param dateShedule
+	 * @param dateSheduleList
 	 * @throws Exception
 	 */
-	public void saveLiked(Integer interactId, Integer worldId, Integer userId, Date dateAdded, Date dateShedule) throws Exception;
+	public void batchSaveLiked(Integer interactId,Integer worldId,List<Integer>zombieIdList,Date dateAdded,List<Date>dateSheduleList)throws Exception;
 	
 	/**
-	 * 添加播放次数
-	 * 
+	 * 批量添加播放
+	 * @param interactId
 	 * @param worldId
-	 * @param clickCount
+	 * @param clickCountList
 	 * @param dateAdded
-	 * @param dateShedule
+	 * @param dateSheduleList
 	 * @throws Exception
 	 */
-	public void saveClick(Integer interactId, Integer worldId, Integer clickCount, Date dateAdded, Date dateShedule) throws Exception;
+	public void batchSaveClick(Integer interactId,Integer worldId,List<Integer>clickCountList,Date dateAdded,List<Date>dateSheduleList)throws Exception;
 
 	
 	/**
@@ -193,7 +164,7 @@ public interface InteractWorldService extends BaseService {
 	 * @param duration
 	 * @throws Exception
 	 */
-	public void saveUserInteract(Integer userId, Integer followCount, Integer duration) throws Exception;
+	public void saveUserInteract(Integer userId, Integer degreeId, Integer followCount, Integer duration) throws Exception;
 	
 	/**
 	 * 删除用户互动
@@ -343,35 +314,55 @@ public interface InteractWorldService extends BaseService {
 	 */	
 	public void deleteInteractCommentByids(String idsStr)throws Exception;
 	
-	/**
-	 * 第二版本的时间调度算法，主要是使用分钟来进行调度
-	 * @param start
-	 * @param minuteDuration
-	 * @param size
-	 * @return
-	 * @author zxx
-	 */
-	public List<Date> getScheduleDatesV2(Date start,int minuteDuration,int size  );
 	
 	/**
-	 * 第二版本的添加互动，主要是支持以分钟来进行调度
+	 * 第二版的数量分配算法。主要是使用分钟
+	 * @param total
+	 * @param minutes
+	 * @return
+	 */
+	public List<Integer> getScheduleCountV2(int total, int minutes);
+	
+	/**
+	 * 第三版本的获取计划时间
+	 * @param total
+	 * @param minutes
+	 * @return
+	 */
+	public List<Date> getScheduleV3(Date begin,Integer minuteDuration, Integer total);
+	
+	/**
+	 * 添加互动第三版
+	 * @param userId
+	 * @param degreeId
 	 * @param worldId
 	 * @param clickCount
 	 * @param likedCount
 	 * @param commentIds
 	 * @param minuteDuration
 	 * @throws Exception
-	 * @author zxx
 	 */
-	public void saveInteractV2(Integer worldId, Integer clickCount,
-			Integer likedCount, String[] commentIds, Integer minuteDuration) throws Exception ;
+	public void saveInteractV3(Integer userId,Integer degreeId,Integer worldId,Integer clickCount,
+			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception;
 	
 	/**
-	 * 第二版本的获取计划时间
-	 * @param total
-	 * @param minutes
-	 * @return
+	 * 两个saveUserInteract是一样的，这个接口就是方便那些只有userId没有zombieDegreeId的
+	 * @param userId
+	 * @param followCount
+	 * @param minuteDuration
+	 * @throws Exception
 	 */
-	public List<Integer> getScheduleCountV2(int total, int minutes) ;
+	public void saveUserInteract(Integer userId,Integer followCount,Integer minuteDuration)throws Exception;
+	
+	/**
+	 * 两个saveInteractV3接口是一样的，这个接口就是方便那些只有worldId没有zombieDegreeId和userId的
+	 * @param worldId
+	 * @param clickCount
+	 * @param likeCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 */
+	public void saveInteractV3(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
 	
 }

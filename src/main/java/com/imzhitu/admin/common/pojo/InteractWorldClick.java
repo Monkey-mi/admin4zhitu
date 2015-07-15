@@ -5,7 +5,9 @@ import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class InteractWorldClick implements Serializable {
+import com.hts.web.common.pojo.AbstractNumberDto;
+
+public class InteractWorldClick extends AbstractNumberDto {
 
 	/**
 	 * 

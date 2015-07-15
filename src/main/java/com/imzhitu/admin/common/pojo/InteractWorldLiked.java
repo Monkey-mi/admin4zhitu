@@ -1,11 +1,12 @@
 package com.imzhitu.admin.common.pojo;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class InteractWorldLiked implements Serializable {
+import com.hts.web.common.pojo.AbstractNumberDto;
+
+public class InteractWorldLiked extends AbstractNumberDto {
 
 	/**
 	 * 
@@ -20,6 +21,10 @@ public class InteractWorldLiked implements Serializable {
 	private Date dateSchedule;
 	private Integer valid;
 	private Integer finished;
+	
+	public InteractWorldLiked(){
+		super();
+	}
 	
 	public InteractWorldLiked(Integer id, Integer interactId, Integer worldId, Integer userId,
 			Date dateAdded, Date dateSchedule, Integer valid, Integer finished) {

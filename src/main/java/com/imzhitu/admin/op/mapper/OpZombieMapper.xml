@@ -87,7 +87,38 @@
 		</where>
 	</select>
 	
+	<!-- 根据最后修改时间来查询n个马甲.最后修改时间越小，排在越前 -->
+	<select id="queryZombieByLastModifyASC" resultMap="ZombieMap">
+		select *
+		hts_admin.op_zombie ozb
+		where ozb.degree_id=#{degreeId}
+		order by ozb.last_modify asc
+		limit 0, #{limit}
+	</select>
 	
 	
+	<!-- 随机查询n个马甲，这些马甲已经关注过该织图的作者，并且没有评论过该织图。 -->
+	<select id="queryNotInteractNRandomFollowZombie" resultType="Integer">
+		select wz.user_id from 
+			hts.operations_user_zombie wz,
+			hts.user_concern uc
+			where uc.concern_id =  #{userId} and wz.user_id=uc.user_id
+			and not exists(
+			    select id from hts_admin.interact_world_comment wc where world_id=#{worldId} and wc.user_id = wz.user_id
+			  )
+			order by rand() 
+			limit 0,#{limit}
+	</select>
+	
+	<!-- 随机查询n个马甲，这些马甲没有关注过该织图作者，并且没有评论过该织图，并且改马甲具有该等级 -->
+	<select id="queryNotInteractNRandomNotFollowZombie" resultType="Integer">
+		select oz.user_id
+		from hts_admin.op_zombie oz
+		where oz.degree_id=#{degreeId} and not exists(
+		 	select uc.user_id from hts.user_concern uc where uc.concern_id =  #{concernId} and oz.user_id=uc.user_id
+		)
+		order by oz.last_modify asc
+		limit 0,#{limit}
+	</select>
 	
 </mapper>

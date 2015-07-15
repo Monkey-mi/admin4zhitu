@@ -1,6 +1,9 @@
 package com.imzhitu.admin.op.service;
 
+import java.util.List;
 import java.util.Map;
+
+import com.imzhitu.admin.common.pojo.OpZombieDegreeUserLevel;
 
 public interface OpZombieDegreeUserLevelService {
 	/**
@@ -41,4 +44,15 @@ public interface OpZombieDegreeUserLevelService {
 	 * @throws Exception
 	 */
 	public long queryZombieDegreeUserLevelTotalCount(Integer id,Integer zombieDegreeId,Integer userLevelId,Integer maxId)throws Exception;
+	
+	/**
+	 * 查询
+	 * @param id
+	 * @param zombieDegreeId
+	 * @param userLevelId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<OpZombieDegreeUserLevel> queryZombieDegree(Integer id, Integer zombieDegreeId,
+			Integer userLevelId)throws Exception;
 }

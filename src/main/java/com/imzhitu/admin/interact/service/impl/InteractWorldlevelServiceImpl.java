@@ -17,13 +17,13 @@ import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.ZTWorldLevelDto;
 import com.imzhitu.admin.interact.dao.InteractWorldlevelDao;
 import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelService;
+import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
 
 @Service
 public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements InteractWorldlevelService {
-	
-	private Integer ONE_HOUR_COMPLETE_RATE = 70;
 	
 	@Autowired
 	private InteractWorldlevelDao interactWorldlevelDao;
@@ -33,6 +33,14 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 	
 	@Autowired
 	private InteractCommentService interactCommentService;
+	
+	@Autowired
+	private InteractUserlevelListService userLevelListService;
+	
+	@Autowired
+	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
+	
+
 
 	@Override
 	public void QueryWorldlevelList(int maxId, int start, int limit,
@@ -133,111 +141,28 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 			throw new Exception("AddLevelWorld:world_id is null");
 		}
 		
+		//查询对应的马甲zombieDegreeId
+		Integer uid = interactWorldlevelDao.QueryUIDByWID(world_id);
+		
+		//添加互动
 		if(id != null){
 			worldLevel = interactWorldlevelDao.QueryWorldlevelById(id);
 			if(worldLevel != null){
-				Integer uid = interactWorldlevelDao.QueryUIDByWID(world_id);
-				if(uid != null){
-					try{
-						interactWorldService.saveUserInteract(uid,
-								GetLongRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),1);
-					}catch(Exception e){
-						e.printStackTrace();
-					}
-				}
-				
-			}
-			
-		}
-		
-		if((labelsStr==null || labelsStr.equals("")) && (id == null || id == 0)){//若等级id为空，且标签为空
-			if(comments != null && !comments.equals("")){//若评论不为空，则只评论，且平时时长为1小时
-				interactWorldService.saveInteractV2(world_id,0,0,comments.split(","),60);				
-			}
-			return ;
-		}
-		
-		if((labelsStr==null || labelsStr.equals("")) && (id != null)){//若标签为空，等级id 不为空
-			if(worldLevel == null){
-				worldLevel = new ZTWorldLevelDto(0,0,0,0,0,0,0,0,2,0,null,0);
-//				throw new Exception("interactWorldLevelServiceImpl:AddLevelWorld: worldLevel is NULL");
-			}
-			if(comments != null && !comments.equals("")){//若评论不为空，则只评论，且平时时长为10小时
-				interactWorldService.saveInteractV2(world_id,GetLongRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
-						GetLongRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),comments.split(","),worldLevel.getTime());				
-			}else{//若评论为空，则不评论
-				interactWorldService.saveInteractV2(world_id,GetLongRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
-						GetLongRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),null,worldLevel.getTime());
-			}
-			return ;
-		}
-		
-		/*
-		if(labelsStr!=null ){//标签不为空的时候,则分情况来讨论，若等级id为空和不为空的两种情况
-			Integer commentCountInteger;
-			Integer playTimes;
-			Integer likedCount;
-			Integer time;
-			String[] labels=labelsStr.split(",");
-			int commentCount;
-			if(id != null){
-				if(worldLevel == null){
-					commentCount = 0;
-					playTimes = 0;
-					likedCount = 0;
-					time = 20;
-//					throw new Exception("interactWorldLevelServiceImpl:AddLevelWorld: worldLevel is NULL");
-				}else{
-					commentCountInteger = GetLongRandamNum(worldLevel.getMin_comment_count(),worldLevel.getMax_comment_count());//获取每个标签对应的评论数
-					commentCount = commentCountInteger/labels.length < 1 ? 1 : commentCountInteger/labels.length;
-					playTimes = GetLongRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times());
-					likedCount = GetLongRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count());
-					time = worldLevel.getTime();
-				}
-			}else{
-				commentCount = 1;
-				playTimes = 1;
-				likedCount = 1;
-				time = 20;
-			}
-			
-			
-			//标签不为空时，根据标签来添加评论
-			List<Integer> commentIds = new java.util.ArrayList<Integer>();
-			
-			//根据标签来获取评论
-			for(String label:labels){
-				List<Integer> commentsList;
 				try{
-					commentsList = interactCommentService.getRandomCommentIds(Integer.parseInt(label.trim()),commentCount);
+					interactWorldService.saveUserInteract(uid,
+							GetLongRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),worldLevel.getTime());
+					if(comments != null && !comments.equals("")){//若评论不为空，则只评论，且平时时长为10小时
+						interactWorldService.saveInteractV3(world_id,GetLongRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
+								GetLongRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),comments.split(","),worldLevel.getTime());				
+					}
 				}catch(Exception e){
-					e.printStackTrace();
-					commentsList = null;
+					throw e;
 				}
 				
-				if(commentsList == null || commentsList.size()<1)continue;//没有评论，则continue
-				commentIds.addAll(commentsList);
 			}
 			
-			if(commentIds.size() == 0){//若是没有获得评论，则不评论
-				if(comments==null || comments.equals("")){
-					interactWorldService.saveInteractV2(world_id,playTimes,likedCount,null,time);
-				}else{
-					interactWorldService.saveInteractV2(world_id,playTimes,likedCount,comments.split(","),time);
-				}				
-				return ;
-			}else{//若有评论,
-				String s = commentIds.toString();
-				String s1;
-				if(comments==null || comments.equals("")){
-					s1 = s.substring(1, s.length()-1);
-				}else{
-					s1 = s.substring(1, s.length()-1) + ","+comments;
-				}
-				String[] commentIdsStrArray = s1.split(",");//List toString 的过程中的数据格式是[]这样的
-				interactWorldService.saveInteractV2(world_id,playTimes,likedCount,commentIdsStrArray,time);
-			}
-		}*/			
+		}
+			
 	}
 	
 	/**
@@ -254,51 +179,15 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 		
 		ZTWorldLevelDto worldLevel = interactWorldlevelDao.QueryWorldlevelById(worldLevelId);
 		if(worldLevel != null){
-			Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
-			if(uid != null){
-				try{
-					
-					//一小时内发完80%
-					Integer likeCountOneHour = 0;
-					Integer playCountOneHour = 0;
-					Integer commentCountOneHour = 0;
-					Integer likeCount = worldLevel.getMax_liked_count() + worldLevel.getMin_liked_count() / 2;
-					Integer playCount = worldLevel.getMax_play_times() + worldLevel.getMin_play_times() / 2;
-					likeCountOneHour = likeCount  * ONE_HOUR_COMPLETE_RATE / 100;
-					playCountOneHour = playCount  * ONE_HOUR_COMPLETE_RATE / 100;
-					if(commentStr != null && !"".equals(commentStr.trim())){//有评论
-						String[] commentIds = commentStr.split(",");
-						commentCountOneHour = commentIds.length*ONE_HOUR_COMPLETE_RATE / 100;
-						
-						//一小时内发完80%
-						if(commentCountOneHour > 0) {
-							String[] comentIdsOneHour = new String[commentCountOneHour];
-							for(int i=0; i<commentCountOneHour && i<commentIds.length; i++){
-								comentIdsOneHour[i] = commentIds[i];
-							}
-							interactWorldService.saveInteractV2(worldId,playCountOneHour,likeCountOneHour,comentIdsOneHour,60);	
-						}
-						
-						//剩下的照常发
-						if(commentIds.length - commentCountOneHour > 0){
-							String [] commentIdsOther = new String[commentIds.length - commentCountOneHour];
-							for( int j=0; j<commentIds.length-commentCountOneHour; j++){
-								commentIdsOther[j] = commentIds[j+commentCountOneHour];
-							}
-							interactWorldService.saveInteractV2(worldId,playCount - playCountOneHour,likeCount - likeCountOneHour,commentIdsOther,worldLevel.getTime());	
-						}
-					} else {//没有评论
-						interactWorldService.saveInteractV2(worldId,playCountOneHour,likeCountOneHour,null,60);	
-						interactWorldService.saveInteractV2(worldId,playCount - playCountOneHour,likeCount - likeCountOneHour,null,worldLevel.getTime());
-					}
-					 
-					interactWorldService.saveUserInteract(uid,
-							GetLongRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),1);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
+			if(commentStr != null && !"".equals(commentStr.trim())){//有评论
+				String[] commentIds = commentStr.split(",");
+				Integer likeCount = worldLevel.getMax_liked_count() + worldLevel.getMin_liked_count() / 2;
+				Integer playCount = worldLevel.getMax_play_times() + worldLevel.getMin_play_times() / 2;
+				interactWorldService.saveInteractV3(worldId, playCount, likeCount, commentIds, worldLevel.getTime());
 			}
 			
+			Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
+			interactWorldService.saveUserInteract(uid, GetLongRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),worldLevel.getTime());			
 		}
 		
 	}

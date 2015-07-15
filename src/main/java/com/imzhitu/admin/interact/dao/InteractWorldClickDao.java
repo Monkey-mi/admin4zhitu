@@ -7,6 +7,7 @@ import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.dao.BaseDao;
 import com.imzhitu.admin.common.pojo.InteractWorldClick;
 
+@Deprecated
 public interface InteractWorldClickDao extends BaseDao {
 
 	/**

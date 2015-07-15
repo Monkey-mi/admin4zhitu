@@ -129,7 +129,7 @@ public class InteractAction extends BaseCRUDAction {
 	public String saveInteract() {
 		try {
 			String[] commentIds = request.getParameterValues("comments");
-			interactWorldService.saveInteract(worldId, clickCount, likedCount, commentIds, duration);
+			interactWorldService.saveInteractV3(worldId, clickCount, likedCount, commentIds, duration);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch(Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

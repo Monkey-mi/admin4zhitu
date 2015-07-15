@@ -1,6 +1,6 @@
 package com.imzhitu.admin.interact.service;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +10,8 @@ import net.sf.json.JSONObject;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.base.BaseTest;
 
 public class InteractWorldServiceTest extends BaseTest {
@@ -20,15 +19,15 @@ public class InteractWorldServiceTest extends BaseTest {
 	@Autowired
 	InteractWorldService service;
 	
-//	@Test
+	@Test
 	public void testSaveInteract() throws Exception {
-		service.saveInteract(14302, 50, 0, null, 2);
+		service.saveInteractV3(27522, 350, 10, "1234,1235,1236,1237,1238,1239,12310,12311".split(","), 60);
 	}
 	
 	@Test
-	public void testSaveInteractV2() throws Exception {
+	public void testSaveInteractV3() throws Exception {
 		String[] s = "1234,1235,1236,1237,1238,1239,12310,12311,12332,12333,12334".split(",");
-		service.saveInteractV2(14303, 5000, 4,s, 20);
+		service.saveInteractV3(14303, 5000, 4,s, 20);
 	}
 	
 	@Test
@@ -50,7 +49,7 @@ public class InteractWorldServiceTest extends BaseTest {
 	@Test
 	public void testBuildClicks() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildClicks(17, 52, 2, 10, jsonMap);
+		service.buildClicks(697, 0, 1, 10, jsonMap);
 		JSONObject jsObj = JSONObject.fromObject(jsonMap);
 		logger.debug(jsObj);
 	}
@@ -110,4 +109,23 @@ public class InteractWorldServiceTest extends BaseTest {
 		List<Integer> list = service.getScheduleCountV2(3000,120);
 		logger.info(list);
 	}
+	
+	@Test
+	public void testGetScheduleV3()throws Exception{
+		Date  now = new Date();
+		List<Date> dateList = service.getScheduleV3(new Date(now.getTime() - 13*60*60*1000L), 60,8 );
+		logger.info("dateList =======>"+dateList);
+		Date end = new Date();
+		logger.info("cost:"+(end.getTime() - now.getTime() ) +"ms.");
+	}
+	
+	
+	@Test
+	public void testCommit()throws Exception{
+//		service.commitClick();
+		service.commitComment();
+//		service.commitFollow();
+//		service.commitLiked();
+	}
+	
 }

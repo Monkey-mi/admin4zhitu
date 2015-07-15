@@ -64,7 +64,7 @@ public class InteractUserFollowDaoImpl extends BaseDaoImpl implements
 	 * 查询未完成的粉丝
 	 */
 	private static final String QUERY_UN_FINISH_FOLLOW = "select * from " + table 
-			+ " where valid=? and finished=? and date_schedule between ? and ? order by date_schedule asc";
+			+ " where valid=? and finished=? and date_schedule between ? and ? order by id asc";
 	
 	/**
 	 * 更新未完成粉丝计划时间

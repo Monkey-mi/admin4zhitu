@@ -1,9 +1,10 @@
 package com.imzhitu.admin.common.pojo;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
+
+import com.hts.web.common.pojo.AbstractNumberDto;
 
 /**
  * <p>
@@ -14,7 +15,7 @@ import org.apache.struts2.json.annotations.JSON;
  * @author tianjie
  *
  */
-public class InteractUserFollow implements Serializable {
+public class InteractUserFollow  extends AbstractNumberDto {
 
 	/**
 	 * 

@@ -92,4 +92,11 @@ public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieServ
 		return zombieMapper.queryZombieTotalCount(dto);
 	}
 
+	@Override
+	public List<OpZombie> queryNZombie(Integer degreeId, Integer n)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return zombieMapper.queryZombieByLastModifyASC(degreeId, n);
+	}
+
 }
