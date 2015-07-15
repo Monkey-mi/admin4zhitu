@@ -67,6 +67,9 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	/** 更新评论屏蔽标记 */
 	private static final String UPDATE_COMMENT_SHIELD = "update " + table + " set shield=? where id=?";
 	
+	/** 更新评论有效性标记 */
+	private static final String UPDATE_COMMENT_VALID = "update " + table + " set valid=? where id=?";
+	
 	/**
 	 * 更新用户的所有评论的屏蔽标记
 	 */
@@ -212,6 +215,11 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	@Override
 	public void updateCommentShieldByUserId(Integer authorId,Integer shield){
 		getMasterJdbcTemplate().update(UPDATE_COMMENT_SHIELD_BY_USER_ID, shield,authorId);
+	}
+	
+	@Override
+	public void updateCommentValid(Integer id, Integer valid) {
+	    getMasterJdbcTemplate().update(UPDATE_COMMENT_VALID, new Object[]{valid, id});
 	}
 	
 	@Override

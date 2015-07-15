@@ -90,6 +90,14 @@ public interface HTWorldCommentDao extends BaseDao {
 	public void updateCommentShieldByUserId(Integer authorId,Integer shield);
 
 	/**
+	 * 更新评论有效性标志
+	 * 
+	 * @param id
+	 * @param valid
+	 */
+	public void updateCommentValid(Integer id, Integer shield);
+	
+	/**
 	 * 根据id查询world_id
 	 * 
 	 * @param id

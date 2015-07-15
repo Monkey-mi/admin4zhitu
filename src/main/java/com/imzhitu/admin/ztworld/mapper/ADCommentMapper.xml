@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.ADCommentMapper">
+
+	<resultMap id="ADCommentMap" type="com.imzhitu.admin.common.pojo.ZTWorldCommentDto">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="user_avatar" property="authorAvatar" jdbcType="VARCHAR"/>
+		<result column="user_name" property="authorName" jdbcType="INTEGER" />
+		<result column="author_id" property="authorId" jdbcType="INTEGER"/>
+		<result column="content" property="content" jdbcType="INTEGER"/>
+		<result column="world_id" property="worldId" jdbcType="INTEGER"/>
+		<result column="comment_date" property="commentDate" jdbcType="TIMESTAMP"/>
+		<result column="valid" property="valid" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+	<select id="queryADComment" resultMap="ADCommentMap">
+		select acs.id, u.user_avatar, u.user_name, acs.author_id, acs.content, acs.world_id, acs.comment_date, acs.valid 
+		from hts_admin.ad_comment_shield acs, hts.user_info u 
+		<where>
+			u.id = acs.author_id
+			<if test="authorName != null">
+				and u.user_name like CONCAT('%',#{authorName},'%')
+			</if>
+			<if test="authorId != null">
+				and acs.author_id = #{authorId}
+			</if>
+			<if test="worldId != null">
+				and acs.world_id = #{worldId}
+			</if>
+		</where>
+		order by acs.comment_date desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryADCommentTotalCount" resultType="long">
+		select count(*) from hts_admin.ad_comment_shield 
+	</select>
+	
+	<!-- 更新广告评论 -->
+	<update id="updateADComment" parameterType="com.imzhitu.admin.common.pojo.ZTWorldCommentDto">
+		update hts_admin.ad_comment_shield acs
+		<set>
+			<if test="valid != null">acs.valid = #{valid}</if>
+		</set>
+		where acs.id = #{id}
+	</update>
+	
+</mapper>

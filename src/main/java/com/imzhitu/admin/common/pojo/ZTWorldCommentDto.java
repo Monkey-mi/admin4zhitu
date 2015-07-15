@@ -6,6 +6,7 @@ import java.util.Date;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.hts.web.base.constant.Tag;
+import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.pojo.ObjectWithUserVerify;
 
 /**
@@ -18,7 +19,7 @@ import com.hts.web.common.pojo.ObjectWithUserVerify;
  * @author ztj
  * 
  */
-public class ZTWorldCommentDto implements Serializable, ObjectWithUserVerify {
+public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable, ObjectWithUserVerify {
 
 	/**
 	 * 
