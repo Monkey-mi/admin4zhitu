@@ -598,6 +598,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			for(j = 0; j < commentCount - i && j < unFzList.size(); j++){
 				zombieIdList.add(unFzList.get(j));
 			}
+			
 			batchSaveComment(interactId, worldId, zombieIdList, cids, dateAdded, scheduleDateList);
 		}
 		
@@ -627,7 +628,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			}
 			
 			try{
-				userFollowMapper.batchSaveUserFollow(list);
+				if(list.size() > 0)
+					userFollowMapper.batchSaveUserFollow(list);
 			}catch(Exception e){
 				logger.warn("saveInteractV3:userFollowMapper.batchSaveUserFollow failed.List<InteractUserFollow> list:"+list+"\ncause:"+e.getMessage());
 				throw e;
@@ -637,7 +639,9 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		//更新op_zombie表中的lastmodify字段
 		if(unFzList != null && unFzList.size() > 0){
 			try{
-				zombieMapper.batchUpdateZombie(dateAdded.getTime(), 1, 1, (Integer[])unFzList.toArray());
+				Integer[] unFzArray = new Integer[unFzList.size()];
+				unFzList.toArray(unFzArray);
+				zombieMapper.batchUpdateZombie(dateAdded.getTime(), 1, 1, unFzArray);
 			}catch(Exception e){
 				logger.warn("saveInteractV3:zombieMapper.batchUpdateZombie failed.List<InteractUserFollow> unFzList:"+unFzList+"\ncause:"+e.getMessage());
 				throw e;

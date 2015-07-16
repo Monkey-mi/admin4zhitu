@@ -19,12 +19,12 @@ public class InteractWorldServiceTest extends BaseTest {
 	@Autowired
 	InteractWorldService service;
 	
-	@Test
+	//@Test
 	public void testSaveInteract() throws Exception {
 		service.saveInteractV3(27522, 350, 10, "1234,1235,1236,1237,1238,1239,12310,12311".split(","), 60);
 	}
 	
-	@Test
+	//@Test
 	public void testSaveInteractV3() throws Exception {
 		String[] s = "1234,1235,1236,1237,1238,1239,12310,12311,12332,12333,12334".split(",");
 		service.saveInteractV3(14303, 5000, 4,s, 20);
@@ -90,7 +90,7 @@ public class InteractWorldServiceTest extends BaseTest {
 
 	@Test
 	public void testSaveUserInteract() throws Exception {
-		service.saveUserInteract(145, 1, 24);
+		service.saveUserInteract(485, 1, 24);
 	}
 	
 	@Test
@@ -122,10 +122,10 @@ public class InteractWorldServiceTest extends BaseTest {
 	
 	@Test
 	public void testCommit()throws Exception{
-//		service.commitClick();
+		service.commitClick();
 		service.commitComment();
-//		service.commitFollow();
-//		service.commitLiked();
+		service.commitFollow();
+		service.commitLiked();
 	}
 	
 }
