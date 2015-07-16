@@ -33,5 +33,13 @@ public interface ADCommentService extends BaseService {
      * @author zhangbo	2015年7月15日
      */
     public void updateADComment(ZTWorldCommentDto dto) throws Exception;
+
+    /**
+     * 批量删除广告评论
+     * 
+     * @param toIds	广告评论主键id集合
+     * @author zhangbo	2015年7月16日
+     */
+    public void deleteADCommentByIds(Integer[] toIds);
     
 }

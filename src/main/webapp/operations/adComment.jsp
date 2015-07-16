@@ -78,12 +78,32 @@
 			}
 		});
 	};
+	
+	/**
+	 * 删除广告评论
+	 */
+	function delADComments() {
+		var rows = $("#htm_table").datagrid("getSelections");
+		var ids = [];
+		for (var i=0; i<rows.length; i++) {
+			ids.push(rows[i].id);
+		}
+		$.post("./admin_ztworld/adComment_deleteADComments",{ids:ids.toString()}, function(result){
+			if(result['result'] == 0) {
+				$("#htm_table").datagrid("reload");
+			} else {
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+		});
+	}
 
 
 </script>
 </head>
 <body>
-	<div id="tb"></div>
+	<div id="tb">
+		<a id="delBtn" href="javascript:void(0);" onclick="javascript:delADComments();" class="easyui-linkbutton" title="批量删除广告评论" plain="true" iconCls="icon-cut">删除</a>
+	</div>
 	<table id="htm_table"></table>
 </body>
 </html>

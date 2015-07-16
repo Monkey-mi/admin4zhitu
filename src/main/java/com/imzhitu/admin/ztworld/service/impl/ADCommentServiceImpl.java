@@ -45,4 +45,9 @@ public class ADCommentServiceImpl extends BaseServiceImpl implements ADCommentSe
 	mapper.updateADComment(dto);
     }
 
+    @Override
+    public void deleteADCommentByIds(Integer[] toIds) {
+	mapper.deleteADCommentByIds(toIds);
+    }
+
 }

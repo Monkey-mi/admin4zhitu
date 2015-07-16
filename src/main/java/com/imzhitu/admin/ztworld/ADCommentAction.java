@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.common.util.JSONUtil;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.ZTWorldCommentDto;
 import com.imzhitu.admin.ztworld.dao.HTWorldCommentDao;
@@ -34,6 +35,12 @@ public class ADCommentAction extends BaseCRUDAction {
     private Integer valid;
     
     /**
+     * 广告评论主键id集合
+     * @author zhangbo	2015年7月16日
+     */
+    private String ids;
+    
+    /**
      * @param worldCommnetId the worldCommnetId to set
      */
     public void setWorldCommnetId(Integer worldCommnetId) {
@@ -47,6 +54,13 @@ public class ADCommentAction extends BaseCRUDAction {
 	this.valid = valid;
     }
     
+    /**
+     * @param ids the ids to set
+     */
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+
     @Autowired
     private ADCommentService adService;
     
@@ -86,11 +100,23 @@ public class ADCommentAction extends BaseCRUDAction {
 	    
 	    // 更新织图评论
 	    htWorldCommentDao.updateCommentValid(worldCommnetId, valid);
-	    JSONUtil.optSuccess("更新成功", jsonMap);
+	    JSONUtil.optSuccess(jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
 	}
 	return StrutsKey.JSON;
     }
+    
+    public String deleteADComments(){
+	try {
+	    Integer[] toIds = StringUtil.convertStringToIds(ids);
+	    adService.deleteADCommentByIds(toIds);
+	    
+	    JSONUtil.optSuccess(jsonMap);
+	} catch (Exception e) {
+	    JSONUtil.optFailed(e.getMessage(), jsonMap);
+	}
+	return StrutsKey.JSON;
+    } 
 
 }

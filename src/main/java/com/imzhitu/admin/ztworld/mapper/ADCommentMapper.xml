@@ -45,4 +45,12 @@
 		where acs.id = #{id}
 	</update>
 	
+	<delete id="deleteADCommentByIds">
+		delete from hts_admin.ad_comment_shield where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
 </mapper>

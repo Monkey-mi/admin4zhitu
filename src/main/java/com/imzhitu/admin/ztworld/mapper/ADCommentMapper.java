@@ -41,4 +41,12 @@ public interface ADCommentMapper {
      */
     @DataSource("master")
     public void updateADComment(ZTWorldCommentDto dto);
+
+    /**
+     * 批量删除广告评论
+     * 
+     * @param toIds	广告评论主键id集合
+     * @author zhangbo	2015年7月16日
+     */
+    public void deleteADCommentByIds(Integer[] toIds);
 }
