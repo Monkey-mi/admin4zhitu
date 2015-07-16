@@ -48,5 +48,6 @@ public interface ADCommentMapper {
      * @param toIds	广告评论主键id集合
      * @author zhangbo	2015年7月16日
      */
+    @DataSource("master")
     public void deleteADCommentByIds(Integer[] toIds);
 }

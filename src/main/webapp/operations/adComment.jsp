@@ -43,7 +43,25 @@
 	    			},
 	    			{field:'authorName',title:'评论人',align:'center'},
 	    	        {field:'authorId',title:'评论人ID',align:'center'},
-	    	        {field:'content',title:'评论内容',align:'center'},
+	    	        {field:'content',title:'评论内容',align:'center',
+	    	        	formatter: function(value,row,index) {
+	    	        		var str = value;
+	    	        		// 以50个字长度为分隔，向下去整数，小数点舍去，得到结果看需要换行几次
+	    	        		var lgth = 50;
+	    	        		var newlineCount = Math.floor(value.length/lgth);
+	    	        		if (newlineCount > 0) {
+	    	        			for (var i=0; i<=newlineCount; i++) {
+	    	        				if ( i==0 ) {
+	    	        					str = value.substring(0,lgth-1);
+	    	        				} else {
+	    	        					str += "<br>";
+	    	        					str += value.substring(i*lgth-1,(i+1)*lgth-1);
+	    	        				}
+	    	        			}
+	    	        		}
+	    	        		return str;
+	    	  			}
+	    	        },
 	    	        {field:'worldId',title:'被评论织图ID',align:'center'},
 	    	        {field:'commentDate',title:'评论时间',align:'center'},
 	    	        {field:'valid',title:'是否生效',align:'center',
@@ -90,14 +108,14 @@
 		}
 		$.post("./admin_ztworld/adComment_deleteADComments",{ids:ids.toString()}, function(result){
 			if(result['result'] == 0) {
+				$("#htm_table").datagrid("clearSelections");
 				$("#htm_table").datagrid("reload");
 			} else {
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 			}
 		});
-	}
-
-
+	};
+	
 </script>
 </head>
 <body>
