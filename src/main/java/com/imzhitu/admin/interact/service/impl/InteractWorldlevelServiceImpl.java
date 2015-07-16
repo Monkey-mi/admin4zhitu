@@ -154,6 +154,9 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 					if(comments != null && !comments.equals("")){//若评论不为空，则只评论，且平时时长为10小时
 						interactWorldService.saveInteractV3(world_id,GetLongRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
 								GetLongRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),comments.split(","),worldLevel.getTime());				
+					}else{
+						interactWorldService.saveInteractV3(world_id,GetLongRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
+								GetLongRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),null,worldLevel.getTime());
 					}
 				}catch(Exception e){
 					throw e;
