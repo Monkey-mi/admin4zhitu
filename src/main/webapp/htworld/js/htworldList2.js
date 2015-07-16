@@ -1484,3 +1484,30 @@ var htmTableTitle = "分享列表维护", //表格标题
 		searchChannelQueryParams.query = query;
 		$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
 	}
+	
+	/**
+	 * 显示评论
+	 * @param uri
+	 */
+	function showComment(realUri,worldId) {
+		var url="./admin_interact/interact_queryIntegerIdByWorldId";
+		var uri;
+		$.post(url,{'worldId':worldId},function(result){
+			if(result['interactId']){
+				uri = realUri+"&interactId="+result['interactId'];
+			}else{
+				uri = realUri;
+			}
+			$.fancybox({
+				'margin'			: 20,
+				'width'				: '10',
+				'height'			: '100%',
+				'autoScale'			: true,
+				'transitionIn'		: 'none',
+				'transitionOut'		: 'none',
+				'type'				: 'iframe',
+				'href'				: uri
+			});
+			return false;
+		},"json");
+	}
