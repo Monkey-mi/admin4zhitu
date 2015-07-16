@@ -926,7 +926,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		//统一更新hts_admin.interact_world_click里面的完成情况
 		try{
-			worldClickMapper.batchUpdateWorldClickFinished(Tag.TRUE, successId);
+			if(successId.size() > 0)
+				worldClickMapper.batchUpdateWorldClickFinished(Tag.TRUE, successId);
 		}catch(Exception e){
 			logger.warn("commitClick:worldClickMapper.batchUpdateWorldClickValid failed. ids="+successId+"\n.cause:"+e.getMessage());
 		}
@@ -975,7 +976,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		//统一更新interact_world_comment这张表的finish
 		try{
-			worldCommentMapper.batchUpdateWorldCommentFinished(Tag.TRUE, successId);
+			if(successId.size() > 0)
+				worldCommentMapper.batchUpdateWorldCommentFinished(Tag.TRUE, successId);
 		}catch(Exception e){
 			logger.warn("commitComment:worldCommentMapper.batchUpdateWorldClickValid failed. ids="+successId+"\n.cause:"+e.getMessage());
 		}
@@ -1022,7 +1024,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		//批量更新完成情况
 		try{
-			worldLikedMapper.batchUpdateWorldLikedFinished(Tag.TRUE, successId);
+			if(successId.size() > 0)
+				worldLikedMapper.batchUpdateWorldLikedFinished(Tag.TRUE, successId);
 		}catch(Exception e){
 			logger.warn("worldLikedMapper.batchUpdateWorldLikedFinished failed. ids="+successId+"\n.cause:"+e.getMessage());
 		}
@@ -1070,7 +1073,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		//批量更新完成情况
 		try{
-			userFollowMapper.batchUpdateUserFollowFinished(Tag.TRUE, successId);
+			if(successId.size() > 0)
+				userFollowMapper.batchUpdateUserFollowFinished(Tag.TRUE, successId);
 		}catch(Exception e){
 			logger.warn("commitFollow:userFollowMapper.batchUpdateWorldLikedFinished failed. ids="+successId+"\n.cause:"+e.getMessage());
 		}
