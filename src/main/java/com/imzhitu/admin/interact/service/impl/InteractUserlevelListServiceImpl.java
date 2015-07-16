@@ -42,7 +42,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	
 	private static Logger logger = Logger.getLogger(InteractUserlevelListServiceImpl.class);
 	
-	private static final long WORK_TIME = 10*60*1000;//毫秒级工作时间，当前时间-work_time 至 当前时间 范围内的新发的织图10*60*1000
+	private static final long WORK_TIME = 5*60*1000;//毫秒级工作时间，当前时间-work_time 至 当前时间 范围内的新发的织图5*60*1000
 	
 	@Value("${plan.comment.common.userlevel.id}")
 	private Integer commonUserLevelId;
@@ -246,7 +246,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						try{
 							interactWorldService.saveUserInteract(o.getUser_id(),needZombieDegreeId,GetLongRandamNum(userlevel.getMin_fans_count(),userlevel.getMax_fans_count()),userlevel.getTime());//添加粉丝
 						}catch(Exception e){
-							logger.warn("ScanNewWorldAndJoinIntoInteract:interactWorldService.saveUserInteract.\nuserId="+o.getUser_id()+"\nneedZombieDegreeId="+needZombieDegreeId);
+							logger.warn("ScanNewWorldAndJoinIntoInteract:interactWorldService.saveUserInteract.\nuserId="+o.getUser_id()+"\nneedZombieDegreeId="+needZombieDegreeId+"\n.cause:"+e.getStackTrace());
 						}
 						/*
 						 * *暂时先将这个评论的去掉

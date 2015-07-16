@@ -166,7 +166,7 @@
         </property>
         <property name="cronExpression">
         	<!-- <value>*/5 * 0,9-23 * * ?</value> -->
-            <value>0 0/3 * * * ?</value><!-- 每隔5分钟 -->
+            <value>0 0/2 * * * ?</value><!-- 每隔5分钟 -->
         </property>
     </bean>
 		
@@ -191,7 +191,7 @@
         </property>
         <property name="cronExpression">
             <!--<value>*/5 * 0,9-23 * * ?</value>--> 
-            <value>0 0/3 * * * ?</value><!-- 每隔5分钟 -->
+            <value>0 0/2 * * * ?</value><!-- 每隔5分钟 -->
         </property>
     </bean>
     
@@ -216,7 +216,7 @@
         </property>
         <property name="cronExpression">
             <!-- <value>*/5 * 0,9-23 * * ?</value> -->
-            <value>0 0/3 * * * ?</value><!-- 9点到12点每隔5分钟 -->
+            <value>0 0/2 * * * ?</value><!-- 9点到12点每隔5分钟 -->
         </property>
     </bean>
     
@@ -241,7 +241,7 @@
         </property>
         <property name="cronExpression">
             <!-- <value>*/5 * 0,9-23 * * ?</value> -->
-            <value>0 0/3 * * * ?</value><!-- 9点到12点每隔10分钟 -->
+            <value>0 0/2 * * * ?</value><!-- 9点到12点每隔10分钟 -->
         </property>
     </bean>
     
@@ -338,7 +338,7 @@
     		<ref bean="ScanNewWorldAndJoinIntoInteractDetail"/>
     	</property>
     	<property name="cronExpression">
-    		<value>0 0/10 * * * ?</value><!-- 每半时 -->
+    		<value>0 0/5 * * * ?</value><!-- 每半时 -->
     	</property>
     </bean>
     
@@ -357,7 +357,7 @@
   			<ref bean="performTypeWorldSchedula"/>
   		</property>
   		<property name="cronExpression">
-  			<value>0 0/10 * * * ?</value><!-- 10分钟 -->
+  			<value>0 0/5 * * * ?</value><!-- 10分钟 -->
   		</property>
   	</bean>
 

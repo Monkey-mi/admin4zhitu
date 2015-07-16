@@ -598,6 +598,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			for(j = 0; j < commentCount - i && j < unFzList.size(); j++){
 				zombieIdList.add(unFzList.get(j));
 			}
+			
 			batchSaveComment(interactId, worldId, zombieIdList, cids, dateAdded, scheduleDateList);
 		}
 		
@@ -627,7 +628,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			}
 			
 			try{
-				userFollowMapper.batchSaveUserFollow(list);
+				if(list.size() > 0)
+					userFollowMapper.batchSaveUserFollow(list);
 			}catch(Exception e){
 				logger.warn("saveInteractV3:userFollowMapper.batchSaveUserFollow failed.List<InteractUserFollow> list:"+list+"\ncause:"+e.getMessage());
 				throw e;
@@ -637,7 +639,9 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		//更新op_zombie表中的lastmodify字段
 		if(unFzList != null && unFzList.size() > 0){
 			try{
-				zombieMapper.batchUpdateZombie(dateAdded.getTime(), 1, 1, (Integer[])unFzList.toArray());
+				Integer[] unFzArray = new Integer[unFzList.size()];
+				unFzList.toArray(unFzArray);
+				zombieMapper.batchUpdateZombie(dateAdded.getTime(), 1, 1, unFzArray);
 			}catch(Exception e){
 				logger.warn("saveInteractV3:zombieMapper.batchUpdateZombie failed.List<InteractUserFollow> unFzList:"+unFzList+"\ncause:"+e.getMessage());
 				throw e;
@@ -922,7 +926,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		//统一更新hts_admin.interact_world_click里面的完成情况
 		try{
-			worldClickMapper.batchUpdateWorldClickFinished(Tag.TRUE, successId);
+			if(successId.size() > 0)
+				worldClickMapper.batchUpdateWorldClickFinished(Tag.TRUE, successId);
 		}catch(Exception e){
 			logger.warn("commitClick:worldClickMapper.batchUpdateWorldClickValid failed. ids="+successId+"\n.cause:"+e.getMessage());
 		}
@@ -971,7 +976,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		//统一更新interact_world_comment这张表的finish
 		try{
-			worldCommentMapper.batchUpdateWorldCommentFinished(Tag.TRUE, successId);
+			if(successId.size() > 0)
+				worldCommentMapper.batchUpdateWorldCommentFinished(Tag.TRUE, successId);
 		}catch(Exception e){
 			logger.warn("commitComment:worldCommentMapper.batchUpdateWorldClickValid failed. ids="+successId+"\n.cause:"+e.getMessage());
 		}
@@ -1018,7 +1024,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		//批量更新完成情况
 		try{
-			worldLikedMapper.batchUpdateWorldLikedFinished(Tag.TRUE, successId);
+			if(successId.size() > 0)
+				worldLikedMapper.batchUpdateWorldLikedFinished(Tag.TRUE, successId);
 		}catch(Exception e){
 			logger.warn("worldLikedMapper.batchUpdateWorldLikedFinished failed. ids="+successId+"\n.cause:"+e.getMessage());
 		}
@@ -1066,7 +1073,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		//批量更新完成情况
 		try{
-			userFollowMapper.batchUpdateUserFollowFinished(Tag.TRUE, successId);
+			if(successId.size() > 0)
+				userFollowMapper.batchUpdateUserFollowFinished(Tag.TRUE, successId);
 		}catch(Exception e){
 			logger.warn("commitFollow:userFollowMapper.batchUpdateWorldLikedFinished failed. ids="+successId+"\n.cause:"+e.getMessage());
 		}
