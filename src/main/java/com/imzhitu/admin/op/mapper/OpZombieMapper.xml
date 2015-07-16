@@ -30,7 +30,7 @@
 	
 	<!-- BATCH UPDATE ZOMBIE  -->
 	<update id="batchUpdateZombie">
-		update hts_admin.op_zombie set last_modify = #{lastModify},
+		update hts_admin.op_zombie set last_modify = #{lastModify}
 		<if test="concernCount != null and concernCount != 0">
 			, concern_count = concern_count + #{concernCount}
 		</if>
