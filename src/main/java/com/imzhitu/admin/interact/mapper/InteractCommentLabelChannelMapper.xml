@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractCommentLabelChannelMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractCommentLabelChannel" id="CommentLabelChannelMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+		<result property="commentLabelId" column="comment_label_id" jdbcType="INTEGER"/>
+		<result property="operator" column="operator" jdbcType="INTEGER"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+		<result property="commentLabelName" column="comment_label_name" jdbcType="VARCHAR"/>
+		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertCommentLabelChannel">
+		insert into hts_admin.interact_comment_label_channel(channel_id,comment_label_id,operator,date_add)
+		values(#{channelId},#{commentLabelId},#{operator},#{addDate})
+	</insert>
+	
+	<!-- batchDelete -->
+	<delete id="batchDeleteCommentLabelChannel">
+		delete from hts_admin.interact_comment_label_channel
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>	
+	</delete>
+	
+	<!-- Query -->
+	<select id="queryCommentLabelChannel" resultMap="CommentLabelChannelMap">
+		select iclc.*,aui.user_name as operatorName,icl.label_name as comment_label_name,oc.channel_name
+		from hts_admin.interact_comment_label_channel iclc 
+		left join hts_admin.admin_user_info aui on iclc.operator=aui.id
+		left join hts_admin.interact_comment_label icl on iclc.comment_label_id=icl.id
+		left join hts.operations_channel oc on iclc.channel_id=oc.id
+		<where>
+			<if test="id != null">
+				iclc.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[iclc.id <= #{maxId}]]>
+			</if>
+			<if test="channelId != null">
+				and iclc.channel_id = #{channelId}
+			</if>
+			<if test="commentLabelId != null">
+				and iclc.comment_label_id = #{commentLabelId}
+			</if>
+		</where>
+		order by iclc.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- QueryCount -->
+	<select id="queryComemntLabelChannelTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.interact_comment_label_channel iclc
+		<where>
+			<if test="id != null">
+				iclc.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[iclc.id <= #{maxId}]]>
+			</if>
+			<if test="channelId != null">
+				and iclc.channel_id = #{channelId}
+			</if>
+			<if test="commentLabelId != null">
+				and iclc.comment_label_id = #{commentLabelId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- query commentLabelId -->
+	<select id="queryCommentLabelIdByChannelId" resultType="Integer">
+		select comment_label_id 
+		from hts_admin.interact_comment_label_channel
+		where channel_id = #{channelId}
+	</select>
+</mapper>
