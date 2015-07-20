@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imzhitu.admin.ztworld.mapper.ADCommentMapper">
 
+	<!-- 广告评论Map -->
 	<resultMap id="ADCommentMap" type="com.imzhitu.admin.common.pojo.ZTWorldCommentDto">
 		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="user_avatar" property="authorAvatar" jdbcType="VARCHAR"/>
@@ -12,7 +13,15 @@
 		<result column="comment_date" property="commentDate" jdbcType="TIMESTAMP"/>
 		<result column="valid" property="valid" jdbcType="TIMESTAMP"/>
 	</resultMap>
+	
+	<!-- 广告关键词Map -->
+	<resultMap id="ADKeywordMap" type="com.imzhitu.admin.common.pojo.ADKeywordDTO">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="ad_keyword" property="ADKeyword" jdbcType="VARCHAR"/>
+		<result column="hit_count" property="hitCount" jdbcType="INTEGER" />
+	</resultMap>
 
+	<!-- 查询广告评论集合 -->
 	<select id="queryADComment" resultMap="ADCommentMap">
 		select acs.id, u.user_avatar, u.user_name, acs.author_id, acs.content, acs.world_id, acs.comment_date, acs.valid 
 		from hts_admin.ad_comment_shield acs, hts.user_info u 
@@ -32,6 +41,7 @@
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
+	<!-- 查询广告评论总数 -->
 	<select id="queryADCommentTotalCount" resultType="long">
 		select count(*) from hts_admin.ad_comment_shield 
 	</select>
@@ -45,6 +55,7 @@
 		where acs.id = #{id}
 	</update>
 	
+	<!-- 批量删除广告评论 -->
 	<delete id="deleteADCommentByIds">
 		delete from hts_admin.ad_comment_shield where id in
 		<foreach item="item" index="index" collection="array"
@@ -52,5 +63,37 @@
 	       		#{item}
 	 	</foreach>
 	</delete>
+	
+	<!-- 查询广告关键词集合 -->
+	<select id="queryADKeywordList" resultMap="ADKeywordMap">
+		select * from hts_admin.ad_keyword_statistics aks order by aks.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 查询广告关键词总数 -->
+	<select id="queryADKeywordTotalCount" resultType="long">
+		select count(*) from hts_admin.ad_keyword_statistics 
+	</select>
+	
+	<!-- 批量删除广告关键词 -->
+	<delete id="deleteADKeywordByIds">
+		delete from hts_admin.ad_keyword_statistics where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<!-- 插入广告关键词 -->
+	<insert id="insertADKeyword">
+		insert into hts_admin.ad_keyword_statistics (ad_keyword)
+		values (#{ADKeyword})
+	</insert>
+	
+	<!-- 更新广告关键词集合 -->
+	<update id="updateADKeyword" parameterType="com.imzhitu.admin.common.pojo.ADKeywordDTO">
+		update hts_admin.ad_keyword_statistics aks
+		set aks.hit_count=#{hitCount} where aks.ad_keyword = #{ADKeyword}
+	</update>
 	
 </mapper>

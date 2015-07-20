@@ -7,6 +7,9 @@
 <title>广告评论管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript">
 
 	var maxId=0;
@@ -116,11 +119,29 @@
 		});
 	};
 	
+	/**
+	 * 打开广告关键词维护页面
+	 */
+	function openADKeywordPage() {
+		$.fancybox({
+			'margin'			: 20,
+			'width'				: '100%',
+			'height'			: '100%',
+			'autoScale'			: true,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+			'href'				: 'page_operations_adKeyword',
+			onClosed			: function(){}
+		});
+	};
+	
 </script>
 </head>
 <body>
 	<div id="tb">
 		<a id="delBtn" href="javascript:void(0);" onclick="javascript:delADComments();" class="easyui-linkbutton" title="批量删除广告评论" plain="true" iconCls="icon-cut">删除</a>
+		<a id="openPageBtn" href="javascript:void(0);" onclick="javascript:openADKeywordPage();" class="easyui-linkbutton" title="点击打开维护广告关键词页面" plain="true" iconCls="icon-converter">维护广告关键词</a>
 	</div>
 	<table id="htm_table"></table>
 </body>

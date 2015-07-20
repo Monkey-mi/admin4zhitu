@@ -1,5 +1,9 @@
 package com.imzhitu.admin.common.database;
 
+/**
+ * @author zhangbo	2015年7月17日
+ *
+ */
 public class Admin {
 	
 	public static final String KEYGEN = "keygen";
@@ -206,5 +210,12 @@ public class Admin {
 	 * 系统弹幕id
 	 */
 	public static final Integer KEYGEN_OP_SYS_DANMU_ID = 11;
+	
+	
+	/**
+	 * admin系统与daemon守护系统共同操作redis的key值
+	 * @author zhangbo	2015年7月17日
+	 */
+	public static final String ADMIN_DAEMON_ADCACHEKEY = "admin:daemon:ADCacheKey";
 	
 }
