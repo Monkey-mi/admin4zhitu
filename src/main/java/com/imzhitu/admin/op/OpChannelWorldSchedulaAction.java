@@ -27,7 +27,6 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	private Date modifyDate;	//最后修改时间
 	private String idsStr;		//id 字符串
 	private Date schedula;		//计划时间字符串
-	private String superbWids;		//计划时间字符串
 	private Integer minuteTimeSpan;//计划时间间隔
 
 	
@@ -91,7 +90,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		try{
 			String[] wids = StringUtil.convertStringToStrs(request.getParameter("wids"));
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			service.batchAddChannelWorldSchedula(wids, getSuperbWids(), schedula,minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
+			service.batchAddChannelWorldSchedula(wids, schedula, minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -170,21 +169,6 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		this.idsStr = idsStr;
 	}
 
-	/**
-	 * @return the superbWids
-	 */
-	public String getSuperbWids() {
-	    return superbWids;
-	}
-
-	/**
-	 * @param superbWids the superbWids to set
-	 */
-	public void setSuperbWids(String superbWids) {
-	    this.superbWids = superbWids;
-	}
-
-	
 	public Integer getMinuteTimeSpan() {
 		return minuteTimeSpan;
 	}
