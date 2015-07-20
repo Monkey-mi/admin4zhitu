@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractChannelWorldLabelMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractChannelWorldLabel" id="ChannelWorldLabelMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="operator" column="operator" jdbcType="INTEGER"/>
+		<result property="label_ids" column="label_ids" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertChannelWorldLabel">
+		insert into hts_admin.interact_channel_world_label (channel_id,world_id,label_ids,operator,date_add)
+		values (#{channelId},#{worldId},#{label_ids},#{operator},#{addDate})
+	</insert>
+	
+	<!-- SELECT -->
+	<select id="queryChannelWorldLabel" resultMap="ChannelWorldLabelMap">
+		select * 
+		from hts_admin.interact_channel_world_label
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="channelId != null">
+				and channel_id = #{channelId}
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- SELECT TOTAL COUNT -->
+	<select id="queryChannelWorldLabelTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.interact_channel_world_label
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="channelId != null">
+				and channel_id = #{channelId}
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+		</where>
+	</select>
+</mapper>

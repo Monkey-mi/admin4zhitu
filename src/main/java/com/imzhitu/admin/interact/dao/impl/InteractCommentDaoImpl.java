@@ -22,7 +22,12 @@ public class InteractCommentDaoImpl extends BaseDaoImpl implements InteractComme
 	
 	private static final String SAVE_COMMENT = "insert into " + table + " (id,content,label_id) values (?,?,?)";
 
+	/**
+	 * 随机查询评论.已经废弃
+	 */
 	private static final String QUERY_ID_BY_PAGE_INDEX = "select DISTINCT id from " + table + " where label_id=? and valid=? LIMIT ?,1";
+	
+	private static final String QUERY_N_RANDOM_COMMENT = "select id from " + table + " where label_id=? and valid=1 order by rand() limit 0,?";
 	
 	private static final String QUERY_COMMENT = "select * from " + table + " where valid=?";
 	
@@ -166,9 +171,15 @@ public class InteractCommentDaoImpl extends BaseDaoImpl implements InteractComme
 		return getJdbcTemplate().queryForLong(sql, args);
 	}
 	
+	
 	@Override
 	public Integer queryIdByPageIndex(int labelId, int page) {
 		return getJdbcTemplate().queryForObject(QUERY_ID_BY_PAGE_INDEX, new Object[]{labelId, Tag.TRUE, page}, Integer.class);
+	}
+	
+	@Override
+	public List<Integer> queryNRandomComment(Integer labelId,int n){
+		return getJdbcTemplate().queryForList(QUERY_N_RANDOM_COMMENT, Integer.class, labelId,n);
 	}
 	
 	/**

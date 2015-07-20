@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractChannelLevelMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractChannelLevel" id="ChannelLevelMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+		<result property="unSuperMinCommentCount" column="uns_min_comment_count" jdbcType="INTEGER"/>
+		<result property="unSuperMmaxCommentCount" column="uns_max_comment_count" jdbcType="INTEGER"/>
+		<result property="superMinCommentCount" column="s_min_comment_count" jdbcType="INTEGER"/>
+		<result property="superMaxCommentCount" column="s_max_comment_count" jdbcType="INTEGER"/>
+		<result property="minuteTime" column="minute_time" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- 增加 -->
+	<insert id="insertChannelLevel">
+		insert into hts_admin.interact_channel_level (channel_id,uns_min_comment_count,
+							uns_max_comment_count,s_min_comment_count,s_max_comment_count,minute_time)
+			   values (#{channelId},#{unSuperMinCommentCount},#{unSuperMmaxCommentCount},#{superMinCommentCount},#{superMaxCommentCount},#{minuteTime})
+	</insert>
+	
+	<!-- BATCH DELETE -->
+	<delete id="batchDeleteChannelLevel">
+		delete from hts_admin.interact_channel_level
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- UPDATE -->
+	<update id="updateChannelLevel">
+		update hts_admin.interact_channel_level
+		<set>
+			<if test="unSuperMinCommentCount != null">
+				uns_min_comment_count = #{unSuperMinCommentCount},
+			</if>
+			<if test="unSuperMmaxCommentCount != null">
+				uns_max_comment_count = #{unSuperMmaxCommentCount},
+			</if>
+			<if test="superMinCommentCount != null">
+				s_min_comment_count = #{superMinCommentCount},
+			</if>
+			<if test="superMaxCommentCount != null">
+				s_max_comment_count = #{superMaxCommentCount},
+			</if>
+			<if test="minuteTime != null">
+				minute_time = #{minuteTime}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- QUERY -->
+	<select id="queryChannelLevel" resultMap="ChannelLevelMap">
+		select icl.*,oc.channel_name 
+		from hts_admin.interact_channel_level icl left join hts.operations_channel oc on icl.channel_id = oc.id
+		<where>
+			<if test="id != null">
+				icl.id = #{id}
+			</if>
+			<if test="channelId != null">
+				and icl.channel_id = #{channelId}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[icl.id <= #{maxId}]]>
+			</if>
+		</where>
+		order by icl.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- QUERY TOTAL COUNT -->
+	<select id="queryChannelLevelTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.interact_channel_level
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="channelId != null">
+				and channel_id = #{channelId}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+</mapper>

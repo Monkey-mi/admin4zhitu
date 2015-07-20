@@ -30,7 +30,16 @@ public interface InteractCommentDao extends BaseDao {
 	 * @param page
 	 * @return
 	 */
+	@Deprecated
 	public Integer queryIdByPageIndex(int labelId, int page);
+	
+	/**
+	 * 随机查询n条评论
+	 * @param labelId
+	 * @param n
+	 * @return
+	 */
+	public List<Integer> queryNRandomComment(Integer labelId,int n);
 	
 	/**
 	 * 查询评论列表
