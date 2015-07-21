@@ -388,7 +388,7 @@ $(document).ready(function() {
 		        <input id="ss_worldId" class="easyui-searchbox" searcher="searchByWID" prompt="输入织图ID搜索" style="width:200px;" />
 			</div>
    		</div>
-	</div>  
+	</div>
 	
 	<!-- 添加记录 -->
 	<div id="htm_add">
