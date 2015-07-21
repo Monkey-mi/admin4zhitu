@@ -122,7 +122,7 @@ function drawWorldOpt($worldOpt, worlds, index) {
 			+ '<span class="world-opt-head">计划</span>'
 			+ '<span>|</span>'
 			+ '<span class="world-opt-head">完成</span>'
-			+'</div>'
+			+'</div>' 
 			);
 	
 	$worldOpt.addClass('world-margin');
@@ -169,7 +169,16 @@ function drawWorldOptBtn($worldOpt, worlds, index) {
 		+ '<span class="world-opt-btn">'
 		+ getSchedulaCompleteOpt(world['schedulaComplete'], world, index)
 		+ '</span>'
-		+ '</div>');
+		+ '</div>'
+		+ '<hr class="divider"></hr>'
+		+ '<div class="world-opt-btn-wrap">'
+		+ '<div class="world-opt-head"><span class="world-opt-head">评论</span></div>'
+		+ '</div>'
+		+ '<div class="world-opt-btn-wrap">'
+		+ '<div class="world-opt-btn">'
+		+ getCommentInteractOpt(world['worldId'], world, index)
+		+ '</div>'
+		);
 	$worldOpt.append($optBtn);
 }
 
@@ -347,4 +356,40 @@ function getSchedulaCompleteOpt(value, row, index) {
 		return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
 	}
 	return '';
+}
+
+/**
+ * 绘制互动评论按钮
+ * @param worldId	织图id
+ * @param row
+ * @param index
+ */
+function getCommentInteractOpt(worldId, row, index) {
+	if(row.valid == 0 || row.shield == 1) {
+		return '';
+	} else {
+		return "<img title='点击打开织图计划互动评论' class='htm_column_img pointer' " 
+		+ "onclick='javascript:openCommentsInteractPage(\""+ worldId + "\")' " 
+		+ "src='./common/images/edit_add.png'/>";
+	}
+}
+
+/**
+ * 打开评论互动页面
+ * @param worldId	织图id
+ * @param row
+ * @param index
+ */
+function openCommentsInteractPage(worldId) {
+	var uri = "page_operations_htworldCommentInteract?worldId=" + worldId;
+	$.fancybox({
+		'href'				: uri,
+		'margin'			: 20,
+		'width'				: '100%',
+		'height'			: '100%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe'
+	});
 }
