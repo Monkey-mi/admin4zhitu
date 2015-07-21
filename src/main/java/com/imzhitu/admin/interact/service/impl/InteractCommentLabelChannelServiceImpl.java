@@ -83,11 +83,21 @@ public class InteractCommentLabelChannelServiceImpl extends BaseServiceImpl impl
 	}
 
 	@Override
-	public List<InteractCommentLabelChannel> queryCommentLabelIdByChannelId(Integer channelId)
+	public List<InteractCommentLabelChannel> queryCommentLabelByChannelId(Integer channelId)
 			throws Exception {
 		// TODO Auto-generated method stub
 		
-		return commentLabelChannelMapper.queryCommentLabelIdByChannelId(channelId);
+		return commentLabelChannelMapper.queryCommentLabelByChannelId(channelId);
 	}
+
+	@Override
+	public List<InteractCommentLabelChannel> queryCommentLabelNameByLabelIds(
+			String label_ids) throws Exception {
+		// TODO Auto-generated method stub
+		Integer[]ids = StringUtil.convertStringToIds(label_ids);
+		return commentLabelChannelMapper.queryCommentLabelNameByLabelIds(ids);
+	}
+	
+
 
 }

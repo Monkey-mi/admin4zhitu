@@ -154,14 +154,17 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 		List<InteractChannelWorldLabel> list = null;
 		try{
 			list = queryChannelWorldLabel(null,worldId,channelId);
-			jsonMap.put(OptResult.JSON_KEY_LABEL_INFO, list);
-			jsonMap.put(OptResult.JSON_KEY_INTERACT, Tag.TRUE);
+			if(list != null && list.size()== 1){
+				List<InteractCommentLabelChannel>channelLabelList =  commentLabelChannelService.queryCommentLabelNameByLabelIds(list.get(0).getLabel_ids());
+				jsonMap.put(OptResult.JSON_KEY_LABEL_INFO, channelLabelList);
+				jsonMap.put(OptResult.JSON_KEY_INTERACT, Tag.TRUE);
+			}
 		}catch(Exception e){
 			list = null;
 		}
 		
 		if(list == null || list.size() == 0){
-			List<InteractCommentLabelChannel>channelLabelList =  commentLabelChannelService.queryCommentLabelIdByChannelId(channelId);
+			List<InteractCommentLabelChannel>channelLabelList =  commentLabelChannelService.queryCommentLabelByChannelId(channelId);
 			jsonMap.put(OptResult.JSON_KEY_LABEL_INFO, channelLabelList);
 			jsonMap.put(OptResult.JSON_KEY_INTERACT, Tag.FALSE);
 		}

@@ -42,5 +42,6 @@ public interface InteractChannelWorldLabelService {
 	 * @param channelId
 	 * @throws Exception
 	 */
-	public void queryChannelWorldLabel(Integer worldId,Integer channelId,Map<String,Object>jsonMap)throws Exception;
+	public void queryChannelWorldLabel(Integer worldId, Integer channelId,
+			Map<String, Object> jsonMap) throws Exception;
 }
