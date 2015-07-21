@@ -30,6 +30,7 @@ import com.imzhitu.admin.userinfo.dao.UserInfoDao;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.mapper.UserLoginPersistentMapper;
+import com.imzhitu.admin.userinfo.mapper.UserSocialAccountMapper;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
 
 @Service
@@ -62,6 +63,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	
 	@Autowired
 	private UserInfoMapper userInfoMapper;
+	
+	@Autowired
+	private UserSocialAccountMapper socialAccountMapper;
 	
 	@Autowired
 	private UserLoginPersistentMapper userLoginPersistentMapper;
@@ -270,6 +274,10 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		// 调换信息
 		userInfoMapper.updateLoginInfoById(u1);
 		userInfoMapper.updateLoginInfoById(u2);
+
+		// 删除绑定的账号信息
+		socialAccountMapper.deleteByUID(id);
+		socialAccountMapper.deleteByUID(toId);
 		
 		// 清空登录状态
 		userLoginPersistentMapper.deleteByUserId(id);

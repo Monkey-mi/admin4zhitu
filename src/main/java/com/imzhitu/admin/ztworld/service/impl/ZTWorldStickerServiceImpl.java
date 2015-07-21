@@ -20,6 +20,7 @@ import com.imzhitu.admin.common.pojo.ZTWorldStickerSet;
 import com.imzhitu.admin.common.pojo.ZTWorldStickerType;
 import com.imzhitu.admin.ztworld.dao.HTWorldStickerCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldStickerTypeCacheDao;
+import com.imzhitu.admin.ztworld.dao.StickerSetDtoCacheDao;
 import com.imzhitu.admin.ztworld.dao.StickerTopCacheDao;
 import com.imzhitu.admin.ztworld.mapper.StickerSetMapper;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldStickerMapper;
@@ -44,6 +45,9 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private StickerTopCacheDao stickerTopCacheDao;
+	
+	@Autowired
+	private StickerSetDtoCacheDao stickerSetDtoCacheDao;
 	
 	@Autowired
 	private StickerSetMapper stickerSetMapper;
@@ -280,9 +284,11 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 		}
 		
 		typeCacheDao.updateRecommendType(recTypes);
-		typeCacheDao.updateStickerType();
 		
-		List<HTWorldStickerSet> cacheSets = stickerSetMapper.queryCacheSet();
+		/* 2.9.93之后，贴纸按系列划分后需要用到的缓存数据 */
+		stickerSetDtoCacheDao.updateLib();
+		typeCacheDao.updateStickerType();
+		List<HTWorldStickerSet> cacheSets = stickerSetMapper.queryTopCacheSet();
 		stickerTopCacheDao.updateTopSticker(cacheSets);
 	}
 
@@ -315,6 +321,9 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 					@Override
 					public List<? extends Serializable> queryList(
 							ZTWorldStickerSet dto) {
+						if(dto.getTypeId() != null && dto.getTypeId() == 0) {
+							dto.setTypeId(null);
+						}
 						if(!StringUtil.checkIsNULL(dto.getSetName())) {
 							dto.setSetName("%" + dto.getSetName() + "%");
 						} else {
@@ -325,6 +334,9 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 
 					@Override
 					public long queryTotal(ZTWorldStickerSet dto) {
+						if(dto.getTypeId() != null && dto.getTypeId() == 0) {
+							dto.setTypeId(null);
+						}
 						if(!StringUtil.checkIsNULL(dto.getSetName())) {
 							dto.setSetName("%" + dto.getSetName() + "%");
 						} else {

@@ -3,18 +3,28 @@ package com.imzhitu.admin.ztworld.mapper;
 import java.util.List;
 
 import com.hts.web.common.pojo.HTWorldStickerSet;
+import com.hts.web.common.pojo.HTWorldStickerSetDto;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.ZTWorldStickerSet;
 
 public interface StickerSetMapper {
 
+	
 	/**
-	 * 查询缓存系列
+	 * 查询所有系列
 	 * 
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<HTWorldStickerSet> queryCacheSet();
+	public List<HTWorldStickerSetDto> queryAllCacheSet();
+	
+	/**
+	 * 查询置顶系列
+	 * 
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<HTWorldStickerSet> queryTopCacheSet();
 	
 	/**
 	 * 查询系列列表
