@@ -131,7 +131,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	/**
 	 * 批量添加
 	 */
-	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
+	public void batchAddChannelWorldSchedula(String[] wIds, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
 			Integer valid,Integer operatorId)throws Exception{
 		Date now = new Date();
 		long timeSpan = minuteTimeSpan*60*1000L;
@@ -152,12 +152,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setValid(valid);
 			dto.setOperatorId(operatorId);
 			
-			if (superbWids.contains(s)) {	// 若加精的集合中包含当前操作的worldId，则设置加精
-			    dto.setSuperb(1);
-			} else {
-			    dto.setSuperb(0);
-			}
-
 			if(0 == r){
 				channelWorldSchedulaMapper.insertChannelWorldSchedula(dto);
 			}else{
@@ -191,7 +185,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    world.setChannelId(schedulaDto.getChannelId());
 		    world.setWorldId(schedulaDto.getWorldId());
 		    world.setValid(schedulaDto.getValid());
-		    world.setSuperb(schedulaDto.getSuperb());
 		    channelService.updateChannelWorld(world);
 		    
 		    // 刷新频道织图的serial，让10:50的织图排在最新，即serial最大

@@ -71,6 +71,7 @@ var maxId = 0,
 		{field : 'ck',checkbox : true},
 		{field : 'id',title : 'id',align : 'center',width : 60},
 		{field : 'setName',title : '系列名称',align : 'center',width : 120},
+		{field : 'typeName',title : '所属分类',align : 'center',width : 120},
   		{field : 'weight',title : '推荐状态',align : 'center', width: 45,
   			formatter: function(value,row,index) {
   				if(row.id == 1) // 默认系列不能操作
@@ -119,7 +120,7 @@ var maxId = 0,
 			title: '添加系列',
 			modal : true,
 			width : 520,
-			height : 180,
+			height : 220,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -138,18 +139,19 @@ var maxId = 0,
 		});
 
 		$("#ss-weight").combobox({
-			onSelect : function(record) {
-				maxId = 0;
-				myQueryParams['stickerSet.weight'] = record.value;
-				myQueryParams['stickerSet.maxId'] = maxId;
-				$("#htm_table").datagrid("load",myQueryParams);
-			}
 		});		
 		
 		removePageLoading();
 		$("#main").show();
 	};
 	
+function searchSet() {
+	maxId = 0;
+	myQueryParams['stickerSet.weight'] = $('#ss-weight').combobox('getValue');
+	myQueryParams['stickerSet.typeId'] = $('#ss-typeId').combobox('getValue');
+	myQueryParams['stickerSet.maxId'] = maxId;
+	$("#htm_table").datagrid("load",myQueryParams);
+}
 function initEditWindow(id, index, isUpdate) {
 	$("#channelName_edit").focus();  //光标定位
 	loadEditFormValidate(index, isUpdate);
@@ -164,6 +166,8 @@ function initEditWindow(id, index, isUpdate) {
 				$("#setName_edit").val(obj['setName']);
 				
 				$("#id_edit").val(obj['id']);
+				$("#typeId_edit").combobox('setValue', obj['typeId']);
+				$("#typeId_edit").combobox('setText', obj['typeName']);
 				$("#serial_edit").val(obj['serial']);
 				$("#weight_edit").val(obj['weight']);
 				
@@ -306,6 +310,9 @@ function updateSortingCount(count) {
 	   			<option value="1">已推荐</option>
 	   			<option value="0">未推荐</option>
 	   		</select>
+	   		<input id="ss-typeId" name="stickerSet.typeId" class="easyui-combobox" 
+				data-options="valueField:'id',textField:'typeName',url:'./admin_ztworld/sticker_queryAllType?addAllTag=true' "/>
+			<a href="javascript:void(0);" onclick="javascript:searchSet();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 	   		
    		</div>
 		</div> 
@@ -318,6 +325,14 @@ function updateSortingCount(count) {
 						<tr>
 							<td class="leftTd">系列名称：</td>
 							<td><textarea id="setName_edit" name="stickerSet.setName" onchange="validateSubmitOnce=true;"></textarea></td>
+							<td class="rightTd"><div id="setName_editTip" class="tipDIV"></div></td>
+						</tr>
+						<tr>
+							<td class="leftTd">分类</td>
+							<td>
+								<input id="typeId_edit" name="stickerSet.typeId" class="easyui-combobox" 
+										data-options="valueField:'id',textField:'typeName',url:'./admin_ztworld/sticker_queryAllType' "/>
+							</td>
 							<td class="rightTd"><div id="setName_editTip" class="tipDIV"></div></td>
 						</tr>
 						

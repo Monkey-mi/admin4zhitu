@@ -30,6 +30,6 @@ public class UserInfoServiceTest extends BaseTest {
 	
 	@Test
 	public void testUpdateExchangeUsers() throws Exception {
-//		service.updateExchangeUsers(485, 349);
+		service.updateExchangeUsers(485, 349);
 	}
 }

@@ -1,5 +1,6 @@
 package com.imzhitu.admin.ztworld.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,12 @@ public class SubtitleCacheDaoImpl extends BaseCacheDaoImpl<HTWorldSubtitleDto> i
 		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_SUBTITLE)) {
 			getRedisTemplate().delete(CacheKeies.ZTWORLD_SUBTITLE);
 		}
-		List<HTWorldSubtitleDto> list = subtitleMapper.queryCacheSubtitle(limit);
+		List<HTWorldSubtitleDto> list = new ArrayList<HTWorldSubtitleDto>();
+		List<String> transTos = subtitleMapper.queryTransTo();
+		for(String to : transTos) {
+			List<HTWorldSubtitleDto> tolist = subtitleMapper.queryCacheSubtitle(to, limit);
+			list.addAll(tolist);
+		}
 		if(list.size() > 0) {
 			HTWorldSubtitleDto[] objs = new HTWorldSubtitleDto[list.size()];
 			getRedisTemplate().opsForList().rightPushAll(CacheKeies.ZTWORLD_SUBTITLE, 

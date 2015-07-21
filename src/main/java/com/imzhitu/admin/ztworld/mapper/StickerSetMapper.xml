@@ -5,27 +5,42 @@
 	<resultMap type="com.hts.web.common.pojo.HTWorldStickerSet" id="HTSWorldStickerSetMap">
 		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="set_name" property="setName" jdbcType="VARCHAR"/>
+		<result column="type_id" property="typeId" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap type="com.hts.web.common.pojo.HTWorldStickerSetDto" id="HTSWorldStickerSetDtoMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="set_name" property="setName" jdbcType="VARCHAR"/>
+		<result column="type_id" property="typeId" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldStickerSet" id="WorldStickerSetMap">
 		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="set_name" property="setName" jdbcType="VARCHAR"/>
+		<result column="type_id" property="typeId" jdbcType="INTEGER"/>
 		<result column="weight" property="weight" jdbcType="INTEGER" />
 		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="type_name" property="typeName" jdbcType="VARCHAR" />
 	</resultMap>
 
-	<select id="queryCacheSet" resultMap="HTSWorldStickerSetMap">
-		select id,set_name from hts.htworld_sticker_set where weight=1 order by serial desc
+	<select id="queryAllCacheSet" resultMap="HTSWorldStickerSetDtoMap">
+		select id,set_name, type_id from hts.htworld_sticker_set order by serial desc
+	</select>
+
+	<select id="queryTopCacheSet" resultMap="HTSWorldStickerSetMap">
+		select id,set_name,type_id from hts.htworld_sticker_set where weight=1 order by serial desc
 	</select>
 	
 	<select id="querySets" resultMap="WorldStickerSetMap">
-		select * from hts.htworld_sticker_set 
+		select s.*,t.type_name from hts.htworld_sticker_set s, hts.htworld_sticker_type t
 		<where>
-			<if test="weight != null"> weight=#{weight}</if>
-			<if test="setName != null"> and set_name like #{setName}</if>
-			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
+			s.type_id=t.id
+			<if test="weight != null"> and s.weight=#{weight}</if>
+			<if test="setName != null"> and s.set_name like #{setName}</if>
+			<if test="typeId != null"> and s.type_id=#{typeId}</if>
+			<if test="maxId != null and maxId != 0"><![CDATA[ and s.serial<=#{maxId}]]></if>
 		</where>
-		order by serial desc
+		order by s.serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
@@ -34,23 +49,26 @@
 		<where>
 			<if test="weight != null"> weight=#{weight}</if>
 			<if test="setName != null"> and set_name like #{setName}</if>
+			<if test="typeId != null"> and type_id=#{typeId}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ and serial<=#{maxId}]]></if>
 		</where>
 	</select>
 	
 	<select id="querySetById" resultMap="WorldStickerSetMap">
-		select * from hts.htworld_sticker_set where id=#{id}
+		select s.*,t.type_name from hts.htworld_sticker_set s, hts.htworld_sticker_type t 
+		where s.type_id=t.id and s.id=#{id} 
 	</select>
 	
 	<insert id="save">
-		insert into hts.htworld_sticker_set (set_name,weight,serial)
-	 		values (#{setName}, #{weight}, #{serial})
+		insert into hts.htworld_sticker_set (set_name,type_id,weight,serial)
+	 		values (#{setName}, #{typeId}, #{weight}, #{serial})
 	</insert>
 	
 	<update id="update">
 		update hts.htworld_sticker_set
 		<set>
 	      <if test="setName != null">set_name=#{setName},</if>
+	      <if test="typeId != null">type_id=#{typeId},</if>
 	      <if test="weight != null">weight=#{weight},</if>
 	      <if test="serial != null">serial=#{serial}</if>
 	    </set>

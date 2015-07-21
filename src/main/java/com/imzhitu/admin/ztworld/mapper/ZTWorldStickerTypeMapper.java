@@ -127,5 +127,13 @@ public interface ZTWorldStickerTypeMapper {
 	 */
 	@DataSource("slave")
 	public Integer queryMaxSerial();
+	
+	/**
+	 * 查询所有分类
+	 * 
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<ZTWorldStickerType> queryAllType();
 
 }

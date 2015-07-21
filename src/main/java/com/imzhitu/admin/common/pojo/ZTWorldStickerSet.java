@@ -16,8 +16,10 @@ public class ZTWorldStickerSet extends AbstractNumberDto {
 	private static final long serialVersionUID = -1750428960983341679L;
 	private Integer id;
 	private String setName;
+	private Integer typeId;
 	private Integer weight;
 	private Integer serial;
+	private String typeName;
 
 	public Integer getId() {
 		return id;
@@ -51,4 +53,20 @@ public class ZTWorldStickerSet extends AbstractNumberDto {
 		this.serial = serial;
 	}
 
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+	
 }

@@ -93,23 +93,6 @@ var maxId = 0,
   				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}
   		},
-  		{field : 'channelWorldSchedulaSuperb',title : '加精',align : 'center', width: 45,
-  			formatter: function(value,row,index) {
-  				if(value == 1) {
-  					img = "./common/images/ok.png";
-  					return "<img title='加精' class='htm_column_img'  src='" + img + "'/>";
-  				}
-  				img = "./common/images/tip.png";
-  				return "<img title='未加精' class='htm_column_img' src='" + img + "'/>";
-  			},
-  			editor:{
-  				type:'checkbox',  
-                options:{
-                    on: 1,  
-                    off: 0
-                }
-  			}
-  		},
   		{field : 'beSchedula',title : '计划',align : 'center', width: 45,
   			formatter: function(value,row,index) {
   				if(value == 0) {
@@ -388,18 +371,11 @@ function reIndexed() {
 	var rows = $("#htm_table").datagrid('getSelections');
 	// 定义重新排序织图id集合
 	var wids = [];
-	// 定义存储加精织图id集合
-	var superbWids = [];
 	for(var i=0;i<rows.length;i++){
 		wids.push(rows[i].worldId);
-		
-		if (rows[i].channelWorldSchedulaSuperb==1){
-			superbWids.push(rows[i].worldId);
-		}
 	}
 	
 	$("#wids_indexed").val(wids);
-	$("#superbWids_indexed").val(superbWids);
 	
 	// 打开添加窗口
 	$("#htm_indexed").window('open');
@@ -738,9 +714,6 @@ function queryChannelByIdOrName(){
 					</tr>
 					<tr class="none">
 					<td colspan="2"><input type="text" name="wids" id="wids_indexed" /></td>
-					</tr>
-					<tr class="none">
-						<td colspan="2"><input type="text" name="superbWids" id="superbWids_indexed" /></td>
 					</tr>
 					<tr>
 						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">

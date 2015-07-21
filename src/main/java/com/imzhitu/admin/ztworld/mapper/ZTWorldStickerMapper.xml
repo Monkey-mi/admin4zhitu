@@ -13,6 +13,7 @@
 		<result column="has_lock" property="hasLock" jdbcType="INTEGER"/>
 		<result column="label_id" property="labelId" jdbcType="INTEGER"/>
 		<result column="fill" property="fill" jdbcType="TINYINT" />
+		<result column="label_name" property="labelName" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldSticker" id="WorldStickerMap">
@@ -34,6 +35,11 @@
 		<result column="type_name" property="typeName" jdbcType="VARCHAR" />
 		<result column="set_name" property="setName" jdbcType="VARCHAR" />
 	</resultMap>
+	
+	<select id="queryAllSticker" resultMap="HTSWorldStickerDtoMap">
+		select s.*, l.label_name from hts.htworld_sticker s left join hts.htworld_label l 
+		on s.label_id=l.id and s.valid=1 order by s.serial desc;
+	</select>
 	
 	<select id="queryCacheTopSticker" resultMap="HTSWorldStickerDtoMap">
 		select * from hts.htworld_sticker where valid=1 and set_id=#{setId} order by serial desc

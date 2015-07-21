@@ -21,19 +21,6 @@ public class HTWorldStickerCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStickerD
 	@Autowired
 	private ZTWorldStickerMapper stickerMapper;
 	
-//	@Override
-//	public void updateTopSticker() {
-//		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_TOP)) {
-//			getRedisTemplate().delete(CacheKeies.ZTWORLD_STICKER_TOP);
-//		}
-//		List<HTWorldStickerDto> list = stickerMapper.queryCacheTopStickerDto();
-//		if(list.size() > 0) {
-//			HTWorldStickerDto[] objs = new HTWorldStickerDto[list.size()];
-//			getRedisTemplate().opsForList().rightPushAll(CacheKeies.ZTWORLD_STICKER_TOP, 
-//					list.toArray(objs));
-//		}
-//	}
-
 	@Override
 	public int updateRecommendSticker(Integer typeId, Integer limit) {
 		if(getRedisTemplate().hasKey(CacheKeies.ZTWORLD_STICKER_RECOMMEND)) {
@@ -64,5 +51,6 @@ public class HTWorldStickerCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStickerD
 		}
 		return -1;
 	}
+
 	
 }

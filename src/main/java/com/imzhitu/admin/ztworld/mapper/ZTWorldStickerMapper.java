@@ -11,6 +11,14 @@ import com.imzhitu.admin.common.pojo.ZTWorldSticker;
 public interface ZTWorldStickerMapper {
 
 	/**
+	 * 查询所有贴纸
+	 * 
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<HTWorldStickerDto> queryAllSticker();
+	
+	/**
 	 * 查询置顶贴纸
 	 * 
 	 * @return
