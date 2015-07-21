@@ -1,6 +1,5 @@
 package com.imzhitu.admin.interact;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -8,7 +7,6 @@ import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.common.pojo.InteractChannelWorldLabel;
 import com.imzhitu.admin.interact.service.InteractChannelWorldLabelService;
 
 /**
@@ -72,9 +70,8 @@ public class InteractChannelWorldLabelAction extends BaseCRUDAction{
 	
 	public String queryChannelWorldLabel(){
 		try{
-			List<InteractChannelWorldLabel> list = channelWorldLabelService.queryChannelWorldLabel(id, worldId, channelId);
-			jsonMap.put(OptResult.JSON_KEY_LABEL_INFO, list);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+			channelWorldLabelService.queryChannelWorldLabel( worldId, channelId,jsonMap);
+			JSONUtil.optSuccess(OptResult.QUERY_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}

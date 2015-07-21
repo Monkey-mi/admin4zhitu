@@ -64,6 +64,10 @@
 	 */
 	function delADKeywords() {
 		var rows = $("#htm_table").datagrid("getSelections");
+		if (rows.length == 0) {
+			$.messager.alert('提示',"请选择要删除的广告关键词");
+			return;
+		}
 		var ids = [];
 		for (var i=0; i<rows.length; i++) {
 			ids.push(rows[i].id);
@@ -84,10 +88,14 @@
 	function submitAddKeywordForm() {
 		var $form = $('#addKeyword_form');
 		if($form.form('validate')) {
+			$('#addKeyword_form .opt_btn').hide();
+			$('#addKeyword_form .loading').show();
 			$form.form('submit', {
 				url: $form.attr('action'),
 				success: function(data){
 					var result = $.parseJSON(data);
+					$('#addKeyword_form .opt_btn').show();
+					$('#addKeyword_form .loading').hide();
 					if(result['result'] == 0) {
 						$('#htm_addKeyword').window('close');  // 关闭添加窗口
 						myQueryParams.maxId = 0;
@@ -133,6 +141,12 @@
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitAddKeywordForm();">确定</a>
 							<a class="easyui-linkbutton" iconCls="icon-remove" onclick="javascript:$('#addKeyword_form').form('reset');">清空</a>
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_addKeyword').window('close');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">操作中...</span>
 						</td>
 					</tr>
 				</tbody>

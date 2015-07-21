@@ -44,5 +44,13 @@ public interface InteractCommentLabelChannelMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<Integer> queryCommentLabelIdByChannelId(@Param("channelId") Integer channelId);
+	public List<InteractCommentLabelChannel> queryCommentLabelByChannelId(@Param("channelId") Integer channelId);
+	
+	/**
+	 * 根据频道Id查询标签Id
+	 * @param channelId
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<InteractCommentLabelChannel> queryCommentLabelNameByLabelIds(Integer[] label_ids);
 }

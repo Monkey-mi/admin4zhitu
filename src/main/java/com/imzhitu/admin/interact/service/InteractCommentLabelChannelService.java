@@ -3,6 +3,8 @@ package com.imzhitu.admin.interact.service;
 import java.util.List;
 import java.util.Map;
 
+import com.imzhitu.admin.common.pojo.InteractCommentLabelChannel;
+
 public interface InteractCommentLabelChannelService {
 	/**
 	 * 添加
@@ -45,11 +47,19 @@ public interface InteractCommentLabelChannelService {
 	public long queryComemntLabelChannelTotalCount(Integer id,Integer channelId,Integer commentLabelId,Integer maxId)throws Exception;
 	
 	/**
-	 * 根据频道Id查询评论标签id
+	 * 根据频道Id查询评论标签
 	 * 
 	 * @param channelId
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Integer> queryCommentLabelIdByChannelId(Integer channelId)throws Exception;
+	public List<InteractCommentLabelChannel> queryCommentLabelByChannelId(Integer channelId)throws Exception;
+	
+	/**
+	 * 由于展示的需要，所以根据标签id，查询标签名字
+	 * @param label_ids
+	 * @return
+	 * @throws Exception
+	 */
+	public List<InteractCommentLabelChannel> queryCommentLabelNameByLabelIds(String label_ids)throws Exception;
 }

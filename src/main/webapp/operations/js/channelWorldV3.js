@@ -122,7 +122,7 @@ function drawWorldOpt($worldOpt, worlds, index) {
 			+ '<span class="world-opt-head">计划</span>'
 			+ '<span>|</span>'
 			+ '<span class="world-opt-head">完成</span>'
-			+'</div>'
+			+'</div>' 
 			);
 	
 	$worldOpt.addClass('world-margin');
@@ -169,8 +169,79 @@ function drawWorldOptBtn($worldOpt, worlds, index) {
 		+ '<span class="world-opt-btn">'
 		+ getSchedulaCompleteOpt(world['schedulaComplete'], world, index)
 		+ '</span>'
-		+ '</div>');
+		+ '</div>'
+		+ '<hr class="divider"></hr>'
+		+ '<div class="world-opt-btn-wrap">'
+		+ '<div class="world-opt-head"><span class="world-opt-head">评论</span></div>'
+		+ '</div>'
+		+ '<div class="world-opt-btn-wrap">'
+		+ '<div class="world-opt-btn">'
+		+ getCommentInteractOpt(world['worldId'], world, index)
+		+ '</div>'
+		);
 	$worldOpt.append($optBtn);
+}
+
+/**
+ * 查询频道织图互动过的标签，若是没有频道互动过，则查询该频道绑定的标签
+ * @param $worldOpt
+ * @param worlds
+ * @param index
+ * @return
+ */
+function drawChannelWorldLabelBtn($worldOpt, worlds, index) {
+	var world = worlds[index];
+	$.post("./admin_interact/channelWorldLabel_queryChannelWorldLabel",{
+		'channelId':world['channelId'],
+		'worldId':world['id']},function(result){
+			if(result['result'] == 0){
+				var $optBtn = 
+					$('<hr class="divider"></hr>'
+					+ '<div class="world-opt-btn-wrap world-opt-channel-world-labels">'
+					+ '<span class="world-opt-btn channel-world-labels-span">';
+			}
+		},"json");
+	
+}
+
+/**
+ * 提交添加频道织图标签
+ * @param worldId
+ * @param labelIds
+ * @return
+ */
+function submitAddChannelWorldLabel(channelId,worldId,labelIds){
+	$.post("./admin_interact/channelWorldLabel_insertChannelWorldLabel",{
+		'channelId'	: channelId,
+		'worldId'	: worldId,
+		'labelIds'	: labelIds
+	},function(result){
+		if(result['result'] == 0){
+			
+		}else{
+			$.messager.alter('失败提示',result['msg']);
+		}
+	},"json");
+}
+
+/**
+ * 移除织图标签
+ * @param $worldOpt
+ * @return
+ */
+function removeChannelWorldLabelBtn($worldOpt){
+	$worldOpt.children('world-opt-channel-world-labels:eq(0)').remove();
+}
+
+/**
+ * 更新频道织图标签
+ * @param index
+ * @param key
+ * @param value
+ * @return
+ */
+function updateChannelWorldLabelBtn(index,key,value){
+	
 }
 
 /**
@@ -347,4 +418,40 @@ function getSchedulaCompleteOpt(value, row, index) {
 		return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
 	}
 	return '';
+}
+
+/**
+ * 绘制互动评论按钮
+ * @param worldId	织图id
+ * @param row
+ * @param index
+ */
+function getCommentInteractOpt(worldId, row, index) {
+	if(row.valid == 0 || row.shield == 1) {
+		return '';
+	} else {
+		return "<img title='点击打开织图计划互动评论' class='htm_column_img pointer' " 
+		+ "onclick='javascript:openCommentsInteractPage(\""+ worldId + "\")' " 
+		+ "src='./common/images/edit_add.png'/>";
+	}
+}
+
+/**
+ * 打开评论互动页面
+ * @param worldId	织图id
+ * @param row
+ * @param index
+ */
+function openCommentsInteractPage(worldId) {
+	var uri = "page_operations_htworldCommentInteract?worldId=" + worldId;
+	$.fancybox({
+		'href'				: uri,
+		'margin'			: 20,
+		'width'				: '100%',
+		'height'			: '100%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe'
+	});
 }

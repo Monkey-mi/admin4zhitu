@@ -6,7 +6,8 @@
 		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
 		<result property="commentLabelId" column="comment_label_id" jdbcType="INTEGER"/>
 		<result property="operator" column="operator" jdbcType="INTEGER"/>
-		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<!-- 删除掉addDate，因为不打算拿来显示。若是要显示的话，会影响 -->
+		<!--  <result property="addDate" column="date_add" jdbcType="TIMESTAMP"/> -->
 		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
 		<result property="commentLabelName" column="comment_label_name" jdbcType="VARCHAR"/>
 		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
@@ -73,9 +74,19 @@
 	</select>
 	
 	<!-- query commentLabelId -->
-	<select id="queryCommentLabelIdByChannelId" resultType="Integer">
-		select comment_label_id 
-		from hts_admin.interact_comment_label_channel
-		where channel_id = #{channelId}
+	<select id="queryCommentLabelByChannelId" resultMap="CommentLabelChannelMap">
+		select iclc.* ,icl.label_name as comment_label_name
+		from hts_admin.interact_comment_label_channel iclc 
+		left join hts_admin.interact_comment_label icl on iclc.comment_label_id=icl.id
+		where iclc.channel_id = #{channelId}
+	</select>
+	
+	<select id="queryCommentLabelNameByLabelIds" resultMap="CommentLabelChannelMap">
+		select  id as comment_label_id,label_name as comment_label_name
+		from hts_admin.interact_comment_label
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
 	</select>
 </mapper>
