@@ -115,10 +115,6 @@
 						searchChannelQueryParams.maxId = searchChannelMaxId;
 					}
 				}
-		    },
-		    onSelect:function(rec){
-		    	tableQueryParams.channelId = $("#i-channelId").combogrid('getValue');
-		    	$("#htm_table").datagrid("load",tableQueryParams);
 		    }
 		});
 		var p = $('#i-channelId').combogrid('grid').datagrid('getPager');
@@ -219,7 +215,7 @@
 			$('#htm_add .loading').hide();
 			if(result['result'] == 0) {
 				tableQueryParams.maxId=0;
-				$("#htm_table").datagrid("reload");
+				$("#htm_table").datagrid("load",tableQueryParams);
 				$('#htm_add').window('close');
 			} else {
 				$.messager.alert('提示',result['msg']);
