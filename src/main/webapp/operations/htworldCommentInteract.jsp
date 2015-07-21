@@ -16,6 +16,7 @@
 	var worldId = <%= worldId %>;
 
 	var maxId=0;
+	hideIdColumn = false;
 	htmTablePageList = [25,50,100];
 
 	loadDataURL = "./admin_interact/comment_queryCommentListByLabel";	//数据装载请求地址
