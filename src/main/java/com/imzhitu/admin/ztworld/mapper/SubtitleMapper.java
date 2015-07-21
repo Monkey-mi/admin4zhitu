@@ -11,7 +11,8 @@ import com.imzhitu.admin.common.pojo.ZTWorldSubtitle;
 public interface SubtitleMapper {
 
 	@DataSource("slave")
-	public List<HTWorldSubtitleDto> queryCacheSubtitle(@Param("limit")Integer limit);
+	public List<HTWorldSubtitleDto> queryCacheSubtitle(@Param("transTo")String transTo,
+			@Param("limit")Integer limit);
 	
 	@DataSource("slave")
 	public List<ZTWorldSubtitle> queryTitles(ZTWorldSubtitle title);
@@ -34,5 +35,8 @@ public interface SubtitleMapper {
 	
 	@DataSource("slave")
 	public ZTWorldSubtitle queryById(Integer id);
+	
+	@DataSource("slave")
+	public List<String> queryTransTo();
 
 }

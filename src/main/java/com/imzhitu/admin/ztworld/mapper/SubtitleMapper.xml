@@ -18,7 +18,8 @@
 	</resultMap>
 	
 	<select id="queryCacheSubtitle" resultMap="HTSWorldSubtitleDtoMap">
-		select * from hts.htworld_subtitle order by serial desc limit #{limit}
+		select * from hts.htworld_subtitle where trans_to=#{transTo} 
+			order by serial desc limit #{limit}
 	</select>
 	
 	<insert id="saveSubtitle">
@@ -71,4 +72,9 @@
 	<select id="queryById" resultMap="WorldSubtitleMap">
 		select * from hts.htworld_subtitle where id=#{id}
 	</select>
+	
+	<select id="queryTransTo" resultType="String">
+		select trans_to from hts.htworld_subtitle group by trans_to;
+	</select>
+	
 </mapper>

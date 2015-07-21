@@ -25,7 +25,7 @@ public class HTWorldStickerTypeCacheDaoImpl extends BaseCacheDaoImpl<HTWorldStic
 		}
 		List<HTWorldStickerTypeDto> list = typeMapper.queryCacheType();
 		if(list.size() > 0) {
-			list.add(new HTWorldStickerTypeDto(-1, "推荐"));
+			list.add(0, new HTWorldStickerTypeDto(-1, "推荐"));
 			HTWorldStickerTypeDto[] objs = new HTWorldStickerTypeDto[list.size()];
 			getRedisTemplate().opsForList().rightPushAll(CacheKeies.ZTWORLD_STICKER_TYPE, 
 					list.toArray(objs));
