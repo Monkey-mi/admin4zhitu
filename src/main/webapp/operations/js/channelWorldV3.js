@@ -170,16 +170,9 @@ function drawWorldOptBtn($worldOpt, worlds, index) {
 		+ getSchedulaCompleteOpt(world['schedulaComplete'], world, index)
 		+ '</span>'
 		+ '</div>'
-		+ '<hr class="divider"></hr>'
-		+ '<div class="world-opt-btn-wrap">'
-		+ '<div class="world-opt-head"><span class="world-opt-head">评论</span></div>'
-		+ '</div>'
-		+ '<div class="world-opt-btn-wrap">'
-		+ '<div class="world-opt-btn">'
-		+ getCommentInteractOpt(world['worldId'], world, index)
-		+ '</div>'
 		);
 	$worldOpt.append($optBtn);
+	drawChannelWorldLabelBtn($worldOpt, worlds, index);
 }
 
 /**
@@ -191,17 +184,61 @@ function drawWorldOptBtn($worldOpt, worlds, index) {
  */
 function drawChannelWorldLabelBtn($worldOpt, worlds, index) {
 	var world = worlds[index];
+	var optBtnStr = 
+		'<hr class="divider"></hr>'
+		+ '<div class="world-opt-btn-wrap">'
+		+ '<span class="world-opt-head">评论</span>'
+		+ '<span>|</span>'
+		+ '<span class="world-opt-head">标签</span>'
+		+ '</div>'
+		+ '<div class="world-opt-btn-wrap">'
+		+ '<span class="world-opt-btn">'
+		+ getCommentInteractOpt(world['worldId'], world, index)
+		+ '</span>'
+		+ '<span>|</span>';
+	
 	$.post("./admin_interact/channelWorldLabel_queryChannelWorldLabel",{
 		'channelId':world['channelId'],
 		'worldId':world['id']},function(result){
+			
 			if(result['result'] == 0){
-				var $optBtn = 
-					$('<hr class="divider"></hr>'
-					+ '<div class="world-opt-btn-wrap world-opt-channel-world-labels">'
-					+ '<span class="world-opt-btn channel-world-labels-span">';
+				if (!result.interact) {
+					var data=result.labelInfo;
+					for (var i=0; i<data.length; i++) {
+						optBtnStr += '<span><a onclick="putWorldCommentLabelId(' + world.id + ',' + data[i].commentLabelId + ')">#' + data[i].commentLabelName + '</a></span>';
+					}
+					
+					optBtnStr += '<a id="comment_label_submit" href="#" onclick="submitAddChannelWorldLabel('
+						+ world.id + ', ' + index + ');" class="easyui-linkbutton" iconCls="icon-add">确定</a>'
+						+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>'
+						+'</div>';
+					
+					$worldOpt.append($(optBtnStr));
+				}
 			}
 		},"json");
-	
+}
+
+/**
+ * 点击标签触发：将点击的标签ID放入指定的存储位置
+ * @param worldId
+ * @param labelId
+ */
+function putWorldCommentLabelId(worldId, labelId) {
+	var ids = [];
+	if ($("#worldCommentLabel-" + worldId).val() == "") {
+		ids.push(labelId);
+	} else {
+		
+		var labelIds = $("#worldCommentLabel-" + worldId).val().split(",");
+		ids = labelIds;
+		for (var i=0; i<labelIds.length; i++) {
+			if (labelIds[i] != labelId) {
+				ids.push(labelId);
+			}
+		}
+	}
+	$("#worldCommentLabel-" + worldId).val(ids.toString());
 }
 
 /**
@@ -210,28 +247,19 @@ function drawChannelWorldLabelBtn($worldOpt, worlds, index) {
  * @param labelIds
  * @return
  */
-function submitAddChannelWorldLabel(channelId,worldId,labelIds){
+function submitAddChannelWorldLabel(worldId, index){
 	$.post("./admin_interact/channelWorldLabel_insertChannelWorldLabel",{
-		'channelId'	: channelId,
+		'channelId'	: baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"),
 		'worldId'	: worldId,
-		'labelIds'	: labelIds
+		'labelIds'	: $("#worldCommentLabel-" + worldId).val()
 	},function(result){
 		if(result['result'] == 0){
-			
+			updateChannelWorldLabelBtn(index, "labelInfo", "interact", 1);
 		}else{
-			$.messager.alter('失败提示',result['msg']);
+			$.messager.alert('失败提示',result['msg']);
 		}
 	},"json");
-}
-
-/**
- * 移除织图标签
- * @param $worldOpt
- * @return
- */
-function removeChannelWorldLabelBtn($worldOpt){
-	$worldOpt.children('world-opt-channel-world-labels:eq(0)').remove();
-}
+};
 
 /**
  * 更新频道织图标签
@@ -240,9 +268,12 @@ function removeChannelWorldLabelBtn($worldOpt){
  * @param value
  * @return
  */
-function updateChannelWorldLabelBtn(index,key,value){
-	
-}
+function updateChannelWorldLabelBtn(index,key_level_1,key_level_2,value){
+	var $worldOpt = $(".world-opt-wrap:eq("+index+")");
+	dataList[index][key_level_1][key_level_2] = value;
+	removeWorldOptBtn($worldOpt);
+	drawWorldOptBtn($worldOpt, dataList, index);
+};
 
 /**
  * 移出操作按钮
@@ -252,7 +283,7 @@ function updateChannelWorldLabelBtn(index,key,value){
  */
 function removeWorldOptBtn($worldOpt) {
 	$worldOpt.children('.world-opt-btn-wrap:eq(0)').remove();
-}
+};
 
 /**
  * 获取用户名
@@ -268,7 +299,7 @@ function getAuthorName(value, row, index) {
 	} else if(baseTools.isNULL(value)) {
 		return "织图用户";
 	}
-}
+};
 
 /**
  * 更新记录字段
@@ -283,7 +314,7 @@ function updateValue(index, key, value) {
 	dataList[index][key] = value;
 	removeWorldOptBtn($worldOpt);
 	drawWorldOptBtn($worldOpt, dataList, index);
-}
+};
 
 /**
  * 批量更新记录字段
@@ -300,7 +331,7 @@ function updateValues(index, keys, values) {
 	}
 	removeWorldOptBtn($worldOpt);
 	drawWorldOptBtn($worldOpt, dataList, index);
-}
+};
 
 /**
  * 获取织图有效操作
@@ -329,7 +360,7 @@ function getChannelWorldValid(value, row, index) {
 	return "<img title='"+ tip + "' class='htm_column_img pointer' " 
 		+ "onclick='javascript:updateValid(\""+ row.channelId + "\",\"" + row.worldId + "\","+ valid + "," + index + ")' " 
 		+ "src='" + img + "'/>";
-}
+};
 
 /**
  * 获取精选操作
@@ -358,7 +389,7 @@ function getSuperb(value, row, index) {
 	return "<img title='"+ tip + "' class='htm_column_img pointer' " 
 		+ "onclick='javascript:updateSuperb(\""+ row.channelId + "\",\"" + row.worldId + "\","+ superb + "," + index + ")' " 
 		+ "src='" + img + "'/>";
-}
+};
 
 /**
  * 获取删除操作
