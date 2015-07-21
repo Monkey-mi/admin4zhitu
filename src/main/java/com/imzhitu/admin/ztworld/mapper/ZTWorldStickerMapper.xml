@@ -5,6 +5,7 @@
 	<resultMap type="com.hts.web.common.pojo.HTWorldStickerDto" id="HTSWorldStickerDtoMap">
 		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="type_id" property="typeId" jdbcType="INTEGER"/>
+		<result column="set_id" property="setId" jdbcType="INTEGER"/>
 		<result column="sticker_path" property="stickerPath" jdbcType="VARCHAR"/>
 		<result column="sticker_thumb_path" property="stickerThumbPath" jdbcType="VARCHAR"/>
 		<result column="sticker_demo_path" property="stickerDemoPath" jdbcType="VARCHAR" />
