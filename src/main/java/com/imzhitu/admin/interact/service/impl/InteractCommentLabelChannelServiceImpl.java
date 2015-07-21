@@ -83,7 +83,7 @@ public class InteractCommentLabelChannelServiceImpl extends BaseServiceImpl impl
 	}
 
 	@Override
-	public List<Integer> queryCommentLabelIdByChannelId(Integer channelId)
+	public List<InteractCommentLabelChannel> queryCommentLabelIdByChannelId(Integer channelId)
 			throws Exception {
 		// TODO Auto-generated method stub
 		

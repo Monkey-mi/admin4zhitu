@@ -73,8 +73,8 @@
 	</select>
 	
 	<!-- query commentLabelId -->
-	<select id="queryCommentLabelIdByChannelId" resultType="Integer">
-		select comment_label_id 
+	<select id="queryCommentLabelIdByChannelId" resultMap="CommentLabelChannelMap">
+		select * 
 		from hts_admin.interact_comment_label_channel
 		where channel_id = #{channelId}
 	</select>

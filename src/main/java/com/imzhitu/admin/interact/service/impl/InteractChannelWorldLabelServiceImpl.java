@@ -2,19 +2,23 @@ package com.imzhitu.admin.interact.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.InteractChannelLevel;
 import com.imzhitu.admin.common.pojo.InteractChannelWorldLabel;
+import com.imzhitu.admin.common.pojo.InteractCommentLabelChannel;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.interact.mapper.InteractChannelWorldLabelMapper;
 import com.imzhitu.admin.interact.service.InteractChannelLevelService;
 import com.imzhitu.admin.interact.service.InteractChannelWorldLabelService;
+import com.imzhitu.admin.interact.service.InteractCommentLabelChannelService;
 import com.imzhitu.admin.interact.service.InteractCommentService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
@@ -36,6 +40,9 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 	
 	@Autowired
 	private InteractChannelLevelService channelLevelService;
+	
+	@Autowired
+	private InteractCommentLabelChannelService commentLabelChannelService;
 	
 	@Override
 	public void insertChannelWorldLabel(Integer channelId, Integer worldId,
@@ -134,6 +141,30 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 		dto.setChannelId(channelId);
 		dto.setWorldId(worldId);
 		return channelWorldLabelMapper.queryChannelWorldLabelTotalCount(dto);
+	}
+
+	@Override
+	public void queryChannelWorldLabel(Integer worldId, Integer channelId,
+			Map<String, Object> jsonMap) throws Exception {
+		// TODO Auto-generated method stub
+		if(null == worldId || channelId == null){
+			throw new Exception("worldId and channelId cannot be null");
+		}
+		
+		List<InteractChannelWorldLabel> list = null;
+		try{
+			list = queryChannelWorldLabel(null,worldId,channelId);
+			jsonMap.put(OptResult.JSON_KEY_LABEL_INFO, list);
+			jsonMap.put(OptResult.JSON_KEY_INTERACT, Tag.TRUE);
+		}catch(Exception e){
+			list = null;
+		}
+		
+		if(list == null || list.size() == 0){
+			List<InteractCommentLabelChannel>channelLabelList =  commentLabelChannelService.queryCommentLabelIdByChannelId(channelId);
+			jsonMap.put(OptResult.JSON_KEY_LABEL_INFO, channelLabelList);
+			jsonMap.put(OptResult.JSON_KEY_INTERACT, Tag.FALSE);
+		}
 	}
 
 }

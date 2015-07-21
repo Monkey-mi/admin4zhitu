@@ -1,6 +1,7 @@
 package com.imzhitu.admin.interact.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.imzhitu.admin.common.pojo.InteractChannelWorldLabel;
 
@@ -34,4 +35,12 @@ public interface InteractChannelWorldLabelService {
 	 * @throws Exception
 	 */
 	public long queryChannelWorldLabelTotalCount(Integer id,Integer worldId,Integer channelId)throws Exception;
+	
+	/**
+	 * 查询该织图对应的标签，若是没有，则查询该频道绑定的标签
+	 * @param worldId
+	 * @param channelId
+	 * @throws Exception
+	 */
+	public void queryChannelWorldLabel(Integer worldId,Integer channelId,Map<String,Object>jsonMap)throws Exception;
 }

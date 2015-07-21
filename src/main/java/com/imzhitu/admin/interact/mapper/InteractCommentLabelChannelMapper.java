@@ -44,5 +44,5 @@ public interface InteractCommentLabelChannelMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<Integer> queryCommentLabelIdByChannelId(@Param("channelId") Integer channelId);
+	public List<InteractCommentLabelChannel> queryCommentLabelIdByChannelId(@Param("channelId") Integer channelId);
 }

@@ -3,6 +3,8 @@ package com.imzhitu.admin.interact.service;
 import java.util.List;
 import java.util.Map;
 
+import com.imzhitu.admin.common.pojo.InteractCommentLabelChannel;
+
 public interface InteractCommentLabelChannelService {
 	/**
 	 * 添加
@@ -51,5 +53,5 @@ public interface InteractCommentLabelChannelService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Integer> queryCommentLabelIdByChannelId(Integer channelId)throws Exception;
+	public List<InteractCommentLabelChannel> queryCommentLabelIdByChannelId(Integer channelId)throws Exception;
 }
