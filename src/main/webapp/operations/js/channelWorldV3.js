@@ -221,14 +221,16 @@ function drawChannelWorldLabelBtn($opt2LineBtn, worlds, index) {
 						var labelId = data[i].commentLabelId;
 						var labelName = data[i].commentLabelName;
 						ret += '<span id="commentLabel-'+world.id+'-'+labelId+'" class="label-btn-unclc-bg" data-label="'+labelId+'">'
-								+ '<a href="#" style="text-decoration:none;" onclick="putWorldCommentLabelId(' 
+								+ '<a href="javascript:void(0)" style="text-decoration:none;" onclick="putWorldCommentLabelId(' 
 								+ world.id + ',' + labelId + ',' + index + ')">#' + labelName + '</a>'
 								+ '<input type="hidden" value="' + labelId + '"></input>'
 								+ '</span>&nbsp;';
 					}
-					ret += '<input type="button" value="确定" onclick="submitAddChannelWorldLabel('
-						+ world.id + ', ' + index + ')"></input>'
-						+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>';
+//					ret += '<a href="#" onclick="submitAddChannelWorldLabel('+ world.id + ', ' + index + ')" ' 
+//							+ 'style="text-decoration:none;background-color:#b6ffff;">确定</a>'
+//							+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>';
+					ret += '<a href="javascript:void(0)"><img src="./common/images/ok.png" onclick="submitAddChannelWorldLabel('+ world.id + ', ' + index + ')"></img></a>'
+					+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>';
 				} else {
 					for (var i=0; i<data.length; i++) {
 						ret += '<span>#' + data[i].commentLabelName + '</span>&nbsp;';
