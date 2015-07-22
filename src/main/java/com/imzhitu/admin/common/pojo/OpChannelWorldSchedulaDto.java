@@ -14,6 +14,7 @@ public class OpChannelWorldSchedulaDto extends AbstractNumberDto{
 	private Integer worldId;	//织图id
 	private Integer userId;		//用户id
 	private Integer valid;		//有效性，0无效，1有效
+	private Integer superb;		//加精，0未加精，1加精
 	private Integer channelId;	//频道id
 	private Integer operatorId;	//最后操作人id
 	private String operatorName;//最后操作人名字
@@ -69,6 +70,18 @@ public class OpChannelWorldSchedulaDto extends AbstractNumberDto{
 		this.valid = valid;
 	}
 	
+	/**
+	 * @return the superb
+	 */
+	public Integer getSuperb() {
+	    return superb;
+	}
+	/**
+	 * @param superb the superb to set
+	 */
+	public void setSuperb(Integer superb) {
+	    this.superb = superb;
+	}
 	public Integer getOperatorId() {
 		return operatorId;
 	}
