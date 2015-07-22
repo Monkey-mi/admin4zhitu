@@ -43,12 +43,15 @@
 	</select>
 	
 	<select id="queryCacheTopSticker" resultMap="HTSWorldStickerDtoMap">
-		select * from hts.htworld_sticker where valid=1 and set_id=#{setId} order by serial desc
+		select s.*, l.label_name from hts.htworld_sticker s
+		left join hts.htworld_label l on s.label_id=l.id and s.valid=1 and s.set_id=#{setId} 
+		 order by s.serial desc
 	</select>
 	
 	<select id="queryCacheRecommendStickerDto" resultMap="HTSWorldStickerDtoMap">
-		select * from hts.htworld_sticker where valid=1 
-		and weight>0 order by serial desc limit #{limit}
+		select * from hts.htworld_sticker s
+		left join hts.htworld_label l on s.label_id=l.id and s.valid=1 and s.weight>0 
+		order by s.serial desc limit #{limit}
 	</select>
 	
 	<select id="queryStickers" resultMap="WorldStickerMap">
