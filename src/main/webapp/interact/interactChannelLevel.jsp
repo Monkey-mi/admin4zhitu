@@ -39,7 +39,7 @@
 	function tableLoadDate(pageNum){
 		$("#htm_table").datagrid({
 			title  :"精品马甲管理",
-			width  :1200,
+			width  :1470,
 			pageList : [10,30,50,100,300],
 			pageSize : 10,
 			loadMsg:"加载中....",
@@ -52,20 +52,51 @@
 			toolbar:'#tb',
 			columns: [[
 				{field :'ck',checkbox:true},
-				{field :'id',title:'ID',align:'center',width:80},
-				{field : 'channelName',title: '频道名称',align : 'center',width : 180},
-				{field : 'unSuperMinCommentCount',title:'非精选最小评论数',align:'center',width : 100	},
-				{field : 'unSuperMmaxCommentCount',title:'非精选最大评论数',align:'center',width : 100	},
-				{field : 'superMinCommentCount',title:'精选最小评论数',align:'center',width : 100	},
-				{field : 'superMaxCommentCount',title:'精选最大评论数',align:'center',width : 100	},
-				{field : 'minuteTime',title:'时间(分钟)',align:'center',width : 100	},
-				{field : 'opt',title : '操作',width : 120,align : 'center',rowspan : 1,
+				{field :'id',title:'ID',align:'center',width:50},
+				{field : 'channelName',title: '频道名称',align : 'center',width : 120},
+				{field : 'unSuperMinCommentCount',title:'非精选最小评论数',align:'center',width : 70	},
+				{field : 'unSuperMaxCommentCount',title:'非精选最大评论数',align:'center',width : 70	},
+				{field : 'superMinCommentCount',title:'精选最小评论数',align:'center',width : 70	},
+				{field : 'superMaxCommentCount',title:'精选最大评论数',align:'center',width : 70	},
+				
+				{field : 'unSuperMinClickCount',title:'非精选最小播放数',align:'center',width : 70	},
+				{field : 'unSuperMaxClickCount',title:'非精选最大播放数',align:'center',width : 70	},
+				{field : 'superMinClickCount',title:'精选最小播放数',align:'center',width : 70	},
+				{field : 'superMaxClickCount',title:'精选最大播放数',align:'center',width : 70	},
+				
+				{field : 'unSuperMinLikeCount',title:'非精选最小喜欢数',align:'center',width : 70	},
+				{field : 'unSuperMaxLikeCount',title:'非精选最大喜欢数',align:'center',width : 70	},
+				{field : 'superMinLikeCount',title:'精选最小喜欢数',align:'center',width : 70	},
+				{field : 'superMaxLikeCount',title:'精选最大喜欢数',align:'center',width : 70	},
+				
+				{field : 'unSuperMinFollowCount',title:'非精选最小粉丝数',align:'center',width : 70	},
+				{field : 'unSuperMaxFollowCount',title:'非精选最大粉丝数',align:'center',width : 70	},
+				{field : 'superMinFollowCount',title:'精选最小粉丝数',align:'center',width : 70	},
+				{field : 'superMaxFollowCount',title:'精选最大粉丝数',align:'center',width : 70	},
+				{field : 'minuteTime',title:'时间(分钟)',align:'center',width : 70	},
+				{field : 'opt',title : '操作',width : 60,align : 'center',rowspan : 1,
 					formatter : function(value, row, index ) {
 						var retStr="<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" 
-									+ row.channelId + "\",\""  + row.unSuperMinCommentCount + "\",\""  
-									+ row.unSuperMmaxCommentCount + "\",\""  
+									+ row.channelId + "\",\""  
+									+ row.unSuperMinCommentCount + "\",\""  
+									+ row.unSuperMaxCommentCount + "\",\""  
 									+ row.superMinCommentCount + "\",\"" 
 									+ row.superMaxCommentCount + "\",\"" 
+									
+									+ row.unSuperMinClickCount + "\",\""  
+									+ row.unSuperMaxClickCount + "\",\""  
+									+ row.superMinClickCount + "\",\"" 
+									+ row.superMaxClickCount + "\",\""
+									
+									+ row.unSuperMinLikeCount + "\",\""  
+									+ row.unSuperMaxLikeCount + "\",\""  
+									+ row.superMinLikeCount + "\",\"" 
+									+ row.superMaxLikeCount + "\",\""
+									
+									+ row.unSuperMinFollowCount + "\",\""  
+									+ row.unSuperMaxFollowCount + "\",\""  
+									+ row.superMinFollowCount + "\",\"" 
+									+ row.superMaxFollowCount + "\",\""
 									+ row.minuteTime
 									+"\")'>【修改】</a>";
 						return retStr;
@@ -87,7 +118,7 @@
 			title : '添加',
 			modal : true,
 			width : 490,
-			height : 300,
+			height : 360,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -97,10 +128,25 @@
 			resizable : false,
 			onClose : function(){
 				$("#i-channelId").combogrid('clear');
-				$("#i-unsMin").val('');
-				$("#i-unsMax").val('');
-				$("#i-sMin").val('');
-				$("#i-sMax").val('');
+				$("#i-unsMinComment").val('');
+				$("#i-unsMaxComment").val('');
+				$("#i-sMinComment").val('');
+				$("#i-sMaxComment").val('');
+				
+				$("#i-unsMinClick").val('');
+				$("#i-unsMaxClick").val('');
+				$("#i-sMinClick").val('');
+				$("#i-sMaxClick").val('');
+				
+				$("#i-unsMinLike").val('');
+				$("#i-unsMaxLike").val('');
+				$("#i-sMinLike").val('');
+				$("#i-sMaxLike").val('');
+				
+				$("#i-unsMinFollow").val('');
+				$("#i-unsMaxFollow").val('');
+				$("#i-sMinFollow").val('');
+				$("#i-sMaxFollow").val('');
 				$("#i-time").val('');
 				$("#i-id").val('');		
 			}
@@ -222,12 +268,33 @@
 		$('#htm_add').window('open');
 	}
 	
-	function updateInit(id,channelId,unsMin,unsMax,sMin,sMax,time){
+	function updateInit(id,channelId,
+			unsMinComment,unsMaxComment,sMinComment,sMaxComment,
+			unsMinClick,unsMaxClick,sMinClick,sMaxClick,
+			unsMinLike,unsMaxLike,sMinLike,sMaxLike,
+			unsMinFollow,unsMaxFollow,sMinFollow,sMaxFollow,
+			time){
 		$("#i-channelId").combogrid('setValue',channelId);
-		$("#i-unsMin").val(unsMin);
-		$("#i-unsMax").val(unsMax);
-		$("#i-sMin").val(sMin);
-		$("#i-sMax").val(sMax);
+		$("#i-unsMinComment").val(unsMinComment);
+		$("#i-unsMaxComment").val(unsMaxComment);
+		$("#i-sMinComment").val(sMinComment);
+		$("#i-sMaxComment").val(sMaxComment);
+		
+		$("#i-unsMinClick").val(unsMinClick);
+		$("#i-unsMaxClick").val(unsMaxClick);
+		$("#i-sMinClick").val(sMinClick);
+		$("#i-sMaxClick").val(sMaxClick);
+		
+		$("#i-unsMinLike").val(unsMinLike);
+		$("#i-unsMaxLike").val(unsMaxLike);
+		$("#i-sMinLike").val(sMinLike);
+		$("#i-sMaxLike").val(sMaxLike);
+		
+		$("#i-unsMinFollow").val(unsMinFollow);
+		$("#i-unsMaxFollow").val(unsMaxFollow);
+		$("#i-sMinFollow").val(sMinFollow);
+		$("#i-sMaxFollow").val(sMaxFollow);
+		
 		$("#i-time").val(time);
 		$("#i-id").val(id);
 		$('#htm_add').window('open');
@@ -235,10 +302,26 @@
 	
 	function addSubmit(){
 		var channelId = $("#i-channelId").combogrid('getValue');
-		var unSuperMinCommentCount = $("#i-unsMin").val();
-		var unSuperMaxCommentCount = $("#i-unsMax").val();
-		var superMinCommentCount   = $("#i-sMin").val();
-		var superMaxCommentCount   = $("#i-sMax").val();
+		var unSuperMinCommentCount = $("#i-unsMinComment").val();
+		var unSuperMaxCommentCount = $("#i-unsMaxComment").val();
+		var superMinCommentCount   = $("#i-sMinComment").val();
+		var superMaxCommentCount   = $("#i-sMaxComment").val();
+		
+		var unSuperMinClickCount = $("#i-unsMinClick").val();
+		var unSuperMaxClickCount = $("#i-unsMaxClick").val();
+		var superMinClickCount   = $("#i-sMinClick").val();
+		var superMaxClickCount   = $("#i-sMaxClick").val();
+		
+		var unSuperMinLikeCount = $("#i-unsMinLike").val();
+		var unSuperMaxLikeCount = $("#i-unsMaxLike").val();
+		var superMinLikeCount   = $("#i-sMinLike").val();
+		var superMaxLikeCount   = $("#i-sMaxLike").val();
+		
+		var unSuperMinFollowCount = $("#i-unsMinFollow").val();
+		var unSuperMaxFollowCount = $("#i-unsMaxFollow").val();
+		var superMinFollowCount   = $("#i-sMinFollow").val();
+		var superMaxFollowCount   = $("#i-sMaxFollow").val();
+		
 		var minuteTime 			   = $("#i-time").val();
 		var id = $("#i-id").val();
 		var url="";
@@ -255,13 +338,28 @@
 			'unSuperMaxCommentCount'	: unSuperMaxCommentCount,
 			'superMinCommentCount'		: superMinCommentCount,
 			'superMaxCommentCount'		: superMaxCommentCount,
+			
+			'unSuperMinClickCount'		: unSuperMinClickCount,
+			'unSuperMaxClickCount'		: unSuperMaxClickCount,
+			'superMinClickCount'		: superMinClickCount,
+			'superMaxClickCount'		: superMaxClickCount,
+			
+			'unSuperMinLikeCount'		: unSuperMinLikeCount,
+			'unSuperMaxLikeCount'		: unSuperMaxLikeCount,
+			'superMinLikeCount'			: superMinLikeCount,
+			'superMaxLikeCount'			: superMaxLikeCount,
+			
+			'unSuperMinFollowCount'		: unSuperMinFollowCount,
+			'unSuperMaxFollowCount'		: unSuperMaxFollowCount,
+			'superMinFollowCount'		: superMinFollowCount,
+			'superMaxFollowCount'		: superMaxFollowCount,
+			
 			'minuteTime'				: minuteTime
 		},function(result){
 			$('#htm_add .opt_btn').show();
 			$('#htm_add .loading').hide();
 			if(result['result'] == 0) {
-				tableQueryParams.maxId=0;
-				$("#htm_table").datagrid("load",tableQueryParams);
+				$("#htm_table").datagrid("reload");
 				$('#htm_add').window('close');
 			} else {
 				$.messager.alert('提示',result['msg']);
@@ -294,30 +392,50 @@
 				<table class="htm_edit_table" width="480">
 					<tbody>
 						<tr>
-							<td class="leftTd">频道：</td>
+							<td class="leftTd" style="width:230px;"><span>频道：</span><input id="i-channelId" style="width:80px;"/></td>
 							<td>
-								<input id="i-channelId"/>
+								<span>时 间 ( 分 钟 ) ：</span><input id="i-time" style="width:80px;" >
 							</td>
 						</tr>
 						<tr>
-							<td class="leftTd">非精选最小评论数：</td>
-							<td><input id="i-unsMin" style="width:170px;" ></td>
+							<td class="leftTd"><span>非精选最小评论数：</span><input id="i-unsMinComment" style="width:80px;" ></td>
+							<td ><span>非精选最大评论数：</span><input id="i-unsMaxComment" style="width:80px;" ></td>
 						</tr>
 						<tr>
-							<td class="leftTd">非精选最大评论数：</td>
-							<td><input id="i-unsMax" style="width:170px;" ></td>
+							<td class="leftTd"><span>精选最小评论数：</span><input id="i-sMinComment" style="width:80px;" ></td>
+							<td ><span>精 选 最大评论数：</span><input id="i-sMaxComment" style="width:80px;" ></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd"><span>非精选最小播放数：</span><input id="i-unsMinClick" style="width:80px;" ></td>
+							<td><span>非精选最大播放数：</span><input id="i-unsMaxClick" style="width:80px;" ></td>
 						</tr>
 						<tr>
-							<td class="leftTd">精选最小评论数：</td>
-							<td><input id="i-sMin" style="width:170px;" ></td>
+							<td class="leftTd"><span>精选最小播放数：</span><input id="i-sMinClick" style="width:80px;" ></td>
+							<td><span>精 选 最大播放数：</span><input id="i-sMaxClick" style="width:80px;" ></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd"><span>非精选最小喜欢数：</span><input id="i-unsMinLike" style="width:80px;" ></td>
+							<td><span>非精选最大喜欢数：</span><input id="i-unsMaxLike" style="width:80px;" ></td>
 						</tr>
 						<tr>
-							<td class="leftTd">精选最大评论数：</td>
-							<td><input id="i-sMax" style="width:170px;" ></td>
+							<td class="leftTd"><span>精选最小喜欢数：</span><input id="i-sMinLike" style="width:80px;" ></td>
+							<td><span>精 选 最大喜欢数：</span><input id="i-sMaxLike" style="width:80px;" ></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd"><span>非精选最小粉丝数：</span><input id="i-unsMinFollow" style="width:80px;" ></td>
+							<td><span>非精选最大粉丝数：</span><input id="i-unsMaxFollow" style="width:80px;" ></td>
 						</tr>
 						<tr>
-							<td class="leftTd">时间(分钟)：</td>
-							<td><input id="i-time" style="width:170px;" ></td>
+							<td class="leftTd"><span>精选最小粉丝数：</span><input id="i-sMinFollow" style="width:80px;" ></td>
+							<td><span>精 选 最大粉丝数：</span><input id="i-sMaxFollow" style="width:80px;" ></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd"></td>
+							<td><span></span></td>
 						</tr>
 						<tr>
 							<td class="none"><input id="i-id"></td>

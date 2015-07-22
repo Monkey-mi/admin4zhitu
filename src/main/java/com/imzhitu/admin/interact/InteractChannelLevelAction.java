@@ -26,9 +26,96 @@ public class InteractChannelLevelAction extends BaseCRUDAction {
 	private Integer unSuperMaxCommentCount;
 	private Integer superMinCommentCount;
 	private Integer superMaxCommentCount;
+	
+	private Integer unSuperMinLikeCount;
+	private Integer unSuperMaxLikeCount;
+	private Integer superMinLikeCount;
+	private Integer superMaxLikeCount;
+	private Integer unSuperMinFollowCount;
+	private Integer unSuperMaxFollowCount;
+	private Integer superMinFollowCount;
+	private Integer superMaxFollowCount;
+	private Integer unSuperMinClickCount;
+	private Integer unSuperMaxClickCount;
+	private Integer superMinClickCount;
+	private Integer superMaxClickCount;
+	
 	private Integer minuteTime;
 	private String idsStr;
 	
+	
+	public Integer getUnSuperMinLikeCount() {
+		return unSuperMinLikeCount;
+	}
+	public void setUnSuperMinLikeCount(Integer unSuperMinLikeCount) {
+		this.unSuperMinLikeCount = unSuperMinLikeCount;
+	}
+	public Integer getUnSuperMaxLikeCount() {
+		return unSuperMaxLikeCount;
+	}
+	public void setUnSuperMaxLikeCount(Integer unSuperMaxLikeCount) {
+		this.unSuperMaxLikeCount = unSuperMaxLikeCount;
+	}
+	public Integer getSuperMinLikeCount() {
+		return superMinLikeCount;
+	}
+	public void setSuperMinLikeCount(Integer superMinLikeCount) {
+		this.superMinLikeCount = superMinLikeCount;
+	}
+	public Integer getSuperMaxLikeCount() {
+		return superMaxLikeCount;
+	}
+	public void setSuperMaxLikeCount(Integer superMaxLikeCount) {
+		this.superMaxLikeCount = superMaxLikeCount;
+	}
+	public Integer getUnSuperMinFollowCount() {
+		return unSuperMinFollowCount;
+	}
+	public void setUnSuperMinFollowCount(Integer unSuperMinFollowCount) {
+		this.unSuperMinFollowCount = unSuperMinFollowCount;
+	}
+	public Integer getUnSuperMaxFollowCount() {
+		return unSuperMaxFollowCount;
+	}
+	public void setUnSuperMaxFollowCount(Integer unSuperMaxFollowCount) {
+		this.unSuperMaxFollowCount = unSuperMaxFollowCount;
+	}
+	public Integer getSuperMinFollowCount() {
+		return superMinFollowCount;
+	}
+	public void setSuperMinFollowCount(Integer superMinFollowCount) {
+		this.superMinFollowCount = superMinFollowCount;
+	}
+	public Integer getSuperMaxFollowCount() {
+		return superMaxFollowCount;
+	}
+	public void setSuperMaxFollowCount(Integer superMaxFollowCount) {
+		this.superMaxFollowCount = superMaxFollowCount;
+	}
+	public Integer getUnSuperMinClickCount() {
+		return unSuperMinClickCount;
+	}
+	public void setUnSuperMinClickCount(Integer unSuperMinClickCount) {
+		this.unSuperMinClickCount = unSuperMinClickCount;
+	}
+	public Integer getUnSuperMaxClickCount() {
+		return unSuperMaxClickCount;
+	}
+	public void setUnSuperMaxClickCount(Integer unSuperMaxClickCount) {
+		this.unSuperMaxClickCount = unSuperMaxClickCount;
+	}
+	public Integer getSuperMinClickCount() {
+		return superMinClickCount;
+	}
+	public void setSuperMinClickCount(Integer superMinClickCount) {
+		this.superMinClickCount = superMinClickCount;
+	}
+	public Integer getSuperMaxClickCount() {
+		return superMaxClickCount;
+	}
+	public void setSuperMaxClickCount(Integer superMaxClickCount) {
+		this.superMaxClickCount = superMaxClickCount;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -80,7 +167,10 @@ public class InteractChannelLevelAction extends BaseCRUDAction {
 	
 	public String insertChannelLevel(){
 		try{
-			channelLevelService.insertChannelLevel(channelId, unSuperMinCommentCount, unSuperMaxCommentCount, superMinCommentCount, superMaxCommentCount, minuteTime);
+			channelLevelService.insertChannelLevel(channelId, unSuperMinCommentCount, unSuperMaxCommentCount, 
+					superMinCommentCount, superMaxCommentCount, unSuperMinLikeCount, unSuperMaxLikeCount, superMinLikeCount, 
+					superMaxLikeCount, unSuperMinFollowCount, unSuperMaxFollowCount, superMinFollowCount, superMaxFollowCount,
+					unSuperMinClickCount, unSuperMaxClickCount, superMinClickCount, superMaxClickCount, minuteTime);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -100,7 +190,10 @@ public class InteractChannelLevelAction extends BaseCRUDAction {
 	
 	public String updateChannelLevel(){
 		try{
-			channelLevelService.updateChannelLevel(id, unSuperMinCommentCount, unSuperMaxCommentCount, superMinCommentCount, superMaxCommentCount, minuteTime);
+			channelLevelService.updateChannelLevel(id, unSuperMinCommentCount, unSuperMaxCommentCount, superMinCommentCount, 
+					superMaxCommentCount, unSuperMinLikeCount, unSuperMaxLikeCount, superMinLikeCount, superMaxLikeCount, 
+					unSuperMinFollowCount, unSuperMaxFollowCount, superMinFollowCount, superMaxFollowCount, unSuperMinClickCount, 
+					unSuperMaxClickCount, superMinClickCount, superMaxClickCount, minuteTime);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

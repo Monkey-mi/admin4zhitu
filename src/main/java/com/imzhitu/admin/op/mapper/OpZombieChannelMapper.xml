@@ -69,4 +69,18 @@
 			</if>
 		</where>
 	</select>
+	
+	
+	<!-- 随机查询n个马甲，这些马甲没有关注过该织图作者，并且没有评论过该织图，并且改马甲具有该等级 -->
+	<select id="queryNotInteractNRandomNotFollowZombie" resultType="Integer">
+		select oz.user_id
+		from hts_admin.op_zombie_channel oz
+		where oz.channel_id=#{channelId} and not exists(
+		 	select uc.user_id from hts.user_concern uc where uc.concern_id =  #{concernId} and oz.user_id=uc.user_id
+		)
+		and not exists(
+			select id from hts_admin.interact_world_comment wc where wc.world_id=#{worldId} and wc.user_id = oz.user_id
+		)
+		limit 0,#{limit}
+	</select>
 </mapper>

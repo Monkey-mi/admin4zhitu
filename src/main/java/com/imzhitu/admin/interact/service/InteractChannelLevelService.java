@@ -10,8 +10,12 @@ public interface InteractChannelLevelService {
 	 * 增加
 	 * @param dto
 	 */
-	public void insertChannelLevel(Integer channelId,Integer unSuperMinCommentCount,
-			Integer unSuperMaxCommentCount,Integer superMinCommentCount,Integer superMaxCommentCount,Integer minutetime)throws Exception;
+	public void insertChannelLevel(Integer channelId,
+			Integer unSuperMinCommentCount,	Integer unSuperMaxCommentCount,Integer superMinCommentCount,Integer superMaxCommentCount,
+			Integer unSuperMinLikeCount,	Integer unSuperMaxLikeCount,Integer superMinLikeCount,Integer superMaxLikeCount,
+			Integer unSuperMinFollowCount,	Integer unSuperMaxFollowCount,Integer superMinFollowCount,Integer superMaxFollowCount,
+			Integer unSuperMinClickCount,	Integer unSuperMaxClickCount,Integer superMinClickCount,Integer superMaxClickCount,
+			Integer minutetime)throws Exception;
 	
 	/**
 	 * 批量删除
@@ -23,8 +27,12 @@ public interface InteractChannelLevelService {
 	 * 更新
 	 * @param dto
 	 */
-	public void updateChannelLevel(Integer id,Integer unSuperMinCommentCount,
-			Integer unSuperMaxCommentCount,Integer superMinCommentCount,Integer superMaxCommentCount,Integer minutetime)throws Exception;
+	public void updateChannelLevel(Integer id,
+			Integer unSuperMinCommentCount,Integer unSuperMaxCommentCount,Integer superMinCommentCount,Integer superMaxCommentCount,
+			Integer unSuperMinLikeCount,	Integer unSuperMaxLikeCount,Integer superMinLikeCount,Integer superMaxLikeCount,
+			Integer unSuperMinFollowCount,	Integer unSuperMaxFollowCount,Integer superMinFollowCount,Integer superMaxFollowCount,
+			Integer unSuperMinClickCount,	Integer unSuperMaxClickCount,Integer superMinClickCount,Integer superMaxClickCount,
+			Integer minutetime)throws Exception;
 	
 	/**
 	 * 查询

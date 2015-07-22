@@ -113,7 +113,7 @@ public class InteractWorldServiceTest extends BaseTest {
 	@Test
 	public void testGetScheduleV3()throws Exception{
 		Date  now = new Date();
-		List<Date> dateList = service.getScheduleV3(new Date(now.getTime() - 13*60*60*1000L), 60,8 );
+		List<Date> dateList = service.getScheduleV3(new Date(now.getTime() - 60*60*1000L), 60,8 );
 		logger.info("dateList =======>"+dateList);
 		Date end = new Date();
 		logger.info("cost:"+(end.getTime() - now.getTime() ) +"ms.");

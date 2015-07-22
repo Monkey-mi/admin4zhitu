@@ -50,6 +50,7 @@ import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.dao.UserZombieDao;
 import com.imzhitu.admin.op.mapper.OpZombieMapper;
 import com.imzhitu.admin.op.service.OpUserService;
+import com.imzhitu.admin.op.service.OpZombieChannelService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
 import com.imzhitu.admin.op.service.impl.OpServiceImpl;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
@@ -198,6 +199,9 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
+	
+	@Autowired
+	private OpZombieChannelService zombieChannelService;
 	
 	public Integer getCommonZombieDegreeId() {
 		return commonZombieDegreeId;
@@ -422,23 +426,24 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			}
 			
 			for(int k=1;tt > hasBeenProcess;k++){
-				int t = tt *(k>12?(24-k):k)/100;
-				if(t <= 0){
-					t = 1;
+				int tmpK = k>12?(24-k):k;
+				int t = tt * tmpK/100;
+				if(t == 0){
+					if(Math.round(Math.random()) == 1){
+						t = 1;
+					}
+					k--;
 				}
 				hasBeenProcess += t;
+				long tmpBeginTime = beginTime;
 				if(t>0){
 					long span = interval / t;
-					long tmpBeginTime = beginTime;
 					for(int j=0; j < t; j++){						
 						beginTime += (long)((Math.random()+1)*span);
 						dateList.add(new Date(beginTime));
 					}
-					beginTime = tmpBeginTime + 300000L;
-				}else{
-					break;
 				}
-					
+				beginTime = tmpBeginTime + 300000L;
 			}
 		}else if(hourOfDay > 2 && hourOfDay < 8){//凌晨3点到早上八点基本很少人
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -451,43 +456,47 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			}
 			
 			for(int k=1;tt > hasBeenProcess;k++){
-				int t = tt *(k>12?(24-k):k)/100;
-				if(t <= 0){
-					t = 1;
+				int tmpK = k>12?(24-k):k;
+				int t = tt * tmpK/100;
+				if(t == 0){
+					if(Math.round(Math.random()) == 1){
+						t = 1;
+					}
+					k--;
 				}
 				hasBeenProcess += t;
+				long tmpBeginTime = beginTime;
 				if(t>0){
 					long span = interval / t;
-					long tmpBeginTime = beginTime;
 					for(int j=0; j < t; j++){						
 						beginTime += (long)((Math.random()+1)*span);
 						dateList.add(new Date(beginTime));
 					}
-					beginTime = tmpBeginTime + 300000L;
-				}else{
-					break;
 				}
+				beginTime = tmpBeginTime + 300000L;
 					
 			}
 		}else{//正常时间.
 			//比例12、11、10、9、8、7、6、5、4、3、2、1、1。。。
 			for(int i=0; tt > hasBeenProcess; i++){
-				int t = tt *((12-i)>0?(12-i):1)/100;
-				if(t <= 0){
-					t = 1;
+				int tmpK = (12-i)>0?(12-i):1;
+				int t = tt * tmpK / 100;
+				if(t == 0){
+					if(Math.round(Math.random()) == 1){
+						t = 1;
+					}
+					i--;
 				}
 				hasBeenProcess += t;
+				long tmpBeginTime = beginTime;
 				if(t>0){
 					long span = interval / t;
-					long tmpBeginTime = beginTime;
 					for(int j=0; j < t; j++){						
 						beginTime += (long)((Math.random()+1)*span);
 						dateList.add(new Date(beginTime));
 					}
-					beginTime = tmpBeginTime + 300000L;
-				}else{
-					break;
 				}
+				beginTime = tmpBeginTime + 300000L;
 			}
 			
 		}
@@ -559,7 +568,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		try{
 			int unFollowZombieNeedTotal = followZombiesTotal + unFollowZombiesTotal - fzListLength;
 			if(unFollowZombieNeedTotal > 0){
-				unFzList = zombieMapper.queryNotInteractNRandomNotFollowZombie(userId, degreeId,unFollowZombieNeedTotal);
+				unFzList = zombieMapper.queryNotInteractNRandomNotFollowZombie(userId, degreeId,worldId,unFollowZombieNeedTotal);
 				if( null == unFzList){
 					logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
 					throw new Exception("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
@@ -568,6 +577,162 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			
 		}catch(Exception e){
 			logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+(followZombiesTotal + unFollowZombiesTotal - fzListLength)+".\nnow set fzList is null.\ncause:"+e.getMessage());
+		}
+		//保存喜欢
+		if(likedCount > 0) {
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, likedCount);
+			List<Integer> zombieIdList = new ArrayList<Integer>();
+			int likeSize = Math.round(likedCount * likeFromFollowRate/100.00f);
+			int i,j;
+			for(i = 0; i < likeSize && i < fzListLength; i++) {
+				zombieIdList.add(fzList.get(i));
+			}
+			for(j = 0; j < likedCount - i && j < unFzList.size(); j++){
+				zombieIdList.add(unFzList.get(j));
+			}
+			batchSaveLiked(interactId, worldId, zombieIdList, dateAdded, scheduleDateList);
+		}
+		
+		// 保存评论
+		if(commentCount > 0) {
+			String idStr = Arrays.toString(commentIds);
+			Integer[] cids = StringUtil.convertStringToIds(idStr.substring(1, idStr.length() - 1));
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, cids.length);
+			List<Integer> zombieIdList = new ArrayList<Integer>();
+			int followCommentSize = Math.round(commentCount * commentFromFollowRate);
+			int i,j;
+			for( i = 0; i < followCommentSize && i < fzListLength ; i++) {
+				zombieIdList.add(fzList.get(i));
+			}
+			for(j = 0; j < commentCount - i && j < unFzList.size(); j++){
+				zombieIdList.add(unFzList.get(j));
+			}
+			
+			batchSaveComment(interactId, worldId, zombieIdList, cids, dateAdded, scheduleDateList);
+		}
+		
+		
+		//加粉
+		if(likedCount > 0){
+			int followSize = Math.round(likedCount * likeToFollowRate / 100.0f);
+			InteractUser userInteract = interactUserDao.queryUserInteractByUID(userId);
+			if(userInteract != null) {
+				interactId = userInteract.getId();
+				// 更新用户互动
+				interactUserDao.updateInteract(interactId, followSize+userInteract.getFollowCount(),
+						(minuteDuration/60>0?minuteDuration/60:1)+userInteract.getDuration());
+			} else {
+				interactId = keyGenService.generateId(Admin.KEYGEN_INTERACT_USER_ID);
+				// 保存用户互动
+				interactUserDao.saveInteract(new InteractUser(interactId, 
+						userId, followSize, minuteDuration/60>0?minuteDuration/60:1, dateAdded, Tag.TRUE));
+			}
+			
+			// 保存粉丝互动
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, followSize);
+			List<InteractUserFollow> list = new ArrayList<InteractUserFollow>();
+			for(int i = 0; i < followSize && i < unFzList.size(); i++) {
+				list.add(new InteractUserFollow(interactId, userId, unFzList.get(i),
+						dateAdded, scheduleDateList.get(i), Tag.TRUE, Tag.FALSE));
+			}
+			
+			try{
+				if(list.size() > 0)
+					userFollowMapper.batchSaveUserFollow(list);
+			}catch(Exception e){
+				logger.warn("saveInteractV3:userFollowMapper.batchSaveUserFollow failed.List<InteractUserFollow> list:"+list+"\ncause:"+e.getMessage());
+				throw e;
+			}
+		}
+		
+		//更新op_zombie表中的lastmodify字段
+		if(unFzList != null && unFzList.size() > 0){
+			try{
+				Integer[] unFzArray = new Integer[unFzList.size()];
+				unFzList.toArray(unFzArray);
+				zombieMapper.batchUpdateZombie(dateAdded.getTime(), 1, 1, unFzArray);
+			}catch(Exception e){
+				logger.warn("saveInteractV3:zombieMapper.batchUpdateZombie failed.List<InteractUserFollow> unFzList:"+unFzList+"\ncause:"+e.getMessage());
+				throw e;
+			}
+		}
+		
+	}
+	
+	@Override
+	public void saveChannelInteractV3(Integer userId,Integer channelId,Integer worldId,Integer clickCount,
+			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception {
+		minuteDuration = minuteDuration == null ? 0 : minuteDuration; 
+		clickCount = clickCount == null ? 0 : clickCount;
+		likedCount = likedCount == null ? 0 : likedCount;
+		int commentCount = commentIds == null ? 0 : commentIds.length;
+		
+		Integer interactId = 0;
+		Date dateAdded = new Date();
+		InteractWorld interact = interactWorldDao.queryInteractByWorldId(worldId);
+		if(interact != null) {
+			interactId = interact.getId();
+			interactWorldDao.updateInteract(
+					interactId, 
+					interact.getClickCount()+clickCount,
+					interact.getCommentCount()+commentCount,
+					interact.getLikedCount()+likedCount,
+					interact.getDuration());
+		} else {
+			interactId = keyGenService.generateId(Admin.KEYGEN_INTERACT_WORLD_ID);
+			interactWorldDao.saveInteract(new InteractWorld(interactId, worldId, clickCount,
+					commentCount, likedCount, minuteDuration/60>0?minuteDuration/60:1,//若不足一个钟，就按一个钟来计算
+					dateAdded, Tag.TRUE));
+		}
+		
+		// 保存播放
+		if(clickCount > 0) {
+			List<Integer> countList = getScheduleCountV2(clickCount, minuteDuration);
+			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, countList.size());
+			batchSaveClick(interactId, worldId, countList, dateAdded, scheduleDateList);
+		}
+		
+		//
+		//获取非粉僵尸用户、和用户僵尸粉所需总数
+		//因为*Rate是整数，范围在0-100代表0%-100%
+		//
+		List<Integer> fzList = null;
+		List<Integer> unFzList = null;
+		int fzListLength=0;
+		
+		//计算粉丝马甲数
+		int followZombiesTotal = likedCount * likeFromFollowRate + likedCount * ( 100 -  likeFromFollowRate)* likeToFollowRate
+				> commentCount * commentFromFollowRate ? likedCount * likeFromFollowRate : commentCount * commentFromFollowRate;
+		followZombiesTotal = Math.round(followZombiesTotal / 100.00f);
+		int unFollowZombiesTotal = likedCount > commentCount ? likedCount - followZombiesTotal : commentCount - followZombiesTotal;
+		
+		//查询粉丝马甲
+		if ( followZombiesTotal > 0){
+			try{
+				fzList = zombieMapper.queryNotInteractNRandomFollowZombie(userId, worldId,followZombiesTotal);
+				if(fzList != null){
+					fzListLength = fzList.size();
+				}
+			}catch(Exception e){
+				logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".worldId="+worldId+".\nnow set fzList is null.\ncause:"+e.getMessage());
+				fzList = null;
+				fzListLength = 0;
+			}
+		}
+		
+		//非粉丝马甲
+		try{
+			int unFollowZombieNeedTotal = followZombiesTotal + unFollowZombiesTotal - fzListLength;
+			if(unFollowZombieNeedTotal > 0){
+				unFzList = zombieChannelService.queryNotInteractNRandomNotFollowZombie(userId, channelId, worldId, unFollowZombieNeedTotal);
+				if( null == unFzList || unFzList.size() == 0){
+					logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".channelId="+channelId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
+					throw new Exception("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".channelId="+channelId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
+				}
+			}
+			
+		}catch(Exception e){
+			logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".channelId="+channelId+",need:"+(followZombiesTotal + unFollowZombiesTotal - fzListLength)+".\nnow set fzList is null.\ncause:"+e.getMessage());
 		}
 		//保存喜欢
 		if(likedCount > 0) {
@@ -841,7 +1006,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		// 保存粉丝互动
 		if(followCount > 0) {
-			List<Integer> uids = zombieMapper.queryNotInteractNRandomNotFollowZombie(userId, degreeId, followCount);
+			List<Integer> uids = zombieMapper.queryNRandomNotFollowZombie(userId, degreeId, followCount);
 			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, followCount);
 			List<InteractUserFollow> list = new ArrayList<InteractUserFollow>();
 			for(int i = 0; i < uids.size(); i++) {
@@ -1445,6 +1610,12 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	}
 	
 	@Override
+	public void saveUserInteractByWorldId(Integer worldId,Integer followCount,Integer minuteDuration)throws Exception{
+		Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
+		saveUserInteract(uid,followCount,minuteDuration);
+	}
+	
+	@Override
 	public void saveInteractV3(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception{
 		//查询对应的马甲zombieDegreeId
 		Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
@@ -1465,5 +1636,12 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			throw new Exception("saveInteractV3:userLevelListService.QueryUserlevelByUserId is null.\nuserId="+uid);
 		}
 		saveInteractV3(uid,needZombieDegreeId,worldId,clickCount,likeCount,commentIds,minuteDuration);
+	}
+	
+	@Override
+	public void saveChannelInteractV3(Integer channelId,Integer worldId,Integer clickCount,
+			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception{
+		Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
+		saveChannelInteractV3(uid,channelId,worldId,clickCount,likedCount,commentIds,minuteDuration);
 	}
 }

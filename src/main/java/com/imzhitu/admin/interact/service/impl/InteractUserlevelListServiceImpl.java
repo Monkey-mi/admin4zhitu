@@ -147,7 +147,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 			
 			zombieDegreeUserLevelList = zombieDegreeUserLevelService.queryZombieDegree(null, null, null);
 		}catch(Exception e){
-			logger.warn(e.getStackTrace());
+			logger.warn(e.getMessage());
 		}
 		for(InteractWorldLabelDto o:interactWorldLabel){//新发织图遍历
 			
@@ -282,7 +282,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						interactWorldService.saveInteractV3(o.getUser_id(),needZombieDegreeId,o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
 								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), null, userlevel.getTime());//添加互动
 					}catch(Exception e){
-						logger.info(e.getStackTrace());
+						logger.info(e.getMessage()+"\n"+e.getCause());
 					}
 					break;
 				}

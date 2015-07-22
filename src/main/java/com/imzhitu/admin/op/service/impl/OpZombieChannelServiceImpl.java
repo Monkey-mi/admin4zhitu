@@ -77,4 +77,11 @@ public class OpZombieChannelServiceImpl extends BaseServiceImpl implements OpZom
 		return zombieChannelMapper.queryZombieChannelTotalCount(dto);
 	}
 
+	@Override
+	public List<Integer> queryNotInteractNRandomNotFollowZombie(Integer userId,
+			Integer channelId, Integer worldId, Integer limit) throws Exception {
+		// TODO Auto-generated method stub
+		return zombieChannelMapper.queryNotInteractNRandomNotFollowZombie(userId, channelId, worldId, limit);
+	}
+
 }

@@ -346,6 +346,20 @@ public interface InteractWorldService extends BaseService {
 			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception;
 	
 	/**
+	 * 添加频道互动V3，与上面的互动不同之处在于马甲的来源不同
+	 * @param userId
+	 * @param channelId
+	 * @param worldId
+	 * @param clickCount
+	 * @param likedCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 */
+	public void saveChannelInteractV3(Integer userId,Integer channelId,Integer worldId,Integer clickCount,
+			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception;
+	
+	/**
 	 * 两个saveUserInteract是一样的，这个接口就是方便那些只有userId没有zombieDegreeId的
 	 * @param userId
 	 * @param followCount
@@ -353,6 +367,15 @@ public interface InteractWorldService extends BaseService {
 	 * @throws Exception
 	 */
 	public void saveUserInteract(Integer userId,Integer followCount,Integer minuteDuration)throws Exception;
+	
+	/**
+	 * 根据worldId来添加用户粉丝互动
+	 * @param worldId
+	 * @param followCount
+	 * @param minuteDuration
+	 * @throws Exception
+	 */
+	public void saveUserInteractByWorldId(Integer worldId,Integer followCount,Integer minuteDuration)throws Exception;
 	
 	/**
 	 * 两个saveInteractV3接口是一样的，这个接口就是方便那些只有worldId没有zombieDegreeId和userId的
@@ -364,5 +387,18 @@ public interface InteractWorldService extends BaseService {
 	 * @throws Exception
 	 */
 	public void saveInteractV3(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
+	
+	/**
+	 * 两个saveChannelInteractV3是一样的，只不过这个方法中因为没有userId
+	 * @param channelId
+	 * @param worldId
+	 * @param clickCount
+	 * @param likedCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 */
+	public void saveChannelInteractV3(Integer channelId,Integer worldId,Integer clickCount,
+			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception;
 	
 }

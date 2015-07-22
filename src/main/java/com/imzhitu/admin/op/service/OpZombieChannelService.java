@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface OpZombieChannelService {
@@ -41,4 +42,15 @@ public interface OpZombieChannelService {
 	 * @throws Exception
 	 */
 	public long queryZombieChannelTotalCount(Integer id,Integer userId,Integer channelId,Integer maxId)throws Exception;
+	
+	/**
+	 * 随机查询n个没有跟该织图互动的频道马甲
+	 * @param userId
+	 * @param channelId
+	 * @param worldId
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Integer> queryNotInteractNRandomNotFollowZombie(Integer userId,Integer channelId,Integer worldId,Integer limit)throws Exception;
 }

@@ -57,6 +57,7 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 		dto.setWorldId(worldId);
 		dto.setLabel_ids(label_ids);
 		dto.setAddDate(new Date());
+		dto.setOperator(operator);
 		
 		List<InteractChannelLevel> channelLevelList = null;
 		long total = channelWorldLabelMapper.queryChannelWorldLabelTotalCount(dto);
@@ -78,14 +79,24 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 			channelWorld.setSuperb(Tag.TRUE);
 			long isSuperFlag = channelWorldMapper.queryChannelWorldCount(channelWorld);
 			
-			//查询 评论ids
+			//查询 评论ids //点赞和粉丝数
 			StringBuilder sb = new StringBuilder();
-			long totalCommentCount = 0;
+			int totalCommentCount = 0;
+			int totalLikeCount = 0;
+			int totalFollowCount = 0;
+			int totalClickCount = 0;
 			Integer [] labelIds = StringUtil.convertStringToIds(label_ids);
+			long rNum = Math.round(Math.random()*1234);
 			if(isSuperFlag == 0){
-				totalCommentCount = channelLevel.getUnSuperMinCommentCount() + Math.round(Math.random()*1234) % (channelLevel.getUnSuperMmaxCommentCount() - channelLevel.getUnSuperMinCommentCount());
+				totalCommentCount = (int)(channelLevel.getUnSuperMinCommentCount() + rNum % (channelLevel.getUnSuperMaxCommentCount() - channelLevel.getUnSuperMinCommentCount()));
+				totalClickCount = (int)(channelLevel.getUnSuperMinClickCount() + rNum % (channelLevel.getUnSuperMaxClickCount() - channelLevel.getUnSuperMinClickCount()));
+				totalFollowCount = (int)(channelLevel.getUnSuperMinFollowCount() + rNum % (channelLevel.getUnSuperMaxFollowCount() - channelLevel.getUnSuperMinFollowCount()));
+				totalLikeCount = (int)(channelLevel.getUnSuperMinLikeCount() + rNum % (channelLevel.getUnSuperMaxLikeCount() - channelLevel.getUnSuperMinLikeCount()));
 			}else{
-				totalCommentCount = channelLevel.getSuperMinCommentCount() + Math.round(Math.random()*1234) % ( channelLevel.getSuperMaxCommentCount() - channelLevel.getSuperMinCommentCount());
+				totalCommentCount = (int)(channelLevel.getSuperMinCommentCount() + rNum % ( channelLevel.getSuperMaxCommentCount() - channelLevel.getSuperMinCommentCount()));
+				totalClickCount = (int)(channelLevel.getSuperMinClickCount() + rNum % ( channelLevel.getSuperMaxClickCount() - channelLevel.getSuperMinClickCount()));
+				totalFollowCount = (int)(channelLevel.getSuperMinFollowCount() + rNum % ( channelLevel.getSuperMaxFollowCount() - channelLevel.getSuperMinFollowCount()));
+				totalLikeCount = (int)(channelLevel.getSuperMinLikeCount() + rNum % ( channelLevel.getSuperMaxLikeCount() - channelLevel.getSuperMinLikeCount()));
 			}
 			Integer avetege = (int)(totalCommentCount / labelIds.length);
 			avetege = avetege > 0 ? avetege : 1;
@@ -110,13 +121,17 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 				}
 			}
 			
+			
+			
 			//评论
 			try{
-				String[] commentIds = sb.toString().split(",");
-				worldService.saveInteractV3(worldId, 0, 0,commentIds , channelLevel.getMinuteTime());
+				String commentStr = sb.toString();
+				String[] commentIds = commentStr.substring(1, commentStr.length()-1).split(",");
+				worldService.saveUserInteractByWorldId(worldId, totalFollowCount, 400);
+				worldService.saveChannelInteractV3(channelId, worldId, totalClickCount, totalLikeCount, commentIds, channelLevel.getMinuteTime());
 				channelWorldLabelMapper.insertChannelWorldLabel(dto);
 			}catch(Exception e){
-				throw new Exception("commentIds:"+sb.toString()+"\n"+e.getStackTrace());
+				throw new Exception("commentIds:"+sb.toString()+"\n"+e.getMessage());
 			}
 		}
 	}

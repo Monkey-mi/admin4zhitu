@@ -21,16 +21,35 @@ public class InteractChannelLevelServiceImpl extends BaseServiceImpl implements 
 	
 	@Override
 	public void insertChannelLevel(Integer channelId,
-			Integer unSuperMinCommentCount, Integer unSuperMaxCommentCount,
-			Integer superMinCommentCount, Integer superMaxCommentCount,Integer minutetime)
+			Integer unSuperMinCommentCount, Integer unSuperMaxCommentCount,	Integer superMinCommentCount, Integer superMaxCommentCount,
+			Integer unSuperMinLikeCount,	Integer unSuperMaxLikeCount,Integer superMinLikeCount,Integer superMaxLikeCount,
+			Integer unSuperMinFollowCount,	Integer unSuperMaxFollowCount,Integer superMinFollowCount,Integer superMaxFollowCount,
+			Integer unSuperMinClickCount,	Integer unSuperMaxClickCount,Integer superMinClickCount,Integer superMaxClickCount,
+			Integer minutetime)
 			throws Exception {
 		// TODO Auto-generated method stub
 		InteractChannelLevel dto = new InteractChannelLevel();
 		dto.setChannelId(channelId);
 		dto.setUnSuperMinCommentCount(unSuperMinCommentCount);
-		dto.setUnSuperMmaxCommentCount(unSuperMaxCommentCount);
+		dto.setUnSuperMaxCommentCount(unSuperMaxCommentCount);
 		dto.setSuperMinCommentCount(superMinCommentCount);
 		dto.setSuperMaxCommentCount(superMaxCommentCount);
+		
+		dto.setUnSuperMinLikeCount(unSuperMinLikeCount);
+		dto.setUnSuperMaxLikeCount(unSuperMaxLikeCount);
+		dto.setSuperMinLikeCount(superMinLikeCount);
+		dto.setSuperMaxLikeCount(superMaxLikeCount);
+		
+		dto.setUnSuperMinFollowCount(unSuperMinFollowCount);
+		dto.setUnSuperMaxFollowCount(unSuperMaxFollowCount);
+		dto.setSuperMinFollowCount(superMinFollowCount);
+		dto.setSuperMaxFollowCount(superMaxFollowCount);
+		
+		dto.setUnSuperMinClickCount(unSuperMinClickCount);
+		dto.setUnSuperMaxClickCount(unSuperMaxClickCount);
+		dto.setSuperMinClickCount(superMinClickCount);
+		dto.setSuperMaxClickCount(superMaxClickCount);
+		
 		dto.setMinuteTime(minutetime);
 		channelLevelMapper.insertChannelLevel(dto);
 	}
@@ -43,16 +62,35 @@ public class InteractChannelLevelServiceImpl extends BaseServiceImpl implements 
 	}
 
 	@Override
-	public void updateChannelLevel(Integer id,Integer unSuperMinCommentCount,
-			Integer unSuperMaxCommentCount, Integer superMinCommentCount,
-			Integer superMaxCommentCount,Integer minutetime) throws Exception {
+	public void updateChannelLevel(Integer id,
+			Integer unSuperMinCommentCount,	Integer unSuperMaxCommentCount, Integer superMinCommentCount,Integer superMaxCommentCount,
+			Integer unSuperMinLikeCount,	Integer unSuperMaxLikeCount,Integer superMinLikeCount,Integer superMaxLikeCount,
+			Integer unSuperMinFollowCount,	Integer unSuperMaxFollowCount,Integer superMinFollowCount,Integer superMaxFollowCount,
+			Integer unSuperMinClickCount,	Integer unSuperMaxClickCount,Integer superMinClickCount,Integer superMaxClickCount,
+			Integer minutetime) throws Exception {
 		// TODO Auto-generated method stub
 		InteractChannelLevel dto = new InteractChannelLevel();
 		dto.setId(id);
 		dto.setUnSuperMinCommentCount(unSuperMinCommentCount);
-		dto.setUnSuperMmaxCommentCount(unSuperMaxCommentCount);
+		dto.setUnSuperMaxCommentCount(unSuperMaxCommentCount);
 		dto.setSuperMinCommentCount(superMinCommentCount);
 		dto.setSuperMaxCommentCount(superMaxCommentCount);
+		
+		dto.setUnSuperMinLikeCount(unSuperMinLikeCount);
+		dto.setUnSuperMaxLikeCount(unSuperMaxLikeCount);
+		dto.setSuperMinLikeCount(superMinLikeCount);
+		dto.setSuperMaxLikeCount(superMaxLikeCount);
+		
+		dto.setUnSuperMinFollowCount(unSuperMinFollowCount);
+		dto.setUnSuperMaxFollowCount(unSuperMaxFollowCount);
+		dto.setSuperMinFollowCount(superMinFollowCount);
+		dto.setSuperMaxFollowCount(superMaxFollowCount);
+		
+		dto.setUnSuperMinClickCount(unSuperMinClickCount);
+		dto.setUnSuperMaxClickCount(unSuperMaxClickCount);
+		dto.setSuperMinClickCount(superMinClickCount);
+		dto.setSuperMaxClickCount(superMaxClickCount);
+		
 		dto.setMinuteTime(minutetime);
 		channelLevelMapper.updateChannelLevel(dto);
 	}

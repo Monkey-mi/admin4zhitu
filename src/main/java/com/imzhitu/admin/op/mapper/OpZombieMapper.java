@@ -74,9 +74,18 @@ public interface OpZombieMapper {
 	 * @return
 	 */
 	@DataSource("master")
-	public List<Integer> queryNotInteractNRandomNotFollowZombie(@Param("concernId")Integer concernId,@Param("degreeId")Integer degreeId,@Param("limit")Integer limit);
+	public List<Integer> queryNotInteractNRandomNotFollowZombie(@Param("concernId")Integer concernId,@Param("degreeId")Integer degreeId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
 	
-	
+	/**
+	 * 
+	 * @param concernId
+	 * @param degreeId
+	 * @param interactId
+	 * @param limit
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<Integer> queryNRandomNotFollowZombie(@Param("concernId")Integer concernId,@Param("degreeId")Integer degreeId,@Param("limit")Integer limit);
 	
 	
 }

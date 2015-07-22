@@ -5,18 +5,43 @@
 		<result property="id" column="id" jdbcType="INTEGER"/>
 		<result property="channelId" column="channel_id" jdbcType="INTEGER"/>
 		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+		
 		<result property="unSuperMinCommentCount" column="uns_min_comment_count" jdbcType="INTEGER"/>
-		<result property="unSuperMmaxCommentCount" column="uns_max_comment_count" jdbcType="INTEGER"/>
+		<result property="unSuperMaxCommentCount" column="uns_max_comment_count" jdbcType="INTEGER"/>
 		<result property="superMinCommentCount" column="s_min_comment_count" jdbcType="INTEGER"/>
 		<result property="superMaxCommentCount" column="s_max_comment_count" jdbcType="INTEGER"/>
+		
+		<result property="unSuperMinLikeCount" column="uns_min_like_count" jdbcType="INTEGER"/>
+		<result property="unSuperMaxLikeCount" column="uns_max_like_count" jdbcType="INTEGER"/>
+		<result property="superMinLikeCount" column="s_min_like_count" jdbcType="INTEGER"/>
+		<result property="superMaxLikeCount" column="s_max_like_count" jdbcType="INTEGER"/>
+		
+		<result property="unSuperMinFollowCount" column="uns_min_follow_count" jdbcType="INTEGER"/>
+		<result property="unSuperMaxFollowCount" column="uns_max_follow_count" jdbcType="INTEGER"/>
+		<result property="superMinFollowCount" column="s_min_follow_count" jdbcType="INTEGER"/>
+		<result property="superMaxFollowCount" column="s_max_follow_count" jdbcType="INTEGER"/>
+		
+		<result property="unSuperMinClickCount" column="uns_min_click_count" jdbcType="INTEGER"/>
+		<result property="unSuperMaxClickCount" column="uns_max_click_count" jdbcType="INTEGER"/>
+		<result property="superMinClickCount" column="s_min_click_count" jdbcType="INTEGER"/>
+		<result property="superMaxClickCount" column="s_max_click_count" jdbcType="INTEGER"/>
+		
 		<result property="minuteTime" column="minute_time" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<!-- 增加 -->
 	<insert id="insertChannelLevel">
 		insert into hts_admin.interact_channel_level (channel_id,uns_min_comment_count,
-							uns_max_comment_count,s_min_comment_count,s_max_comment_count,minute_time)
-			   values (#{channelId},#{unSuperMinCommentCount},#{unSuperMmaxCommentCount},#{superMinCommentCount},#{superMaxCommentCount},#{minuteTime})
+							uns_max_comment_count,s_min_comment_count,s_max_comment_count,
+							uns_min_like_count,uns_max_like_count,s_min_like_count,s_max_like_count,
+							uns_min_follow_count,uns_max_follow_count,s_min_follow_count,s_max_follow_count,
+							uns_min_click_count,uns_max_click_count,s_min_click_count,s_max_click_count,
+							minute_time)
+			   values (#{channelId},#{unSuperMinCommentCount},#{unSuperMaxCommentCount},#{superMinCommentCount},#{superMaxCommentCount},
+						   #{unSuperMinLikeCount},#{unSuperMaxLikeCount},#{superMinLikeCount},#{superMaxLikeCount},
+						   #{unSuperMinFollowCount},#{unSuperMaxFollowCount},#{superMinFollowCount},#{superMaxFollowCount},
+						   #{unSuperMinClickCount},#{unSuperMaxClickCount},#{superMinClickCount},#{superMaxClickCount},
+						   #{minuteTime})
 	</insert>
 	
 	<!-- BATCH DELETE -->
@@ -35,8 +60,8 @@
 			<if test="unSuperMinCommentCount != null">
 				uns_min_comment_count = #{unSuperMinCommentCount},
 			</if>
-			<if test="unSuperMmaxCommentCount != null">
-				uns_max_comment_count = #{unSuperMmaxCommentCount},
+			<if test="unSuperMaxCommentCount != null">
+				uns_max_comment_count = #{unSuperMaxCommentCount},
 			</if>
 			<if test="superMinCommentCount != null">
 				s_min_comment_count = #{superMinCommentCount},
@@ -44,6 +69,46 @@
 			<if test="superMaxCommentCount != null">
 				s_max_comment_count = #{superMaxCommentCount},
 			</if>
+			
+			<if test="unSuperMinLikeCount != null">
+				uns_min_like_count = #{unSuperMinLikeCount},
+			</if>
+			<if test="unSuperMaxLikeCount != null">
+				uns_max_like_count = #{unSuperMaxLikeCount},
+			</if>
+			<if test="superMinLikeCount != null">
+				s_min_like_count = #{superMinLikeCount},
+			</if>
+			<if test="superMaxLikeCount != null">
+				s_max_like_count = #{superMaxLikeCount},
+			</if>
+			
+			<if test="unSuperMinFollowCount != null">
+				uns_min_follow_count = #{unSuperMinFollowCount},
+			</if>
+			<if test="unSuperMaxFollowCount != null">
+				uns_max_follow_count = #{unSuperMaxFollowCount},
+			</if>
+			<if test="superMinFollowCount != null">
+				s_min_follow_count = #{superMinFollowCount},
+			</if>
+			<if test="superMaxFollowCount != null">
+				s_max_follow_count = #{superMaxFollowCount},
+			</if>
+			
+			<if test="unSuperMinClickCount != null">
+				uns_min_click_count = #{unSuperMinClickCount},
+			</if>
+			<if test="unSuperMaxClickCount != null">
+				uns_max_click_count = #{unSuperMaxClickCount},
+			</if>
+			<if test="superMinClickCount != null">
+				s_min_click_count = #{superMinClickCount},
+			</if>
+			<if test="superMaxClickCount != null">
+				s_max_click_count = #{superMaxClickCount},
+			</if>
+			
 			<if test="minuteTime != null">
 				minute_time = #{minuteTime}
 			</if>
