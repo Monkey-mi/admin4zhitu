@@ -210,6 +210,10 @@ function drawOptArea($worldOpt, worlds, index) {
  */
 function drawChannelWorldLabelBtn($opt2LineBtn, worlds, index) {
 	var world = worlds[index];
+	if(world.valid == 0 || world.shield == 1) {
+		return '';
+	}
+	
 	var ret = '';
 	$.post("./admin_interact/channelWorldLabel_queryChannelWorldLabel",{
 		'channelId':world['channelId'],
