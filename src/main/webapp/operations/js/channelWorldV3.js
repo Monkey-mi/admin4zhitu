@@ -57,7 +57,7 @@ function loadData(pageNumber, pageSize) {
 						titlePath = world['titlePath'];
 					dataList.push(world);
 					var $worldOpt = $('<div class="world-opt-wrap"></div>');
-					drawWorldOpt($worldOpt, worlds, i);
+					drawWorld($worldOpt, worlds, i);
 					$worldBox.append($worldOpt);
 				}
 				$("#page-loading").hide();
@@ -73,7 +73,7 @@ function loadData(pageNumber, pageSize) {
  * @param index
  * @return
  */
-function drawWorldOpt($worldOpt, worlds, index) {
+function drawWorld($worldOpt, worlds, index) {
 	var world = worlds[index],
 		worldId = world['id'],
 		ver = world['ver'],
@@ -111,26 +111,11 @@ function drawWorldOpt($worldOpt, worlds, index) {
 		+'</div>');
 	var $world = $('<div class="world" />');
 
-	/*添加操作按钮*/
-	var $opt = $('<div class="world-opt-head-wrap">'
-			+ '<span class="world-opt-head">生效</span>'
-			+ '<span>|</span>'
-			+ '<span class="world-opt-head">精选</span>'
-			+ '<span>|</span>'
-			+ '<span class="world-opt-head">操作</span>'
-			+ '<span>|</span>'
-			+ '<span class="world-opt-head">计划</span>'
-			+ '<span>|</span>'
-			+ '<span class="world-opt-head">完成</span>'
-			+'</div>' 
-			);
-	
 	$worldOpt.addClass('world-margin');
 	$worldOpt.append($authorInfo);
 	$worldOpt.append($world);
 	$worldOpt.append($worldInfo);
-	$worldOpt.append($opt);
-	drawWorldOptBtn($worldOpt, worlds, index);
+	drawOptArea($worldOpt, worlds, index);
 	$world.appendtour({
 		'width':250,
 		'worldId':worldId,
@@ -143,36 +128,77 @@ function drawWorldOpt($worldOpt, worlds, index) {
 }
 
 /**
- * 绘制操作按钮
+ * 绘制操作区域
  * 
  * @param $worldOpt
  * @param worlds
  * @param index
  * @return
  */
-function drawWorldOptBtn($worldOpt, worlds, index) {
+function drawOptArea($worldOpt, worlds, index) {
 	var world = worlds[index];
-	var $optBtn = 
-		$('<div class="world-opt-btn-wrap">'
-		+ '<span class="world-opt-btn">'
-		+ getChannelWorldValid(world['channelWorldValid'], world, index)
-		+ '</span>'+ '<span>|</span>'
-		+ '<span class="world-opt-btn">'
-		+ getSuperb(world['superb'], world, index)
-		+ '</span>'+ '<span>|</span>'
-		+ '<span class="world-opt-btn">'
-		+ getDeleteStatusOpt(world['channelWorldValid'], world, index)
-		+ '</span>'+ '<span>|</span>'
-		+ '<span class="world-opt-btn">'
-		+ getBeSchedulaOpt(world['beSchedula'], world, index)
-		+ '</span>'+ '<span>|</span>'
-		+ '<span class="world-opt-btn">'
-		+ getSchedulaCompleteOpt(world['schedulaComplete'], world, index)
-		+ '</span>'
-		+ '</div>'
-		);
-	$worldOpt.append($optBtn);
-	drawChannelWorldLabelBtn($worldOpt, worlds, index);
+	// 声明操作区域对象 
+	var $opt = $('<div class="world-opt-area"></div>');
+	
+	// 添加第一行操作title
+	var $opt1LineTitle = $('<div class="world-opt-head-wrap">'
+			+ '<span class="world-opt-head">生效</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">精选</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">操作</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">计划</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">完成</span>'
+			+'</div>');
+	
+	// 添加第一行操作title对应的按钮
+	var $opt1LineBtn = $('<div class="world-opt-btn-wrap">'
+			+ '<span class="world-opt-btn">'
+			+ getChannelWorldValid(world['channelWorldValid'], world, index)
+			+ '</span>'+ '<span>|</span>'
+			+ '<span class="world-opt-btn">'
+			+ getSuperb(world['superb'], world, index)
+			+ '</span>'+ '<span>|</span>'
+			+ '<span class="world-opt-btn">'
+			+ getDeleteStatusOpt(world['channelWorldValid'], world, index)
+			+ '</span>'+ '<span>|</span>'
+			+ '<span class="world-opt-btn">'
+			+ getBeSchedulaOpt(world['beSchedula'], world, index)
+			+ '</span>'+ '<span>|</span>'
+			+ '<span class="world-opt-btn">'
+			+ getSchedulaCompleteOpt(world['schedulaComplete'], world, index)
+			+ '</span>'
+			+ '</div>');
+	
+	// 添加分隔线
+	var $optDivider = $('<hr class="divider"></hr>');
+	
+	// 添加第二行操作title
+	var $opt2LineTitle = $('<div class="world-opt-head-wrap">'
+			+ '<span class="world-opt-head">评论</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">标签</span>'
+			+ '</div>');
+	
+	// 添加第二行操作title对应的按钮
+	var $opt2LineBtn = $('<div class="world-opt-btn-wrap"></div>');
+	// 向第二行按钮中添加元素
+	$line2CommentBtn = $('<span class="world-opt-btn">'
+			+ getCommentInteractOpt(world['worldId'], world, index)
+			+ '</span>'
+			+ '<span>|</span>');
+	$opt2LineBtn.append($line2CommentBtn);
+	drawChannelWorldLabelBtn($opt2LineBtn, worlds, index);
+	
+	$opt.append($opt1LineTitle);
+	$opt.append($opt1LineBtn);
+	$opt.append($optDivider);
+	$opt.append($opt2LineTitle);
+	$opt.append($opt2LineBtn);
+	
+	$worldOpt.append($opt);
 }
 
 /**
@@ -182,40 +208,34 @@ function drawWorldOptBtn($worldOpt, worlds, index) {
  * @param index
  * @return
  */
-function drawChannelWorldLabelBtn($worldOpt, worlds, index) {
+function drawChannelWorldLabelBtn($opt2LineBtn, worlds, index) {
 	var world = worlds[index];
-	var optBtnStr = 
-		'<hr class="divider"></hr>'
-		+ '<div class="world-opt-btn-wrap">'
-		+ '<span class="world-opt-head">评论</span>'
-		+ '<span>|</span>'
-		+ '<span class="world-opt-head">标签</span>'
-		+ '</div>'
-		+ '<div class="world-opt-btn-wrap">'
-		+ '<span class="world-opt-btn">'
-		+ getCommentInteractOpt(world['worldId'], world, index)
-		+ '</span>'
-		+ '<span>|</span>';
-	
+	var ret = '';
 	$.post("./admin_interact/channelWorldLabel_queryChannelWorldLabel",{
 		'channelId':world['channelId'],
 		'worldId':world['id']},function(result){
-			
 			if(result['result'] == 0){
+				var data = result.labelInfo;
 				if (!result.interact) {
-					var data=result.labelInfo;
 					for (var i=0; i<data.length; i++) {
-						optBtnStr += '<span><a onclick="putWorldCommentLabelId(' + world.id + ',' + data[i].commentLabelId + ')">#' + data[i].commentLabelName + '</a></span>';
+						var labelId = data[i].commentLabelId;
+						var labelName = data[i].commentLabelName;
+						ret += '<span id="commentLabel-'+world.id+'-'+labelId+'" class="label-btn-unclc-bg" data-label="'+labelId+'">'
+								+ '<a href="#" style="text-decoration:none;" onclick="putWorldCommentLabelId(' 
+								+ world.id + ',' + labelId + ',' + index + ')">#' + labelName + '</a>'
+								+ '<input type="hidden" value="' + labelId + '"></input>'
+								+ '</span>&nbsp;';
 					}
-					
-					optBtnStr += '<a id="comment_label_submit" href="#" onclick="submitAddChannelWorldLabel('
-						+ world.id + ', ' + index + ');" class="easyui-linkbutton" iconCls="icon-add">确定</a>'
-						+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>'
-						+'</div>';
-					
-					$worldOpt.append($(optBtnStr));
+					ret += '<input type="button" value="确定" onclick="submitAddChannelWorldLabel('
+						+ world.id + ', ' + index + ')"></input>'
+						+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>';
+				} else {
+					for (var i=0; i<data.length; i++) {
+						ret += '<span>#' + data[i].commentLabelName + '</span>&nbsp;';
+					}
 				}
 			}
+			$opt2LineBtn.append($(ret));
 		},"json");
 }
 
@@ -224,19 +244,18 @@ function drawChannelWorldLabelBtn($worldOpt, worlds, index) {
  * @param worldId
  * @param labelId
  */
-function putWorldCommentLabelId(worldId, labelId) {
+function putWorldCommentLabelId(worldId, labelId, index) {
+	var bgColor = $("#commentLabel-" + worldId + "-" + labelId).attr("class");
+	if (bgColor == "label-btn-onclc-bg") {
+		$("#commentLabel-" + worldId + "-" + labelId).attr("class", "label-btn-unclc-bg");
+	} else if (bgColor == "label-btn-unclc-bg") {
+		$("#commentLabel-" + worldId + "-" + labelId).attr("class", "label-btn-onclc-bg");
+	}
+	
+	var spanNods = $(".world-opt-area:eq("+index+") span.label-btn-onclc-bg");
 	var ids = [];
-	if ($("#worldCommentLabel-" + worldId).val() == "") {
-		ids.push(labelId);
-	} else {
-		
-		var labelIds = $("#worldCommentLabel-" + worldId).val().split(",");
-		ids = labelIds;
-		for (var i=0; i<labelIds.length; i++) {
-			if (labelIds[i] != labelId) {
-				ids.push(labelId);
-			}
-		}
+	for (var i=0; i<spanNods.length; i++) {
+		ids.push($(spanNods[i]).children('input').val());
 	}
 	$("#worldCommentLabel-" + worldId).val(ids.toString());
 }
@@ -254,7 +273,7 @@ function submitAddChannelWorldLabel(worldId, index){
 		'labelIds'	: $("#worldCommentLabel-" + worldId).val()
 	},function(result){
 		if(result['result'] == 0){
-			updateChannelWorldLabelBtn(index, "labelInfo", "interact", 1);
+			updateValue(index);
 		}else{
 			$.messager.alert('失败提示',result['msg']);
 		}
@@ -262,27 +281,13 @@ function submitAddChannelWorldLabel(worldId, index){
 };
 
 /**
- * 更新频道织图标签
- * @param index
- * @param key
- * @param value
- * @return
- */
-function updateChannelWorldLabelBtn(index,key_level_1,key_level_2,value){
-	var $worldOpt = $(".world-opt-wrap:eq("+index+")");
-	dataList[index][key_level_1][key_level_2] = value;
-	removeWorldOptBtn($worldOpt);
-	drawWorldOptBtn($worldOpt, dataList, index);
-};
-
-/**
- * 移出操作按钮
+ * 移除操作区域
  * 
  * @param $worldOpt
  * @return
  */
-function removeWorldOptBtn($worldOpt) {
-	$worldOpt.children('.world-opt-btn-wrap:eq(0)').remove();
+function removeWorldOptArea($worldOpt) {
+	$worldOpt.children('.world-opt-area:eq(0)').remove();
 };
 
 /**
@@ -310,10 +315,10 @@ function getAuthorName(value, row, index) {
  * @return
  */
 function updateValue(index, key, value) {
-	var $worldOpt = $(".world-opt-wrap:eq("+index+")");
 	dataList[index][key] = value;
-	removeWorldOptBtn($worldOpt);
-	drawWorldOptBtn($worldOpt, dataList, index);
+	var $worldOpt = $(".world-opt-wrap:eq("+index+")");
+	removeWorldOptArea($worldOpt);
+	drawOptArea($worldOpt, dataList, index);
 };
 
 /**
@@ -329,8 +334,8 @@ function updateValues(index, keys, values) {
 	for(var i = 0; i < keys.length; i++) {
 		dataList[index][keys[i]] = values[i];
 	}
-	removeWorldOptBtn($worldOpt);
-	drawWorldOptBtn($worldOpt, dataList, index);
+	removeWorldOptArea($worldOpt);
+	drawOptArea($worldOpt, dataList, index);
 };
 
 /**
