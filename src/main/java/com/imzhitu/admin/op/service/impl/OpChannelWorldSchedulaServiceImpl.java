@@ -106,29 +106,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	}
 	
 	/**
-	 * 添加
-	 * @throws Exception
-	 */
-	@Override
-	public void insertChannelWorldSchedula(Integer worldId,
-			Integer channelId,Integer finish,Integer valid,Integer operatorId)throws Exception{
-		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
-		Date now = new Date();
-		dto.setWorldId(worldId);
-		long r = channelWorldSchedulaMapper.queryChannelWorldSchedulaCount(dto);
-		dto.setChannelId(channelId);
-		dto.setModifyDate(now);
-		dto.setAddDate(now);
-		dto.setSchedulaDate(now);
-		dto.setFinish(finish);
-		dto.setValid(valid);
-		dto.setOperatorId(operatorId);
-		if(0 == r){
-			channelWorldSchedulaMapper.insertChannelWorldSchedula(dto);
-		}
-	}
-	
-	/**
 	 * 批量添加
 	 */
 	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
@@ -232,4 +209,5 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			}
 		}
 	}
+	
 }

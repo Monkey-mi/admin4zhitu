@@ -17,11 +17,6 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	private Logger logger = Logger.getLogger(OpChannelWorldSchedulaServiceTest.class);
 	
 	@Test
-	public void insertChannelWorldSchedulaTest()throws Exception{
-		service.insertChannelWorldSchedula( 1163, 1, 0, 0, 0);
-	}
-	
-	@Test
 	public void updateChannelWorldSchedulaTest()throws Exception{
 		service.updateChannelWorldSchedula(null, null, 1163, 2, 1, 1, 1, new Date());
 	}

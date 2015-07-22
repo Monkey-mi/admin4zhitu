@@ -74,19 +74,6 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	public String addChannelWorldSchedula(){
-		try{
-			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			service.insertChannelWorldSchedula(  worldId, channelId, finish, valid, user.getId());
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
-		}catch(Exception e){
-			e.printStackTrace();
-			JSONUtil.optFailed(OptResult.ADD_FAILED, jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	
 	public String batchAddChannelWorldSchedula(){
 		try{
 			String[] wids = StringUtil.convertStringToStrs(request.getParameter("wids"));

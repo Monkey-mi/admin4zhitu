@@ -30,13 +30,6 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	public void delChannelWorldSchedula(String idsStr)throws Exception;
 	
 	/**
-	 * 添加
-	 * @throws Exception
-	 */
-	public void insertChannelWorldSchedula(Integer worldId,
-			Integer channelId,Integer finish,Integer valid,Integer operatorId)throws Exception; 
-	
-	/**
 	 * 批量添加
 	 * @param wIds
 	 * @param superbWids	加精的worldid集合，用,分割

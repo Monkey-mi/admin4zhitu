@@ -253,23 +253,6 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 	//					return false;
 					},"json");
 				}
-				/*
-				if(channelId && typeId){
-					$.post("./admin_op/cwSchedula_addChannelWorldSchedula",{
-						'worldId':worldId,
-						'channelId':channelId,
-						'valid':0,
-						'finish':0
-					},function(result){
-						if(result['result'] == 0){
-							//	updateValue(index,'channelName',channelName);
-						}else{
-							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-						}
-						$('#htm_type').window('close');  //关闭添加窗口
-	//					return false;
-					},"json");
-				}*/
 				
 				return false;
 				
