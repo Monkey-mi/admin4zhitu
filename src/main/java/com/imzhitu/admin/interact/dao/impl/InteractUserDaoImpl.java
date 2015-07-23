@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -134,15 +135,19 @@ public class InteractUserDaoImpl extends BaseDaoImpl implements InteractUserDao 
 	
 	@Override
 	public InteractUser queryUserInteractByUID(Integer userId) {
-		return queryForObjectWithNULL(QUERY_INTERACT_BY_USER_ID, new Object[]{userId}, 
-				new RowMapper<InteractUser>() {
-
-					@Override
-					public InteractUser mapRow(ResultSet rs, int num)
-							throws SQLException {
-						return buildInteract(rs);
-					}
-		});
+		try{
+			return getMasterJdbcTemplate().queryForObject(QUERY_INTERACT_BY_USER_ID, new Object[]{userId}, 
+					new RowMapper<InteractUser>() {
+	
+						@Override
+						public InteractUser mapRow(ResultSet rs, int num)
+								throws SQLException {
+							return buildInteract(rs);
+						}
+			});
+		}catch(EmptyResultDataAccessException e){
+			return null;
+		}
 	}
 	
 	@Override
