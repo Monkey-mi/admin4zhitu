@@ -13,7 +13,9 @@ import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
+import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
+import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelWorldSchedulaMapper;
 import com.imzhitu.admin.op.service.ChannelService;
 import com.imzhitu.admin.op.service.OpChannelWorldSchedulaService;
@@ -27,6 +29,10 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	
 	@Autowired
 	private OpChannelWorldSchedulaMapper channelWorldSchedulaMapper;
+	
+	@Autowired
+	private ChannelWorldMapper channelWorldMapper;
+	
 	@Value("${urlPrefix}")
 	private String urlPrefix;
 	public String getUrlPrefix() {
@@ -117,6 +123,12 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			if(s.equals(""))continue;
 			Integer worldId = Integer.parseInt(s);
 			
+			// 查询频道织图，list查出来应该只有一个对象
+			OpChannelWorld cwDto = new OpChannelWorld();
+			cwDto.setChannelId(channelId);
+			cwDto.setWorldId(worldId);
+			List<OpChannelWorldDto> cwList = channelWorldMapper.queryChannelWorlds(cwDto);
+			
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
 			dto.setWorldId(worldId);
 			dto.setChannelId(channelId);
@@ -132,7 +144,12 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			if (superbWids.contains(s)) {	// 若加精的集合中包含当前操作的worldId，则设置加精
 			    dto.setSuperb(1);
 			} else {
-			    dto.setSuperb(0);
+			    // 若不在加精集合中，先判断此对象在频道织图中是否已经是加精的，已经为加精则依旧设置计划加精为1
+			    if ( cwList.get(0).getSuperb() == 1) {
+				dto.setSuperb(1);
+			    } else {
+				dto.setSuperb(0);
+			    }
 			}
 
 			if(0 == r){

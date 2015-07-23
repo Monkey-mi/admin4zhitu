@@ -95,19 +95,20 @@ var maxId = 0,
   		},
   		{field : 'channelWorldSchedulaSuperb',title : '加精',align : 'center', width: 45,
   			formatter: function(value,row,index) {
-  				if(value == 1) {
+  				var superb;
+  				switch(value) {
+  				case 1:
+  					tip = "已加精,点击取消加精";
   					img = "./common/images/ok.png";
-  					return "<img title='加精' class='htm_column_img'  src='" + img + "'/>";
+  					superb = 0;
+  					break;
+  				default:
+  					tip = "点击加精";
+  					img = "./common/images/tip.png";
+  					superb = 1;
+  					break;
   				}
-  				img = "./common/images/tip.png";
-  				return "<img title='未加精' class='htm_column_img' src='" + img + "'/>";
-  			},
-  			editor:{
-  				type:'checkbox',  
-                options:{
-                    on: 1,  
-                    off: 0
-                }
+  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateSchedulaSuperbOp("+ superb +","+ index +")' src='" + img + "'/>";
   			}
   		},
   		{field : 'beSchedula',title : '计划',align : 'center', width: 45,
@@ -634,6 +635,16 @@ function queryChannelByIdOrName(){
 			
 		},"json");
 	}
+};
+
+// 更新计划加精列点击后图片
+function updateSchedulaSuperbOp(superb, index) {
+	$('#htm_table').datagrid('updateRow',{
+		index: index,
+		row: {
+			channelWorldSchedulaSuperb: superb
+		}
+	});
 }
 
 </script>
