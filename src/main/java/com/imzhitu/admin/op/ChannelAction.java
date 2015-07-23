@@ -56,21 +56,6 @@ public class ChannelAction extends BaseCRUDAction{
 	private Integer superb;
 	
 	/**
-	 * 查询频道缓存
-	 * 
-	 * @return
-	 */
-	public String updateChannelCache() {
-		try {
-			channelService.updateChannelCache();
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
 	 * 更新频道明星缓存
 	 * 
 	 * @return
@@ -723,51 +708,6 @@ public class ChannelAction extends BaseCRUDAction{
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return null;
-	}
-	
-	/**
-	 * 添加频道封面缩略图
-	 * 
-	 * @return
-	 */
-	public String saveChannelCover() {
-		try {
-			channelService.saveChannelCover(cover);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-
-	/**
-	 * 删除频道封面缩略图
-	 * 
-	 * @return
-	 */
-	public String deleteChannelCover() {
-		try {
-			channelService.deleteChannelCover(cover);
-			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 更新频道封面缓存
-	 * 
-	 * @return
-	 */
-	public String updateChannelCoverCache() {
-		try {
-			channelService.updateChannelCoverCache();
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
 	}
 	
 	public ChannelService getChannelService() {

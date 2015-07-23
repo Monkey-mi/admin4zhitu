@@ -29,11 +29,6 @@ public class ChannelServiceTest extends BaseTest {
 	private ChannelService service;
 	
 	@Test
-	public void testUpdateChannelCache() throws Exception {
-		service.updateChannelCache();
-	}
-	
-	@Test
 	public void testUpdateChannelTopOneCache() throws Exception {
 		service.updateTopOneCache();
 	}
@@ -79,17 +74,6 @@ public class ChannelServiceTest extends BaseTest {
 	}
 	
 	@Test
-	public void testSaveChannel() throws Exception {
-//		OpChannel channel = new OpChannel();
-//		int rand = (int)(Math.random() * 10000);
-//		channel.setChannelName("测试频道" + rand); 
-//		channel.setValid(Tag.TRUE);
-//		channel.setChannelTitle("测试频道标题" + rand);
-//		channel.setChannelIcon("http://imzhitu.qiniudn.com/op%2Fchannel%2F%E5%90%83%E8%B4%A7_%402x.png");
-//		service.saveChannel(channel);
-	}
-	
-	@Test
 	public void testUpdateChannel() throws Exception {
 		OpChannel channel = new OpChannel();
 		channel.setId(4);
@@ -122,19 +106,6 @@ public class ChannelServiceTest extends BaseTest {
 		for(OpChannelStarDto dto : starList) {
 			Log.debug(dto.getChannelStarId() + " : " + dto.getId() + " : " + star.getWeight() + dto.getUserName());
 		}
-		
-//		logNumberList(logger, new TestNumberListAdapter(){
-//
-//			@Override
-//			public void buildTestNumberList(Map<String, Object> jsonMap)
-//					throws Exception {
-//				OpChannelStar star = new OpChannelStar();
-//				star.setChannelId(8);
-////				service.buildStarDto(star, 1, 10, jsonMap);
-////				star.setMaxId(3);
-//				service.buildStarDto(star, 2, 10, jsonMap);
-//			}
-//		});
 	}
 	
 	

@@ -27,7 +27,6 @@ import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.common.pojo.OpChannel;
-import com.imzhitu.admin.common.pojo.OpChannelCover;
 import com.imzhitu.admin.common.pojo.OpChannelNameDto;
 import com.imzhitu.admin.common.pojo.OpChannelStar;
 import com.imzhitu.admin.common.pojo.OpChannelStarDto;
@@ -37,13 +36,10 @@ import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
-import com.imzhitu.admin.op.dao.ChannelCacheDao;
-import com.imzhitu.admin.op.dao.ChannelCoverCacheDao;
 import com.imzhitu.admin.op.dao.ChannelStarCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneTitleCacheDao;
 import com.imzhitu.admin.op.dao.UserRecommendDao;
-import com.imzhitu.admin.op.mapper.ChannelCoverMapper;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
 import com.imzhitu.admin.op.mapper.ChannelStarMapper;
 import com.imzhitu.admin.op.mapper.ChannelTopOneMapper;
@@ -77,9 +73,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Value("${admin.op.channelStarLimit}")
 	private Integer channelStarLimit;
-	
-	@Autowired
-	private ChannelCacheDao channelCacheDao;
 	
 	@Autowired
 	private ChannelStarCacheDao channelStarCacheDao;
@@ -130,21 +123,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	private UserRecommendDao userRecommendDao;
 	
 	@Autowired
-	private ChannelCoverMapper channelCoverMapper;
-	
-	@Autowired
-	private ChannelCoverCacheDao channelCoverCacheDao;
-	
-	@Autowired
-	private com.hts.web.operations.dao.ChannelThemeCacheDao webThemeCacheDao;
-	
-	@Autowired
 	private com.hts.web.operations.service.ChannelService webChannelService;
 
-	private static final int CHANNEL_CACHE_LIMIT_2_9_89 = 8;
-	
-//	private Integer channeCachelLimit = 1000;
-	
 	private Integer channelCoverLimit = 5;
 
 	public Logger logger = Logger.getLogger(ChannelServiceImpl.class);
@@ -163,14 +143,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	public void setChannelCoverLimit(Integer channelCoverLimit) {
 		this.channelCoverLimit = channelCoverLimit;
-	}
-
-	@Override
-	public void updateChannelCache() throws Exception {
-//		channelCacheDao.updateChannel(channeCachelLimit);
-		webThemeCacheDao.updateTheme();
-		channelCacheDao.updateOldChannel();
-		updateChannelCoverCache();
 	}
 
 	@Override
@@ -1207,34 +1179,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	@Override
 	public OpChannelTopOne queryTopOneById(Integer id) {
 		return channelTopOneMapper.queryTopOneById(id);
-	}
-
-	@Override
-	public void saveChannelCover(OpChannelCover cover) throws Exception {
-		channelCoverMapper.save(cover);
-	}
-
-	@Override
-	public void updateChannelCover(OpChannelCover cover) throws Exception {
-		channelCoverMapper.update(cover);
-	}
-
-	@Override
-	public void deleteChannelCover(OpChannelCover cover) throws Exception {
-		channelCoverMapper.deleteByChannelIdAndWID(cover);
-	}
-
-	@Override
-	public void updateChannelCoverCache() throws Exception {
-		List<com.hts.web.common.pojo.OpChannel> clist 
-			= channelCacheDao.queryChannel(CHANNEL_CACHE_LIMIT_2_9_89);
-		if(clist.size() > 0) {
-			Integer[] cids = new Integer[clist.size()];
-			for(int i = 0; i < clist.size(); i++) {
-				cids[i] = clist.get(i).getId();
-			}
-			channelCoverCacheDao.updateCoverCache(cids, channelCoverLimit);
-		}
 	}
 
 	@Override

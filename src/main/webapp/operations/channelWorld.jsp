@@ -52,7 +52,6 @@ var maxId = 0,
 	updateValidURL = "./admin_op/channel_updateChannelWorldValid?ids=",
 	addRecommendMsgURL = "./admin_op/channel_addChannelWorldRecommendMsgs?ids=",
 	queryChannelURL = "./admin_op/channel_queryChannelById",
-	updateCoverCacehURL = "./admin_op/channel_updateChannelCoverCache",
 	queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName",// 根据id或民称查询频道
 	columnsFields = [
 		{field : 'ck',checkbox : true },
@@ -132,18 +131,6 @@ var maxId = 0,
   				}
   				return '';
   			} 			
-  		},
-  		{field : 'isCover',title : '频道封面',align : 'center', width: 45,
-  			formatter: function(value,row,index) {
-  				if(value > 0) {
-  					img = "./common/images/undo.png";
-  					return "<img title='点击取消频道封面' class='htm_column_img pointer'  src='" + img 
-  						+ "' onclick='javascript:removeCover(\""+ row['channelId'] + "\",\""+ row['worldId'] + "\",\"" + index + "\")' />";
-  				}
-  				img = "./common/images/tip.png";
-  				return "<img title='点击设置成频道封面' class='htm_column_img pointer'  src='" + img 
-  					+ "' onclick='javascript:addCover(\""+ row['channelId'] + "\",\""+ row['worldId'] + "\",\"" + index + "\")' />";
-  			}
   		},
   		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160},
   		dateModified,
@@ -571,37 +558,6 @@ function addSubmit(){
 		
 	},"json");
 }
-
-function removeCover(channelId, worldId, index) {
-	$("#htm_table").datagrid('loading');
-	$.post("./admin_op/channel_deleteChannelCover",{
-		'cover.channelId':channelId,
-		'cover.worldId':worldId
-		},function(result){
-			if(result['result'] == 0) {
-				updateValue(index,'isCover','0');	
-			} else {
-				$.messager.alert('失败提示',result['msg']);  //提示失败信息
-			}
-			$("#htm_table").datagrid('loaded');
-		},"json");
-}
-
-function addCover(channelId, worldId, index) {
-	$("#htm_table").datagrid('loading');
-	$.post("./admin_op/channel_saveChannelCover",{
-		'cover.channelId':channelId,
-		'cover.worldId':worldId
-		},function(result){
-			if(result['result'] == 0) {
-				updateValue(index,'isCover','1');	
-			} else {
-				$.messager.alert('失败提示',result['msg']);  //提示失败信息
-			}
-			$("#htm_table").datagrid('loaded');
-		},"json");
-}
-
 
 /**
  * 根据频道Id或名字查询频道

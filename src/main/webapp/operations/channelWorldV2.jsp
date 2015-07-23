@@ -52,7 +52,6 @@ var maxId = 0,
 	updateValidURL = "./admin_op/channel_updateChannelWorldValid?ids=",
 	addRecommendMsgURL = "./admin_op/channel_addChannelWorldRecommendMsgs?ids=",
 	queryChannelURL = "./admin_op/channel_queryChannelById",
-	updateCoverCacehURL = "./admin_op/channel_updateChannelCoverCache",
 	columnsFields = [
 		{field : 'ck',checkbox : true },
 		{field : recordIdKey,title : '序号',align : 'center',width : 60},
@@ -98,25 +97,6 @@ var maxId = 0,
 	addHeight = 190, //添加信息高度
 	addTitle = "添加频道织图", //添加信息标题
 	
-	pageButtons = [{
-        iconCls:'icon-save',
-        text:'更新封面缓存',
-        handler:function(){
-        	$.messager.confirm('提示', '确定更新封面缓存？', function(r){ 	
-			if(r){				
-				$('#htm_table').datagrid('loading');
-				$.post(updateCoverCacehURL, function(result){
-					$('#htm_table').datagrid('loaded');
-					if(result['result'] == 0) {
-						$.messager.alert('提示',result['msg']);
-					} else {
-						$.messager.alert('提示',result['msg']);
-					}
-				});				
-			}	
-		});	
-        }
-    }],
     onBeforeInit = function() {
 		showPageLoading();
 		var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
@@ -524,47 +504,6 @@ function addSubmit(){
 		
 	},"json");
 }
-
-function removeCover(channelId, worldId, index) {
-	$("#htm_table").datagrid('loading');
-	$.post("./admin_op/channel_deleteChannelCover",{
-		'cover.channelId':channelId,
-		'cover.worldId':worldId
-		},function(result){
-			if(result['result'] == 0) {
-				updateValue(index,'isCover','0');	
-			} else {
-				$.messager.alert('失败提示',result['msg']);  //提示失败信息
-			}
-			$("#htm_table").datagrid('loaded');
-		},"json");
-}
-
-function addCover(channelId, worldId, index) {
-	$("#htm_table").datagrid('loading');
-	$.post("./admin_op/channel_saveChannelCover",{
-		'cover.channelId':channelId,
-		'cover.worldId':worldId
-		},function(result){
-			if(result['result'] == 0) {
-				updateValue(index,'isCover','1');	
-			} else {
-				$.messager.alert('失败提示',result['msg']);  //提示失败信息
-			}
-			$("#htm_table").datagrid('loaded');
-		},"json");
-}
-
-
-//function getChannelIdFromCookie(){
-//	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
-//	var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
-//	if(channelId){
-//		channelQueryParam ['world.channelId'] = channelId;
-//		$("#htm_table").datagrid('load',channelQueryParam);
-//		$("#channelNameTitle").text(channelName);
-//	}
-//}
 
 /**
  * 改变表格表现形式

@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.OpChannel;
-import com.imzhitu.admin.common.pojo.OpChannelCover;
 import com.imzhitu.admin.common.pojo.OpChannelStar;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
@@ -25,13 +24,6 @@ import com.imzhitu.admin.common.pojo.OpChannelWorld;
  */
 public interface ChannelService extends BaseService {
 
-	/**
-	 * 更新频道缓存
-	 * 
-	 * @throws Exception
-	 */
-	public void updateChannelCache() throws Exception;
-	
 	/**
 	 * 更新频道明星缓存
 	 * 
@@ -566,34 +558,6 @@ public interface ChannelService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateChannelStar()throws Exception;
-	
-	/**
-	 * 保存频道封面
-	 * 
-	 * @throws Exception
-	 */
-	public void saveChannelCover(OpChannelCover cover) throws Exception;
-	
-	/**
-	 * 更新频道封面
-	 * 
-	 * @throws Exception
-	 */
-	public void updateChannelCover(OpChannelCover cover) throws Exception;
-	
-	/**
-	 *　删除频道封面
-	 *
-	 * @throws Exception
-	 */
-	public void deleteChannelCover(OpChannelCover cover) throws Exception;
-	
-	/**
-	 * 更新频道封面缓存
-	 * 
-	 * @throws Exception
-	 */
-	public void updateChannelCoverCache() throws Exception;
 	
 	/**
 	 * 搜索频道
