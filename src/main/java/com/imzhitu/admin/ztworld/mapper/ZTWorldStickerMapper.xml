@@ -39,18 +39,18 @@
 	
 	<select id="queryAllSticker" resultMap="HTSWorldStickerDtoMap">
 		select s.*, l.label_name from hts.htworld_sticker s left join hts.htworld_label l 
-		on s.label_id=l.id and s.valid=1 order by s.serial desc;
+		on s.label_id=l.id where s.valid=1 order by s.serial desc;
 	</select>
 	
 	<select id="queryCacheTopSticker" resultMap="HTSWorldStickerDtoMap">
 		select s.*, l.label_name from hts.htworld_sticker s
-		left join hts.htworld_label l on s.label_id=l.id and s.valid=1 and s.set_id=#{setId} 
-		 order by s.serial desc
+		left join hts.htworld_label l on s.label_id=l.id where s.valid=1 and s.set_id=#{setId} 
+		order by s.serial desc
 	</select>
 	
 	<select id="queryCacheRecommendStickerDto" resultMap="HTSWorldStickerDtoMap">
-		select * from hts.htworld_sticker s
-		left join hts.htworld_label l on s.label_id=l.id and s.valid=1 and s.weight>0 
+		select s.*, l.label_name from hts.htworld_sticker s
+		left join hts.htworld_label l on s.label_id=l.id where s.valid=1 and s.weight>0 
 		order by s.serial desc limit #{limit}
 	</select>
 	

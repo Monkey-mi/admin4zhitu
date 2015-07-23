@@ -191,7 +191,7 @@ public class AppLinkDaoImpl extends BaseDaoImpl implements AppLinkDao {
 			rs.getString("app_name"),
 			rs.getString("app_icon"),
 			rs.getString("app_desc"),
-			urlPrefix + rs.getString("short_link")
+			appUrlPrefix + rs.getString("short_link")
 		);
 	}
 	
@@ -213,7 +213,7 @@ public class AppLinkDaoImpl extends BaseDaoImpl implements AppLinkDao {
 				rs.getInt("click_count"),
 				rs.getInt("serial"),
 				rs.getInt("open"));
-		link.setUrl(urlPrefix + rs.getString("short_link"));
+		link.setUrl(appUrlPrefix + rs.getString("short_link"));
 		return link;
 	}
 
