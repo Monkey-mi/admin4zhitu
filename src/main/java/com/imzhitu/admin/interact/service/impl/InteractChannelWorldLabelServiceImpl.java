@@ -108,13 +108,19 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 					if(sb.length() > 0){
 						sb.append(',');
 					}
-					sb.append(commentList.toString());
+					if (commentList != null && commentList.size() > 0) {
+					    String commentStrs = commentList.toString();
+					    sb.append(commentStrs.substring(1, commentStrs.length()-1)); 
+					}
 				}else if( totalCommentCount > 0){
 					List<Integer> commentList = commentService.getRandomCommentIds(labelIds[i], (int)totalCommentCount);
 					if(sb.length() > 0){
 						sb.append(',');
 					}
-					sb.append(commentList.toString());
+					if (commentList != null && commentList.size() > 0) {
+					    String commentStrs = commentList.toString();
+					    sb.append(commentStrs.substring(1, commentStrs.length()-1)); 
+					}
 					break;
 				}else{
 					break;
@@ -126,7 +132,7 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 			//评论
 			try{
 				String commentStr = sb.toString();
-				String[] commentIds = commentStr.substring(1, commentStr.length()-1).split(",");
+				String[] commentIds = commentStr.split(",");
 				worldService.saveUserInteractByWorldId(worldId, totalFollowCount, 400);
 				worldService.saveChannelInteractV3(channelId, worldId, totalClickCount, totalLikeCount, commentIds, channelLevel.getMinuteTime());
 				channelWorldLabelMapper.insertChannelWorldLabel(dto);

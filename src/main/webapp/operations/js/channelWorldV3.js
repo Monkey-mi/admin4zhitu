@@ -214,6 +214,7 @@ function drawChannelWorldLabelBtn($opt2LineBtn, worlds, index) {
 		return '';
 	}
 	
+	var $labelDIV = $('<div style="display: inline-block;"></div>');
 	var ret = '';
 	$.post("./admin_interact/channelWorldLabel_queryChannelWorldLabel",{
 		'channelId':world['channelId'],
@@ -229,10 +230,10 @@ function drawChannelWorldLabelBtn($opt2LineBtn, worlds, index) {
 								+ world.id + ',' + labelId + ',' + index + ')">#' + labelName + '</a>'
 								+ '<input type="hidden" value="' + labelId + '"></input>'
 								+ '</span>&nbsp;';
+						if (i != 0 && i%3 == 0) {
+							ret += '<br>';
+						}
 					}
-//					ret += '<a href="#" onclick="submitAddChannelWorldLabel('+ world.id + ', ' + index + ')" ' 
-//							+ 'style="text-decoration:none;background-color:#b6ffff;">确定</a>'
-//							+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>';
 					ret += '<a href="javascript:void(0)"><img src="./common/images/ok.png" onclick="submitAddChannelWorldLabel('+ world.id + ', ' + index + ')"></img></a>'
 					+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>';
 				} else {
@@ -241,7 +242,8 @@ function drawChannelWorldLabelBtn($opt2LineBtn, worlds, index) {
 					}
 				}
 			}
-			$opt2LineBtn.append($(ret));
+			$labelDIV.append($(ret))
+			$opt2LineBtn.append($labelDIV);
 		},"json");
 }
 
