@@ -112,8 +112,8 @@
 	 */
 	function addComment(id, index) {
 		$.fancybox({
-			'width'				: 700,
-			'height'			: 450,
+			'width'				: '65%',
+			'height'			: '75%',
 			'autoScale'			: true,
 			'type'				: 'iframe',
 			'href'				: "page_interact_addComment?id="+id,
@@ -123,7 +123,7 @@
 			'hideOnOverlayClick': false,
 			'showCloseButton'   : false,
 			'titleShow'			: false,
-			'onClose'			:function(){
+			'onClosed'			:function(){
 				$("#htm_table").datagrid('reload');
 			}
 		});
@@ -162,7 +162,7 @@
 	
 	<div id="comment_tb" style="padding:5px;" class="none">
 		<a href="#htm_add_comment" onclick="addComment(0);" class="easyui-linkbutton" style="vertical-align:middle;" title="添加评论" plain="true" iconCls="icon-add" id="addCommentBtn">添加</a>
-		<a href="#htm_submit_comment" onclick="submitComment();" class="easyui-linkbutton" style="vertical-align:middle;" title="计划互动评论" plain="true" iconCls="icon-ok" id="addCommentBtn">确定</a>
+		<a href="#htm_submit_comment" onclick="submitComment();" class="easyui-linkbutton" style="vertical-align:middle;" title="计划互动评论" plain="true" iconCls="icon-ok" id="addCommentBtn">计划互动评论</a>
 		<span>已选：<span id="selectionCount">0</span></span>
 		<span>&nbsp;&nbsp;</span>
 		<div style="display: inline-block;margin-right: 5px; margin-top:3px;">

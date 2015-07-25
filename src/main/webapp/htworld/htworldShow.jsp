@@ -66,11 +66,6 @@
 							}
 						}
 				    },
-			/*	    onChange:function(record) {
-				    	var len = $('#comments_interact').combobox('getValues').length,
-				   			$selectCount = $("#selected_comment_count");
-				    	$selectCount.text(len);
-				    },*/
 				    onSelect:function(index,row){
 				    	var  comments	= $('#comments_interact').combobox('getValues');
 				    	var flag = false;
@@ -230,7 +225,6 @@
 			}
 		});
 		
-//		tableInit();
 		removePageLoading();
 		$("#main").show();
 		$(".loading").hide();
@@ -288,14 +282,13 @@
 		$(".page_loading_tip").remove();
 	}
 	
-	
 	/**
 	 * 添加评论
 	 */
 	function addComment(id, index) {
 		$.fancybox({
-			'width'				: 700,
-			'height'			: 450,
+			'width'				: '65%',
+			'height'			: '75%',
 			'autoScale'			: true,
 			'type'				: 'iframe',
 			'href'				: "page_interact_addComment?id="+id,
@@ -305,26 +298,12 @@
 			'hideOnOverlayClick': false,
 			'showCloseButton'   : false,
 			'titleShow'			: false,
-			'onClose'			:function(){
-					$("#comments_interact_table").datagrid('reload');
+			'onClosed'			:function(){
+				commentQueryParams.maxId = 0;
+				commentQueryParams.comment = "";
+				$("#comments_interact_table").datagrid('load',commentQueryParams);
 			}
 		});
-	}
-	/**
-	*刷新评论，在page_interact_addComment页面用到
-	*/
-	function refreshComment4Add() {
-		commentMaxId = 0;
-		commentQueryParams.maxId = commentMaxId;
-		commentQueryParams.comment = "";
-		$("#comments_interact_table").datagrid('load',commentQueryParams);
-	}
-	
-	/**
-	* 刷新评论更新 ，暂时设置为空
-	*/
-	function refreshComent4Update() {
-		
 	}
 	
 	/**

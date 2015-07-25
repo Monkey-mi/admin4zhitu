@@ -16,7 +16,7 @@
 	.xm-bq{margin:10px 0;font-size:14px;color:#333;}
 	.xm-bq a{color:#09c;margin:0 5px;}
 	.xm-bq a:hover{color:#E10602;}
-	.rl_exp {margin-left:10px; width:624px}
+	.rl_exp {margin-left:10px; width:96%}
 	.rl_exp_main {height:230px; overflow-y: scroll;}
 	.comment-main{
 		text-align:left;
@@ -27,7 +27,7 @@
 	.comment-main a:hover{color:#E10602;}
 	
 	#rl_exp_input {
-		width: 650px;
+		width: 99%;
 		margin-left:10px;
 		margin-top: 15px;
 	}
@@ -44,8 +44,7 @@
 </style>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/emotion/rl_exp.js"></script>
 <script type="text/javascript">
-	var id = <%=id%>,
-		hasUpdate = false; // 标记是否更新过
+	var id = <%=id%>;
 	$(document).ready(function() {
 		$("#labelId_comment").combotree({
 			url:'./admin_interact/comment_queryLabelTree?hasTotal=false&selected=31',
@@ -99,15 +98,12 @@
 			'content':content
 		}, function(result){
 			if(result['result'] == 0) {
-				if(!hasUpdate) 
-					hasUpdate = true;
 				$.messager.confirm(result['msg'],"还要继续添加吗？", function(r){
 					if (r)
 						$("#rl_exp_input").val("").focus();
 					else {
 						closePage();
 					}
-						
 				});
 			} else {
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
@@ -132,7 +128,6 @@
 			'content':content
 		}, function(result){
 			if(result['result'] == 0) {
-				parent.refreshComent4Update();
 				parent.$.fancybox.close();
 			} else {
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
@@ -146,10 +141,7 @@
      * 关闭页面
      */
 	function closePage() {
-		if(hasUpdate)
-			parent.refreshComment4Add();
 		parent.$.fancybox.close();
-			
 	}
 	
 	/**
