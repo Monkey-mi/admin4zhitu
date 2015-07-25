@@ -124,8 +124,8 @@ var maxId = 0,
 function showInteractComment(uri) {
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: 968,
-		'height'			: 520,
+		'width'				: '100%',
+		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',
@@ -137,8 +137,8 @@ function showInteractComment(uri) {
 function showInteractLiked(uri) {
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: 538,
-		'height'			: 520,
+		'width'				: '100%',
+		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',
@@ -150,8 +150,8 @@ function showInteractLiked(uri) {
 function showInteractClick(uri) {
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: 538,
-		'height'			: 520,
+		'width'				: '100%',
+		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',

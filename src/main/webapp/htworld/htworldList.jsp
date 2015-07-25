@@ -1147,7 +1147,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 			}
 			$.fancybox({
 				'margin'			: 20,
-				'width'				: '10',
+				'width'				: '100%',
 				'height'			: '100%',
 				'autoScale'			: true,
 				'transitionIn'		: 'none',
@@ -1165,7 +1165,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 	function showUserInfo(uri){
 		$.fancybox({
 			'margin'			: 20,
-			'width'				: '10',
+			'width'				: '100%',
 			'height'			: '100%',
 			'autoScale'			: true,
 			'transitionIn'		: 'none',
@@ -1290,10 +1290,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
 			'type'				: 'iframe',
-			'href'				: uri,
-			onClosed			: function(){
-//				$("#htm_table").datagrid('reload');
-			}
+			'href'				: uri
 		});
 	}
 	

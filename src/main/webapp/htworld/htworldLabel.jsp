@@ -384,8 +384,8 @@ function loadAddFormValidate() {
 function showWorld(uri) {
 	$.fancybox({
 		'margin'			: 10,
-		'width'				: 1090,
-		'height'			: 480,
+		'width'				: '100%',
+		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',

@@ -135,8 +135,8 @@ function loadAddFormValidate() {
 function showInteractFollow(uri) {
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: 618,
-		'height'			: 520,
+		'width'				: '100%',
+		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',

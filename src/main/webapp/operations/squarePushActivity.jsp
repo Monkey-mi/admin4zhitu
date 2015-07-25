@@ -393,8 +393,8 @@ function clearSponsorsAdd() {
 function showLogo() {
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: 980,
-		'height'			: 600,
+		'width'				: '100%',
+		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',

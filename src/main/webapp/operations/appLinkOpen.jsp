@@ -127,8 +127,8 @@ var maxSerial = 0,
 function showRecord(uri) {
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: 520,
-		'height'			: 480,
+		'width'				: '100%',
+		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',

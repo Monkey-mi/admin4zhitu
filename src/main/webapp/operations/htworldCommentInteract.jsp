@@ -112,7 +112,7 @@
 	 */
 	function addComment(id, index) {
 		$.fancybox({
-			'width'				: '65%',
+			'width'				: '70%',
 			'height'			: '75%',
 			'autoScale'			: true,
 			'type'				: 'iframe',

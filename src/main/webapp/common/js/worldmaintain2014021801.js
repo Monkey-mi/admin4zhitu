@@ -149,7 +149,7 @@ function showUserInfo(uri){
 	
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: '10',
+		'width'				: '100%',
 		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
@@ -352,7 +352,7 @@ function initTypeUpdateWindow(worldId, typeId, index, isAdd,userId,labelIsExist)
 function showWorld(uri) {
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: '10',
+		'width'				: '100%',
 		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
@@ -377,7 +377,7 @@ function showComment(realUri,worldId) {
 		}
 		$.fancybox({
 			'margin'			: 20,
-			'width'				: '10',
+			'width'				: '100%',
 			'height'			: '100%',
 			'autoScale'			: true,
 			'transitionIn'		: 'none',
@@ -396,7 +396,7 @@ function showComment(realUri,worldId) {
 function showLikedUser(uri) {
 	$.fancybox({
 		'margin'			: 20,
-		'width'				: '10',
+		'width'				: '100%',
 		'height'			: '100%',
 		'autoScale'			: true,
 		'transitionIn'		: 'none',
@@ -516,8 +516,8 @@ function removeTrust(userId, index) {
  */
 function addComment(id, index) {
 	$.fancybox({
-		'width'				: 700,
-		'height'			: 450,
+		'width'				: '100%',
+		'height'			: '100%',
 		'autoScale'			: true,
 		'type'				: 'iframe',
 		'href'				: "page_interact_addComment?id="+id,

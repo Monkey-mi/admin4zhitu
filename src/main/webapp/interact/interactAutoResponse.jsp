@@ -140,7 +140,7 @@ var maxId = 0,
 		uri = "page_interact_interactResponseDialog?autoResponseId="+autoResponseId;
 		$.fancybox({
 			'margin'			: 20,
-			'width'				: '10',
+			'width'				: '100%',
 			'height'			: '100%',
 			'autoScale'			: true,
 			'transitionIn'		: 'none',

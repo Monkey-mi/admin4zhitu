@@ -61,7 +61,7 @@ var maxId = 0,
 	function showUserWorld(uri){
 		$.fancybox({
 			'margin'			: 20,
-			'width'				: '10',
+			'width'				: '100%',
 			'height'			: '100%',
 			'autoScale'			: true,
 			'transitionIn'		: 'none',
