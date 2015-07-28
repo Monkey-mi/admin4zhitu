@@ -1014,7 +1014,9 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 						dateAdded, scheduleDateList.get(i), Tag.TRUE, Tag.FALSE));
 			}
 			//批量插入
-			userFollowMapper.batchSaveUserFollow(list);
+			if(list.size() > 0){
+				userFollowMapper.batchSaveUserFollow(list);
+			}
 		}
 	}
 	
