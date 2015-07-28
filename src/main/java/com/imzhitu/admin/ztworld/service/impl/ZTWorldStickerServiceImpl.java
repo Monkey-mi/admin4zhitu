@@ -300,6 +300,13 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 	@Override
 	public List<ZTWorldStickerType> queryAllType(Boolean addAllTag, ZTWorldStickerType type) throws Exception {
 		List<ZTWorldStickerType> list = stickerTypeMapper.queryAllType(type);
+		
+		ZTWorldStickerType defaultType = new ZTWorldStickerType();
+		defaultType.setId(0);
+		defaultType.setTypeName("默认分类");
+		defaultType.setSelected(false);
+		list.add(defaultType);
+		
 		if(addAllTag) {
 			ZTWorldStickerType all = new ZTWorldStickerType();
 			all.setId(0);
