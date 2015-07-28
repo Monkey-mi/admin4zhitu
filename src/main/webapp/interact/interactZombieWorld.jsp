@@ -11,28 +11,27 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript">
-var maxId = 0,
-	hideIdColumn = false,
-	worldURLPrefix = 'http://www.imzhitu.com/DT',
-	htmTableTitle = "马甲发图计划管理", //表格标题
-	htmTablePageList = [10,30,50,100,150,300,500],
-	loadDataURL = "./admin_interact/interactZombieWorld_queryZombieWorldForTable", //数据装载请求地址
-	batchSaveURI = "./admin_interact/zombieWorldSchedula_batchInsertZombieWorldSchedula?zombieWorldIdsStr=",
-	batchUpdateLabelsURL = "./admin_interact/interactZombieWorld_batchUpdateZombieWorldlabel?ids=",
+	var maxId = 0;
+	var worldURLPrefix = 'http://www.imzhitu.com/DT';
+	hideIdColumn = false;
+	htmTableTitle = "马甲发图计划管理"; //表格标题
+	htmTablePageList = [10,30,50,100,150,300,500];
+	loadDataURL = "./admin_interact/interactZombieWorld_queryZombieWorldForTable"; //数据装载请求地址
+	var batchSaveURI = "./admin_interact/zombieWorldSchedula_batchInsertZombieWorldSchedula?zombieWorldIdsStr=";
+	var batchUpdateLabelsURL = "./admin_interact/interactZombieWorld_batchUpdateZombieWorldlabel?ids=";
 	init = function() {
-		toolbarComponent = '#tb';
 		myQueryParams = {
 			'maxId' : maxId,
 		},
 		loadPageData(initPage);
 		
-	},
+	};
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
 			maxId = 0;
 			myQueryParams.maxId = maxId;
 		}
-	},
+	};
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
 			if(data.maxId > maxId) {
@@ -41,29 +40,30 @@ var maxId = 0,
 			}
 		}
 	};
+	toolbarComponent = '#tb';
 	//分页组件,可以重载
 	columnsFields = [
 		{field : 'ck',checkbox : true },
-		{field : 'id',title : 'ID',align : 'center', width : 45},
-		{field : 'authorId',title : '马甲ID',align : 'center',width : 80},
-		{field : 'thumbTitlePath',title : '缩略图',align : 'center',width : 80,
+		{field : 'id',title : 'ID',align : 'center'},
+		{field : 'authorId',title : '马甲ID',align : 'center'},
+		{field : 'thumbTitlePath',title : '缩略图',align : 'center',
 			formatter: function(value,row,index){
 				var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png');
-				return "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "' />";
+				return "<img width='100px' height='100px' class='htm_column_img' src='" + imgSrc + "' />";
 			}
 		},
-		{field : 'worldDesc', title:'织图描述', align : 'center',width : 80},
-		{field : 'addDate', title:'添加日期', align : 'center',width : 120, 
+		{field : 'worldDesc', title:'织图描述', align : 'center',editor:'text'},
+		{field : 'addDate', title:'添加日期', align : 'center', 
 			formatter: function(value,row,index){
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 			}
 		},
-		{field : 'modifyDate', title:'最后修改时间日期', align : 'center',width : 120, 
+		{field : 'modifyDate', title:'最后修改时间日期', align : 'center', 
 			formatter: function(value,row,index){
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 			}
 		},
-		{field : 'complete',title : '完成',align : 'center', width: 45,
+		{field : 'complete',title : '完成',align : 'center',
   			formatter: function(value,row,index) {
   				if(value == 1) {
   					img = "./common/images/ok.png";
@@ -73,7 +73,7 @@ var maxId = 0,
   				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}
   		},
-  		{field : 'shortLink', title:'短链',align : 'center',width : 220,
+  		{field : 'shortLink', title:'短链',align : 'center',
 			styler: function(value,row,index){ 
 				return 'cursor:pointer;';
 			},
@@ -83,13 +83,34 @@ var maxId = 0,
 						+ worldURLPrefix + value + "\")'>" +value+"</a>";
 			}
 		},
-		{field : 'htworldId', title:'织图ID', align : 'center',width : 80},
-		{field : 'channelId',title:'频道ID',align : 'center',width:70},
-		{field : 'channelName',title:'频道名称',align:'center',width:90},
-		{field : 'worldLabel',title:'织图标签',align:'center',width:120},
+		{field : 'htworldId', title:'织图ID', align : 'center'},
+		{field : 'channelId',title:'频道ID',align : 'center'},
+		{field : 'channelName',title:'频道名称',align:'center'},
+		{field : 'worldLabel',title:'织图标签',align:'center'}
 		
-	],
+	];
 	onAfterInit = function() {
+		$('#htm_table').datagrid({
+			onAfterEdit: function(index,row,changes){
+				/*
+				 * 若changes.worldDesc为undefined，则证明没有改动，什么都不进行操作
+				 */
+				if (changes.worldDesc) {
+					var requestData = {'id':row.id,'worldDesc':row.worldDesc};
+					$.post('./admin_interact/interactZombieWorld_updateZombieWorld', requestData, function(data){
+						if (data.result == -1) {
+							$.messager.alert("提示","第" + (index+1) + "行，" + data.msg);
+							$('#htm_table').datagrid('rejectChanges');
+						}
+					});
+				} else {
+					$('#htm_table').datagrid('rejectChanges');
+				}
+				row.editing = false;
+				$('#htm_table').datagrid('refreshRow', index);
+			}
+		});
+		
 		$("#batch-save").window({
 			title : '批量发图',
 			modal : true,
