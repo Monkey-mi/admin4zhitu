@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +41,9 @@ import com.imzhitu.admin.interact.mapper.InteractZombieWorldMapper;
 import com.imzhitu.admin.interact.service.InteractZombieService;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class InteractZombieServiceImpl extends BaseServiceImpl implements InteractZombieService{
@@ -455,81 +455,6 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		}
 	}
 	
-	/**
-	 * 批量定时发布马甲织图
-	 * @param zombieWorldIds
-	 * @param begin
-	 * @param timeSpan
-	 */
-	@Override
-	public void batchSaveZombieWorldToHTWorld(final String zombieWorldIds,final Date begin, final Integer timeSpan){
-		if(null == zombieWorldIds || "".equals(zombieWorldIds.trim()))
-			return;
-		
-		Runnable rn = new Runnable(){
-			public void run(){
-				Integer [] zombieWorldIdArray = StringUtil.convertStringToIds(zombieWorldIds);
-				long timeMsSpan = timeSpan*60L*1000;
-				
-				//从啥时候开始发图
-				Date now = new Date();
-				long beginMsSpan = begin.getTime() - now.getTime();
-				if(beginMsSpan > 0 && beginMsSpan < 24L*60*60*1000 && timeMsSpan >0 && timeMsSpan < 3600L*1000){//目标发图时间必须在一天之内。因为防止误操作导致建立一条很长时间睡眠的线程。
-					try{
-						Thread.sleep(beginMsSpan);
-					}catch(Exception e){
-						return;
-					}
-				}else{//不符合规则的时间间隔将不处理
-					return;
-				}
-				for(Integer id: zombieWorldIdArray){
-					try{
-						ZombieWorld dto = new ZombieWorld();
-						dto.setId(id);
-						//检查数据是否合法
-						List<ZombieWorld> zombieWorldList = zombieWorldMapper.queryZombieWorld(dto);
-						if(zombieWorldList != null && zombieWorldList.size() == 1){
-							ZombieWorld zw = zombieWorldList.get(0);
-							if(zw.getComplete() == Tag.FALSE){
-								//正式发布织图
-								Integer worldId = saveZombieWorldToHtWorld(id);
-								
-								//添加到频道
-								if(zw.getChannelId() != null && zw.getChannelId() != 0){
-									if(channelMapper.queryChannelById(zw.getChannelId()) != null){
-										Integer channelWorldId = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
-										OpChannelWorld channelWorld = new OpChannelWorld();
-										channelWorld.setAuthorId(zw.getAuthorId());
-										channelWorld.setChannelId(zw.getChannelId());
-										channelWorld.setDateAdded(now);
-										channelWorld.setId(channelWorldId);
-										channelWorld.setNotified(Tag.TRUE);
-										channelWorld.setValid(Tag.TRUE);
-										channelWorld.setWorldId(worldId);
-										channelWorld.setSuperb(Tag.FALSE);
-										channelWorld.setWeight(0);
-										channelWorld.setSerial(channelWorldId);
-										channelWorlMapper.save(channelWorld);
-										//更新频道图片总数
-										webChannelService.updateWorldAndChildCount(zw.getChannelId());
-									}
-								}
-								
-								//睡眠多少毫秒
-								Thread.sleep(timeMsSpan);
-							}
-						}
-					}catch(Exception e){
-						//不处理异常
-					}
-				}
-			}
-		};
-		Thread t = new Thread(rn);
-		t.start();
-	}
-	
 	private Integer getTypeByTypePath(String typePath) {
 		Integer type = Tag.BASE_THUMB_CIRCLE;
 		if(!StringUtil.checkIsNULL(typePath)) {
@@ -684,5 +609,13 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	public void batchDeleteZombieWorld(String idsStr)throws Exception{
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		zombieWorldMapper.batchDeleteZombieWorld(ids);
+	}
+
+	@Override
+	public void updateZombieWorld(Integer id, String worldDesc) {
+	    ZombieWorld dto = new ZombieWorld();
+	    dto.setId(id);
+	    dto.setWorldDesc(worldDesc);
+	    zombieWorldMapper.updateZombieWorld(dto);
 	}
 }

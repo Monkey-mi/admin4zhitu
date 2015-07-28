@@ -2,14 +2,21 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.ZombieWorld;
 
 public interface InteractZombieWorldMapper {
 	@DataSource("master")
 	public void insertZombieWorld(ZombieWorld dto);
+	
+	/**
+	 * 更新马甲织图
+	 * @param dto
+	 * @author zhangbo	2015年7月28日
+	 */
+	@DataSource("master")
+	public void updateZombieWorld(ZombieWorld dto);
+	
 	@DataSource("master")
 	public void updateComplete(ZombieWorld dto);
 	

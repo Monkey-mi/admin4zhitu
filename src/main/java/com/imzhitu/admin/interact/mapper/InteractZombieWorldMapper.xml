@@ -34,6 +34,17 @@
 		  #{thumbTitlePath},#{longitude},#{latitude},#{locationAddr},#{size},#{complete},#{addDate},#{modifyDate},#{channelId})
 	</insert>
 	
+	<!-- 更新马甲织图 -->
+	<update id="updateZombieWorld">
+		update hts_admin.zombie_world
+		<set>
+	      <if test="worldDesc != null">
+	      	world_desc=#{worldDesc}
+	      </if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
 	<!-- 批量删除 -->
 	<delete id="batchDeleteZombieWorld">
 		delete from hts_admin.zombie_world 

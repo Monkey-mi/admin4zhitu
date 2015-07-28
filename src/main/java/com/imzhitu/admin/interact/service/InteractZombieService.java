@@ -47,15 +47,6 @@ public interface InteractZombieService {
 	public void queryZombieWorldForTable(Integer channelId,int maxId,Date addDate,Date modifyDate,int page,int rows,Integer complete,Integer schedulaFlag,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
-	 * 批量定时发布马甲织图
-	 * @param zombieWorldIds
-	 * @param begin
-	 * @param timeSpan
-	 */
-	@Deprecated
-	public void batchSaveZombieWorldToHTWorld(final String zombieWorldIds,final Date begin, final Integer timeSpan);
-	
-	/**
 	 * 批量更新标签
 	 * @throws Exception
 	 */
@@ -72,4 +63,13 @@ public interface InteractZombieService {
 	 * 批量删除
 	 */
 	public void batchDeleteZombieWorld(String idsStr)throws Exception;
+
+	/**
+	 * 更新马甲织图
+	 * 
+	 * @param id		马甲织图表主键id
+	 * @param worldDesc	马甲织图描述
+	 * @author zhangbo	2015年7月28日
+	 */
+	public void updateZombieWorld(Integer id, String worldDesc);
 }
