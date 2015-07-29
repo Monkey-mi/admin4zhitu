@@ -109,7 +109,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	zombieWorld.setSize(size);
 	zombieWorld.setThumbTitlePath(titleThumbPath);
 	zombieWorld.setTitlePath(titlePath);
-	zombieWorld.setWorldDesc(handleWorldDesc(worldDesc));
+	zombieWorld.setWorldDesc(worldDesc == null? null : handleWorldDesc(worldDesc));
 	zombieWorld.setWorldLabel(worldLabel);
 	zombieWorld.setWorldLabelIds(labelIds);
 	zombieWorld.setWorldName(worldName);
