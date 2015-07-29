@@ -639,17 +639,21 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	// 匹配各种单独的html起始标签，如<div>
 	String regex2 = "<[A-Za-z]*>";
 	
+	// 匹配各种单独的html起始标签，并且有属性配置的，如<SPAN class="emoji emoji2764" title="heavy black heart">
+	String regex3 = "<[A-Za-z0-9\\s\\`~!@#$%^&*()_+-=\"\']*>";
+	
 	// 匹配各种单独的html起始标签，如<div>
-	String regex3 = "</[A-Za-z]*>";
+	String regex4 = "</[A-Za-z]*>";
 	
 	// 匹配网页粘贴过来后，剩余的样式class设置，故其中不包括中文与中文字符的过滤
-	String regex4 = "class=[A-Za-z0-9\\s\\`~!@#$%^&*()_+-=]*>";
+	String regex5 = "class=[A-Za-z0-9\\s\\`~!@#$%^&*()_+-=]*>";
 	
 	// 进行连续处理
 	String str1 = handleStrByRegex(regex1, worldDesc);
 	String str2 = handleStrByRegex(regex2, str1);
 	String str3 = handleStrByRegex(regex3, str2);
-	result = handleStrByRegex(regex4, str3);
+	String str4 = handleStrByRegex(regex4, str3);
+	result = handleStrByRegex(regex5, str4);
 	return result;
     }
     
