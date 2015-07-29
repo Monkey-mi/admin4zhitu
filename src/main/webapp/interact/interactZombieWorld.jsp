@@ -52,7 +52,7 @@
 				return "<img width='100px' height='100px' class='htm_column_img' src='" + imgSrc + "' />";
 			}
 		},
-		{field : 'worldDesc', title:'织图描述', align : 'center',editor:'text'},
+		{field : 'worldDesc', title:'织图描述', align : 'center',width:300,editor:'text'},
 		{field : 'addDate', title:'添加日期', align : 'center', 
 			formatter: function(value,row,index){
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
@@ -91,6 +91,7 @@
 	];
 	onAfterInit = function() {
 		$('#htm_table').datagrid({
+			fitColumns: false,
 			onAfterEdit: function(index,row,changes){
 				/*
 				 * 若changes.worldDesc为undefined，则证明没有改动，什么都不进行操作
