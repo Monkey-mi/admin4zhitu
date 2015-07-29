@@ -26,7 +26,7 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 		
 	private Logger log = Logger.getLogger(InteractZombieWorldSchedulaService.class);
 	
-	public static long ZOMBIE_WORLD_SCHEDULA_TIME_SPAN = 4*60*60*1000L;
+	public static long ZOMBIE_WORLD_SCHEDULA_TIME_SPAN = 10*60*1000L;
 	
 	@Override
 	public void insertZombieWorldSchedula(Integer zombieWorldId, Date schedula,

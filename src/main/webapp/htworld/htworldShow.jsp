@@ -616,7 +616,6 @@
 		}, function(result){
 			if(result['result'] == 0) {
 				$("#rl_exp_input").val('');
-				refreshComment4Add();
 			} else {
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 			}
