@@ -70,6 +70,7 @@
 				<version>2.2</version>
 				<configuration>
 					<ignoreWebxml>false</ignoreWebxml>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
 			<plugin>
