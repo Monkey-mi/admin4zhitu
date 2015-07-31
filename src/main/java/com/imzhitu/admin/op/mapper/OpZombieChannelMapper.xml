@@ -16,6 +16,15 @@
 		(user_id,channel_id) values (#{userId},#{channelId})
 	</insert>
 	
+	<!-- BATCH INSERT -->
+	<insert id="batchInsertZombieChannel">
+		insert into hts_admin.op_zombie_channel
+		(user_id,channel_id) values
+		<foreach collection="list" index="index" item="item" separator=",">
+			(#{userId},#{channelId})
+		</foreach>
+	</insert>
+	
 	<!-- BATCH DELETE ZOMBIE CHANNEL -->
 	<delete id="batchDeleteZombieChannel">
 		delete from hts_admin.op_zombie_channel

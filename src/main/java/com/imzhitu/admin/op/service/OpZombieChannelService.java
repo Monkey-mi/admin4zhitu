@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,14 @@ public interface OpZombieChannelService {
 	 * @throws Exception
 	 */
 	public void insertZombieChannel(Integer userId,Integer channelId)throws Exception;
+	
+	/**
+	 * 批量添加
+	 * @param file
+	 * @param channelId
+	 * @throws Exception
+	 */
+	public void batchInsertZombieChannel(File file,Integer channelId)throws Exception;
 	
 	/**
 	 * 批量删除

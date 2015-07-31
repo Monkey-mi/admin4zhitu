@@ -16,6 +16,12 @@ public interface OpZombieChannelMapper {
 	public void insertZombieChannel(OpZombieChannel dto);
 	
 	/**
+	 * 批量增加
+	 * @param list
+	 */
+	public void batchInsertZombieChannel(List<OpZombieChannel> list);
+	
+	/**
 	 * 批量删除
 	 * @param ids
 	 */
