@@ -247,14 +247,15 @@
 				searchChannelQueryParams);
 	} 
 	
-	
  	function searchChannel01() {
 		searchChannelMaxId = 0;
-		var channelId = $('#channel-searchbox01').searchbox('getValue');
-		tableQueryParams.channelId = channelId;
+		var query = $('#channel-searchbox01').searchbox('getValue');
+		searchChannelQueryParams.maxId = searchChannelMaxId;
+		searchChannelQueryParams.query = query;
 		$("#selectChannelId").combogrid('grid').datagrid("load",
-				tableQueryParams);
- 	}
+				searchChannelQueryParams);
+	} 
+	
 
 	 /*
 	 add by mishengliang 07-30-2015
@@ -272,33 +273,38 @@
 							selectOnNavigation : false, 
  							pageList : [ 6, 10, 20 ],
 							pageSize : 6, 
-							textField : 'channelId',
+							textField : 'id',
  						 	toolbar : '#search-channel-tb01', 
-							url : "./admin_interact/commentLabelChannel_queryCommentLabelChannel",
+							url :  './admin_op/channel_searchChannel',
 							pagination : true,
 							columns : [ [ {
 								field : 'id',
-								title : 'id',
+								title : 'channeId',
 								align : 'center',
 								width : 100,
+							},	{
+								field : 'channelIcon',
+								title : 'icon',
+								align : 'center',
+								width : 60,
+								height : 60,
+								formatter : function(value, row, index) {
+									return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+								}
 							}, {
-								field : 'channelId',
-								title : 'channelId',
-								align : 'center',
-								width : 100,
-							} , {
 								field : 'channelName',
 								title : 'channelName',
 								align : 'center',
 								width : 222,
 							}] ],
-							onChange : function(newValue,oldValue){
+ 							onChange : function(newValue,oldValue){
 								var r = $('#selectChannelId').combogrid('grid').datagrid('getSelected');
-								newValue = newValue||r.channelId; 
-			 					tableQueryParams.channelId = newValue;
+								newValue = newValue||r.id; 
+								/* alert(newValue); */
+ 			 					tableQueryParams.channelId = newValue;
 								$('#htm_table').datagrid('load',
-											tableQueryParams);			 					
-								}, 
+											tableQueryParams);	 	
+								},  
 						});
 	});
 	 
@@ -309,7 +315,7 @@
 	<div id="main" class="none">
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:addInit();" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
-			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
+			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="t'./admin_op/channel_searchChannel'rue" iconCls="icon-cut" id="delBtn">删除</a>
 			<input id="selectChannelId">
 		</div>
 		<table id="htm_table"></table>
