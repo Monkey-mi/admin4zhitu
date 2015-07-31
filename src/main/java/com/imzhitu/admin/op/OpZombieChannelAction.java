@@ -1,5 +1,7 @@
 package com.imzhitu.admin.op;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
@@ -15,6 +17,7 @@ public class OpZombieChannelAction extends BaseCRUDAction{
 	private Integer channelId;
 	private String idsStr;
 	private Integer id;
+	private File zombieIdFile;
 	
 	@Autowired
 	private OpZombieChannelService zombieChannelService;
@@ -44,11 +47,28 @@ public class OpZombieChannelAction extends BaseCRUDAction{
 	public void setIdsStr(String idsStr) {
 		this.idsStr = idsStr;
 	}
+	
+	public File getZombieIdFile() {
+		return zombieIdFile;
+	}
+	public void setZombieIdFile(File zombieIdFile) {
+		this.zombieIdFile = zombieIdFile;
+	}
 
 	
 	public String insertZombieChannel(){
 		try{
 			zombieChannelService.insertZombieChannel(userId, channelId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String batchInsertZombieChannel(){
+		try{
+			zombieChannelService.batchInsertZombieChannel(zombieIdFile, channelId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -75,4 +95,5 @@ public class OpZombieChannelAction extends BaseCRUDAction{
 		}
 		return StrutsKey.JSON;
 	}
+	
 }
