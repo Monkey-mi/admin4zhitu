@@ -7,6 +7,7 @@
 <title>马甲频道管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/htmCRUD20131111.css"></link>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery.form.min.js"></script>
 <script type="text/javascript">
 	var searchChannelMaxId = 0,
 	searchChannelQueryParams = {
@@ -15,7 +16,7 @@
 	var maxId=0,
 	loadDateUrl="./admin_op/zbChannel_queryZombieChannel",
 	addUrl="./admin_op/zbChannel_insertZombieChannel",
-	delUrl = "./admin_op/zbChannel_batchDeleteZombieChannel?idsStr="
+	delUrl = "./admin_op/zbChannel_batchDeleteZombieChannel?idsStr=",
 	tableQueryParams = {},
 	tableInit = function() {
 		tableLoadDate(1);
@@ -82,12 +83,11 @@
 			iconCls : 'icon-edit',
 			resizable : false,
 			onClose : function(){
-				$("#i-userId").val('');
 				$("#ss-channel").combogrid('clear');
 				$("#i-id").val('');		
 			}
 		});
-		
+		/*
 		$('#ss-channel').combogrid({
 			panelWidth : 440,
 		    panelHeight : 330,
@@ -130,7 +130,7 @@
 				searchChannelQueryParams.maxId = searchChannelMaxId;
 			}
 		}
-	});
+	});*/
 		
 		tableInit();
 		$("#main").show();
@@ -203,36 +203,29 @@
 	}
 	
 	function updateInit(id){
-		$("#i-id").val(id);
 		$('#htm_add').window('open');
 	}
 	
 	function addSubmit(){
-		var userId = $("#i-userId").val();
-		var channelId = $("#ss-channel").combogrid('getValue');
-		var id = $("#i-id").val();
-		var url="";
-		if(id){
-			url = updateUrl+id;
-		}else{
-			url = addUrl;
-		}
+		var addForm = $('#add_form');
 		$('#htm_add .opt_btn').hide();
 		$('#htm_add .loading').show();
-		$.post(url,{
-			'userId':userId,
-			'channelId':channelId
-		},function(result){
-			$('#htm_add .opt_btn').show();
-			$('#htm_add .loading').hide();
-			if(result['result'] == 0) {
-				tableQueryParams.maxId=0;
-				$("#htm_table").datagrid("reload");
-				$('#htm_add').window('close');
-			} else {
-				$.messager.alert('提示',result['msg']);
-			}
-		},"json");
+		addForm.ajaxSubmit({
+			success:function(result){
+				$('#htm_add .opt_btn').show();
+				$('#htm_add .loading').hide();
+				if(result['result'] == 0) {
+					tableQueryParams.maxId=0;
+					$("#htm_table").datagrid("reload");
+					$('#htm_add').window('close');
+				} else {
+					$.messager.alert('提示',result['msg']);
+				}
+			},
+			url:       addForm.attr("action"),
+	        type:      'post',
+	        dataType:  'json' 
+		});
 	}
 	
 	/**
@@ -257,21 +250,20 @@
 		<table id="htm_table"></table>
 		<!-- 添加记录 -->
 		<div id="htm_add">
-			<form id="add_form"  method="post">
+			<form id="add_form" action="./admin_op/zbChannel_batchInsertZombieChannel" method="post">
 				<table class="htm_edit_table" width="480">
 					<tbody>
 						<tr>
 							<td class="leftTd">马甲ID：</td>
 							<td>
-								<input id="i-userId" style="width:220px;">
+								<input id="zombieIdFile_add" type="file" name="zombieIdFile" />
 							</td>
 						</tr>
 						<tr>
 							<td class="leftTd">频道：</td>
-							<td><input id="ss-channel" style="width:223px;"/></td>
-						</tr>
-						<tr>
-							<td class="none"><input id="i-id"></td>
+							<td>
+								<input id="add_form_channelId" style="width:223px;" name="channelId" />
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2" style="text-align: center;padding-top: 10px;">
@@ -284,7 +276,7 @@
 			</form>
 		</div>
 	</div>
-	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
+	<div id="search-channel-tb" style="padding:5px;height:auto" class="none"> 
 		<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
 	</div>
 	
