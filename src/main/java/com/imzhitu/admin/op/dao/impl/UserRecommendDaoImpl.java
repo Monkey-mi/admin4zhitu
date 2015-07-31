@@ -108,7 +108,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 	private static final String QUERY_ACCEPT_UID_BY_IDS = "select * from " + table
 			+ " where user_accept=1 and id in";
 	
-	private static final String UPDATE_FIX_POS_BY_UID = "update " + table + " set fix_pos=? where user_id=?";
+//	private static final String UPDATE_FIX_POS_BY_UID = "update " + table + " set fix_pos=? where user_id=?";
 	
 	private static final String QUERY_BY_ID = "select * from " + table + " where id=?";
 	
@@ -303,7 +303,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void setFixPosByUserId(Integer uid , Integer fixPos){
-		getMasterJdbcTemplate().update(UPDATE_FIX_POS_BY_UID, fixPos,uid);
+//		getMasterJdbcTemplate().update(UPDATE_FIX_POS_BY_UID, fixPos,uid);
 	}
 	
 	@Override
@@ -373,7 +373,6 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 				rs.getInt("user_accept"),
 				rs.getInt("sys_accept"),
 				rs.getInt("notified"),
-				rs.getInt("fix_pos"),
 				rs.getInt("weight"),
 				rs.getInt("verify_id"),
 				rs.getString("verify_name"),

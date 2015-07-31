@@ -79,7 +79,7 @@ public class OpUserRecommendDto implements Serializable, UserWithInteract,
 	public OpUserRecommendDto(Integer id, Integer userId, String recommendDesc,
 			String recommender, Date dateAdded, Date dateModified,
 			Integer userAccept, Integer sysAccept, Integer notified,
-			Integer fixPos, Integer weight, Integer verifyId, String verifyName,
+			Integer weight, Integer verifyId, String verifyName,
 			String verifyIcon, Integer platformCode, String userName,
 			String userAvatar, String userAvatarL, Integer sex, String email,
 			String address, String province, String city, Date birthday,
@@ -98,7 +98,6 @@ public class OpUserRecommendDto implements Serializable, UserWithInteract,
 		this.userAccept = userAccept;
 		this.sysAccept = sysAccept;
 		this.notified = notified;
-		this.fixPos = fixPos;
 		this.weight = weight;
 		this.verifyId = verifyId;
 		this.verifyName = verifyName;
