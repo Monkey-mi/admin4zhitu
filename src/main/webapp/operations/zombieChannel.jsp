@@ -246,6 +246,88 @@
 		searchChannelQueryParams.query = query;
 		$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
 	}
+	
+	$(function() {
+		
+		/*
+		add by mishengliang 07-31-2015
+		马甲频道管理中加入频道ID搜索
+		*/
+		$('#channelId').combogrid(
+						{
+							panelWidth : 440,
+							panelHeight : 330,
+							loadMsg : '加载中，请稍后...',
+							pageList : [ 4, 10, 20 ],
+							pageSize : 4,
+ 							toolbar : "#search-channel-tb01", 
+							multiple : false,
+							required : false,
+							idField : 'id',
+							textField : 'channelName',
+							url : './admin_op/channel_searchChannel',
+							pagination : true,
+							columns : [ [
+									{
+										field : 'id',
+										title : 'id',
+										align : 'center',
+										width : 80
+									},
+									{
+										field : 'channelIcon',
+										title : 'icon',
+										align : 'center',
+										width : 60,
+										height : 60,
+										formatter : function(value, row, index) {
+											return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+										}
+									}, {
+										field : 'channelName',
+										title : '频道名称',
+										align : 'center',
+										width : 280
+									} ] ],
+ 							queryParams : searchChannelQueryParams,
+							onLoadSuccess : function(data) {
+								if (data.result == 0) {
+									if (data.maxId > searchChannelMaxId) {
+										searchChannelMaxId = data.maxId;
+										searchChannelQueryParams.maxId = searchChannelMaxId;
+									}
+								}
+							}, 
+							onSelect : function(rowIndex,rowData) {
+								channelId = rowData.id;
+								tableQueryParams.channelId = channelId;
+								$("#htm_table").datagrid('load',tableQueryParams);
+							}
+						});
+		
+		/*
+		add by mishengliang 07-31-2015
+		在马甲频道管理中加入用户ID搜索
+		*/
+		$('#userId').searchbox({
+			searcher : function(value){
+				tableQueryParams.userId = value;
+				$("#htm_table").datagrid("load",tableQueryParams);
+			}
+		});
+	});
+	
+	function searchChannel01() {
+		searchChannelMaxId = 0;
+		maxId = 0;
+		var query = $('#channel-searchbox01').searchbox('getValue');
+		searchChannelQueryParams.maxId = searchChannelMaxId;
+		searchChannelQueryParams.query = query;
+		$("#channelId").combogrid('grid').datagrid("load",searchChannelQueryParams);
+	}
+	
+
+	
 </script>
 </head>
 <body>
@@ -253,6 +335,8 @@
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:addInit();" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
+			<input id="userId">
+			<input id="channelId">
 		</div>
 		<table id="htm_table"></table>
 		<!-- 添加记录 -->
@@ -287,6 +371,8 @@
 	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
 		<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
 	</div>
-	
+		<div id="search-channel-tb01" style="padding:5px;height:auto" class="none">
+		<input id="channel-searchbox01" searcher="searchChannel01" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
+	</div>
 </body>
 </html>
