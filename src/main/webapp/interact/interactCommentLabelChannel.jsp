@@ -350,7 +350,7 @@
 		<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
 			<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
 		</div>
-				<div id="search-channel-tb01" style="padding:5px;height:auto" class="none">
+		<div id="search-channel-tb01" style="padding:5px;height:auto" class="none">
 			<input id="channel-searchbox01" searcher="searchChannel01" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
 		</div>
 	</div>
