@@ -69,6 +69,6 @@ public interface ADCommentService extends BaseService {
      * @return msg	添加操作的返回提示
      * @author zhangbo	2015年7月17日
      */
-    public void addADKeywords(String[] keywords);
+    public void addADKeywords(String[] keywords) throws Exception;
     
 }

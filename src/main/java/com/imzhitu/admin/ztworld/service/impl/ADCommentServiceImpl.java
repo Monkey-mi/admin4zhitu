@@ -87,7 +87,7 @@ public class ADCommentServiceImpl extends BaseServiceImpl implements ADCommentSe
     }
 
     @Override
-    public void addADKeywords(String[] keywords) {
+    public void addADKeywords(String[] keywords) throws Exception{
 
 	// 从缓存中获取广告关键字集合，缓存中的关键字与数据库中存储的数据一致
 	Map<String, Integer> cacheMap = cacheService.getADKeywordCacheFromRedis();
