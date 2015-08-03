@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.ChatMapper">
+	
+	<resultMap id="ChatMap" type="com.imzhitu.admin.common.pojo.ChatDTO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="uid" property="uId" jdbcType="INTEGER"/>
+		<result column="uname" property="uName" jdbcType="VARCHAR"/>
+		<result column="tid" property="tId" jdbcType="INTEGER" />
+		<result column="tname" property="tName" jdbcType="VARCHAR"/>
+		<result column="relationship" property="relationship" jdbcType="INTEGER"/>
+		<result column="msg" property="msg" jdbcType="VARCHAR"/>
+		<result column="date" property="date" jdbcType="TIMESTAMP"/>
+		<result column="shield" property="userShield" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- 查询骚扰私聊列表 -->
+	<select id="queryChatList" resultMap="ChatMap">
+	select csu.*, uu.shield
+	from (select cs.*, u.user_name as tname
+			from hts_admin.chat_shield cs, hts.user_info u
+			where cs.tid = u.id
+			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" />) as csu, 
+		hts.user_info uu
+	where csu.uid = uu.id
+</select>
+	
+	<!-- 查询骚扰私聊总数 -->
+	<select id="queryChatCount" resultType="long">
+		select count(*) from hts_admin.chat_shield 
+	</select>
+	
+	<!-- 批量删除骚扰私聊 -->
+	<delete id="deleteChats">
+		delete from hts_admin.chat_shield where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+</mapper>
