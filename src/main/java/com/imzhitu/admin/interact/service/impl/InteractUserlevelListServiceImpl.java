@@ -249,7 +249,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 							logger.warn("ScanNewWorldAndJoinIntoInteract:interactWorldService.saveUserInteract.\nuserId="+o.getUser_id()+"\nneedZombieDegreeId="+needZombieDegreeId+"\n.cause:"+e.getStackTrace());
 						}
 						/*
-						 * *暂时先将这个评论的去掉
+						 * *暂时先将这个评论的去掉*/
 						StringBuilder strb = new StringBuilder();
 						List<InteractPlanCommentLabel> list = interactPlanCommentLabelService.queryInteractPlanCommentLabelByDateAndTime(df.parse(df.format(currentDate)), df2.parse(df2.format(currentDate)));//查询当前有效标签
 						if(list != null && list.size() > 0){
@@ -277,10 +277,10 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						String[] commentsArray = null;
 						if(strb.length()>0){
 							commentsArray = strb.toString().split(",");
-						}*/
+						}
 						
 						interactWorldService.saveInteractV3(o.getUser_id(),needZombieDegreeId,o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
-								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), null, userlevel.getTime());//添加互动
+								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), commentsArray, userlevel.getTime());//添加互动
 					}catch(Exception e){
 						logger.info(e.getMessage()+"\n"+e.getCause());
 					}
