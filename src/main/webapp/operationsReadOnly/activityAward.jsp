@@ -429,7 +429,7 @@ function submitSerialForm() {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -456,7 +456,7 @@ function submitSerialForm() {
             	$("#iconPath_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#iconImg_add").attr('src', url);
             	$("#iconPath_add").val(url);
             },
@@ -479,7 +479,7 @@ function submitSerialForm() {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -506,7 +506,7 @@ function submitSerialForm() {
             	$("#iconThumbPath_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#iconThumbImg_add").attr('src', url);
             	$("#iconThumbPath_add").val(url);
             },

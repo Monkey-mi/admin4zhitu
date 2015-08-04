@@ -24,7 +24,7 @@ public class OpMsgServiceTest extends BaseTest {
 	
 	@Test
 	public void testSaveNotice() throws Exception {
-		service.saveNotice("http://imzhitu.qiniudn.com/op/notice/2014081101.jpg", "http://www.imzhitu.com", Tag.IOS);
+		service.saveNotice("http://static.imzhitu.com/op/notice/2014081101.jpg", "http://www.imzhitu.com", Tag.IOS);
 	}
 	
 	@Test
@@ -40,7 +40,7 @@ public class OpMsgServiceTest extends BaseTest {
 //		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //		Date endDate = df.parse("2015-06-20 00:00:00");
 //		service.updateStartPageCache(
-//				"http://imzhitu.qiniudn.com/op/notice/2015061001.png",
+//				"http://static.imzhitu.com/op/notice/2015061001.png",
 //				3,"自拍情结",
 //				beginDate , endDate, 10);
 //	}

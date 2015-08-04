@@ -41,7 +41,7 @@ public class ZTWorldServiceTest extends BaseTest {
 	
 	@Test
 	public void testUpdateFilterLogoCache() throws Exception {
-		service.updateFilterLogo(2.0907f, "http://imzhitu.qiniudn.com/world/thumbs/14060233330003.png", "滤镜来自Instagram", Tag.TRUE);
+		service.updateFilterLogo(2.0907f, "http://static.imzhitu.com/world/thumbs/14060233330003.png", "滤镜来自Instagram", Tag.TRUE);
 	}
 	
 	@Test

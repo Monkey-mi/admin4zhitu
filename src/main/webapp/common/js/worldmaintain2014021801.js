@@ -574,9 +574,9 @@ function queryUserInfoAndCheckIsZombie(userId,x,y){
 		if(result['result'] == 0){
 			var platformHead = "<img id='platformImg' src='";
 			var platformNail = "'/>";
-			var platformImg = ["http://imzhitu.qiniudn.com/web%2Fadmin%2Fimages%2Fzhitu1.png",
-			                   "微信","http://imzhitu.qiniudn.com/web%2Fadmin%2Fimages%2Fweibo.png","人人网",
-			                   "http://imzhitu.qiniudn.com/web%2Fadmin%2Fimages%2Fqzone.png"];
+			var platformImg = ["http://static.imzhitu.com/web%2Fadmin%2Fimages%2Fzhitu1.png",
+			                   "微信","http://static.imzhitu.com/web%2Fadmin%2Fimages%2Fweibo.png","人人网",
+			                   "http://static.imzhitu.com/web%2Fadmin%2Fimages%2Fqzone.png"];
 			$("#hover_worldCount").text(result['userInfo']['worldCount']);
 			$("#hover_superb").text(result['superbCount']);
 			$("#hover_concernCount").text(result['userInfo']['concernCount']);

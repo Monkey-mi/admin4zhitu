@@ -15,12 +15,12 @@ public class ZTWorldChildWorldServiceTest extends BaseTest {
 	
 //	@Test
 	public void testSaveChildType() throws Exception {
-		service.saveChildType("http://imzhitu.qiniudn.com/world/thumbs/octagon.png",
+		service.saveChildType("http://static.imzhitu.com/world/thumbs/octagon.png",
 				100,
 				100,
 				"测试描述",
 				"毕业季",
-				"http://imzhitu.qiniudn.com/world/thumbs/octagon.png");
+				"http://static.imzhitu.com/world/thumbs/octagon.png");
 	}
 	
 	@Test

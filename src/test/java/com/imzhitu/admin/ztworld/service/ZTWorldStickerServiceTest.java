@@ -82,8 +82,8 @@ public class ZTWorldStickerServiceTest extends BaseTest {
 	@Test
 	public void saveStickerTest() throws Exception {
 //		ZTWorldSticker sticker = new ZTWorldSticker();
-//		sticker.setStickerPath("http://imzhitu.qiniudn.com/world/sticker/fart-L.png");
-//		sticker.setStickerThumbPath("http://imzhitu.qiniudn.com/world/sticker/fart-S.png");
+//		sticker.setStickerPath("http://static.imzhitu.com/world/sticker/fart-L.png");
+//		sticker.setStickerThumbPath("http://static.imzhitu.com/world/sticker/fart-S.png");
 //		sticker.setTypeId(8);
 //		sticker.setSetId(1);
 //		sticker.setValid(0);
@@ -98,8 +98,8 @@ public class ZTWorldStickerServiceTest extends BaseTest {
 	@Test
 	public void updateStickerTest() throws Exception {
 		ZTWorldSticker sticker = new ZTWorldSticker();
-		sticker.setStickerPath("http://imzhitu.qiniudn.com/world/sticker/fart-L.png");
-		sticker.setStickerThumbPath("http://imzhitu.qiniudn.com/world/sticker/fart-S.png");
+		sticker.setStickerPath("http://static.imzhitu.com/world/sticker/fart-L.png");
+		sticker.setStickerThumbPath("http://static.imzhitu.com/world/sticker/fart-S.png");
 		sticker.setTypeId(8);
 		sticker.setValid(0);
 		sticker.setTopWeight(0);

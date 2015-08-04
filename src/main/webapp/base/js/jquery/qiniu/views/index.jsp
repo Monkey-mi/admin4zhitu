@@ -27,7 +27,7 @@
 				View Source on Github
 			</a>
 		</h1>
-        <input type="hidden" id="domain" value="http://imzhitu.qiniudn.com/">
+        <input type="hidden" id="domain" value="http://static.imzhitu.com/">
         <input type="hidden" id="uptoken_url" value="${webRootPath}/admin_qiniu/uptoken">
 		<ul class="tip col-md-12 text-mute">
 			<li>

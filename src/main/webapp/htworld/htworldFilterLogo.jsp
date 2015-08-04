@@ -194,7 +194,7 @@ function loadAddFormValidate() {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -221,7 +221,7 @@ function loadAddFormValidate() {
             	$("#logoPath_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#logoImg_add").attr('src', url);
             	$("#logoPath_add").val(url);
             },

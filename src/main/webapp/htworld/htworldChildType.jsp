@@ -791,7 +791,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -826,7 +826,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath1_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg1_add").attr('src', url);
             	$("#typePath1_add").val(url);
             },
@@ -843,7 +843,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -878,7 +878,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath2_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg2_add").attr('src', url);
             	$("#typePath2_add").val(url);
             },
@@ -895,7 +895,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -930,7 +930,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath3_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg3_add").attr('src', url);
             	$("#typePath3_add").val(url);
             },
@@ -947,7 +947,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -981,7 +981,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath4_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg4_add").attr('src', url);
             	$("#typePath4_add").val(url);
             },
@@ -998,7 +998,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -1032,7 +1032,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath5_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg5_add").attr('src', url);
             	$("#typePath5_add").val(url);
             },
@@ -1049,7 +1049,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -1083,7 +1083,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath6_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg6_add").attr('src', url);
             	$("#typePath6_add").val(url);
             },
@@ -1100,7 +1100,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -1134,7 +1134,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath7_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg7_add").attr('src', url);
             	$("#typePath7_add").val(url);
             },
@@ -1151,7 +1151,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -1185,7 +1185,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath8_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg8_add").attr('src', url);
             	$("#typePath8_add").val(url);
             },
@@ -1202,7 +1202,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -1236,7 +1236,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath9_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg9_add").attr('src', url);
             	$("#typePath9_add").val(url);
             },
@@ -1253,7 +1253,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -1286,7 +1286,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath10_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg10_add").attr('src', url);
             	$("#typePath10_add").val(url);
             },
@@ -1304,7 +1304,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -1333,7 +1333,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#descPath_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#descImg_add").attr('src', url);
             	$("#descPath_add").val(url);
             },
@@ -1352,7 +1352,7 @@ function loadAddFormValidate(index, isUpdate) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -1382,7 +1382,7 @@ function loadAddFormValidate(index, isUpdate) {
             	$("#typePath_add_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#typeImg_add").attr('src', url);
             	$("#typePath_add").val(url);
             	$("#typeImg1_add").attr("src", "./base/images/bg_empty.png");

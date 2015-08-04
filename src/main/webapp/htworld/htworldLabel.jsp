@@ -858,7 +858,7 @@ function clearSponsorsActLabel() {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -885,7 +885,7 @@ function clearSponsorsActLabel() {
             	$("#titlePath_actlabel_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#titleImg_actlabel").attr('src', url);
             	$("#titlePath_actlabel").val(url);
             },
@@ -908,7 +908,7 @@ function clearSponsorsActLabel() {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -935,7 +935,7 @@ function clearSponsorsActLabel() {
             	$("#titleThumbPath_actlabel_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#titleThumbImg_actlabel").attr('src', url);
             	$("#titleThumbPath_actlabel").val(url);
             },
@@ -958,7 +958,7 @@ function clearSponsorsActLabel() {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -985,7 +985,7 @@ function clearSponsorsActLabel() {
             	$("#channelPath_actlabel_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#channelImg_actlabel").attr('src', url);
             	$("#channelPath_actlabel").val(url);
             },

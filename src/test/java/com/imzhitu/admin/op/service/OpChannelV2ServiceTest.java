@@ -32,7 +32,7 @@ public class OpChannelV2ServiceTest extends BaseTest {
 	
 	@Test
 	public void insertChannelTest()throws Exception{
-		service.insertOpChannel(4, "测试添加频道V2", "title", "subtitle", "description", "http://imzhitu.qiniudn.com/op/activity/1415436817000.png", 1, "女神","1", 0, 0,0,0,0,Tag.FALSE,Tag.FALSE,0,Tag.FALSE,Tag.FALSE,Tag.TRUE,10001);
+		service.insertOpChannel(4, "测试添加频道V2", "title", "subtitle", "description", "http://static.imzhitu.com/op/activity/1415436817000.png", 1, "女神","1", 0, 0,0,0,0,Tag.FALSE,Tag.FALSE,0,Tag.FALSE,Tag.FALSE,Tag.TRUE,10001);
 	}
 	
 	@Test

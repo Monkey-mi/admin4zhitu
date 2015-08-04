@@ -85,10 +85,10 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
     @Autowired
     private com.hts.web.operations.service.ChannelService webChannelService;
 
-    private String baseThumbPathAixin = "http://imzhitu.qiniudn.com/world/thumbs/1403056393000.png";
-    private String baseThumbPathXing = "http://imzhitu.qiniudn.com/world/thumbs/1403057093000.png";
-    private String baseThumbPathHuabian = "http://imzhitu.qiniudn.com/world/thumbs/1403056953000.png";
-    private String baseThumbPathHua = "http://imzhitu.qiniudn.com/world/thumbs/1403057046000.png";
+    private String baseThumbPathAixin = "http://static.imzhitu.com/world/thumbs/1403056393000.png";
+    private String baseThumbPathXing = "http://static.imzhitu.com/world/thumbs/1403057093000.png";
+    private String baseThumbPathHuabian = "http://static.imzhitu.com/world/thumbs/1403056953000.png";
+    private String baseThumbPathHua = "http://static.imzhitu.com/world/thumbs/1403057046000.png";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -510,7 +510,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	    Date date = new Date(time * 1000);
 	    SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
 	    String dateStr = df.format(date);
-	    return "http://imzhitu.qiniudn.com/ios/image/" + dateStr + "/" + localPath.substring(nameBeginPos);
+	    return "http://static.imzhitu.com/ios/image/" + dateStr + "/" + localPath.substring(nameBeginPos);
 	} catch (Exception e) {
 	    throw new Exception("名字出错");
 	}

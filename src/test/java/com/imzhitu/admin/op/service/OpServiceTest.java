@@ -34,12 +34,12 @@ public class OpServiceTest extends BaseTest{
 		Integer id = (int) (Math.random() * 1000000);
 		service.saveActivity(
 				id,
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
 				"测试","测试","测试",
 				"http://www.imzhitu.com/testActivity",
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg",
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg",
 				new Date(),
 				new Date(),
 				Tag.SQUARE_ACTIVITY_NORMAL, 
@@ -53,12 +53,12 @@ public class OpServiceTest extends BaseTest{
 	public void testUpdateActivity() throws Exception {
 		service.updateActivity(
 				34,
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
 				"测试","测试","测试",
 				"http://www.imzhitu.com/testActivity",
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg",
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg",
 				new Date(),
 				new Date(),
 				Tag.SQUARE_ACTIVITY_NORMAL, 
@@ -105,8 +105,8 @@ public class OpServiceTest extends BaseTest{
 	@Test
 	public void testSaveActivityAward() throws Exception {
 		service.saveActivityAward(2, 
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg.thumbnail",
-				"http://imzhitu.qiniudn.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg.thumbnail",
+				"http://static.imzhitu.com/avatar/s/2014/02/05/15/23d241de6d2eb98675e4ee89c46f044c.jpg", 
 				"名称",
 				"描述",
 				100.00d,

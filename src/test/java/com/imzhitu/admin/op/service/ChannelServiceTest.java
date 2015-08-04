@@ -81,7 +81,7 @@ public class ChannelServiceTest extends BaseTest {
 		channel.setChannelName("测试频道" + rand); 
 		channel.setValid(Tag.TRUE);
 		channel.setChannelTitle("测试频道标题" + rand);
-		channel.setChannelIcon("http://imzhitu.qiniudn.com/op%2Fchannel%2F%E5%90%83%E8%B4%A7_%402x.png");
+		channel.setChannelIcon("http://static.imzhitu.com/op%2Fchannel%2F%E5%90%83%E8%B4%A7_%402x.png");
 		service.updateChannel(channel);;
 	}
 	

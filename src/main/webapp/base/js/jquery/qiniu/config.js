@@ -4,5 +4,5 @@ module.exports = {
     'Bucket_Name': 'imzhitu',
     'Port': 18080,
     'Uptoken_Url': '/admin/admin_qiniu/uptoken',
-    'Domain': 'http://imzhitu.qiniudn.com/'
+    'Domain': 'http://static.imzhitu.com/'
 };

@@ -873,7 +873,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
         uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://imzhitu.qiniudn.com/',
+        domain: 'http://static.imzhitu.com/',
         unique_names: false,
         save_key: false,
         auto_start: true,
@@ -900,7 +900,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
             	$("#channelIcon_edit_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://imzhitu.qiniudn.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#channelImg_edit").attr('src', url);
             	$("#channelIcon_edit").val(url);
             },

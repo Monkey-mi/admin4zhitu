@@ -48,7 +48,7 @@ public class InteractZombieWorldServiceTest extends BaseTest{
 //			Date date = new Date(time*1000);
 //			SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
 //			String dateStr = df.format(date);
-//			log.info("http://imzhitu.qiniudn.com/ios/image/" + dateStr + "/"+localPath.substring(nameBeginPos+1));
+//			log.info("http://static.imzhitu.com/ios/image/" + dateStr + "/"+localPath.substring(nameBeginPos+1));
 //		}catch(Exception e){
 //			throw new Exception("名字出错");
 //		}
