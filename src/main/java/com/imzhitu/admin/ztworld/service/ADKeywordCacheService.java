@@ -16,14 +16,20 @@ public interface ADKeywordCacheService extends BaseCacheDao {
      * @author zhangbo 2015年7月17日
      * @return
      */
-    public Map<String, Integer> getADKeywordCacheFromRedis();
+    Map<String, Integer> getADKeywordCacheFromRedis();
+    
+    /**
+     * 把redis缓存中广告关键词集合持久化到DB
+     * @author zhangbo	2015年8月5日
+     */
+    void setADKeywordCacheToDB();
 
     /**
-     * 刷新广告关键字缓存
+     * 从数据库中刷新广告关键字集合到redis缓存
      * 
      * @author zhangbo 2015年7月17日
      */
-    public void refreshADKeywordCache();
+    void refreshADKeywordCacheToRedis();
     
     /**
      * redis-cli发布消息，供其他redis-cli接收
@@ -31,6 +37,6 @@ public interface ADKeywordCacheService extends BaseCacheDao {
      * @param msg	发布的消息
      * @author zhangbo	2015年7月17日
      */
-    public void publisher(String msg);
+    void publisher(String msg);
 
 }
