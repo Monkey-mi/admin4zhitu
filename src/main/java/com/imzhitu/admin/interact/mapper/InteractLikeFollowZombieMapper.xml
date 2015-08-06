@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractLikeFollowZombieMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractLikeFollowZombie" id="ZombieMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="zombieId" column="zombie_id" jdbcType="INTEGER"/>
+		<result property="zombieName" column="user_name" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertLikeFollowZombie">
+		insert into hts_admin.interact_like_follow_zombie
+		(zombie_id) values (#{zombieId})
+	</insert>
+	
+	<!-- batch Delete -->
+	<delete id="batchDeleteLikeFollowZombie">
+		delete from hts_admin.interact_like_follow_zombie
+		where id in
+		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- query -->
+	<select id="queryLikeFollowZombie" resultMap="ZombieMap">
+		select ilfz.*,ui.user_name
+		from hts_admin.interact_like_follow_zombie ilfz,hts.user_info ui
+		where
+		ilfz.zombie_id = ui.id
+		<if test="id != null">
+			and ilfz.id = #{id}
+		</if>
+		<if test="maxId != null and maxId != 0">
+			and <![CDATA[ ilfz.id <= #{maxId}]]>
+		</if>
+		<if test="zombieId != null">
+			and ilfz.zombie_id = #{zombieId}
+		</if>
+		order by ilfz.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- query total count -->
+	<select id="queryLikeFollowZombieTotalCount" resultType="long">
+		select count(*)
+		from hts_admin.interact_like_follow_zombie ilfz
+		<where>
+			<if test="id != null">
+				ilfz.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[ ilfz.id <= #{maxId}]]>
+			</if>
+			<if test="zombieId != null">
+				and ilfz.zombie_id = #{zombieId}
+			</if>
+		</where>		
+	</select>
+	
+	<!-- query n random unInteract zombie id -->
+	<select id="queryNRandomNotCommentNotFollowZombieId" resultType="Integer">
+		select ilfz.id
+		from hts_admin.interact_like_follow_zombie ilfz
+		where not exists(
+			select uc.id from hts.user_concern uc
+			where uc.concern_id=ilfz.zombie_id and uc.user_id=#{userId}
+		) and not exists(
+			select iwc.id from hts_admin.interact_world_comment wc
+			where wc.world_id=#{worldId} and wc.user_id = ilfz.zombie_id
+		)
+	</select>
+	
+</mapper>
