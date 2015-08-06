@@ -300,4 +300,12 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 		}
 	}
 
+	@Override
+	public List<InteractCommentLabel> getAllCommentLableUse() throws Exception {
+		List<InteractCommentLabel> list = null;
+		return list;
+	}
+	
+	
+
 }
