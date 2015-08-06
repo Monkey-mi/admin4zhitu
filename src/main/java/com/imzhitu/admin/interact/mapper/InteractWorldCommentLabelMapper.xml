@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractWorldCommentLabelMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractWorldCommentLabel" id="WorldCommentLabelMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="operator" column="operator" jdbcType="INTEGER"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="labelIds" column="label_ids" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertWorldCommentLabel">
+		insert into hts_admin.interact_world_comment_label 
+		(world_id,label_ids,operator,date_add)
+		values
+		(#{worldId},#{labelIds},#{operator},#{addDate})
+	</insert>
+	
+	<!-- QUERY -->
+	<select id="queryWorldCommentLabel" resultMap="WorldCommentLabelMap">
+		select *
+		from hts_admin.interact_world_comment_label iwcl
+		<where>
+			<if test="id != null">
+				iwcl.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[ iwcl.id <= #{maxId}]]>
+			</if>
+			<if test="worldId != null">
+				and iwcl.world_id = #{worldId}
+			</if>
+		</where>
+		order by iwcl.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+</mapper>
