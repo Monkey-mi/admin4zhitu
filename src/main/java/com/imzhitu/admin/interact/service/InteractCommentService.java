@@ -178,4 +178,9 @@ public interface InteractCommentService extends BaseService {
 	 * @throws Exception
 	 */
 	public List<InteractCommentLabelTree> getAllLabelTree()throws Exception;
+	
+	/*
+	 * 获取标签中的非一级标签
+	 * */
+	public List<InteractCommentLabel> getAllCommentLableUse() throws Exception;
 }
