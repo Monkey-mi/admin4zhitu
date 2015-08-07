@@ -116,7 +116,7 @@
 			</result>
 		</action>
 		
-		<action name="channelWorldLabel_*" class="com.imzhitu.admin.interact.InteractChannelWorldLabelAction" method="{1}">
+		<action name="channelWorldLabel_*" class="com.imzhitu.admin.interact.InteractWorldLabelAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>
