@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpNotice;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
+import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.constant.LoggerKeies;
@@ -94,8 +97,11 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	}
 
 	@Override
-	public void pushAppMsg(final OpSysMsg msg, Boolean inApp, Boolean noticed)
+	public void pushAppMsg(final OpSysMsg msg, Boolean inApp, Boolean noticed, Integer uid)
 			throws Exception {
+		
+		Integer pushAction = Tag.PUSH_ACTION_SYS;
+		
 		if(msg.getObjId() == null || msg.getObjId() == 0) {
 			Integer objId = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
 			msg.setObjId(objId);
@@ -103,6 +109,20 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		msg.setSenderId(appMsgSenderId);
 		msg.setMsgDate(new Date());
 		
+		String sid = null;
+		if(msg.getObjType().equals(Tag.USER_MSG_STAR_RECOMMEND)) {
+			pushAction = Tag.PUSH_ACTION_USER_REC_MSG;
+			sid = String.valueOf(msg.getObjId());
+		}
+		
+		if(uid != null && uid != 0) {
+			msg.setRecipientId(uid);
+			sysMsgMapper.saveMsg(msg);
+			List<Integer> ulist = new ArrayList<Integer>();
+			ulist.add(uid);
+			pushService.pushBulletin(pushAction, msg.getContent(), sid, ulist);
+			return;
+		}
 		
 		// 向数据库插入消息
 		if(inApp) {
@@ -135,11 +155,13 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 				}
 				final int maxId4Thread = maxId;
 				final int minId4Thread = minId;
+				final String sidThread = sid;
+				final int pushActionThread = pushAction;
 				pushService.getPushExecutor().execute(new Runnable() {
 
 					@Override
 					public void run() {
-						batchPushAppMsg(msg.getContent(), minId4Thread, maxId4Thread);
+						batchPushAppMsg(pushActionThread, msg.getContent(), sidThread, minId4Thread, maxId4Thread);
 					}
 				});
 			}
@@ -165,7 +187,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 //	}
 	
 	
-	public void batchPushAppMsg(String msg, Integer minId, Integer maxId) {
+	public void batchPushAppMsg(Integer pushAction, String msg, String sid, Integer minId, Integer maxId) {
 		List<Integer> uids = null;
 		if(maxId == -1) {
 			uids = userInfoMapper.queryUID(minId, appPushLimit); // 第一次推送
@@ -177,12 +199,12 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			int startId = uids.get(0);
 			int endId = uids.get(uids.size() - 1);
 			try { 
-				pushService.pushBulletin(msg, uids);
+				pushService.pushBulletin(pushAction, msg, sid, uids);
 			} catch(Exception e) {
 				appPushLogger.warn("push app msg error : " + e.getMessage());
 			}
 			appPushLogger.info("push app msg from " + startId + "-" + endId);
-			batchPushAppMsg(msg, minId, endId);
+			batchPushAppMsg(pushAction, msg, sid, minId, endId);
 		}
 	}
 
