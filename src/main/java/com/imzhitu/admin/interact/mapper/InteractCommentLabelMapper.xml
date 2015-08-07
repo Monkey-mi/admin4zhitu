@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractCommentLabelMapper">
+<resultMap type="com.imzhitu.admin.common.pojo.InteractCommentLabel" id="InteractCommentLabelMap">
+<result property="id" column="id" jdbcType="INTEGER"/>
+<result property="labelName" column="label_name" jdbcType="VARCHAR"/>
+</resultMap>
+
+<select id="selectInteractCommentLabel" resultMap="InteractCommentLabelMap">
+SELECT * 
+FROM  interact_comment_label 
+WHERE group_id !=0
+</select>
+</mapper>

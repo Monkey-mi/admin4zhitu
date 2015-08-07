@@ -5,6 +5,7 @@ import java.util.List;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.dao.BaseDao;
 import com.imzhitu.admin.common.pojo.InteractComment;
+import com.imzhitu.admin.common.pojo.InteractCommentLabel;
 
 public interface InteractCommentDao extends BaseDao {
 
@@ -99,5 +100,6 @@ public interface InteractCommentDao extends BaseDao {
 	 * @param id
 	 */
 	public void updateCommentContentById(String content,Integer id);
+	
 	
 }

@@ -37,6 +37,7 @@ import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.interact.dao.InteractCommentDao;
 import com.imzhitu.admin.interact.dao.InteractCommentLabelDao;
 import com.imzhitu.admin.interact.dao.InteractWorldCommentDao;
+import com.imzhitu.admin.interact.mapper.InteractCommentLabelMapper;
 import com.imzhitu.admin.interact.service.InteractCommentService;
 
 @Service
@@ -57,6 +58,9 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 	@Autowired
 	private InteractWorldCommentDao interactWorldCommentDao;
 	
+	
+	@Autowired
+	private InteractCommentLabelMapper commentLableMapper;
 	
 	@Override
 	public void batchSaveComment(File file, Integer labelId) throws Exception {
@@ -302,7 +306,7 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public List<InteractCommentLabel> getAllCommentLableUse() throws Exception {
-		List<InteractCommentLabel> list = null;
+			List<InteractCommentLabel> list = commentLableMapper.selectInteractCommentLabel();
 		return list;
 	}
 	

@@ -13,6 +13,7 @@ import com.hts.web.base.database.SQLUtil;
 import com.hts.web.common.dao.impl.BaseDaoImpl;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.InteractComment;
+import com.imzhitu.admin.common.pojo.InteractCommentLabel;
 import com.imzhitu.admin.interact.dao.InteractCommentDao;
 
 @Repository
@@ -46,6 +47,8 @@ public class InteractCommentDaoImpl extends BaseDaoImpl implements InteractComme
 	private static final String UPDATE_COMMENT_BY_ID = "update " + table + " set content=?, label_id=? where id=?";
 	
 	private static final String UPDATE_COMMENT_CONTENT_BY_ID = "update " + table + " set content=? where id=?";
+	
+	private static final String QUERY_INTERACT_COMMENT_LABEL = "select * from interact_comment_label where group_id != 0";
 	
 	@Override
 	public void saveComment(InteractComment comment) {
