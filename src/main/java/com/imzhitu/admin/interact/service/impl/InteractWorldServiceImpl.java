@@ -31,16 +31,19 @@ import com.imzhitu.admin.common.pojo.InteractUserFollow;
 import com.imzhitu.admin.common.pojo.InteractWorld;
 import com.imzhitu.admin.common.pojo.InteractWorldClick;
 import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
+import com.imzhitu.admin.common.pojo.InteractWorldLevelListDto;
 import com.imzhitu.admin.common.pojo.InteractWorldLiked;
 import com.imzhitu.admin.common.pojo.OpZombieDegreeUserLevel;
 import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserLevelListDto;
+import com.imzhitu.admin.common.pojo.ZTWorldLevelDto;
 import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.interact.dao.InteractCommentDao;
 import com.imzhitu.admin.interact.dao.InteractTrackerDao;
 import com.imzhitu.admin.interact.dao.InteractUserDao;
 import com.imzhitu.admin.interact.dao.InteractWorldDao;
 import com.imzhitu.admin.interact.dao.InteractWorldlevelDao;
+import com.imzhitu.admin.interact.dao.InteractWorldlevelListDao;
 import com.imzhitu.admin.interact.mapper.InteractUserFollowMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldClickMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldCommentMapper;
@@ -201,6 +204,9 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private InteractUserlevelService userLevelService;
+	
+	@Autowired
+	private InteractWorldlevelListDao interactWorldlevelListDao ;
 	
 	@Autowired
 	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
@@ -1665,20 +1671,22 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	public void saveInteractV3(Integer worldId ,String labelIdsStr)throws Exception{
 		Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
 		UserLevelListDto userLevelDto = userLevelListService.QueryUserlevelByUserId(uid);
+		//所有的注释是为了现在没有绑定，所以硬编码来查询织图等级。等以后绑定了，再开放
+//		InteractWorldLevelListDto worldLevelListDto = interactWorldlevelListDao.queryWorldLevelListByWid(worldId); 
 		Integer needZombieDegreeId = null;
 		Integer clickCount = 0;
 		Integer likeCount = 0;
 		Integer commentCount = 0;
 		Integer minuteDuration = 0;
 		String[] commentIds = null;
-		if( null != userLevelDto){
+//		if( null != worldLevelListDto){
 			try{
 				//获取用户等级里面的值
-				UserLevelDto userLevel = userLevelService.QueryUserlevelById(userLevelDto.getUser_level_id());
-				clickCount = userLevel.getMin_play_times() + (int)(Math.round(Math.random()*(userLevel.getMax_play_times()-userLevel.getMin_play_times())));
-				likeCount  = userLevel.getMin_liked_count() + (int)(Math.round(Math.random()*(userLevel.getMax_liked_count() - userLevel.getMin_liked_count())));
-				commentCount = userLevel.getMin_comment_count() + (int)(Math.round(Math.random()*(userLevel.getMax_comment_count() - userLevel.getMin_comment_count())));
-				minuteDuration = userLevel.getTime();
+				ZTWorldLevelDto worldLevelDto = interactWorldlevelDao.QueryWorldlevelById(64);//(worldLevelListDto.getWorld_level_id());先硬编码，后面再优化
+				clickCount = worldLevelDto.getMin_play_times() + (int)(Math.round(Math.random()*(worldLevelDto.getMax_play_times()-worldLevelDto.getMin_play_times())));
+				likeCount  = worldLevelDto.getMin_liked_count() + (int)(Math.round(Math.random()*(worldLevelDto.getMax_liked_count() - worldLevelDto.getMin_liked_count())));
+				commentCount = worldLevelDto.getMin_comment_count() + (int)(Math.round(Math.random()*(worldLevelDto.getMax_comment_count() - worldLevelDto.getMin_comment_count())));
+				minuteDuration = worldLevelDto.getTime();
 				
 				//从对应的标签中获取评论
 				StringBuilder sb = new StringBuilder();
@@ -1727,9 +1735,9 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			}catch(Exception e){
 				needZombieDegreeId = commonZombieDegreeId;
 			}
-		}else{
-			throw new Exception("saveInteractV3:userLevelListService.QueryUserlevelByUserId is null.\nuserId="+uid);
-		}
+//		}else{
+//			throw new Exception("saveInteractV3:userLevelListService.QueryUserlevelByUserId is null.\nuserId="+uid);
+//		}
 		saveInteractV3(uid,needZombieDegreeId,worldId,clickCount,likeCount,commentIds,minuteDuration);
 	}
 	
