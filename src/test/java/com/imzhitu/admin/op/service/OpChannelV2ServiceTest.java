@@ -43,8 +43,8 @@ public class OpChannelV2ServiceTest extends BaseTest {
 	
 	@Test
 	public void queryYestodayWorldIncreasementTest()throws Exception{
-		long r = service.queryYestodayWorldIncreasement(null, null, 11834);
-		log.info("====================>"+r);
+//		long r = service.queryYestodayWorldIncreasement(null, null, 11834);
+//		log.info("====================>"+r);
 	}
 	
 	@Test

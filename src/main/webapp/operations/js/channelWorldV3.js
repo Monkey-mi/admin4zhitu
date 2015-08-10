@@ -191,7 +191,7 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ '<span>|</span>');
 	$opt2LineBtn.append($line2CommentBtn);
 	drawChannelWorldLabelBtn($opt2LineBtn, worlds, index);
-	
+	   
 	$opt.append($opt1LineTitle);
 	$opt.append($opt1LineBtn);
 	$opt.append($optDivider);

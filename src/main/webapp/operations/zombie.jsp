@@ -183,7 +183,7 @@
 		        handler:function(){
 		        	endEditing();
 		        	var rows = $("#htm_table").datagrid('getChanges', "updated"); 
-		        	var updateSignatureURL = "./admin_op/zombieUpdate_updateSexAndSignature";
+		        	var updateSignatureURL = "./admin_op/zombie_updateSexAndSignature";
 		        	$("#htm_table").datagrid('loading');
 		        	$.post(updateSignatureURL,{
 		        		'zombieInfoJSON':JSON.stringify(rows)
