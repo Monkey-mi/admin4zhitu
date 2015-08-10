@@ -47,7 +47,6 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 	@Override
 	public void insertChannelWorldLabel(Integer channelId, Integer worldId,
 			String label_ids, Integer operator) throws Exception {
-		// TODO Auto-generated method stub
 		if(null == label_ids || "".equals(label_ids.trim())){
 			throw new Exception("标签不能为空");
 		}
@@ -56,7 +55,8 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 		dto.setChannelId(channelId);
 		dto.setWorldId(worldId);
 		dto.setLabel_ids(label_ids);
-		dto.setAddDate(new Date());
+		// TODO	查询时并用不到日期与人员，所以不用传递数据	----- zhangbo	2015-08-06
+		dto.setAddDate(new Date());	
 		dto.setOperator(operator);
 		
 		List<InteractChannelLevel> channelLevelList = null;
@@ -145,7 +145,7 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 	@Override
 	public List<InteractChannelWorldLabel> queryChannelWorldLabel(Integer id,
 			Integer worldId, Integer channelId) throws Exception {
-		// TODO Auto-generated method stub
+		// TODO 此方法只被queryChannelWorldLabel方法调用，但是调用时是不传递id属性的，所以id参数是否有保留必要？-----zhangbo	2015-08-06
 		InteractChannelWorldLabel dto = new InteractChannelWorldLabel();
 		dto.setId(id);
 		dto.setChannelId(channelId);
@@ -156,7 +156,7 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 	@Override
 	public long queryChannelWorldLabelTotalCount(Integer id, Integer worldId,
 			Integer channelId) throws Exception {
-		// TODO Auto-generated method stub
+		// TODO 此方法没有被任何方法引用，要整改，看业务有没有需求，要展示与频道相关的标签-------zhangbo	2015-08-06
 		InteractChannelWorldLabel dto = new InteractChannelWorldLabel();
 		dto.setId(id);
 		dto.setChannelId(channelId);
@@ -190,5 +190,6 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 			jsonMap.put(OptResult.JSON_KEY_INTERACT, Tag.FALSE);
 		}
 	}
+
 
 }

@@ -23,7 +23,6 @@ public class InteractCommentLabelChannelServiceImpl extends BaseServiceImpl impl
 	@Override
 	public void insertCommentLabelChannel(Integer channelId,
 			Integer commentLabelId, Integer operator) throws Exception {
-		// TODO Auto-generated method stub
 		InteractCommentLabelChannel dto = new InteractCommentLabelChannel();
 		dto.setChannelId(channelId);
 		dto.setCommentLabelId(commentLabelId);
@@ -35,7 +34,6 @@ public class InteractCommentLabelChannelServiceImpl extends BaseServiceImpl impl
 
 	@Override
 	public void batchDeleteCommentLabelChannel(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		commentLabelChannelMapper.batchDeleteCommentLabelChannel(ids);
 	}
@@ -44,7 +42,6 @@ public class InteractCommentLabelChannelServiceImpl extends BaseServiceImpl impl
 	public void queryCommentLabelChannel(Integer id, Integer channelId,
 			Integer commentLabelId, Integer maxId, int page, int rows,
 			Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		InteractCommentLabelChannel dto = new InteractCommentLabelChannel();
 		dto.setChannelId(channelId);
 		dto.setCommentLabelId(commentLabelId);
@@ -73,7 +70,6 @@ public class InteractCommentLabelChannelServiceImpl extends BaseServiceImpl impl
 	@Override
 	public long queryComemntLabelChannelTotalCount(Integer id,
 			Integer channelId, Integer commentLabelId,Integer maxId) throws Exception {
-		// TODO Auto-generated method stub
 		InteractCommentLabelChannel dto = new InteractCommentLabelChannel();
 		dto.setChannelId(channelId);
 		dto.setCommentLabelId(commentLabelId);
@@ -85,15 +81,12 @@ public class InteractCommentLabelChannelServiceImpl extends BaseServiceImpl impl
 	@Override
 	public List<InteractCommentLabelChannel> queryCommentLabelByChannelId(Integer channelId)
 			throws Exception {
-		// TODO Auto-generated method stub
-		
 		return commentLabelChannelMapper.queryCommentLabelByChannelId(channelId);
 	}
 
 	@Override
 	public List<InteractCommentLabelChannel> queryCommentLabelNameByLabelIds(
 			String label_ids) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[]ids = StringUtil.convertStringToIds(label_ids);
 		return commentLabelChannelMapper.queryCommentLabelNameByLabelIds(ids);
 	}

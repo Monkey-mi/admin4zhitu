@@ -31,6 +31,11 @@ public class InteractWorldServiceTest extends BaseTest {
 	}
 	
 	@Test
+	public void testSaveInteractV3ByUserLevelAndLabel()throws Exception{
+		service.saveInteractV3(25594, "39,40");
+	}
+	
+	@Test
 	public void testBuildInteracts() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		service.buildInteracts(16220, 0, 1, 10, jsonMap);

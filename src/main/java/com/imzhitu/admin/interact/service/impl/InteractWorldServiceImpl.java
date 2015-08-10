@@ -31,21 +31,26 @@ import com.imzhitu.admin.common.pojo.InteractUserFollow;
 import com.imzhitu.admin.common.pojo.InteractWorld;
 import com.imzhitu.admin.common.pojo.InteractWorldClick;
 import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
+import com.imzhitu.admin.common.pojo.InteractWorldLevelListDto;
 import com.imzhitu.admin.common.pojo.InteractWorldLiked;
 import com.imzhitu.admin.common.pojo.OpZombieDegreeUserLevel;
+import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserLevelListDto;
+import com.imzhitu.admin.common.pojo.ZTWorldLevelDto;
 import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.interact.dao.InteractCommentDao;
 import com.imzhitu.admin.interact.dao.InteractTrackerDao;
 import com.imzhitu.admin.interact.dao.InteractUserDao;
 import com.imzhitu.admin.interact.dao.InteractWorldDao;
 import com.imzhitu.admin.interact.dao.InteractWorldlevelDao;
+import com.imzhitu.admin.interact.dao.InteractWorldlevelListDao;
 import com.imzhitu.admin.interact.mapper.InteractUserFollowMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldClickMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldCommentMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldLikedMapper;
 import com.imzhitu.admin.interact.service.InteractCommentService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
+import com.imzhitu.admin.interact.service.InteractUserlevelService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.dao.UserZombieDao;
 import com.imzhitu.admin.op.mapper.OpZombieMapper;
@@ -196,6 +201,12 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private InteractUserlevelListService userLevelListService;
+	
+	@Autowired
+	private InteractUserlevelService userLevelService;
+	
+	@Autowired
+	private InteractWorldlevelListDao interactWorldlevelListDao ;
 	
 	@Autowired
 	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
@@ -1631,6 +1642,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		Integer needZombieDegreeId = null;
 		if( null != userLevelDto){
 			try{
+				//如果clickCount、likeCount为空，则采用userlevel里的值
+				
 				List<OpZombieDegreeUserLevel> zombieDegreeUserLevelList = zombieDegreeUserLevelService.queryZombieDegree(null, null, userLevelDto.getUser_level_id());
 				if(zombieDegreeUserLevelList != null && zombieDegreeUserLevelList.size() == 1){
 					needZombieDegreeId = zombieDegreeUserLevelList.get(0).getZombieDegreeId();
@@ -1645,6 +1658,89 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		}
 		saveInteractV3(uid,needZombieDegreeId,worldId,clickCount,likeCount,commentIds,minuteDuration);
 	}
+	
+	
+	
+	/**
+	 * 根据织图id、织图标签，进行用户等级的互动，
+	 * @param worldId
+	 * @param labelIdsStr
+	 * @throws Exception
+	 */
+	@Override
+	public void saveInteractV3(Integer worldId ,String labelIdsStr)throws Exception{
+		Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
+		UserLevelListDto userLevelDto = userLevelListService.QueryUserlevelByUserId(uid);
+		//所有的注释是为了现在没有绑定，所以硬编码来查询织图等级。等以后绑定了，再开放
+//		InteractWorldLevelListDto worldLevelListDto = interactWorldlevelListDao.queryWorldLevelListByWid(worldId); 
+		Integer needZombieDegreeId = null;
+		Integer clickCount = 0;
+		Integer likeCount = 0;
+		Integer commentCount = 0;
+		Integer minuteDuration = 0;
+		String[] commentIds = null;
+//		if( null != worldLevelListDto){
+			try{
+				//获取用户等级里面的值
+				ZTWorldLevelDto worldLevelDto = interactWorldlevelDao.QueryWorldlevelById(64);//(worldLevelListDto.getWorld_level_id());先硬编码，后面再优化
+				clickCount = worldLevelDto.getMin_play_times() + (int)(Math.round(Math.random()*(worldLevelDto.getMax_play_times()-worldLevelDto.getMin_play_times())));
+				likeCount  = worldLevelDto.getMin_liked_count() + (int)(Math.round(Math.random()*(worldLevelDto.getMax_liked_count() - worldLevelDto.getMin_liked_count())));
+				commentCount = worldLevelDto.getMin_comment_count() + (int)(Math.round(Math.random()*(worldLevelDto.getMax_comment_count() - worldLevelDto.getMin_comment_count())));
+				minuteDuration = worldLevelDto.getTime();
+				
+				//从对应的标签中获取评论
+				StringBuilder sb = new StringBuilder();
+				Integer [] labelIds = StringUtil.convertStringToIds(labelIdsStr);
+				Integer avetege = (int)(commentCount / labelIds.length);
+				avetege = avetege > 0 ? avetege : 1;
+				
+				for( int i=0; i<labelIds.length; i++){
+					if(commentCount >= avetege){
+						commentCount -= avetege;
+						List<Integer> commentList = interactCommentService.getRandomCommentIds(labelIds[i], avetege);
+						if(sb.length() > 0){
+							sb.append(',');
+						}
+						if (commentList != null && commentList.size() > 0) {
+						    String commentStrs = commentList.toString();
+						    sb.append(commentStrs.substring(1, commentStrs.length()-1)); 
+						}
+					}else if( commentCount > 0){
+						List<Integer> commentList = interactCommentService.getRandomCommentIds(labelIds[i], (int)commentCount);
+						if(sb.length() > 0){
+							sb.append(',');
+						}
+						if (commentList != null && commentList.size() > 0) {
+						    String commentStrs = commentList.toString();
+						    sb.append(commentStrs.substring(1, commentStrs.length()-1)); 
+						}
+						break;
+					}else{
+						break;
+					}
+				}
+				
+				if(sb.length() > 0){
+					String commentStr = sb.toString();
+					commentIds = commentStr.split(",");
+				}
+				
+				//获取用户对应的马甲等级
+				List<OpZombieDegreeUserLevel> zombieDegreeUserLevelList = zombieDegreeUserLevelService.queryZombieDegree(null, null, userLevelDto.getUser_level_id());
+				if(zombieDegreeUserLevelList != null && zombieDegreeUserLevelList.size() == 1){
+					needZombieDegreeId = zombieDegreeUserLevelList.get(0).getZombieDegreeId();
+				}else{
+					needZombieDegreeId = commonZombieDegreeId;
+				}
+			}catch(Exception e){
+				needZombieDegreeId = commonZombieDegreeId;
+			}
+//		}else{
+//			throw new Exception("saveInteractV3:userLevelListService.QueryUserlevelByUserId is null.\nuserId="+uid);
+//		}
+		saveInteractV3(uid,needZombieDegreeId,worldId,clickCount,likeCount,commentIds,minuteDuration);
+	}
+	
 	
 	@Override
 	public void saveChannelInteractV3(Integer channelId,Integer worldId,Integer clickCount,

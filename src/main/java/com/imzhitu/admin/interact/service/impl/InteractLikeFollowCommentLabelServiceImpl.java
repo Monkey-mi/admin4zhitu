@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.service.impl.BaseServiceImpl;
@@ -12,6 +13,7 @@ import com.imzhitu.admin.common.pojo.InteractLikeFollowCommentLabel;
 import com.imzhitu.admin.interact.mapper.InteractLikeFollowCommentLabelMapper;
 import com.imzhitu.admin.interact.service.InteractLikeFollowCommentLabelService;
 
+@Service
 public class InteractLikeFollowCommentLabelServiceImpl extends BaseServiceImpl implements InteractLikeFollowCommentLabelService{
 	
 	@Autowired

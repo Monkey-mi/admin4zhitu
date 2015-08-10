@@ -160,34 +160,11 @@ function drawWorldOpt($worldOpt, worlds, index) {
 		+'</div>');
 	var $world = $('<div class="world" />');
 	
-	var $opt = $('<div class="world-opt-head-wrap">'
-			+ '<span class="world-opt-head">活动</span>'
-			+ '<span>|</span>'
-			+ '<span class="world-opt-head">最新</span>'
-			+ '<span>|</span>'
-			+ '<span class="world-opt-head">操作</span>'
-			+'</div>'
-			+ '<div class="world-opt-btn-wrap">'
-			+ '<span class="world-opt-btn">'
-			+ getActiveOperated(world['activeOperated'], world, index)
-			+ '</span>'+ '<span>|</span>'
-			+ '<span class="world-opt-btn">'
-			+ getLatestValid(world['latestValid'], world, index)
-			+ '</span>'+ '<span>|</span>'
-			+ '<span class="world-opt-btn">'
-			+ shieldColumn.formatter(world['shield'], world, index)
-			+ '</span>'
-			+ '</div>'
-			+'<hr class="divider"></hr>'
-			+ '<div><span class="world-opt-head">频道</span></div>'
-			+ '<div class="world-channel">'+getChannelName(world['channelName'], world, index)+'</div>'
-			);
-	
 	$worldOpt.addClass('world-margin');
 	$worldOpt.append($authorInfo);
 	$worldOpt.append($world);
 	$worldOpt.append($worldInfo);
-	$worldOpt.append($opt);
+	drawOptArea($worldOpt, worlds, index);
 	$world.appendtour({
 		'width':250,
 		'worldId':worldId,
@@ -225,6 +202,162 @@ function getAuthorName(value, row, index) {
 		return "织图用户";
 	}
 }
+
+/**
+ * 绘制操作区域
+ * 
+ * @param $worldOpt
+ * @param worlds
+ * @param index
+ * @return
+ */
+function drawOptArea($worldOpt, worlds, index) {
+	var world = worlds[index];
+	// 声明操作区域对象 
+	var $opt = $('<div class="world-opt-area"></div>');
+	
+	// 添加第一行操作title
+	var $opt1LineTitle = $('<div class="world-opt-head-wrap">'
+			+ '<span class="world-opt-head">活动</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">最新</span>'
+			+ '<span>|</span>'
+			+ '<span class="world-opt-head">操作</span>'
+			+'</div>');
+	
+	// 添加第一行操作title对应的按钮
+	var $opt1LineBtn = $('<div class="world-opt-btn-wrap">'
+			+ '<span class="world-opt-btn">'
+			+ getActiveOperated(world['activeOperated'], world, index)
+			+ '</span>'+ '<span>|</span>'
+			+ '<span class="world-opt-btn">'
+			+ getLatestValid(world['latestValid'], world, index)
+			+ '</span>'+ '<span>|</span>'
+			+ '<span class="world-opt-btn">'
+			+ shieldColumn.formatter(world['shield'], world, index)
+			+ '</span>'
+			+ '</div>');
+	
+	// 添加一二行分隔线
+	var $optDivider1To2 = $('<hr class="divider"></hr>');
+	
+	// 添加第二行操作title
+	var $opt2LineTitle = $('<div class="world-opt-head-wrap">'
+			+ '<span class="world-opt-head">频道</span>'
+			+ '</div>');
+	
+	// 添加第二行操作title对应的按钮
+	var $opt2LineBtn = $('<div class="world-channel">' 
+			+ getChannelName(world['channelName'], world, index) 
+			+ '</div>');
+	
+	// 添加二三行分隔线
+	var $optDivider2To3 = $('<hr class="divider"></hr>');
+	
+	// 添加第三行操作title
+	var $opt3LineTitle = $('<div class="world-opt-head-wrap">'
+			+ '<span class="world-opt-head">评论签</span>'
+			+ '</div>');
+	// 向第三行按钮中添加元素
+	$opt3LineBtn = $('<div class="world-channel"></div>');
+	drawWorldCommentLabelBtn($opt3LineBtn, worlds, index);
+	
+	$opt.append($opt1LineTitle);
+	$opt.append($opt1LineBtn);
+	$opt.append($optDivider1To2);
+	$opt.append($opt2LineTitle);
+	$opt.append($opt2LineBtn);
+	$opt.append($optDivider2To3);
+	$opt.append($opt3LineTitle);
+	$opt.append($opt3LineBtn);
+	
+	$worldOpt.append($opt);
+}
+
+/**
+ * 查询织图互动过的评论标签，若是没有互动过，则查询根据织图描述或织图标签得到的评论标签
+ * @param $WorldOptBtn	被添加内容的jQuery对象，一般为空的dom对象
+ * @param worlds
+ * @param index
+ * @return
+ */
+function drawWorldCommentLabelBtn($WorldOptBtn, worlds, index) {
+	var world = worlds[index];
+	if(world.valid == 0 || world.shield == 1) {
+		return "";
+	}
+	
+	var $labelDIV = $('<div style="display: inline-block;"></div>');
+	var ret = '';
+	$.post("./admin_interact/channelWorldLabel_queryWorldLabelList",{'worldId':world.id},
+		function(result){
+			if(result['result'] == 0){
+				var data = result.labelInfo;
+				if (!result.interact) {
+					for (var i=0; i<data.length; i++) {
+						var labelId = data[i].id;
+						var labelName = data[i].labelName;
+						ret += '<span id="commentLabel-'+world.id+'-'+labelId+'" class="label-btn-unclc-bg" data-label="'+labelId+'">'
+								+ '<a href="javascript:void(0)" style="text-decoration:none;" onclick="putWorldCommentLabelId(' 
+								+ world.id + ',' + labelId + ',' + index + ')">#' + labelName + '</a>'
+								+ '<input type="hidden" value="' + labelId + '"></input>'
+								+ '</span>&nbsp;';
+						if (i != 0 && i%3 == 0) {
+							ret += '<br>';
+						}
+					}
+					ret += '<a href="javascript:void(0)"><img src="./common/images/ok.png" onclick="submitAddWorldCommentLabel('+ world.id + ', ' + index + ')"></img></a>'
+					+ '<input id="worldCommentLabel-' + world.id + '" type="hidden"></input>';
+				} else {
+					for (var i=0; i<data.length; i++) {
+						ret += '<span>#' + data[i].labelName + '</span>&nbsp;';
+					}
+				}
+			}
+			$labelDIV.append($(ret))
+			$WorldOptBtn.append($labelDIV);
+		},"json");
+}
+
+/**
+ * 点击标签触发：将点击的标签ID放入指定的存储位置
+ * @param worldId
+ * @param labelId
+ */
+function putWorldCommentLabelId(worldId, labelId, index) {
+	var bgColor = $("#commentLabel-" + worldId + "-" + labelId).attr("class");
+	if (bgColor == "label-btn-onclc-bg") {
+		$("#commentLabel-" + worldId + "-" + labelId).attr("class", "label-btn-unclc-bg");
+	} else if (bgColor == "label-btn-unclc-bg") {
+		$("#commentLabel-" + worldId + "-" + labelId).attr("class", "label-btn-onclc-bg");
+	}
+	
+	var spanNods = $(".world-opt-area:eq("+index+") span.label-btn-onclc-bg");
+	var ids = [];
+	for (var i=0; i<spanNods.length; i++) {
+		ids.push($(spanNods[i]).children('input').val());
+	}
+	$("#worldCommentLabel-" + worldId).val(ids.toString());
+}
+
+/**
+ * 提交添加织图标签
+ * @param worldId
+ * @param labelIds
+ * @return
+ */
+function submitAddWorldCommentLabel(worldId, index){
+	$.post("./admin_interact/channelWorldLabel_insertWorldLabel",{
+		'worldId'	: worldId,
+		'labelIds'	: $("#worldCommentLabel-" + worldId).val()
+	},function(result){
+		if(result['result'] == 0){
+			updateValue(index);
+		}else{
+			$.messager.alert('失败提示',result['msg']);
+		}
+	},"json");
+};
 
 function getTypeInteract(value, row, index) {
 	img = "./common/images/edit_add.png";
@@ -1396,20 +1529,30 @@ var htmTableTitle = "分享列表维护", //表格标题
 	}
 	
 	function updateValue(index, key, value) {
-		var $worldOpt = $(".world-opt-wrap:eq("+index+")");
-		$worldOpt.empty();
 		dataList[index][key] = value;
-		drawWorldOpt($worldOpt, dataList, index);
+		var $worldOpt = $(".world-opt-wrap:eq("+index+")");
+		removeWorldOptArea($worldOpt);
+		drawOptArea($worldOpt, dataList, index);
 	}
 
 	function updateValues(index, keys, values) {
 		var $worldOpt = $(".world-opt-wrap:eq("+index+")");
-		$worldOpt.empty();
 		for(var i = 0; i < keys.length; i++) {
 			dataList[index][keys[i]] = values[i];
 		}
-		drawWorldOpt($worldOpt, dataList, index);
+		removeWorldOptArea($worldOpt);
+		drawOptArea($worldOpt, dataList, index);
 	}
+	
+	/**
+	 * 移除操作区域
+	 * 
+	 * @param $worldOpt
+	 * @return
+	 */
+	function removeWorldOptArea($worldOpt) {
+		$worldOpt.children('.world-opt-area:eq(0)').remove();
+	};
 	
 	function searchByShortLink() {
 		maxId = 0;

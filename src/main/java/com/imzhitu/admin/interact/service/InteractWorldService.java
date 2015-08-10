@@ -389,6 +389,14 @@ public interface InteractWorldService extends BaseService {
 	public void saveInteractV3(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
 	
 	/**
+	 * 根据织图id、织图标签，进行用户等级的互动，
+	 * @param worldId
+	 * @param labelIdsStr
+	 * @throws Exception
+	 */
+	public void saveInteractV3(Integer worldId ,String labelIdsStr)throws Exception;
+	
+	/**
 	 * 两个saveChannelInteractV3是一样的，只不过这个方法中因为没有userId
 	 * @param channelId
 	 * @param worldId

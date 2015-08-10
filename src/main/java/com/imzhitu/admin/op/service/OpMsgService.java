@@ -57,7 +57,7 @@ public interface OpMsgService extends BaseService {
 	 * @param msg
 	 */
 	public void pushAppMsg(OpSysMsg msg, 
-			Boolean inApp, Boolean noticed) throws Exception;
+			Boolean inApp, Boolean noticed, Integer uid) throws Exception;
 
 //	/**
 //	 * 更新启动缓存
