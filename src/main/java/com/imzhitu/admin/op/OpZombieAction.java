@@ -17,6 +17,7 @@ public class OpZombieAction extends BaseCRUDAction{
 	private Integer userId;
 	private String idsStr;
 	private Integer degreeId;
+	private String zombieInfoJSON;
 	
 	public Integer getUserId() {
 		return userId;
@@ -42,6 +43,15 @@ public class OpZombieAction extends BaseCRUDAction{
 		this.degreeId = degreeId;
 	}
 	
+	public String getZombieInfoJSON() {
+		return zombieInfoJSON;
+	}
+
+	public void setZombieInfoJSON(String zombieInfoJSON) {
+		this.zombieInfoJSON = zombieInfoJSON;
+	}
+
+
 	/**
 	 * 分页查询
 	 * @return
@@ -85,5 +95,19 @@ public class OpZombieAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	
+	/**
+	 * 更新性别和签名
+	 * @return
+	 */
+	public String updateSexAndSignature(){
+		try{
+			zombieService.updateSexAndSignature(zombieInfoJSON);
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 	
 }

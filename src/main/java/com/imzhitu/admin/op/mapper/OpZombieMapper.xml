@@ -3,14 +3,20 @@
 <mapper namespace="com.imzhitu.admin.op.mapper.OpZombieMapper">
 	
 	<resultMap id="ZombieMap" type="com.imzhitu.admin.common.pojo.OpZombie">
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
 		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="user_id" property="userId" jdbcType="INTEGER"/>
 		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
 		<result column="degree_id" property="degreeId" jdbcType="INTEGER"/>
 		<result column="degree_name" property="degreeName" jdbcType="VARCHAR"/>
 		<result column="comment_count" property="commentCount" jdbcType="INTEGER"/>
 		<result column="concern_count" property="concernCount" jdbcType="INTEGER"/>
+		<result column="follow_count" property="followCount" jdbcType="INTEGER"/>
+		<result column="world_count" property="worldCount" jdbcType="INTEGER"/>
 		<result column="last_modify" property="lastModify" jdbcType="BIGINT"/>
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<!-- INSERT -->
@@ -45,7 +51,7 @@
 	
 	<!-- 分页查询 -->
 	<select id="queryZombie" resultMap="ZombieMap">
-		select ozb.*,ozd.degree_name,ui.user_name
+		select ozb.id,ozb.user_id,ozb.degree_id,ozb.comment_count,ozb.last_modify,ozd.degree_name,ui.user_name,ui.concern_count,ui.follow_count,ui.world_count,ui.user_avatar,ui.user_avatar_l,ui.sex,ui.signature
 		from hts_admin.op_zombie ozb
 		left join hts_admin.op_zombie_degree ozd on ozb.degree_id = ozd.id,hts.user_info ui
 		<where>
@@ -136,5 +142,9 @@
 		order by rand()
 		limit 0,#{limit}
 	</select>
+	
+	<update id="updateSexAndSignature">
+update hts.user_info set sex=#{sex},signature=#{signature} where id=#{userId} 
+	</update>
 	
 </mapper>

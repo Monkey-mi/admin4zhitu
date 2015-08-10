@@ -87,5 +87,6 @@ public interface OpZombieMapper {
 	@DataSource("slave")
 	public List<Integer> queryNRandomNotFollowZombie(@Param("concernId")Integer concernId,@Param("degreeId")Integer degreeId,@Param("limit")Integer limit);
 	
-	
+	@DataSource("master")
+	public void updateSexAndSignature(@Param("userId")Integer userId,@Param("sex")Integer sex,@Param("signature")String signature);
 }
