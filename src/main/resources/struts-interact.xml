@@ -116,15 +116,13 @@
 			</result>
 		</action>
 		
-		<action name="channelWorldLabel_*" class="com.imzhitu.admin.interact.InteractChannelWorldLabelAction" method="{1}">
+		<action name="channelWorldLabel_*" class="com.imzhitu.admin.interact.InteractWorldLabelAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>
 		</action>
 
- 	<action name="labelId_*"
-		class="com.imzhitu.admin.interact.InteractCommentLabelIdAction.java"
-		method="{1}">
+ 	<action name="commentLabel_*" class="com.imzhitu.admin.interact.InteractCommentLabelAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>
@@ -136,11 +134,6 @@
 			</result>
 		</action>
 		
-		<action name="likeFollowZombie_*" class="com.imzhitu.admin.interact.InteractLikeFollowZombieAction" method="{1}">
-			<result name="json" type="json">
-				<param name="root">jsonMap</param>
-			</result>
-		</action>
 		
 	</package>
 
