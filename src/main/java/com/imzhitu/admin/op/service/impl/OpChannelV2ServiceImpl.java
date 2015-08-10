@@ -30,6 +30,7 @@ import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
+import com.imzhitu.admin.common.pojo.OpDataStatisticsDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
@@ -317,8 +318,10 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		List<OpChannelV2Dto> list = opChannelV2Mapper.queryOpChannel(dto);
 		if(list != null && list.size() == 1){
 			OpChannelV2Dto o = list.get(0);
-			long yestodayMemberIncreasement =  queryYestodayMemberIncreasement(null,null,o.getChannelId());
-			long yestodayWorldIncreasement  =  queryYestodayWorldIncreasement(null, null, o.getChannelId());
+//			long yestodayMemberIncreasement =  queryYestodayMemberIncreasement(null,null,o.getChannelId());
+			OpDataStatisticsDto YestodayWorldAndMemberIncreasement  =  opChannelV2Mapper.queryYestodayWorldAndMemberIncreasement(o.getChannelId());
+			long yestodayMemberIncreasement = YestodayWorldAndMemberIncreasement.getMemberAddCount();
+			long yestodayWorldIncreasement = YestodayWorldAndMemberIncreasement.getWorldAddCount();
 			o.setYestodayMemberIncreasement(yestodayMemberIncreasement);
 			o.setYestodayWorldIncreasement(yestodayWorldIncreasement);
 			
@@ -499,7 +502,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @return
 	 * @throws Exception
 	 */
-	public long queryYestodayWorldIncreasement(Date yestoday, Date today,Integer  channelId) throws Exception{
+/*	public long queryYestodayWorldIncreasement(Date yestoday, Date today,Integer  channelId) throws Exception{
 		Date now = new Date();
 		DateFormat df = new  SimpleDateFormat("yyyy-MM-dd");
 		Date today1 = df.parse(df.format(now));
@@ -510,7 +513,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			today = today1;
 		}
 		return opChannelV2Mapper.queryYestodayWorldIncreasement(yestoday, today, channelId);
-	}
+	}*/
+	
+
 
 	/**
 	 * @author zhangbo 2015年6月10日

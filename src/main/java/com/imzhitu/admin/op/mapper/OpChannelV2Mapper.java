@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
+import com.imzhitu.admin.common.pojo.OpDataStatisticsDto;
 
 public interface OpChannelV2Mapper {
 	/**
@@ -73,7 +74,7 @@ public interface OpChannelV2Mapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public long queryYestodayWorldIncreasement(@Param("yestoday") Date yestoday,@Param("today") Date today,@Param("channelId")Integer  channelId);
+	public OpDataStatisticsDto queryYestodayWorldAndMemberIncreasement(@Param("channelId")Integer  channelId);
 
 	/**
 	 * 添加关联频道

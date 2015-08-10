@@ -32,6 +32,11 @@
 		<result column="theme_name" property="themeName" jdbcType="VARCHAR"/>
 	</resultMap>
 	
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.OpDataStatisticsDto" id="YestodayWorldAndMemberIncreasement">
+	<result column="htworld_add_count" property="worldAddCount" jdbcType="INTEGER"/>
+	<result column="member_add_count" property="memberAddCount" jdbcType="INTEGER"/>
+	</resultMap>
 	<!-- insert -->
 	<insert id="insertOpChannel">
 		insert into hts.operations_channel (id,owner_id,channel_name,channel_title,subtitle,channel_desc,channel_icon,
@@ -265,16 +270,8 @@
 	</select>
 	
 	<!-- 查询昨日新增织图数 -->
-	<select id="queryYestodayWorldIncreasement" resultType="long">
-		select count(*) from hts.operations_channel_world ocw
-		where ocw.channel_id = #{channelId}
-		and ocw.date_added between #{yestoday,jdbcType=TIMESTAMP} and #{today,jdbcType=TIMESTAMP}
-		and not exists (
-			select ouz.id
-			from hts.operations_user_zombie ouz
-			where ouz.user_id=ocw.author_id
-		)
-		
+	<select id="queryYestodayWorldAndMemberIncreasement" resultMap="YestodayWorldAndMemberIncreasement">
+select htworld_add_count,member_add_count from hts_admin.op_data_statistics ds where ds.channel_id=#{channelId} ORDER BY ds.id DESC LIMIT 1 
 	</select>
 	
 	<!-- 添加关联频道 -->

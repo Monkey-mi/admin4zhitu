@@ -8,7 +8,7 @@
 <title>织图用户管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
-<script type="text/javascript" src="${webRootPath }/base/js/jquery/uploadify/jquery.uploadify.js"></script>
+ <script type="text/javascript" src="${webRootPath }/base/js/jquery/uploadify/jquery.uploadify.js"></script>
 <link rel="stylesheet" type="text/css" href="${webRootPath }/base/js/jquery/uploadify/uploadify.css">
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -65,6 +65,7 @@ var maxId = 0,
 		sexColumn,
 		concernCountColumn,
 		followCountColumn,
+	/* 	mishengliang */
 		{field : 'worldCount',title:'织图',align : 'center', width : 60,
 			formatter: function(value,row,index){
 				var uri = "page_user_userWorldInfo?userId="+row.userId;
