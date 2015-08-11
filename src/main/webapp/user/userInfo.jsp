@@ -823,9 +823,9 @@ function loadMsgFormValidate() {
 						<td class="rightTd"><div id="followCount_uinteractTip" class="tipDIV"></div></td>
 					</tr>
 					<tr>
-						<td class="leftTd">为期：</td>
+						<td class="leftTd">为期(分钟)：</td>
 						<td><input id="duration_uinteract" name="duration"  /></td>
-						<td class="rightTd"><div id="duration_uinteractTip" class="tipDIV"></div></td>
+						<td class="rightTd"><div id="minute_duration_uinteractTip" class="tipDIV"></div></td>
 					</tr>
 					<tr>
 						<td class="leftTd">用户ID：</td>
