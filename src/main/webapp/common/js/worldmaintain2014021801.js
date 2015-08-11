@@ -856,14 +856,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				return '';
 			}
 		},
-	worldLabelColumn = {field : 'worldLabel',title : '标签',align : 'center', width : 100, 
-		formatter: function(value,row,index){
-			if(value != null && value != '') {
-				return "<a href='#' title=" + value + " class='viewInfo easyui-tooltip'>" + value + "</a>";
-			}
-			return '';
-		}
-	},
+	worldLabelColumn = {field : 'worldLabel',title : '标签',align : 'center', width : 100},
 	titleThumbPathColumn = {field : 'titleThumbPath',title : '预览',align : 'center',
 		formatter: function(value,row,index){
 			var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png');
