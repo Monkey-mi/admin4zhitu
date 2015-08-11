@@ -97,7 +97,7 @@ function drawWorld($worldOpt, worlds, index) {
 			+'</div>');
 	var $worldInfo = $('<div class="world-info">'
 		+'<div class="world-label">#'
-		+ worldLabelColumn.formatter(world['worldLabel'],world,index)+'</div>'
+		+ world['worldLabel'] +'</div>'
 		+'<div class="world-desc">'+worldDescColumn.formatter(world['worldDesc'],world,index)+'</div>'
 		+'<div class="world-count-wrap">'
 		+'<span class="glyphicon glyphicon-heart" aria-hidden="false">'
@@ -191,7 +191,7 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ '<span>|</span>');
 	$opt2LineBtn.append($line2CommentBtn);
 	drawChannelWorldLabelBtn($opt2LineBtn, worlds, index);
-	
+	   
 	$opt.append($opt1LineTitle);
 	$opt.append($opt1LineBtn);
 	$opt.append($optDivider);

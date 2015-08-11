@@ -176,7 +176,7 @@ var maxId = 0,
 		$('#htm_appmsg').window({
 			modal : true,
 			width : 820,
-			height : 440,
+			height : 480,
 			top: 10,
 			title : '推送App消息',
 			shadow : false,
@@ -407,6 +407,12 @@ function searchBySenderId(){
 							<input class="notice_appmsg" type="checkbox" name="notice" value="notify" checked="checked" style="width:13px;" />通知栏
 						</td>
 					</tr>
+					<tr>
+						<td class="leftTd">接收用户：</td>
+						<td colspan="2">
+							<input type="text" name="userId" />
+						</td>
+					</tr>
 					
 					<tr>
 						<td class="leftTd">消息类型：</td>
@@ -416,6 +422,7 @@ function searchBySenderId(){
 						        <option value="4">普通文本</option>
 						        <option value="9">链接</option>
 						        <option value="8">频道</option>
+						        <option value="10">明星推荐</option>
 					   		</select>
 						</td>
 					</tr>

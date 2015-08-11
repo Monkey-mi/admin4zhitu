@@ -12,4 +12,7 @@ public interface SysMsgMapper {
 	@DataSource("master")
 	public void saveMsgByProcedure(OpSysMsg msg);
 	
+	@DataSource("master")
+	public void saveMsg(OpSysMsg msg);
+	
 }

@@ -26,6 +26,7 @@ public class OpMsgAction extends BaseCRUDAction {
 	private Integer phoneCode;
 	private String link;
 	private String path;
+	private Integer userId;
 	
 	private OpSysMsg sysMsg = new OpSysMsg();
 	
@@ -121,7 +122,7 @@ public class OpMsgAction extends BaseCRUDAction {
 					notify = true;
 				}
 			}
-			opMsgService.pushAppMsg(sysMsg, inApp, notify);
+			opMsgService.pushAppMsg(sysMsg, inApp, notify, userId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch(Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -184,6 +185,14 @@ public class OpMsgAction extends BaseCRUDAction {
 
 	public void setSysMsg(OpSysMsg sysMsg) {
 		this.sysMsg = sysMsg;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 	
 }

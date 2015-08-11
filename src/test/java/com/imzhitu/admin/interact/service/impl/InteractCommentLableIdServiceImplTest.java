@@ -10,19 +10,19 @@ import com.imzhitu.admin.interact.service.InteractCommentLabelIdService;
 
 public class InteractCommentLableIdServiceImplTest extends BaseTest {
 	
-	@Autowired
-	private InteractCommentLabelIdService service;
+//	@Autowired
+//	private InteractCommentLabelIdService service;
 
 	@Test
 	public void testInsertLableId() {
-		Integer lableId = 123123123;
-		try {
-			System.out.println("=======>" + service);
-			service.insertLableId(lableId);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		Integer lableId = 123123123;
+//		try {
+//			System.out.println("=======>" + service);
+//			service.insertLableId(lableId);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 }

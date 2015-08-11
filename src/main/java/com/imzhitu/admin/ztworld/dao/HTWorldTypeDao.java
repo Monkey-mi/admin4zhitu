@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.dao.BaseDao;
-import com.hts.web.common.pojo.HTWorldType;
+import com.imzhitu.admin.common.pojo.ZTWorldType;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 
 
@@ -24,7 +24,7 @@ public interface HTWorldTypeDao extends BaseDao {
 	 * 
 	 * @param type
 	 */
-	public void saveType(HTWorldType type);
+	public void saveType(ZTWorldType type);
 	
 	/**
 	 * 查询所有分类
@@ -36,7 +36,7 @@ public interface HTWorldTypeDao extends BaseDao {
 	 * @param rowSelection
 	 * @return
 	 */
-	public List<HTWorldType> queryType(RowSelection rowSelection);
+	public List<ZTWorldType> queryType(RowSelection rowSelection);
 	
 	/**
 	 * 查询分类
@@ -44,7 +44,7 @@ public interface HTWorldTypeDao extends BaseDao {
 	 * @param rowSelection
 	 * @return
 	 */
-	public List<HTWorldType> queryType(int maxSerial, RowSelection rowSelection);
+	public List<ZTWorldType> queryType(int maxSerial, RowSelection rowSelection);
 	
 	/**
 	 * 查询分类总数

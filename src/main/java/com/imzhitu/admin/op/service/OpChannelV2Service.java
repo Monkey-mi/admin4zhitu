@@ -107,7 +107,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public long queryYestodayWorldIncreasement(Date yestoday, Date today,Integer  channelId)throws Exception;
+//	public long queryYestodayWorldIncreasement(Integer channelId)throws Exception;
 	
 	/**
 	 * 查询昨天新增成员数，不包含马甲

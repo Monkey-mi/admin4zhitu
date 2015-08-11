@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,8 @@ import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpZombie;
 import com.imzhitu.admin.op.mapper.OpZombieMapper;
 import com.imzhitu.admin.op.service.OpZombieService;
+
+import net.sf.json.JSONArray;
 
 @Service
 public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieService{
@@ -98,5 +101,18 @@ public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieServ
 		// TODO Auto-generated method stub
 		return zombieMapper.queryZombieByLastModifyASC(degreeId, n);
 	}
+
+	@Override
+	public void updateSexAndSignature(String zombieInfoJSON) {
+		JSONArray jsna = JSONArray.fromObject(zombieInfoJSON);
+		for (int i = 0; i < jsna.size(); i++) {
+			net.sf.json.JSONObject jsno = jsna.getJSONObject(i);
+			Integer userId = jsno.getInt("userId");
+			Integer sex = jsno.getInt("sex");
+			String signature = jsno.getString("signature");
+			zombieMapper.updateSexAndSignature(userId,sex,signature);
+		}
+	}
+
 
 }

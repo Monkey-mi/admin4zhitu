@@ -62,4 +62,10 @@ public interface OpZombieService extends BaseService{
 	 * @throws Exception
 	 */
 	public List<OpZombie> queryNZombie(Integer degreeId,Integer n)throws Exception;
+	
+	/*
+	 * 更新马甲的性别和签名
+	 * 
+	 * */
+	public void updateSexAndSignature(String zombieInfoJSON);
 }

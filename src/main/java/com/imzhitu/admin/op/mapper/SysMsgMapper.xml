@@ -23,5 +23,11 @@
 	<insert id="saveMsgByProcedure">
 		call hts.func_batch_save_sys_msg(#{content},#{objType},
 			#{objMeta},#{objMeta2},#{objId},#{senderId},#{msgDate},#{thumbPath})
-	</insert>	
+	</insert>
+	
+	<insert id="saveMsg">
+		insert into hts.operations_sys_msg (recipient_id,content,obj_type,obj_meta,
+			obj_meta2, obj_id, sender_id, msg_date, thumb_path) 
+			values (#{recipientId},#{content},#{objType}, #{objMeta},#{objMeta2},#{objId},#{senderId},#{msgDate},#{thumbPath})
+	</insert>
 </mapper>

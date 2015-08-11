@@ -6,7 +6,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>精品马甲管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
+<%-- <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>  --%>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/htmCRUD20131111.css"></link>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript">
 	var maxId=0,
 	loadDateUrl="./admin_op/zombie_queryZombie",
@@ -32,7 +35,82 @@
 		}
 	};
 	
+	//显示用户织图
+	//add by mishengliang 07-31-2015
+	function showURI(uri){
+		$.fancybox({
+			'margin'			: 20,
+			'width'				: '100%',
+			'height'			: '100%',
+			'autoScale'			: true,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+			'href'				: uri
+		});
+	}
+	
+	/*
+	add by mishengliang 08-03-2015
+	增加点击单元格处理函数
+	*/
+	$.extend($.fn.datagrid.methods, {
+	    editCell: function(jq,param){
+	        return jq.each(function(){
+	            var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+	            for(var i=0; i<fields.length; i++){
+	                var col = $(this).datagrid('getColumnOption', fields[i]);
+	                col.editor1 = col.editor;
+	                if (fields[i] != param.field){
+	                    col.editor = null;
+	                }
+	            }
+	            $(this).datagrid('beginEdit', param.index);
+	            for(var i=0; i<fields.length; i++){
+	                var col = $(this).datagrid('getColumnOption', fields[i]);
+	                col.editor = col.editor1;
+	            }
+	        });
+	    }
+	});
+	
+	var editIndex = undefined;
+	function endEditing(){
+	    if (editIndex == undefined){
+	    	return true; 
+	    }
+	    if ($('#htm_table').datagrid('validateRow', editIndex)){
+	        $('#htm_table').datagrid('endEdit', editIndex);
+	        editIndex = undefined;
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
+
+	function onClickCell(index, field){
+	    if (endEditing()){
+	        $('#htm_table').datagrid('selectRow', index)
+	                .datagrid('editCell', {index:index,field:field});
+	        editIndex = index;
+	    }
+	}
+	
+	var Address = [{ "value": "1", "text": "男" }, { "value": "2", "text": "女" }];
+	
+	//mishengliang end	
+	
 	function tableLoadDate(pageNum){
+		
+		sexFormatter = function(value, row, index) {
+			if(value == 1) {
+				return "男";
+			} else if(value == 2) {
+				return "女";
+			}
+			return "";
+		},
+		
 		$("#htm_table").datagrid({
 			title  :"精品马甲管理",
 			width  :1200,
@@ -46,19 +124,86 @@
 			idField   :'id',
 			pageNumber: pageNum,
 			toolbar:'#tb',
+		  onClickCell:onClickCell, /*mishengliang*/
 			columns: [[
-				{field :'ck',checkbox:true},
+ 				{field :'ck',checkbox:true}, 
+				{field : 'userAvatar',title : '头像',align : 'left',width : 40,
+					formatter: function(value, row, index) {
+						imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg'),
+							content = "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "'/>";
+						if(row.star >= 1) {
+							content = content + "<img title='" + row['verifyName'] + "' class='avatar_tag' src='" + row['verifyIcon'] + "'/>";
+						}
+						return "<span>" + content + "</span>";	
+					}		
+				},
 				{field :'id',title:'ID',align:'center',width:80},
 				{field :'userId',title:'马甲ID',align:'center',width:80},
 				{field :'userName',title:'马甲名称',align:'center',width:80},
+				{field : 'sex',title:'性别',align : 'center', width:40, formatter: sexFormatter,editor: { type: 'combobox', options: { data: Address, valueField: "value", textField: "text" },panelHeight:10}},
+				{field : 'signature', title:'签名',align:'center', width:100,editor:'text'},
 				{field : 'degreeName',title: '等级名称',align : 'center',width : 180},
-				
+				{field : 'concernCount',title:'关注',align : 'center', width : 80,
+						formatter : function(value, row, rowIndex ) {
+							var uri = 'page_user_concern?userId='+ row.userId; 			
+							return "<a title='显示关注' class='updateInfo' href='javascript:showURI(\""
+									+ uri + "\")'>"+value+"</a>";
+						}
+					},
+					{field : 'followCount',title:'粉丝',align : 'center', width : 60, 
+						formatter : function(value, row, rowIndex ) {
+							var uri = 'page_user_follow?userId='+ row.userId; 	
+							return "<a title='显示粉丝' class='updateInfo' href='javascript:showURI(\""
+									+ uri + "\")'>"+value+"</a>";
+						}		
+					},
+				{field : 'worldCount',title: '织图',align : 'center',width : 180,
+					formatter: function(value,row,index){
+						var uri = "page_user_userWorldInfo?userId="+row.userId;
+						return "<a title='显示织图' class='updateInfo' href='javascript:showURI(\""+uri
+							+"\")'>"+value+"</a>"; 
+					}	
+				},
+				{field : 'userAvatarL',title : '大头像',align : 'left',width : 70,
+					formatter: function(value, row, index) {
+						imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg'),
+							content = "<img width='60px' height='60px' class='htm_column_img' src='" + imgSrc + "'/>";
+						return "<span>" + content + "</span>";	
+					}		
+				},
 			]],
 			onLoadSuccess:myOnLoadSuccess,
 			onBeforeRefresh : myOnBeforeRefresh
 		});
 		var p = $("#htm_table").datagrid("getPager");
 		p.pagination({
+			buttons : [{
+		        iconCls:'icon-save',
+		        text:'保存',
+		        handler:function(){
+		        	endEditing();
+		        	var rows = $("#htm_table").datagrid('getChanges', "updated"); 
+		        	var updateSignatureURL = "./admin_op/zombie_updateSexAndSignature";
+		        	$("#htm_table").datagrid('loading');
+		        	$.post(updateSignatureURL,{
+		        		'zombieInfoJSON':JSON.stringify(rows)
+		        		},function(result){
+		        			if(result['result'] == 0) {
+		        				$("#htm_table").datagrid('acceptChanges');
+		        			} else {
+		        				$.messager.alert('失败提示',result['msg']);  //提示失败信息
+		        			}
+		        			$("#htm_table").datagrid('loaded');
+		        		},"json");
+		        }
+		    },{
+		        iconCls:'icon-undo',
+		        text:'取消',
+		        handler:function(){
+		        	$("#htm_table").datagrid('rejectChanges');
+		        	$("#htm_table").datagrid('loaded');
+		        }
+		    }]
 		});
 	}
 	
