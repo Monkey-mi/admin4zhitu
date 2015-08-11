@@ -13,6 +13,7 @@ import com.hts.web.base.database.RowSelection;
 import com.hts.web.base.database.SQLUtil;
 import com.hts.web.common.dao.impl.BaseDaoImpl;
 import com.hts.web.common.pojo.HTWorldType;
+import com.imzhitu.admin.common.pojo.ZTWorldType;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeDao;
 
@@ -88,7 +89,7 @@ public class HTWorldTypeDaoImpl extends BaseDaoImpl implements HTWorldTypeDao {
 	}
 	
 	@Override
-	public void saveType(HTWorldType type) {
+	public void saveType(ZTWorldType type) {
 		getMasterJdbcTemplate().update(SAVE_TYPE, new Object[]{
 			type.getId(),
 			type.getTypeName(),
@@ -100,11 +101,11 @@ public class HTWorldTypeDaoImpl extends BaseDaoImpl implements HTWorldTypeDao {
 	}
 
 	@Override
-	public List<HTWorldType> queryType(RowSelection rowSelection) {
-		return queryForPage(QUERY_TYPE, new Object[]{Tag.TRUE}, new RowMapper<HTWorldType>() {
+	public List<ZTWorldType> queryType(RowSelection rowSelection) {
+		return queryForPage(QUERY_TYPE, new Object[]{Tag.TRUE}, new RowMapper<ZTWorldType>() {
 
 			@Override
-			public HTWorldType mapRow(ResultSet rs, int rowNum)
+			public ZTWorldType mapRow(ResultSet rs, int rowNum)
 					throws SQLException {
 				return buildType(rs);
 			}
@@ -113,11 +114,11 @@ public class HTWorldTypeDaoImpl extends BaseDaoImpl implements HTWorldTypeDao {
 	}
 
 	@Override
-	public List<HTWorldType> queryType(int maxSerial, RowSelection rowSelection) {
-		return queryForPage(QUERY_TYPE_BY_MAX_SERIAL, new Object[]{Tag.TRUE, maxSerial}, new RowMapper<HTWorldType>() {
+	public List<ZTWorldType> queryType(int maxSerial, RowSelection rowSelection) {
+		return queryForPage(QUERY_TYPE_BY_MAX_SERIAL, new Object[]{Tag.TRUE, maxSerial}, new RowMapper<ZTWorldType>() {
 
 			@Override
-			public HTWorldType mapRow(ResultSet rs, int rowNum)
+			public ZTWorldType mapRow(ResultSet rs, int rowNum)
 					throws SQLException {
 				return buildType(rs);
 			}
@@ -146,8 +147,8 @@ public class HTWorldTypeDaoImpl extends BaseDaoImpl implements HTWorldTypeDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	private HTWorldType buildType(ResultSet rs) throws SQLException {
-		return new HTWorldType(
+	private ZTWorldType buildType(ResultSet rs) throws SQLException {
+		return new ZTWorldType(
 				rs.getInt("id"), 
 				rs.getString("type_name"), 
 				rs.getString("type_pinyin"),

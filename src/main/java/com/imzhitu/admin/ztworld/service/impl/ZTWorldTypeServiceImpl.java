@@ -33,6 +33,7 @@ import com.imzhitu.admin.common.pojo.InteractWorldlevelWorldComment;
 import com.imzhitu.admin.common.pojo.InteractWorldlevelWorldLabel;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.UserTrust;
+import com.imzhitu.admin.common.pojo.ZTWorldType;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeWorldDto;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
 import com.imzhitu.admin.interact.service.InteractWorldService;
@@ -523,20 +524,20 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	public void saveType(String typeName, String typeDesc) throws Exception {
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_ID);
 		String typePinyin = StringUtil.getPinYin(typeName);
-		worldTypeDao.saveType(new HTWorldType(id, typeName, typePinyin, typeDesc, Tag.TRUE, id));
+		worldTypeDao.saveType(new ZTWorldType(id, typeName, typePinyin, typeDesc, Tag.TRUE, id));
 	}
 
 	@Override
 	public void buildType(int maxSerial, int start, int limit, Map<String, Object> jsonMap) throws Exception {
-		buildSerializables("getSerial", maxSerial, start, limit, jsonMap, new SerializableListAdapter<HTWorldType>() {
+		buildSerializables("getSerial", maxSerial, start, limit, jsonMap, new SerializableListAdapter<ZTWorldType>() {
 
 			@Override
-			public List<HTWorldType> getSerializables(RowSelection rowSelection) {
+			public List<ZTWorldType> getSerializables(RowSelection rowSelection) {
 				return worldTypeDao.queryType(rowSelection);
 			}
 
 			@Override
-			public List<HTWorldType> getSerializableByMaxId(int maxId,
+			public List<ZTWorldType> getSerializableByMaxId(int maxId,
 					RowSelection rowSelection) {
 				return worldTypeDao.queryType(maxId, rowSelection);
 			}
