@@ -4,7 +4,6 @@
 
 	<resultMap type="com.hts.web.common.pojo.HTWorldStickerDto" id="HTSWorldStickerDtoMap">
 		<result column="id" property="id" jdbcType="INTEGER"/>
-		<result column="type_id" property="typeId" jdbcType="INTEGER"/>
 		<result column="set_id" property="setId" jdbcType="INTEGER"/>
 		<result column="sticker_path" property="stickerPath" jdbcType="VARCHAR"/>
 		<result column="sticker_thumb_path" property="stickerThumbPath" jdbcType="VARCHAR"/>
@@ -19,7 +18,6 @@
 	
 	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldSticker" id="WorldStickerMap">
 		<result column="id" property="id" jdbcType="INTEGER"/>
-		<result column="type_id" property="typeId" jdbcType="INTEGER"/>
 		<result column="set_id" property="setId" jdbcType="INTEGER"/>
 		<result column="sticker_path" property="stickerPath" jdbcType="VARCHAR"/>
 		<result column="sticker_thumb_path" property="stickerThumbPath" jdbcType="VARCHAR"/>
@@ -55,11 +53,10 @@
 	</select>
 	
 	<select id="queryStickers" resultMap="WorldStickerMap">
-		select s.*,t.type_name,ss.set_name from
-		hts.htworld_sticker s, hts.htworld_sticker_type as t, hts.htworld_sticker_set as ss 
+		select s.*,ss.set_name from
+		hts.htworld_sticker s, hts.htworld_sticker_set as ss 
 		<where>
-			s.type_id=t.id and s.set_id=ss.id
-			<if test="typeId != null and typeId != 0"> and s.type_id=#{typeId}</if>
+			s.set_id=ss.id
 			<if test="setId != null and setId != 0"> and s.set_id=#{setId}</if>
 			<if test="topWeight == 0"> and s.topWeight=#{topWeight}</if>
 			<if test="topWeight > 0"> and s.topWeight>=#{topWeight}</if>
@@ -80,7 +77,6 @@
 	<select id="queryTotal" resultType="long">
 		select count(*) from hts.htworld_sticker 
 		<where>
-			<if test="typeId != null and typeId != 0"> type_id=#{typeId}</if>
 			<if test="setId != null and setId != 0"> set_id=#{setId}</if>
 			<if test="topWeight == 0"> and topWeight=#{topWeight}</if>
 			<if test="topWeight > 0"> and topWeight>=#{topWeight}</if>
@@ -98,8 +94,8 @@
 	
 	<insert id="save">
 		insert into hts.htworld_sticker 
-		(type_id,set_id,sticker_path,sticker_thumb_path,sticker_demo_path,sticker_name,sticker_desc,
-			top_weight,weight,serial,valid,has_lock,label_id,fill) values (#{typeId},#{setId},#{stickerPath},
+		(set_id,sticker_path,sticker_thumb_path,sticker_demo_path,sticker_name,sticker_desc,
+			top_weight,weight,serial,valid,has_lock,label_id,fill) values (#{setId},#{stickerPath},
 			#{stickerThumbPath},#{stickerDemoPath},#{stickerName},#{stickerDesc},#{topWeight},#{weight},
 		 	#{serial}, #{valid}, #{hasLock},#{labelId},#{fill})
 	</insert>
@@ -107,7 +103,6 @@
 	<update id="update">
 		update hts.htworld_sticker
 		<set>
-	      <if test="typeId != null">type_id=#{typeId},</if>
 	      <if test="setId != null">set_id=#{setId},</if>
 	      <if test="stickerPath != null">sticker_path=#{stickerPath},</if>
 	      <if test="stickerThumbPath != null">sticker_thumb_path=#{stickerThumbPath},</if>

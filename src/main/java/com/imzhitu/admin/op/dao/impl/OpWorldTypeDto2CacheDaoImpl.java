@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.hts.web.base.constant.CacheKeies;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
-import com.hts.web.common.pojo.OpWorldTypeDto2;
+import com.hts.web.common.pojo.OpWorldTypeDto;
 import com.imzhitu.admin.op.dao.OpWorldTypeDto2CacheDao;
 
 @Repository
-public class OpWorldTypeDto2CacheDaoImpl extends BaseCacheDaoImpl<OpWorldTypeDto2> implements
+public class OpWorldTypeDto2CacheDaoImpl extends BaseCacheDaoImpl<OpWorldTypeDto> implements
 		OpWorldTypeDto2CacheDao {
 
 	@Autowired
@@ -20,11 +20,11 @@ public class OpWorldTypeDto2CacheDaoImpl extends BaseCacheDaoImpl<OpWorldTypeDto
 
 	@Override
 	public void updateWorldTypeDto2(int limit) {
-		List<OpWorldTypeDto2> dtoList = webSquarePushDao.querySuperbSquareIndexFromMaster(new RowSelection(1, limit));
+		List<OpWorldTypeDto> dtoList = webSquarePushDao.querySuperbFromMaster(new RowSelection(1, limit));
 		if(getRedisTemplate().hasKey(CacheKeies.OP_SUPERB_TYPE)) {
 			getRedisTemplate().delete(CacheKeies.OP_SUPERB_TYPE);
 		}
-		OpWorldTypeDto2[] list = new OpWorldTypeDto2[dtoList.size()];
+		OpWorldTypeDto[] list = new OpWorldTypeDto[dtoList.size()];
 		getRedisTemplate().opsForList().rightPushAll(CacheKeies.OP_SUPERB_TYPE, dtoList.toArray(list));
 
 	}

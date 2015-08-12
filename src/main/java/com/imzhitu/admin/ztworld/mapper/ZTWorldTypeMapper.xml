@@ -7,4 +7,8 @@
 		<result column="type_name" property="typeName" jdbcType="VARCHAR"/>
 	</resultMap>
 	
+	<select id="queryCacheType" resultMap="HTSWorldTypeMap">
+		select id, type_name from hts.htworld_type where valid=1 order by serial desc	
+	</select>
+	
 </mapper>
