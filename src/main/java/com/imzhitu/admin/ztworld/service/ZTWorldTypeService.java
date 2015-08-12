@@ -190,4 +190,11 @@ public interface ZTWorldTypeService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateTypeWorldCache()throws Exception;
+	
+	/**
+	 * 更新分类缓存
+	 * 
+	 * @throws Exception
+	 */
+	public void updateTypeCache() throws Exception;
 }

@@ -380,6 +380,20 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	
+	/**
+	 * 更新分类缓存
+	 */
+	public String updateTypeCache() {
+		try{
+			worldTypeService.updateTypeCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(OptResult.UPDATE_FAILED, jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

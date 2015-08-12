@@ -47,6 +47,7 @@ import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
+import com.imzhitu.admin.ztworld.dao.HTWorldTypeCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeWorldDao;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
@@ -128,6 +129,9 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private ChannelWorldMapper channelWorldMapper;
+	
+	@Autowired
+	private HTWorldTypeCacheDao typeCacheDao;
 	
 	public Integer getSuperbLimit() {
 		return superbLimit;
@@ -599,6 +603,12 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	 */
 	public void updateTypeWorldCache()throws Exception{
 		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
+	}
+	
+	
+	@Override
+	public void updateTypeCache()throws Exception {
+		typeCacheDao.updateTypeCache();
 	}
 
 }
