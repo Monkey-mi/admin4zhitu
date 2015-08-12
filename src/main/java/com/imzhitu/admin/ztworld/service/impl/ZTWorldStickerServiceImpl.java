@@ -264,10 +264,7 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public void updateStickerCache(String[] typeIdStrs) throws Exception {
-		if(typeIdStrs == null) {
-			throw new Exception("please select recommend sticker type");
-		}
+	public void updateStickerCache() throws Exception {
 		
 		List<HTWorldStickerTypeDto> recTypes = new ArrayList<HTWorldStickerTypeDto>();
 		

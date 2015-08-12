@@ -100,7 +100,6 @@ public class ZTWorldStickerServiceTest extends BaseTest {
 		ZTWorldSticker sticker = new ZTWorldSticker();
 		sticker.setStickerPath("http://static.imzhitu.com/world/sticker/fart-L.png");
 		sticker.setStickerThumbPath("http://static.imzhitu.com/world/sticker/fart-S.png");
-		sticker.setTypeId(8);
 		sticker.setValid(0);
 		sticker.setTopWeight(0);
 		sticker.setWeight(1);
@@ -115,6 +114,6 @@ public class ZTWorldStickerServiceTest extends BaseTest {
 	
 	@Test
 	public void updateStickerCacheTest() throws Exception {
-		service.updateStickerCache(new String[]{"1","2"});
+		service.updateStickerCache();
 	}
 }

@@ -347,9 +347,9 @@ var maxSerial = 0,
 		
 		$('#typeId_type').combobox({
 			valueField:'id',
-			textField:'labelName',
+			textField:'text',
 			selectOnNavigation:false,
-			url:'./admin_ztworld/label_queryLabelForCombobox',
+			url:'./admin_ztworld/type_queryAllType',
 		});
 		
 		$('#htm_type').window({
@@ -595,20 +595,22 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 				$("#htm_type .loading").show();
 				$.post("./admin_ztworld/type_saveTypeWorld",{
 					'worldId':worldId,
-					'worldType':"旅行",
-					'typeId':"1",
+					'worldType':worldType,
+					'typeId':typeId,
 					'isAdd':isAdd
 					},function(result){
 						formSubmitOnce = true;
 						$("#htm_type .opt_btn").show();
 						$("#htm_type .loading").hide();
 						if(result['result'] == 0) {
-							updateValues(index,['recommenderId','worldType'],['1','旅行']);
+							 $('#htm_type').window('close');  //关闭添加窗口
+							updateValues(index,['recommenderId','worldType'],[typeId,worldType]);
 						} else {
 							$.messager.alert('失败提示',result['msg']);  //提示失败信息
 						}
 					},"json");
 				//若标签为空，则更新标签
+				/*
 				if(labelIsExist == 0)
 				 $.post("./admin_ztworld/label_updateWorldLable",{
 					 'worldId':worldId,
@@ -623,6 +625,7 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 						 $.messager.alert('失败提示',result['msg']);  //提示失败信息
 					 }
 				 },"json");
+				 */
 				return false;
 			}
 		}
@@ -1034,11 +1037,11 @@ function updateTypeWorldCache(){
 	
 	<div id="htm_type">
 		<span id="type_loading" style="margin:60px 0 0 220px; position:absolute; ">加载中...</span>
-		<form id="type_form" action="./admin_op/op_saveSquarePushActivityWorld" method="post" class="none">
+		<form id="type_form"  method="post" class="none">
 			<table class="htm_edit_table" width="480">
 				<tbody>
 					<tr>
-						<td class="leftTd">标签：</td>
+						<td class="leftTd">分类：</td>
 						<td>
 							<input id="typeId_type" name="typeId" type="text" style="width:205px;"  onchange="validateSubmitOnce=true;"/>
 						</td>

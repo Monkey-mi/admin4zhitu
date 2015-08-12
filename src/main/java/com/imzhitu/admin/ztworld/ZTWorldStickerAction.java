@@ -174,9 +174,8 @@ public class ZTWorldStickerAction extends BaseCRUDAction {
 	 * @return
 	 */
 	public String updateStickerCache() {
-		String[] typeIdStrs = request.getParameterValues("typeId");
 		try {
-			stickerService.updateStickerCache(typeIdStrs);
+			stickerService.updateStickerCache();
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

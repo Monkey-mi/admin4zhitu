@@ -203,4 +203,5 @@ public interface ZTWorldTypeService extends BaseService {
 	 * 查询所有的分类，用以做下拉列表
 	 */
 	public List<ZTWorldTypeLabelDto> queryAllType()throws Exception;
+
 }

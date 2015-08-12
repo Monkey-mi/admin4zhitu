@@ -46,7 +46,7 @@ public interface ZTWorldStickerService extends BaseService {
 	
 	public Integer updateStickerTopWeight(Integer id, Integer topWeight) throws Exception;
 	
-	public void updateStickerCache(String[] typeIdStrs) throws Exception;
+	public void updateStickerCache() throws Exception;
 	
 	public List<ZTWorldStickerType> queryAllType(Boolean addAllTag, ZTWorldStickerType type) throws Exception;
 	

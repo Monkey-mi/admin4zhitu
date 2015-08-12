@@ -22,7 +22,6 @@ public class ZTWorldSticker extends AbstractNumberDto implements Serializable {
 	private static final long serialVersionUID = 8253835480403941405L;
 
 	private Integer id;
-	private Integer typeId;
 	private Integer setId;
 	private String stickerPath;
 	private String stickerThumbPath;
@@ -45,14 +44,6 @@ public class ZTWorldSticker extends AbstractNumberDto implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Integer getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(Integer typeId) {
-		this.typeId = typeId;
 	}
 
 	public String getStickerPath() {

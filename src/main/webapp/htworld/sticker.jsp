@@ -104,7 +104,7 @@ var maxId = 0,
 	stickerBgColor = "#4f4f4f";
 	columnsFields = [
 		{field : 'ck',checkbox : true},
-		{field : 'id',title : 'id',align : 'center',width : 60},
+		{field : 'id',title : 'id',align : 'center',width : 40},
 		{field : 'stickerThumbPath',title : '缩略图', align : 'center',width : 60, height:60,
 			formatter:function(value,row,index) {
 				return "<a class='sticker-img' target='_blank' rel='sticker-group' title='点击放大' href="+row.stickerPath+"><img width='50px' height='50px' alt='' class='htm_column_img' src='" + value + "'/></a>";
@@ -113,7 +113,7 @@ var maxId = 0,
 				return 'background-color:' + stickerBgColor;
 			}
 		},
-		{field : 'typeName',title : '分类', align : 'center',width : 60},
+		{field : 'stickerName',title : '名字',align : 'center',width : 60},
 		{field : 'setName',title : '系列', align : 'center',width : 60},
 		{field : 'stickerDemoPath',title : '示例', align : 'center',width : 60, height:60,
 			formatter:function(value,row,index) {
@@ -146,8 +146,6 @@ var maxId = 0,
   				return "no";
   			}
   		},
-  		{field : 'stickerName',title : '名字',align : 'center',width : 120},
-  		{field : 'stickerDesc',title : '描述',align : 'center',width : 220},
   		{field : 'opt',title : '操作',width : 80,align : 'center',rowspan : 1,
 			formatter : function(value, row, index ) {
 				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.id + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
@@ -199,7 +197,7 @@ var maxId = 0,
 			title: '添加贴纸',
 			modal : true,
 			width : 1040,
-			height : 455,
+			height : 385,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -295,16 +293,10 @@ var maxId = 0,
 			}
 		});
 		
-		$('#ss-typeId').combobox({
-		   	valueField: 'id',
-		    textField : 'typeName',
-		    url : './admin_ztworld/sticker_queryAllType?addAllTag=true',
-		});
-		
 		$('#htm_refresh').window({
 			title : '更新缓存',
 			modal : true,
-			width : 520,
+			width : 320,
 			height : 155,
 			shadow : false,
 			closed : true,
@@ -313,21 +305,6 @@ var maxId = 0,
 			collapsible : false,
 			iconCls : 'icon-reload',
 			resizable : false,
-		});
-		
-		$('#typeIds_refresh').combobox({
-			valueField:'id',
-			textField:'typeName',
-			multiple:'true',
-			required:'true',
-			url:'./admin_ztworld/sticker_queryAllType?addAllTag=true&type.weight=1',
-			onSelect:function(record) {
-				if(record.id == 0) {
-					$(this).combobox('setValue', 0);
-				} else {
-					$(this).combobox('unselect', 0);
-				}
-			}
 		});
 		
 		$('#ss-setId').combogrid({
@@ -427,7 +404,6 @@ function initEditWindow(id, index, isUpdate) {
 				$("#stickerThumbImg_edit").attr('src', obj['stickerThumbPath']);
 				$("#stickerDemoPath_edit").val(obj['stickerDemoPath']);
 				$("#stickerDemoImg_edit").attr('src', obj['stickerDemoPath']);
-				$("#typeId_edit").combobox('setValue', obj['typeId']);
 				$("#setId_edit").combogrid('setValue', obj['setId']);
 				if(obj['hasLock'] == 0) {
 					$("#unlock_edit").attr('checked', 'checked');
@@ -466,13 +442,6 @@ function initEditWindow(id, index, isUpdate) {
 		$("#valid_edit").val(1);
 		$("#weight_edit").val(0);
 		$("#topWeight_edit").val(0);
-		var currTypeId = $('#ss-typeId').combobox('getValue');
-		if(currTypeId != '' && currTypeId != 0) {
-			$("#typeId_edit").combobox('setValue', currTypeId);
-		} else {
-			var data = $("#typeId_edit").combobox('getData');
-			$("#typeId_edit").combobox('select', data[0]['id']);
-		}
 		
 		var currSetId = $('#ss-setId').combogrid('getValue');
 		if(currSetId != '' && currSetId != 0) {
@@ -481,7 +450,7 @@ function initEditWindow(id, index, isUpdate) {
 			$("#setId_edit").combogrid('setValue', 1);
 		}
 		
-		$("#lock_edit").attr('checked', 'checked');
+		$("#unlock_edit").attr('checked', 'checked');
 		$("#unfill_edit").attr('checked', 'checked');
 		$("#un_edit").attr('checked', 'checked');
 		$('#htm_edit').panel('setTitle', '添加贴纸');
@@ -543,10 +512,6 @@ function loadEditFormValidate(index, isUpdate) {
 	$("#stickerDemoPath_edit")
 	.formValidator({empty:true, onshow:"请选示例图（可选）",onfocus:"请选示例图",oncorrect:"正确！"})
 	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
-	
-	
-	$("#typeId_edit")
-	.formValidator({empty:false, onshow:"请选分类（必填）",onfocus:"请选分类",oncorrect:"该分类可用！"});
 	
 	$("#setId_edit")
 	.formValidator({empty:false, onshow:"请选系列（必填）",onfocus:"请选系列",oncorrect:"该系列可用！"});
@@ -681,11 +646,7 @@ function searchSticker() {
 	maxId = 0;
 	myQueryParams['sticker.maxId'] = maxId;
 	myQueryParams['sticker.weight'] = $('#ss-weight').combobox('getValue');
-	myQueryParams['sticker.typeId'] = $('#ss-typeId').combobox('getValue');
 	myQueryParams['sticker.setId'] = $('#ss-setId').combogrid('getValue');
-	//myQueryParams['sticker.valid'] = $('#ss-valid').combobox('getValue');
-	//myQueryParams['sticker.hasLock'] = $('#ss-hasLock').combobox('getValue');
-	//myQueryParams['sticker.fill'] = $('#ss-fill').combobox('getValue');
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
@@ -726,8 +687,7 @@ function submitRefreshForm() {
 	if(flag) {
 		$("#refresh_form .opt_btn").hide();
 		$("#refresh_form .loading").show();
-		$.post($form.attr('action'),$form.serialize(),
-			function(result){
+		$.post($form.attr('action'), function(result){
 				$("#refresh_form .opt_btn").show();
 				$("#refresh_form .loading").hide();
 				if(result['result'] == 0) {
@@ -763,7 +723,6 @@ function searchStickerByName() {
 	myQueryParams['sticker.maxId'] = maxId;
 	myQueryParams['sticker.stickerName'] = $('#ss-stickerName').searchbox('getValue');
 	myQueryParams['sticker.weight'] = '';
-	myQueryParams['sticker.typeId'] = '';
 	myQueryParams['sticker.setId'] = '';
 	//myQueryParams['sticker.valid'] = '';
 	//myQueryParams['sticker.hasLock'] = '';
@@ -784,8 +743,6 @@ function searchStickerByName() {
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" 
 			title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序+<span id="sorting-count">0</span></a>
 			<a href="javascript:void(0);" onclick="javascript:refresh();" class="easyui-linkbutton" title="刷新缓存" plain="true" iconCls="icon-reload">刷新缓存</a>
-			<span class="search_label">分类：</span>
-			<input id="ss-typeId" />
 			<span class="search_label">系列：</span>
 			<input id="ss-setId" />
 			<span class="search_label">推荐：</span>
@@ -794,24 +751,6 @@ function searchStickerByName() {
 	   			<option value="1">推荐</option>
 	   			<option value="0">未推荐</option>
    			</select>
-   			<!-- 
-   			<select id="ss-valid" class="easyui-combobox" style="width:80px;">
-	   			<option value="">所有状态</option>
-	   			<option value="1">生效</option>
-	   			<option value="0">未生效</option>
-   			</select>
-   			
-   			<select id="ss-hasLock" class="easyui-combobox" style="width:100px;">
-	   			<option value="">所有锁状态</option>
-	   			<option value="1">有锁</option>
-	   			<option value="0">无锁</option>
-   			</select>
-   			<select id="ss-fill" class="easyui-combobox" style="width:100px;">
-	   			<option value="">全屏状态</option>
-	   			<option value="0">no全屏</option>
-	   			<option value="1">全屏</option>
-   			</select>
-   			 -->
    			<a href="javascript:void(0);" onclick="javascript:searchSticker();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
    			<input id="ss-stickerName" searcher="searchStickerByName" class="easyui-searchbox" prompt="输入名字搜索" />
    			<div style="display: inline-block;float: right; margin-right: 5px; margin-top:3px;">
@@ -881,45 +820,12 @@ function searchStickerByName() {
 						</tr>
 						
 						<tr>
-							<td class="leftTd">分类：</td>
-							<td>
-								<input name="sticker.typeId" id="typeId_edit" class="easyui-combobox" 
-									data-options="valueField:'id',textField:'typeName',url:'./admin_ztworld/sticker_queryAllType' "/>
-							</td>
-							<td class="rightTd">
-								<div id="typeId_editTip" style="display: inline-block;" class="tipDIV"></div>
-							</td>
-							
-							<td class="leftTd">描述：</td>
-							<td>
-								<textarea name="sticker.stickerDesc" id="stickerDesc_edit"  onchange="validateSubmitOnce=true;"></textarea>
-							</td>
-							<td class="rightTd">
-								<div id="stickerDesc_editTip" class="tipDIV"></div>
-							</td>
-							
-							
-						</tr>
-						
-						<tr>
 							<td class="leftTd">系列：</td>
 							<td>
-								<input type="text" name="sticker.setId" id="setId_edit"  onchange="validateSubmitOnce=true;"/>
+								<input type="text" name="sticker.setId" id="setId_edit"  onchange="validateSubmitOnce=true;" />
 							</td>
 							<td class="rightTd">
 								<div id="setId_editTip" class="tipDIV"></div>
-							</td>
-							<td class="rightTd" colspan="4">
-							</td>
-							
-						</tr>
-						<tr>
-							<td class="leftTd">锁状态：</td>
-							<td>
-								<input id="lock_edit" class="radio" type="radio" name="sticker.hasLock" value="1" checked="checked" />加锁
-								<input id="unlock_edit" class="radio" type="radio" name="sticker.hasLock" value="0" />无锁
-							</td>
-							<td class="rightTd">
 							</td>
 							
 							<td class="leftTd">活动：</td>
@@ -929,6 +835,17 @@ function searchStickerByName() {
 							<td class="rightTd">
 								<div id="labelId_editTip" class="tipDIV"></div>
 							</td>
+							
+						</tr>
+						<tr>
+							<td class="leftTd">锁状态：</td>
+							<td>
+								<input id="unlock_edit" class="radio" type="radio" name="sticker.hasLock" value="0" checked="checked" />无锁
+								<input id="lock_edit" class="radio" type="radio" name="sticker.hasLock" value="1"  />加锁
+							</td>
+							<td class="rightTd" colspan="4">
+							</td>
+							
 						</tr>
 						<tr>
 							<td class="leftTd">全屏状态：</td>
@@ -1070,13 +987,10 @@ function searchStickerByName() {
 		<!-- 更新缓存 -->
 		<div id="htm_refresh">
 			<form id="refresh_form" action="./admin_ztworld/sticker_updateStickerCache" method="post">
-				<table class="htm_edit_table" width="480">
+				<table class="htm_edit_table" width="280">
 					<tbody>
 						<tr>
-							<td class="leftTd">选择推荐分类：</td>
-							<td>
-								<input id="typeIds_refresh" name="typeId" style="width:300px;"/>
-							</td>
+							<td colspan="2">确定要更新缓存吗？更新后精选和编辑页面的推荐贴纸都会生效</td>
 						</tr>
 						<tr>
 							<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
