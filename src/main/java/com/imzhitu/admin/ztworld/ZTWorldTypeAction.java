@@ -5,9 +5,15 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
+import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeService;
 
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.List;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -118,6 +124,30 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 	public void setWorldTypeService(ZTWorldTypeService worldTypeService) {
 		this.worldTypeService = worldTypeService;
 	}
+	
+	/**
+	 * 查询分类
+	 */
+	public String queryAllType(){
+		PrintWriter out = null;
+		try{
+			out = response.getWriter();
+			List<ZTWorldTypeLabelDto> list = worldTypeService.queryAllType();
+			JSONArray jsArray = JSONArray.fromObject(list);
+			out.print(jsArray.toString());
+			out.flush();
+		}catch(Exception e) {
+			jsonMap.clear();
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			JSONObject json = JSONObject.fromObject(jsonMap);
+			out.print(json.toString());
+			out.flush();
+		} finally {
+			out.close();
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * 查询分类
@@ -373,6 +403,20 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 	public String updateTypeWorldCache(){
 		try{
 			worldTypeService.updateTypeWorldCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(OptResult.UPDATE_FAILED, jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	
+	/**
+	 * 更新分类缓存
+	 */
+	public String updateTypeCache() {
+		try{
+			worldTypeService.updateTypeCache();
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(OptResult.UPDATE_FAILED, jsonMap);

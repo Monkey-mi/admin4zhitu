@@ -34,6 +34,7 @@ import com.imzhitu.admin.common.pojo.InteractWorldlevelWorldLabel;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldType;
+import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeWorldDto;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
 import com.imzhitu.admin.interact.service.InteractWorldService;
@@ -47,6 +48,7 @@ import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
+import com.imzhitu.admin.ztworld.dao.HTWorldTypeCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeWorldDao;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
@@ -128,6 +130,9 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private ChannelWorldMapper channelWorldMapper;
+	
+	@Autowired
+	private HTWorldTypeCacheDao typeCacheDao;
 	
 	public Integer getSuperbLimit() {
 		return superbLimit;
@@ -599,6 +604,20 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	 */
 	public void updateTypeWorldCache()throws Exception{
 		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
+	}
+	
+	@Override
+	public void updateTypeCache()throws Exception {
+		typeCacheDao.updateTypeCache();
+	}
+	
+	/**
+	 * 查询所有的分类，用以做下拉列表
+	 */
+	@Override
+	public List<ZTWorldTypeLabelDto> queryAllType()throws Exception{
+		List<ZTWorldTypeLabelDto> list = worldTypeDao.queryAllType();
+		return list;
 	}
 
 }

@@ -2,9 +2,11 @@ package com.imzhitu.admin.ztworld.service;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
+import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 
 /**
  * <p>
@@ -190,4 +192,15 @@ public interface ZTWorldTypeService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateTypeWorldCache()throws Exception;
+	/**
+	 * 更新分类缓存
+	 * 
+	 * @throws Exception
+	 */
+	public void updateTypeCache() throws Exception;
+	
+	/**
+	 * 查询所有的分类，用以做下拉列表
+	 */
+	public List<ZTWorldTypeLabelDto> queryAllType()throws Exception;
 }
