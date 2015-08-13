@@ -858,7 +858,7 @@ function updateWeight(index, id, isAdd) {
 * 刷新推荐达人缓存
 */
 function refreshUserRecommendCache(){
-	$.post("./admin_op/starRecommend_updateStarRecommendCache",function(result){
+	$.post("./admin_op/user_updateUserRecommendCache",function(result){
 		$.messager.alert('提示',result['msg']);
 	});
 }

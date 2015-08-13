@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,7 @@ import com.hts.web.base.database.RowSelection;
 import com.hts.web.base.database.SQLUtil;
 import com.hts.web.common.dao.impl.BaseDaoImpl;
 import com.hts.web.common.pojo.OpUserRecommend;
+import com.hts.web.common.pojo.UserInfoDto;
 import com.hts.web.common.util.CollectionUtil;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpUserRecommendDto;
@@ -121,6 +123,18 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 	private static final String QUERY_ID_BY_UID = "select id from " + table + " where user_id=?";
 	
 	private static final String QUERY_USER_ACCEPT_SYS_ACCPET_RESULT =  " select count(*) from  " + table + " where user_accept=1 and sys_accept=1 and user_id=?";
+	
+	/**
+	 * 查询置顶的推荐用户,并未分类置顶.以后可能会分类置顶
+	 */
+	private static final String QUERY_WEIGHT_USER_RECOMMEND = "select ur.*,uv.verify_name,uv.verify_icon,ui.user_avatar,ui.user_name,ui.user_avatar_l from " + table + " ur left join " + HTS.USER_VERIFY +" uv on ur.verify_id=uv.id ,"
+			+ HTS.USER_INFO + " ui where ur.weight>0 and ur.user_accept=1 and ur.sys_accept=1 and ui.id=ur.user_id ORDER BY ur.weight desc limit ?";
+	
+	/**
+	 * 查询非置顶的推荐用户
+	 */
+	private static final String QUERY_NOT_WEIGHT_USER_RECOMMEND_BY_VERIFY_ID = "select * from " + table + " ur left join " + HTS.USER_VERIFY +" uv on ur.verify_id=uv.id ,"
+			+ HTS.USER_INFO + " ui where ur.weight=0 and ur.user_accept=1 and ur.sys_accept=1 and ui.id=ur.user_id and ur.verify_id=? ORDER BY ur.weight desc limit ?";
 	
 	@Override
 	public List<OpUserRecommendDto> queryRecommendUser(Map<String, Object> attrMap, 
@@ -350,6 +364,33 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 		return getJdbcTemplate().queryForLong(QUERY_USER_ACCEPT_SYS_ACCPET_RESULT, userId);
 	}
 
+	@Override
+	public List<UserInfoDto> queryWeightUserRecommend(int limit){
+		try{
+			return getMasterJdbcTemplate().query(QUERY_WEIGHT_USER_RECOMMEND, new Object[]{limit}, new RowMapper<UserInfoDto>(){
+				@Override
+				public UserInfoDto mapRow(ResultSet rs,int rowNum)throws SQLException{
+					return buildUserInfoDto(rs);
+				}
+			});
+		}catch(EmptyResultDataAccessException e){
+			return null;
+		}
+	}
+	
+	public List<UserInfoDto> queryNotWeightUserRecommendByVerifyId(Integer verifyId,int limit){
+		try{
+			return getMasterJdbcTemplate().query(QUERY_NOT_WEIGHT_USER_RECOMMEND_BY_VERIFY_ID,new Object[]{verifyId,limit}, new RowMapper<UserInfoDto>(){
+				@Override
+				public UserInfoDto mapRow(ResultSet rs,int rowNum)throws SQLException{
+					return buildUserInfoDto(rs);
+				}
+			});
+		}catch(EmptyResultDataAccessException e){
+			return null;
+		}
+	}
+	
 	/**
 	 * 从结果及构建推荐用户数据传输对象
 	 * 
@@ -419,4 +460,15 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 				rs.getInt("sys_accept"));
 	}
 
+	
+	public UserInfoDto buildUserInfoDto(ResultSet rs)throws SQLException{
+		UserInfoDto dto = new UserInfoDto();
+		dto.setId(rs.getInt("user_id"));
+		dto.setUserName(rs.getString("user_name"));
+		dto.setUserAvatar(rs.getString("user_avatar"));
+		dto.setUserAvatarL(rs.getString("user_avatar_l"));
+		dto.setVerifyName(rs.getString("verify_name"));
+		dto.setVerifyIcon(rs.getString("verify_icon"));
+		return dto;
+	}
 }
