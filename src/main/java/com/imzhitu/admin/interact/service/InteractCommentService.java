@@ -181,6 +181,7 @@ public interface InteractCommentService extends BaseService {
 	
 	/*
 	 * 获取标签中的非一级标签
+	 * add by mishengliang
 	 * */
 	
 	public List<InteractCommentLabel> getAllCommentLableUse() throws Exception;

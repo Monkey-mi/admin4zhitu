@@ -5,10 +5,23 @@
 <result property="id" column="id" jdbcType="INTEGER"/>
 <result property="labelName" column="label_name" jdbcType="VARCHAR"/>
 </resultMap>
-
+<!--
+ 查询所有的二级标签 
+ create by mishengliang
+ -->
 <select id="selectInteractCommentLabel" resultMap="InteractCommentLabelMap">
 SELECT * 
 FROM  interact_comment_label 
 WHERE group_id !=0
 </select>
+
+<!-- 查找是否存在该标签名 -->
+<select id="checkLabelExsistByLabelName" resultType="Integer">
+select count(*) from interact_comment_label where label_name=#{labelName}
+</select>
+
+<!-- 存储新建的标签 -->
+<insert id="saveLabel">
+insert into interact_comment_label(label_name,group_id) value(#{labelName},#{group_id})
+</insert>
 </mapper>

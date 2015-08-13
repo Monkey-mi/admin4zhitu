@@ -62,6 +62,8 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 	@Autowired
 	private InteractCommentLabelMapper commentLableMapper;
 	
+	private InteractCommentLabelMapper interactCommentLabelMapper;
+	
 	@Override
 	public void batchSaveComment(File file, Integer labelId) throws Exception {
 		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
@@ -163,11 +165,19 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 		
 	}
 	
+	
+	/*
+	 * 代码整改，将检查是否存在此标签名下的标签改为Mapper格式
+	 * modify by mishengliang
+	 * */
 	@Override
 	public void saveLabel(String labelName, Integer groupId) throws Exception {
-		boolean b = interactCommentLabelDao.checkLabelExsistByLabelName(labelName);
+/*	boolean b = interactCommentLabelDao.checkLabelExsistByLabelName(labelName);
 		if(b == false)
-		interactCommentLabelDao.saveLabel(new InteractCommentLabel(labelName, groupId));
+		interactCommentLabelDao.saveLabel(new InteractCommentLabel(labelName, groupId));*/
+		Integer b = interactCommentLabelMapper.checkLabelExsistByLabelName(labelName);
+		if(!(b > 0))
+			interactCommentLabelMapper.saveLabel(labelName, groupId);
 	}
 	
 	@Override
@@ -304,6 +314,11 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 		}
 	}
 
+	
+	/*
+	 * add by mishengliang
+	 * 查询所有的二级标签
+	 * */
 	@Override
 	public List<InteractCommentLabel> getAllCommentLableUse() throws Exception {
 			List<InteractCommentLabel> list = commentLableMapper.selectInteractCommentLabel();

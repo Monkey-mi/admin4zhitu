@@ -22,9 +22,7 @@ import com.imzhitu.admin.interact.service.InteractCommentService;
 
 public class InteractCommentAction extends BaseCRUDAction {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -5458395827792742247L;
 	
 	
