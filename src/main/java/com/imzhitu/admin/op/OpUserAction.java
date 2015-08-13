@@ -10,6 +10,7 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
+import com.imzhitu.admin.op.service.OpUserRecommendCacheService;
 import com.imzhitu.admin.op.service.OpUserService;
 
 /**
@@ -67,10 +68,23 @@ public class OpUserAction extends BaseCRUDAction {
 	@Autowired
 	private OpUserService opUserService;
 	
+	@Autowired
+	private OpUserRecommendCacheService opUserRecommendCacheService;
+	
 	
 	/*
 	 *******用户推荐模块******
 	 */
+	
+	public String updateUserRecommendCache(){
+		try{
+			opUserRecommendCacheService.updateUserRecommendCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 	
 	/**
 	 * 查询推荐用户列表

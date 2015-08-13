@@ -854,6 +854,15 @@ function updateWeight(index, id, isAdd) {
 			},"json");
 }
 
+/**
+* 刷新推荐达人缓存
+*/
+function refreshUserRecommendCache(){
+	$.post("./admin_op/starRecommend_updateStarRecommendCache",function(result){
+		$.messager.alert('提示',result['msg']);
+	});
+}
+
 </script>
 </head>
 <body>
@@ -863,29 +872,30 @@ function updateWeight(index, id, isAdd) {
 	<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
 			<a href="javascript:void(0);" onclick="javascript:initDeleteWindow();" class="easyui-linkbutton" title="删除推荐用户" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
-			<a href="javascript:void(0);" onclick="javascript:updateSysAccept(1);" class="easyui-linkbutton" title="批量通过推荐申请！" plain="true" iconCls="icon-ok" id="refreshBtn">批量通过</a>
-			<a href="javascript:void(0);" onclick="javascript:updateSysAccept(2);" class="easyui-linkbutton" title="批量拒绝推荐申请！" plain="true" iconCls="icon-cancel" id="rejectBtn">批量拒绝</a>
+			<a href="javascript:void(0);" onclick="javascript:updateSysAccept(1);" class="easyui-linkbutton" title="批量通过推荐申请！" plain="true" iconCls="icon-ok" id="refreshBtn">通过</a>
+			<a href="javascript:void(0);" onclick="javascript:updateSysAccept(2);" class="easyui-linkbutton" title="批量拒绝推荐申请！" plain="true" iconCls="icon-cancel" id="rejectBtn">拒绝</a>
 			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
-			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量提醒" plain="true" iconCls="icon-converter" id="batchNotifyBtn">批量提醒</a>
+			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量提醒" plain="true" iconCls="icon-converter" id="batchNotifyBtn">提醒</a>
+			<a href="javascript:void(0);" onclick="javascript:refreshUserRecommendCache();" class="easyui-linkbutton" title="刷新用户推荐缓存" plain="true" iconCls="icon-converter" >刷新缓存</a>
 			<input id="ss-verifyId" value="所有认证类型" style="width:100px" />
-			<select id="ss-sysAccept" class="easyui-combobox" style="width:120px;">
+			<select id="ss-sysAccept" class="easyui-combobox" style="width:110px;">
 		        <option value="">所有系统状态</option>
 		        <option value="0">待定</option>
 		        <option value="1">通过</option>
 		        <option value="2">拒绝</option>
 	   		</select>
-	   		<select id="ss-userAccept" class="easyui-combobox" style="width:120px;">
+	   		<select id="ss-userAccept" class="easyui-combobox" style="width:110px;">
 		        <option value="">所有用户状态</option>
 		        <option value="0">待定</option>
 		        <option value="1">通过</option>
 		        <option value="2">拒绝</option>
 	   		</select>
-	   		<select id="ss-notified" class="easyui-combobox" style="width:120px;">
+	   		<select id="ss-notified" class="easyui-combobox" style="width:110px;">
 		        <option value="">所有通知状态</option>
 		        <option value="0">未通知</option>
 		        <option value="1">已通知</option>
 	   		</select>
-	   		<select id="ss-weight" class="easyui-combobox" style="width:120px;">
+	   		<select id="ss-weight" class="easyui-combobox" style="width:110px;">
 	   			<option value="">置顶和未置顶</option>
 	   			<option value="1">已置顶</option>
 	   			<option value="0">未置顶</option>
@@ -897,7 +907,7 @@ function updateWeight(index, id, isAdd) {
 	   		<a href="javascript:void(0);" onclick="javascript:searchRecommend();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 	   		
 	   		<div style="display: inline-block; vertical-align:middle; float: right;">
-		        <input id="ss-userName" class="easyui-searchbox" searcher="searchByName" prompt="请输入昵称/ID搜索用户" style="width:150px;" />
+		        <input id="ss-userName" class="easyui-searchbox" searcher="searchByName" prompt="昵称/ID" style="width:120px;" />
 			</div>
    		</div>
 	</div> 
