@@ -6,6 +6,7 @@ import java.util.Map;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.dao.BaseDao;
 import com.hts.web.common.pojo.OpUserRecommend;
+import com.hts.web.common.pojo.UserInfoDto;
 import com.imzhitu.admin.common.pojo.OpUserRecommendDto;
 
 /**
@@ -182,4 +183,19 @@ public interface UserRecommendDao extends BaseDao {
 	 * @return
 	 */
 	public long queryUserAccpetAndSysAcceptResult(Integer userId);
+	
+	/**
+	 * 查询置顶的推荐用户
+	 * @param limit
+	 * @return
+	 */
+	public List<UserInfoDto> queryWeightUserRecommend(int limit);
+	
+	/**
+	 * 根据认证类型查询非置顶的推荐用户
+	 * @param verifyId
+	 * @param limit
+	 * @return
+	 */
+	public List<UserInfoDto> queryNotWeightUserRecommendByVerifyId(Integer verifyId,int limit);
 }
