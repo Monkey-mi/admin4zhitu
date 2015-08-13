@@ -143,6 +143,7 @@
 	<bean id="opStarRecommendCacheService" class="com.imzhitu.admin.op.service.impl.OpStarRecommendCacheServiceImpl" />
 	<bean id="interactZombieWorldSchedulaService" class="com.imzhitu.admin.interact.service.impl.InteractZombieWorldSchedulaServiceImpl"/>
 	<bean id="dailyDataStatisticsService" class="com.imzhitu.admin.statistics.service.impl.DailyDataStatisticsServiceImpl"/>
+	<bean id="opUserRecommendCacheService" class="com.imzhitu.admin.op.service.impl.OpUserRecommendCacheServiceImpl"/>
 
 		
 	<!-- 互动播放定时任务 -->
@@ -513,6 +514,28 @@
 	</bean>
 	
 	
+	<!-- 用户推荐缓存更新计划 -->
+	<bean id="userRecommendCacheJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="opUserRecommendCacheService"/>
+		</property>
+		<property name="targetMethod">
+			<value>doUpdateUserRecommendCacheJob</value>
+		</property>
+	</bean>
+	
+	<bean id="userRecommendCacheTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="userRecommendCacheJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>0 0/10 * * * ?</value><!-- 每10分钟执行 -->
+  		</property>
+	</bean>
+	
+	
+	
+	
 	<!-- opensearch修改提交任务 -->
     <bean id="osPushJobDetail"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -627,6 +650,7 @@
                 <ref bean="starRecommendCacheTrigger" />
                 <ref bean="zombieWorldSchedulaJobTrigger" />
                 <ref bean="dailyDataStatisticsSchedulaJobTrigger" />
+                <ref bean="userRecommendCacheTrigger" />
             </list>
         </property>
     </bean>

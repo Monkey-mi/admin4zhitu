@@ -1,10 +1,11 @@
 package com.imzhitu.admin.op.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.CacheKeies;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
@@ -14,7 +15,6 @@ import com.hts.web.operations.dao.OpUserVerifyDtoCacheDao;
 import com.imzhitu.admin.op.dao.UserRecommendDao;
 import com.imzhitu.admin.op.service.OpUserRecommendCacheService;
 
-@Service
 public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<UserInfoDto> implements
 		OpUserRecommendCacheService {
 
@@ -24,6 +24,8 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<UserInfoDt
 	
 	@Autowired
 	private UserRecommendDao userRecommendDao;
+	
+	private Logger log = Logger.getLogger(OpUserRecommendCacheServiceImpl.class);
 	
 	@Override
 	public void updateUserRecommendCache() throws Exception {
@@ -60,6 +62,22 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<UserInfoDt
 			throw new Exception("update userRecommendCache failed! result is null");
 		}
 		
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void doUpdateUserRecommendCacheJob(){
+		try{
+			Date begin = new Date();
+			log.info("begin update user recommend cache."+begin);
+			updateUserRecommendCache();
+			Date end = new Date();
+			log.info("end update user recommend cache. cost:"+(end.getTime() - begin.getTime()) +"ms.");
+		}catch(Exception e){
+			log.warn(e.getMessage());
+		}
 	}
 
 }

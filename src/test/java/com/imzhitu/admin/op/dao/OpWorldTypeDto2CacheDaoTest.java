@@ -12,7 +12,7 @@ public class OpWorldTypeDto2CacheDaoTest extends BaseTest {
 	
 	@Test
 	public void updateWorldTypeDto2Test() throws Exception {
-		dao.updateWorldTypeDto2(75);
+//		dao.updateWorldTypeDto2(75);
 	}
 	
 	

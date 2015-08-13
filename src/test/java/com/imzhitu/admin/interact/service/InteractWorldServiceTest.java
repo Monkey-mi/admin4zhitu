@@ -30,7 +30,7 @@ public class InteractWorldServiceTest extends BaseTest {
 		service.saveInteractV3(14303, 5000, 4,s, 20);
 	}
 	
-	@Test
+//	@Test
 	public void testSaveInteractV3ByUserLevelAndLabel()throws Exception{
 		service.saveInteractV3(25594, "39,40");
 	}

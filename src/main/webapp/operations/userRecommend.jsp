@@ -159,7 +159,12 @@ var maxId = 0,
   				return "<img title='" + title +  "' class='htm_column_img pointer' onclick='updateWeight(\"" + index + "\",\"" + row[recordIdKey] + "\",\"" + true + "\")' src='" + img + "'/>";
   			}
 		},
-		{field : 'recommender',title : '推荐人',align : 'center', width : 55}
+		{field : 'recommender',title : '推荐人',align : 'center', width : 55},
+		{field : 'dateAdded', title:'推荐日期', align : 'center',width : 120, 
+			formatter: function(value,row,index){
+				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+			} 
+		}
 		],
 	addWidth = 520, //添加信息宽度
 	addHeight = 130, //添加信息高度

@@ -31,7 +31,7 @@ public class ZTWorldTypeServiceTest extends BaseTest {
 		logObj(jsonMap);
 	}
 	
-	@Test
+//	@Test
 	public void testBatchUpdateRecommendTypeWorldValid() throws Exception {
 		service.batchUpdateRecommendTypeWorldValid();
 	}
