@@ -22,6 +22,10 @@ select count(*) from interact_comment_label where label_name=#{labelName}
 
 <!-- 存储新建的标签 -->
 <insert id="saveLabel">
-insert into interact_comment_label(label_name,group_id) value(#{labelName},#{group_id})
+insert into interact_comment_label(label_name,group_id) value(#{labelName},#{groupId})
 </insert>
+
+<select id="queryLabel" resultMap="InteractCommentLabelMap">
+select * from interact_comment_label 
+</select>
 </mapper>

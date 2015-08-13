@@ -24,13 +24,9 @@ public interface InteractCommentLabelMapper {
 	
 	/**
 	 * 查询是否存在该名字的标签
-	 * true 存在
-	 * false 不存在
 	 */
-	
-	
 	@DataSource("slave")
-	public Integer checkLabelExsistByLabelName(@Param("labelName")String labelName);
+	public Integer checkLabelExsistByLabelName(@Param("labelName")String labelName) throws Exception;
 	
 	/*
 	 * 将新建的标签插入数据库
@@ -38,7 +34,13 @@ public interface InteractCommentLabelMapper {
 	 * 08-12-2015	
 	 * */
 	@DataSource("master")
-	public void saveLabel(@Param("labelName")String labelName,@Param("groupId")Integer groupId);
+	public void saveLabel(@Param("labelName")String labelName,@Param("groupId")Integer groupId) throws Exception;
+	
+	/*
+	 * 查询所有 的标签
+	 * */
+	@DataSource("master")
+	public List<InteractCommentLabel> queryLabel() throws Exception;
 }
 
 

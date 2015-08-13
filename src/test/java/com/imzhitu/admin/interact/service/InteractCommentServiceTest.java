@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.imzhitu.admin.base.BaseTest;
+import com.imzhitu.admin.common.pojo.InteractCommentLabel;
 
 public class InteractCommentServiceTest extends BaseTest {
 
@@ -36,4 +37,16 @@ public class InteractCommentServiceTest extends BaseTest {
 			logger.debug(id);
 		}
 	}
+	
+	@Test
+	public void testQueryAllLabels() throws Exception {
+		List<InteractCommentLabel> list = service.getAllLabels();
+		System.out.println("-------------------------->"+list.get(0).getLabelName()+"<---------------------------------------");
+	}
+	
+	@Test
+	public void testSaveLabel()throws Exception{
+		service.saveLabel("夏威夷",35);
+	}
+	
 }

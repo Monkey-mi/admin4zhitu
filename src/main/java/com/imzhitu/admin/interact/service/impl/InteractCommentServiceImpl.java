@@ -62,7 +62,6 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 	@Autowired
 	private InteractCommentLabelMapper commentLableMapper;
 	
-	private InteractCommentLabelMapper interactCommentLabelMapper;
 	
 	@Override
 	public void batchSaveComment(File file, Integer labelId) throws Exception {
@@ -175,14 +174,17 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements
 /*	boolean b = interactCommentLabelDao.checkLabelExsistByLabelName(labelName);
 		if(b == false)
 		interactCommentLabelDao.saveLabel(new InteractCommentLabel(labelName, groupId));*/
-		Integer b = interactCommentLabelMapper.checkLabelExsistByLabelName(labelName);
+		Integer b = commentLableMapper.checkLabelExsistByLabelName(labelName);
 		if(!(b > 0))
-			interactCommentLabelMapper.saveLabel(labelName, groupId);
+			commentLableMapper.saveLabel(labelName, groupId);
 	}
 	
+	//modify by mishengliang
 	@Override
 	public List<InteractCommentLabel> getAllLabels() throws Exception {
-		return interactCommentLabelDao.queryLabel();
+//		return interactCommentLabelDao.queryLabel();
+		List<InteractCommentLabel> list = commentLableMapper.queryLabel();
+		return commentLableMapper.queryLabel();
 	}
 
 	@Override
