@@ -21,7 +21,7 @@ public interface OpChannelMemberService extends BaseService {
 	 * 
 	 * @param dto
 	 */
-	public void updateChannelMemberDegree(Integer channelId, Integer userId, Integer degree) throws Exception;
+	public void updateChannelMemberDegree(Integer id, Integer channelId, Integer userId, Integer degree) throws Exception;
 
 	/**
 	 * 查询总数
