@@ -5,6 +5,7 @@
 <result property="id" column="id" jdbcType="INTEGER"/>
 <result property="labelName" column="label_name" jdbcType="VARCHAR"/>
 </resultMap>
+
 <!--
  查询所有的二级标签 
  create by mishengliang
@@ -25,7 +26,29 @@ select count(*) from interact_comment_label where label_name=#{labelName}
 insert into interact_comment_label(label_name,group_id) value(#{labelName},#{groupId})
 </insert>
 
-<select id="queryLabel" resultMap="InteractCommentLabelMap">
+<!-- 功能略复杂，未优化-->
+<!-- <select id="queryLabel" resultMap="InteractCommentLabelMap">
 select * from interact_comment_label 
+<if test="groupId!=null and groupId != 0">
+where group_id = #{group_id}
+</if>
+<if test="firstRow != 0 and limit != 0">
+limit #{firstRow},#{limit}
+</if>
+order by id desc
+</select> -->
+
+<select id="queryLabelCount" resultType="long">
+select count(*) from interact_comment_label where group_id=#{groupId} and id &lt;= #{maxId}
 </select>
+
+
+<select id="queryLabelGroupCount" resultType="long">
+select count(*) from interact_comment_label where group_id= 0 and id &lt;= #{maxId} 
+</select>
+
+<update id="updateLabel">
+update interact_comment_label set label_name=#{labelName},group_id=#{groupId} where id= #{id}
+</update>
+
 </mapper>

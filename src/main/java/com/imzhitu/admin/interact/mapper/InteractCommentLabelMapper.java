@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 //import org.springframework.stereotype.Service;
 
+import com.hts.web.base.database.RowSelection;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractCommentLabel;
 
@@ -37,10 +38,20 @@ public interface InteractCommentLabelMapper {
 	public void saveLabel(@Param("labelName")String labelName,@Param("groupId")Integer groupId) throws Exception;
 	
 	/*
-	 * 查询所有 的标签
+	 * 查询指定 的标签
 	 * */
 	@DataSource("master")
-	public List<InteractCommentLabel> queryLabel() throws Exception;
+	public List<InteractCommentLabel> queryLabel(@Param("groupId")Integer groupId,@Param("firstRow")Integer firstRow,@Param("limit")Integer limit) throws Exception;
+	
+	@DataSource("master")
+	public long queryLabelCount(@Param("maxId")Integer maxId,@Param("groupId")Integer groupId) throws Exception;
+	
+	@DataSource("master")
+	public long queryLabelGroupCount(@Param("maxId")Integer maxId) throws Exception;
+	
+	@DataSource("master")
+	public void updateLabel(@Param("id")Integer id,@Param("labelName")String labelName,@Param("groupId")Integer groupId) throws Exception;
+	
 }
 
 
