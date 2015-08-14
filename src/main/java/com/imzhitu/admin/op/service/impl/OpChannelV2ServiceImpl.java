@@ -183,10 +183,10 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 				return;
 			}
 			//原拥有者degree设置为0
-			channelMemberService.updateChannelMemberDegree(null, channelId, list.get(0).getOwnerId(), Tag.FALSE);
+			channelMemberService.updateChannelMemberDegree(channelId, list.get(0).getOwnerId(), Tag.CHANNEL_MEMBER_ROLE_NORMAL);
 			
 			//新增频道的同时须将该频道拥有着关注该频道
-			channelMemberService.insertChannelMember(channelId, ownerId, Tag.TRUE);
+			channelMemberService.insertChannelMember(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
 		}
 	}
 
