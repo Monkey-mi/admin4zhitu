@@ -144,7 +144,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 				return;
 			}
 			//原拥有者degree设置为0
-			channelMemberService.updateChannelMemberDegree(null, channelId, list.get(0).getOwnerId(), Tag.CHANNEL_MEMBER_ROLE_NORMAL);
+			channelMemberService.updateChannelMemberDegree(channelId, list.get(0).getOwnerId(), Tag.CHANNEL_MEMBER_ROLE_NORMAL);
 			
 			//新增频道的同时须将该频道拥有着关注该频道
 			channelMemberService.insertChannelMember(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
@@ -474,7 +474,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    // 转换后的置顶 集合
 	    List<OpChannel> topTempList = new ArrayList<OpChannel>();
 	    for (OpChannelV2Dto opChannelV2Dto : topList) {
-<<<<<<< HEAD
 			topTempList.add(new OpChannel(
 					opChannelV2Dto.getChannelId(),
 					opChannelV2Dto.getOwnerId(),
@@ -501,22 +500,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 					opChannelV2Dto.getMoodFlag(),
 					opChannelV2Dto.getWorldFlag(),
 					opChannelV2Dto.getChannelReview()));
-=======
-		topTempList.add(new OpChannel(opChannelV2Dto.getChannelId(),
-			opChannelV2Dto.getOwnerId(),opChannelV2Dto.getChannelName(),
-			opChannelV2Dto.getChannelTitle(),opChannelV2Dto.getSubtitle(),
-			opChannelV2Dto.getChannelDesc(),opChannelV2Dto.getChannelIcon(),
-			opChannelV2Dto.getSubIcon(), opChannelV2Dto.getBanner(),
-			opChannelV2Dto.getChannelTypeId(),opChannelV2Dto.getChannelLabelNames(),
-			opChannelV2Dto.getChannelLabelIds(),opChannelV2Dto.getWorldCount(),
-			opChannelV2Dto.getWorldPictureCount(),opChannelV2Dto.getMemberCount(),
-			opChannelV2Dto.getSuperbCount(),TimeUtil.getDate(opChannelV2Dto.getCreateTime().longValue()),
-			TimeUtil.getDate(opChannelV2Dto.getLastModifiedTime().longValue()),
-			opChannelV2Dto.getSuperb(),opChannelV2Dto.getThemeId(),opChannelV2Dto.getSerial(),
-			opChannelV2Dto.getDanmu(),opChannelV2Dto.getMoodFlag(),opChannelV2Dto.getWorldFlag(),
-			opChannelV2Dto.getReview()
-			));
->>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 	    }
 	    // 置顶频道id集合
 	    List<Integer> topChannelIds = new ArrayList<Integer>();
