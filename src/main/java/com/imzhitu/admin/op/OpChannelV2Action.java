@@ -4,15 +4,11 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
-import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpChannelLink;
 import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.util.JSONUtil;
@@ -22,6 +18,9 @@ import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.constant.LoggerKeies;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
 import com.imzhitu.admin.privileges.dao.RoleDao;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class OpChannelV2Action extends BaseCRUDAction{
 
@@ -39,14 +38,15 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	 * 插入频道
 	 * @return
 	 */
-	public String insertOpChannel(){
-		try{
-			opChannelV2Service.insertOpChannel(ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, channelTypeId,
-					channelLabelNames, channelLabelIds, 0, 0, 0, 0, 0, Tag.FALSE, Tag.FALSE, 0, Tag.FALSE, Tag.FALSE, Tag.TRUE,themeId);
+	public String insertOpChannel() {
+		try {
+			
+			opChannelV2Service.insertOpChannel(channelDesc, channelIcon, channelSubIcon, 
+					channelBanner, channelReview, channelName, channelTypeId, ownerId, themeId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
-		}catch(Exception e){
+		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e.getMessage(),e);
+			log.error(e.getMessage(), e);
 		}
 		return StrutsKey.JSON;
 	}
@@ -72,8 +72,8 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	 */
 	public String updateOpChannel(){
 		try{
-			opChannelV2Service.updateOpChannel(channelId, ownerId, channelName, channelTitle, subtitle, channelDesc, channelIcon, channelTypeId,
-					channelLabelNames, channelLabelIds, worldCount, worldPictureCount, memberCount, superbCount, childCountBase, superb, valid, serial, danmu, moodFlag, worldFlag,themeId);
+			opChannelV2Service.updateOpChannel(channelId, channelDesc, channelIcon, channelSubIcon, 
+					channelBanner, channelReview, channelName, channelTypeId, ownerId, themeId);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -89,7 +89,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
     public String queryOpChannel() {
 	try {
 	    // 判断是否置顶，置顶传递1，不置顶传递null，因为是查询，若不置顶，则设置为null，表示不查询top字段
-	    Integer top = isTopFlag() ? 1 : null;
+	    Integer top = topFlag ? 1 : null;
 	    opChannelV2Service.queryOpChannel(channelId, channelName,
 		    channelTypeId, ownerId, superb, valid, top, serial, danmu,
 		    moodFlag, worldFlag, themeId, page, rows, maxId, jsonMap);
@@ -132,7 +132,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
 	 */
 	public String queryOpChannelLabelList(){
 	    try{
-		List<Map<String, Object>> queryOpChannelLabelList = opChannelV2Service.queryOpChannelLabelList(getChannelId());
+		List<Map<String, Object>> queryOpChannelLabelList = opChannelV2Service.queryOpChannelLabelList(channelId);
 		JSONUtil.optResult(OptResult.OPT_SUCCESS, queryOpChannelLabelList, OptResult.ROWS, jsonMap);
 	    }catch(Exception e){
 		JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -227,7 +227,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
      */
     public String queryRelatedChannel() {
 	try {
-	    List<OpChannelLink> queryRelatedChannelList = opChannelV2Service.queryRelatedChannelList(getChannelId());
+	    List<OpChannelLink> queryRelatedChannelList = opChannelV2Service.queryRelatedChannelList(channelId);
 	    JSONUtil.optResult(OptResult.OPT_SUCCESS, queryRelatedChannelList, OptResult.ROWS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -244,7 +244,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
      */
     public String addRelatedChannel(){
 	try {
-	    opChannelV2Service.addRelatedChannel(getChannelId(),getLinkChannelId());
+	    opChannelV2Service.addRelatedChannel(channelId, linkChannelId);
 	    JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -261,8 +261,8 @@ public class OpChannelV2Action extends BaseCRUDAction{
      */
     public String deleteRelatedChannels(){
 	try {
-	    Integer[] deleteIds = StringUtil.convertStringToIds(getDeleteIds());
-	    opChannelV2Service.deleteRelatedChannels(getChannelId(),deleteIds);
+	    Integer[] delIds = StringUtil.convertStringToIds(deleteIds);
+	    opChannelV2Service.deleteRelatedChannels(channelId, delIds);
 	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -298,7 +298,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
      */
     public String saveChannelTop(){
 	try {
-	    opChannelV2Service.saveChannelTop(getChannelId());
+	    opChannelV2Service.saveChannelTop(channelId);
 	    JSONUtil.optSuccess("修改成功", jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -315,7 +315,7 @@ public class OpChannelV2Action extends BaseCRUDAction{
      */
     public String deleteChannelTop(){
 	try {
-	    opChannelV2Service.deleteChannelTop(getChannelId());
+	    opChannelV2Service.deleteChannelTop(channelId);
 	    JSONUtil.optSuccess("修改成功", jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -332,9 +332,9 @@ public class OpChannelV2Action extends BaseCRUDAction{
      */
 	public String updateOpChannelLabel() {
 		try {
-			String labelIds = getChannelLabelIds().equals("") ? null : getChannelLabelIds();
-			String labelNames = getChannelLabelNames().equals("") ? null : getChannelLabelNames();
-			opChannelV2Service.updateOpChannelLabel(getChannelId(), labelIds, labelNames);
+			String labelIds = channelLabelIds.equals("") ? null : channelLabelIds;
+			String labelNames = channelLabelNames.equals("") ? null : channelLabelNames;
+			opChannelV2Service.updateOpChannelLabel(channelId, labelIds, labelNames);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -379,265 +379,129 @@ public class OpChannelV2Action extends BaseCRUDAction{
 		}
 	}
 	
-	
-	private Integer channelId;			//id
+	private Integer channelId;			//频道id
 	private Integer ownerId;			//拥有者ID
-	private String ownerName;			//拥有者名称
 	private String channelName;			//频道名称
-	private String channelTitle;		//频道标题
-	private String subtitle;			//频道副标题
 	private String channelDesc;			//频道描述
 	private String channelIcon;			//频道icon
+	private String channelSubIcon;		//频道sub_icon
+	private String channelBanner;		//频道banner
+	private String channelReview;		//频道review，用于点击banner时，跳转到h5页面的链接
 	private Integer channelTypeId;		//频道类型ID
-	private String channelTypeName;		//频道类型名称
 	private String channelLabelNames;	//频道标签名称，eg。label_A,label_B,...
 	private String channelLabelIds;		//频道标签ids，eg: label_A_id,label_B_id....
-	private Integer worldCount;			//织图总数
-	private Integer worldPictureCount;	//图片总数
-	private Integer memberCount;		//频道成员总数
-	private Integer  superbCount;		//精选总数
-	private Integer childCountBase;		//图片基数
-	private Long createTime;			//创建时间
-	private Long lastModifiedTime;		//最后修改时间
 	private Integer superb;				//精选标记。0非精选。1精选
 	private Integer valid;				//有效性	0无效。1有效
 	private Integer serial;				//序号
 	private Integer danmu;				//弹幕标记。0非弹幕，1弹幕
 	private Integer moodFlag;			//发心情标记
 	private Integer worldFlag;			//织图标记
-	
-	private Integer orderBy;			//排序
 	private String channelIdsStr;		//channel id array string
-	
 	private String worldAndAuthorIdsStr;//worldId and authorId，eg：123-114,124-114
 	private Integer themeId;			//主题ID
-	
 	private Integer linkChannelId;	// 关联频道id
 	private String deleteIds;	// 执行删除操作的id集合
 	private boolean topFlag;			//是否置顶	true置顶，false不置顶
-	
-	
-	public Integer getMoodFlag() {
-		return moodFlag;
+
+	public void setOpChannelV2Service(OpChannelV2Service opChannelV2Service) {
+		this.opChannelV2Service = opChannelV2Service;
 	}
-	public void setMoodFlag(Integer moodFlag) {
-		this.moodFlag = moodFlag;
+
+	public void setRoleDao(RoleDao roleDao) {
+		this.roleDao = roleDao;
 	}
-	public String getOwnerName() {
-		return ownerName;
-	}
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
-	}
-	public Integer getChannelId() {
-		return channelId;
-	}
+
 	public void setChannelId(Integer channelId) {
 		this.channelId = channelId;
 	}
-	public Integer getOwnerId() {
-		return ownerId;
-	}
+
 	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
 	}
-	public String getChannelName() {
-		return channelName;
-	}
+
 	public void setChannelName(String channelName) {
 		this.channelName = channelName;
 	}
-	public String getChannelTitle() {
-		return channelTitle;
-	}
-	public void setChannelTitle(String channelTitle) {
-		this.channelTitle = channelTitle;
-	}
-	public String getSubtitle() {
-		return subtitle;
-	}
-	public void setSubtitle(String subtitle) {
-		this.subtitle = subtitle;
-	}
-	public String getChannelDesc() {
-		return channelDesc;
-	}
+
 	public void setChannelDesc(String channelDesc) {
 		this.channelDesc = channelDesc;
 	}
-	public String getChannelIcon() {
-		return channelIcon;
-	}
+
 	public void setChannelIcon(String channelIcon) {
 		this.channelIcon = channelIcon;
 	}
-	public Integer getChannelTypeId() {
-		return channelTypeId;
+
+	public void setChannelSubIcon(String channelSubIcon) {
+		this.channelSubIcon = channelSubIcon;
 	}
+
+	public void setChannelBanner(String channelBanner) {
+		this.channelBanner = channelBanner;
+	}
+
+	public void setChannelReview(String channelReview) {
+		this.channelReview = channelReview;
+	}
+
 	public void setChannelTypeId(Integer channelTypeId) {
 		this.channelTypeId = channelTypeId;
 	}
-	public String getChannelTypeName() {
-		return channelTypeName;
-	}
-	public void setChannelTypeName(String channelTypeName) {
-		this.channelTypeName = channelTypeName;
-	}
-	public String getChannelLabelNames() {
-		return channelLabelNames;
-	}
+
 	public void setChannelLabelNames(String channelLabelNames) {
 		this.channelLabelNames = channelLabelNames;
 	}
-	public String getChannelLabelIds() {
-		return channelLabelIds;
-	}
+
 	public void setChannelLabelIds(String channelLabelIds) {
 		this.channelLabelIds = channelLabelIds;
 	}
-	public Integer getWorldCount() {
-		return worldCount;
-	}
-	public void setWorldCount(Integer worldCount) {
-		this.worldCount = worldCount;
-	}
-	public Integer getWorldPictureCount() {
-		return worldPictureCount;
-	}
-	public void setWorldPictureCount(Integer worldPictureCount) {
-		this.worldPictureCount = worldPictureCount;
-	}
-	public Integer getMemberCount() {
-		return memberCount;
-	}
-	public void setMemberCount(Integer memberCount) {
-		this.memberCount = memberCount;
-	}
-	public Integer getSuperbCount() {
-		return superbCount;
-	}
-	public void setSuperbCount(Integer superbCount) {
-		this.superbCount = superbCount;
-	}
-	public Integer getChildCountBase() {
-		return childCountBase;
-	}
-	public void setChildCountBase(Integer childCountBase) {
-		this.childCountBase = childCountBase;
-	}
-	public Long getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(Long createTime) {
-		this.createTime = createTime;
-	}
-	public Long getLastModifiedTime() {
-		return lastModifiedTime;
-	}
-	public void setLastModifiedTime(Long lastModifiedTime) {
-		this.lastModifiedTime = lastModifiedTime;
-	}
-	public Integer getSuperb() {
-		return superb;
-	}
+
 	public void setSuperb(Integer superb) {
 		this.superb = superb;
 	}
-	public Integer getValid() {
-		return valid;
-	}
+
 	public void setValid(Integer valid) {
 		this.valid = valid;
 	}
-	public Integer getSerial() {
-		return serial;
-	}
+
 	public void setSerial(Integer serial) {
 		this.serial = serial;
 	}
-	public Integer getDanmu() {
-		return danmu;
-	}
+
 	public void setDanmu(Integer danmu) {
 		this.danmu = danmu;
 	}
-	public Integer getWorldFlag() {
-		return worldFlag;
-	}
-	public void setWorldFlag(Integer worldFlag) {
-		this.worldFlag = worldFlag;
-	}
-	public Integer getOrderBy() {
-		return orderBy;
-	}
-	public void setOrderBy(Integer orderBy) {
-		this.orderBy = orderBy;
+
+	public void setMoodFlag(Integer moodFlag) {
+		this.moodFlag = moodFlag;
 	}
 
-	public String getChannelIdsStr() {
-		return channelIdsStr;
+	public void setWorldFlag(Integer worldFlag) {
+		this.worldFlag = worldFlag;
 	}
 
 	public void setChannelIdsStr(String channelIdsStr) {
 		this.channelIdsStr = channelIdsStr;
 	}
 
-	public String getWorldAndAuthorIdsStr() {
-		return worldAndAuthorIdsStr;
-	}
-
 	public void setWorldAndAuthorIdsStr(String worldAndAuthorIdsStr) {
 		this.worldAndAuthorIdsStr = worldAndAuthorIdsStr;
-	}
-
-	public Integer getThemeId() {
-		return themeId;
 	}
 
 	public void setThemeId(Integer themeId) {
 		this.themeId = themeId;
 	}
 
-	/**
-	 * @return the linkChannelId
-	 */
-	public Integer getLinkChannelId() {
-	    return linkChannelId;
-	}
-
-	/**
-	 * @param linkChannelId the linkChannelId to set
-	 */
 	public void setLinkChannelId(Integer linkChannelId) {
-	    this.linkChannelId = linkChannelId;
+		this.linkChannelId = linkChannelId;
 	}
 
-	/**
-	 * @return the deleteIds
-	 */
-	public String getDeleteIds() {
-	    return deleteIds;
-	}
-
-	/**
-	 * @param deleteIds the deleteIds to set
-	 */
 	public void setDeleteIds(String deleteIds) {
-	    this.deleteIds = deleteIds;
+		this.deleteIds = deleteIds;
 	}
 
-	/**
-	 * @return the topFlag
-	 */
-	public boolean isTopFlag() {
-	    return topFlag;
-	}
-
-	/**
-	 * @param topFlag the topFlag to set
-	 */
 	public void setTopFlag(boolean topFlag) {
-	    this.topFlag = topFlag;
+		this.topFlag = topFlag;
 	}
+	
 
 }

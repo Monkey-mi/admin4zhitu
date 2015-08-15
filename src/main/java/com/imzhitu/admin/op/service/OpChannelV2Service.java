@@ -1,25 +1,24 @@
 package com.imzhitu.admin.op.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.json.JSONArray;
 
 import com.hts.web.common.pojo.OpChannelLink;
 import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 
+import net.sf.json.JSONArray;
+
 public interface OpChannelV2Service extends BaseService{
+	
 	/**
-	 * 增加
+	 * 新增频道
 	 * @param dto
 	 */
-	public void insertOpChannel(Integer ownerId,String channelName,String channelTitle,String subtitle,String channelDesc,
-			String channelIcon,Integer channelTypeId,String channelLabelNames,String channelLabelIds,Integer worldCount,
-			Integer worldPictureCount,Integer memberCount,Integer  superbCount,Integer childCountBase,Integer superb,Integer valid,
-			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId)throws Exception;
+	public void insertOpChannel(String channelDesc, String channelIcon, 
+			String channelSubIcon, String channelBanner, String channelReview, String channelName,
+			Integer channelTypeId, Integer ownerId, Integer themeId)throws Exception;
 	
 	/**
 	 * 删除
@@ -28,13 +27,12 @@ public interface OpChannelV2Service extends BaseService{
 	public void deleteOpChannel(Integer channelId,Integer ownerId)throws Exception;
 	
 	/**
-	 * 修改
+	 * 修改频道，根据channelId
 	 * @param dto
 	 */
-	public void updateOpChannel(Integer channelId,Integer ownerId,String channelName,String channelTitle,String subtitle,String channelDesc,
-			String channelIcon,Integer channelTypeId,String channelLabelNames,String channelLabelIds,Integer worldCount,
-			Integer worldPictureCount,Integer memberCount,Integer  superbCount,Integer childCountBase,Integer superb,Integer valid,
-			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId)throws Exception;
+	public void updateOpChannel(Integer channelId, String channelDesc, String channelIcon, 
+			String channelSubIcon, String channelBanner, String channelReview, String channelName,
+			Integer channelTypeId, Integer ownerId, Integer themeId)throws Exception;
 	
 	/**
 	 * 分页查询

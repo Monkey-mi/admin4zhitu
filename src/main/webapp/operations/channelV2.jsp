@@ -259,8 +259,8 @@ var maxId = 0;
 		$('#htm_edit').window({
 			title: '添加频道',
 			modal : true,
-			width : 600,
-			height : 430,
+			width : $(document).width()*0.5,
+			height : $(document).height()*0.8,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -272,6 +272,8 @@ var maxId = 0;
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
 				$("#channelImg_edit").attr("src", "./base/images/bg_empty.png");
+				$("#channelSubImg_edit").attr("src", "./base/images/bg_empty.png");
+				$("#channelBannerImg_edit").attr("src", "./base/images/bg_empty.png");
 				
 				$('#edit_form').form('reset');
 				
@@ -342,6 +344,7 @@ function initEditWindow(id, index, isUpdate) {
 	if(isUpdate) {
 		$('#htm_edit').panel('setTitle', '修改频道信息');
 		$('#htm_edit').window('open');
+		// TODO 这里不用重新请求一次后台，待有时间梳理一下这里的逻辑，返回回来的数据有一些是用不上的
 		$.post(queryChannelByIdOrNameURL,{
 			"channelId":id
 		}, function(result){
@@ -349,6 +352,11 @@ function initEditWindow(id, index, isUpdate) {
 				var obj = result['obj'];
 				$("#channelIcon_edit").val(obj['channelIcon']);
 				$("#channelImg_edit").attr('src', obj['channelIcon']);
+				$("#channelSubIcon_edit").val(obj['channelSubIcon']);
+				$("#channelSubImg_edit").attr('src', obj['channelSubIcon']);
+				$("#channelBanner_edit").val(obj['channelBanner']);
+				$("#channelBannerImg_edit").attr('src', obj['channelBanner']);
+				$("#channelReview_edit").val(obj['channelReview']);
 				$("#channelName_edit").val(obj['channelName']);
 				$("#id_edit").val(obj['channelId']);
 				$("#valid_edit").val(obj['valid']);
@@ -414,11 +422,17 @@ function loadEditFormValidate(index, isUpdate) {
 	.formValidator({empty:false, onshow:"请选icon（必填）",onfocus:"请选icon",oncorrect:"该封面可用！"})
 	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
 	
+	$("#channelSubIcon_edit")
+	.formValidator({empty:false, onshow:"请选sub_icon（必填）",onfocus:"请选sub_icon",oncorrect:"该子封面可用！"})
+	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
+	
+	$("#channelBanner_edit")
+	.formValidator({empty:false, onshow:"请选banner（必填）",onfocus:"请选banner",oncorrect:"该banner可用！"})
+	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
+	
 	$("#channelName_edit")
 	.formValidator({empty:false,onshow:"频道名称（必填）",onfocus:"请输入名称",oncorrect:"设置成功"});
 	
-//	$("#channelsubtitle")
-//	.formValidator({empty:true,onshow:"标题（必填）",onfocus:"请输入副标题",oncorrect:"设置成功"});
 };
 
 /**
@@ -504,6 +518,9 @@ function submitSerialForm() {
 	}
 }
 
+/**
+ * 频道编辑完提交方法
+ */
 function addChannelSubmit(){
 	var url;
 	var channelId = $("#id_edit").val();
@@ -513,6 +530,9 @@ function addChannelSubmit(){
 		url = "./admin_op/v2channel_updateOpChannel";
 	}
 	var channelIcon = $("#channelIcon_edit").val();
+	var channelSubIcon = $("#channelSubIcon_edit").val();
+	var channelBanner = $("#channelBanner_edit").val();
+	var channelReview = $("#channelReview_edit").val();
 	var channelName = $("#channelName_edit").val();
 	var channelTypeId = $("#channel_type_id").combobox('getValue');
 	var ownerId = $("#ownerId_edit").combogrid('getValue');
@@ -523,6 +543,9 @@ function addChannelSubmit(){
 	$.post(url,{
 		'channelId':channelId,
 		'channelIcon':channelIcon,
+		'channelSubIcon':channelSubIcon,
+		'channelBanner':channelBanner,
+		'channelReview':channelReview,
 		'channelName':channelName,
 		'channelDesc':channelDesc,
 		'channelTypeId':channelTypeId,
@@ -610,7 +633,7 @@ function updateChannelSuperbOp(channelId,superb) {
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 		}
 	});
 };
@@ -633,7 +656,7 @@ function updateChannelTopOp(channelId,top) {
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 		}
 	});
 };
@@ -646,7 +669,7 @@ function updateChannelValidOp(channelId,valid) {
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 		}
 	});
 };
@@ -659,7 +682,7 @@ function updateChannelDanmuOp(channelId,danmu) {
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 		}
 	});
 };
@@ -672,7 +695,7 @@ function updateChannelMoodOp(channelId,moodFlag) {
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 		}
 	});
 };
@@ -685,7 +708,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 		}
 	});
 };
@@ -741,11 +764,43 @@ function updateChannelWorldOp(channelId,worldFlag) {
 							</td>
 						</tr>
 						<tr>
+							<td class="leftTd">SUB_ICON：</td>
+							<td style="height: 90px;">
+							<input class="none" type="text" name="channelSubIcon" id="channelSubIcon_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+								<a id="channelSubIcon_edit_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="channelSubImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
+								<div id="channelSubIcon_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+									上传中...<span class="upload_progress"></span><span>%</span>
+								</div>
+							</td>
+							<td class="rightTd">
+							<div id="channelSubIcon_editTip" style="display: inline-block;" class="tipDIV"></div>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftTd">Banner：</td>
+							<td style="height: 90px;">
+							<input class="none" type="text" name="channelBanner" id="channelBanner_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+								<a id="channelBanner_edit_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="channelBannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
+								<div id="channelBanner_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+									上传中...<span class="upload_progress"></span><span>%</span>
+								</div>
+							</td>
+							<td class="rightTd">
+								<div id="channelBanner_editTip" style="display: inline-block;" class="tipDIV"></div>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftTd">编辑推荐链接：</td>
+							<td><input id="channelReview_edit" name="channelReview" onchange="validateSubmitOnce=true;"/></td>
+						</tr>
+						<tr>
 							<td class="leftTd">频道名称：</td>
 							<td><input id="channelName_edit" name="channelName" onchange="validateSubmitOnce=true;"/></td>
 							<td class="rightTd"><div id="channelName_editTip" class="tipDIV"></div></td>
 						</tr>
-						 <tr>
+						<tr>
 							<td class="leftTd">频道描述：</td>
 							<td colspan="2"><textarea name="channelDesc" id="channelDesc_edit" onchange="validateSubmitOnce=true;" style="width:80%;height:100px;"></textarea></td>
 						</tr>
@@ -861,11 +916,12 @@ function updateChannelWorldOp(channelId,worldFlag) {
 	</div>
 
 	
-	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
-	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
-	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
-	<script type="text/javascript">
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
+<script type="text/javascript">
 	
+	 // 此为频道icon上传组件 
 	Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'channelIcon_edit_upload_btn',
@@ -882,15 +938,16 @@ function updateChannelWorldOp(channelId,worldFlag) {
             	$("#channelIcon_edit_upload_btn").hide();
             	$("#channelImg_edit").hide();
             	var $status = $("#channelIcon_edit_upload_status");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
             	$status.find('.upload_progress:eq(0)').text(0);
             	$status.show();
             	
             },
             'BeforeUpload': function(up, file) {
             },
-            
             'UploadProgress': function(up, file) {
             	var $status = $("#channelIcon_edit_upload_status");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
             	$status.find('.upload_progress:eq(0)').text(file.percent);
 
             },
@@ -900,13 +957,13 @@ function updateChannelWorldOp(channelId,worldFlag) {
             	$("#channelIcon_edit_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
-            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
+            	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
             	$("#channelImg_edit").attr('src', url);
             	$("#channelIcon_edit").val(url);
             },
             'Error': function(up, err, errTip) {
-                $.messager.alert('上传失败',errTip);  // 提示添加信息失败
-            },
+                $.messager.alert('上传失败',errTip);
+             },
             'Key': function(up, file) {
             	var timestamp = Date.parse(new Date());
             	var suffix = /\.[^\.]+/.exec(file.name);
@@ -915,7 +972,113 @@ function updateChannelWorldOp(channelId,worldFlag) {
             }
         }
     });
+	
+	// 此为频道sub_icon上传组件
+    Qiniu.uploader({
+    	runtimes: 'html5,flash,html4',
+    	browse_button: 'channelSubIcon_edit_upload_btn',
+    	max_file_size: '100mb',
+    	flash_swf_url: 'js/plupload/Moxie.swf',
+    	chunk_size: '4mb',
+    	uptoken_url: './admin_qiniu/uptoken',
+    	domain: 'http://static.imzhitu.com/',
+    	unique_names: false,
+    	save_key: false,
+    	auto_start: true,
+    	init: {
+    		'FilesAdded': function(up, files) {
+    			$("#channelSubIcon_edit_upload_btn").hide();
+    			$("#channelSubImg_edit").hide();
+    			var $status = $("#channelSubIcon_edit_upload_status");
+    			// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，sub_icon获取第二个
+    			$status.find('.upload_progress:eq(1)').text(0);
+    			$status.show();
+    			
+    		},
+    		'BeforeUpload': function(up, file) {
+    		},
+    		
+    		'UploadProgress': function(up, file) {
+    			var $status = $("#channelSubIcon_edit_upload_status");
+    			// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，sub_icon获取第二个
+    			$status.find('.upload_progress:eq(1)').text(file.percent);
+    			
+    		},
+    		'UploadComplete': function() {
+    			$("#channelSubIcon_edit_upload_btn").show();
+    			$("#channelSubImg_edit").show();
+    			$("#channelSubIcon_edit_upload_status").hide();
+    		},
+    		'FileUploaded': function(up, file, info) {
+    			var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+    			$("#channelSubImg_edit").attr('src', url);
+    			$("#channelSubIcon_edit").val(url);
+    		},
+    		'Error': function(up, err, errTip) {
+    			$.messager.alert('上传失败',errTip);
+    		},
+    		'Key': function(up, file) {
+    			var timestamp = Date.parse(new Date());
+    			var suffix = /\.[^\.]+/.exec(file.name);
+    			var key = "op/channel/" + timestamp+suffix;
+    			return key;
+    		}
+		}
+	});
     
-	</script>
+    // 此为频道banner上传组件 
+    Qiniu.uploader({
+    	runtimes: 'html5,flash,html4',
+    	browse_button: 'channelBanner_edit_upload_btn',
+    	max_file_size: '100mb',
+    	flash_swf_url: 'js/plupload/Moxie.swf',
+    	chunk_size: '4mb',
+    	uptoken_url: './admin_qiniu/uptoken',
+    	domain: 'http://static.imzhitu.com/',
+    	unique_names: false,
+    	save_key: false,
+    	auto_start: true,
+    	init: {
+    		'FilesAdded': function(up, files) {
+    			$("#channelBanner_edit_upload_btn").hide();
+    			$("#channelBannerImg_edit").hide();
+    			var $status = $("#channelBanner_edit_upload_status");
+    			// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，banner获取第三个
+    			$status.find('.upload_progress:eq(2)').text(0);
+    			$status.show();
+    			
+    		},
+    		'BeforeUpload': function(up, file) {
+    		},
+    		
+    		'UploadProgress': function(up, file) {
+    			var $status = $("#channelBanner_edit_upload_status");
+    			// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，banner获取第三个
+    			$status.find('.upload_progress:eq(2)').text(file.percent);
+    			
+    		},
+    		'UploadComplete': function() {
+    			$("#channelBanner_edit_upload_btn").show();
+    			$("#channelBannerImg_edit").show();
+    			$("#channelBanner_edit_upload_status").hide();
+    		},
+    		'FileUploaded': function(up, file, info) {
+    			var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+    			$("#channelBannerImg_edit").attr('src', url);
+    			$("#channelBanner_edit").val(url);
+    		},
+    		'Error': function(up, err, errTip) {
+    			$.messager.alert('上传失败',errTip);
+    		},
+    		'Key': function(up, file) {
+    			var timestamp = Date.parse(new Date());
+    			var suffix = /\.[^\.]+/.exec(file.name);
+    			var key = "op/channel/" + timestamp+suffix;
+    			return key;
+    		}
+		}
+	});
+    
+</script>
 </body>
 </html>
