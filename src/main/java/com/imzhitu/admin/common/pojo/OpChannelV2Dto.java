@@ -17,6 +17,9 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	private String subtitle;			//频道副标题
 	private String channelDesc;			//频道描述
 	private String channelIcon;			//频道icon
+	private String channelSubIcon;		//频道sub_icon
+	private String channelBanner;		//频道banner
+	private String channelReview;		//频道review，用于点击banner时，跳转到h5页面的链接
 	private Integer channelTypeId;		//频道类型ID
 	private String channelTypeName;		//频道类型名称
 	private String channelLabelNames;	//频道标签名称，eg。label_A,label_B,...
@@ -127,6 +130,24 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	}
 	public void setChannelIcon(String channelIcon) {
 		this.channelIcon = channelIcon;
+	}
+	public String getChannelSubIcon() {
+		return channelSubIcon;
+	}
+	public void setChannelSubIcon(String channelSubIcon) {
+		this.channelSubIcon = channelSubIcon;
+	}
+	public String getChannelBanner() {
+		return channelBanner;
+	}
+	public void setChannelBanner(String channelBanner) {
+		this.channelBanner = channelBanner;
+	}
+	public String getChannelReview() {
+		return channelReview;
+	}
+	public void setChannelReview(String channelReview) {
+		this.channelReview = channelReview;
 	}
 	public Integer getChannelTypeId() {
 		return channelTypeId;

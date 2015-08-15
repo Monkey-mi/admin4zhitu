@@ -10,6 +10,9 @@
 		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
 		<result column="channel_desc" property="channelDesc" jdbcType="VARCHAR"/>
 		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR"/>
+		<result column="sub_icon" property="channelSubIcon" jdbcType="VARCHAR"/>
+		<result column="banner" property="channelBanner" jdbcType="VARCHAR"/>
+		<result column="review" property="channelReview" jdbcType="VARCHAR"/>
 		<result column="channel_type" property="channelTypeId" jdbcType="INTEGER"/>
 		<result column="channel_type_name" property="channelTypeName" jdbcType="VARCHAR"/>
 		<result column="channel_label" property="channelLabelNames" jdbcType="VARCHAR"/>
@@ -39,13 +42,12 @@
 	</resultMap>
 	<!-- insert -->
 	<insert id="insertOpChannel">
-		insert into hts.operations_channel (id,owner_id,channel_name,channel_title,subtitle,channel_desc,channel_icon,
-			channel_type,channel_label,label_ids,world_count,child_count,member_count,superb_count,
-			child_count_base,create_time,last_modified,superb,valid,serial,danmu,mood,world,theme_id)
+		insert into hts.operations_channel 
+			(channel_desc, channel_icon, sub_icon, banner, review, channel_name,
+			channel_type, owner_id, theme_id)
 		values
-			(#{channelId},#{ownerId},#{channelName},#{channelTitle},#{subtitle},#{channelDesc},#{channelIcon},
-			#{channelTypeId},#{channelLabelNames},#{channelLabelIds},#{worldCount},#{worldPictureCount},#{memberCount},#{superbCount},
-			#{childCountBase},#{createTime},#{lastModifiedTime},#{superb},#{valid},#{serial},#{danmu},#{moodFlag},#{worldFlag},#{themeId})
+			(#{channelDesc},#{channelIcon},#{channelSubIcon},#{channelBanner},
+			#{channelReview},#{channelName},#{channelTypeId},#{ownerId},#{themeId})
 	</insert>
 	
 	<!-- delete -->
@@ -64,68 +66,29 @@
 	<update id="updateOpChannel">
 		update hts.operations_channel
 		<set>
-			<if test="ownerId != null">
-				owner_id = #{ownerId},
-			</if>
-			<if test="channelName != null">
-				channel_name = #{channelName},
-			</if>
-			<if test="channelTitle != null">
-				channel_title = #{channelTitle},
-			</if>
-			<if test="subtitle != null">
-				subtitle = #{subtitle},
-			</if>
 			<if test="channelDesc != null">
 				channel_desc = #{channelDesc},
 			</if>
 			<if test="channelIcon != null">
 				channel_icon = #{channelIcon},
 			</if>
+			<if test="channelSubIcon != null">
+				sub_icon = #{channelSubIcon},
+			</if>
+			<if test="channelBanner != null">
+				banner = #{channelBanner},
+			</if>
+			<if test="channelReview != null">
+				review = #{channelReview},
+			</if>
+			<if test="channelName != null">
+				channel_name = #{channelName},
+			</if>
 			<if test="channelTypeId != null">
 				channel_type = #{channelTypeId},
 			</if>
-			<if test="channelLabelNames != null and channelLabelNames !='' ">
-				channel_label = #{channelLabelNames},
-			</if>
-			<if test="channelLabelIds != null and channelLabelIds != '' ">
-				label_ids = #{channelLabelIds},
-			</if>
-			<if test="worldCount != null">
-				world_count = #{worldCount},
-			</if>
-			<if test="worldPictureCount != null">
-				child_count = #{worldPictureCount},
-			</if>
-			<if test="memberCount != null">
-				member_count = #{memberCount},
-			</if>
-			<if test="superbCount != null">
-				superb_count = #{superbCount},
-			</if>
-			<if test="childCountBase != null">
-				child_count_base = #{childCountBase},
-			</if>
-			<if test="lastModifiedTime != null">
-				last_modified = #{lastModifiedTime},
-			</if>
-			<if test="superb != null">
-				superb = #{superb},
-			</if>
-			<if test="valid != null">
-				valid = #{valid},
-			</if>
-			<if test="serial != null">
-				serial = #{serial},
-			</if>
-			<if test="danmu != null">
-				danmu = #{danmu},
-			</if>
-			<if test="moodFlag != null">
-				mood = #{moodFlag},
-			</if>
-			<if test="worldFlag != null">
-				world = #{worldFlag},
+			<if test="ownerId != null">
+				owner_id = #{ownerId},
 			</if>
 			<if test="themeId != null">
 				theme_id = #{themeId}
