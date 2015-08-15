@@ -27,16 +27,16 @@ insert into interact_comment_label(label_name,group_id) value(#{labelName},#{gro
 </insert>
 
 <!-- 功能略复杂，未优化-->
-<!-- <select id="queryLabel" resultMap="InteractCommentLabelMap">
+<select id="queryLabel" resultMap="InteractCommentLabelMap">
 select * from interact_comment_label 
-<if test="groupId!=null and groupId != 0">
+<!-- <if test="groupId!=null and groupId != 0">
 where group_id = #{group_id}
 </if>
 <if test="firstRow != 0 and limit != 0">
 limit #{firstRow},#{limit}
 </if>
-order by id desc
-</select> -->
+order by id desc -->
+</select>
 
 <select id="queryLabelCount" resultType="long">
 select count(*) from interact_comment_label where group_id=#{groupId} and id &lt;= #{maxId}
