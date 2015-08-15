@@ -37,6 +37,7 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	private Integer danmu;				//弹幕标记。0非弹幕，1弹幕
 	private Integer moodFlag;			//发心情标记
 	private Integer worldFlag;			//织图标记
+	private String review;				// 小编推荐链接
 	
 	private Integer orderBy;			//排序
 	private Integer themeId;			//主题ID
@@ -279,6 +280,12 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	}
 	public void setBanner(String banner) {
 		this.banner = banner;
+	}
+	public String getReview() {
+		return review;
+	}
+	public void setReview(String review) {
+		this.review = review;
 	}
 	
 }

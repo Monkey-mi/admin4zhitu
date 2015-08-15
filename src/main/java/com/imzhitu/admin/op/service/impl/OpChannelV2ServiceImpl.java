@@ -538,7 +538,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			opChannelV2Dto.getSuperbCount(),TimeUtil.getDate(opChannelV2Dto.getCreateTime().longValue()),
 			TimeUtil.getDate(opChannelV2Dto.getLastModifiedTime().longValue()),
 			opChannelV2Dto.getSuperb(),opChannelV2Dto.getThemeId(),opChannelV2Dto.getSerial(),
-			opChannelV2Dto.getDanmu(),opChannelV2Dto.getMoodFlag(),opChannelV2Dto.getWorldFlag()
+			opChannelV2Dto.getDanmu(),opChannelV2Dto.getMoodFlag(),opChannelV2Dto.getWorldFlag(),
+			opChannelV2Dto.getReview()
 			));
 	    }
 	    // 置顶频道id集合

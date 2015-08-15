@@ -30,6 +30,7 @@
 		<result column="danmu" property="danmu" jdbcType="INTEGER"/>
 		<result column="mood" property="moodFlag" jdbcType="INTEGER"/>
 		<result column="world" property="worldFlag" jdbcType="INTEGER"/>
+		<result column="review" property="review" jdbcType="VARCHAR"/>
 		<result column="theme_id" property="themeId" jdbcType="INTEGER"/>
 		<result column="theme_name" property="themeName" jdbcType="VARCHAR"/>
 	</resultMap>
@@ -318,7 +319,7 @@ select htworld_add_count,member_add_count from hts_admin.op_data_statistics ds w
 			c0.channel_label,c0.label_ids,c0.world_count,
 			c0.child_count,c0.member_count,c0.superb_count,
 			c0.create_time,c0.last_modified,c0.superb,c0.theme_id,
-			c0.serial,c0.danmu,c0.mood,c0.world
+			c0.serial,c0.danmu,c0.mood,c0.world,c0.review
 		from hts.operations_channel  c0, hts_admin.op_channel_top ctop
 		where ctop.channel_id = c0.id
 		order by c0.serial desc
