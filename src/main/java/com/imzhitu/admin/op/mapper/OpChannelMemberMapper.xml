@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imzhitu.admin.op.mapper.OpChannelMemberMapper">
+
 	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelMemberDto" id="OpChannelLinkMapper">
-		<result column="id" property="id" jdbcType="INTEGER"/>
-		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
-		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
-		<result column="user_id" property="userId" jdbcType="INTEGER"/>
-		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
-		<result column="sub_time" property="subTime" jdbcType="BIGINT"/>
-		<result column="degree" property="degree" jdbcType="INTEGER"/>
+		<result column="channel_member_id" property="channelMemberId" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="sub_time" property="subTime" jdbcType="BIGINT" />
+		<result column="degree" property="degree" jdbcType="INTEGER" />
+		<result column="shield" property="shield" jdbcType="INTEGER" />
+		
+		<!-- 下列为父项userInfo的信息，当功能扩展时，可补充查询结果 -->
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="concern_count" property="concernCount" jdbcType="INTEGER" />
+		<result column="follow_count" property="followCount" jdbcType="INTEGER" />
+		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		
 	</resultMap>
-	
+
+	<!-- 新增频道成员 -->
 	<insert id="insertChannelMember">
-		insert hts.operations_channel_member 
-			(channel_id,user_id,sub_time,degree)
-		values (#{channelId},#{userId},#{subTime},#{degree})
+		insert hts.operations_channel_member
+		(channel_id,user_id,sub_time,degree)
+		values
+		(#{channelId},#{userId},#{subTime},#{degree})
 	</insert>
-	
+
+	<!-- 修改频道成员的等级 -->
 	<update id="updateChannelMemberDegree">
-		update hts.operations_channel_member  set degree = #{degree}
+		update hts.operations_channel_member set degree = #{degree}
 		<where>
 			<if test="id != null">
 				id = #{id}
@@ -28,51 +43,75 @@
 			</if>
 		</where>
 	</update>
-	
-	<select id="queryChannelMember" resultMap="OpChannelLinkMapper" >
-		select ocm.*,ui.user_name,oc.channel_name
-		from hts.operations_channel_member ocm
-			left join hts.user_info ui on ocm.user_id = ui.id
-			left join hts.operations_channel oc on ocm.channel_id = oc.id
-		<where>
-			<if test="id != null">
-				ocm.id = #{id}
-			</if>
-			<if test="channelId != null">
-				and ocm.channel_id = #{channelId}
-			</if>
-			<if test="userId != null">
-				and ocm.user_id = #{userId}
-			</if>
-			<if test="degree != null">
-				and ocm.degree = #{degree}
-			</if>
-			<if test="maxId != null and maxId != 0">
-				<![CDATA[ and ocm.id <= #{maxId} ]]>
-			</if>
-		</where>
-		order by ocm.id desc
-		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+
+	<!-- 有输入条件的分页查询 -->
+	<select id="queryChannelMember" resultMap="OpChannelLinkMapper">
+		select
+			cms.id as channel_member_id,
+			cms.channel_id,
+			cms.user_id,
+			cms.sub_time,
+			cms.degree,
+			u.user_name,
+			u.user_avatar,
+			u.sex,
+			u.user_label,
+			u.concern_count,
+			u.follow_count,
+			u.world_count,
+			u.phone_code,
+			u.star
+		from
+			(select
+				ocm.id, ocm.channel_id, ocm.user_id, ocm.sub_time, ocm.degree, ocs.notified, ocs.serial
+			from
+				hts.operations_channel_member ocm
+				left join hts.operations_channel_star ocs on ocm.id = ocs.id
+			<where>
+				<if test="channelId != null">
+					and ocm.channel_id = #{channelId}
+				</if>
+				<if test="userId != null">
+					and ocm.user_id = #{userId}
+				</if>
+				<if test="shield != null">
+					and ocm.shield = #{shield}
+				</if>
+				<if test="maxId != null and maxId != 0">
+					<![CDATA[ and ocm.id <= #{maxId} ]]>
+				</if>
+			</where>
+			order by ocs.serial desc, ocm.id desc
+			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" />
+			) as cms, hts.user_info u
+		where
+		cms.user_id = u.id;
+
 	</select>
-	
+
+	<!-- 有输入条件的查询总数 -->
 	<select id="queryChannelMemberTotalCount" resultType="long">
 		select count(*) from hts.operations_channel_member ocm
 		<where>
-			<if test="id != null">
-				ocm.id = #{id}
-			</if>
 			<if test="channelId != null">
 				and ocm.channel_id = #{channelId}
 			</if>
 			<if test="userId != null">
 				and ocm.user_id = #{userId}
 			</if>
-			<if test="degree != null">
-				and ocm.degree = #{degree}
+			<if test="shield != null">
+				and ocm.shield = #{shield}
 			</if>
 			<if test="maxId != null and maxId != 0">
 				<![CDATA[ and ocm.id <= #{maxId} ]]>
 			</if>
 		</where>
 	</select>
+
+	<!-- 查询频道成员当前最大id -->
+	<select id="getChannelMemberMaxId" resultType="long">
+		select max(id)
+		from hts.operations_channel_member
+	</select>
+
 </mapper>

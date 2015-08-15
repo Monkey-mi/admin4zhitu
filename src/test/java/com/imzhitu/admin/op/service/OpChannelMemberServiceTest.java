@@ -17,12 +17,7 @@ public class OpChannelMemberServiceTest extends BaseTest{
 	
 	@Test
 	public void updateChannelMemberDegreeTest()throws Exception{
-		service.updateChannelMemberDegree(null, 11834, 527, 1);
+		service.updateChannelMemberDegree(11834, 527, 1);
 	}
 	
-	@Test
-	public void queryChannelMemberTotalCountTest()throws Exception{
-		service.queryChannelMemberTotalCount(null, 11834, null, null);
-	}
-
 }

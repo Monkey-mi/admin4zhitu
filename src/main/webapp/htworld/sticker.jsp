@@ -146,6 +146,7 @@ var maxId = 0,
   				return "no";
   			}
   		},
+  		{field : 'labelName',title : '关联标签',align : 'center',width : 60},
   		{field : 'opt',title : '操作',width : 80,align : 'center',rowspan : 1,
 			formatter : function(value, row, index ) {
 				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.id + "\",\"" + index + "\"," + true + ")'>【修改】</a>";

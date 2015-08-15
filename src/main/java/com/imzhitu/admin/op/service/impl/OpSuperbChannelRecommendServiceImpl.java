@@ -136,6 +136,7 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 				}
 			}
 			if(true == flag){
+				System.out.println(list.get(i).getId() + ".." + list.get(i).getSubIcon());
 				topList.add(list.get(i));
 				flag = false;
 			}else{
