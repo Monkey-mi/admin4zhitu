@@ -10,6 +10,8 @@
 		<result column="subtitle" property="subtitle" jdbcType="VARCHAR"/>
 		<result column="channel_desc" property="channelDesc" jdbcType="VARCHAR"/>
 		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR"/>
+		<result column="sub_icon" property="subIcon" jdbcType="VARCHAR"/>
+		<result column="banner" property="banner" jdbcType="VARCHAR"/>
 		<result column="channel_type" property="channelTypeId" jdbcType="INTEGER"/>
 		<result column="channel_type_name" property="channelTypeName" jdbcType="VARCHAR"/>
 		<result column="channel_label" property="channelLabelNames" jdbcType="VARCHAR"/>
@@ -312,7 +314,7 @@ select htworld_add_count,member_add_count from hts_admin.op_data_statistics ds w
 		select 
 			c0.id,c0.owner_id,c0.channel_name,
 			c0.channel_title,c0.subtitle,c0.channel_desc,
-			c0.channel_icon,c0.channel_type,
+			c0.channel_icon,c0.sub_icon,c0.banner,c0.channel_type,
 			c0.channel_label,c0.label_ids,c0.world_count,
 			c0.child_count,c0.member_count,c0.superb_count,
 			c0.create_time,c0.last_modified,c0.superb,c0.theme_id,

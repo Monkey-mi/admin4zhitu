@@ -3,13 +3,16 @@ package com.imzhitu.admin.ztworld.service.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.common.pojo.HTWorldLabel;
 import com.hts.web.common.pojo.HTWorldStickerSet;
 import com.hts.web.common.pojo.HTWorldStickerTypeDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
@@ -18,6 +21,7 @@ import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.ZTWorldSticker;
 import com.imzhitu.admin.common.pojo.ZTWorldStickerSet;
 import com.imzhitu.admin.common.pojo.ZTWorldStickerType;
+import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldStickerCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldStickerTypeCacheDao;
 import com.imzhitu.admin.ztworld.dao.StickerSetDtoCacheDao;
@@ -51,6 +55,9 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private StickerSetMapper stickerSetMapper;
+
+	@Autowired
+	private HTWorldLabelDao worldLabelDao;
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
@@ -174,7 +181,9 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 						} else {
 							dto.setStickerName(null);
 						}
-						return stickerMapper.queryStickers(dto);
+						List<ZTWorldSticker> stickers = stickerMapper.queryStickers(dto);
+						queryLabelName(stickers);
+						return stickers;
 					}
 
 					@Override
@@ -195,6 +204,35 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 		});
 	}
 
+	/**
+	 * 查询标签名
+	 * @param stickers
+	 */
+	private void queryLabelName(List<ZTWorldSticker> stickers) {
+		Set<Integer> labelSet = new HashSet<Integer>();
+		List<Integer> labelIds = new ArrayList<Integer>();
+		for(int i = 0; i < stickers.size(); i++) {
+			Integer labelId = stickers.get(i).getLabelId();
+			if(labelId != null && labelId != 0) {
+				if(!labelSet.contains(labelId)) {
+					labelIds.add(labelId);
+					labelSet.add(labelId);
+				}
+			}
+		}
+		
+		if(labelIds.size() > 0) {
+			Integer[] ids = new Integer[labelIds.size()];
+			Map<Integer, HTWorldLabel> map = worldLabelDao.queryLabelMap(labelIds.toArray(ids));
+			for(ZTWorldSticker st : stickers) {
+				Integer labelId = st.getLabelId();
+				if(labelId != null && labelId != 0 && map.get(labelId) != null) {
+					st.setLabelName(map.get(labelId).getLabelName());
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void saveSticker(ZTWorldSticker sticker) throws Exception {
 		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_STICKER_ID);
@@ -207,6 +245,8 @@ public class ZTWorldStickerServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateSticker(ZTWorldSticker sticker) throws Exception {
+		if(sticker.getLabelId() == null)
+			sticker.setLabelId(0);
 		stickerMapper.update(sticker);
 	}
 

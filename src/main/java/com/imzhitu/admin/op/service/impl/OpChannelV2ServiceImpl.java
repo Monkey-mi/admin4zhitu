@@ -183,7 +183,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 				return;
 			}
 			//原拥有者degree设置为0
-			channelMemberService.updateChannelMemberDegree(channelId, list.get(0).getOwnerId(), Tag.CHANNEL_MEMBER_ROLE_NORMAL);
+			channelMemberService.updateChannelMemberDegree(null, channelId, list.get(0).getOwnerId(), Tag.CHANNEL_MEMBER_ROLE_NORMAL);
 			
 			//新增频道的同时须将该频道拥有着关注该频道
 			channelMemberService.insertChannelMember(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
@@ -531,7 +531,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			opChannelV2Dto.getOwnerId(),opChannelV2Dto.getChannelName(),
 			opChannelV2Dto.getChannelTitle(),opChannelV2Dto.getSubtitle(),
 			opChannelV2Dto.getChannelDesc(),opChannelV2Dto.getChannelIcon(),
-			null,opChannelV2Dto.getChannelTypeId(),opChannelV2Dto.getChannelLabelNames(),
+			opChannelV2Dto.getSubIcon(), opChannelV2Dto.getBanner(),
+			opChannelV2Dto.getChannelTypeId(),opChannelV2Dto.getChannelLabelNames(),
 			opChannelV2Dto.getChannelLabelIds(),opChannelV2Dto.getWorldCount(),
 			opChannelV2Dto.getWorldPictureCount(),opChannelV2Dto.getMemberCount(),
 			opChannelV2Dto.getSuperbCount(),TimeUtil.getDate(opChannelV2Dto.getCreateTime().longValue()),

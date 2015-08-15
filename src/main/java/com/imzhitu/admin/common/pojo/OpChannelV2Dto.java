@@ -4,8 +4,8 @@ import com.hts.web.common.pojo.AbstractNumberDto;
 
 /**
  * 频道第二版
+ * 
  * @author zxx
- *
  */
 public class OpChannelV2Dto extends AbstractNumberDto{
 	private static final long serialVersionUID = 3772809833324187184L;
@@ -17,6 +17,8 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	private String subtitle;			//频道副标题
 	private String channelDesc;			//频道描述
 	private String channelIcon;			//频道icon
+	private String subIcon;				//频道封面小图
+	private String banner;				//频道封面大图
 	private Integer channelTypeId;		//频道类型ID
 	private String channelTypeName;		//频道类型名称
 	private String channelLabelNames;	//频道标签名称，eg。label_A,label_B,...
@@ -265,6 +267,18 @@ public class OpChannelV2Dto extends AbstractNumberDto{
 	 */
 	public void setRelatedChannel(String relatedChannel) {
 	    this.relatedChannel = relatedChannel;
+	}
+	public String getSubIcon() {
+		return subIcon;
+	}
+	public void setSubIcon(String subIcon) {
+		this.subIcon = subIcon;
+	}
+	public String getBanner() {
+		return banner;
+	}
+	public void setBanner(String banner) {
+		this.banner = banner;
 	}
 	
 }
