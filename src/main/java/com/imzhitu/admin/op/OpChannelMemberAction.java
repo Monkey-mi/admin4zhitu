@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.common.util.JSONUtil;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.op.service.OpChannelMemberService;
 
@@ -133,5 +134,40 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 		}
 		return StrutsKey.JSON;
 	}
-
+	
+	/**
+	 * 批量设置频道成员成为频道红人
+	 * @return
+	 * @author zhangbo	2015年8月17日
+	 */
+	public String addMembersToStar() {
+		try {
+			Integer[] channelMemberIds = StringUtil.convertStringToIds(ids);
+			for (Integer channelMemberId : channelMemberIds) {
+				channelMemberService.saveChannelStar(channelMemberId);
+			}
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 批量删除频道红人
+	 * 
+	 * @return
+	 * @author zhangbo	2015年8月17日
+	 */
+	public String deleteChannelStars() {
+		try {
+			Integer[] channelMemberIds = StringUtil.convertStringToIds(ids);
+			channelMemberService.deleteChannelStars(channelMemberIds);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 }

@@ -26,7 +26,7 @@ public interface ChannelService extends BaseService {
 
 	/**
 	 * 更新频道明星缓存
-	 * 
+	 * TODO 这个功能目前没有用了
 	 * @param star
 	 * @throws Exception
 	 */

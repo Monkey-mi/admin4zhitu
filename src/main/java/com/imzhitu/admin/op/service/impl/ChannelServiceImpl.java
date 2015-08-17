@@ -147,6 +147,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateStarCache(OpChannelStar star) throws Exception {
+		// TODO 这个功能目前没有用到了
 		star.setFirstRow(0);
 		star.setLimit(channelStarLimit);
 		channelStarCacheDao.updateChannelStar(star);
@@ -869,7 +870,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			OpChannelStar star = new OpChannelStar();
 			star.setChannelId(o.getId());
 				
-			//根据频道id查询频道排名前15个用户
+			//根据频道id查询频道排名前15个用户 TODO 这个逻辑现在没有用了，可以删除掉
 			List<Integer> channelUserList = opChannelUserService.queryChannelUserRankTopN(o.getId());
 			for(Integer u:channelUserList){
 				star.setUserId(u);

@@ -93,4 +93,25 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 
 	}
 
+	@Override
+	public void saveChannelStar(Integer channelMemberId) {
+		OpChannelMemberDto memberDto = channelMemberMapper.queryChannelMemberById(channelMemberId);
+		
+		// 若不是红人，则插入到频道红人表中
+		if ( !memberDto.isChannelStar() ) {
+			// 因为频道成员与频道红人关键字段id，channel_id，user_id相同，所以直接使用dto进行插入操作
+			channelMemberMapper.insertChannelStar(memberDto);
+			
+			// 设置channel_star为1，并刷新频道成员为红人
+			memberDto.setChannelStar(1);
+			channelMemberMapper.updateChannelMember(memberDto);
+		}
+		
+	}
+
+	@Override
+	public void deleteChannelStars(Integer[] channelMemberIds) {
+		channelMemberMapper.deleteChannelStarByIds(channelMemberIds);
+	}
+
 }

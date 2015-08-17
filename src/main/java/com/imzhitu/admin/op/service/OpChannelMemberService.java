@@ -49,6 +49,24 @@ public interface OpChannelMemberService extends BaseService {
 	 * @param jsonMap
 	 * @author zhangbo 2015年8月14日
 	 */
-	public void queryChannelMemberByUserName(Integer channelId, Integer userId, Integer page, Integer rows, Map<String, Object> jsonMap);
+	public void queryChannelMemberByUserName(Integer channelId, Integer userId, Integer page, Integer rows, Map<String, Object> jsonMap) throws Exception;
+
+	/**
+	 * 保存频道红人， 频道红人来源与频道成员
+	 * 频道成员表主键id与频道红人表主键id保持一致
+	 * 此方法执行从频道成员表冗余到频道红人中
+	 * 
+	 * @param channelMemberId	频道成员表主键id
+	 * @author zhangbo	2015年8月17日
+	 */
+	public void saveChannelStar(Integer channelMemberId) throws Exception;
+
+	/**
+	 * 批量删除频道红人 
+	 * 
+	 * @param channelMemberIds
+	 * @author zhangbo	2015年8月17日
+	 */
+	public void deleteChannelStars(Integer[] channelMemberIds) throws Exception;
 
 }
