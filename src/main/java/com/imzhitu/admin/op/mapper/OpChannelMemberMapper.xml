@@ -8,6 +8,7 @@
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
 		<result column="sub_time" property="subTime" jdbcType="BIGINT" />
 		<result column="degree" property="degree" jdbcType="INTEGER" />
+		<result column="notified" property="notified" jdbcType="INTEGER" />
 		<result column="shield" property="shield" jdbcType="INTEGER" />
 		<result column="channel_star" property="channelStar" jdbcType="INTEGER" />
 		
@@ -78,6 +79,7 @@
 			cms.user_id,
 			cms.sub_time,
 			cms.degree,
+			cms.notified,
 			cms.shield,
 			cms.channel_star,
 			u.user_name,
