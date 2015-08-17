@@ -50,7 +50,7 @@
 		</set> 
 		<where>
 			<if test="id != null">
-				id = #{id}
+				id = #{channelMemberId}
 			</if>
 			<if test="userId != null and channelId != null">
 				and user_id = #{userId} and channel_id = #{channelId}
@@ -58,19 +58,6 @@
 		</where>
 	</update>
 	
-	<!-- 修改频道成员的等级 -->
-	<update id="updateChannelMemberDegree">
-		update hts.operations_channel_member set degree = #{degree}
-		<where>
-			<if test="id != null">
-				id = #{id}
-			</if>
-			<if test="userId != null and channelId != null">
-				and user_id = #{userId} and channel_id = #{channelId}
-			</if>
-		</where>
-	</update>
-
 	<!-- 有输入条件的分页查询 -->
 	<select id="queryChannelMember" resultMap="ChannelMemberMap">
 		select
@@ -93,7 +80,7 @@
 			u.star
 		from
 			(select
-				ocm.id, ocm.channel_id, ocm.user_id, ocm.sub_time, ocm.degree, ocs.notified, ocs.serial
+				ocm.id, ocm.channel_id, ocm.user_id, ocm.shield,ocm.sub_time, ocm.degree, ocs.notified, ocs.serial
 			from
 				hts.operations_channel_member ocm
 				left join hts.operations_channel_star ocs on ocm.id = ocs.id
