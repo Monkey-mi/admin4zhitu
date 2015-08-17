@@ -20,7 +20,8 @@
 		insert into hts_admin.op_msg_bulletin
 			(path,type,link,operator,date_add,date_modify,valid,name,thumb)
 		values
-			(#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{valid},#{name},#{thumb})
+			(#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},
+			#{modifyDate,jdbcType=TIMESTAMP},#{valid},#{bulletinName},#{bulletinThumb})
 	</insert>
 	
 	<!-- BATCHDELETE -->
