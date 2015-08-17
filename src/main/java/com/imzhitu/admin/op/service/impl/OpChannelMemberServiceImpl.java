@@ -1,7 +1,6 @@
 package com.imzhitu.admin.op.service.impl;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,27 +19,6 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	@Autowired
 	private OpChannelMemberMapper channelMemberMapper;
 
-	@Autowired
-	private com.hts.web.operations.service.ChannelService webChannelService;
-
-	@Override
-	public void insertChannelMember(Integer channelId, Integer userId, Integer degree) throws Exception {
-		OpChannelMemberDto dto = new OpChannelMemberDto();
-		Date now = new Date();
-		dto.setChannelId(channelId);
-		dto.setUserId(userId);
-
-		long total = channelMemberMapper.queryChannelMemberTotalCount(dto);
-		dto.setDegree(degree);
-		dto.setSubTime(now.getTime());
-		if (0 == total) {
-			channelMemberMapper.insertChannelMember(dto);
-			webChannelService.updateMemberCount(channelId);
-		} else {
-			channelMemberMapper.updateChannelMemberDegree(dto);
-		}
-	}
-
 	@Override
 	public void updateChannelMemberDegree(Integer channelId, Integer userId, Integer degree) throws Exception {
 		if (channelId == null || userId == null) {
@@ -50,7 +28,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
 		dto.setDegree(degree);
-		channelMemberMapper.updateChannelMemberDegree(dto);
+		channelMemberMapper.updateChannelMember(dto);
 
 	}
 
