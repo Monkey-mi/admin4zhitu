@@ -17,6 +17,21 @@ public class OpMsgBulletin extends AbstractNumberDto{
 	private Date addDate;
 	private Date modifyDate;
 	private Integer valid;
+	private String bulletinName;
+	private String bulletinThumb;
+	
+	public String getBulletinName() {
+		return bulletinName;
+	}
+	public void setBulletinName(String bulletinName) {
+		this.bulletinName = bulletinName;
+	}
+	public String getBulletinThumb() {
+		return bulletinThumb;
+	}
+	public void setBulletinThumb(String bulletinThumb) {
+		this.bulletinThumb = bulletinThumb;
+	}
 	
 	public String getBulletinPath() {
 		return bulletinPath;

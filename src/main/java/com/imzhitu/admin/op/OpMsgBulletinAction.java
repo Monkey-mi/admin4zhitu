@@ -19,6 +19,8 @@ public class OpMsgBulletinAction extends BaseCRUDAction{
 	private String link;
 	private String idsStr;
 	private Integer isCache;
+	private String bulletinName;
+	private String bulletinThumb;
 	
 	
 	@Autowired
@@ -67,6 +69,18 @@ public class OpMsgBulletinAction extends BaseCRUDAction{
 		this.isCache = isCache;
 	}
 	
+	public String getBulletinName() {
+		return bulletinName;
+	}
+	public void setBulletinName(String bulletinName) {
+		this.bulletinName = bulletinName;
+	}
+	public String getBulletinThumb() {
+		return bulletinThumb;
+	}
+	public void setBulletinThumb(String bulletinThumb) {
+		this.bulletinThumb = bulletinThumb;
+	}
 	public String queryMsgBulletin(){
 		try{
 			msgBulletinService.queryMsgBulletin(id, type, valid, isCache, maxId, page, rows, jsonMap);
@@ -79,7 +93,7 @@ public class OpMsgBulletinAction extends BaseCRUDAction{
 	
 	public String insertMsgBulletin(){
 		try{
-			msgBulletinService.insertMsgBulletin(path, type, link, getCurrentLoginUserId());
+			msgBulletinService.insertMsgBulletin(path, type, link, getCurrentLoginUserId(),bulletinName,bulletinThumb);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -99,7 +113,7 @@ public class OpMsgBulletinAction extends BaseCRUDAction{
 	
 	public String updateMsgBulletin(){
 		try{
-			msgBulletinService.updateMsgBulletin(id, path, type, link, valid, getCurrentLoginUserId());
+			msgBulletinService.updateMsgBulletin(id, path, type, link, valid, getCurrentLoginUserId(),bulletinName,bulletinThumb);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

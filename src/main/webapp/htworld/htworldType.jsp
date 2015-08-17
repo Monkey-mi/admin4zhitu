@@ -608,24 +608,8 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 						} else {
 							$.messager.alert('失败提示',result['msg']);  //提示失败信息
 						}
+						return false;
 					},"json");
-				//若标签为空，则更新标签
-				/*
-				if(labelIsExist == 0)
-				 $.post("./admin_ztworld/label_updateWorldLable",{
-					 'worldId':worldId,
-					 'userId':userId,
-					 'labelId':typeId,
-					 'labelName':worldType
-				 },function(result){
-					 if(result['result'] == 0){
-						 $('#htm_type').window('close');  //关闭添加窗口
-						 updateValues(index,['worldLabel'],[worldType]);
-					 }else{
-						 $.messager.alert('失败提示',result['msg']);  //提示失败信息
-					 }
-				 },"json");
-				 */
 				return false;
 			}
 		}
@@ -640,7 +624,8 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
  * 查询广场
  */
 function searchType() {
-	myQueryParams.maxSerial = maxSerial;
+	myQueryParams.maxSerial = 10000000;
+//	myQueryParams.maxSerial = maxSerial;
 //	myQueryParams.typeId = $('#ss-typeId').combobox('getValue');
 //	myQueryParams.superb = $('#ss-superb').combobox('getValue');
 	myQueryParams.valid = $('#ss-valid').combobox('getValue');

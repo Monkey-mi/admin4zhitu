@@ -16,7 +16,7 @@ public interface OpMsgBulletinService extends BaseService{
 	 * @param operator
 	 * @throws Exception
 	 */
-	public void insertMsgBulletin(String path,Integer type,String link,Integer operator)throws Exception;
+	public void insertMsgBulletin(String path,Integer type,String link,Integer operator,String bulletinName,String bulletinThumb)throws Exception;
 	
 	/**
 	 * 批量删除
@@ -35,7 +35,7 @@ public interface OpMsgBulletinService extends BaseService{
 	 * @param operator
 	 * @throws Exception
 	 */
-	public void updateMsgBulletin(Integer id, String path,Integer type,String link,Integer valid,Integer operator)throws Exception;
+	public void updateMsgBulletin(Integer id, String path,Integer type,String link,Integer valid,Integer operator,String bulletinName,String bulletinThumb)throws Exception;
 	
 	/**
 	 * 批量更新有效性

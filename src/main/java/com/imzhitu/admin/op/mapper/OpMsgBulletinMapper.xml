@@ -11,14 +11,16 @@
 		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
 		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
 		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="bulletinName" column="name" jdbcType="VARCHAR"/>
+		<result property="bulletinThumb" column="thumb" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- INSERT -->
 	<insert id="insertMsgBulletin">
 		insert into hts_admin.op_msg_bulletin
-			(path,type,link,operator,date_add,date_modify,valid)
+			(path,type,link,operator,date_add,date_modify,valid,name,thumb)
 		values
-			(#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{valid})
+			(#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{valid},#{name},#{thumb})
 	</insert>
 	
 	<!-- BATCHDELETE -->
@@ -38,6 +40,8 @@
 			<if test="bulletinType != null">type = #{bulletinType},</if>
 			<if test="link != null">link = #{link},</if>
 			<if test="valid != null">valid = #{valid},</if>
+			<if test="bulletinName !=null">name = #{bulletinName},</if>
+			<if test="bulletinThumb != null"> thumb = #{bulletinThumb},</if>
 			date_modify = #{modifyDate,jdbcType=TIMESTAMP},
 			operator = #{operator}
 		</set>
