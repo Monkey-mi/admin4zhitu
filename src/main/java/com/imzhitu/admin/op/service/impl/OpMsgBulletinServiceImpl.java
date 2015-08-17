@@ -157,6 +157,8 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 					webBulletin.setBulletinType(dto.getBulletinType());
 					webBulletin.setId(dto.getId());
 					webBulletin.setLink(dto.getLink());
+					webBulletin.setBulletinName(dto.getBulletinName());
+					webBulletin.setBulletinThumb(dto.getBulletinThumb());
 					webBulletinList.add(webBulletin);
 					break;
 				}
