@@ -37,7 +37,7 @@ public interface OpChannelMemberService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void queryChannelMember(Integer channelId, Integer userId, Integer userStarId, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception;
+	public void queryChannelMember(Integer channelId, Integer userId, Integer userStarId, Integer notified, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception;
 
 	/**
 	 * 通过用户名查找频道成员

@@ -107,6 +107,9 @@
 				<if test="shield != null">
 					and ocm.shield = #{shield}
 				</if>
+				<if test="notified != null">
+					and ocs.notified = #{notified}
+				</if>
 				<if test="maxId != null and maxId != 0">
 					<![CDATA[ and ocm.id <= #{maxId} ]]>
 				</if>
@@ -114,8 +117,12 @@
 			order by ocs.serial desc, ocm.id desc
 			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" />
 			) as cms, hts.user_info u
-		where
-		cms.user_id = u.id;
+		<where>
+			<if test="star != null">
+				u.star = #{star}
+			</if>
+			and cms.user_id = u.id;
+		</where>
 	</select>
 
 	<!-- 有输入条件的查询总数 -->

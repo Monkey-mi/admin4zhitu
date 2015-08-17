@@ -55,11 +55,13 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	}
 
 	@Override
-	public void queryChannelMember(Integer channelId, Integer userId, Integer userStarId, Integer sh, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception {
+	public void queryChannelMember(Integer channelId, Integer userId, Integer userStarId, Integer notified, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception {
 		OpChannelMemberDto dto = new OpChannelMemberDto();
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
 		dto.setStar(userStarId);
+		dto.setNotified(notified);
+		dto.setShield(shield);
 
 		buildNumberDtos(dto, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelMemberDto>() {
 			@Override
