@@ -259,8 +259,8 @@ var maxId = 0;
 		$('#htm_edit').window({
 			title: '添加频道',
 			modal : true,
-			width : $(document).width()*0.7,
-			height : $(document).height(),
+			width : 1000,
+			height : 555,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -419,11 +419,25 @@ function loadEditFormValidate(index, isUpdate) {
 	});
 	
 	$("#channelBanner_edit")
-	.formValidator({empty:false, onshow:"请选图片（必填）",onfocus:"请选图片",oncorrect:"此图片可用！"})
+	.formValidator({empty:false, onshow:"请选封面（必填）",onfocus:"请选图片",oncorrect:"此图片可用！"})
+	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
+	
+	$("#channelSubIcon_edit")
+	.formValidator({empty:false, onshow:"请选缩略图（必填）",onfocus:"请选图片",oncorrect:"此图片可用！"})
+	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
+	
+	$("#channelIcon_edit")
+	.formValidator({empty:false, onshow:"请选正方形图（必填）",onfocus:"请选图片",oncorrect:"此图片可用！"})
 	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
 	
 	$("#channelName_edit")
 	.formValidator({empty:false,onshow:"频道名称（必填）",onfocus:"请输入名称",oncorrect:"设置成功"});
+	
+	$("#channelDesc_edit")
+	.formValidator({empty:true,onshow:"频道描述（可选）",onfocus:"请输入描述",oncorrect:"设置成功"});
+	
+	$("#channelReview_edit")
+	.formValidator({empty:true,onshow:"编辑链接（可选）",onfocus:"请输入编辑推荐链接",oncorrect:"设置成功"});
 	
 };
 
@@ -739,71 +753,77 @@ function updateChannelWorldOp(channelId,worldFlag) {
 		<!-- 添加记录 -->
 		<div id="htm_edit">
 			<form id="edit_form" action="./admin_op/v2channel_insertOpChannel" method="post">
-				<table id="htm_edit_table" style="width:98%;">
+				<table id="htm_edit_table" style="width:960">
 					<tbody>
 						<tr>
-							<td style="text-align: right; width:10%">ICON：</td>
-							<td style="height:90px;width:10%">
-								<div style="display: inline-block;">
-									<input class="none" type="text" name="channelIcon" id="channelIcon_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-									<img id="channelImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
-									<a id="channelIcon_edit_upload_btn" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-									<div id="channelIcon_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">
-										上传中...<span class="upload_progress"></span><span>%</span>
-									</div>
-								</div>
-							</td>
 							
-							<td style="text-align: right; width:10%">SUB_ICON：</td>
-							<td style="height: 90px;width:10%">
-								<div style="display: inline-block;">
-									<input class="none" type="text" name="channelSubIcon" id="channelSubIcon_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-									<img id="channelSubImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
-									<a id="channelSubIcon_edit_upload_btn" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-									<div id="channelSubIcon_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">
-										上传中...<span class="upload_progress"></span><span>%</span>
-									</div>
+							<td class="leftTd">BANNER：</td>
+							<td style="height: 90px;">
+								<input class="none" type="text" name="channelBanner" id="channelBanner_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+								<a id="channelBanner_edit_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="channelBannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="205px" height="90px">
+								<div id="channelBanner_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+									上传中...<span class="upload_progress"></span><span>%</span>
 								</div>
 							</td>
-							
-							<td style="text-align: right; width:10%">Banner：</td>
-							<td style="height: 90px;width:10%">
-								<div style="display: inline-block;">
-									<input class="none" type="text" name="channelBanner" id="channelBanner_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-									<img id="channelBannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
-									<a id="channelBanner_edit_upload_btn" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-									<div id="channelBanner_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">
-										上传中...<span class="upload_progress"></span><span>%</span>
-									</div>
-								</div>
-							</td>
-							<td style="text-align: left;">
+							<td class="rightTd">
 								<div id="channelBanner_editTip" style="display: inline-block;" class="tipDIV"></div>
 							</td>
 							
-						</tr>
-						<tr>
-							<td style="text-align: right; width:10%">编辑推荐链接：</td>
-							<td colspan="4"><input id="channelReview_edit" name="channelReview" onchange="validateSubmitOnce=true;"/></td>
-						</tr>
-						<tr>
-							<td style="text-align: right; width:10%">频道名称：</td>
-							<td colspan="4"><input id="channelName_edit" name="channelName" onchange="validateSubmitOnce=true;"/></td>
-							<td colspan="2" style="text-align: left; width: 90px;"><div id="channelName_editTip" class="tipDIV"></div></td>
-						</tr>
-						<tr>
-							<td style="text-align: right; width:10%">频道描述：</td>
-							<td colspan="4"><textarea name="channelDesc" id="channelDesc_edit" onchange="validateSubmitOnce=true;" style="width:80%;height:100px;"></textarea></td>
-						</tr>
-						 
-						<tr>
-							<td style="text-align: right; width:10%">拥有者ID：</td>
-							<td colspan="4"><input id="ownerId_edit" name="ownerId" onchange="validateSubmitOnce=true;" /></td>
+							<td class="leftTd">正方形：</td>
+							<td style="height: 90px;">
+								<input class="none" type="text" name="channelIcon" id="channelIcon_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+								<a id="channelIcon_edit_upload_btn" style="position: absolute; margin:30px 0 0 10px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="channelImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90" height="90px">
+								<div id="channelIcon_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">
+									上传中...<span class="upload_progress"></span><span>%</span>
+								</div>
+							</td>
+							<td class="rightTd">
+								<div id="channelIcon_editTip" style="display: inline-block;" class="tipDIV"></div>
+							</td>
+							
 						</tr>
 						
 						<tr>
-							<td style="text-align: right; width:10%">专属主题：</td>
-							<td colspan="4">
+						
+							<td class="leftTd">缩略图：</td>
+							<td style="height: 90px;">
+								<input class="none" type="text" name="channelSubIcon" id="channelSubIcon_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+								<a id="channelSubIcon_edit_upload_btn" style="position: absolute; margin:20px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="channelSubImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="150px" height="65px">
+								<div id="channelSubIcon_edit_upload_status" class="update_status none" style="width: 150px; text-align: center;">
+									上传中...<span class="upload_progress"></span><span>%</span>
+								</div>
+							</td>
+							
+							<td class="rightTd">
+								<div id="channelSubIcon_editTip" style="display: inline-block;" class="tipDIV"></div>
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd">频道描述：</td>
+							<td colspan="4"><textarea name="channelDesc" id="channelDesc_edit" onchange="validateSubmitOnce=true;" style="width:90%;height:100px;"></textarea></td>
+							<td class="rightTd">
+								<div id="channelDesc_editTip" style="display: inline-block;" class="tipDIV"></div>
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd">频道名称：</td>
+							<td><input id="channelName_edit" name="channelName" onchange="validateSubmitOnce=true;"/></td>
+							<td><div id="channelName_editTip" class="tipDIV"></div></td>
+						</tr>
+						 
+						<tr>
+							<td class="leftTd">拥有者ID：</td>
+							<td colspan="5"><input id="ownerId_edit" name="ownerId" onchange="validateSubmitOnce=true;" /></td>
+						</tr>
+						
+						<tr>
+							<td class="leftTd">专属主题：</td>
+							<td colspan="5">
 								<input id="channelThemeId" name="themeId" 
 									class="easyui-combobox" onchange="validateSubmitOnce=true;" 
 										data-options="valueField:'themeId',textField:'themeName',url:'./admin_op/v2channel_queryChannelThemeList'" />
@@ -811,8 +831,8 @@ function updateChannelWorldOp(channelId,worldFlag) {
 						</tr>
 						
 						<tr>
-							<td style="text-align: right; width:10%">频道类型：</td>
-							<td colspan="4">
+							<td class="leftTd">频道类型：</td>
+							<td colspan="5">
 								<select name="channelTypeId" id="channel_type_id" class="easyui-combobox" onchange="validateSubmitOnce=true;" >
 									<option value="0">默认频道</option>
 						   			<option value="1">活动频道</option>
@@ -822,26 +842,34 @@ function updateChannelWorldOp(channelId,worldFlag) {
 							</td>
 						</tr>
 						
-						<tr class="none">
-							<td colspan="3"><input type="text" name="channelId" id="id_edit" onchange="validateSubmitOnce=true;"/></td>
+						<tr>
+							<td>编辑推荐链接：</td>
+							<td ><input id="channelReview_edit" name="channelReview" onchange="validateSubmitOnce=true;"/></td>
+							<td class="rightTd">
+								<div id="channelReview_editTip" style="display: inline-block;" class="tipDIV"></div>
+							</td>
 						</tr>
 						
 						<tr class="none">
-							<td colspan="3"><input type="text" name="valid" id="valid_edit" onchange="validateSubmitOnce=true;"/></td>
+							<td colspan="6"><input type="text" name="channelId" id="id_edit" onchange="validateSubmitOnce=true;"/></td>
 						</tr>
 						
 						<tr class="none">
-							<td colspan="3"><input type="text" name="serial" id="serial_edit" onchange="validateSubmitOnce=true;"/></td>
+							<td colspan="6"><input type="text" name="valid" id="valid_edit" onchange="validateSubmitOnce=true;"/></td>
+						</tr>
+						
+						<tr class="none">
+							<td colspan="6"><input type="text" name="serial" id="serial_edit" onchange="validateSubmitOnce=true;"/></td>
 						</tr>
 						
 						<tr class="opt_btn">
-							<td colspan="3" style="text-align: center;padding-top: 10px;">
+							<td colspan="6" style="text-align: center;padding-top: 10px;">
 								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addChannelSubmit();">提交</a>
 								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_edit').window('close');">取消</a>
 							</td>
 						</tr>
 						<tr class="loading none">
-							<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<td colspan="6" style="text-align: center; padding-top: 10px; vertical-align:middle;">
 								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
 								<span style="vertical-align:middle;">保存中...</span>
 							</td>
