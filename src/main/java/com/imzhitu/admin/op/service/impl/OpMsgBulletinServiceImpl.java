@@ -150,7 +150,7 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 		
 		for(int i = 0; i < ids.length; i++){
 			for(int j = 0; j < list.size(); j++){
-				if(ids[i] == list.get(j).getId()){
+				if(ids[i].equals(list.get(j).getId())){
 					OpMsgBulletin dto = list.get(j);
 					com.hts.web.common.pojo.OpMsgBulletin webBulletin = new com.hts.web.common.pojo.OpMsgBulletin();
 					webBulletin.setBulletinPath(dto.getBulletinPath());
