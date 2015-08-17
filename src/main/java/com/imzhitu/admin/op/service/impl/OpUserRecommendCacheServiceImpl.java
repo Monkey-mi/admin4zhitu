@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.constant.CacheKeies;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
+import com.hts.web.common.pojo.OpUser;
 import com.hts.web.common.pojo.OpUserVerifyDto;
 import com.hts.web.common.pojo.UserInfoDto;
 import com.hts.web.operations.dao.OpUserVerifyDtoCacheDao;
+import com.hts.web.operations.service.UserOperationsService;
 import com.imzhitu.admin.op.dao.UserRecommendDao;
 import com.imzhitu.admin.op.service.OpUserRecommendCacheService;
 
@@ -24,6 +26,9 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<UserInfoDt
 	
 	@Autowired
 	private UserRecommendDao userRecommendDao;
+	
+	@Autowired
+	private UserOperationsService userOperationsService;
 	
 	private Logger log = Logger.getLogger(OpUserRecommendCacheServiceImpl.class);
 	
@@ -43,11 +48,18 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<UserInfoDt
 		if(getRedisTemplate().hasKey(key)){
 			getRedisTemplate().delete(key);
 		}
-		List<UserInfoDto> list = new ArrayList<UserInfoDto>();
-		List<UserInfoDto> userRecommendTopList = userRecommendDao.queryWeightUserRecommend(50);
-		List<UserInfoDto> userRecommendNotTopList = userRecommendDao.queryNotWeightUserRecommendByVerifyId(verifyId, 50);
+		
+		//查询推荐用户
+		List<OpUser> list = new ArrayList<OpUser>();
+		List<OpUser> userRecommendTopList = userRecommendDao.queryWeightUserRecommend(50);
+		List<OpUser> userRecommendNotTopList = userRecommendDao.queryNotWeightUserRecommendByVerifyId(verifyId, 50);
+		
 		list.addAll(userRecommendTopList);
 		list.addAll(userRecommendNotTopList);
+		
+		//查询织图
+		userOperationsService.extractHTWorldThumbUser(2, list);
+				
 		int size = 0;
 		if( userRecommendTopList != null){
 			size += userRecommendTopList.size();

@@ -16,8 +16,8 @@ import com.hts.web.base.database.HTS;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.base.database.SQLUtil;
 import com.hts.web.common.dao.impl.BaseDaoImpl;
+import com.hts.web.common.pojo.OpUser;
 import com.hts.web.common.pojo.OpUserRecommend;
-import com.hts.web.common.pojo.UserInfoDto;
 import com.hts.web.common.util.CollectionUtil;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpUserRecommendDto;
@@ -127,14 +127,14 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 	/**
 	 * 查询置顶的推荐用户,并未分类置顶.以后可能会分类置顶
 	 */
-	private static final String QUERY_WEIGHT_USER_RECOMMEND = "select ur.*,uv.verify_name,uv.verify_icon,ui.user_avatar,ui.user_name,ui.user_avatar_l from " + table + " ur left join " + HTS.USER_VERIFY +" uv on ur.verify_id=uv.id ,"
+	private static final String QUERY_WEIGHT_USER_RECOMMEND = "select ur.*,uv.verify_name,uv.verify_icon,ui.user_avatar,ui.user_name,ui.user_avatar_l,ui.star from " + table + " ur left join " + HTS.USER_VERIFY +" uv on ur.verify_id=uv.id ,"
 			+ HTS.USER_INFO + " ui where ur.weight>0 and ur.user_accept=1 and ur.sys_accept=1 and ui.id=ur.user_id ORDER BY ur.weight desc limit ?";
 	
 	/**
 	 * 查询非置顶的推荐用户
 	 */
-	private static final String QUERY_NOT_WEIGHT_USER_RECOMMEND_BY_VERIFY_ID = "select * from " + table + " ur left join " + HTS.USER_VERIFY +" uv on ur.verify_id=uv.id ,"
-			+ HTS.USER_INFO + " ui where ur.weight=0 and ur.user_accept=1 and ur.sys_accept=1 and ui.id=ur.user_id and ur.verify_id=? ORDER BY ur.weight desc limit ?";
+	private static final String QUERY_NOT_WEIGHT_USER_RECOMMEND_BY_VERIFY_ID = "select ur.*,uv.verify_name,uv.verify_icon,ui.user_avatar,ui.user_name,ui.user_avatar_l,ui.star from " + table + " ur left join " + HTS.USER_VERIFY +" uv on ur.verify_id=uv.id ,"
+			+ HTS.USER_INFO + " ui where ur.weight=0 and ur.user_accept=1 and ur.sys_accept=1 and ui.id=ur.user_id and ur.verify_id=? ORDER BY ur.serial desc limit ?";
 	
 	@Override
 	public List<OpUserRecommendDto> queryRecommendUser(Map<String, Object> attrMap, 
@@ -365,12 +365,12 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 	}
 
 	@Override
-	public List<UserInfoDto> queryWeightUserRecommend(int limit){
+	public List<OpUser> queryWeightUserRecommend(int limit){
 		try{
-			return getMasterJdbcTemplate().query(QUERY_WEIGHT_USER_RECOMMEND, new Object[]{limit}, new RowMapper<UserInfoDto>(){
+			return getMasterJdbcTemplate().query(QUERY_WEIGHT_USER_RECOMMEND, new Object[]{limit}, new RowMapper<OpUser>(){
 				@Override
-				public UserInfoDto mapRow(ResultSet rs,int rowNum)throws SQLException{
-					return buildUserInfoDto(rs);
+				public OpUser mapRow(ResultSet rs,int rowNum)throws SQLException{
+					return buildOpUser(rs);
 				}
 			});
 		}catch(EmptyResultDataAccessException e){
@@ -378,12 +378,13 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 		}
 	}
 	
-	public List<UserInfoDto> queryNotWeightUserRecommendByVerifyId(Integer verifyId,int limit){
+	@Override
+	public List<OpUser> queryNotWeightUserRecommendByVerifyId(Integer verifyId,int limit){
 		try{
-			return getMasterJdbcTemplate().query(QUERY_NOT_WEIGHT_USER_RECOMMEND_BY_VERIFY_ID,new Object[]{verifyId,limit}, new RowMapper<UserInfoDto>(){
+			return getMasterJdbcTemplate().query(QUERY_NOT_WEIGHT_USER_RECOMMEND_BY_VERIFY_ID,new Object[]{verifyId,limit}, new RowMapper<OpUser>(){
 				@Override
-				public UserInfoDto mapRow(ResultSet rs,int rowNum)throws SQLException{
-					return buildUserInfoDto(rs);
+				public OpUser mapRow(ResultSet rs,int rowNum)throws SQLException{
+					return buildOpUser(rs);
 				}
 			});
 		}catch(EmptyResultDataAccessException e){
@@ -461,14 +462,16 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 	}
 
 	
-	public UserInfoDto buildUserInfoDto(ResultSet rs)throws SQLException{
-		UserInfoDto dto = new UserInfoDto();
+	
+	public OpUser buildOpUser(ResultSet rs)throws SQLException{
+		OpUser dto = new OpUser();
 		dto.setId(rs.getInt("user_id"));
 		dto.setUserName(rs.getString("user_name"));
 		dto.setUserAvatar(rs.getString("user_avatar"));
 		dto.setUserAvatarL(rs.getString("user_avatar_l"));
 		dto.setVerifyName(rs.getString("verify_name"));
 		dto.setVerifyIcon(rs.getString("verify_icon"));
+		dto.setStar(rs.getInt("star"));
 		return dto;
 	}
 }
