@@ -18,19 +18,20 @@ public interface OpChannelMemberMapper {
 	/**
 	 * 修改频道成员
 	 * 
+	 * 可修改字段：
+	 * 		频道成员等级：degree	频道主：1，管理员：2，普通成员：0
+	 * 		频道成员是否被屏蔽：shield	屏蔽：1，未屏蔽：0 
+	 * 		频道成员是否为频道红人：channelStar	红人：1，非红人：0
+	 * 可使用条件：
+	 * 		频道成员表主键id：channelMemberId
+	 * 		频道id与用户id：channelId与userId联合确定一条
+	 * 		（三个参数允许同时传递，但使用其中一种条件即可）
+	 * 
 	 * @param memberDto
 	 * @author zhangbo 2015年8月17日
 	 */
 	@DataSource("master")
 	public void updateChannelMember(OpChannelMemberDto dto);
-
-	/**
-	 * 修改频道成员的等级
-	 * TODO 这个方法可以改掉， 废弃掉，让调用的地方直接进行更新频道成员的动作
-	 * @param dto
-	 */
-	@DataSource("master")
-	public void updateChannelMemberDegree(OpChannelMemberDto dto);
 
 	/**
 	 * 查询总数
