@@ -7,11 +7,16 @@
 <title>频道红人管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/common/js/user2014022101.js?ver=${webVer} "></script>
-<script type="text/javascript">
+ <script type="text/javascript">
 
-	var maxId = 0;
+ 	var maxId = 0;
 	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") ? baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") : "";
+	batchEnableTip = "您确定要使已选中的用户生效吗？",
+	batchDisableTip = "您确定要使已选中的用户失效吗？",
 	
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
@@ -33,11 +38,16 @@
 	// 数据装载请求地址
 	loadDataURL = "./admin_op/channelmember_queryChannelMember";
 	addRecommendMsgURL = "./admin_op/channel_addStarRecommendMsgs",
+	//在封装的方法中缺少指定的字段造成Ui渲染不出来
+	recordIdKey = "id",
+	hideIdColumn = false,
+	
+
 	
 	columnsFields = [
      		{field: 'ck', checkbox: true },
      		{field:'channelMemberId', title: '频道成员表id', align: 'center'},
-     		{field:'channelStarId', title: '频道红人表id', align: 'center'},
+     		{field:'channelStar', title: '是否红人', align: 'center'},
      		{field:'userId', title: '用户ID', align: 'center'},
      		phoneCodeColumn,
      		userAvatarColumn,
@@ -83,7 +93,11 @@
        			field : 'weight',title : '置顶为最新红人',align : 'center', width : 60,
 	     			formatter: function(value,row,index) {
 	     				img = "./common/images/edit_add.png";
-	       				title = "点击设置为最新红人";
+	       				title = "点击设置为最新红人";	/**
+	       				 *mishengliang
+	       				* 批量增加删除数据
+	       				 */
+
 	       				return "<img title='" + title +  "' class='htm_column_img pointer' onclick='updateWeight(\"" + index + "\",\"" + row.channelStarId + ")' src='" + img + "'/>";
 	       			}
      		}
@@ -104,7 +118,96 @@
 			'href'				: uri
 		});
 	};
-	
+
+	onAfterInit = function() {
+		$('#ss-verifyId').combogrid({
+			panelWidth : 460,
+		    panelHeight : 310,
+		    loadMsg : '加载中，请稍后...',
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'verifyName',
+		    url : './admin_user/verify_queryAllVerify?addAllTag=true',
+		    pagination : false,
+		    remoteSort : false,
+		    sortName : 'serial',
+		    sortOrder : 'desc',
+		    columns:[[
+				{field : 'id',title : 'ID', align : 'center',width : 60},
+				{field : 'verifyIcon',title : '图标', align : 'center',width : 60,
+					formatter: function(value,row,index) {
+		  				return "<img title='" + row['verifyName'] +  "' class='htm_column_img' src='" + value + "'/>";
+		  			}	
+				},
+		  		{field : 'verifyName', title : '名称', align : 'center',width : 80},
+		  		{field : 'verifyDesc', title : '描述', align : 'center',width : 180},
+		  		{field : 'serial', title : '序号', align : 'center',width : 60,
+		  			sorter:function(a,b){  
+		  				return (a>b?1:-1); 
+					} 
+		  		}
+		  		
+		    ]]
+		});
+		
+		$('#htm_indexed').window({
+			title : '重新排序',
+			modal : true,
+			width : 600,
+			height : 165,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-converter',
+			resizable : false
+		});
+	}
+
+	/**
+	 *mishengliang
+	* 批量增加删除数据
+	 */
+	function addOrDelete(valid){
+		var rows = $('#htm_table').datagrid('getSelections');	
+		if(rows.length > 0){
+				var tip = batchEnableTip;
+			if(valid == 0) 
+				tip = batchDisableTip;
+			$.messager.confirm('更新记录', tip, function(r){ 	
+				if(r){				
+					var ids = [];
+					for(var i=0;i<rows.length;i+=1){		
+						ids.push(rows[i][recordIdKey]);
+					}	
+					//mishengliang add in 08-17-2015
+					//根据valid判断是添加还是删除
+					if (valid == 1) {
+						updateValidURL = "./admin_op/channelmember_addMembersToStar";
+					} else if(valid == 0) {
+						updateValidURL = "./admin_op/channelmember_deleteChannelStars";
+					}
+					$.post(updateValidURL,{
+						"ids" : ids
+					},function(result){
+						$('#htm_table').datagrid('loaded');
+						if(result['result'] == 0) {
+							//成功后显示的提示信息
+							$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
+							$("#htm_table").datagrid("reload");
+						} else {
+							$.messager.alert('提示',result['msg']);
+						}
+					});				
+				}	
+			});	
+		}else{
+			$.messager.alert('更新失败','请先选择记录，再执行更新操作!','error');
+		}
+	}
+
 	/**
 	 * 批量通知操作方法
 	 */
@@ -134,15 +237,116 @@
 			$.messager.alert('通知失败','请先选择记录，再执行更新操作!','error');
 		}
 	}
+	
+	/**
+	 * 重排推荐
+	 */
+	function reIndexed() {
+ 		$('#htm_indexed .opt_btn').show();
+		$('#htm_indexed .loading').hide();
+		clearReIndexedForm(); 
+		// 打开添加窗口
+		$("#htm_indexed").window('open');
+	}
+	
+	/**
+	 * 清空索引排序
+	 */
+	function clearReIndexedForm() {
+ 		$("#indexed_form").find('input[name="reIndexId"]').val('');	 
+	}
 
-</script>
+	
+	/*
+	*根据查询条件查找数据
+	*/
+	function searchMemberV2() {
+		maxId = 0;
+		myQueryParams['maxId'] = maxId;
+		myQueryParams['topOne.userId'] = "";
+		myQueryParams['userStarId'] = $('#ss-verifyId').combobox('getValue');
+		myQueryParams['notified'] = $('#ss-notified').combobox('getValue');
+		myQueryParams['topOne.valid'] = $('#ss-shield').combobox('getValue');
+		$("#htm_table").datagrid("load",myQueryParams);
+	}
+</script> 
 </head>
 <body>
 	<table id="htm_table"></table>
 	
 	<div id="tb" style="padding:5px;height:auto" class="none">
-		<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
+		  <a href="javascript:void(0);" onclick="javascript:addOrDelete(1);" class="easyui-linkbutton" title="批量添加" plain="true" iconCls="icon-ok">批量添加</a>
+			<a href="javascript:void(0);" onclick="javascript:addOrDelete(0);" class="easyui-linkbutton" title="批量刪除" plain="true" iconCls="icon-ok">批量删除</a>
+			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
+			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
+			<input id="ss-verifyId" value="所有认证类型" style="width:100px" />
+			<select id="ss-notified" class="easyui-combobox" style="width:100px;">
+		     <option value="">所有通知状态</option>
+		     <option value="0">未通知</option>
+		     <option value="1">已通知</option>
+	   </select>
+	   <select id="ss-shield" class="easyui-combobox" style="width:100px;">
+		     <option value="">是否屏蔽</option>
+		     <option value="0">是</option>
+		     <option value="1">否</option>
+	   </select>
+	
+	   <a href="javascript:void(0);" onclick="javascript:searchMemberV2();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
+	   <span style="display: inline-block; vertical-align:middle; float: right;">
+		     <input id="ss-userId" class="easyui-searchbox" searcher="" prompt="输入用户ID搜索" style="width:120px;" />
+			</span>
 	</div>
 
+	<!-- 重排索引 -->
+	<div id="htm_indexed">
+		<form id="indexed_form" action="./admin_op/channel_updateTopOneSerial" method="post">
+			<table class="htm_edit_table" width="580">
+				<tbody>
+					<tr>
+						<td class="leftTd">序号：</td>
+						<td>
+							<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<br />
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+						</td>
+					</tr>
+					<tr class="none">
+						<td colspan="2"><input type="text" name="channelId" id="channelId_indexed" /></td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReIndexForm();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-redo" onclick="clearReIndexedForm();">清空</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_indexed').window('close');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">排序中...</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
 </body>
 </html>
