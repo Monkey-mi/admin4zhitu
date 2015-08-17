@@ -278,10 +278,15 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			OpChannelV2Dto o = list.get(0);
 			// long yestodayMemberIncreasement = queryYestodayMemberIncreasement(null,null,o.getChannelId());
 			OpDataStatisticsDto YestodayWorldAndMemberIncreasement = opChannelV2Mapper.queryYestodayWorldAndMemberIncreasement(o.getChannelId());
-			long yestodayMemberIncreasement = YestodayWorldAndMemberIncreasement.getMemberAddCount();
-			long yestodayWorldIncreasement = YestodayWorldAndMemberIncreasement.getWorldAddCount();
-			o.setYestodayMemberIncreasement(yestodayMemberIncreasement);
-			o.setYestodayWorldIncreasement(yestodayWorldIncreasement);
+			
+			// TODO 这块逻辑要重新梳理，这个是获取queryOpChannelByIdOrName是获取全量的信息， 要斟酌使用，要提供一个channel查询的基础类，然后根据不同业务需要再添加枝叶
+			if (YestodayWorldAndMemberIncreasement != null) {
+				long yestodayMemberIncreasement = YestodayWorldAndMemberIncreasement.getMemberAddCount();
+				long yestodayWorldIncreasement = YestodayWorldAndMemberIncreasement.getWorldAddCount();
+				o.setYestodayMemberIncreasement(yestodayMemberIncreasement);
+				o.setYestodayWorldIncreasement(yestodayWorldIncreasement);
+			}
+			
 
 			// 获取频道主信息
 			if (o.getOwnerId() != null) {
