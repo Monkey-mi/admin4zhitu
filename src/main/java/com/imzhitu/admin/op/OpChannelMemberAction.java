@@ -111,7 +111,7 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	public String queryChannelMember() {
 		try {
 			// 若用户认证为空则证明，没有根据认证查询，所以用通用查询
-			channelMemberService.queryChannelMember(channelId, userId, userStarId, shield, maxId, page, rows, jsonMap);
+			channelMemberService.queryChannelMember(channelId, userId, userStarId, notified, shield, maxId, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
