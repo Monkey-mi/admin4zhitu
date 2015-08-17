@@ -29,7 +29,7 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 
 	@Override
 	public void insertMsgBulletin(String path, Integer type, String link,
-			Integer operator) throws Exception {
+			Integer operator,String bulletinName,String bulletinThumb) throws Exception {
 		// TODO Auto-generated method stub
 		OpMsgBulletin dto = new OpMsgBulletin();
 		Date now = new Date();
@@ -40,7 +40,8 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 		dto.setValid(Tag.FALSE);
 		dto.setModifyDate(now);
 		dto.setAddDate(now);
-		
+		dto.setBulletinName(bulletinName);
+		dto.setBulletinThumb(bulletinThumb);
 		msgBulletinMapper.insertMsgBulletin(dto);
 	}
 
@@ -55,7 +56,7 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 
 	@Override
 	public void updateMsgBulletin(Integer id, String path, Integer type,
-			String link, Integer valid, Integer operator) throws Exception {
+			String link, Integer valid, Integer operator,String bulletinName,String bulletinThumb) throws Exception {
 		// TODO Auto-generated method stub
 		OpMsgBulletin dto = new OpMsgBulletin();
 		Date now = new Date();
@@ -66,6 +67,8 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 		dto.setOperator(operator);
 		dto.setValid(valid);
 		dto.setModifyDate(now);
+		dto.setBulletinName(bulletinName);
+		dto.setBulletinThumb(bulletinThumb);
 		msgBulletinMapper.updateMsgBulletin(dto);
 	}
 

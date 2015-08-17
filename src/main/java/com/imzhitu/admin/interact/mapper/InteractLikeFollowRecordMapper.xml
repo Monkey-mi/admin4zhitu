@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractLikeFollowRecordMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.InteractLikeFollowRecord" id="LikeFollowRecordMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="zombieId" column="zombie_id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="userId" column="user_id" jdbcType="INTEGER"/>
+		<result property="type" column="type" jdbcType="INTEGER"/>
+		<result property="complete" column="complete" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="insertLikeFollowRecord">
+		insert into hts_admin.interact_like_follow_record(zombie_id,world_id,user_id,type,complete)
+		values (#{zombieId},#{worldId},#{userId},#{type},#{complete})
+	</insert>
+	
+	<!-- DELETE -->
+	<delete id="batchDeleteLikeFollowRecord">
+		delete from hts_admin.interact_like_follow_record
+		where id in
+		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- BATCH UPDATE COMPLETE -->
+	<update id="batchUpdateLikeFollowRecord">
+		update hts_admin.interact_like_follow_record
+		set complete=#{complete}
+		where id in
+		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 查询 -->
+	<select id="queryLikeFollowRecord" resultMap="LikeFollowRecordMap">
+		select * 
+		from hts_admin.interact_like_follow_record 
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[ id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+			<if test="zombieId != null">
+				and zombie_id = #{zombieId}
+			</if>
+			<if test="complete != null">
+				and complete = #{complete}
+			</if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 查询总数 -->
+	<select id="queryLikeFollowRecordCount" resultType="long">
+		select count(*)
+		from hts_admin.interact_like_follow_record 
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[ id <= #{maxId}]]>
+			</if>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+			<if test="zombieId != null">
+				and zombie_id = #{zombieId}
+			</if>
+			<if test="complete != null">
+				and complete = #{complete}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -18,7 +18,7 @@ public class OpMsgBulletinServiceTest extends BaseTest{
 	
 	@Test
 	public void insertMsgBulletinTest()throws Exception{
-		service.insertMsgBulletin("http://static.imzhitu.com/ios/image/2015/06/15/15/6e59030b0b4a2c977203581e0ca5015d_20991@2x.jpg", 1, "http://www.imzhitu.com", 0);
+		service.insertMsgBulletin("http://static.imzhitu.com/ios/image/2015/06/15/15/6e59030b0b4a2c977203581e0ca5015d_20991@2x.jpg", 1, "http://www.imzhitu.com", 0,null,null);
 	}
 	
 	@Test
@@ -28,7 +28,7 @@ public class OpMsgBulletinServiceTest extends BaseTest{
 	
 	@Test
 	public void updateMsgBulletinTest()throws Exception{
-		service.updateMsgBulletin(1, "http://static.imzhitu.com/ios/image/2015/06/15/15/6e59030b0b4a2c977203581e0ca5015d_20991@2x.jpg", 1, "http://www.imzhitu.com", 1, 14);
+		service.updateMsgBulletin(1, "http://static.imzhitu.com/ios/image/2015/06/15/15/6e59030b0b4a2c977203581e0ca5015d_20991@2x.jpg", 1, "http://www.imzhitu.com", 1, 14,null,null);
 	}
 	
 	@Test

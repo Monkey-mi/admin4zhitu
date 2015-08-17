@@ -75,6 +75,12 @@
 					}
 				},
 				{field : 'link',title: '链接',align : 'center',width : 130},
+				{field : 'bulletinName',title: '名字',align : 'center',width : 130},
+				{field : 'bulletinThumb',title: '缩略图',align : 'center',width : 130,
+					formatter: function(value,row,index) {
+			  				return "<img title='无效' width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+			  			}
+			  	},
 				/*
 				{field : 'valid',title : '有效性',align : 'center', width: 45,
 		  			formatter: function(value,row,index) {
@@ -140,7 +146,7 @@
 			title : '添加频道精选推荐',
 			modal : true,
 			width : 490,
-			height : 260,
+			height : 390,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -153,7 +159,10 @@
 				$("#bulletin_img_edit").attr("src", "./base/images/bg_empty.png");
 				$("#s-type").combobox('setValue',0);
 				$("#i-link").val('');
-				$("#i-id").val('');		
+				$("#i-id").val('');	
+				$("#i-name").val('');	
+				$("#i-thumb").val('');
+				$("#bulletin_thumb_img_edit").attr("src", "./base/images/bg_empty.png");
 			}
 		});
 		
@@ -244,9 +253,12 @@
 		$('#htm_add').window('open');
 	}
 	
-	function updateInit(id,path,type,link){
+	function updateInit(id,path,type,link,name,thumb){
 		$("#i-path").val(path);
+		$("#i-name").val(name);
+		$("#i-thumb").val(thumb);
 		$("#bulletin_img_edit").attr('src',path);
+		$("#bulletin_thumb_img_edit").attr('src',thumb);
 		$("#s-type").combobox('setValue',type);
 		$("#i-link").val(link);
 		$("#i-id").val(id);
@@ -258,6 +270,8 @@
 		var type = $("#s-type").combobox('getValue');
 		var link = $("#i-link").val();
 		var id = $("#i-id").val();
+		var bulletinName = $("#i-name").val();
+		var bulletinThumb = $("#i-thumb").val();
 		var url="";
 		if(id){
 			url = updateUrl+id;
@@ -269,7 +283,9 @@
 		$.post(url,{
 			'path':path,
 			'type':type,
-			'link':link
+			'link':link,
+			'bulletinName':bulletinName,
+			'bulletinThumb':bulletinThumb
 		},function(result){
 			$('#htm_add .opt_btn').show();
 			$('#htm_add .loading').hide();
@@ -321,6 +337,17 @@
 							</td>
 						</tr>
 						<tr>
+							<td class="leftTd">链接缩略图路径：</td>
+							<td>
+								<input id="i-thumb" class="none" readonly="readonly" >
+								<a id="bulletin_thumb_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<img id="bulletin_thumb_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
+								<div id="bulletin_thumb_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+									上传中...<span class="upload_progress"></span><span>%</span>
+								</div>
+							</td>
+						</tr>
+						<tr>
 							<td class="leftTd">链接类型：</td>
 							<td>
 								<select id="s-type" class="easyui-combobox" style="width:223px;" >
@@ -335,6 +362,10 @@
 						<tr>
 							<td class="leftTd">链接：</td>
 							<td><input id="i-link" style="width:220px;" ></td>
+						</tr>
+						<tr>
+							<td class="leftTd">名字：</td>
+							<td><input id="i-name" style="width:220px;" ></td>
 						</tr>
 						<tr>
 							<td class="none"><input id="i-id"></td>
@@ -393,6 +424,56 @@
             	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
             	$("#bulletin_img_edit").attr('src', url);
             	$("#i-path").val(url);
+            },
+            'Error': function(up, err, errTip) {
+                $.messager.alert('上传失败',errTip);  // 提示添加信息失败
+            },
+            'Key': function(up, file) {
+            	var timestamp = Date.parse(new Date());
+            	var suffix = /\.[^\.]+/.exec(file.name);
+                var key = "op/notice/" + timestamp+suffix;
+                return key;
+            }
+        }
+    });
+    
+    Qiniu.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'bulletin_thumb_upload_btn',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        chunk_size: '4mb',
+        uptoken_url: './admin_qiniu/uptoken',
+        domain: 'http://static.imzhitu.com/',
+        unique_names: false,
+        save_key: false,
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+            	$("#bulletin_thumb_upload_btn").hide();
+            	$("#bulletin_thumb_img_edit").hide();
+            	var $status = $("#bulletin_thumb_img_upload_status");
+            	$status.find('.upload_progress:eq(0)').text(0);
+            	$status.show();
+            	
+            },
+            'BeforeUpload': function(up, file) {
+            },
+            
+            'UploadProgress': function(up, file) {
+            	var $status = $("#bulletin_thumb_img_upload_status");
+            	$status.find('.upload_progress:eq(0)').text(file.percent);
+
+            },
+            'UploadComplete': function() {
+            	$("#bulletin_thumb_upload_btn").show();
+            	$("#bulletin_thumb_img_edit").show();
+            	$("#bulletin_thumb_img_upload_status").hide();
+            },
+            'FileUploaded': function(up, file, info) {
+            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
+            	$("#bulletin_thumb_img_edit").attr('src', url);
+            	$("#i-thumb").val(url);
             },
             'Error': function(up, err, errTip) {
                 $.messager.alert('上传失败',errTip);  // 提示添加信息失败
