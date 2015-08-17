@@ -2,13 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imzhitu.admin.op.mapper.OpChannelMemberMapper">
 
-	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelMemberDto" id="OpChannelLinkMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelMemberDto" id="ChannelMemberMap">
 		<result column="channel_member_id" property="channelMemberId" jdbcType="INTEGER" />
 		<result column="channel_id" property="channelId" jdbcType="INTEGER" />
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
 		<result column="sub_time" property="subTime" jdbcType="BIGINT" />
 		<result column="degree" property="degree" jdbcType="INTEGER" />
 		<result column="shield" property="shield" jdbcType="INTEGER" />
+		<result column="channel_star" property="channelStar" jdbcType="INTEGER" />
 		
 		<!-- 下列为父项userInfo的信息，当功能扩展时，可补充查询结果 -->
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />
@@ -26,11 +27,36 @@
 	<!-- 新增频道成员 -->
 	<insert id="insertChannelMember">
 		insert hts.operations_channel_member
-		(channel_id,user_id,sub_time,degree)
+			(channel_id,user_id,sub_time,degree)
 		values
-		(#{channelId},#{userId},#{subTime},#{degree})
+			(#{channelId},#{userId},#{subTime},#{degree})
 	</insert>
 
+	<!-- 修改频道成员 -->
+	<update id="updateChannelMember">
+		update 
+			hts.operations_channel_member
+		<set>
+			<if test="degree != null">
+				degree = #{degree}
+			</if>
+			<if test="shield != null">
+				shield = #{shield}
+			</if>
+			<if test="channelStar != null">
+				channel_star = #{channelStar}
+			</if>
+		</set> 
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="userId != null and channelId != null">
+				and user_id = #{userId} and channel_id = #{channelId}
+			</if>
+		</where>
+	</update>
+	
 	<!-- 修改频道成员的等级 -->
 	<update id="updateChannelMemberDegree">
 		update hts.operations_channel_member set degree = #{degree}
@@ -45,13 +71,15 @@
 	</update>
 
 	<!-- 有输入条件的分页查询 -->
-	<select id="queryChannelMember" resultMap="OpChannelLinkMapper">
+	<select id="queryChannelMember" resultMap="ChannelMemberMap">
 		select
 			cms.id as channel_member_id,
 			cms.channel_id,
 			cms.user_id,
 			cms.sub_time,
 			cms.degree,
+			cms.shield,
+			cms.channel_star,
 			u.user_name,
 			u.user_avatar,
 			u.sex,
@@ -86,7 +114,6 @@
 			) as cms, hts.user_info u
 		where
 		cms.user_id = u.id;
-
 	</select>
 
 	<!-- 有输入条件的查询总数 -->
@@ -113,5 +140,51 @@
 		select max(id)
 		from hts.operations_channel_member
 	</select>
+	
+	<!-- 查询频道成员当前最大id -->
+	<select id="queryChannelMemberById" resultMap="ChannelMemberMap">
+		select 
+			ocm.id as channel_member_id,
+			ocm.channel_id,
+			ocm.user_id,
+			ocm.sub_time,
+			ocm.degree,
+			ocm.shield,
+			ocm.channel_star,
+		from 
+			hts.operations_channel_member ocm
+		where ocm.id = #{channelMemberId}
+	</select>
 
+	<!-- 新增频道红人 -->
+	<insert id="insertChannelStar">
+		insert hts.operations_channel_star
+			(id, channel_id, user_id, notified, serial)
+		values
+			(#{channelMemberId}, #{channelId}, #{userId}, #{notified},#{serial})
+	</insert>
+	
+	<!-- 修改频道红人 -->
+	<update id="updateChannelStar">
+		update hts.operations_channel_star
+		<set>
+			<if test="notified != null">
+				notified = #{notified}
+			</if>
+			<if test="serial != null">
+				serial = #{serial}
+			</if>
+		</set>
+		where id = #{channelMemberId} 
+	</update>
+	
+	<!-- 批量删除频道红人，根据频道红人id集合 -->
+	<delete id="deleteChannelStarByIds">
+		delete from hts.operations_channel_star where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
 </mapper>
