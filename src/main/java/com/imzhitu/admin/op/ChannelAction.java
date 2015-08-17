@@ -62,6 +62,7 @@ public class ChannelAction extends BaseCRUDAction{
 	 */
 	public String updateStarCache() {
 		try {
+			// TODO 更新频道明星缓存应该没有用了
 			channelService.updateStarCache(star);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
@@ -277,7 +278,7 @@ public class ChannelAction extends BaseCRUDAction{
 	
 	/**
 	 * 保存明星
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @return
 	 */
 	public String saveStar() {
