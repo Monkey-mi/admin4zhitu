@@ -191,7 +191,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, tip, msgCode, recipientId, channelName, String.valueOf(channelId), null, 0);
 
 			// 更新通知标记，设置成已经通知，及推送了信息
-			updateStarNotified(channelStarId, Tag.TRUE);
+			updateChannelStarNotified(channelStarId, Tag.TRUE);
 
 			// 推送消息
 			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
@@ -199,7 +199,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 				@Override
 				public void onPushFailed(Exception e) {
 					// 若推送消息失败，则要执行更新通知标记，设置成未推送信息
-					updateStarNotified(channelStarId, 0);
+					updateChannelStarNotified(channelStarId, 0);
 				}
 			});
 		}
@@ -207,12 +207,13 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	
 	/**
 	 * 更新频道红人的通知状态
+	 * FIXME 这个要是有需要的话，可以放开出来，升级到接口中，供外部调用，要分析一下 
 	 * 
 	 * @param channelStarId	频道红人表主键id
 	 * @param notified 		通知状态
 	 * @author zhangbo	2015年8月18日
 	 */
-	private void updateStarNotified(Integer channelStarId, Integer notified) {
+	private void updateChannelStarNotified(Integer channelStarId, Integer notified) {
 		OpChannelMemberDto dto = new OpChannelMemberDto();
 		dto.setChannelMemberId(channelStarId);
 		dto.setNotified( notified == null ? Tag.FALSE : Tag.TRUE );
