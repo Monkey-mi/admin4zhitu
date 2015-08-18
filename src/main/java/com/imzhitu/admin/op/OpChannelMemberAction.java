@@ -105,7 +105,7 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	}
 
 	/**
-	 * 通过用户名查找频道成员
+	 * 通过用户名或用户Id查找频道成员
 	 * 
 	 * @return
 	 * @author zhangbo 2015年8月14日
