@@ -55,7 +55,8 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer notified;
+	//一般的用户没有通知的状态，所以默认为0 ，否则在插入数据时，star表中的notified字段不能为空。
+	private Integer notified ;
 
 	/**
 	 * 是否屏蔽 不屏蔽：0，屏蔽：1
@@ -69,7 +70,7 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer serial;
+	private Integer serial ;
 
 	/**
 	 * 是否为频道红人 是红人：1， 不是红人：0

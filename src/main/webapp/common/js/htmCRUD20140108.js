@@ -57,6 +57,7 @@ var htmTablePageList = [5,10,15,20,25,30]; //页面最大显示记录条数设�
 var isRowNumbers = true; //是否显示行号
 var mySortName = "id"; //排序字段名
 var mySortOrder = "desc"; //排序设置,"asc"--正序和"desc"--倒序
+//mishengliang idField没有值时，选择只能为一行
 var myIdField = "id"; //id字段
 var isRemoteSort = true; //是否远程排序
 var isCollapsible = false; //是否可以收缩

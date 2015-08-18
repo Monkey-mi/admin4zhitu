@@ -39,10 +39,10 @@
 			hts.operations_channel_member
 		<set>
 			<if test="degree != null">
-				degree = #{degree}
+				degree = #{degree},
 			</if>
 			<if test="shield != null">
-				shield = #{shield}
+				shield = #{shield},
 			</if>
 			<if test="channelStar != null">
 				channel_star = #{channelStar}
@@ -66,9 +66,9 @@
 			cms.user_id,
 			cms.sub_time,
 			cms.degree,
-			cms.notified,
 			cms.shield,
 			cms.channel_star,
+			cms.notified,
 			u.user_name,
 			u.user_avatar,
 			u.sex,
@@ -80,7 +80,7 @@
 			u.star
 		from
 			(select
-				ocm.id, ocm.channel_id, ocm.user_id, ocm.shield,ocm.sub_time, ocm.degree, ocs.notified, ocs.serial
+				ocm.id, ocm.channel_id, ocm.user_id, ocm.sub_time, ocm.degree, ocm.shield, ocm.channel_star, ocs.notified, ocs.serial
 			from
 				hts.operations_channel_member ocm
 				left join hts.operations_channel_star ocs on ocm.id = ocs.id
@@ -146,10 +146,10 @@
 			ocm.sub_time,
 			ocm.degree,
 			ocm.shield,
-			ocm.channel_star,
+			ocm.channel_star
 		from 
 			hts.operations_channel_member ocm
-		where ocm.id = #{channelMemberId}
+		where ocm.id = #{channelMemberId} 
 	</select>
 
 	<!-- 新增频道红人 -->
@@ -157,7 +157,7 @@
 		insert hts.operations_channel_star
 			(id, channel_id, user_id, notified, serial)
 		values
-			(#{channelMemberId}, #{channelId}, #{userId}, #{notified},#{serial})
+			(#{channelMemberId}, #{channelId}, #{userId}, 0 , 0)
 	</insert>
 	
 	<!-- 修改频道红人 -->
