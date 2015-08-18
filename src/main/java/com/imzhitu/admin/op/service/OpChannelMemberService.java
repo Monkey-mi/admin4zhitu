@@ -92,4 +92,12 @@ public interface OpChannelMemberService extends BaseService {
 	 */
 	public void addStarRecommendMsg(Integer channelStarIds) throws Exception;
 
+	/**
+	 * 对频道红人进行重新排序
+	 * 
+	 * @param channelStarIds	频道红人表主键id集合
+	 * @author zhangbo	2015年8月18日
+	 */
+	public void serialChannelStars(Integer[] channelStarIds);
+
 }

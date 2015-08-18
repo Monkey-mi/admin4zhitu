@@ -165,12 +165,28 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	 * @return
 	 * @author zhangbo	2015年8月17日
 	 */
-	public String addStarsRecommendMsg() {
+	public String addChannelStarsRecommendMsg() {
 		try {
 			Integer[] channelStarIds = StringUtil.convertStringToIds(ids);
 			for (Integer channelStarId : channelStarIds) {
 				channelMemberService.addStarRecommendMsg(channelStarId);
 			}
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 对频道红人进行重新排序
+	 * 
+	 * @return
+	 * @author zhangbo	2015年8月18日
+	 */
+	public String serialChannelStars() {
+		try {
+			channelMemberService.serialChannelStars(StringUtil.convertStringToIds(ids));
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
