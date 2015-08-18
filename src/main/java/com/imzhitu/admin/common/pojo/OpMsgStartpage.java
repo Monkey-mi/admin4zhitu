@@ -22,6 +22,7 @@ public class OpMsgStartpage extends AbstractNumberDto{
 	private Date addDate;
 	private Integer operator;
 	private String operatorName;
+	private Integer serial;
 	public Integer getId() {
 		return id;
 	}
@@ -97,5 +98,10 @@ public class OpMsgStartpage extends AbstractNumberDto{
 	public void setOperatorName(String operatorName) {
 		this.operatorName = operatorName;
 	}
-	
+	public Integer getSerial() {
+		return serial;
+	}
+	public void setSerial(Integer serial) {
+		this.serial = serial;
+	}
 }

@@ -81,5 +81,5 @@ public interface OpMsgBulletinService extends BaseService{
 	 * @param idsStr
 	 * @throws Exception
 	 */
-	public void updateMsgBulletinCache(String idsStr)throws Exception;
+	public void updateMsgBulletinCache(String idsStr,Integer operator)throws Exception;
 }

@@ -93,5 +93,5 @@ public interface OpMsgStartpageService {
 	 * @param idsStr
 	 * @throws Exception
 	 */
-	public void updateMsgStartpageCache(String idsStr)throws Exception;
+	public void updateMsgStartpageCache(String idsStr,Integer operator)throws Exception;
 }

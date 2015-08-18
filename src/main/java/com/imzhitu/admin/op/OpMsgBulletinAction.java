@@ -133,7 +133,7 @@ public class OpMsgBulletinAction extends BaseCRUDAction{
 	
 	public String updateMsgBulletinCache(){
 		try{
-			msgBulletinService.updateMsgBulletinCache(idsStr);
+			msgBulletinService.updateMsgBulletinCache(idsStr,getCurrentLoginUserId());
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

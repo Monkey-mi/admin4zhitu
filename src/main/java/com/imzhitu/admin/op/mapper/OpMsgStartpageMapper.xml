@@ -13,15 +13,16 @@
 		<result property="lastModified" column="last_modified" jdbcType="TIMESTAMP"/>
 		<result property="beginDate" column="date_begin" jdbcType="TIMESTAMP"/>
 		<result property="endDate" column="date_end" jdbcType="TIMESTAMP"/>
+		<result property="serial" column="serial" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<!-- INSERT -->
 	<insert id="insertMsgStartpage">
 		insert into hts_admin.op_msg_startpage
-			(path,type,link,operator,date_add,last_modified,valid,date_begin,date_end)
+			(path,type,link,operator,date_add,last_modified,valid,date_begin,date_end,serial)
 		values
 			(#{linkPath},#{linkType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},
-			 #{lastModified,jdbcType=TIMESTAMP},#{valid},#{beginDate,jdbcType=TIMESTAMP},#{endDate,jdbcType=TIMESTAMP})
+			 #{lastModified,jdbcType=TIMESTAMP},#{valid},#{beginDate,jdbcType=TIMESTAMP},#{endDate,jdbcType=TIMESTAMP},#{serial})
 	</insert>
 	
 	<!-- BATCHDELETE -->
@@ -43,6 +44,7 @@
 			<if test="valid != null">valid = #{valid},</if>
 			<if test="beginDate != null">date_begin = #{beginDate,jdbcType=TIMESTAMP},</if>
 			<if test="endDate != null">date_end = #{endDate,jdbcType=TIMESTAMP},</if>
+			<if test="serial != null"> serial = #{serial},</if>
 			last_modified = #{lastModified,jdbcType=TIMESTAMP},
 			operator = #{operator}
 		</set>
@@ -94,7 +96,7 @@
 				<![CDATA[and omb.id <= #{maxId}]]>
 			</if>
 		</where>
-		order by omb.id desc
+		order by omb.serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	

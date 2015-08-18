@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,9 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.dao.BulletinCacheDao;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpMsgBulletin;
+import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
 import com.imzhitu.admin.op.service.OpMsgBulletinService;
 
@@ -26,11 +29,16 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	@Autowired
 	private BulletinCacheDao bulletinCacheDao;
 	
+	@Autowired
+	private KeyGenService keyGenService;
+	
+	private Logger log = Logger.getLogger(OpMsgBulletinServiceImpl.class);
 
 	@Override
 	public void insertMsgBulletin(String path, Integer type, String link,
 			Integer operator,String bulletinName,String bulletinThumb) throws Exception {
 		// TODO Auto-generated method stub
+		Integer  serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_SERIAL);
 		OpMsgBulletin dto = new OpMsgBulletin();
 		Date now = new Date();
 		dto.setBulletinPath(path);
@@ -42,6 +50,7 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 		dto.setAddDate(now);
 		dto.setBulletinName(bulletinName);
 		dto.setBulletinThumb(bulletinThumb);
+		dto.setSerial(serial);
 		msgBulletinMapper.insertMsgBulletin(dto);
 	}
 
@@ -110,7 +119,9 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 		
 		if(total > 0){
 			list = msgBulletinMapper.queryMsgBulletin(dto);
-			reMaxId = list.get(0).getId();
+			if(list != null && list.size() > 0){
+				reMaxId = list.get(0).getSerial();
+			}
 		}
 		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
@@ -139,7 +150,8 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	}
 
 	@Override
-	public void updateMsgBulletinCache(String idsStr) throws Exception {
+	public void updateMsgBulletinCache(String idsStr,Integer operator) throws Exception {
+		Date now  = new Date();
 		if(idsStr == null || idsStr.trim().equals("")){
 			bulletinCacheDao.updateBulletin(new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>());
 			return;
@@ -148,7 +160,10 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 		List<OpMsgBulletin> list = msgBulletinMapper.queryMsgBulletinByIds(ids);
 		List<com.hts.web.common.pojo.OpMsgBulletin> webBulletinList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
 		
+		
 		for(int i = 0; i < ids.length; i++){
+			
+			//排序
 			for(int j = 0; j < list.size(); j++){
 				if(ids[i].equals(list.get(j).getId())){
 					OpMsgBulletin dto = list.get(j);
@@ -163,10 +178,69 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 					break;
 				}
 			}
+			
+			//更新serial
+			Integer  serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_SERIAL);
+			OpMsgBulletin bulletin = new OpMsgBulletin();
+			bulletin.setModifyDate(now);
+			bulletin.setSerial(serial);
+			bulletin.setId(ids[ids.length - i - 1]);
+			bulletin.setOperator(operator);
+			msgBulletinMapper.updateMsgBulletin(bulletin);
 		}
 		
 		if(webBulletinList.size() > 0){
 			bulletinCacheDao.updateBulletin(webBulletinList);
+		}
+		
+		//更新 用户推荐列表缓存com.hts.web.base.constant.CacheKeies.OP_MSG_USER_THEME 对应的type为1
+		OpMsgBulletin tmpBulletin = new OpMsgBulletin();
+		List<com.hts.web.common.pojo.OpMsgBulletin> webUserThemeList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
+		tmpBulletin.setBulletinType(1);
+		try{
+			List<OpMsgBulletin> userThemeList = msgBulletinMapper.queryMsgBulletin(tmpBulletin);
+			if(userThemeList != null && userThemeList.size() > 0){
+				for( OpMsgBulletin dto:userThemeList){
+					com.hts.web.common.pojo.OpMsgBulletin webBulletin = new com.hts.web.common.pojo.OpMsgBulletin();
+					webBulletin.setBulletinPath(dto.getBulletinPath());
+					webBulletin.setBulletinType(dto.getBulletinType());
+					webBulletin.setId(dto.getId());
+					webBulletin.setLink(dto.getLink());
+					webBulletin.setBulletinName(dto.getBulletinName());
+					webBulletin.setBulletinThumb(dto.getBulletinThumb());
+					webUserThemeList.add(webBulletin);
+				}
+			}
+			
+			if( webBulletinList.size() > 0 ) {
+				bulletinCacheDao.updateUserThemeBulletin(webUserThemeList);
+			}
+		}catch(Exception e){
+			log.warn(e.getMessage());
+		}
+		
+		//缓存活动/专题推荐列表 com.hts.web.base.constant.CacheKeies.OP_MSG_THEME 对应的type为4
+		List<com.hts.web.common.pojo.OpMsgBulletin> webThemeList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
+		tmpBulletin.setBulletinType(4);
+		try{
+			List<OpMsgBulletin> themeList = msgBulletinMapper.queryMsgBulletin(tmpBulletin);
+			if(themeList != null && themeList.size() > 0){
+				for( OpMsgBulletin dto:themeList){
+					com.hts.web.common.pojo.OpMsgBulletin webBulletin = new com.hts.web.common.pojo.OpMsgBulletin();
+					webBulletin.setBulletinPath(dto.getBulletinPath());
+					webBulletin.setBulletinType(dto.getBulletinType());
+					webBulletin.setId(dto.getId());
+					webBulletin.setLink(dto.getLink());
+					webBulletin.setBulletinName(dto.getBulletinName());
+					webBulletin.setBulletinThumb(dto.getBulletinThumb());
+					webThemeList.add(webBulletin);
+				}
+			}
+			if(webThemeList.size() > 0 ) {
+				bulletinCacheDao.updateThemeBulletin(webThemeList);
+			}
+		}catch(Exception e){
+			log.warn(e.getMessage());
 		}
 	}
 

@@ -211,6 +211,16 @@ public class Admin {
 	 */
 	public static final Integer KEYGEN_OP_SYS_DANMU_ID = 11;
 	
+	/**
+	 * 频道公告排序
+	 */
+	public static final Integer KEYGEN_OP_MSG_BULLETIN_SERIAL = 12;
+	
+	/**
+	 * 启动页排序
+	 */
+	public static final Integer KEYGEN_OP_MSG_START_PAGE_SERIAL = 13;
+	
 	
 	/**
 	 * admin系统与daemon守护系统共同操作redis的key值
