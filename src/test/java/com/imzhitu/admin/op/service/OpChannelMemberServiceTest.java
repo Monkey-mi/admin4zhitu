@@ -12,7 +12,7 @@ public class OpChannelMemberServiceTest extends BaseTest{
 	
 	@Test
 	public void insertChannelMemberTest()throws Exception{
-		service.insertChannelMember(11834, 527,0);
+//		service.insertChannelMember(11834, 527,0);
 	}
 	
 	@Test
