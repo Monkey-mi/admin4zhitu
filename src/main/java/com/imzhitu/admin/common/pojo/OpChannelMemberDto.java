@@ -2,6 +2,8 @@ package com.imzhitu.admin.common.pojo;
 
 import java.io.Serializable;
 
+import com.hts.web.base.constant.Tag;
+
 /**
  * 频道成员数据传输对象 继承与userInfo，可携带成员user相关联信息 此DTO其中包含了频道红人信息
  * 
@@ -45,39 +47,41 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 
 	/**
 	 * 用户在频道当中的等级 成员等级分为：群主：0，管理员：1，普通成员：2
+	 * 频道成员等级设置默认级别为普通成员
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer degree;
+	private Integer degree = Tag.CHANNEL_MEMBER_ROLE_NORMAL;
 
 	/**
 	 * 是否推送通知 不通知：0，通知：1
+	 * 一般的用户没有通知的状态，所以默认为0 ，否则在插入数据时，star表中的notified字段不能为空。
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	//一般的用户没有通知的状态，所以默认为0 ，否则在插入数据时，star表中的notified字段不能为空。
-	private Integer notified ;
+	private Integer notified = 0;
 
 	/**
 	 * 是否屏蔽 不屏蔽：0，屏蔽：1
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer shield;
+	private Integer shield = 0;
 
 	/**
 	 * 序号，用于排序，序号根据特定sequence流水而来
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer serial ;
+	private Integer serial;
 
 	/**
 	 * 是否为频道红人 是红人：1， 不是红人：0
+	 * 设置默认值为不是红人
 	 * 
 	 * @author zhangbo 2015年8月17日
 	 */
-	private Integer channelStar;
+	private Integer channelStar = 0;
 
 	/**
 	 * @return the channelMemberId

@@ -170,4 +170,21 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 批量通知频道成员成为频道红人
+	 * 
+	 * @return
+	 * @author zhangbo	2015年8月17日
+	 */
+	public String addStarsRecommendMsg() {
+		try {
+			Integer[] channelMemberIds = StringUtil.convertStringToIds(ids);
+			channelMemberService.deleteChannelStars(channelMemberIds);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 }

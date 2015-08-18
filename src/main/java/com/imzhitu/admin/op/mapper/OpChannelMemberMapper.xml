@@ -117,7 +117,7 @@
 		select count(*) from hts.operations_channel_member ocm
 		<where>
 			<if test="channelId != null">
-				and ocm.channel_id = #{channelId}
+				ocm.channel_id = #{channelId}
 			</if>
 			<if test="userId != null">
 				and ocm.user_id = #{userId}
@@ -133,8 +133,10 @@
 
 	<!-- 查询频道成员当前最大id -->
 	<select id="getChannelMemberMaxId" resultType="long">
-		select max(id)
-		from hts.operations_channel_member
+		select 
+			max(id)
+		from 
+			hts.operations_channel_member
 	</select>
 	
 	<!-- 查询频道成员当前最大id -->
@@ -149,7 +151,8 @@
 			ocm.channel_star
 		from 
 			hts.operations_channel_member ocm
-		where ocm.id = #{channelMemberId} 
+		where 
+			ocm.id = #{channelMemberId} 
 	</select>
 
 	<!-- 新增频道红人 -->
@@ -157,7 +160,7 @@
 		insert hts.operations_channel_star
 			(id, channel_id, user_id, notified, serial)
 		values
-			(#{channelMemberId}, #{channelId}, #{userId}, 0 , 0)
+			(#{channelMemberId}, #{channelId}, #{userId}, #{notified}, #{serial})
 	</insert>
 	
 	<!-- 修改频道红人 -->
@@ -176,11 +179,14 @@
 	
 	<!-- 批量删除频道红人，根据频道红人id集合 -->
 	<delete id="deleteChannelStarByIds">
-		delete from hts.operations_channel_star where id in
-		<foreach item="item" index="index" collection="array"
-	    	open="(" separator="," close=")">
-	       		#{item}
-	 	</foreach>
+		delete from 
+			hts.operations_channel_star 
+		where 
+			id in
+			<foreach item="item" index="index" collection="array"
+		    	open="(" separator="," close=")">
+		       		#{item}
+		 	</foreach>
 	</delete>
 	
 </mapper>
