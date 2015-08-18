@@ -108,13 +108,20 @@
 			<if test="star != null">
 				u.star = #{star}
 			</if>
-			and cms.user_id = u.id;
+			<if test="userName != null">
+				and u.user_name like CONCAT('%',#{userName},'%')
+			</if>
+			and cms.user_id = u.id
 		</where>
 	</select>
 
 	<!-- 有输入条件的查询总数 -->
 	<select id="queryChannelMemberTotalCount" resultType="long">
-		select count(*) from hts.operations_channel_member ocm
+		select 
+			count(*) 
+		from 
+			hts.operations_channel_member ocm,
+			hts.user_info u
 		<where>
 			<if test="channelId != null">
 				ocm.channel_id = #{channelId}
@@ -125,9 +132,13 @@
 			<if test="shield != null">
 				and ocm.shield = #{shield}
 			</if>
+			<if test="userName != null">
+				and u.user_name like CONCAT('%',#{userName},'%')
+			</if>
 			<if test="maxId != null and maxId != 0">
 				<![CDATA[ and ocm.id <= #{maxId} ]]>
 			</if>
+			and ocm.user_id = u.id
 		</where>
 	</select>
 

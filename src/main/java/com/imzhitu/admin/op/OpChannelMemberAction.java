@@ -15,13 +15,6 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	private OpChannelMemberService channelMemberService;
 
 	/**
-	 * 被操作的id
-	 * 
-	 * @author zhangbo 2015年8月14日
-	 */
-	private Integer id;
-
-	/**
 	 * 频道id
 	 * 
 	 * @author zhangbo 2015年8月14日
@@ -34,13 +27,13 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	 * @author zhangbo 2015年8月14日
 	 */
 	private Integer userId;
-
+	
 	/**
-	 * 用户等级
+	 * 用户名称
 	 * 
-	 * @author zhangbo 2015年8月14日
+	 * @author zhangbo	2015年8月18日
 	 */
-	private Integer degree;
+	private String userName;
 
 	/**
 	 * 达人认证的id
@@ -70,20 +63,12 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	 */
 	private String ids;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public void setChannelId(Integer channelId) {
 		this.channelId = channelId;
 	}
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
-	}
-
-	public void setDegree(Integer degree) {
-		this.degree = degree;
 	}
 
 	public void setUserStarId(Integer userStarId) {
@@ -125,9 +110,13 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	 * @return
 	 * @author zhangbo 2015年8月14日
 	 */
-	public String queryChannelMemberByUserName() {
+	public String queryChannelMemberByUserNameOrId() {
 		try {
-			channelMemberService.queryChannelMemberByUserName(channelId, userId, page, rows, jsonMap);
+			if ( userId != null) {
+				channelMemberService.queryChannelMemberByUserId(channelId, userId, jsonMap);
+			} else if ( userName != null ) {
+				channelMemberService.queryChannelMemberByUserName(channelId, userName, page, rows, jsonMap);
+			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
