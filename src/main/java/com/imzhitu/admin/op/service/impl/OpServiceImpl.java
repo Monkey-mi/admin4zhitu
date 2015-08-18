@@ -65,7 +65,7 @@ public class OpServiceImpl extends BaseServiceImpl
 	public static final String ACTIVITY_TIP_REJECT_FOOT = "#,很抱歉";
 	
 	/** 织图官方账号id */
-	public static final Integer ZHITU_UID = 2063; 
+	public static final Integer ZHITU_UID = 2063; // TODO 目前这个已经移植到ADMIN常量类中， 后续的调用要整改掉
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;

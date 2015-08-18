@@ -52,9 +52,9 @@ import com.imzhitu.admin.op.service.OpChannelUserService;
 public class ChannelServiceImpl extends BaseServiceImpl implements
 		ChannelService {
 
-	private static final String CHANNEL_STAR_MSG_HEAD = "，恭喜！你被推荐为";
+	private static final String CHANNEL_STAR_MSG_HEAD = "，恭喜！你被推荐为";	// TODO 这些已经移植到了频道成员相关操作中了
 	
-	private static final String CHANNEL_STAR_MSG_FOOT =  "频道的红人啦！继续发光发亮哟，么么哒！";
+	private static final String CHANNEL_STAR_MSG_FOOT =  "频道的红人啦！继续发光发亮哟，么么哒！";	// TODO 这些已经移植到了频道成员相关操作中了
 	
 	private static final String CHANNEL_WORLD_MSG_HEAD = "，恭喜！由于你的织图棒棒的，入选";
 	
@@ -147,6 +147,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateStarCache(OpChannelStar star) throws Exception {
+		// TODO 这个功能目前没有用到了
 		star.setFirstRow(0);
 		star.setLimit(channelStarLimit);
 		channelStarCacheDao.updateChannelStar(star);
@@ -869,7 +870,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			OpChannelStar star = new OpChannelStar();
 			star.setChannelId(o.getId());
 				
-			//根据频道id查询频道排名前15个用户
+			//根据频道id查询频道排名前15个用户 TODO 这个逻辑现在没有用了，可以删除掉
 			List<Integer> channelUserList = opChannelUserService.queryChannelUserRankTopN(o.getId());
 			for(Integer u:channelUserList){
 				star.setUserId(u);

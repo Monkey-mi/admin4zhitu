@@ -5,6 +5,13 @@ import java.util.List;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelMemberDto;
 
+/**
+ * 频道成员相关数据接口
+ * 作为持久层操作，对数据库进行的一系列操作
+ * 
+ * @author zhangbo	2015年8月18日
+ *
+ */
 public interface OpChannelMemberMapper {
 
 	/**
@@ -18,19 +25,20 @@ public interface OpChannelMemberMapper {
 	/**
 	 * 修改频道成员
 	 * 
+	 * 可修改字段：
+	 * 		频道成员等级：degree	频道主：1，管理员：2，普通成员：0
+	 * 		频道成员是否被屏蔽：shield	屏蔽：1，未屏蔽：0 
+	 * 		频道成员是否为频道红人：channelStar	红人：1，非红人：0
+	 * 可使用条件：
+	 * 		频道成员表主键id：channelMemberId
+	 * 		频道id与用户id：channelId与userId联合确定一条
+	 * 		（三个参数允许同时传递，但使用其中一种条件即可）
+	 * 
 	 * @param memberDto
 	 * @author zhangbo 2015年8月17日
 	 */
 	@DataSource("master")
 	public void updateChannelMember(OpChannelMemberDto dto);
-
-	/**
-	 * 修改频道成员的等级
-	 * TODO 这个方法可以改掉， 废弃掉，让调用的地方直接进行更新频道成员的动作
-	 * @param dto
-	 */
-	@DataSource("master")
-	public void updateChannelMemberDegree(OpChannelMemberDto dto);
 
 	/**
 	 * 查询总数
@@ -80,7 +88,21 @@ public interface OpChannelMemberMapper {
 	public void insertChannelStar(OpChannelMemberDto dto);
 
 	/**
-	 * 更新频道红人相关信息， 频道红人id，channel_id，user_id保持不变 其他属性发生变化，此方法根据频道红人id，操作唯一一条数据，不通过channel_id与user_id联合确定唯一一条数据 频道成员表主键id与频道红人表主键id保持一致
+	 * 根据频道红人主键id，查询频道红人对象（不携带成员相关联的user信息）
+	 * 
+	 * @param id
+	 *            频道红人主键id
+	 * @return OpChannelMemberDto 频道成员数据传递对象（红人也属于频道成员，成员user相关信息为空）
+	 * @author zhangbo 2015年8月17日
+	 */
+	@DataSource("slave")
+	public OpChannelMemberDto queryChannelStarById(Integer id);
+	
+	/**
+	 * 更新频道红人相关信息
+	 * 频道红人id，channel_id，user_id保持不变 其他属性发生变化
+	 * 此方法根据频道红人id，操作唯一一条数据，不通过channel_id与user_id联合确定唯一一条数据 
+	 * 频道成员表主键id与频道红人表主键id保持一致
 	 * 
 	 * @param dto
 	 * @author zhangbo 2015年8月17日

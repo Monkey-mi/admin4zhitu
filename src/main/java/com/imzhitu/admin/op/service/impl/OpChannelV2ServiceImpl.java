@@ -104,8 +104,12 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setLastModifiedTime(now.getTime());
 
 		opChannelV2Mapper.insertOpChannel(dto);
-		// 新增频道的同时须将该频道拥有着关注该频道
-		channelMemberService.insertChannelMember(channelId, ownerId, Tag.TRUE);
+		
+		// 新增频道的同时须将该频道拥有者关注该频道
+		webChannelService.saveMember(channelId, ownerId);
+		
+		// 设置拥有者频道等级为owner，即1
+		channelMemberService.updateChannelMemberDegree(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
 	}
 
 	@Override
@@ -143,11 +147,11 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			if (list.get(0).getOwnerId() == ownerId) {
 				return;
 			}
-			//原拥有者degree设置为0
+			// 原拥有者degree设置为0
 			channelMemberService.updateChannelMemberDegree(channelId, list.get(0).getOwnerId(), Tag.CHANNEL_MEMBER_ROLE_NORMAL);
 			
-			//新增频道的同时须将该频道拥有着关注该频道
-			channelMemberService.insertChannelMember(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
+			// 现拥有者degree设置为1
+			channelMemberService.updateChannelMemberDegree(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
 		}
 	}
 
