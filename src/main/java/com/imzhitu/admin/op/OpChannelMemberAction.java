@@ -71,6 +71,10 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 		this.userId = userId;
 	}
 
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public void setUserStarId(Integer userStarId) {
 		this.userStarId = userStarId;
 	}
@@ -95,35 +99,13 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	 */
 	public String queryChannelMember() {
 		try {
-			// 若用户认证为空则证明，没有根据认证查询，所以用通用查询
-			channelMemberService.queryChannelMember(channelId, userId, userStarId, notified, shield, maxId, page, rows, jsonMap);
-			JSONUtil.optSuccess(jsonMap);
+			channelMemberService.buildChannelMemberList(channelId, userId, userName, userStarId, notified, shield, maxId, page, rows, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
 
-	/**
-	 * 通过用户名或用户Id查找频道成员
-	 * 
-	 * @return
-	 * @author zhangbo 2015年8月14日
-	 */
-	public String queryChannelMemberByUserNameOrId() {
-		try {
-			if ( userId != null) {
-				channelMemberService.queryChannelMemberByUserId(channelId, userId, jsonMap);
-			} else if ( userName != null ) {
-				channelMemberService.queryChannelMemberByUserName(channelId, userName, page, rows, jsonMap);
-			}
-			JSONUtil.optSuccess(jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
 	/**
 	 * 批量设置频道成员成为频道红人
 	 * @return

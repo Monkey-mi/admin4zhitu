@@ -23,48 +23,24 @@ public interface OpChannelMemberService extends BaseService {
 	 * @param dto
 	 */
 	public void updateChannelMemberDegree(Integer channelId, Integer userId, Integer degree) throws Exception;
-
+	
 	/**
 	 * 分页查询频道成员
 	 * 
-	 * @param channelId	频道id
-	 * @param userId	用户id
-	 * @param degree
+	 * @param channelId
+	 * @param userId
+	 * @param userName
 	 * @param userStarId
-	 * @param sheild
+	 * @param notified
+	 * @param shield
 	 * @param maxId
 	 * @param page
 	 * @param rows
 	 * @param jsonMap
 	 * @throws Exception
+	 * @author zhangbo	2015年8月18日
 	 */
-	public void queryChannelMember(Integer channelId, Integer userId, Integer userStarId, Integer notified, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception;
-
-	/**
-	 * 通过用户id查找频道成员
-	 * 
-	 * @param channelId	频道id
-	 * @param userId	用户id
-	 * @param page		page对应分页查询start
-     * @param rows		对应分页查询limit
-     * @param jsonMap	返回前台结果集
-     * 
-	 * @author zhangbo 2015年8月14日
-	 */
-	public void queryChannelMemberByUserId(Integer channelId, Integer userId, Map<String, Object> jsonMap) throws Exception;
-	
-	/**
-	 * 通过用户名查找频道成员
-	 * 
-	 * @param channelId	频道id
-	 * @param userName	用户名称 
-	 * @param page		page对应分页查询start
-     * @param rows		对应分页查询limit
-     * @param jsonMap	返回前台结果集
-     * 
-	 * @author zhangbo 2015年8月14日
-	 */
-	public void queryChannelMemberByUserName(Integer channelId, String userName, Integer page, Integer rows, Map<String, Object> jsonMap) throws Exception;
+	public void buildChannelMemberList(Integer channelId, Integer userId, String userName, Integer userStarId, Integer notified, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception;
 
 	/**
 	 * 保存频道红人， 频道红人来源与频道成员

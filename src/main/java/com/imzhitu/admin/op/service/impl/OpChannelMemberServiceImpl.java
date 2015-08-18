@@ -100,10 +100,11 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	}
 
 	@Override
-	public void queryChannelMember(Integer channelId, Integer userId, Integer userStarId, Integer notified, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception {
+	public void buildChannelMemberList(Integer channelId, Integer userId, String userName, Integer userStarId, Integer notified, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception {
 		OpChannelMemberDto dto = new OpChannelMemberDto();
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
+		dto.setUserName(userName);
 		dto.setStar(userStarId);
 		dto.setNotified(notified);
 		dto.setShield(shield);
@@ -130,43 +131,6 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	}
 
 	@Override
-	public void queryChannelMemberByUserId(Integer channelId, Integer userId,  Map<String, Object> jsonMap) throws Exception {
-		/* 
-		 * 由于只根据用户id查询，所以达人类型：userStarId，通知：notified，屏蔽：shield，都设置为空，maxId也设置为0，重新查询
-		 * 由于用户id只能查出唯一一条数据，所以分页传递的参数为默认的，page：1，row：10
-		 */
-		queryChannelMember(channelId, userId, null, null, null, 0, 1, 10, jsonMap);
-	}
-	
-	@Override
-	public void queryChannelMemberByUserName(Integer channelId, String userName, Integer page, Integer rows, Map<String, Object> jsonMap) throws Exception {
-		OpChannelMemberDto dto = new OpChannelMemberDto();
-		dto.setChannelId(channelId);
-		dto.setUserName(userName);
-
-		buildNumberDtos(dto, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelMemberDto>() {
-			@Override
-			public long queryTotal(OpChannelMemberDto dto) {
-				return channelMemberMapper.queryChannelMemberTotalCount(dto);
-			}
-
-			@Override
-			public List<? extends AbstractNumberDto> queryList(OpChannelMemberDto dto) {
-				return channelMemberMapper.queryChannelMember(dto);
-			}
-		}, new NumberDtoListMaxIdAdapter() {
-
-			@Override
-			public Serializable getMaxId(List<? extends Serializable> list) throws Exception {
-				return channelMemberMapper.getChannelMemberMaxId();
-			}
-
-		});
-
-		
-	}
-
-	@Override
 	public void saveChannelStar(Integer channelMemberId) {
 		OpChannelMemberDto memberDto = channelMemberMapper.queryChannelMemberById(channelMemberId);
 		
@@ -179,7 +143,6 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 			memberDto.setChannelStar(1);
 			channelMemberMapper.updateChannelMember(memberDto);
 		}
-		
 	}
 
 	@Override
