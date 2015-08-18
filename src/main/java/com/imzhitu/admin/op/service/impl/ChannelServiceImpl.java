@@ -52,9 +52,9 @@ import com.imzhitu.admin.op.service.OpChannelUserService;
 public class ChannelServiceImpl extends BaseServiceImpl implements
 		ChannelService {
 
-	private static final String CHANNEL_STAR_MSG_HEAD = "，恭喜！你被推荐为";
+	private static final String CHANNEL_STAR_MSG_HEAD = "，恭喜！你被推荐为";	// TODO 这些已经移植到了频道成员相关操作中了
 	
-	private static final String CHANNEL_STAR_MSG_FOOT =  "频道的红人啦！继续发光发亮哟，么么哒！";
+	private static final String CHANNEL_STAR_MSG_FOOT =  "频道的红人啦！继续发光发亮哟，么么哒！";	// TODO 这些已经移植到了频道成员相关操作中了
 	
 	private static final String CHANNEL_WORLD_MSG_HEAD = "，恭喜！由于你的织图棒棒的，入选";
 	

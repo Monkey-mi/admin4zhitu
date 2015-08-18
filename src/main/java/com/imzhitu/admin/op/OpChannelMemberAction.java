@@ -171,15 +171,17 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	}
 	
 	/**
-	 * 批量通知频道成员成为频道红人
+	 * 批量推送消息给频道红人，通知其成为频道红人
 	 * 
 	 * @return
 	 * @author zhangbo	2015年8月17日
 	 */
 	public String addStarsRecommendMsg() {
 		try {
-			Integer[] channelMemberIds = StringUtil.convertStringToIds(ids);
-			channelMemberService.deleteChannelStars(channelMemberIds);
+			Integer[] channelStarIds = StringUtil.convertStringToIds(ids);
+			for (Integer channelStarId : channelStarIds) {
+				channelMemberService.addStarRecommendMsg(channelStarId);
+			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

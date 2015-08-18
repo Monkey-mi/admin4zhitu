@@ -4,12 +4,19 @@ import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
 
+/**
+ * 频道成员相关操作的业务接口
+ * 包括对频道成员的CRUD，与频道红人的CRUD及消息推送等操作
+ * 
+ * @author zhangbo	2015年8月18日
+ *
+ */
 public interface OpChannelMemberService extends BaseService {
 	
 	/**
 	 * 修改频道成员等级
-	 * 
 	 * 成员等级分为：群主：1，管理员：2，普通成员：0
+	 * 
 	 * 这个接口目前只被频道更换群主时调用
 	 * 但是以后可能开放出来给运营，让运营直接操作成员的等级
 	 * 
@@ -62,5 +69,13 @@ public interface OpChannelMemberService extends BaseService {
 	 * @author zhangbo	2015年8月17日
 	 */
 	public void deleteChannelStars(Integer[] channelMemberIds) throws Exception;
+
+	/**
+	 * 推送消息给频道红人，通知其成为频道红人
+	 * 
+	 * @param channelStarId	频道红人表主键id
+	 * @author zhangbo	2015年8月18日
+	 */
+	public void addStarRecommendMsg(Integer channelStarIds) throws Exception;
 
 }

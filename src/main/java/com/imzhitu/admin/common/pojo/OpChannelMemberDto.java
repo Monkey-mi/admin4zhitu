@@ -5,7 +5,10 @@ import java.io.Serializable;
 import com.hts.web.base.constant.Tag;
 
 /**
- * 频道成员数据传输对象 继承与userInfo，可携带成员user相关联信息 此DTO其中包含了频道红人信息
+ * 频道成员数据传输对象 
+ * 继承与userInfo，可携带成员user相关联信息 
+ * 此DTO其中包含了频道红人信息
+ * 频道红人信息是从频道成员中冗余出来的，为的是方便查询，及单独操作更符合红人性质的特性
  * 
  * @author zhangbo 2015年8月17日
  *
@@ -19,6 +22,8 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 
 	/**
 	 * 频道成员表主键id
+	 * 频道红人表主键与频道成员表主键一致，相同频道中的相同订阅人员（或为红人）
+	 * 两张表用相同的id
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
@@ -59,14 +64,14 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer notified = 0;
+	private Integer notified = Tag.FALSE;
 
 	/**
 	 * 是否屏蔽 不屏蔽：0，屏蔽：1
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer shield = 0;
+	private Integer shield = Tag.FALSE;
 
 	/**
 	 * 序号，用于排序，序号根据特定sequence流水而来
@@ -81,7 +86,7 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 	 * 
 	 * @author zhangbo 2015年8月17日
 	 */
-	private Integer channelStar = 0;
+	private Integer channelStar = Tag.FALSE;
 
 	/**
 	 * @return the channelMemberId
