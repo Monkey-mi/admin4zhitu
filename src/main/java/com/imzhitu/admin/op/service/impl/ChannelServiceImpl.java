@@ -26,6 +26,7 @@ import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannel;
 import com.imzhitu.admin.common.pojo.OpChannelNameDto;
 import com.imzhitu.admin.common.pojo.OpChannelStar;
@@ -711,7 +712,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, recipientId, channelName, String.valueOf(channelId), null, 0);
 			
 			// 更新推送标记
@@ -719,7 +720,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			channelStarMapper.update(star);
 			
 			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
@@ -756,7 +757,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(tipHead);
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, recipientId, null, null, null, 0);
 			
 			// 更新推送标记
@@ -764,7 +765,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			channelTopOneMapper.update(topOne);
 			
 			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
@@ -803,7 +804,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
 			
 			// 更新推送标记
@@ -811,7 +812,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			channelWorldMapper.update(world);
 			
 			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
@@ -843,7 +844,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
 			
 			// 更新推送标记
@@ -851,7 +852,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			channelWorldMapper.update(world);
 			
 			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {

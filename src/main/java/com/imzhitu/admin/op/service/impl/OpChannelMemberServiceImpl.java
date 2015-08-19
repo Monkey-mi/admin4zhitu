@@ -183,7 +183,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 			updateChannelStarNotified(channelStarId, Tag.TRUE);
 
 			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 
 				@Override
 				public void onPushFailed(Exception e) {

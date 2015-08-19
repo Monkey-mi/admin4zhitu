@@ -29,13 +29,13 @@ import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpActivityLogoDto;
 import com.imzhitu.admin.common.pojo.OpActivityWorldCheckDto;
 import com.imzhitu.admin.common.pojo.OpActivityWorldDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.interact.service.InteractActiveOperatedService;
 import com.imzhitu.admin.op.dao.ActivityAwardDao;
-import com.imzhitu.admin.op.dao.ActivityCacheDao;
 import com.imzhitu.admin.op.dao.ActivityDao;
 import com.imzhitu.admin.op.dao.ActivityLogoCacheDao;
 import com.imzhitu.admin.op.dao.ActivityLogoDao;
@@ -44,12 +44,10 @@ import com.imzhitu.admin.op.dao.ActivityStarCacheDao;
 import com.imzhitu.admin.op.dao.ActivityWinnerDao;
 import com.imzhitu.admin.op.dao.ActivityWorldDao;
 import com.imzhitu.admin.op.dao.OpWorldTypeCacheDao;
-import com.imzhitu.admin.op.dao.SquarePushTopicDao;
 import com.imzhitu.admin.op.service.OpService;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
-import com.imzhitu.admin.ztworld.service.ZTWorldService;
 
 @Service
 public class OpServiceImpl extends BaseServiceImpl
@@ -63,9 +61,6 @@ public class OpServiceImpl extends BaseServiceImpl
 	public static final String ACTIVITY_TIP_REJECT_HEAD = "您的织图不符合活动#";
 	
 	public static final String ACTIVITY_TIP_REJECT_FOOT = "#,很抱歉";
-	
-	/** 织图官方账号id */
-	public static final Integer ZHITU_UID = 2063; // TODO 目前这个已经移植到ADMIN常量类中， 后续的调用要整改掉
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
@@ -86,22 +81,13 @@ public class OpServiceImpl extends BaseServiceImpl
 	private com.hts.web.userinfo.service.UserInfoService webUserInfoService;
 	
 	@Autowired
-	private SquarePushTopicDao squarePushTopicDao;
-	
-	@Autowired
 	private ActivityDao activityDao;
-	
-	@Autowired
-	private ActivityCacheDao activityCacheDao;
 	
 	@Autowired
 	private ActivityWorldDao activityWorldDao;
 	
 	@Autowired
 	private com.hts.web.operations.dao.ActivityCacheDao webActivityCacheDao;
-	
-	@Autowired
-	private ZTWorldService worldService;
 	
 	@Autowired
 	private HTWorldDao worldDao;
@@ -381,17 +367,17 @@ public class OpServiceImpl extends BaseServiceImpl
 	@Override
 	public void addActivityWorldCheckMsg(Integer activityId, Integer worldId, 
 			Integer recipientId, String recipientName, String msg) throws Exception {
-		Integer msgId = webUserMsgService.getValidMessageId(ZHITU_UID, recipientId, 
+		Integer msgId = webUserMsgService.getValidMessageId(Admin.ZHITU_UID, recipientId, 
 				Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY, worldId, String.valueOf(activityId));
 		if(msgId == null) {
 			String tip = recipientName + "," + msg;
 			String shortTip = PushUtil.getShortName(recipientName) + "," + PushUtil.getShortTip(msg);
 			HTWorld world = webWorldDao.queryWorldById(worldId);
-			webUserMsgService.saveSysMsg(ZHITU_UID, recipientId, tip, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, tip, 
 					Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY, worldId, null,
 					String.valueOf(activityId), world.getTitleThumbPath(), 0);
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
-			pushService.pushSysMessage(shortTip, ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY,
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY,
 					new PushFailedCallback() {
 
 				@Override
