@@ -399,23 +399,6 @@
   		</property>
 	</bean>
 	
-	<!-- 频道红人 定时更新任务 -->
-	<bean id="updateChannelStarJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject">
-			<ref bean="channelService"/>
-		</property>
-		<property name="targetMethod">
-			<value>updateChannelStar</value>
-		</property>
-	</bean>
-	<bean id="updateChannelStarTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-		<property name="jobDetail">
-			<ref bean="updateChannelStarJob"/>
-		</property>
-		<property name="cronExpression">
-  			<value>13 12 5 1/2 * ?</value><!-- 每三天的凌晨4:12:13执行 -->
-  		</property>
-	</bean>
 	
 	<!-- 频道织图定时更新 -->
 	<bean id="updateChannelWorldSchedulaJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -640,7 +623,6 @@
                 <ref bean="updateTypeWorldSchedulaTrigger" /> 
                 <ref bean="scanResponseAndGetAnswerTrigger" />
                 <ref bean="updateTopOneTrigger"/>
-                <ref bean="updateChannelStarTrigger"/>
                 <ref bean="updateChannelWorldSchedulaTrigger"/>
                 <ref bean="autoAddStarWorldTrigger"/>
                 <ref bean="autoResponseSchedulaTrigger"/>
