@@ -636,7 +636,7 @@ function relatedChannelEdit(channelId){
  * 更新频道加精操作
  */
 function updateChannelSuperbOp(channelId,superb) {
-	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,superb:superb}, function(result){
+	$.post("./admin_op/v2channel_updateOpChannelSuperb",{channelId:channelId,superb:superb}, function(result){
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
@@ -672,7 +672,7 @@ function updateChannelTopOp(channelId,top) {
  * 更新频道有效性操作
  */
 function updateChannelValidOp(channelId,valid) {
-	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,valid:valid}, function(result){
+	$.post("./admin_op/v2channel_updateOpChannelValid",{channelId:channelId,valid:valid}, function(result){
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
@@ -685,7 +685,7 @@ function updateChannelValidOp(channelId,valid) {
  * 更新频道是否有弹幕操作
  */
 function updateChannelDanmuOp(channelId,danmu) {
-	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,danmu:danmu}, function(result){
+	$.post("./admin_op/v2channel_updateOpChannelDanmu",{channelId:channelId,danmu:danmu}, function(result){
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
@@ -698,7 +698,7 @@ function updateChannelDanmuOp(channelId,danmu) {
  * 更新频道是否有心情操作
  */
 function updateChannelMoodOp(channelId,moodFlag) {
-	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,moodFlag:moodFlag}, function(result){
+	$.post("./admin_op/v2channel_updateOpChannelMoodFlag",{channelId:channelId,moodFlag:moodFlag}, function(result){
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {
@@ -711,7 +711,7 @@ function updateChannelMoodOp(channelId,moodFlag) {
  * 更新频道是否有织图操作
  */
 function updateChannelWorldOp(channelId,worldFlag) {
-	$.post("./admin_op/v2channel_updateOpChannel",{channelId:channelId,worldFlag:worldFlag}, function(result){
+	$.post("./admin_op/v2channel_updateOpChannelWorldFlag",{channelId:channelId,worldFlag:worldFlag}, function(result){
 		if(result['result'] == 0) {
 			$("#htm_table").datagrid("reload");
 		} else {

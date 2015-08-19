@@ -93,6 +93,21 @@
 			<if test="themeId != null">
 				theme_id = #{themeId}
 			</if>
+			<if test="superb != null">
+				superb = #{superb}
+			</if>
+			<if test="valid != null">
+				valid = #{valid}
+			</if>
+			<if test="danmu != null">
+				danmu = #{danmu}
+			</if>
+			<if test="moodFlag != null">
+				mood = #{moodFlag}
+			</if>
+			<if test="worldFlag != null">
+				world = #{worldFlag}
+			</if>
 		</set>
 		where id = #{channelId}
 	</update>
