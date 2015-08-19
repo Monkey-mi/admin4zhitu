@@ -37,7 +37,7 @@
 
 	// 数据装载请求地址
 	loadDataURL = "./admin_op/channelmember_queryChannelMember";
-	addRecommendMsgURL = "./admin_op/channel_addStarRecommendMsgs",
+	addRecommendMsgURL = "./admin_op/channelmember_addChannelStarsRecommendMsg";
 	// 在封装的方法中缺少指定的字段造成Ui渲染不出来
  	myIdField = "channelMemberId";
 	recordIdKey = "channelMemberId";
@@ -381,12 +381,12 @@
   
   <div id="tb" style="padding: 5px; height: auto" class="none"> 
   		<a href="javascript:void(0);" onclick="javascript:addOrDelete(1);" class="easyui-linkbutton" title="批量添加" plain="true" iconcls="icon-ok">批量添加</a> 
-	  	<a href="javascript:void(0);" onclick="javascript:addOrDelete(0);" class="easyui-linkbutton" title="批量刪除" plain="true" iconcls="icon-ok">批量删除</a> 
+	  	<a href="javascript:void(0);" onclick="javascript:addOrDelete(0);" class="easyui-linkbutton" title="批量刪除" plain="true" iconcls="icon-ok">批量删除红人</a> 
 	  	<a href="javascript:void(0);" onclick="javascript:addChannelStarsRecommendMsg();" class="easyui-linkbutton" title="批量通知" plain="true" iconcls="icon-ok">批量通知</a> 
 	  	<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconcls="icon-converter" id="reIndexedBtn">重新排序</a> 
-	  	<input id="ss-verifyId" value="所有认证类型" style="width: 100px" /> 
-	  	<select id="ss-notified" class="easyui-combobox" style="width: 100px;"> 
-	   		<option value="">所有通知状态</option>
+	  	<input id="ss-verifyId"  style="width: 100px" /> 
+	  	<select id="ss-notified" class="easyui-combobox"  style="width: 100px;"> 
+	   		<option value="">所有通知状态(只针对红人)</option>
 	   		<option value="0">未通知</option>
 	   		<option value="1">已通知</option>
 	   	</select> 
