@@ -903,6 +903,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			Map<String, Object> jsonMap) throws Exception {
 		final OpChannel channel = new OpChannel();
 		channel.setMaxId(maxId);
+		channel.setValid(Tag.TRUE); // 只查询有效频道
 		if(!StringUtil.checkIsNULL(query)) {
 			try {
 				Integer id = Integer.parseInt(query);

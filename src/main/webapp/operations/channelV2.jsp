@@ -15,6 +15,7 @@
 var maxId = 0;
 
 	init = function() {
+		myQueryParams.valid = 1;
 		loadPageData(initPage);
 	};
 	hideIdColumn = false;
@@ -735,7 +736,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
 			<span class="search_label">有效性过滤：</span>
 			<select id="ss_valid" class="easyui-combobox" style="width:80px;">
 	   			<option value="">所有状态</option>
-	   			<option value="1">生效</option>
+	   			<option value="1" selected>生效</option>
 	   			<option value="0">未生效</option>
    			</select>
    			<span class="search_label">加精过滤：</span>
