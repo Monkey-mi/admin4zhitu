@@ -214,8 +214,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 		for (Integer channelStarId : channelStarIds) {
 			OpChannelMemberDto dto = new OpChannelMemberDto();
 			dto.setChannelMemberId(channelStarId);
-			// FIXME 合并以后调用的天杰提供的接口
-			dto.setSerial(0);
+			dto.setSerial(com.hts.web.common.service.impl.KeyGenServiceImpl.OP_CHANNEL_STAR_SERIAL);
 			channelMemberMapper.updateChannelStar(dto);
 		}
 	}
