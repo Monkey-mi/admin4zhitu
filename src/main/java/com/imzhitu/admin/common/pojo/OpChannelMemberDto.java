@@ -52,7 +52,7 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 	private Long subTime;
 
 	/**
-	 * 用户在频道当中的等级 成员等级分为：群主：0，管理员：1，普通成员：2
+	 * 用户在频道当中的等级 成员等级分为：普通成员：0，频道主：1，管理员：2
 	 * 频道成员等级设置默认级别为普通成员
 	 * 
 	 * @author zhangbo 2015年8月14日
