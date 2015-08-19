@@ -8,6 +8,7 @@
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
 		<result column="sub_time" property="subTime" jdbcType="BIGINT" />
 		<result column="degree" property="degree" jdbcType="INTEGER" />
+		<result column="notified" property="notified" jdbcType="INTEGER" />
 		<result column="shield" property="shield" jdbcType="INTEGER" />
 		<result column="channel_star" property="channelStar" jdbcType="INTEGER" />
 		
@@ -38,10 +39,10 @@
 			hts.operations_channel_member
 		<set>
 			<if test="degree != null">
-				degree = #{degree}
+				degree = #{degree},
 			</if>
 			<if test="shield != null">
-				shield = #{shield}
+				shield = #{shield},
 			</if>
 			<if test="channelStar != null">
 				channel_star = #{channelStar}
@@ -49,7 +50,7 @@
 		</set> 
 		<where>
 			<if test="id != null">
-				id = #{id}
+				id = #{channelMemberId}
 			</if>
 			<if test="userId != null and channelId != null">
 				and user_id = #{userId} and channel_id = #{channelId}
@@ -57,19 +58,6 @@
 		</where>
 	</update>
 	
-	<!-- 修改频道成员的等级 -->
-	<update id="updateChannelMemberDegree">
-		update hts.operations_channel_member set degree = #{degree}
-		<where>
-			<if test="id != null">
-				id = #{id}
-			</if>
-			<if test="userId != null and channelId != null">
-				and user_id = #{userId} and channel_id = #{channelId}
-			</if>
-		</where>
-	</update>
-
 	<!-- 有输入条件的分页查询 -->
 	<select id="queryChannelMember" resultMap="ChannelMemberMap">
 		select
@@ -80,6 +68,7 @@
 			cms.degree,
 			cms.shield,
 			cms.channel_star,
+			cms.notified,
 			u.user_name,
 			u.user_avatar,
 			u.sex,
@@ -105,6 +94,9 @@
 				<if test="shield != null">
 					and ocm.shield = #{shield}
 				</if>
+				<if test="notified != null">
+					and ocs.notified = #{notified}
+				</if>
 				<if test="maxId != null and maxId != 0">
 					<![CDATA[ and ocm.id <= #{maxId} ]]>
 				</if>
@@ -112,16 +104,27 @@
 			order by ocs.serial desc, ocm.id desc
 			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" />
 			) as cms, hts.user_info u
-		where
-		cms.user_id = u.id;
+		<where>
+			<if test="star != null">
+				u.star = #{star}
+			</if>
+			<if test="userName != null">
+				and u.user_name like CONCAT('%',#{userName},'%')
+			</if>
+			and cms.user_id = u.id
+		</where>
 	</select>
 
 	<!-- 有输入条件的查询总数 -->
 	<select id="queryChannelMemberTotalCount" resultType="long">
-		select count(*) from hts.operations_channel_member ocm
+		select 
+			count(*) 
+		from 
+			hts.operations_channel_member ocm,
+			hts.user_info u
 		<where>
 			<if test="channelId != null">
-				and ocm.channel_id = #{channelId}
+				ocm.channel_id = #{channelId}
 			</if>
 			<if test="userId != null">
 				and ocm.user_id = #{userId}
@@ -129,16 +132,38 @@
 			<if test="shield != null">
 				and ocm.shield = #{shield}
 			</if>
+			<if test="userName != null">
+				and u.user_name like CONCAT('%',#{userName},'%')
+			</if>
 			<if test="maxId != null and maxId != 0">
 				<![CDATA[ and ocm.id <= #{maxId} ]]>
 			</if>
+			and ocm.user_id = u.id
 		</where>
 	</select>
 
 	<!-- 查询频道成员当前最大id -->
 	<select id="getChannelMemberMaxId" resultType="long">
-		select max(id)
-		from hts.operations_channel_member
+		select 
+			max(id)
+		from 
+			hts.operations_channel_member
+	</select>
+	
+	<!-- 根据频道成员主键id，查询频道成员对象（不携带成员相关联的user信息） -->
+	<select id="queryChannelMemberById" resultMap="ChannelMemberMap">
+		select 
+			ocm.id as channel_member_id,
+			ocm.channel_id,
+			ocm.user_id,
+			ocm.sub_time,
+			ocm.degree,
+			ocm.shield,
+			ocm.channel_star
+		from 
+			hts.operations_channel_member ocm
+		where 
+			ocm.id = #{channelMemberId} 
 	</select>
 	
 	<!-- 查询频道成员当前最大id -->
@@ -161,8 +186,22 @@
 		insert hts.operations_channel_star
 			(id, channel_id, user_id, notified, serial)
 		values
-			(#{channelMemberId}, #{channelId}, #{userId}, #{notified},#{serial})
+			(#{channelMemberId}, #{channelId}, #{userId}, #{notified}, #{serial})
 	</insert>
+	
+	<!-- 根据频道红人主键id，查询频道红人对象（不携带成员相关联的user信息） -->
+	<select id="queryChannelStarById" resultMap="ChannelMemberMap">
+		select 
+			ocs.id as channel_member_id,
+			ocs.channel_id,
+			ocs.user_id,
+			ocs.notified,
+			ocs.serial
+		from 
+			hts.operations_channel_star ocs
+		where 
+			ocs.id = #{channelMemberId} 
+	</select>
 	
 	<!-- 修改频道红人 -->
 	<update id="updateChannelStar">
@@ -180,11 +219,14 @@
 	
 	<!-- 批量删除频道红人，根据频道红人id集合 -->
 	<delete id="deleteChannelStarByIds">
-		delete from hts.operations_channel_star where id in
-		<foreach item="item" index="index" collection="array"
-	    	open="(" separator="," close=")">
-	       		#{item}
-	 	</foreach>
+		delete from 
+			hts.operations_channel_star 
+		where 
+			id in
+			<foreach item="item" index="index" collection="array"
+		    	open="(" separator="," close=")">
+		       		#{item}
+		 	</foreach>
 	</delete>
 	
 </mapper>

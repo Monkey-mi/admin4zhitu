@@ -134,7 +134,7 @@ public class OpMsgStartpageAction extends BaseCRUDAction{
 	
 	public String updateMsgStartpageCache(){
 		try{
-			startpageService.updateMsgStartpageCache(idsStr);
+			startpageService.updateMsgStartpageCache(idsStr,getCurrentLoginUserId());
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

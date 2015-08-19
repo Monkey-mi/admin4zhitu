@@ -13,7 +13,9 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.dao.StartPageCacheDao;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpMsgStartpage;
+import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.op.mapper.OpMsgStartpageMapper;
 import com.imzhitu.admin.op.service.OpMsgStartpageService;
 
@@ -25,12 +27,16 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 	
 	@Autowired
 	private StartPageCacheDao startpageCacheDao;
+	
+	@Autowired
+	private KeyGenService keyGenService;
 
 	@Override
 	public void insertMsgStartpage(String linkPath, Integer linkType,
 			String link, Date beginDate, Date endDate, Integer operator)
 			throws Exception {
 		// TODO Auto-generated method stub
+		Integer serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_START_PAGE_SERIAL);
 		OpMsgStartpage dto = new OpMsgStartpage();
 		Date now = new Date();
 		dto.setAddDate(now);
@@ -42,6 +48,7 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 		dto.setLinkType(linkType);
 		dto.setOperator(operator);
 		dto.setValid(Tag.FALSE);
+		dto.setSerial(serial);
 		startpageMapper.insertMsgStartpage(dto);
 	}
 
@@ -113,7 +120,7 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 		if(total > 0){
 			list = startpageMapper.queryMsgStartpage(dto);
 			if(list != null && list.size() > 0){
-				reMaxId = list.get(0).getId();
+				reMaxId = list.get(0).getSerial();
 			}
 		}
 		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
@@ -150,7 +157,8 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 	}
 
 	@Override
-	public void updateMsgStartpageCache(String idsStr) throws Exception {
+	public void updateMsgStartpageCache(String idsStr,Integer operator) throws Exception {
+		Date now = new Date();
 		if(idsStr == null || idsStr.trim().equals("")){
 			startpageCacheDao.updateStartPage(new ArrayList<com.hts.web.common.pojo.OpMsgStartPage>());
 			return;
@@ -160,6 +168,8 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 		List<com.hts.web.common.pojo.OpMsgStartPage> webStarpageList = new ArrayList<com.hts.web.common.pojo.OpMsgStartPage>();
 		
 		for(int i=0; i < ids.length; i++){
+			
+			//排序
 			for(int j=0; j < list.size(); j++){
 				if(ids[i] == list.get(j).getId()){
 					OpMsgStartpage dto = list.get(j);
@@ -175,11 +185,20 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 					break;
 				}
 			}
+			
+			//更新排序
+			Integer serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_START_PAGE_SERIAL);
+			OpMsgStartpage startpage = new OpMsgStartpage();
+			startpage.setLastModified(now);
+			startpage.setSerial(serial);
+			startpage.setOperator(operator);
+			startpage.setId(ids[ids.length - i - 1]);
+			startpageMapper.updateMsgStartpage(startpage);
 		}
 		
 		if(webStarpageList.size() > 0){
 			startpageCacheDao.updateStartPage(webStarpageList);
-			startpageMapper.batchUpdateMsgStartpageLastModified(ids);
+//			startpageMapper.batchUpdateMsgStartpageLastModified(ids);
 		}else{
 			throw new Exception("update 0 rows.reason: no data for update!");
 		}

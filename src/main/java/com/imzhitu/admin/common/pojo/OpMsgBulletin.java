@@ -19,6 +19,7 @@ public class OpMsgBulletin extends AbstractNumberDto{
 	private Integer valid;
 	private String bulletinName;
 	private String bulletinThumb;
+	private Integer serial;
 	
 	public String getBulletinName() {
 		return bulletinName;
@@ -90,5 +91,11 @@ public class OpMsgBulletin extends AbstractNumberDto{
 	}
 	public void setValid(Integer valid) {
 		this.valid = valid;
+	}
+	public Integer getSerial() {
+		return serial;
+	}
+	public void setSerial(Integer serial) {
+		this.serial = serial;
 	}
 }

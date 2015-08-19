@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.common.util.JSONUtil;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.op.service.OpChannelMemberService;
 
@@ -12,13 +13,6 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 
 	@Autowired
 	private OpChannelMemberService channelMemberService;
-
-	/**
-	 * 被操作的id
-	 * 
-	 * @author zhangbo 2015年8月14日
-	 */
-	private Integer id;
 
 	/**
 	 * 频道id
@@ -33,13 +27,13 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	 * @author zhangbo 2015年8月14日
 	 */
 	private Integer userId;
-
+	
 	/**
-	 * 用户等级
+	 * 用户名称
 	 * 
-	 * @author zhangbo 2015年8月14日
+	 * @author zhangbo	2015年8月18日
 	 */
-	private Integer degree;
+	private String userName;
 
 	/**
 	 * 达人认证的id
@@ -69,10 +63,6 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	 */
 	private String ids;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public void setChannelId(Integer channelId) {
 		this.channelId = channelId;
 	}
@@ -81,8 +71,8 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 		this.userId = userId;
 	}
 
-	public void setDegree(Integer degree) {
-		this.degree = degree;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public void setUserStarId(Integer userStarId) {
@@ -109,9 +99,7 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	 */
 	public String queryChannelMember() {
 		try {
-			// 若用户认证为空则证明，没有根据认证查询，所以用通用查询
-			channelMemberService.queryChannelMember(channelId, userId, userStarId, shield, maxId, page, rows, jsonMap);
-			JSONUtil.optSuccess(jsonMap);
+			channelMemberService.buildChannelMemberList(channelId, userId, userName, userStarId, notified, shield, maxId, page, rows, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -119,19 +107,79 @@ public class OpChannelMemberAction extends BaseCRUDAction {
 	}
 
 	/**
-	 * 通过用户名查找频道成员
-	 * 
+	 * 批量设置频道成员成为频道红人
 	 * @return
-	 * @author zhangbo 2015年8月14日
+	 * @author zhangbo	2015年8月17日
 	 */
-	public String queryChannelMemberByUserName() {
+	public String addMembersToStar() {
 		try {
-			channelMemberService.queryChannelMemberByUserName(channelId, userId, page, rows, jsonMap);
+			Integer[] channelMemberIds = StringUtil.convertStringToIds(ids);
+			for (Integer channelMemberId : channelMemberIds) {
+				channelMemberService.saveChannelStar(channelMemberId);
+			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
-
+	
+	/**
+	 * 批量删除频道红人
+	 * 
+	 * @return
+	 * @author zhangbo	2015年8月17日
+	 */
+	public String deleteChannelStars() {
+		try {
+			Integer[] channelMemberIds = StringUtil.convertStringToIds(ids);
+			channelMemberService.deleteChannelStars(channelMemberIds);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 批量推送消息给频道红人，通知其成为频道红人
+	 * 
+	 * @return
+	 * @author zhangbo	2015年8月17日
+	 */
+	public String addChannelStarsRecommendMsg() {
+		try {
+			Integer[] channelStarIds = StringUtil.convertStringToIds(ids);
+			for (Integer channelStarId : channelStarIds) {
+				channelMemberService.addStarRecommendMsg(channelStarId);
+			}
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 对频道红人进行重新排序
+	 * 
+	 * @return
+	 * @author zhangbo	2015年8月18日
+	 */
+	public String serialChannelStars() {
+		try {
+			// 转化从前台来的参数
+			String[] channelStarIds = request.getParameterValues("reIndexId");
+			Integer[] csIds = new Integer[channelStarIds.length];
+			for (int i = 0; i < channelStarIds.length; i++) {
+				csIds[i] = Integer.valueOf(channelStarIds[i]);
+			}
+			channelMemberService.serialChannelStars(csIds);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 }

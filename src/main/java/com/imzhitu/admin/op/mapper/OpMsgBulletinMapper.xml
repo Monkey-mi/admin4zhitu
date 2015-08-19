@@ -13,14 +13,16 @@
 		<result property="valid" column="valid" jdbcType="INTEGER"/>
 		<result property="bulletinName" column="name" jdbcType="VARCHAR"/>
 		<result property="bulletinThumb" column="thumb" jdbcType="VARCHAR"/>
+		<result property="serial" column="serial" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<!-- INSERT -->
 	<insert id="insertMsgBulletin">
 		insert into hts_admin.op_msg_bulletin
-			(path,type,link,operator,date_add,date_modify,valid,name,thumb)
+			(path,type,link,operator,date_add,date_modify,valid,name,thumb,serial)
 		values
-			(#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{valid},#{name},#{thumb})
+			(#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},
+			#{modifyDate,jdbcType=TIMESTAMP},#{valid},#{bulletinName},#{bulletinThumb},#{serial})
 	</insert>
 	
 	<!-- BATCHDELETE -->
@@ -42,6 +44,7 @@
 			<if test="valid != null">valid = #{valid},</if>
 			<if test="bulletinName !=null">name = #{bulletinName},</if>
 			<if test="bulletinThumb != null"> thumb = #{bulletinThumb},</if>
+			<if test="serial != null"> serial = #{serial},</if>
 			date_modify = #{modifyDate,jdbcType=TIMESTAMP},
 			operator = #{operator}
 		</set>
@@ -77,7 +80,7 @@
 				<![CDATA[and omb.id <= #{maxId}]]>
 			</if>
 		</where>
-		order by omb.id desc
+		order by omb.serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	

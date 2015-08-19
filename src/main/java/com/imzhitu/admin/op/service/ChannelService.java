@@ -26,7 +26,7 @@ public interface ChannelService extends BaseService {
 
 	/**
 	 * 更新频道明星缓存
-	 * 
+	 * TODO 这个功能目前没有用了
 	 * @param star
 	 * @throws Exception
 	 */
@@ -126,7 +126,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 构建频道明星列表
-	 *  
+	 *  TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param star
 	 * @param page
 	 * @param rows
@@ -138,7 +138,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 更新频道明星
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param star
 	 * @throws Exception
 	 */
@@ -146,7 +146,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 保存频道明星
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param star
 	 * @throws Exception
 	 */
@@ -154,7 +154,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 批量删除频道明星
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param idsStr
 	 * @throws Exception
 	 */
@@ -162,7 +162,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 增加频道明星id
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param channelId
 	 * @param uidStrs
 	 * @throws Exception
@@ -172,7 +172,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 添加频道明星id
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param channelId
 	 * @param uid
 	 * @throws Exception
@@ -181,7 +181,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 批量更新频道明星有效标记
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param idsStr
 	 * @param valid
 	 * @throws Exception
@@ -190,7 +190,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 更新明星权重
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param id
 	 * @param isAdd
 	 * @throws Exception
@@ -199,7 +199,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 添加频道明星推荐消息
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param id
 	 * @throws Exception
 	 */
@@ -207,7 +207,7 @@ public interface ChannelService extends BaseService {
 	
 	/**
 	 * 批量添加明星推荐消息
-	 * 
+	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
 	 * @param idsStr
 	 * @throws Exception
 	 */

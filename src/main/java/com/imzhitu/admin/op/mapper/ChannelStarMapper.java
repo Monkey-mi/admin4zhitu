@@ -57,7 +57,7 @@ public interface ChannelStarMapper {
 	
 	/**
 	 * 保存频道明星
-	 * 
+	 * TODO 待整个channelMember开发完成后，这个方法可以废除掉
 	 * @param star
 	 */
 	@DataSource("master")
@@ -116,7 +116,7 @@ public interface ChannelStarMapper {
 	
 	/**
 	 * 根据频道查询明星
-	 * 
+	 *  TODO 已经移植到channelMember的相关操作中了
 	 * @param channelId
 	 * @param userId
 	 * @return
