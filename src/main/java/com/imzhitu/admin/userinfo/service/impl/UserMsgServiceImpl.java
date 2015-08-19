@@ -18,14 +18,13 @@ import com.hts.web.common.pojo.UserMsgDto;
 import com.hts.web.common.pojo.UserMsgRecipientDto;
 import com.hts.web.common.pojo.UserPushInfo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
-import com.hts.web.common.util.Log;
 import com.hts.web.common.util.NumberUtil;
 import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.UserMsgDanmu;
-import com.imzhitu.admin.op.service.impl.OpServiceImpl;
 import com.imzhitu.admin.userinfo.dao.UserMsgDao;
 import com.imzhitu.admin.userinfo.service.UserMsgService;
 
@@ -84,8 +83,8 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 			String fullContent = MSG_TITLE + userName + "，" + content;
 			userName = PushUtil.getShortName(userName);
 			String title = MSG_TITLE + userName + "，" + content;
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, info.getId(), fullContent, Tag.USER_MSG_SYS, null, null, null, null, 0);
-			pushService.pushSysMessage(title, OpServiceImpl.ZHITU_UID, title,
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, info.getId(), fullContent, Tag.USER_MSG_SYS, null, null, null, null, 0);
+			pushService.pushSysMessage(title, Admin.ZHITU_UID, title,
 					info, Tag.USER_MSG_SYS, new PushFailedCallback() {
 
 						@Override

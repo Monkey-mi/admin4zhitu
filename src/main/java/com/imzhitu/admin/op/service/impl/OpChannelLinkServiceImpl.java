@@ -28,7 +28,6 @@ public class OpChannelLinkServiceImpl extends BaseServiceImpl implements OpChann
 	@Override
 	public void insertOpChannelLink(Integer channelId, Integer linkId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		if( null == channelId || null == linkId){
 			throw new Exception("channelId or linkId cannot be null");
 		}
@@ -48,7 +47,6 @@ public class OpChannelLinkServiceImpl extends BaseServiceImpl implements OpChann
 	@Override
 	public void deleteOpChannelLink(Integer channelId, Integer linkId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpChannelLink dto = new OpChannelLink();
 		dto.setChannelId(channelId);
 		dto.setLinkChannelId(linkId);
@@ -58,7 +56,6 @@ public class OpChannelLinkServiceImpl extends BaseServiceImpl implements OpChann
 	@Override
 	public long queryOpChannelLinkTotalCount(Integer maxId, Integer channelId,
 			Integer linkId) throws Exception {
-		// TODO Auto-generated method stub
 		OpChannelLink dto = new OpChannelLink();
 		dto.setChannelId(channelId);
 		dto.setLinkChannelId(linkId);
@@ -70,7 +67,6 @@ public class OpChannelLinkServiceImpl extends BaseServiceImpl implements OpChann
 	public void queryOpChannelLink(Integer maxId, int page, int rows,
 			Integer channelId, Integer linkId, Map<String, Object> jsonMap)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpChannelLink dto = new OpChannelLink();
 		dto.setChannelId(channelId);
 		dto.setLinkChannelId(linkId);

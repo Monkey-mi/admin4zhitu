@@ -1,6 +1,5 @@
 package com.imzhitu.admin.op.service;
 
-import java.util.Date;
 import java.util.Map;
 
 import com.hts.web.common.pojo.OpNotice;

@@ -35,7 +35,6 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 	public void insertMsgStartpage(String linkPath, Integer linkType,
 			String link, Date beginDate, Date endDate, Integer operator)
 			throws Exception {
-		// TODO Auto-generated method stub
 		Integer serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_START_PAGE_SERIAL);
 		OpMsgStartpage dto = new OpMsgStartpage();
 		Date now = new Date();
@@ -54,7 +53,6 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 
 	@Override
 	public void batchDeleteMsgStartpage(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[]ids = StringUtil.convertStringToIds(idsStr);
 		startpageMapper.batchDeleteMsgStartpage(ids);
 	}
@@ -63,7 +61,6 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 	public void updateMsgStartpage(Integer id, String linkPath,
 			Integer linkType, String link, Integer valid, Date beginDate,
 			Date endDate, Integer operator) throws Exception {
-		// TODO Auto-generated method stub
 		OpMsgStartpage dto = new OpMsgStartpage();
 		Date now = new Date();
 		dto.setId(id);
@@ -81,7 +78,6 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 	@Override
 	public void batchUpdateMsgStartpageValid(String idsStr, Integer valid,
 			Integer operator) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		startpageMapper.batchUpdateMsgStartpageValid(ids, valid, operator);
 	}
@@ -90,8 +86,6 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 	public void queryMsgStartpage(Integer id, Integer linkType, Integer valid,
 			Integer isCache, Date beginDate, Date endDate, Integer maxId,
 			int page, int rows, Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
-		
 		Integer reMaxId = 0;
 		long total 		= 0;
 		List<OpMsgStartpage> list = null;
@@ -133,7 +127,6 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 	public long queryMsgStartpageTotalCount(Integer id, Integer linkType,
 			Integer valid, Date beginDate, Date endDate, Integer maxId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpMsgStartpage dto = new OpMsgStartpage();
 		dto.setId(id);
 		dto.setBeginDate(beginDate);
@@ -147,7 +140,6 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 	@Override
 	public List<OpMsgStartpage> queryMsgBulletinByIds(String idsStr)
 			throws Exception {
-		// TODO Auto-generated method stub
 		if(idsStr == null || idsStr.trim().equals("")){
 			throw new Exception("idsStr cannot be null");
 		}

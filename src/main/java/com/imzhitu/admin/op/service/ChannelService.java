@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.OpChannel;
-import com.imzhitu.admin.common.pojo.OpChannelStar;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
@@ -15,7 +14,7 @@ import com.imzhitu.admin.common.pojo.OpChannelWorld;
 /**
  * <p>
  * 频道模块业务逻辑访问接口，包括:<br><br>
- * 频道、Top红人、频道红人、频道织图等子模块CURD
+ * 频道、Top红人、频道织图等子模块CURD
  * </p>
  * 
  * 创建时间: 2014-11-04
@@ -23,14 +22,6 @@ import com.imzhitu.admin.common.pojo.OpChannelWorld;
  *
  */
 public interface ChannelService extends BaseService {
-
-	/**
-	 * 更新频道明星缓存
-	 * TODO 这个功能目前没有用了
-	 * @param star
-	 * @throws Exception
-	 */
-	public void updateStarCache(OpChannelStar star) throws Exception;
 	
 	/**
 	 * 更新top one缓存
@@ -123,95 +114,6 @@ public interface ChannelService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateChannelValid(String idsStr, Integer valid) throws Exception;
-	
-	/**
-	 * 构建频道明星列表
-	 *  TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param star
-	 * @param page
-	 * @param rows
-	 * @param jsonMap
-	 * @throws Exception
-	 */
-	public void buildStarDto(OpChannelStar star, int page, int rows,
-			Map<String, Object> jsonMap) throws Exception;
-	
-	/**
-	 * 更新频道明星
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param star
-	 * @throws Exception
-	 */
-	public void updateStar(OpChannelStar star) throws Exception;
-	
-	/**
-	 * 保存频道明星
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param star
-	 * @throws Exception
-	 */
-	public void saveStar(OpChannelStar star) throws Exception;
-	
-	/**
-	 * 批量删除频道明星
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param idsStr
-	 * @throws Exception
-	 */
-	public void deletelStars(String idsStr) throws Exception;
-	
-	/**
-	 * 增加频道明星id
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param channelId
-	 * @param uidStrs
-	 * @throws Exception
-	 */
-	public void addStarId(Integer channelId, String[] uidStrs) throws Exception;
-	
-	
-	/**
-	 * 添加频道明星id
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param channelId
-	 * @param uid
-	 * @throws Exception
-	 */
-	public void addStarId(Integer channelId, Integer uid) throws Exception;
-	
-	/**
-	 * 批量更新频道明星有效标记
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param idsStr
-	 * @param valid
-	 * @throws Exception
-	 */
-	public void updateStarValid(String idsStr, Integer valid) throws Exception;
-	
-	/**
-	 * 更新明星权重
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param id
-	 * @param isAdd
-	 * @throws Exception
-	 */
-	public void updateStarWeight(Integer id, Boolean isAdd, Map<String, Object> jsonMap) throws Exception;
-	
-	/**
-	 * 添加频道明星推荐消息
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param id
-	 * @throws Exception
-	 */
-	public void addStarRecommendMsg(Integer id) throws Exception;
-	
-	/**
-	 * 批量添加明星推荐消息
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @param idsStr
-	 * @throws Exception
-	 */
-	public void addStarRecommendMsgs(String idsStr) throws Exception;
 	
 	/**
 	 * 构建top one列表
@@ -553,12 +455,6 @@ public interface ChannelService extends BaseService {
 	 */
 	public void updateTopOne()throws Exception;
 
-	/**
-	 * 更新频道红人
-	 * @throws Exception
-	 */
-	public void updateChannelStar()throws Exception;
-	
 	/**
 	 * 搜索频道
 	 * 

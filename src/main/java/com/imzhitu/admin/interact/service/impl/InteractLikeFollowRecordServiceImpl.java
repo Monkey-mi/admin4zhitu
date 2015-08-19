@@ -20,7 +20,6 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 	@Override
 	public void insertLikeFollowRecord(Integer zombieId, Integer worldId,
 			Integer userId, Integer type, Integer complete) throws Exception {
-		// TODO Auto-generated method stub
 		InteractLikeFollowRecord dto = new InteractLikeFollowRecord();
 		dto.setZombieId(zombieId);
 		dto.setWorldId(worldId);
@@ -32,7 +31,6 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 
 	@Override
 	public void batchDeleteLikeFollowRecord(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		likeFollowRecordMapper.batchDeleteLikeFollowRecord(ids);
 	}
@@ -40,7 +38,6 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 	@Override
 	public void batchUpdateLikeFollowRecord(Integer complete, Integer[] ids)
 			throws Exception {
-		// TODO Auto-generated method stub
 		likeFollowRecordMapper.batchUpdateLikeFollowRecord(complete, ids);
 	}
 
@@ -49,7 +46,6 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 			Integer worldId, Integer userId, Integer type, Integer complete,
 			Integer maxId, int page, int rows, Map<String, Object> jsonMap)
 			throws Exception {
-		// TODO Auto-generated method stub
 		InteractLikeFollowRecord dto = new InteractLikeFollowRecord();
 		dto.setId(id);
 		dto.setZombieId(zombieId);

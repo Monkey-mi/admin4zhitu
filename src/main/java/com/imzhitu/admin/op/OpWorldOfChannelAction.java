@@ -229,7 +229,6 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
     private static final String EMPTY_SUCCESS = "永久删除成功";
     private static final String EMPTY_FAILED = "永久删除失败";
     private static final String SYNC_SUCCESS = "同步成功";
-    private static final String SYNC_FAILED = "同步失败";
     private static final String RECOVER_SUCCESS = "恢复成功";
     
     @Autowired

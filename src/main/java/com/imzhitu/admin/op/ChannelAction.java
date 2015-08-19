@@ -4,9 +4,6 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -17,12 +14,14 @@ import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.common.pojo.OpChannel;
 import com.imzhitu.admin.common.pojo.OpChannelCover;
-import com.imzhitu.admin.common.pojo.OpChannelStar;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.op.service.ChannelService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class ChannelAction extends BaseCRUDAction{
 
@@ -35,7 +34,6 @@ public class ChannelAction extends BaseCRUDAction{
 	private ChannelService channelService;
 	
 	private OpChannel channel = new OpChannel();
-	private OpChannelStar star = new OpChannelStar();
 	private OpChannelWorld world = new OpChannelWorld();
 	private OpChannelTopOne topOne = new OpChannelTopOne();
 	private OpChannelTopOnePeriod period = new OpChannelTopOnePeriod();
@@ -54,22 +52,6 @@ public class ChannelAction extends BaseCRUDAction{
 	private Integer worldId;
 	private String query;
 	private Integer superb;
-	
-	/**
-	 * 更新频道明星缓存
-	 * 
-	 * @return
-	 */
-	public String updateStarCache() {
-		try {
-			// TODO 更新频道明星缓存应该没有用了
-			channelService.updateStarCache(star);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
 	
 	/**
 	 * 更新频道top one title缓存
@@ -252,129 +234,6 @@ public class ChannelAction extends BaseCRUDAction{
 	public String updateChannelValid() {
 		try {
 			channelService.updateChannelValid(ids, valid);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 查询频道明星列表
-	 * 
-	 * @return
-	 */
-	public String queryStar() {
-		
-		try {
-			channelService.buildStarDto(star, page, rows, jsonMap);
-			JSONUtil.optSuccess(jsonMap);
-		} catch(Exception e) {
-			e.printStackTrace();
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 保存明星
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @return
-	 */
-	public String saveStar() {
-		try {
-			channelService.saveStar(star);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
-		} catch(Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 更新频道明星
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @return
-	 */
-	public String updateStar() {
-		try {
-			channelService.updateStar(star);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch(Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 删除频道明星
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @return
-	 */
-	public String deleteStar() {
-		try {
-			channelService.deletelStars(ids);
-			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 更新频道明星有效性
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @return
-	 */
-	public String updateStarValid() {
-		try {
-			channelService.updateStarValid(ids, valid);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 添加频道明星推荐消息
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @return
-	 */
-	public String addStarRecommendMsgs() {
-		try {
-			channelService.addStarRecommendMsgs(ids);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 更新频道明星排序
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @return
-	 */
-	public String updateStarSerial() {
-		String[] ids = request.getParameterValues("reIndexId");
-		try {
-			channelService.addStarId(channelId, ids);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 更新明星权重
-	 * TODO 将要删掉，这是旧方法，再查看一下jsp页面，确认后就可以删除
-	 * @return
-	 */
-	public String updateStarWeight() {
-		try {
-			channelService.updateStarWeight(id, isAdd, jsonMap);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -618,8 +477,7 @@ public class ChannelAction extends BaseCRUDAction{
 			writer = response.getWriter();
 			if(start == 0) 
 				period.setFirstRow(0);
-			List<OpChannelTopOnePeriod> list = channelService.queryTopOnePeriodList(period, page, rows,
-					addAllTag);
+			List<OpChannelTopOnePeriod> list = channelService.queryTopOnePeriodList(period, page, rows, addAllTag);
 			JSONArray jsArray = JSONArray.fromObject(list);
 			writer.println(jsArray.toString());
 		} catch (Exception e) {
@@ -700,17 +558,6 @@ public class ChannelAction extends BaseCRUDAction{
 		return null;
 	}
 	
-	public String updateChannelStarByAdmin(){
-		try{
-			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if(user.getId() != 59) return null;
-			channelService.updateChannelStar();
-		}catch(Exception e){
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return null;
-	}
-	
 	public ChannelService getChannelService() {
 		return channelService;
 	}
@@ -725,14 +572,6 @@ public class ChannelAction extends BaseCRUDAction{
 
 	public void setChannel(OpChannel channel) {
 		this.channel = channel;
-	}
-
-	public OpChannelStar getStar() {
-		return star;
-	}
-
-	public void setStar(OpChannelStar star) {
-		this.star = star;
 	}
 
 	public OpChannelWorld getWorld() {

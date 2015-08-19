@@ -30,7 +30,6 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 	@Override
 	public void insertStarRecommend(Integer userId, Integer top, Integer valid)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpStarRecommendDto dto = new OpStarRecommendDto();
 		dto.setUserId(userId);
 		long total = starRecommendMapper.queryStarRecommendTotalCount(dto);
@@ -45,7 +44,6 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 	@Override
 	public void deleteStarRecommend(Integer id, Integer userId, Integer top,
 			Integer valid) throws Exception {
-		// TODO Auto-generated method stub
 		if(id == null && userId == null)
 			return;
 		OpStarRecommendDto dto = new OpStarRecommendDto();
@@ -59,7 +57,6 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 	@Override
 	public void updateStarRecommend(Integer id, Integer userId, Integer top,
 			Integer valid,Integer activity) throws Exception {
-		// TODO Auto-generated method stub
 		if(id == null && userId == null)
 			return;
 		OpStarRecommendDto dto = new OpStarRecommendDto();
@@ -75,7 +72,6 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 	public void queryStarRecommend(int maxId,int page, int rows, Map<String, Object> jsonMap,
 			Integer id, Integer userId, Integer top, Integer valid,Integer orderBy)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpStarRecommendDto dto = new OpStarRecommendDto();
 		dto.setId(id);
 		dto.setUserId(userId);
@@ -148,7 +144,6 @@ public class OpStarRecommendServiceImpl  extends BaseServiceImpl implements OpSt
 	@Override
 	public long queryStarRecommendTotalCount(int maxId, Integer id,
 			Integer userId, Integer top, Integer valid) throws Exception {
-		// TODO Auto-generated method stub
 		OpStarRecommendDto dto = new OpStarRecommendDto();
 		dto.setId(id);
 		dto.setUserId(userId);
