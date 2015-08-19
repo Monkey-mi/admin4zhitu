@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,6 @@ public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieServ
 	@Override
 	public void insertZombie(Integer userId, Integer degreeId,
 			Integer commentCount, Integer concernCount) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombie dto = new OpZombie();
 		Date now = new Date();
 		dto.setUserId(userId);
@@ -45,7 +43,6 @@ public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieServ
 
 	@Override
 	public void batchDeleteZombie(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		zombieMapper.batchDeleteZombie(ids);
 	}
@@ -53,7 +50,6 @@ public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieServ
 	@Override
 	public void batchUpdateZombie(Integer commentCount, Integer concernCount,
 			Integer[] ids) throws Exception {
-		// TODO Auto-generated method stub
 		Date now = new Date(); 
 		zombieMapper.batchUpdateZombie(now.getTime(), concernCount, commentCount, ids);
 	}
@@ -61,7 +57,6 @@ public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieServ
 	@Override
 	public void queryZombie(Integer userId, Integer degreeId, Integer maxId,
 			int page, int rows, Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombie dto = new OpZombie();
 		dto.setUserId(userId);
 		dto.setDegreeId(degreeId);
@@ -87,7 +82,6 @@ public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieServ
 	@Override
 	public long queryZombieTotalCount(Integer userId, Integer degreeId,
 			Integer maxId) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombie dto = new OpZombie();
 		dto.setUserId(userId);
 		dto.setDegreeId(degreeId);
@@ -98,7 +92,6 @@ public class OpZombieServiceImpl extends BaseServiceImpl implements OpZombieServ
 	@Override
 	public List<OpZombie> queryNZombie(Integer degreeId, Integer n)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return zombieMapper.queryZombieByLastModifyASC(degreeId, n);
 	}
 

@@ -83,7 +83,6 @@ public class DailyDataStatisticsServiceImpl extends BaseServiceImpl implements D
 			log.error("日期转换错误：" + e.getMessage(), e);
 		}
 		
-		// TODO 还要调用天杰提供的接口，获取每天的点击频道的次数，从缓存中获取
 		Map<Integer, Integer> allPVMap = pvCacheDao.queryAllPV();
 		
 		// 获取前一天频道新增织图数，返回的dto中只有channelId与worldCount，可认为是键值对的列表

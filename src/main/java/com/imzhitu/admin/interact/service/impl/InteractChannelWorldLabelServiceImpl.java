@@ -167,7 +167,6 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 	@Override
 	public void queryChannelWorldLabel(Integer worldId, Integer channelId,
 			Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		if(null == worldId || channelId == null){
 			throw new Exception("worldId and channelId cannot be null");
 		}

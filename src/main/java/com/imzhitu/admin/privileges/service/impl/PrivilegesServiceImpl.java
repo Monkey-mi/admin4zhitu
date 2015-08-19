@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +31,8 @@ import com.imzhitu.admin.privileges.mapper.AdminUserInfoMapper;
 import com.imzhitu.admin.privileges.mapper.AdminUserInfoRoleMapper;
 import com.imzhitu.admin.privileges.mapper.AdminUserPrivilegesMapper;
 import com.imzhitu.admin.privileges.service.PrivilegesService;
+
+import net.sf.json.JSONArray;
 
 /**
  * <p>

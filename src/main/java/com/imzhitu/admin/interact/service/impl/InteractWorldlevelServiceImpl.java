@@ -45,7 +45,6 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 	@Override
 	public void QueryWorldlevelList(int maxId, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		buildSerializables(maxId, start, limit, jsonMap,new SerializableListAdapter<ZTWorldLevelDto>(){
 			@Override
 			public List<ZTWorldLevelDto> getSerializables(RowSelection rowSelection){
@@ -67,27 +66,23 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 
 	@Override
 	public void DeleteWorldlevelByIds(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		interactWorldlevelDao.DeleteWorldLevelByIds(ids);
 	}
 
 	@Override
 	public ZTWorldLevelDto QueryWorldlevelById(Integer id) throws Exception {
-		// TODO Auto-generated method stub
 		return interactWorldlevelDao.QueryWorldlevelById(id);
 	}
 
 	@Override
 	public void AddWorldlevel(ZTWorldLevelDto worldlevelDto) throws Exception {
-		// TODO Auto-generated method stub
 		interactWorldlevelDao.AddWorldlevel(worldlevelDto);
 	}
 
 	@Override
 	public void UpdateWorldlevel(ZTWorldLevelDto worldlevelDto)
 			throws Exception {
-		// TODO Auto-generated method stub
 		interactWorldlevelDao.UpdateWorldlevel(worldlevelDto);
 	}
 	

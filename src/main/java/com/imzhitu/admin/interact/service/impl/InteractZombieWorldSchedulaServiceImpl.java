@@ -31,7 +31,6 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 	@Override
 	public void insertZombieWorldSchedula(Integer zombieWorldId, Date schedula,
 			Integer operator) throws Exception {
-		// TODO Auto-generated method stub
 		ZombieWorldSchedulaDto dto = new ZombieWorldSchedulaDto();
 		Date now = new Date();
 		dto.setZombieWorldId(zombieWorldId);
@@ -53,7 +52,6 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 
 	@Override
 	public void batchDeleteZombieWorldSchedula(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		zombieWorldSchedulaMapper.batchDeleteZombieWorldSchedula(ids);
 	}
@@ -61,7 +59,6 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 	@Override
 	public void updateZombieWorldSchedula(Integer id, Integer zombieWorldId,Integer valid,
 			Integer finished, Date schedula,Integer operator) throws Exception {
-		// TODO Auto-generated method stub
 		ZombieWorldSchedulaDto dto = new ZombieWorldSchedulaDto();
 		if (id == null && zombieWorldId == null) {
 			throw new Exception("id或者zombieWorldId不能同时为空");
@@ -80,7 +77,6 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 	public void queryZombieWorldSchedula(Integer id, Integer valid,
 			Integer finished, Integer zombieWorldId, Integer maxId, int page,
 			int rows, Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		ZombieWorldSchedulaDto dto = new ZombieWorldSchedulaDto();
 		
 		dto.setId(id);
@@ -106,7 +102,6 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 	public long queryZombieWorldSchedulaTotalCount(Integer id, Integer valid,
 			Integer finished, Integer zombieWorldId, Integer maxId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		ZombieWorldSchedulaDto dto = new ZombieWorldSchedulaDto();
 		
 		dto.setId(id);
@@ -120,7 +115,6 @@ public class InteractZombieWorldSchedulaServiceImpl extends BaseServiceImpl impl
 	@Override
 	public List<ZombieWorldSchedulaDto> queryZombieWorldSchedulaByTime(
 			Date beginDate, Date endDate,Integer valid,Integer finished) throws Exception {
-		// TODO Auto-generated method stub
 		return zombieWorldSchedulaMapper.queryZombieWorldSchedulaByTime(beginDate, endDate, valid, finished);
 	}
 	

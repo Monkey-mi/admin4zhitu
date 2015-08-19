@@ -27,7 +27,6 @@ public class InteractChannelLevelServiceImpl extends BaseServiceImpl implements 
 			Integer unSuperMinClickCount,	Integer unSuperMaxClickCount,Integer superMinClickCount,Integer superMaxClickCount,
 			Integer minutetime)
 			throws Exception {
-		// TODO Auto-generated method stub
 		InteractChannelLevel dto = new InteractChannelLevel();
 		dto.setChannelId(channelId);
 		dto.setUnSuperMinCommentCount(unSuperMinCommentCount);
@@ -56,7 +55,6 @@ public class InteractChannelLevelServiceImpl extends BaseServiceImpl implements 
 
 	@Override
 	public void batchDeleteChannelLevel(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		channelLevelMapper.batchDeleteChannelLevel(ids);
 	}
@@ -68,7 +66,6 @@ public class InteractChannelLevelServiceImpl extends BaseServiceImpl implements 
 			Integer unSuperMinFollowCount,	Integer unSuperMaxFollowCount,Integer superMinFollowCount,Integer superMaxFollowCount,
 			Integer unSuperMinClickCount,	Integer unSuperMaxClickCount,Integer superMinClickCount,Integer superMaxClickCount,
 			Integer minutetime) throws Exception {
-		// TODO Auto-generated method stub
 		InteractChannelLevel dto = new InteractChannelLevel();
 		dto.setId(id);
 		dto.setUnSuperMinCommentCount(unSuperMinCommentCount);
@@ -98,7 +95,6 @@ public class InteractChannelLevelServiceImpl extends BaseServiceImpl implements 
 	@Override
 	public List<InteractChannelLevel> queryChannelLevel(Integer channelId,
 			Integer id) throws Exception {
-		// TODO Auto-generated method stub
 		InteractChannelLevel dto = new InteractChannelLevel();
 		dto.setId(id);
 		dto.setChannelId(channelId);
@@ -108,7 +104,6 @@ public class InteractChannelLevelServiceImpl extends BaseServiceImpl implements 
 	@Override
 	public void queryChannelLevel(Integer id, Integer channelId, Integer maxId,
 			int page, int rows, Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		InteractChannelLevel dto = new InteractChannelLevel();
 		dto.setId(id);
 		dto.setChannelId(channelId);

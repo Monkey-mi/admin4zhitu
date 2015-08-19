@@ -11,7 +11,6 @@ import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.InteractAutoResponseSchedula;
-import com.imzhitu.admin.interact.mapper.InteractAutoResponseMapper;
 import com.imzhitu.admin.interact.mapper.InteractAutoResponseSchedulaMapper;
 import com.imzhitu.admin.interact.service.InteractAutoResponseSchedulaService;
 import com.imzhitu.admin.interact.service.InteractAutoResponseService;
@@ -20,9 +19,6 @@ public class InteractAutoResponseSchedulaServiceImpl extends BaseServiceImpl imp
 	
 	@Autowired
 	private InteractAutoResponseSchedulaMapper autoResponseSchedulaMapper;
-	
-	@Autowired
-	private InteractAutoResponseMapper autoResponseMapper;
 	
 	@Autowired
 	private InteractAutoResponseService autoResponseService;

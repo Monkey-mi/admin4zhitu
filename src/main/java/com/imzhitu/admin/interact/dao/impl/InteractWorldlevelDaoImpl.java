@@ -34,7 +34,6 @@ public class InteractWorldlevelDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public List<ZTWorldLevelDto> QueryWorldlevelList(RowSelection rowSelection) {
-		// TODO Auto-generated method stub
 		return queryForPage(QUERY_WORLD_LEVEL_LIST, new RowMapper<ZTWorldLevelDto>(){
 			@Override
 			public ZTWorldLevelDto mapRow(ResultSet rs,int rowNum) throws SQLException{
@@ -45,7 +44,6 @@ public class InteractWorldlevelDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public ZTWorldLevelDto QueryWorldlevelById(Integer id) throws Exception {
-		// TODO Auto-generated method stub
 		try{
 			return getJdbcTemplate().queryForObject(QUERY_WORLD_LEVEL_LIST_BY_ID, new Object[]{id}, new RowMapper<ZTWorldLevelDto>(){
 				@Override
@@ -69,14 +67,12 @@ public class InteractWorldlevelDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public void DeleteWorldLevelByIds(Integer[] ids) throws Exception {
-		// TODO Auto-generated method stub
 		String sql = DELETE_WORLD_LEVEL_BY_IDS + SQLUtil.buildInSelection(ids);
 		getMasterJdbcTemplate().update(sql, (Object[])ids);
 	}
 
 	@Override
 	public void AddWorldlevel(ZTWorldLevelDto worldlevelDto) throws Exception {
-		// TODO Auto-generated method stub
 		getMasterJdbcTemplate().update(ADD_WORLD_LEVEL, new Object[]{
 				worldlevelDto.getMin_fans_count(),worldlevelDto.getMax_fans_count(),
 				worldlevelDto.getMin_liked_count(),worldlevelDto.getMax_liked_count(),
@@ -87,7 +83,6 @@ public class InteractWorldlevelDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public void UpdateWorldlevel(ZTWorldLevelDto worldlevelDto)	throws Exception {
-		// TODO Auto-generated method stub
 		getMasterJdbcTemplate().update(UPDATE_WORLD_LEVEL, new Object[]{
 				worldlevelDto.getMin_fans_count(),worldlevelDto.getMax_fans_count(),
 				worldlevelDto.getMin_liked_count(),worldlevelDto.getMax_liked_count(),
@@ -99,13 +94,11 @@ public class InteractWorldlevelDaoImpl extends BaseDaoImpl implements
 
 	@Override
 	public long GetWorldlevelCountByMaxId(Integer maxId) {
-		// TODO Auto-generated method stub
 		return getJdbcTemplate().queryForLong(QUERY_WORLD_LEVEL_COUNT, maxId);
 	}
 
 	@Override
 	public List<ZTWorldLevelDto> QueryWorldlevelListByMaxId(Integer maxId,RowSelection rowSelection) {
-		// TODO Auto-generated method stub
 		return queryForPage(QUERY_WORLD_LEVEL_LIST_BY_MAXID,new Object[]{maxId}, new RowMapper<ZTWorldLevelDto>(){
 			@Override
 			public ZTWorldLevelDto mapRow(ResultSet rs,int rowNum) throws SQLException{

@@ -7,12 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.Tag;
-import com.imzhitu.admin.common.pojo.AdminUserDto;
-import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.common.pojo.AdminRole;
+import com.imzhitu.admin.common.pojo.AdminUserDetails;
+import com.imzhitu.admin.common.pojo.AdminUserDto;
 import com.imzhitu.admin.privileges.dao.AdminDao;
 import com.imzhitu.admin.privileges.dao.RoleDao;
 

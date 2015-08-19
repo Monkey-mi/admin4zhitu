@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.common.service.impl.BaseServiceImpl;
-import com.imzhitu.admin.common.dao.KeyGenDao;
 import com.imzhitu.admin.common.service.KeyGenService;
 
 @Service

@@ -1,6 +1,5 @@
 package com.imzhitu.admin.common.pojo;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;

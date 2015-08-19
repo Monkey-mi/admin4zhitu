@@ -7,7 +7,6 @@ import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.dao.BaseDao;
 import com.hts.web.common.pojo.OpUser;
 import com.hts.web.common.pojo.OpUserRecommend;
-import com.hts.web.common.pojo.UserInfoDto;
 import com.imzhitu.admin.common.pojo.OpUserRecommendDto;
 
 /**

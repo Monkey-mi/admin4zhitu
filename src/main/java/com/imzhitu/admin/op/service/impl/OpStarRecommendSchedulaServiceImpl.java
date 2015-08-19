@@ -29,7 +29,6 @@ public class OpStarRecommendSchedulaServiceImpl extends BaseServiceImpl implemen
 	@Override
 	public void insertStarRecommendSchedula(Integer osrId, Integer userId,
 			Date schedula, Integer operator, Integer valid,Integer top) throws Exception {
-		// TODO Auto-generated method stub
 		OpStarRecommendSchedulaDto dto = new OpStarRecommendSchedulaDto();
 		dto.setOsrId(osrId);
 		dto.setTop(top);
@@ -55,7 +54,6 @@ public class OpStarRecommendSchedulaServiceImpl extends BaseServiceImpl implemen
 	@Override
 	public void deleteStarRecommendSchedula(Integer id, Integer osrId,
 			Integer userId, Integer valid) throws Exception {
-		// TODO Auto-generated method stub
 		OpStarRecommendSchedulaDto dto = new OpStarRecommendSchedulaDto();
 		dto.setOsrId(osrId);
 		dto.setId(id);
@@ -67,7 +65,6 @@ public class OpStarRecommendSchedulaServiceImpl extends BaseServiceImpl implemen
 	public void updateStarRecommendSchedula(Integer id, Integer osrId,
 			Integer userId, Integer valid, Date schedula, Integer operator,Integer finish)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpStarRecommendSchedulaDto dto = new OpStarRecommendSchedulaDto();
 		dto.setOsrId(osrId);
 		dto.setSchedula(schedula);
@@ -85,7 +82,6 @@ public class OpStarRecommendSchedulaServiceImpl extends BaseServiceImpl implemen
 			Map<String, Object> jsonMap, Integer id, Integer osrId,
 			Integer userId, Integer valid, Date addDate, Date modifyDate,Integer top,Integer finish)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpStarRecommendSchedulaDto dto = new OpStarRecommendSchedulaDto();
 		dto.setMaxId(maxId);
 		dto.setId(id);
@@ -113,7 +109,6 @@ public class OpStarRecommendSchedulaServiceImpl extends BaseServiceImpl implemen
 	public long queryStarRecommendSchedulaTotalCount(Integer maxId, Integer id,
 			Integer osrId, Integer userId, Integer valid, Date addDate,
 			Date modifyDate,Integer top,Integer finish) throws Exception {
-		// TODO Auto-generated method stub
 		OpStarRecommendSchedulaDto dto = new OpStarRecommendSchedulaDto();
 		dto.setOsrId(osrId);
 		dto.setUserId(userId);

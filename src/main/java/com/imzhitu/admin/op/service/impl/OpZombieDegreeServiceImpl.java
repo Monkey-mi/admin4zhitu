@@ -22,7 +22,6 @@ public class OpZombieDegreeServiceImpl extends BaseServiceImpl implements OpZomb
 	@Override
 	public void insertZombieDegree(String degreeName, Integer weight)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieDegree dto = new OpZombieDegree();
 		dto.setDegreeName(degreeName);
 		dto.setWeight(weight);
@@ -31,7 +30,6 @@ public class OpZombieDegreeServiceImpl extends BaseServiceImpl implements OpZomb
 
 	@Override
 	public void batchDeleteZombieDegree(String idsStr) {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		zombieDegreeMapper.batchDeleteZombieDegree(ids);
 	}
@@ -39,7 +37,6 @@ public class OpZombieDegreeServiceImpl extends BaseServiceImpl implements OpZomb
 	@Override
 	public void updateZombieDegree(Integer id, String degreeName, Integer weight)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieDegree dto = new OpZombieDegree();
 		dto.setId(id);
 		dto.setDegreeName(degreeName);
@@ -50,7 +47,6 @@ public class OpZombieDegreeServiceImpl extends BaseServiceImpl implements OpZomb
 	@Override
 	public void queryZombieDegree(Integer id, Integer weight, Integer maxId,
 			int page, int rows, Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieDegree dto = new OpZombieDegree();
 		dto.setId(id);
 		dto.setWeight(weight);
@@ -77,7 +73,6 @@ public class OpZombieDegreeServiceImpl extends BaseServiceImpl implements OpZomb
 	@Override
 	public long queryZombieDegreeTotalCount(Integer id, Integer weight,
 			Integer maxId) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieDegree dto = new OpZombieDegree();
 		dto.setId(id);
 		dto.setWeight(weight);
@@ -87,7 +82,6 @@ public class OpZombieDegreeServiceImpl extends BaseServiceImpl implements OpZomb
 
 	@Override
 	public List<OpZombieDegree> queryAllZombieDegree() throws Exception {
-		// TODO Auto-generated method stub
 		return zombieDegreeMapper.queryAllZombieDegree();
 	}
 
