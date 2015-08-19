@@ -91,7 +91,7 @@
 			u.star
 		from
 			(select
-				ocm.id, ocm.channel_id, ocm.user_id, ocm.sub_time, ocm.degree, ocs.notified, ocs.serial
+				ocm.id, ocm.channel_id, ocm.user_id, ocm.sub_time, ocm.degree, ocm.shield, ocm.channel_star, ocs.notified
 			from
 				hts.operations_channel_member ocm
 				left join hts.operations_channel_star ocs on ocm.id = ocs.id
