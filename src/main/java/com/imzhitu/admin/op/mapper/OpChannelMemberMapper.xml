@@ -8,9 +8,9 @@
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
 		<result column="sub_time" property="subTime" jdbcType="BIGINT" />
 		<result column="degree" property="degree" jdbcType="INTEGER" />
-		<result column="notified" property="notified" jdbcType="INTEGER" />
 		<result column="shield" property="shield" jdbcType="INTEGER" />
 		<result column="channel_star" property="channelStar" jdbcType="INTEGER" />
+		<result column="notified" property="notified" jdbcType="INTEGER" />
 		
 		<!-- 下列为父项userInfo的信息，当功能扩展时，可补充查询结果 -->
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />
@@ -166,21 +166,6 @@
 			ocm.id = #{channelMemberId} 
 	</select>
 	
-	<!-- 查询频道成员当前最大id -->
-	<select id="queryChannelMemberById" resultMap="ChannelMemberMap">
-		select 
-			ocm.id as channel_member_id,
-			ocm.channel_id,
-			ocm.user_id,
-			ocm.sub_time,
-			ocm.degree,
-			ocm.shield,
-			ocm.channel_star,
-		from 
-			hts.operations_channel_member ocm
-		where ocm.id = #{channelMemberId}
-	</select>
-
 	<!-- 新增频道红人 -->
 	<insert id="insertChannelStar">
 		insert hts.operations_channel_star
@@ -195,8 +180,7 @@
 			ocs.id as channel_member_id,
 			ocs.channel_id,
 			ocs.user_id,
-			ocs.notified,
-			ocs.serial
+			ocs.notified
 		from 
 			hts.operations_channel_star ocs
 		where 
