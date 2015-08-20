@@ -2,6 +2,7 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractLikeFollowCommentLabel;
 
 /**
@@ -14,12 +15,14 @@ public interface InteractLikeFollowCommentLabelMapper {
 	 * 添加
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void insertLikeFollowCommentLabel(InteractLikeFollowCommentLabel dto);
 	
 	/**
 	 * 批量删除
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void batchDeleteLikeFollowCommentLabel(Integer[] ids);
 	
 	/**
@@ -27,6 +30,7 @@ public interface InteractLikeFollowCommentLabelMapper {
 	 * @param labelIds
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<InteractLikeFollowCommentLabel> queryCommentLabelNameByLabelIds(Integer[] labelIds);
 	
 	/**
@@ -34,6 +38,7 @@ public interface InteractLikeFollowCommentLabelMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<InteractLikeFollowCommentLabel> queryLikeFollowCommentLabel(InteractLikeFollowCommentLabel dto);
 	
 	/**
@@ -41,5 +46,6 @@ public interface InteractLikeFollowCommentLabelMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryLikeFollowCommentLabelTotalCount(InteractLikeFollowCommentLabel dto);
 }

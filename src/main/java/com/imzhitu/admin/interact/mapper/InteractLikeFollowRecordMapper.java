@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractLikeFollowRecord;
 
 /**
@@ -16,12 +17,14 @@ public interface InteractLikeFollowRecordMapper {
 	 * 添加
 	 * @param dto
 	 */
+	@DataSource("master")
 	public void insertLikeFollowRecord(InteractLikeFollowRecord dto);
 	
 	/**
 	 * 批量删除
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void batchDeleteLikeFollowRecord(Integer[] ids);
 	
 	/**
@@ -29,12 +32,14 @@ public interface InteractLikeFollowRecordMapper {
 	 * @param complete
 	 * @param ids
 	 */
+	@DataSource("master")
 	public void batchUpdateLikeFollowRecord(Integer complete,Integer[]ids);
 	
 	/**
 	 * 查询互动互赞
 	 * @param dto
 	 */
+	@DataSource("slave")
 	public List<InteractLikeFollowRecord> queryLikeFollowRecord(InteractLikeFollowRecord dto);
 
 	/**
@@ -42,6 +47,7 @@ public interface InteractLikeFollowRecordMapper {
 	 * @param dto
 	 * @return
 	 */
+	@DataSource("slave")
 	public long queryLikeFollowRecordCount(InteractLikeFollowRecord dto);
 	
 	/**
@@ -49,5 +55,6 @@ public interface InteractLikeFollowRecordMapper {
 	 * @param type
 	 * @return
 	 */
+	@DataSource("slave")
 	public List<InteractLikeFollowRecord> queryUnCompleteLikeFollowRecordByType(@Param("type")Integer type);
 }
