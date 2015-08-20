@@ -1,7 +1,6 @@
 package com.imzhitu.admin.op.service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,13 +8,9 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
-import com.hts.web.common.util.Log;
 import com.imzhitu.admin.base.BaseTest;
 import com.imzhitu.admin.common.pojo.OpChannel;
-import com.imzhitu.admin.common.pojo.OpChannelStar;
-import com.imzhitu.admin.common.pojo.OpChannelStarDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
@@ -31,13 +26,6 @@ public class ChannelServiceTest extends BaseTest {
 	@Test
 	public void testUpdateChannelTopOneCache() throws Exception {
 		service.updateTopOneCache();
-	}
-	
-	@Test
-	public void testUpdateChannelStarCache() throws Exception {
-		OpChannelStar star = new OpChannelStar();
-		star.setChannelId(8);
-		service.updateStarCache(star);
 	}
 	
 	@Test
@@ -93,44 +81,6 @@ public class ChannelServiceTest extends BaseTest {
 	@Test
 	public void testAddChannelSerial() throws Exception {
 		service.addChannelSerial(new String[]{"2", "1"});
-	}
-	
-	@Test
-	public void testBuildStar() throws Exception {
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		OpChannelStar star = new OpChannelStar();
-		star.setChannelId(8);
-		service.buildStarDto(star, 2, 10, jsonMap);
-		
-		List<OpChannelStarDto> starList = (List<OpChannelStarDto>) jsonMap.get(OptResult.JSON_KEY_ROWS);
-		for(OpChannelStarDto dto : starList) {
-			Log.debug(dto.getChannelStarId() + " : " + dto.getId() + " : " + star.getWeight() + dto.getUserName());
-		}
-	}
-	
-	
-	@Test
-	public void testUpdateStar() throws Exception {
-		OpChannelStar star = new OpChannelStar();
-		star.setId(21);
-		star.setChannelId(2);
-		star.setNotified(Tag.TRUE);
-		service.updateStar(star);
-	}
-	
-	@Test
-	public void testDeleteStars() throws Exception {
-		service.deletelStars("21");
-	}
-	
-	@Test
-	public void testAddStarId() throws Exception {
-		service.addStarId(1, new String[]{"11"});
-	}
-	
-	@Test
-	public void testUpdateValid() throws Exception {
-		service.updateStarValid("1,2", Tag.TRUE);
 	}
 	
 	@Test
@@ -270,11 +220,6 @@ public class ChannelServiceTest extends BaseTest {
 	@Test
 	public void testUpdateChannelWorldValid() throws Exception {
 		service.updateChannelWorldValid("12", Tag.TRUE);
-	}
-	
-	@Test
-	public void testAddStarRecommendMsg() throws Exception {
-		service.addStarRecommendMsg(362);
 	}
 	
 	@Test
@@ -421,11 +366,6 @@ public class ChannelServiceTest extends BaseTest {
 		dto.setEndDate(endDate);
 		List<Integer> userId = service.queryActivityTopOne(dto);
 		logger.info("===============queryActivityTopOne is:"+ userId);
-	}
-	
-	@Test
-	public void updateChannelStarTest()throws Exception{
-		service.updateChannelStar();
 	}
 	
 	@Test

@@ -13,9 +13,9 @@
 	searchChannelQueryParams = {
 		'maxId':searchChannelMaxId
 	},
-	loadDateUrl="./admin_interact/commentLabelChannel_queryCommentLabelChannel",
-	addUrl="./admin_interact/commentLabelChannel_insertCommentLabelChannel",
-	delUrl="./admin_interact/commentLabelChannel_batchDeleteCommentLabelChannel?idsStr=",
+	loadDateUrl="./admin_interact/likeFollow_queryLikeFollowCommentLabel",
+	addUrl="./admin_interact/likeFollow_insertLikeFollowCommentLabel",
+	delUrl="./admin_interact/likeFollow_batchDeleteLikeFollowCommentLabel?idsStr=",
 	tableQueryParams = {},
 	tableInit = function() {
 		tableLoadDate(1);
@@ -37,7 +37,7 @@
 	
 	function tableLoadDate(pageNum){
 		$("#htm_table").datagrid({
-			title  :"评论标签与频道关联管理",
+			title  :"互粉乎赞评论标签管理",
 			width  :1200,
 			pageList : [10,30,50,100,300],
 			pageSize : 10,
@@ -52,10 +52,8 @@
 			columns: [[
 				{field :'ck',checkbox:true},
 				{field :'id',title:'ID',align:'center',width:80},
-				{field :'channelId',title:'频道ID',align:'center',width:80},
-				{field :'channelName',title: '频道名称',align : 'center',width : 180},
-				{field :'commentLabelName',title:'标签名称',align:'center',width:180},
-				{field :'operatorName',title:'添加者',align:'center',width:100},
+				{field :'labelId',title:'标签ID',align:'center',width:80},
+				{field :'labelName',title: '标签名称',align : 'center',width : 180},
 			]],
 			onLoadSuccess:myOnLoadSuccess,
 			onBeforeRefresh : myOnBeforeRefresh
@@ -81,7 +79,6 @@
 			iconCls : 'icon-edit',
 			resizable : false,
 			onClose : function() {
-				$("#i-channelId").combogrid('clear');
 				$("#i-commentLabelId").combotree('clear');
 			}
 		});
@@ -160,13 +157,16 @@
 	}
 
 	function addSubmit() {
-		var channelId = $("#i-channelId").combogrid('getValue');
 		var commentLabelId = $("#i-commentLabelId").combotree('getValue');
+		var type = $("#s-type").val();
+		if(!type || !commentLabelId){
+			alert("类型、标签不能为空");
+		}
 		$('#htm_add .opt_btn').hide();
 		$('#htm_add .loading').show();
 		$.post(addUrl, {
-			'channelId' : channelId,
-			'commentLabelId' : commentLabelId
+			'labelId' : commentLabelId,
+			'type'	  : type
 		}, function(result) {
 			$('#htm_add .opt_btn').show();
 			$('#htm_add .loading').hide();
@@ -189,7 +189,6 @@
 		<div id="tb">
 			<a href="javascript:void(0);" onclick="javascript:addInit();" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="t'./admin_op/channel_searchChannel'rue" iconCls="icon-cut" id="delBtn">删除</a>
-			<input id="selectChannelId">
 		</div>
 		<table id="htm_table"></table>
 		<!-- 添加记录 -->
@@ -201,6 +200,15 @@
 							<td class="leftTd">标签：</td>
 							<td>
 								<input id="i-commentLabelId" >
+							</td>
+						</tr>
+						<tr>
+							<td class="leftTd">标签：</td>
+							<td>
+								<select id="s-type"  style="width:173px">
+									<option value="0">互赞</option>
+									<option value="0">互粉</option>
+								</select>
 							</td>
 						</tr>
 						<tr>

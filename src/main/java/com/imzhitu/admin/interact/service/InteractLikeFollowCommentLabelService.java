@@ -11,7 +11,7 @@ public interface InteractLikeFollowCommentLabelService {
 	 * @param labelId
 	 * @throws Exception
 	 */
-	public void insertLikeFollowCommentLabel(Integer labelId)throws Exception;
+	public void insertLikeFollowCommentLabel(Integer labelId,Integer type)throws Exception;
 	
 	/**
 	 * 批量删除
@@ -38,5 +38,5 @@ public interface InteractLikeFollowCommentLabelService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void queryLikeFollowCommentLabel(Integer id,Integer labelId,Integer maxId,int page,int rows,Map<String, Object>jsonMap)throws Exception;
+	public void queryLikeFollowCommentLabel(Integer id,Integer labelId,Integer type,Integer maxId,int page,int rows,Map<String, Object>jsonMap)throws Exception;
 }

@@ -2,6 +2,8 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.imzhitu.admin.common.pojo.InteractLikeFollowRecord;
 
 /**
@@ -41,4 +43,11 @@ public interface InteractLikeFollowRecordMapper {
 	 * @return
 	 */
 	public long queryLikeFollowRecordCount(InteractLikeFollowRecord dto);
+	
+	/**
+	 * 查询未完成的互粉互赞记录
+	 * @param type
+	 * @return
+	 */
+	public List<InteractLikeFollowRecord> queryUnCompleteLikeFollowRecordByType(@Param("type")Integer type);
 }

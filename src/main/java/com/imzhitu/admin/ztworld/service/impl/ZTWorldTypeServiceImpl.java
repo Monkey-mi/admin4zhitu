@@ -19,7 +19,6 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.pojo.HTWorldLabel;
-import com.hts.web.common.pojo.HTWorldType;
 import com.hts.web.common.pojo.HTWorldTypeWorld;
 import com.hts.web.common.pojo.UserPushInfo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
@@ -28,6 +27,7 @@ import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.InteractWorldLevelListDto;
 import com.imzhitu.admin.common.pojo.InteractWorldlevelWorldComment;
 import com.imzhitu.admin.common.pojo.InteractWorldlevelWorldLabel;
@@ -37,13 +37,11 @@ import com.imzhitu.admin.common.pojo.ZTWorldType;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeWorldDto;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
-import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelService;
 import com.imzhitu.admin.op.dao.OpWorldTypeCacheDao;
 import com.imzhitu.admin.op.dao.OpWorldTypeDto2CacheDao;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
-import com.imzhitu.admin.op.service.impl.OpServiceImpl;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
@@ -106,9 +104,6 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private ZTWorldService worldService;
-
-	@Autowired
-	private InteractWorldService interactWorldService;
 
 	@Autowired
 	private OpWorldTypeDto2CacheDao opWorldTypeDto2CacheDao;
@@ -493,7 +488,6 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	}
 	
 	public void autoCommitUpdateTypeWorldValid(ZTWorldTypeWorldDto dto) throws Exception {
-//		String notifyTip = UPDATE_TYPE_WORLD_NOTIFY_TIP_HEAD + dto.getWorldType() + UPDATE_TYPE_WORLD_NOTIFY_TIP_FOOT;
 		String notifyTip = UPDATE_TYPE_WORLD_NOTIFY_TIP;
 		Integer msgId = null;
 		Integer userId = dto.getAuthorId();
@@ -501,13 +495,13 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		String userName = dto.getUserInfo().getUserName();
 		String tip = userName + "," + notifyTip;
 		String shortTip = PushUtil.getShortName(userName) + "," + PushUtil.getShortTip(notifyTip);
-		msgId = webUserMsgService.getValidMessageId(OpServiceImpl.ZHITU_UID, userId, Tag.USER_MSG_SQUARE_NOTIFY, worldId);
+		msgId = webUserMsgService.getValidMessageId(Admin.ZHITU_UID, userId, Tag.USER_MSG_SQUARE_NOTIFY, worldId);
 		if(msgId == null) {
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(userId);
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, userId, tip, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, userId, tip, 
 					Tag.USER_MSG_SQUARE_NOTIFY, worldId, dto.getWorldType(), String.valueOf(dto.getTypeId()),
 					dto.getTitleThumbPath(), 0);
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, shortTip, userPushInfo,
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, shortTip, userPushInfo,
 					Tag.USER_MSG_SQUARE_NOTIFY,
 					new PushFailedCallback() {
 	

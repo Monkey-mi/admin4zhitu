@@ -2,7 +2,6 @@ package com.imzhitu.admin.op.dao;
 
 import com.hts.web.common.dao.BaseCacheDao;
 import com.hts.web.common.pojo.OpActivity;
-import com.imzhitu.admin.common.pojo.OpActivityStar;
 
 public interface ActivityStarCacheDao extends BaseCacheDao {
 

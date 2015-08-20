@@ -1,23 +1,11 @@
 package com.imzhitu.admin.interact.service.impl;
 
-import info.monitorenter.cpdetector.io.ASCIIDetector;
-import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
-import info.monitorenter.cpdetector.io.JChardetFacade;
-import info.monitorenter.cpdetector.io.ParsingDetector;
-import info.monitorenter.cpdetector.io.UnicodeDetector;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +15,6 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.service.impl.BaseServiceImpl;
-import com.hts.web.common.util.NumberUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.InteractComment;
@@ -39,6 +26,14 @@ import com.imzhitu.admin.interact.dao.InteractCommentLabelDao;
 import com.imzhitu.admin.interact.dao.InteractWorldCommentDao;
 import com.imzhitu.admin.interact.mapper.InteractCommentLabelMapper;
 import com.imzhitu.admin.interact.service.InteractCommentService;
+
+import info.monitorenter.cpdetector.io.ASCIIDetector;
+import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
+import info.monitorenter.cpdetector.io.JChardetFacade;
+import info.monitorenter.cpdetector.io.ParsingDetector;
+import info.monitorenter.cpdetector.io.UnicodeDetector;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class InteractCommentServiceImpl extends BaseServiceImpl implements InteractCommentService {

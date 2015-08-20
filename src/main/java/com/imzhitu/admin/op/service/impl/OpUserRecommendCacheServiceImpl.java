@@ -1,6 +1,5 @@
 package com.imzhitu.admin.op.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import com.hts.web.base.constant.CacheKeies;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
 import com.hts.web.common.pojo.OpUser;
 import com.hts.web.common.pojo.OpUserVerifyDto;
-import com.hts.web.common.pojo.UserInfoDto;
 import com.hts.web.operations.dao.OpUserVerifyDtoCacheDao;
 import com.hts.web.operations.service.UserOperationsService;
 import com.imzhitu.admin.op.dao.UserRecommendDao;
@@ -34,7 +32,6 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<OpUser> im
 	
 	@Override
 	public void updateUserRecommendCache() throws Exception {
-		// TODO Auto-generated method stub
 		//更新置顶的
 		List<OpUser> userRecommendTopList = userRecommendDao.queryWeightUserRecommend(50);
 		int size = 0;
@@ -56,7 +53,6 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<OpUser> im
 
 	@Override
 	public void updateUserRecommendCache(Integer verifyId) throws Exception {
-		// TODO Auto-generated method stub
 		String key = CacheKeies.OP_USER_VERIFY_REC + verifyId;
 		if(getRedisTemplate().hasKey(key)){
 			getRedisTemplate().delete(key);

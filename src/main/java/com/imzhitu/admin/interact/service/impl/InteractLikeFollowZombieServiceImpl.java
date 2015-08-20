@@ -34,7 +34,6 @@ public class InteractLikeFollowZombieServiceImpl extends BaseServiceImpl impleme
 	
 	@Override
 	public void batchInsertLikeFollowZombie(File file) throws Exception {
-		// TODO Auto-generated method stub
 		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
 		detector.add(new ParsingDetector(false)); 
 		detector.add(JChardetFacade.getInstance());
@@ -71,21 +70,18 @@ public class InteractLikeFollowZombieServiceImpl extends BaseServiceImpl impleme
 
 	@Override
 	public void batchDeleteLikeFollowZombie(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		likeFollowZobmieMapper.batchDeleteLikeFollowZombie(ids);
 	}
 
 	@Override
 	public List<Integer> queryNRandomNotCommentNotFollowZombieId(Integer userId, Integer worldId) throws Exception {
-		// TODO Auto-generated method stub
 		return likeFollowZobmieMapper.queryNRandomNotCommentNotFollowZombieId(userId, worldId);
 	}
 
 	@Override
 	public void queryLikeFollowZombie(Integer id, Integer zombieId, Integer maxId, int page, int rows,
 			Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		InteractLikeFollowZombie dto = new InteractLikeFollowZombie();
 		dto.setFirstRow(rows*(page-1));
 		dto.setLimit(rows);

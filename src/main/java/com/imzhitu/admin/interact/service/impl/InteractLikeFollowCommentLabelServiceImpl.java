@@ -30,14 +30,12 @@ public class InteractLikeFollowCommentLabelServiceImpl extends BaseServiceImpl i
 
 	@Override
 	public void batchDeleteLikeFollowCommentLabel(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		likeFollowCommentLabelMapper.batchDeleteLikeFollowCommentLabel(ids);
 	}
 
 	@Override
 	public List<InteractLikeFollowCommentLabel> queryCommentLabelNameByLabelIds(String labelIdsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] labelIds = StringUtil.convertStringToIds(labelIdsStr);
 		return likeFollowCommentLabelMapper.queryCommentLabelNameByLabelIds(labelIds);
 	}
@@ -45,7 +43,6 @@ public class InteractLikeFollowCommentLabelServiceImpl extends BaseServiceImpl i
 	@Override
 	public void queryLikeFollowCommentLabel(Integer id, Integer labelId,Integer type, Integer maxId, int page, int rows,
 			Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		InteractLikeFollowCommentLabel dto = new InteractLikeFollowCommentLabel();
 		dto.setId(id);
 		dto.setMaxId(maxId);

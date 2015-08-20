@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.stereotype.Service;
@@ -35,6 +32,7 @@ import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.service.impl.UserOperationsServiceImpl;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpUserRecommendDto;
 import com.imzhitu.admin.op.dao.UserRecommendDao;
 import com.imzhitu.admin.op.dao.UserZombieDao;
@@ -42,6 +40,9 @@ import com.imzhitu.admin.op.service.OpUserService;
 import com.imzhitu.admin.userinfo.dao.UserInfoDao;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
 import com.imzhitu.admin.userinfo.service.impl.UserInfoServiceImpl;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService {
@@ -317,7 +318,7 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 				weight = 0;
 				objMeta = UserOperationsServiceImpl.USER_RECOMMEND_ACCEPT + 1;
 			}
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					msg, Tag.USER_MSG_USER_RECOMMEND, recipientId, String.valueOf(objMeta), recommendType, null, weight);
 		}
 		userRecommendDao.updateNotified(id, ++notified);
@@ -325,7 +326,7 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 		String tip = recipientName + "," + msg;
 		String shortTip = PushUtil.getShortName(recipientName) + "," + PushUtil.getShortTip(msg);
 		UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
-		pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_USER_RECOMMEND, new PushFailedCallback() {
+		pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_USER_RECOMMEND, new PushFailedCallback() {
 
 			@Override
 			public void onPushFailed(Exception e) {

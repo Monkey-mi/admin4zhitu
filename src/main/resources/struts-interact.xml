@@ -128,11 +128,11 @@
 			</result>
 	</action>
 		
-		<action name="likeFollow_*" class="com.imzhitu.admin.interact.InteractLikeFollowAction" method="{1}">
-			<result name="json" type="json">
-				<param name="root">jsonMap</param>
-			</result>
-		</action>
+	<action name="likeFollow_*" class="com.imzhitu.admin.interact.InteractLikeFollowAction" method="{1}">
+		<result name="json" type="json">
+			<param name="root">jsonMap</param>
+		</result>
+	</action>
 		
 		
 	</package>

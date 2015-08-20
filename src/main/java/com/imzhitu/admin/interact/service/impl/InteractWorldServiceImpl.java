@@ -31,10 +31,8 @@ import com.imzhitu.admin.common.pojo.InteractUserFollow;
 import com.imzhitu.admin.common.pojo.InteractWorld;
 import com.imzhitu.admin.common.pojo.InteractWorldClick;
 import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
-import com.imzhitu.admin.common.pojo.InteractWorldLevelListDto;
 import com.imzhitu.admin.common.pojo.InteractWorldLiked;
 import com.imzhitu.admin.common.pojo.OpZombieDegreeUserLevel;
-import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserLevelListDto;
 import com.imzhitu.admin.common.pojo.ZTWorldLevelDto;
 import com.imzhitu.admin.common.service.KeyGenService;
@@ -57,7 +55,6 @@ import com.imzhitu.admin.op.mapper.OpZombieMapper;
 import com.imzhitu.admin.op.service.OpUserService;
 import com.imzhitu.admin.op.service.OpZombieChannelService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
-import com.imzhitu.admin.op.service.impl.OpServiceImpl;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 
 //@Service
@@ -140,28 +137,16 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	private KeyGenService keyGenService;
 	
 	@Autowired
-	private OpUserService opUserService;
-	
-	@Autowired
 	private InteractWorldDao interactWorldDao;
 	
 	@Autowired
 	private InteractCommentService interactCommentService;
 	
 	@Autowired
-	private InteractCommentDao interactCommentDao;
-	
-	@Autowired
 	private InteractUserDao interactUserDao;
 	
 	@Autowired
 	private InteractTrackerDao interactTrackerDao;
-	
-	@Autowired
-	private HTWorldDao worldDao;
-	
-	@Autowired
-	private UserZombieDao userZombieDao;
 	
 	@Autowired
 	private com.hts.web.ztworld.service.ZTWorldInteractService webWorldInteractService;
@@ -201,12 +186,6 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private InteractUserlevelListService userLevelListService;
-	
-	@Autowired
-	private InteractUserlevelService userLevelService;
-	
-	@Autowired
-	private InteractWorldlevelListDao interactWorldlevelListDao ;
 	
 	@Autowired
 	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
@@ -1334,10 +1313,10 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			break;
 		}
 		try {
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, adminId, content,
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, adminId, content,
 					Tag.USER_MSG_SYS, 0, null, null, null, 0);
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(adminId);
-			pushService.pushSysMessage(content, OpServiceImpl.ZHITU_UID, content, 
+			pushService.pushSysMessage(content, Admin.ZHITU_UID, content, 
 					userPushInfo, Tag.USER_MSG_SYS, new PushFailedCallback() {
 
 				@Override

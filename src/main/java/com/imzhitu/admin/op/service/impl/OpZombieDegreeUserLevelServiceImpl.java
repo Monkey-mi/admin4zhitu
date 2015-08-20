@@ -22,7 +22,6 @@ public class OpZombieDegreeUserLevelServiceImpl extends BaseServiceImpl implemen
 	@Override
 	public void insertZombieDegreeUserLevel(Integer zombieDegreeId,
 			Integer userLevelId) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieDegreeUserLevel dto = new OpZombieDegreeUserLevel();
 		dto.setZombieDegreeId(zombieDegreeId);
 		dto.setUserLevelId(userLevelId);
@@ -32,7 +31,6 @@ public class OpZombieDegreeUserLevelServiceImpl extends BaseServiceImpl implemen
 	@Override
 	public void batchDeleteZombieDegreeUserLevel(String idsStr)
 			throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		zombieDegreeUserLevelMapper.batchDeleteZombieDegreeUserLevel(ids);
 	}
@@ -41,7 +39,6 @@ public class OpZombieDegreeUserLevelServiceImpl extends BaseServiceImpl implemen
 	public void queryZombieDegreeUserLevel(Integer id, Integer zombieDegreeId,
 			Integer userLevelId, Integer maxId, int page, int rows,
 			Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieDegreeUserLevel dto = new OpZombieDegreeUserLevel();
 		dto.setZombieDegreeId(zombieDegreeId);
 		dto.setUserLevelId(userLevelId);
@@ -71,7 +68,6 @@ public class OpZombieDegreeUserLevelServiceImpl extends BaseServiceImpl implemen
 	public long queryZombieDegreeUserLevelTotalCount(Integer id,
 			Integer zombieDegreeId, Integer userLevelId, Integer maxId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieDegreeUserLevel dto = new OpZombieDegreeUserLevel();
 		dto.setZombieDegreeId(zombieDegreeId);
 		dto.setUserLevelId(userLevelId);

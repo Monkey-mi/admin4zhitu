@@ -1,6 +1,9 @@
 package com.imzhitu.admin.interact.service;
 
+import java.util.List;
 import java.util.Map;
+
+import com.imzhitu.admin.common.pojo.InteractLikeFollowRecord;
 
 public interface InteractLikeFollowRecordService {
 	/**
@@ -12,7 +15,7 @@ public interface InteractLikeFollowRecordService {
 	 * @param complete 整个互动过程完成情况
 	 * @throws Exception
 	 */
-	public void insertLikeFollowRecord(Integer zombieId,Integer worldId,Integer userId,Integer type,Integer complete)throws Exception;
+	public void insertLikeFollowRecord(Integer zombieId,Integer worldId,Integer userId,Integer type,Integer complete,Integer interactWorldCommentId)throws Exception;
 	
 	/**
 	 * 批量删除
@@ -44,5 +47,18 @@ public interface InteractLikeFollowRecordService {
 	 * @throws Exception
 	 */
 	public void queryLikeFollowRecord(Integer id,Integer zombieId,Integer worldId,Integer userId,Integer type,
-			Integer complete,Integer maxId,int page,int rows,Map<String,Object>jsonMap)throws Exception;
+			Integer complete,Integer interactWorldCommentId,Integer maxId,int page,int rows,Map<String,Object>jsonMap)throws Exception;
+	
+	/**
+	 * 查询未完成的互粉互赞
+	 * @param type 类型，用以区分互粉还是互赞。0表示互赞，1表示互粉
+	 * @return
+	 */
+	public List<InteractLikeFollowRecord> queryUnCompleteLikeFollowRecordByType(Integer type)throws Exception;
+	
+	/**
+	 * 扫描互粉互赞，添加对应的计划，job
+	 * @throws Exception
+	 */
+	public void doLikeFollowJob()throws Exception;
 }

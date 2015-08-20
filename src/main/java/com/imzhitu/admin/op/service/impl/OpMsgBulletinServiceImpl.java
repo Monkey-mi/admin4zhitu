@@ -37,7 +37,6 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	@Override
 	public void insertMsgBulletin(String path, Integer type, String link,
 			Integer operator,String bulletinName,String bulletinThumb) throws Exception {
-		// TODO Auto-generated method stub
 		Integer  serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_SERIAL);
 		OpMsgBulletin dto = new OpMsgBulletin();
 		Date now = new Date();
@@ -56,7 +55,6 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 
 	@Override
 	public void batchDeleteMsgBulletin(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		if(ids.length > 0){
 			msgBulletinMapper.batchDeleteMsgBulletin(ids);
@@ -66,7 +64,6 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	@Override
 	public void updateMsgBulletin(Integer id, String path, Integer type,
 			String link, Integer valid, Integer operator,String bulletinName,String bulletinThumb) throws Exception {
-		// TODO Auto-generated method stub
 		OpMsgBulletin dto = new OpMsgBulletin();
 		Date now = new Date();
 		dto.setId(id);
@@ -83,7 +80,6 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 
 	@Override
 	public void batchUpdateMsgBulletinValid(String idsStr,Integer valid,Integer operator) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		if(ids.length > 0){
 			msgBulletinMapper.batchUpdateMsgBulletinValid(ids,valid,operator);
@@ -94,7 +90,6 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	public void queryMsgBulletin(Integer id, Integer type, Integer valid,Integer isCache,
 			Integer maxId, int page, int rows, Map<String, Object> jsonMap)
 			throws Exception {
-		// TODO Auto-generated method stub
 		List<OpMsgBulletin> list = null;
 		Integer reMaxId = 0;
 		long total = 0;
@@ -131,7 +126,6 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	@Override
 	public long queryMsgBulletinTotalCount(Integer id, Integer type,
 			Integer valid, Integer maxId) throws Exception {
-		// TODO Auto-generated method stub
 		OpMsgBulletin dto = new OpMsgBulletin();
 		dto.setId(id);
 		dto.setBulletinType(type);
@@ -144,7 +138,6 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	@Override
 	public List<OpMsgBulletin> queryMsgBulletinByIds(String idsStr)
 			throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		return msgBulletinMapper.queryMsgBulletinByIds(ids);
 	}

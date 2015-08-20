@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.hts.web.common.pojo.AbstractNumberDto;
 

@@ -35,6 +35,56 @@ public interface OpChannelV2Service extends BaseService{
 			Integer channelTypeId, Integer ownerId, Integer themeId)throws Exception;
 	
 	/**
+	 * 修改频道的精选
+	 * 
+	 * @param channelId	频道id
+	 * @param superb	是否精选，精选：1，非精选：0
+	 * @throws Exception
+	 * @author zhangbo	2015年8月19日
+	 */
+	public void updateOpChannelSuperb(Integer channelId, Integer superb) throws Exception;
+	
+	/**
+	 * 修改频道的有效性
+	 * 
+	 * @param channelId	频道id
+	 * @param valid	是否有效，有效：1，无效：0
+	 * @throws Exception
+	 * @author zhangbo	2015年8月19日
+	 */
+	public void updateOpChannelValid(Integer channelId, Integer valid) throws Exception;
+	
+	/**
+	 * 修改频道是否有弹幕
+	 * 
+	 * @param channelId	频道id
+	 * @param danmu		是否有弹幕，有弹幕：1，没有弹幕：0
+	 * @throws Exception
+	 * @author zhangbo	2015年8月19日
+	 */
+	public void updateOpChannelDanmu(Integer channelId, Integer danmu) throws Exception;
+	
+	/**
+	 * 修改频道的发心情标记
+	 * 
+	 * @param channelId	频道id
+	 * @param moodFlag	是否可以发心情，可以：1，不可以：0
+	 * @throws Exception
+	 * @author zhangbo	2015年8月19日
+	 */
+	public void updateOpChannelMoodFlag(Integer channelId, Integer moodFlag) throws Exception;
+	
+	/**
+	 * 修改频道是否可以发织图的标记
+	 * 
+	 * @param channelId	频道id
+	 * @param worldFlag	是否可以在频道中发织图，可以：1，不可以 ：0
+	 * @throws Exception
+	 * @author zhangbo	2015年8月19日
+	 */
+	public void updateOpChannelWorldFlag(Integer channelId, Integer worldFlag) throws Exception;
+	
+	/**
 	 * 分页查询
 	 * @param dto
 	 * @return

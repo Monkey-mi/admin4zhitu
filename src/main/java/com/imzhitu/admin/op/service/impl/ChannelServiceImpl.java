@@ -26,36 +26,27 @@ import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannel;
 import com.imzhitu.admin.common.pojo.OpChannelNameDto;
-import com.imzhitu.admin.common.pojo.OpChannelStar;
-import com.imzhitu.admin.common.pojo.OpChannelStarDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOneDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
-import com.imzhitu.admin.op.dao.ChannelStarCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneTitleCacheDao;
-import com.imzhitu.admin.op.dao.UserRecommendDao;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
-import com.imzhitu.admin.op.mapper.ChannelStarMapper;
 import com.imzhitu.admin.op.mapper.ChannelTopOneMapper;
 import com.imzhitu.admin.op.mapper.ChannelTopTypeMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.service.ChannelService;
-import com.imzhitu.admin.op.service.OpChannelUserService;
 
 //@Service
 public class ChannelServiceImpl extends BaseServiceImpl implements
 		ChannelService {
 
-	private static final String CHANNEL_STAR_MSG_HEAD = "，恭喜！你被推荐为";
-	
-	private static final String CHANNEL_STAR_MSG_FOOT =  "频道的红人啦！继续发光发亮哟，么么哒！";
-	
 	private static final String CHANNEL_WORLD_MSG_HEAD = "，恭喜！由于你的织图棒棒的，入选";
 	
 	private static final String CHANNEL_WORLD_MSG_FOOT = "啦！期待你的新作哦！";
@@ -75,9 +66,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	private Integer channelStarLimit;
 	
 	@Autowired
-	private ChannelStarCacheDao channelStarCacheDao;
-	
-	@Autowired
 	private ChannelTopOneCacheDao channelTopOneCacheDao;
 	
 	@Autowired
@@ -87,9 +75,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	private ChannelMapper channelMapper;
 
 	@Autowired
-	private ChannelStarMapper channelStarMapper;
-	
-	@Autowired
 	private ChannelTopOneMapper channelTopOneMapper;
 	
 	@Autowired
@@ -97,9 +82,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private ChannelWorldMapper channelWorldMapper;
-	
-	@Autowired
-	private OpChannelUserService opChannelUserService;
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
@@ -118,9 +100,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private com.hts.web.userinfo.service.UserInfoService webUserInfoService;
-	
-	@Autowired
-	private UserRecommendDao userRecommendDao;
 	
 	@Autowired
 	private com.hts.web.operations.service.ChannelService webChannelService;
@@ -146,13 +125,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public void updateStarCache(OpChannelStar star) throws Exception {
-		star.setFirstRow(0);
-		star.setLimit(channelStarLimit);
-		channelStarCacheDao.updateChannelStar(star);
-	}
-
-	@Override
 	public void updateTopOneCache() throws Exception {
 		channelTopOneCacheDao.updateTopOne();
 		Date endDate = new Date();
@@ -162,47 +134,16 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateTopOneTitleCache(Date beginDate, Date endDate) throws Exception {
-//		SimpleDateFormat format = new SimpleDateFormat("MM.dd");
-//		String begin = format.format(beginDate);
-//		String end = format.format(endDate);
-		
 		OpChannelTopOneTitle title = new OpChannelTopOneTitle();
 		title.setText(CHANNEL_TOP_ONE_TITLE_TEXT);
-//		title.setDateInterval("（" + begin + "~" + end + "）");
 		channelTopOneTitleCacheDao.updateTitle(title);
 	}
 	
 	@Override
 	public void updateChannelWorldCache(OpChannelWorld world, Integer childCountBase) throws Exception {
-//		updateChannelWorldCache(world.getChannelId(), childCountBase);
 		webChannelService.updateWorldAndChildCount(world.getChannelId());
 	}
 	
-	/**
-	 * 更新频道织图缓存
-	 * 
-	 * @param channelId
-	 * @param childCountBase
-	 * @throws Exception
-	 */
-//	private void updateChannelWorldCache(Integer channelId, Integer childCountBase) throws Exception {
-//		Integer count = 0;
-//		if(childCountBase == null || childCountBase.equals(0)) {
-//			childCountBase = channelMapper.queryChildCountBase(channelId);
-//		} else if(childCountBase.equals(-1)) {
-//			childCountBase = 0;
-//		}
-//		count = channelWorldMapper.querySumChildCountByChannelId(channelId);
-//		count += childCountBase;
-//		
-//		OpChannel channel = new OpChannel();
-//		channel.setId(channelId);
-//		channel.setChildCount(count);
-//		channel.setChildCountBase(childCountBase);
-//		channelMapper.update(channel);
-//		
-//	}
-
 	@Override
 	public void buildChannel(final OpChannel channel, int page, int rows, 
 			Map<String, Object> jsonMap) throws Exception {
@@ -269,144 +210,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		channelMapper.updateValidByIds(ids, valid);
-	}
-
-	@Override
-	public void buildStarDto(OpChannelStar star, int page, int rows,
-			Map<String, Object> jsonMap) throws Exception {
-		
-		if(star.getChannelId() == null && star.getUserId() == null) {
-			jsonMap.put(OptResult.JSON_KEY_TOTAL, 0);
-			jsonMap.put(OptResult.JSON_KEY_ROWS, new ArrayList<OpChannelStarDto>());
-			return;
-		}
-		
-		
-		buildNumberDtos(OptResult.JSON_KEY_ROWS, OptResult.JSON_KEY_TOTAL, OptResult.JSON_KEY_MAX_ID, 
-				 "getChannelStarId", star, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelStar>() {
-			
-			@Override
-			public long queryTotal(OpChannelStar star) {
-				return channelStarMapper.queryStarCount(star);
-			}
-			
-			@Override
-			public List<? extends AbstractNumberDto> queryList(OpChannelStar star) {
-				List<OpChannelStarDto> starList = channelStarMapper.queryStars(star);
-				webUserInfoService.extractVerify(starList);
-				
-				//获取每个因素的具体值,动态的值，因为注册时间会随着时间的流逝增加，最后发图时间也是
-				Integer superbScore;	//平均几天上精选*3 对应的分数
-				Integer channelScore;	//平均几天上频道*3 对应的分数
-				Integer registerScore;	//注册多少个周/2
-				Integer lastWorldScore;	//最近发图时间*2
-				for(OpChannelStarDto dto:starList){
-					try{
-						superbScore = opChannelUserService.querySuperbScore(dto.getUserId());
-					}catch(Exception e){
-						superbScore = -1;
-					}
-					try{
-						channelScore = opChannelUserService.queryChannelScore(dto.getUserId());
-					}catch(Exception e){
-						channelScore = -1;
-					}
-					try{
-						registerScore = opChannelUserService.queryRegisterScore(dto.getUserId());
-					}catch(Exception e){
-						registerScore = -1;
-					}
-					try{
-						lastWorldScore = opChannelUserService.queryLastWorldScore(dto.getUserId());
-					}catch(Exception e){
-						lastWorldScore = -1;
-					}
-					dto.setSuperbScore(superbScore);
-					dto.setChannelScore(channelScore);
-					dto.setRegisterScore(registerScore);
-					dto.setLastWorldScore(lastWorldScore);
-				}
-				
-				return starList;
-			}
-		});
-		
-		if(page == 1) {
-			Integer maxId = channelStarMapper.queryMaxId(star.getChannelId());
-			jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
-		}
-	}
-
-	@Override
-	public void updateStar(OpChannelStar star) throws Exception {
-		channelStarMapper.update(star);
-	}
-
-	@Override
-	public void saveStar(OpChannelStar star) throws Exception {
-		OpChannelStar starExists = channelStarMapper.queryStarByChannelId(star);
-		if(starExists != null) {
-			addStarId(star.getChannelId(), star.getUserId());
-		} else {
-			Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_STAR_ID);
-			star.setId(id);
-			channelStarMapper.save(star);
-		}
-	}
-
-	@Override
-	public void deletelStars(String idsStr) throws Exception {
-		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		channelStarMapper.deleteByIds(ids);
-	}
-
-	@Override
-	public void updateStarValid(String idsStr, Integer valid) throws Exception {
-		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		channelStarMapper.updateValidByIds(ids, valid);
-	}
-	
-	@Override
-	public void addStarId(Integer channelId, String[] uidStrs) throws Exception {
-		for(int i = uidStrs.length - 1; i >= 0; i--) {
-			if(StringUtil.checkIsNULL(uidStrs[i]))
-				continue;
-			int uid = Integer.parseInt(uidStrs[i]);
-			addStarId(channelId, uid);
-		}
-	}
-	
-	@Override
-	public void addStarId(Integer channelId, Integer uid) throws Exception {
-		Integer newId = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_STAR_ID);
-		OpChannelStar star = new OpChannelStar();
-		star.setId(newId);
-		star.setUserId(uid);
-		star.setChannelId(channelId);
-		channelStarMapper.updateId(star);
-	}
-	
-	@Override
-	public void updateStarWeight(Integer id, Boolean isAdd,
-			Map<String, Object> jsonMap) throws Exception {
-		OpChannelStar star = new OpChannelStar();
-		Integer weight = 0;
-		star.setId(id);
-		
-		if(isAdd)
-			weight = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_STAR_ID);
-		
-		star.setWeight(weight);
-		channelStarMapper.update(star);
-		
-		Integer userId = channelStarMapper.queryUserIdById(id);
-		Integer recommendWeight = userRecommendDao.queryWeightByUID(userId);
-		if(recommendWeight == null) recommendWeight = -1;
-		
-		jsonMap.put(OptResult.JSON_KEY_WEIGHT, weight);
-		jsonMap.put(OptResult.JSON_KEY_RECOMMEND_WEIGHT, recommendWeight);
-		jsonMap.put(OptResult.JSON_KEY_USER_ID, userId);
-		
 	}
 	
 	@Override
@@ -524,7 +327,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		
 		if(world.getChannelId() == null && world.getWorldId() == null) {
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, 0);
-			jsonMap.put(OptResult.JSON_KEY_ROWS, new ArrayList<OpChannelStarDto>());
+			jsonMap.put(OptResult.JSON_KEY_ROWS, new ArrayList<OpChannelWorld>());
 			return;
 		}
 		
@@ -688,52 +491,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			webChannelService.updateWorldAndChildCount(channelId);
 		}
 	}
-
-	@Override
-	public void addStarRecommendMsg(Integer id) throws Exception {
-		OpChannelStar star = channelStarMapper.queryStarById(id);
-		if(star == null) 
-			throw new HTSException("记录已经被删除");
-		
-		Integer notified = star.getNotified();
-		if(notified != null && notified.equals(Tag.FALSE)) {
-			OpChannel channel = channelMapper.queryChannelById(star.getChannelId());
-			String channelName = channel.getChannelName();
-			Integer recipientId = star.getUserId();
-			Integer channelId = star.getChannelId();
-			String recipientName = webUserInfoDao.queryUserNameById(recipientId);
-			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
-			Integer msgCode = UserInfoUtil.getSysMsgCode(userPushInfo.getVer(), Tag.USER_MSG_CHANNEL_STAR);
-			
-			String msg = CHANNEL_STAR_MSG_HEAD + channelName + CHANNEL_STAR_MSG_FOOT;
-			String tip = recipientName + msg;
-			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);
-			
-			// 保存消息
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
-					tip, msgCode, recipientId, channelName, String.valueOf(channelId), null, 0);
-			
-			// 更新推送标记
-			star.setNotified(Tag.TRUE);
-			channelStarMapper.update(star);
-			
-			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
-	
-				@Override
-				public void onPushFailed(Exception e) {
-				}
-			});
-		}
-	}
-	
-	@Override
-	public void addStarRecommendMsgs(String idsStr) throws Exception {
-		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		for(Integer id : ids) {
-			addStarRecommendMsg(id);
-		}
-	}
 	
 	@Override
 	public void addTopOneRecommendMsg(Integer id) throws Exception {
@@ -755,7 +512,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(tipHead);
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, recipientId, null, null, null, 0);
 			
 			// 更新推送标记
@@ -763,7 +520,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			channelTopOneMapper.update(topOne);
 			
 			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
@@ -802,7 +559,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
 			
 			// 更新推送标记
@@ -810,7 +567,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			channelWorldMapper.update(world);
 			
 			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
@@ -842,7 +599,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(OpServiceImpl.ZHITU_UID, recipientId, 
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
 			
 			// 更新推送标记
@@ -850,7 +607,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			channelWorldMapper.update(world);
 			
 			// 推送消息
-			pushService.pushSysMessage(shortTip, OpServiceImpl.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
@@ -858,46 +615,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			});
 		}
 	}
-	
-	@Override
-	public void updateChannelStar() throws Exception{
-		Date now = new Date();
-		logger.info("======更新频道明星任务开始执行，开始时间："+now);
-		//查询频道类型所有类型
-		List<OpChannelTopType> channelTopTypeList = channelTopTypeMapper.queryTopTypes();
-		for(OpChannelTopType o:channelTopTypeList){
-			OpChannelStar star = new OpChannelStar();
-			star.setChannelId(o.getId());
-				
-			//根据频道id查询频道排名前15个用户
-			List<Integer> channelUserList = opChannelUserService.queryChannelUserRankTopN(o.getId());
-			for(Integer u:channelUserList){
-				star.setUserId(u);
-				star.setValid(Tag.FALSE);
-				star.setNotified(Tag.FALSE);
-					//保存
-					OpChannelStar starExists = channelStarMapper.queryStarByChannelId(star);
-					Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_STAR_ID);
-					star.setId(id);
-					if(starExists != null) {
-						channelStarMapper.updateId(star);
-					} else {
-						channelStarMapper.save(star);
-					}
-					
-					//更新缓存
-					//channelStarCacheDao.updateChannelStar(star);
-					//通知
-					//addStarRecommendMsg(star.getId());
-					
-			}
-			//更新缓存
-			//updateStarCache(star);
-		}
-		Date end = new Date();
-		logger.info("=======更新频道明星完毕。结束时间："+end + ". 费时："+(now.getTime() - end.getTime()) + "ms");
-	}
-	
 	
 	@Override
 	public List<Integer> querySuperbTopOne(OpChannelTopOne dto)throws Exception{
@@ -1186,6 +903,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			Map<String, Object> jsonMap) throws Exception {
 		final OpChannel channel = new OpChannel();
 		channel.setMaxId(maxId);
+		channel.setValid(Tag.TRUE); // 只查询有效频道
 		if(!StringUtil.checkIsNULL(query)) {
 			try {
 				Integer id = Integer.parseInt(query);

@@ -1,5 +1,9 @@
 package com.imzhitu.admin.common.pojo;
 
+import java.util.Date;
+
+import org.apache.struts2.json.annotations.JSON;
+
 import com.hts.web.common.pojo.AbstractNumberDto;
 
 public class InteractLikeFollowRecord extends AbstractNumberDto{
@@ -10,6 +14,25 @@ public class InteractLikeFollowRecord extends AbstractNumberDto{
 	private Integer zombieId;
 	private Integer type;	//类型，0表示互赞，1表示互粉
 	private Integer complete;
+	private Integer interactWorldCommentId;
+	private Date addDate;
+	private Date modifyDate;
+	
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Date getAddDate() {
+		return addDate;
+	}
+	public void setAddDate(Date addDate) {
+		this.addDate = addDate;
+	}
+	
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -45,6 +68,12 @@ public class InteractLikeFollowRecord extends AbstractNumberDto{
 	}
 	public void setComplete(Integer complete) {
 		this.complete = complete;
+	}
+	public Integer getInteractWorldCommentId() {
+		return interactWorldCommentId;
+	}
+	public void setInteractWorldCommentId(Integer interactWorldCommentId) {
+		this.interactWorldCommentId = interactWorldCommentId;
 	}
 	
 }

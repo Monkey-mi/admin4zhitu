@@ -15,7 +15,6 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpNotice;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
-import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.constant.LoggerKeies;
@@ -43,9 +42,6 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 
 	@Autowired
 	private com.hts.web.push.service.PushService pushService;
-	
-	@Autowired
-	private com.hts.web.operations.dao.StartPageCacheDao webStartPageCacheDao;
 	
 	@Value("${push.appMsgSenderId}")
 	private Integer appMsgSenderId = 2063;

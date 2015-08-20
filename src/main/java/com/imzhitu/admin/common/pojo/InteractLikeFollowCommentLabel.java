@@ -7,6 +7,8 @@ public class InteractLikeFollowCommentLabel extends AbstractNumberDto{
 	private Integer id;
 	private Integer labelId;
 	private String labelName;
+	private Integer type;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -24,5 +26,11 @@ public class InteractLikeFollowCommentLabel extends AbstractNumberDto{
 	}
 	public void setLabelName(String labelName) {
 		this.labelName = labelName;
+	}
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
 	}
 }

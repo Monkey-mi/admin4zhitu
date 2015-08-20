@@ -38,7 +38,6 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 	@Override
 	public void insertSuperbChannelRecommend(Integer channelId, Integer valid,
 			Integer operator)throws Exception {
-		// TODO Auto-generated method stub
 		OpSuperbChannelRecommend dto = new OpSuperbChannelRecommend();
 		dto.setChannelId(channelId);
 		long totalCount = superbChannelRecommendMapper.querySuperbChannelRecommendCount(dto);
@@ -54,7 +53,6 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 
 	@Override
 	public void batchDeleteSuperbChannelRecommend(String idsStr) throws Exception{
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		if(ids != null && ids.length > 0)
 			superbChannelRecommendMapper.batchDeleteSuperbChannelRecommend(ids);
@@ -62,7 +60,6 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 
 	@Override
 	public void batchUpdateSuperbChannelRecommendValid(Integer valid,String idsStr) throws Exception{
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		if(ids != null && ids.length > 0)
 			superbChannelRecommendMapper.batchUpdateSuperbChannelRecommendValid(valid,ids);
@@ -72,7 +69,6 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 	public void qeurySuperbChannelRecommend(Integer id, Integer channelId,
 			Integer valid, Integer maxId, int page, int rows,
 			Map<String, Object> jsonMap) throws Exception{
-		// TODO Auto-generated method stub
 		OpSuperbChannelRecommend dto = new OpSuperbChannelRecommend();
 		dto.setChannelId(channelId);
 		dto.setValid(valid);
@@ -98,7 +94,6 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 	@Override
 	public long querySuperbChannelRecommendCount(Integer id,Integer channelId,
 			Integer valid,Integer maxId) throws Exception{
-		// TODO Auto-generated method stub
 		OpSuperbChannelRecommend dto = new OpSuperbChannelRecommend();
 		dto.setChannelId(channelId);
 		dto.setValid(valid);

@@ -35,7 +35,6 @@ public class OpZombieChannelServiceImpl extends BaseServiceImpl implements OpZom
 	@Override
 	public void insertZombieChannel(Integer userId, Integer channelId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieChannel dto = new OpZombieChannel();
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
@@ -44,7 +43,6 @@ public class OpZombieChannelServiceImpl extends BaseServiceImpl implements OpZom
 
 	@Override
 	public void batchDeleteZombieChannel(String idsStr) throws Exception {
-		// TODO Auto-generated method stub
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		zombieChannelMapper.batchDeleteZombieChannel(ids);
 	}
@@ -53,7 +51,6 @@ public class OpZombieChannelServiceImpl extends BaseServiceImpl implements OpZom
 	public void queryZombieChannel(Integer id, Integer userId,
 			Integer channelId, Integer maxId, int page, int rows,
 			Map<String, Object> jsonMap) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieChannel dto = new OpZombieChannel();
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
@@ -81,7 +78,6 @@ public class OpZombieChannelServiceImpl extends BaseServiceImpl implements OpZom
 	@Override
 	public long queryZombieChannelTotalCount(Integer id, Integer userId,
 			Integer channelId, Integer maxId) throws Exception {
-		// TODO Auto-generated method stub
 		OpZombieChannel dto = new OpZombieChannel();
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
@@ -93,13 +89,11 @@ public class OpZombieChannelServiceImpl extends BaseServiceImpl implements OpZom
 	@Override
 	public List<Integer> queryNotInteractNRandomNotFollowZombie(Integer userId,
 			Integer channelId, Integer worldId, Integer limit) throws Exception {
-		// TODO Auto-generated method stub
 		return zombieChannelMapper.queryNotInteractNRandomNotFollowZombie(userId, channelId, worldId, limit);
 	}
 
 	@Override
 	public void batchInsertZombieChannel(File file, Integer channelId) throws Exception {
-		// TODO Auto-generated method stub
 		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
 		detector.add(new ParsingDetector(false)); 
 		detector.add(JChardetFacade.getInstance());

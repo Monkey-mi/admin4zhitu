@@ -228,4 +228,11 @@ public class Admin {
 	 */
 	public static final String ADMIN_DAEMON_ADCACHEKEY = "admin:daemon:ADCacheKey";
 	
+	/**
+	 * 织图官方账号id
+	 * 
+	 * @author zhangbo	2015年8月18日
+	 */
+	public static final Integer ZHITU_UID = 2063;
+	
 }

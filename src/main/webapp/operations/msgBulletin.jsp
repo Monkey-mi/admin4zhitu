@@ -37,7 +37,7 @@
 	function tableLoadDate(pageNum){
 		$("#htm_table").datagrid({
 			title  :"频道banner管理",
-			width  :1200,
+			width  :1300,
 			pageList : [5,10,30,50],
 			pageSize : 5,
 			loadMsg:"加载中....",
@@ -117,7 +117,8 @@
 					formatter : function(value, row, index ) {
 						var retStr="";
 						if(row.valid == 0 || row.valid == 1){
-							retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.bulletinPath + "\",\"" + row.bulletinType + "\",\"" + row.link + "\")'>【修改】</a>";
+							retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.bulletinPath + "\",\"" + row.bulletinType + "\",\"" + row.link
+							+ "\",\"" + row.bulletinName + "\",\"" + row.bulletinThumb + "\")'>【修改】</a>";
 						}
 						return retStr;
 					}

@@ -5,14 +5,15 @@
 		<result property="id" column="id" jdbcType="INTEGER"/>
 		<result property="labelId" column="label_id" jdbcType="INTEGER"/>
 		<result property="labelName" column="label_name" jdbcType="VARCHAR"/>
+		<result property="type" column="type" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<!-- INSERT -->
 	<insert id="insertLikeFollowCommentLabel">
 		insert hts_admin.interact_like_follow_comment_label
-		(label_id)
+		(label_id,type)
 		values
-		(#{labelId})
+		(#{labelId},#{type})
 	</insert>
 	
 	<!-- BATCH DELETE -->
@@ -44,10 +45,13 @@
 				t1.id = #{id}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				and <![CDATA[ iwcl.id <= #{maxId}]]>
+				and <![CDATA[ t1.id <= #{maxId}]]>
 			</if>
 			<if test="labelId != null">
 				and t1.label_id = #{labelId}
+			</if>
+			<if test="type != null">
+				and t1.type = #{type}
 			</if>
 		</where> 
 		order by t1.id desc
@@ -66,6 +70,9 @@
 			</if>
 			<if test="labelId != null">
 				and t1.label_id = #{labelId}
+			</if>
+			<if test="type != null">
+				and t1.type = #{type}
 			</if>
 		</where> 
 	</select>

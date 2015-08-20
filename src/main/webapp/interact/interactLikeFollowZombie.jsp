@@ -10,8 +10,8 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery.form.min.js"></script>
 <script type="text/javascript">
 	var maxId=0,
-	loadDateUrl="./admin_interact/likeFollowZombie_queryZombieChannel",
-	delUrl = "./admin_interact/likeFollowZombie_batchDeleteLikeFollowZombie?idsStr=",
+	loadDateUrl="./admin_interact/likeFollow_queryLikeFollowZombie",
+	delUrl = "./admin_interact/likeFollow_batchDeleteLikeFollowZombie?idsStr=",
 	tableQueryParams = {},
 	tableInit = function() {
 		tableLoadDate(1);
@@ -48,11 +48,8 @@
 			columns: [[
 				{field :'ck',checkbox:true},
 				{field :'id',title:'ID',align:'center',width:80},
-				{field : 'userId',title: '用户ID',align : 'center',width : 180},
-				{field : 'userName',title: '用户名称',align : 'center',width : 180},
-				{field : 'channelId',title: '频道ID',align : 'center',width : 180},
-				{field : 'channelName',title: '频道名称',align : 'center',width : 180}
-				
+				{field : 'zombieId',title: '马甲ID',align : 'center',width : 180},
+				{field : 'zombieName',title: '马甲名称',align : 'center',width : 180},
 			]],
 			onLoadSuccess:myOnLoadSuccess,
 			onBeforeRefresh : myOnBeforeRefresh
@@ -188,7 +185,7 @@
 		<table id="htm_table"></table>
 		<!-- 添加记录 -->
 		<div id="htm_add">
-			<form id="add_form" action="./admin_interact/likeFollowZombie_batchInsertLikeFollowZombie" method="post">
+			<form id="add_form" action="./admin_interact/likeFollow_batchInsertLikeFollowZombie" method="post">
 				<table class="htm_edit_table" width="480">
 					<tbody>
 						<tr>

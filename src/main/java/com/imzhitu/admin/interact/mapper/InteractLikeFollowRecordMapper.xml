@@ -8,12 +8,15 @@
 		<result property="userId" column="user_id" jdbcType="INTEGER"/>
 		<result property="type" column="type" jdbcType="INTEGER"/>
 		<result property="complete" column="complete" jdbcType="INTEGER"/>
+		<result property="interactWorldCommentId" column="interact_world_comment_id" jdbcType="INTEGER"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
 	</resultMap>
 	
 	<!-- INSERT -->
 	<insert id="insertLikeFollowRecord">
-		insert into hts_admin.interact_like_follow_record(zombie_id,world_id,user_id,type,complete)
-		values (#{zombieId},#{worldId},#{userId},#{type},#{complete})
+		insert into hts_admin.interact_like_follow_record(zombie_id,world_id,user_id,type,complete,interact_world_comment_id,date_add,date_modify)
+		values (#{zombieId},#{worldId},#{userId},#{type},#{complete},#{interactWorldCommentId},NOW(),NOW())
 	</insert>
 	
 	<!-- DELETE -->
@@ -28,7 +31,7 @@
 	<!-- BATCH UPDATE COMPLETE -->
 	<update id="batchUpdateLikeFollowRecord">
 		update hts_admin.interact_like_follow_record
-		set complete=#{complete}
+		set complete=#{complete},date_modify=NOW()
 		where id in
 		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
 			#{item}
@@ -58,6 +61,9 @@
 			<if test="complete != null">
 				and complete = #{complete}
 			</if>
+			<if test="interactWorldCommentId != null">
+				and interact_world_comment_id = #{interactWorldCommentId}
+			</if>
 		</where>
 		order by id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
@@ -86,6 +92,17 @@
 			<if test="complete != null">
 				and complete = #{complete}
 			</if>
+			<if test="interactWorldCommentId != null">
+				and interact_world_comment_id = #{interactWorldCommentId}
+			</if>
 		</where>
+	</select>
+	
+	<!-- 查询未完成的记录 -->
+	<select id="queryUnCompleteLikeFollowRecordByType" resultMap="LikeFollowRecordMap">
+		select fr.*
+		from hts_admin.interact_like_follow_record fr 
+		left join hts_admin.interact_world_comment wc on fr.interact_world_comment_id=wc.id
+		where wc.valid=1 and wc.finished=1 and fr.complete=0 and fr.type=#{type}
 	</select>
 </mapper>

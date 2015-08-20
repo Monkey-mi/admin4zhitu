@@ -104,8 +104,12 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setLastModifiedTime(now.getTime());
 
 		opChannelV2Mapper.insertOpChannel(dto);
-		// 新增频道的同时须将该频道拥有着关注该频道
-		channelMemberService.insertChannelMember(channelId, ownerId, Tag.TRUE);
+		
+		// 新增频道的同时须将该频道拥有者关注该频道
+		webChannelService.saveMember(channelId, ownerId);
+		
+		// 设置拥有者频道等级为owner，即1
+		channelMemberService.updateChannelMemberDegree(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
 	}
 
 	@Override
@@ -143,12 +147,53 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			if (list.get(0).getOwnerId() == ownerId) {
 				return;
 			}
-			//原拥有者degree设置为0
+			// 原拥有者degree设置为0
 			channelMemberService.updateChannelMemberDegree(channelId, list.get(0).getOwnerId(), Tag.CHANNEL_MEMBER_ROLE_NORMAL);
 			
-			//新增频道的同时须将该频道拥有着关注该频道
-			channelMemberService.insertChannelMember(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
+			// 现拥有者degree设置为1
+			channelMemberService.updateChannelMemberDegree(channelId, ownerId, Tag.CHANNEL_MEMBER_ROLE_OWNER);
 		}
+	}
+	
+	@Override
+	public void updateOpChannelSuperb(Integer channelId, Integer superb) throws Exception {
+		OpChannelV2Dto dto = new OpChannelV2Dto();
+		dto.setChannelId(channelId);
+		dto.setSuperb(superb);
+		opChannelV2Mapper.updateOpChannel(dto);
+		
+	}
+	
+	@Override
+	public void updateOpChannelValid(Integer channelId, Integer valid) throws Exception {
+		OpChannelV2Dto dto = new OpChannelV2Dto();
+		dto.setChannelId(channelId);
+		dto.setValid(valid);
+		opChannelV2Mapper.updateOpChannel(dto);
+	}
+	
+	@Override
+	public void updateOpChannelDanmu(Integer channelId, Integer danmu) throws Exception {
+		OpChannelV2Dto dto = new OpChannelV2Dto();
+		dto.setChannelId(channelId);
+		dto.setDanmu(danmu);
+		opChannelV2Mapper.updateOpChannel(dto);
+	}
+	
+	@Override
+	public void updateOpChannelMoodFlag(Integer channelId, Integer moodFlag) throws Exception {
+		OpChannelV2Dto dto = new OpChannelV2Dto();
+		dto.setChannelId(channelId);
+		dto.setMoodFlag(moodFlag);
+		opChannelV2Mapper.updateOpChannel(dto);
+	}
+	
+	@Override
+	public void updateOpChannelWorldFlag(Integer channelId, Integer worldFlag) throws Exception {
+		OpChannelV2Dto dto = new OpChannelV2Dto();
+		dto.setChannelId(channelId);
+		dto.setWorldFlag(worldFlag);
+		opChannelV2Mapper.updateOpChannel(dto);
 	}
 
 	@Override
@@ -641,5 +686,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	public List<OpChannelTheme> queryChannelThemeList() {
 		return webChannelThemeDao.queryAllTheme();
 	}
+
 
 }

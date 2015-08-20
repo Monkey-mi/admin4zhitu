@@ -1,9 +1,14 @@
 package com.imzhitu.admin.common.pojo;
 
 import java.io.Serializable;
+import com.hts.web.base.constant.Tag;
+
 
 /**
- * 频道成员数据传输对象 继承与userInfo，可携带成员user相关联信息 此DTO其中包含了频道红人信息
+ * 频道成员数据传输对象 
+ * 继承与userInfo，可携带成员user相关联信息 
+ * 此DTO其中包含了频道红人信息
+ * 频道红人信息是从频道成员中冗余出来的，为的是方便查询，及单独操作更符合红人性质的特性
  * 
  * @author zhangbo 2015年8月17日
  *
@@ -17,6 +22,8 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 
 	/**
 	 * 频道成员表主键id
+	 * 频道红人表主键与频道成员表主键一致，相同频道中的相同订阅人员（或为红人）
+	 * 两张表用相同的id
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
@@ -37,6 +44,7 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 	private Integer userId;
 
 	/**
+	 * 是否屏蔽 不屏蔽：0，屏蔽：1
 	 * 订阅频道时间
 	 * 
 	 * @author zhangbo 2015年8月14日
@@ -44,25 +52,27 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 	private Long subTime;
 
 	/**
-	 * 用户在频道当中的等级 成员等级分为：群主：0，管理员：1，普通成员：2
+	 * 用户在频道当中的等级 成员等级分为：普通成员：0，频道主：1，管理员：2
+	 * 频道成员等级设置默认级别为普通成员
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer degree;
+	private Integer degree = Tag.CHANNEL_MEMBER_ROLE_NORMAL;
 
 	/**
 	 * 是否推送通知 不通知：0，通知：1
+	 * 一般的用户没有通知的状态，所以默认为0 ，否则在插入数据时，star表中的notified字段不能为空。
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer notified;
+	private Integer notified = Tag.FALSE;
 
 	/**
 	 * 是否屏蔽 不屏蔽：0，屏蔽：1
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer shield;
+	private Integer shield = Tag.FALSE;
 
 	/**
 	 * 序号，用于排序，序号根据特定sequence流水而来
@@ -73,10 +83,11 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 
 	/**
 	 * 是否为频道红人 是红人：1， 不是红人：0
+	 * 设置默认值为不是红人
 	 * 
 	 * @author zhangbo 2015年8月17日
 	 */
-	private Integer channelStar;
+	private Integer channelStar = Tag.FALSE;
 
 	/**
 	 * @return the channelMemberId

@@ -128,7 +128,8 @@
 		select * from hts.operations_channel
 		<where>
 			<if test="id != null">id=#{id}</if>
-			<if test="channelName != null">channel_name like #{channelName}</if>
+			<if test="valid != null"> and valid=#{valid}</if>
+			<if test="channelName != null"> and channel_name like #{channelName}</if>
 	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND serial<=#{maxId}]]></if>
 		</where>
 		order by serial desc
@@ -139,7 +140,8 @@
 		select count(*) from hts.operations_channel
 		<where>
 			<if test="id != null">id=#{id}</if>
-			<if test="channelName != null">channel_name like #{channelName}</if>
+			<if test="valid != null"> and valid=#{valid}</if>
+			<if test="channelName != null"> and channel_name like #{channelName}</if>
 		</where>
 		order by serial desc
 	</select>
