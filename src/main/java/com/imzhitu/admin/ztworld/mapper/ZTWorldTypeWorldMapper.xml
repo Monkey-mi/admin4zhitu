@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper">
+
+	<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldTypeWorldDto" id="ZTWorldTypeWorldMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="typeId" column="type_id" jdbcType="INTEGER"/>
+		<result property="superb" column="superb" jdbcType="INTEGER"/>
+		<result property="typeValid" column="type_valid" jdbcType="INTEGER"/>
+		<result property="serial" column="serial" jdbcType="INTEGER"/>
+		<result property="weight" column="weight" jdbcType="INTEGER"/>
+		<result property="recommenderId" column="recommender_id" jdbcType="INTEGER"/>
+		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
+		<result property="worldName" column="world_name" jdbcType="VARCHAR"/>
+		<result property="worldDesc" column="world_desc" jdbcType="VARCHAR"/>
+		<result property="worldLabel" column="world_label" jdbcType="VARCHAR"/>
+		<result property="worldType" column="world_type" jdbcType="VARCHAR"/>
+		<result property="dateAdded" column="date_added" jdbcType="TIMESTAMP"/>
+		<result property="dateModified" column="date_modified" jdbcType="TIMESTAMP"/>
+		<result property="authorId" column="author_id" jdbcType="INTEGER"/>
+		<result property="authorName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="authorAvatar" column="user_avatar" jdbcType="VARCHAR"/>
+		<result property="star" column="star" jdbcType="INTEGER"/>
+		<result property="trust" column="trust" jdbcType="INTEGER"/>
+		<result property="clickCount" column="click_count" jdbcType="INTEGER"/>
+		<result property="likeCount" column="like_count" jdbcType="INTEGER"/>
+		<result property="commentCount" column="comment_count" jdbcType="INTEGER"/>
+		<result property="keepCount" column="keep_count" jdbcType="INTEGER"/>
+		<result property="coverPath" column="cover_path" jdbcType="VARCHAR"/>
+		<result property="titlePath" column="title_path" jdbcType="VARCHAR"/>
+		<result property="titleThumbPath" column="title_thumb_path" jdbcType="VARCHAR"/>
+		<result property="longitude" column="longitude" jdbcType="FLOAT"/>
+		<result property="latitude" column="latitude" jdbcType="FLOAT"/>
+		<result property="locationDesc" column="location_desc" jdbcType="VARCHAR"/>
+		<result property="locationAddr" column="location_addr" jdbcType="VARCHAR"/>
+		<result property="phoneCode" column="phone_code" jdbcType="INTEGER"/>
+		<result property="province" column="province" jdbcType="VARCHAR"/>
+		<result property="city" column="city" jdbcType="VARCHAR"/>
+		<result property="size" column="size" jdbcType="INTEGER"/>
+		<result property="childCount" column="child_count" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
+		<result property="shield" column="shield" jdbcType="INTEGER"/>
+		<!-- 
+		<result property="" column="short_link" jdbcType="INTEGER"/>
+		 -->
+		<result property="recommenderName" column="recommenderName" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
+		<result property="reView" column="review" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- INSERT -->
+	<insert id="saveTypeWorld">
+		insert into hts.htworld_type_world
+			(id,world_id, type_id, superb, valid, serial, weight, recommender_id,date_add,date_modify) 
+		values (#{id},#{worldId},#{typeId},#{superb},#{valid},#{serial},#{weight},#{recommenderId},NOW(),NOW())	
+	</insert>
+	
+	<!-- 分页查询 -->
+	<select id="queryTypeWorld" resultMap="ZTWorldTypeWorldMap">
+	
+	</select>
+	
+</mapper>
