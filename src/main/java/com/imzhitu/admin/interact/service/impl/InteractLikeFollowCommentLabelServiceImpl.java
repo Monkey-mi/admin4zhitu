@@ -20,10 +20,11 @@ public class InteractLikeFollowCommentLabelServiceImpl extends BaseServiceImpl i
 	private InteractLikeFollowCommentLabelMapper likeFollowCommentLabelMapper;
 
 	@Override
-	public void insertLikeFollowCommentLabel(Integer labelId) throws Exception {
+	public void insertLikeFollowCommentLabel(Integer labelId,Integer type) throws Exception {
 		// TODO Auto-generated method stub
 		InteractLikeFollowCommentLabel dto = new InteractLikeFollowCommentLabel();
 		dto.setLabelId(labelId);
+		dto.setType(type);
 		likeFollowCommentLabelMapper.insertLikeFollowCommentLabel(dto);
 	}
 
@@ -42,7 +43,7 @@ public class InteractLikeFollowCommentLabelServiceImpl extends BaseServiceImpl i
 	}
 
 	@Override
-	public void queryLikeFollowCommentLabel(Integer id, Integer labelId, Integer maxId, int page, int rows,
+	public void queryLikeFollowCommentLabel(Integer id, Integer labelId,Integer type, Integer maxId, int page, int rows,
 			Map<String, Object> jsonMap) throws Exception {
 		// TODO Auto-generated method stub
 		InteractLikeFollowCommentLabel dto = new InteractLikeFollowCommentLabel();
@@ -51,6 +52,7 @@ public class InteractLikeFollowCommentLabelServiceImpl extends BaseServiceImpl i
 		dto.setFirstRow(rows*(page-1));
 		dto.setLimit(rows);
 		dto.setLabelId(labelId);
+		dto.setType(type);
 		
 		List<InteractLikeFollowCommentLabel>  list = null;
 		Integer reMaxId = 0;
