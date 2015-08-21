@@ -123,6 +123,7 @@ public class OpChannelUserAction extends BaseCRUDAction{
 	}
 	
 	public String addChannelUserByVerifyId(){
+		// TODO 这块入口不用了，要整改，要删除掉
 		try{
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			service.addChannelUserByVerifyId(userId, verifyId, Tag.TRUE, user.getId());

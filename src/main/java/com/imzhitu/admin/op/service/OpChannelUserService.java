@@ -22,6 +22,7 @@ public interface OpChannelUserService extends BaseService{
 	
 	/**
 	 * 插入,根据认证id
+	 * // TODO 这块入口不用了，要整改，要删除掉
 	 * @param dto
 	 */
 	public void addChannelUserByVerifyId(Integer userId,Integer verifyId,Integer valid,Integer operatorId)throws Exception;

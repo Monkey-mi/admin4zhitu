@@ -200,6 +200,9 @@ var maxId = 0,
         	$("#htm_table").datagrid('loaded');
         }
     },{
+    	/*
+    	 * TODO 这块入口不用了，要整改，要删除掉
+    	 */ 
     	iconCls:'icon-add',
     	text:'添加到用户池',
     	handler:function(){

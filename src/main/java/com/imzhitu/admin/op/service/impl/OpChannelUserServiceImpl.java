@@ -70,6 +70,7 @@ public class OpChannelUserServiceImpl extends BaseServiceImpl implements OpChann
 	
 	@Override
 	public void addChannelUserByVerifyId(Integer userId,Integer verifyId,Integer valid,Integer operatorId)throws Exception{
+		// TODO 这块入口不用了，要整改，要删除掉
 		Integer channelId = channelIdVerifyIdService.queryChannelIdByVerifyId(verifyId);
 		if(channelId == null) return;
 		Date now = new Date();
