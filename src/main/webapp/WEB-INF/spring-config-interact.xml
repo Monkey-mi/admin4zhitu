@@ -497,10 +497,11 @@
             <ref bean="sortChannelStarSchedulaJobDetail" />
         </property>
         <property name="cronExpression">
-            <value>0 0/1 * * * ?</value><!-- 每隔20分钟 -->
+            <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
         </property>
     </bean>
 	
+	<!--  
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -528,4 +529,6 @@
             </list>
         </property>
     </bean>
+    -->
+    
 </beans>
