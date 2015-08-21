@@ -1,6 +1,7 @@
 package com.imzhitu.admin.op.service.impl;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,8 @@ import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannel;
-import com.imzhitu.admin.common.pojo.OpChannelMemberDto;
+import com.imzhitu.admin.common.pojo.OpChannelMemberDTO;
+import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
 import com.imzhitu.admin.op.mapper.OpChannelMemberMapper;
 import com.imzhitu.admin.op.service.OpChannelMemberService;
@@ -29,7 +31,7 @@ import com.imzhitu.admin.op.service.OpChannelMemberService;
  * @author zhangbo	2015年8月18日
  *
  */
-@Service
+@Service("com.imzhitu.admin.op.service.impl.OpChannelMemberServiceImpl")
 public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpChannelMemberService {
 	
 	/**
@@ -45,6 +47,14 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	 * @author zhangbo	2015年8月18日
 	 */
 	private static final String CHANNEL_STAR_MSG_FOOT =  "频道的红人啦！继续发光发亮哟，么么哒！";
+
+	/**
+	 * 频道红人计划调度，按时间查询，设置的查询范围跨度
+	 * 当前是设置查1小时之内的数据
+	 * 
+	 * @author zhangbo	2015年8月20日
+	 */
+	private static final long channelStarSchedulaTimeSpan = 60*60*1000;
 
 	/**
 	 * 频道成员相关数据接口
@@ -79,6 +89,14 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
 	
 	/**
+	 * web端sequence业务逻辑访问接口
+	 * 
+	 * @author zhangbo	2015年8月20日
+	 */
+	@Autowired
+	private com.hts.web.common.service.KeyGenService keyGenService;
+	
+	/**
 	 * 消息推送服务接口
 	 * 
 	 * @author zhangbo	2015年8月18日
@@ -91,7 +109,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 		if (channelId == null || userId == null) {
 			return;
 		}
-		OpChannelMemberDto dto = new OpChannelMemberDto();
+		OpChannelMemberDTO dto = new OpChannelMemberDTO();
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
 		dto.setDegree(degree);
@@ -101,7 +119,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 
 	@Override
 	public void buildChannelMemberList(Integer channelId, Integer userId, String userName, Integer userStarId, Integer notified, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception {
-		OpChannelMemberDto dto = new OpChannelMemberDto();
+		OpChannelMemberDTO dto = new OpChannelMemberDTO();
 		dto.setChannelId(channelId);
 		dto.setUserId(userId);
 		dto.setUserName(userName);
@@ -109,14 +127,14 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 		dto.setNotified(notified);
 		dto.setShield(shield);
 
-		buildNumberDtos(dto, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelMemberDto>() {
+		buildNumberDtos(dto, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelMemberDTO>() {
 			@Override
-			public long queryTotal(OpChannelMemberDto dto) {
+			public long queryTotal(OpChannelMemberDTO dto) {
 				return channelMemberMapper.queryChannelMemberTotalCount(dto);
 			}
 
 			@Override
-			public List<? extends AbstractNumberDto> queryList(OpChannelMemberDto dto) {
+			public List<? extends AbstractNumberDto> queryList(OpChannelMemberDTO dto) {
 				return channelMemberMapper.queryChannelMember(dto);
 			}
 		}, new NumberDtoListMaxIdAdapter() {
@@ -132,7 +150,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 
 	@Override
 	public void saveChannelStar(Integer channelMemberId) {
-		OpChannelMemberDto memberDto = channelMemberMapper.queryChannelMemberById(channelMemberId);
+		OpChannelMemberDTO memberDto = getChannelMemberById(channelMemberId);
 		
 		// 若不是红人，则插入到频道红人表中
 		if ( !memberDto.isChannelStar() ) {
@@ -148,11 +166,19 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	@Override
 	public void deleteChannelStars(Integer[] channelMemberIds) {
 		channelMemberMapper.deleteChannelStarByIds(channelMemberIds);
+		
+		// 删除频道红人后，修改频道成员的是否是红人的标记位，都设置成不为红人 
+		for (Integer channelMemberId : channelMemberIds) {
+			OpChannelMemberDTO dto = new OpChannelMemberDTO();
+			dto.setChannelMemberId(channelMemberId);
+			dto.setChannelStar(Tag.FALSE);
+			channelMemberMapper.updateChannelMember(dto);
+		}
 	}
 
 	@Override
 	public void addStarRecommendMsg(final Integer channelStarId) throws Exception {
-		OpChannelMemberDto starDto = channelMemberMapper.queryChannelStarById(channelStarId);
+		OpChannelMemberDTO starDto = getChannelStarById(channelStarId);
 		if ( starDto == null ) {
 			throw new HTSException("记录已经被删除");
 		}
@@ -203,19 +229,116 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	 * @author zhangbo	2015年8月18日
 	 */
 	private void updateChannelStarNotified(Integer channelStarId, Integer notified) {
-		OpChannelMemberDto dto = new OpChannelMemberDto();
+		OpChannelMemberDTO dto = new OpChannelMemberDTO();
 		dto.setChannelMemberId(channelStarId);
 		dto.setNotified( notified == null ? Tag.FALSE : Tag.TRUE );
 		channelMemberMapper.updateChannelStar(dto);
 	}
 
 	@Override
-	public void serialChannelStars(Integer[] channelStarIds) {
-		for (Integer channelStarId : channelStarIds) {
-			OpChannelMemberDto dto = new OpChannelMemberDto();
-			dto.setChannelMemberId(channelStarId);
-			dto.setSerial(com.hts.web.common.service.impl.KeyGenServiceImpl.OP_CHANNEL_STAR_SERIAL);
-			channelMemberMapper.updateChannelStar(dto);
+	public void sortChannelStarsSchedule(Integer[] csIds, Date scheduleDate) {
+		/*
+		 *  反向排序，传递过来的集合，第一个是前台想排在前面的
+		 *  下面是依次插入数据库，插入越晚，id越大，而id越大的，排序时就会越新，即serial越大，越靠前
+		 */
+		for ( int i = csIds.length - 1; i >= 0; i--) {
+			OpChannelMemberDTO dto = getChannelStarById(csIds[i]);
+			Integer operatorId = AdminLoginUtil.getCurrentLoginId();
+			channelMemberMapper.insertChannelStarSchedule(dto, scheduleDate, operatorId);
+		}
+	}
+
+	@Override
+	public void setChannelStarTop(Integer channelStarId) {
+		
+		// 得到频道红人最新排序的sequence序号
+		Integer serial = keyGenService.generateId(com.hts.web.common.service.impl.KeyGenServiceImpl.OP_CHANNEL_STAR_SERIAL);
+		
+		// 根据频道红人主键id查询红人
+		OpChannelMemberDTO existStarDto = getChannelStarById(channelStarId);
+		
+		// 若查询结果不存在，即设置置顶的不为红人，则先设置为红人，然后进行重新排序
+		if ( existStarDto == null ) {
+			// 先从频道成员表中查询出主键id对应的成员，然后把成员插入频道红人表
+			OpChannelMemberDTO dto = getChannelMemberById(channelStarId);
+			dto.setSerial(serial);
+			channelMemberMapper.insertChannelStar(dto);
+			
+			// 修改频道成员的是否红人的标记位，设置成红人
+			dto.setChannelStar(Tag.TRUE);
+			channelMemberMapper.updateChannelMember(dto);
+			
+		} else {
+			// 更新频道红人的serial，设置为最新的，达到置顶的效果
+			existStarDto.setSerial(serial);
+			channelMemberMapper.updateChannelStar(existStarDto);
+		}
+		
+	}
+	
+	/**
+	 * 通过频道成员主键id，查询出频道成员对象（不携带成员相关联的user信息）
+	 * 
+	 * 此方法为私有，若有需要可以上升到接口中，供外部调用
+	 * 
+	 * @param channelMemberId	频道成员主键id
+	 * @return
+	 * @author zhangbo	2015年8月20日
+	 */
+	private OpChannelMemberDTO getChannelMemberById(Integer channelMemberId) {
+		OpChannelMemberDTO dto = new OpChannelMemberDTO();
+		dto.setChannelMemberId(channelMemberId);
+		return channelMemberMapper.getChannelMember(dto);
+	}
+	
+	/**
+	 * 通过频道红人主键id，查询出频道红人对象（不携带红人相关联的user信息）
+	 * 
+	 * 此方法为私有，若有需要可以上升到接口中，供外部调用
+	 * 
+	 * @param channelStarId	频道红人主键id
+	 * @return
+	 * @author zhangbo	2015年8月20日
+	 */
+	private OpChannelMemberDTO getChannelStarById(Integer channelStarId) {
+		OpChannelMemberDTO dto = new OpChannelMemberDTO();
+		dto.setChannelMemberId(channelStarId);
+		return channelMemberMapper.getChannelStar(dto);
+	}
+
+	@Override
+	public OpChannelMemberDTO getChannelStarByChannelIdAndUserId(Integer channelId, Integer userId) {
+		OpChannelMemberDTO dto = new OpChannelMemberDTO();
+		dto.setChannelId(channelId);
+		dto.setUserId(userId);
+		return channelMemberMapper.getChannelStar(dto);
+	}
+	
+	/**
+	 * 频道红人排序调度方法，此方法配置的是20分钟执行一次
+	 * 以当前时间，查询前1小时数据，数量不多
+	 * 
+	 * @author zhangbo	2015年8月20日
+	 */
+	public void doSortChannelStarSchedula() {
+		Date endTime = new Date();
+		Date startTime = new Date(endTime.getTime() - channelStarSchedulaTimeSpan);
+		
+		// 查询1小时之内未完成的频道红人排序计划
+		List<OpChannelMemberDTO> dtoList = channelMemberMapper.queryChannelStarSchedule(startTime, endTime, Tag.FALSE);
+		
+		if ( dtoList != null ) {
+			// 对得到的结果进行处理， 依照顺序处理即可，因为查询结果已经保障了刷新serial的顺序
+			for (OpChannelMemberDTO opChannelMemberDTO : dtoList) {
+				
+				// 把频道红人排序计划设置为已完成
+				channelMemberMapper.updateChannelStarSchedule(opChannelMemberDTO, Tag.TRUE);
+				
+				// 得到频道红人最新排序的sequence序号，进而执行刷新
+				Integer serial = keyGenService.generateId(com.hts.web.common.service.impl.KeyGenServiceImpl.OP_CHANNEL_STAR_SERIAL);
+				opChannelMemberDTO.setSerial(serial);
+				channelMemberMapper.updateChannelStar(opChannelMemberDTO);
+			}
 		}
 	}
 

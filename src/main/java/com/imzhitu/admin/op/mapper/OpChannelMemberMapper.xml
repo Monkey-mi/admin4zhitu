@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imzhitu.admin.op.mapper.OpChannelMemberMapper">
 
-	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelMemberDto" id="ChannelMemberMap">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelMemberDTO" id="ChannelMemberMap">
 		<result column="channel_member_id" property="channelMemberId" jdbcType="INTEGER" />
 		<result column="channel_id" property="channelId" jdbcType="INTEGER" />
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
@@ -22,7 +22,12 @@
 		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
 		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
 		<result column="star" property="star" jdbcType="INTEGER" />
-		
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.OpChannelMemberDTO" id="ChannelStarScheduleMap">
+		<result column="channel_member_id" property="channelMemberId" jdbcType="INTEGER" />
+		<result column="channel_id" property="channelId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
 	</resultMap>
 
 	<!-- 新增频道成员 -->
@@ -49,7 +54,7 @@
 			</if>
 		</set> 
 		<where>
-			<if test="id != null">
+			<if test="channelMemberId != null">
 				id = #{channelMemberId}
 			</if>
 			<if test="userId != null and channelId != null">
@@ -151,7 +156,7 @@
 	</select>
 	
 	<!-- 根据频道成员主键id，查询频道成员对象（不携带成员相关联的user信息） -->
-	<select id="queryChannelMemberById" resultMap="ChannelMemberMap">
+	<select id="getChannelMember" resultMap="ChannelMemberMap">
 		select 
 			ocm.id as channel_member_id,
 			ocm.channel_id,
@@ -162,8 +167,14 @@
 			ocm.channel_star
 		from 
 			hts.operations_channel_member ocm
-		where 
-			ocm.id = #{channelMemberId} 
+		<where>
+			<if test="channelMemberId != null">
+				ocm.id = #{channelMemberId}
+			</if>
+			<if test="channelId != null and userId != null">
+				and ocm.channel_id = #{channelId} and ocm.user_id = #{userId}
+			</if>
+		</where>
 	</select>
 	
 	<!-- 新增频道红人 -->
@@ -175,7 +186,7 @@
 	</insert>
 	
 	<!-- 根据频道红人主键id，查询频道红人对象（不携带成员相关联的user信息） -->
-	<select id="queryChannelStarById" resultMap="ChannelMemberMap">
+	<select id="getChannelStar" resultMap="ChannelMemberMap">
 		select 
 			ocs.id as channel_member_id,
 			ocs.channel_id,
@@ -183,16 +194,23 @@
 			ocs.notified
 		from 
 			hts.operations_channel_star ocs
-		where 
-			ocs.id = #{channelMemberId} 
+		<where>
+			<if test="channelMemberId != null">
+				ocs.id = #{channelMemberId}
+			</if>
+			<if test="channelId != null and userId != null">
+				and ocs.channel_id = #{channelId} and ocs.user_id = #{userId}
+			</if>
+		</where> 
 	</select>
 	
 	<!-- 修改频道红人 -->
 	<update id="updateChannelStar">
-		update hts.operations_channel_star
+		update 
+			hts.operations_channel_star
 		<set>
 			<if test="notified != null">
-				notified = #{notified}
+				notified = #{notified},
 			</if>
 			<if test="serial != null">
 				serial = #{serial}
@@ -212,5 +230,51 @@
 		       		#{item}
 		 	</foreach>
 	</delete>
+	
+	<!-- 新增频道红人排序调度  -->
+	<insert id="insertChannelStarSchedule">
+		insert hts_admin.op_channel_star_schedule
+			(channel_star_id, channel_id, user_id, schedule_date, operator_id)
+		values
+			(#{channelMemberDTO.channelMemberId}, #{channelMemberDTO.channelId}, #{channelMemberDTO.userId}, #{scheduleDate}, #{operatorId})
+	</insert>
+	
+	<!-- 更新频道红人排序调度，主要是更新finish状态 -->
+	<update id="updateChannelStarSchedule">
+		update 
+			hts_admin.op_channel_star_schedule
+		<set>
+			<if test="finish != null">
+				finish = #{finish},
+			</if>
+		</set>
+		<where>
+			<if test="channelMemberDTO.channelMemberId != null">
+				channel_star_id = #{channelMemberDTO.channelMemberId}
+			</if>
+			<if test="channelMemberDTO.channelId != null and channelMemberDTO.userId != null">
+				and channel_id = #{channelMemberDTO.channelId} and user_id = #{channelMemberDTO.userId}
+			</if>
+		</where>
+	</update>
+	
+	<!-- 查询频道红人排序计划，返回时间间隔中的数据，并且同时根据完成状态进行查询，按照计划排序时间正序获取结果 -->
+	<select id="queryChannelStarSchedule" resultMap="ChannelStarScheduleMap">
+		select 
+			channel_star_id as channel_member_id,
+			channel_id,
+			user_id
+		from 
+			hts_admin.op_channel_star_schedule
+		<where>
+			<if test="startTime != null and endTime != null">
+				schedule_date between #{startTime} and #{endTime}
+			</if>
+			<if test="finish != null">
+				and finish = #{finish}
+			</if>
+		</where>
+		order by schedule_date
+	</select>
 	
 </mapper>

@@ -1,6 +1,8 @@
 package com.imzhitu.admin.common.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import com.hts.web.base.constant.Tag;
 
 
@@ -13,7 +15,7 @@ import com.hts.web.base.constant.Tag;
  * @author zhangbo 2015年8月17日
  *
  */
-public class OpChannelMemberDto extends UserInfoBase implements Serializable {
+public class OpChannelMemberDTO extends UserInfoBase implements Serializable {
 
 	/**
 	 * 序列号
@@ -75,20 +77,20 @@ public class OpChannelMemberDto extends UserInfoBase implements Serializable {
 	private Integer shield = Tag.FALSE;
 
 	/**
-	 * 序号，用于排序，序号根据特定sequence流水而来
+	 * 序号，用于排序，序号根据特定sequence流水而来，默认为0
 	 * 
 	 * @author zhangbo 2015年8月14日
 	 */
-	private Integer serial;
+	private Integer serial = 0;
 
 	/**
-	 * 是否为频道红人 是红人：1， 不是红人：0
+	 * 是否为频道红人，是红人：1， 不是红人：0
 	 * 设置默认值为不是红人
 	 * 
 	 * @author zhangbo 2015年8月17日
 	 */
 	private Integer channelStar = Tag.FALSE;
-
+	
 	/**
 	 * @return the channelMemberId
 	 */

@@ -3,131 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<!-- 
-	<bean id="interactCommentDao" class="com.imzhitu.admin.interact.dao.impl.InteractCommentDaoImpl" parent="baseDao" />
-	<bean id="interactCommentLabelDao" class="com.imzhitu.admin.interact.dao.impl.InteractCommentLabelDaoImpl" parent="baseDao" />
-	<bean id="interactWorldClickDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldClickDaoImpl" parent="baseDao" />
-	<bean id="interactWorldCommentDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldCommentDaoImpl" parent="baseDao" />
-	<bean id="interactWorldDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldDaoImpl" parent="baseDao" />
-	<bean id="interactWorldLikedDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldLikedDaoImpl" parent="baseDao" />
-	<bean id="interactUserDao" class="com.imzhitu.admin.interact.dao.impl.InteractUserDaoImpl" parent="baseDao" />
-	<bean id="interactUserFollowDao" class="com.imzhitu.admin.interact.dao.impl.InteractUserFollowDaoImpl" parent="baseDao" />
-	<bean id="interactTrackerDao" class="com.imzhitu.admin.interact.dao.impl.InteractTrackerDaoImpl" parent="baseDao" />
-	<bean id="interactUserlevelDao" class="com.imzhitu.admin.interact.dao.impl.InteractUserlevelDaoImpl" parent="baseDao"/>
-	<bean id="interactUserlevelListDao" class="com.imzhitu.admin.interact.dao.impl.InteractUserlevelListDaoImpl" parent="baseDao"/>
-	<bean id="interactWorldlevelDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldlevelDaoImpl" parent="baseDao"/>
-	<bean id="interactWorldLabelCommentLabelDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldLabelCommentLabelDaoImpl"  parent="baseDao"/>	
-	<bean id="interactWorldlevelListDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldlevelListDaoImpl" parent="baseDao"/>
-	<bean id="interactActiveOperatedDao" class="com.imzhitu.admin.interact.dao.impl.InteractActiveOperatedDaoImpl" parent="baseDao"/>
-	<bean id="interactAutoResponseDao" class="com.imzhitu.admin.interact.dao.impl.InteractAutoResponseDaoImpl" parent="baseDao">
-		<property name="urlPrefix" value="${urlPrefix}"/>
-	</bean>
-	 
-	
-	<bean id="interactWorldlevelWorldLabelDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldlevelWorldLabelDaoImpl" parent="baseDao"/>
-	<bean id="interactWorldlevelWorldCommentDao" class="com.imzhitu.admin.interact.dao.impl.InteractWorldlevelWorldCommentDaoImpl" parent="baseDao"/>
-	
-	<bean id="interactPlanCommentDao" class="com.imzhitu.admin.interact.dao.impl.InteractPlanCommentDaoImpl"  parent="baseDao"/>
-	<bean id="interactPlanCommentLabelDao" class="com.imzhitu.admin.interact.dao.impl.InteractPlanCommentLabelDaoImpl"  parent="baseDao"/>
-	
-	
-	
-	<bean id="interactParseResponseService" class="com.imzhitu.admin.interact.service.impl.InteractParseResponseServiceImpl" />
-	
-	<bean id="interactAutoResponseService" class="com.imzhitu.admin.interact.service.impl.InteractAutoResponseServiceImpl"
-		p:interactAutoResponseDao-ref="interactAutoResponseDao"
-		p:webKeyGenService-ref="webKeyGenService"
-		p:webWorldCommentDao-ref="webWorldCommentDao"
-		p:interactRobotService-ref="interactRobotService"
-		p:interactParseResponseService-ref="interactParseResponseService"/>
-	
-	<bean id="interactActiveOperatedService" class="com.imzhitu.admin.interact.service.impl.InteractActiveOperatedServiceImpl"
-		p:interactActiveOperatedDao-ref="interactActiveOperatedDao"
-	/>
-	
-	<bean id="interactRobotService" class="com.imzhitu.admin.interact.service.impl.InteractRobotServiceImpl">
-		<property name="robotAppKey" value="${robot.app.key}"/>
-		<property name="robotAppSecret" value="${robot.app.secret}"/>
-		<property name="userName" value="${robot.userName}"/>
-		<property name="tulingKey" value="${robot.tulingKey}"/>
-	</bean>
-		
-	<bean id="interactWorldlevelListService" class="com.imzhitu.admin.interact.service.impl.InteractWorldlevelListServiceImpl"
-		p:interactWorldlevelListDao-ref="interactWorldlevelListDao"
-		p:interactWorldlevelDao-ref="interactWorldlevelDao"
-		p:interactWorldlevelWorldLabelDao-ref="interactWorldlevelWorldLabelDao"
-		p:interactWorldlevelWorldCommentDao-ref="interactWorldlevelWorldCommentDao"
-		/>
-	
-	<bean id="interactCommentService" class="com.imzhitu.admin.interact.service.impl.InteractCommentServiceImpl"
-		p:interactCommentDao-ref="interactCommentDao"
-		p:interactCommentLabelDao-ref="interactCommentLabelDao" 
-		p:keyGenService-ref="keyGenService"
-		p:interactWorldCommentDao-ref="interactWorldCommentDao"/>
-	
-	<bean id="interactUserlevelService" class="com.imzhitu.admin.interact.service.impl.InteractUserlevelServiceImpl"
-		p:interactUserlevelDao-ref="interactUserlevelDao"
-		/>
-	
-	<bean id="interactUserlevelListService" class="com.imzhitu.admin.interact.service.impl.InteractUserlevelListServiceImpl"
-		p:interactWorldLabelCommentLabelDao-ref="interactWorldLabelCommentLabelDao"
-		p:interactCommentService-ref="interactCommentService"
-		p:interactUserlevelDao-ref="interactUserlevelDao"
-		p:interactWorldService-ref="interactWorldService"
-		p:worldLabelWorldDao-ref="worldLabelWorldDao"
-		p:interactUserlevelListDao-ref="interactUserlevelListDao" 
-		p:interactPlanCommentService-ref="interactPlanCommentService"
-		p:interactPlanCommentLabelService-ref="interactPlanCommentLabelService">
-		<property name="commonUserLevelId" value="${plan.comment.common.userlevel.id}"/>
-	</bean>
-	
-	<bean id="interactWorldlevelService" class="com.imzhitu.admin.interact.service.impl.InteractWorldlevelServiceImpl"
-		p:interactCommentService-ref="interactCommentService"
-		p:interactWorldService-ref="interactWorldService"
-		p:interactWorldlevelDao-ref="interactWorldlevelDao" />
-		d":2655325482,"idstr":"2655325482","class":1,"screen_name":"搞笑热门微博集锦","name":"搞笑热门微博集锦","province":"44","city":"1","location":"广东 广州","d
-	<bean id="interactWorldLabelCommentLabelService" class="com.imzhitu.admin.interact.service.impl.InteractWorldLabelCommentLabelServiceImpl"
-		p:interactCommentLabelDao-ref="interactCommentLabelDao"
-		p:interactWorldLabelCommentLabelDao-ref="interactWorldLabelCommentLabelDao"/>
-	
-		
-	<bean id="interactWorldService" class="com.imzhitu.admin.interact.service.impl.InteractWorldServiceImpl" parent="webBaseService"
-		p:keyGenService-ref="keyGenService"
-		p:opUserService-ref="opUserService" 
-		p:interactWorldLikedDao-ref="interactWorldLikedDao"
-		p:interactWorldCommentDao-ref="interactWorldCommentDao"
-		p:interactWorldClickDao-ref="interactWorldClickDao" 
-		p:interactWorldDao-ref="interactWorldDao" 
-		p:interactCommentService-ref="interactCommentService"
-		p:interactCommentDao-ref="interactCommentDao" 
-		p:webWorldService-ref="webWorldService"
-		p:webWorldInteractService-ref="webWorldInteractService" d":2655325482,"idstr":"2655325482","class":1,"screen_name":"搞笑热门微博集锦","name":"搞笑热门微博集锦","province":"44","city":"1","location":"广东 广州","d
-		p:interactUserDao-ref="interactUserDao"
-		p:interactUserFollowDao-ref="interactUserFollowDao"
-		p:webUserInteractService-ref="webUserInteractService"
-		p:interactTrackerDao-ref="interactTrackerDao" 
-		p:webUserInfoDao-ref="webUserInfoDao"
-		p:pushService-ref="pushService"
-		p:webUserMsgService-ref="webUserMsgService"
-		p:worldDao-ref="worldDao"
-		p:userZombieDao-ref="userZombieDao">
-		<property name="adminId" value="${admin.adminId}" />
-		<property name="likeToFollowRate" value="${admin.interact.likedToFollowRate}" />
-		<property name="likeFromFollowRate" value="${admin.interact.likedFromFollowRate}" />
-		<property name="commentFromFollowRate" value="${admin.interact.commentFromFollowRate}" />
-	</bean>
-	
-	<bean id="interactPlanCommentService" class="com.imzhitu.admin.interact.service.impl.InteractPlanCommentServiceImpl" parent="webBaseService"
-		p:interactPlanCommentDao-ref="interactPlanCommentDao"
-		p:interactCommentDao-ref="interactCommentDao"
-		p:keyGenService-ref="keyGenService"
-	/>
-	
-	<bean id="interactPlanCommentLabelService" class="com.imzhitu.admin.interact.service.impl.InteractPlanCommentLabelServiceImpl" parent="webBaseService"
-		p:interactPlanCommentLabelDao-ref="interactPlanCommentLabelDao"
-	/>
-	-->
-	
 	<bean id="interactAutoResponseService" class="com.imzhitu.admin.interact.service.impl.InteractAutoResponseServiceImpl" />
 	<bean id="interactWorldService" class="com.imzhitu.admin.interact.service.impl.InteractWorldServiceImpl" />
 	<bean id="interactUserlevelListService" class="com.imzhitu.admin.interact.service.impl.InteractUserlevelListServiceImpl" />
@@ -456,7 +331,6 @@
   		</property>
 	</bean>
 	
-	
 	<!-- 达人推荐置顶计划 -->
 	<bean id="starRecommendSchedulaJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -475,7 +349,6 @@
   			<value>0 0/10 * * * ?</value><!-- 每10分钟执行 -->
   		</property>
 	</bean>
-	
 	
 	<!-- 达人推荐缓存更新计划 -->
 	<bean id="starRecommendCacheJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -515,9 +388,6 @@
   			<value>0 0/10 * * * ?</value><!-- 每10分钟执行 -->
   		</property>
 	</bean>
-	
-	
-	
 	
 	<!-- opensearch修改提交任务 -->
     <bean id="osPushJobDetail"
@@ -608,8 +478,29 @@
             <value>0 01 00 * * ?</value><!-- 每日00点01分触发，统计前一日相关数据 -->
         </property>
     </bean>
+    
+	<!-- 频道红人计划排序Job配置 用于定时执行查询频道红人在计划时间触发生效 -->
+    <bean id="sortChannelStarSchedulaJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+        	<!-- 这个是取在类上的bean名字，个人习惯使用类路径全名 by zhangbo 2015-08-21 -->
+            <ref bean="com.imzhitu.admin.op.service.impl.OpChannelMemberServiceImpl"/>
+        </property>
+        <property name="targetMethod">
+            <value>doSortChannelStarSchedula</value>
+        </property>
+    </bean>
+    
+	<!-- 频道红人计划排序Trigger配置 -->
+    <bean id="sortChannelStarSchedulaJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="sortChannelStarSchedulaJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/1 * * * ?</value><!-- 每隔20分钟 -->
+        </property>
+    </bean>
 	
-	<!--
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -633,8 +524,8 @@
                 <ref bean="zombieWorldSchedulaJobTrigger" />
                 <ref bean="dailyDataStatisticsSchedulaJobTrigger" />
                 <ref bean="userRecommendCacheTrigger" />
+                <ref bean="sortChannelStarSchedulaJobTrigger" />
             </list>
         </property>
     </bean>
-    -->
 </beans>

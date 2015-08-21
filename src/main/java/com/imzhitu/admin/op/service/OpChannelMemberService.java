@@ -1,8 +1,10 @@
 package com.imzhitu.admin.op.service;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
+import com.imzhitu.admin.common.pojo.OpChannelMemberDTO;
 
 /**
  * 频道成员相关操作的业务接口
@@ -41,6 +43,8 @@ public interface OpChannelMemberService extends BaseService {
 	 * @author zhangbo	2015年8月18日
 	 */
 	public void buildChannelMemberList(Integer channelId, Integer userId, String userName, Integer userStarId, Integer notified, Integer shield, Integer maxId, int page, int rows, Map<String, Object> jsonMap) throws Exception;
+	
+	public OpChannelMemberDTO getChannelStarByChannelIdAndUserId(Integer channelId, Integer userId);
 
 	/**
 	 * 保存频道红人， 频道红人来源与频道成员
@@ -71,9 +75,18 @@ public interface OpChannelMemberService extends BaseService {
 	/**
 	 * 对频道红人进行重新排序
 	 * 
-	 * @param channelStarIds	频道红人表主键id集合
+	 * @param csIds			频道红人表主键id集合
+	 * @param scheduleDate	计划进行排序的时间
+	 * @author zhangbo	2015年8月19日
+	 */
+	public void sortChannelStarsSchedule(Integer[] csIds, Date scheduleDate);
+	
+	/**
+	 * 设置频道红人在排序的最新一位
+	 * 
+	 * @param channelStarId	频道红人表主键id
 	 * @author zhangbo	2015年8月18日
 	 */
-	public void serialChannelStars(Integer[] channelStarIds);
+	public void setChannelStarTop(Integer channelStarId);
 
 }
