@@ -1,5 +1,6 @@
 package com.imzhitu.admin.privileges.service.impl;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -632,19 +633,20 @@ public class PrivilegesServiceImpl extends BaseServiceImpl implements Privileges
 	@Override
 	public void addAdminTimeManage(Integer userNameId, String workStartTime, String workEndTime, Integer operatorId)
 			throws Exception {
+		if(null==userNameId)throw new Exception("姓名不能为空");
+		if(null == workStartTime || null == workEndTime ||"".equals(workStartTime) || "".equals(workEndTime))throw new Exception("有效开始时间和结束时间不能为空");
+		if(workStartTime.compareTo(workEndTime)>0)throw new Exception("前后时间不附");
+		
 		Date now  = new Date();
-		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+		Time startTime = Time.valueOf(workStartTime); 
+		Time endTime = Time.valueOf(workEndTime); 
 		AdminTimeManageDto dto = new AdminTimeManageDto();
 		dto.setUserNameId(userNameId);
-		dto.setStartTime(df.parse(workStartTime));
-		dto.setEndTime(df.parse(workEndTime));
+		dto.setStartTime(startTime);
+		dto.setEndTime(endTime);
 		dto.setUpdateTime(now);
 		dto.setOperatorId(operatorId);
-		try {
-			adminUserPrivilegesMapper.insertAdminTimeManage(dto);
-		} catch (Exception e) {
-			System.out.println("-------------------------->数据不唯一<-------------------------------------------------------------------------------");
-		}
+		adminUserPrivilegesMapper.insertAdminTimeManage(dto);
 	}
 
 @Override
@@ -652,6 +654,7 @@ public List<AdminTimeManageDto> queryAdminTimeManage(Integer  maxId, Integer pag
 	List<AdminTimeManageDto> list = adminUserPrivilegesMapper.queryAdminTimeManage();
 /*	jsonMap.put(OptResult.JSON_KEY_MAX_ID, 100000);
 	jsonMap.put(OptResult.JSON_KEY_TOTAL, 10);*/
+	
 	jsonMap.put(OptResult.JSON_KEY_ROWS, list);
 	return null;
 }

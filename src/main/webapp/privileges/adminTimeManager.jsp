@@ -20,6 +20,8 @@
 	addWidth = 400, //添加信息宽度
 	addHeight = 260, //添加信息高度
 	addTitle = "添加计划评论标签"; //添加信息标题
+	recordIdKey = "userNameId";
+	myIdField = "userNameId";
 	init = function() {
 		toolbarComponent = '#tb';
 		myQueryParams = {
@@ -141,7 +143,7 @@
  				formSubmitOnce = true;
 				$('#htm_add .opt_btn').show();
 				$('#htm_add .loading').hide();
-				$("#nameInput").val("");
+				$("#nameInput").combogrid("clear");
 				$("#workStartTimeInput").timespinner("clear");
 				$("#workEndTimeInput").timespinner("clear");
 			if(result['result'] == 0) {
@@ -179,7 +181,7 @@
 					
 					$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 					$('#htm_table').datagrid('loading');
-					$.post(deleteURI + userNameIds,function(result){
+					$.post(deleteURI+userNameIds,function(result){
 						$('#htm_table').datagrid('loaded');
 						if(result['result'] == 0) {
 							$.messager.alert('提示',result['msg'] + userNameIds.length + "条记录！");

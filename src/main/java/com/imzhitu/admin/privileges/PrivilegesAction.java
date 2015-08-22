@@ -160,6 +160,15 @@ public class PrivilegesAction extends BaseCRUDAction {
 	public void setWorkEndTime(String workEndTime) {
 		this.workEndTime = workEndTime;
 	}
+	
+	public String getUserNameIds() {
+		return userNameIds;
+	}
+
+	public void setUserNameIds(String userNameIds) {
+		this.userNameIds = userNameIds;
+	}
+
 
 	
 	/*
@@ -606,15 +615,23 @@ public class PrivilegesAction extends BaseCRUDAction {
 			privilegesService.addAdminTimeManage(userNameId, workStartTime, workEndTime, user.getId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		}catch(Exception e){
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			String ex = e.getMessage();
+			if ("姓名不能为空".equals(ex)||"有效开始时间和结束时间不能为空".equals(ex)||"前后时间不附".equals(ex)) {
+				JSONUtil.optFailed(e.getMessage(), jsonMap);
+			}else {
+				JSONUtil.optFailed(OptResult.HAVE_ADDED, jsonMap);
+			}
 		}
 		return StrutsKey.JSON;
 	}
 
-	/**
-	 * 查询管理员时间管理模块的信息
-	 * @return
-	 */
+/**
+ * TODO 模块放在这里不太合适，需要整改
+ * 查询管理员时间管理模块的信息
+ * @return 
+	*	2015年8月22日
+	*	mishengliang
+ */
 	public String queryAdminTimeManage(){
 		try{
 			privilegesService.queryAdminTimeManage(maxId, page, rows, jsonMap);

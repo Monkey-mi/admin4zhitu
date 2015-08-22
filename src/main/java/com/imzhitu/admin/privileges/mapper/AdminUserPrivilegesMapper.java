@@ -104,7 +104,7 @@ public interface AdminUserPrivilegesMapper {
 	
 	/**
 	 * 查询时间管理模块的数据
-	 * @return 
+	 * @return s
 		*	2015年8月21日
 		*	mishengliang
 	 */

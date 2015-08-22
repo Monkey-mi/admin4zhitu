@@ -1,6 +1,7 @@
 package com.imzhitu.admin.common.pojo;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
@@ -19,8 +20,8 @@ public class AdminTimeManageDto extends AbstractNumberDto implements Serializabl
 	 */
 
 	private int userNameId;
-	private Date startTime;
-	private Date endTime;
+	private Time startTime;
+	private Time endTime;
 	private Date updateTime;
 	private int operatorId;
 	
@@ -39,14 +40,14 @@ public class AdminTimeManageDto extends AbstractNumberDto implements Serializabl
 	public Date getStartTime() {
 		return this.startTime;
 	}
-	public void setStartTime(Date startTime) {
+	public void setStartTime(Time startTime) {
 		this.startTime = startTime;
 	}
 	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Date getEndTime() {
 		return this.endTime;
 	}
-	public void setEndTime(Date endTime) {
+	public void setEndTime(Time endTime) {
 		this.endTime = endTime;
 	}
 	@JSON(format="yyyy-MM-dd HH:mm:ss")
@@ -74,7 +75,7 @@ public class AdminTimeManageDto extends AbstractNumberDto implements Serializabl
 	public void setOperatorName(String operatorName) {
 		this.operatorName = operatorName;
 	}
-	public AdminTimeManageDto(int userNameId, Date startTime, Date endTime, Date updateTime, int operatorId,
+	public AdminTimeManageDto(int userNameId, Time startTime, Time endTime, Date updateTime, int operatorId,
 			String userName, String operatorName) {
 		super();
 		this.userNameId = userNameId;
