@@ -237,6 +237,7 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 						Integer interactId = worldService.queryIntegerIdByWorldId(worldId);
 						if(interactId == null){
 							interactId = keyGenService.generateId(Admin.KEYGEN_INTERACT_WORLD_ID);
+							worldService.saveInteract(interactId, worldId, 0, 1, 0, 60, now);
 						}
 						InteractWorldCommentDto dto = new InteractWorldCommentDto();
 						dto.setInteractId(interactId);

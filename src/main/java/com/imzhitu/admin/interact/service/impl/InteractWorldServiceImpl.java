@@ -1761,4 +1761,11 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
 		saveChannelInteractV3(uid,channelId,worldId,clickCount,likedCount,commentIds,minuteDuration);
 	}
+	
+	@Override
+	public void saveInteract(Integer interactId,Integer worldId,Integer clickCount,Integer commentCount,Integer likedCount,Integer minuteDuration,Date dateAdded){
+		interactWorldDao.saveInteract(new InteractWorld(interactId, worldId, clickCount,
+				commentCount, likedCount, minuteDuration/60>0?minuteDuration/60:1,//若不足一个钟，就按一个钟来计算
+				dateAdded, Tag.TRUE));
+	}
 }

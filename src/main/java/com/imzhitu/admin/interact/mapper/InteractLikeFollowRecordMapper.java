@@ -33,7 +33,7 @@ public interface InteractLikeFollowRecordMapper {
 	 * @param ids
 	 */
 	@DataSource("master")
-	public void batchUpdateLikeFollowRecord(Integer complete,Integer[]ids);
+	public void batchUpdateLikeFollowRecord(@Param("complete")Integer complete,@Param("ids")Integer[]ids);
 	
 	/**
 	 * 查询互动互赞

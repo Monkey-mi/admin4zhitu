@@ -33,7 +33,7 @@
 		update hts_admin.interact_like_follow_record
 		set complete=#{complete},date_modify=NOW()
 		where id in
-		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+		<foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">
 			#{item}
 		</foreach>
 	</update>

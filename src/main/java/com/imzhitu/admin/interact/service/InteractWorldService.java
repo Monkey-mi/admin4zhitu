@@ -454,4 +454,16 @@ public interface InteractWorldService extends BaseService {
 	public void saveChannelInteractV3(Integer channelId,Integer worldId,Integer clickCount,
 			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception;
 	
+	/**
+	 * 添加互动记录
+	 * @param interactId
+	 * @param worldId
+	 * @param clickCount
+	 * @param commentCount
+	 * @param likedCount
+	 * @param minuteDuration
+	 * @param dateAdded
+	 */
+	public void saveInteract(Integer interactId,Integer worldId,Integer clickCount,Integer commentCount,Integer likedCount,Integer minuteDuration,Date dateAdded);
+	
 }
