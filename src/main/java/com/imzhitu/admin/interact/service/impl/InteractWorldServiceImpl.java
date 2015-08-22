@@ -825,13 +825,18 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 				list.add(dto);
 			}
 			if (list.size() > 0){
-				worldCommentMapper.batchSaveWorldComment(list);
+				batchSaveComment(list);
 			}			
 		}catch(Exception e){
 			logger.warn("batchSaveClick failed\ninteractId="+interactId+"\nworldId="+worldId+"\nzombieIdList="+zombieIdList+"\ncommentIdList="+commentIdList+"\ndateAdded="+dateAdded
 					+"\ndateSheduleList="+dateSheduleList+"\nCause:"+e.getMessage());
 			throw e;
 		}
+	}
+	
+	@Override
+	public void batchSaveComment(List<InteractWorldCommentDto> list){
+		worldCommentMapper.batchSaveWorldComment(list);
 	}
 	
 	@Override
@@ -842,13 +847,18 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 				list.add(new InteractWorldClick(interactId, worldId,clickCountList.get(i),dateAdded,dateSheduleList.get(i),Tag.TRUE, Tag.FALSE));
 			}
 			if (list.size() > 0){
-				worldClickMapper.batchSaveWorldClick(list);
+				batchSaveClick(list);
 			}
 		}catch(Exception e){
 			logger.warn("batchSaveClick failed\ninteractId="+interactId+"\nworldId="+worldId+"\nclickCountList="+clickCountList+"\ndateAdded="+dateAdded
 					+"\ndateSheduleList="+dateSheduleList+"\nCause:"+e.getMessage());
 			throw e;
 		}
+	}
+	
+	@Override
+	public void batchSaveClick(List<InteractWorldClick> list){
+		worldClickMapper.batchSaveWorldClick(list);
 	}
 	
 	@Override
@@ -859,15 +869,37 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 				list.add(new InteractWorldLiked(interactId, worldId,zombieIdList.get(i),dateAdded,dateSheduleList.get(i),Tag.TRUE, Tag.FALSE));
 			}
 			if (list.size() > 0){
-				worldLikedMapper.batchSaveWorldLiked(list);
+				batchSaveLiked(list);
 			}
 		}catch(Exception e ){
-			logger.warn("batchSaveClick failed\ninteractId="+interactId+"\nworldId="+worldId+"\nzombieIdList="+zombieIdList+"\ndateAdded="+dateAdded
+			logger.warn("batchSaveLike failed\ninteractId="+interactId+"\nworldId="+worldId+"\nzombieIdList="+zombieIdList+"\ndateAdded="+dateAdded
 					+"\ndateSheduleList="+dateSheduleList+"\nCause:"+e.getMessage());
 			throw e;
 		}
 	}
 	
+	@Override
+	public void batchSaveLiked(List<InteractWorldLiked> list){
+		worldLikedMapper.batchSaveWorldLiked(list);
+	}
+	
+	@Override
+	public void batchSaveFollow(Integer interactId,Integer userId,List<Integer>zombieIdList,Date dateAdded,List<Date>dateSheduleList)throws Exception{
+		List<InteractUserFollow> list = new ArrayList<InteractUserFollow>();
+		for(int i = 0; i < zombieIdList.size(); i++) {
+			list.add(new InteractUserFollow(interactId, userId, zombieIdList.get(i),
+					dateAdded, dateSheduleList.get(i), Tag.TRUE, Tag.FALSE));
+		}
+		//批量插入
+		if(list.size() > 0){
+			batchSaveFollow(list);
+		}
+	}
+	
+	@Override
+	public void batchSaveFollow(List<InteractUserFollow> list){
+		userFollowMapper.batchSaveUserFollow(list);
+	}
 	
 	@Override
 	public void updateInteractValid(Integer maxId) throws Exception {
@@ -1002,17 +1034,9 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		
 		// 保存粉丝互动
 		if(followCount > 0) {
-			List<Integer> uids = zombieMapper.queryNRandomNotFollowZombie(userId, degreeId, followCount);
+			List<Integer> zombieIdList = zombieMapper.queryNRandomNotFollowZombie(userId, degreeId, followCount);
 			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, followCount);
-			List<InteractUserFollow> list = new ArrayList<InteractUserFollow>();
-			for(int i = 0; i < uids.size(); i++) {
-				list.add(new InteractUserFollow(interactId, userId, uids.get(i),
-						dateAdded, scheduleDateList.get(i), Tag.TRUE, Tag.FALSE));
-			}
-			//批量插入
-			if(list.size() > 0){
-				userFollowMapper.batchSaveUserFollow(list);
-			}
+			batchSaveFollow(interactId, userId, zombieIdList, dateAdded, scheduleDateList);
 		}
 	}
 	

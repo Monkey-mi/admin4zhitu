@@ -6,7 +6,11 @@ import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.InteractUser;
+import com.imzhitu.admin.common.pojo.InteractUserFollow;
 import com.imzhitu.admin.common.pojo.InteractWorld;
+import com.imzhitu.admin.common.pojo.InteractWorldClick;
+import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
+import com.imzhitu.admin.common.pojo.InteractWorldLiked;
 
 /**
  * <p>
@@ -95,6 +99,12 @@ public interface InteractWorldService extends BaseService {
 	public void batchSaveComment(Integer interactId, Integer worldId, List<Integer> zombieIdList, Integer[] commentIdList,
 			Date dateAdded, List<Date>dateSheduleList) throws Exception;
 	
+	/**
+	 * 批量添加评论 为了统一入口
+	 * @param list
+	 */
+	public void batchSaveComment(List<InteractWorldCommentDto> list);
+	
 	
 	/**
 	 * 批量添加播放
@@ -108,6 +118,12 @@ public interface InteractWorldService extends BaseService {
 	public void batchSaveLiked(Integer interactId,Integer worldId,List<Integer>zombieIdList,Date dateAdded,List<Date>dateSheduleList)throws Exception;
 	
 	/**
+	 * 批量添加喜欢 为了统一入口
+	 * @param list
+	 */
+	public void batchSaveLiked(List<InteractWorldLiked> list);
+	
+	/**
 	 * 批量添加播放
 	 * @param interactId
 	 * @param worldId
@@ -117,6 +133,29 @@ public interface InteractWorldService extends BaseService {
 	 * @throws Exception
 	 */
 	public void batchSaveClick(Integer interactId,Integer worldId,List<Integer>clickCountList,Date dateAdded,List<Date>dateSheduleList)throws Exception;
+	
+	/**
+	 * 批量添加播放 为了统一入口
+	 * @param list
+	 */
+	public void batchSaveClick(List<InteractWorldClick> list);
+	
+	/**
+	 * 批量添加加粉
+	 * @param interactId
+	 * @param userId
+	 * @param zombieIdList
+	 * @param dateAdded
+	 * @param dateSheduleList
+	 * @throws Exception
+	 */
+	public void batchSaveFollow(Integer interactId,Integer userId,List<Integer>zombieIdList,Date dateAdded,List<Date>dateSheduleList)throws Exception;
+	
+	/**
+	 * 批量添加加粉 为了统一入口
+	 * @param list
+	 */
+	public void batchSaveFollow(List<InteractUserFollow> list);
 
 	
 	/**

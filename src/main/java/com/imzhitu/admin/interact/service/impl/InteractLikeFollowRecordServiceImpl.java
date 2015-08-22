@@ -13,9 +13,18 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.common.database.Admin;
+import com.imzhitu.admin.common.pojo.InteractLikeFollowCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractLikeFollowRecord;
+import com.imzhitu.admin.common.pojo.InteractUserFollow;
+import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
+import com.imzhitu.admin.common.pojo.InteractWorldLiked;
+import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.interact.mapper.InteractLikeFollowRecordMapper;
+import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.InteractLikeFollowCommentLabelService;
 import com.imzhitu.admin.interact.service.InteractLikeFollowRecordService;
+import com.imzhitu.admin.interact.service.InteractLikeFollowZombieService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 
 @Service
@@ -26,6 +35,18 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 	
 	@Autowired
 	private InteractWorldService worldService;
+	
+	@Autowired
+	private InteractLikeFollowZombieService likeFollowZombieService;
+	
+	@Autowired
+	private InteractLikeFollowCommentLabelService likeFollowCommentLabelService;
+	
+	@Autowired
+	private InteractCommentService commentService;
+	
+	@Autowired
+	private KeyGenService keyGenService;
 	
 	private Logger log = Logger.getLogger(InteractLikeFollowRecordServiceImpl.class);
 	
@@ -108,8 +129,8 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 		
 		//互赞
 		try{
+			List<InteractWorldLiked> userLikeList = new ArrayList<InteractWorldLiked>();
 			List<InteractLikeFollowRecord> likeRecordList = queryUnCompleteLikeFollowRecordByType(0);
-			List<Integer> zombieIdList = new ArrayList<Integer>();
 			
 			if(likeRecordList != null && likeRecordList.size() > 0 ){
 				Integer[] ids = new Integer[likeRecordList.size()];
@@ -120,11 +141,13 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 					ids[i] = likeDto.getId();
 					Integer interactId = worldService.queryIntegerIdByWorldId(likeDto.getWorldId());
 					if ( interactId != null ) {
-						zombieIdList.clear();
-						zombieIdList.add(likeDto.getZombieId());
 						List<Date> dateList = worldService.getScheduleV3(now, 120, 1);
-						worldService.batchSaveLiked(interactId, likeDto.getWorldId(), zombieIdList, now, dateList);
+						userLikeList.add(new InteractWorldLiked(interactId, likeDto.getWorldId(),likeDto.getZombieId(),now,dateList.get(0),Tag.TRUE, Tag.FALSE));
 					}
+				}
+				
+				if (userLikeList.size() > 0 ) {
+					worldService.batchSaveLiked(userLikeList);
 				}
 				
 				//更新完成标记
@@ -136,8 +159,8 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 		
 		//互粉
 		try{
+			List<InteractUserFollow> userFollowList = new ArrayList<InteractUserFollow>();
 			List<InteractLikeFollowRecord> followRecordList = queryUnCompleteLikeFollowRecordByType(1);
-			List<Integer> zombieIdList = new ArrayList<Integer>();
 			
 			if(followRecordList != null && followRecordList.size() > 0 ){
 				Integer[] ids = new Integer[followRecordList.size()];
@@ -148,11 +171,14 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 					ids[i] = followDto.getId();
 					Integer interactId = worldService.queryIntegerIdByWorldId(followDto.getWorldId());
 					if ( interactId != null ) {
-						zombieIdList.clear();
-						zombieIdList.add(followDto.getZombieId());
 						List<Date> dateList = worldService.getScheduleV3(now, 120, 1);
-						worldService.batchSaveLiked(interactId, followDto.getWorldId(), zombieIdList, now, dateList);
+						userFollowList.add(new InteractUserFollow(interactId, followDto.getUserId(), followDto.getZombieId(),
+								now, dateList.get(0), Tag.TRUE, Tag.FALSE));
 					}
+				}
+				
+				if (userFollowList.size() > 0 ) {
+					worldService.batchSaveFollow(userFollowList);
 				}
 				
 				//更新完成标记
@@ -161,6 +187,85 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 		}catch(Exception e){
 			log.warn("doLikeFollowJob : follow. "+e.getMessage());
 		}
+	}
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param worldId
+	 * @param type 0赞。
+	 */
+	public void addLikeFollowInteract(Integer userId,Integer worldId,Integer type){
+		Date now = new Date();
+		
+		//查询对应的标签
+		List<InteractLikeFollowCommentLabel> labelList = null;
+		try{
+			labelList = likeFollowCommentLabelService.queryLikeFollowCommentLabelByType(type);
+		}catch(Exception e){
+			log.warn("queryLikeFollowCommentLabelByType failed!\ncase:"+e.getMessage());
+			return ;
+		}
+		
+		
+		if (labelList != null && labelList.size() > 0){
+			//查询标签对应的评论
+			List<Integer> commentList = null;
+			try{
+				commentList = commentService.getRandomCommentIds(labelList.get(0).getLabelId(), 1);
+			}catch(Exception e){
+				log.warn("getRandomCommentIds failed.\ncase:"+e.getMessage());
+				return;
+			}
+			if(commentList != null && commentList.size() > 0){
+				
+				//查询马甲id
+				List<Integer> zombieList = null;
+				try{
+					zombieList = likeFollowZombieService.queryNRandomNotCommentNotFollowZombieId(userId, worldId,1);
+				}catch(Exception e){
+					log.warn("queryNRandomNotCommentNotFollowZombieId failed.\ncase:"+e.getMessage());
+					return;
+				}
+				
+				if(zombieList != null && zombieList.size() > 0){
+					
+					//生成评论
+					try{
+						List<Date> dateList = worldService.getScheduleV3(now, 120, 1);
+						Integer interactId = worldService.queryIntegerIdByWorldId(worldId);
+						if(interactId == null){
+							interactId = keyGenService.generateId(Admin.KEYGEN_INTERACT_WORLD_ID);
+						}
+						List<InteractWorldCommentDto> list = new ArrayList<InteractWorldCommentDto>();
+						InteractWorldCommentDto dto = new InteractWorldCommentDto();
+						dto.setInteractId(interactId);
+						dto.setWorldId(worldId);
+						dto.setUserId(zombieList.get(0));
+						dto.setCommentId(commentList.get(0));
+						dto.setDateAdded(now);
+						dto.setDateSchedule(dateList.get(0));
+						dto.setValid(Tag.TRUE);
+						dto.setFinished(Tag.FALSE);
+						list.add(dto);
+						worldService.batchSaveComment(list);
+						
+						//生成互动记录
+						insertLikeFollowRecord(zombieList.get(0),worldId,userId,type,Tag.FALSE,interactId);
+					}catch(Exception e){
+						log.warn("userId:"+userId+".worldId:"+worldId+"type:"+type+"labelList"+labelList+"zombieList"+zombieList+e.getMessage());
+						return;
+					}
+				}
+			}else {
+				log.warn("commentList is null."+"userId:"+userId+".worldId:"+worldId+"type:"+type+"labelList"+labelList);
+				return;
+			}
+		}else{
+			log.warn("labelList is null."+"userId:"+userId+".worldId:"+worldId+"type:"+type);
+			return;
+		}
+		
 	}
 
 }

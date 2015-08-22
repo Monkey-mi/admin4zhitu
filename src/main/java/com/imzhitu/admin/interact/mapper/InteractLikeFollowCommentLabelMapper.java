@@ -2,6 +2,8 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractLikeFollowCommentLabel;
 
@@ -24,6 +26,14 @@ public interface InteractLikeFollowCommentLabelMapper {
 	 */
 	@DataSource("master")
 	public void batchDeleteLikeFollowCommentLabel(Integer[] ids);
+	
+	/**
+	 * 根据标签ids查询标签名称
+	 * @param labelIds
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<InteractLikeFollowCommentLabel> queryLikeFollowCommentLabelByType(@Param("type")Integer type);
 	
 	/**
 	 * 根据标签ids查询标签名称

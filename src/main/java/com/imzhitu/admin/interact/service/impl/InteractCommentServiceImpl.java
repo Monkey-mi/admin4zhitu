@@ -119,18 +119,10 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements Inter
 
 	@Override
 	public List<Integer> getRandomCommentIds(int labelId, int size) throws Exception {
-		// Set<Integer> usedIndex = new HashSet<Integer>();
 		Long total = interactCommentDao.queryCommentTotal(labelId);
 		if (total < size) {
 			throw new IndexOutOfBoundsException("评论数量不足，只有" + total + "条");
 		}
-		// List<Integer> ids = new ArrayList<Integer>();
-		// for(int i = 0; i < size; i++) {
-		// int index = NumberUtil.getRandomIndex(total.intValue(), usedIndex);
-		// usedIndex.add(index);
-		// Integer id = interactCommentDao.queryIdByPageIndex(labelId, index);
-		// ids.add(id);
-		// }
 		List<Integer> ids = interactCommentDao.queryNRandomComment(labelId, size);
 		return ids;
 	}

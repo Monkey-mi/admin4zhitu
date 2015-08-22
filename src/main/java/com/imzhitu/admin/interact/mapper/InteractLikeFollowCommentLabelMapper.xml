@@ -26,6 +26,13 @@
 	</delete>
 	
 	<!-- SELECT -->
+	<select id="queryLikeFollowCommentLabelByType" resultMap="LikeFollowCommentLabelMap">
+		select *
+		from hts_admin.interact_like_follow_comment_label
+		where type = #{type}
+	</select>
+	
+	<!-- SELECT -->
 	<select id="queryCommentLabelNameByLabelIds" resultMap="LikeFollowCommentLabelMap">
 		select label_name,id as label_id
 		from hts_admin.interact_comment_label

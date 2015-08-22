@@ -68,7 +68,9 @@
 		) and not exists(
 			select iwc.id from hts_admin.interact_world_comment wc
 			where wc.world_id=#{worldId} and wc.user_id = ilfz.zombie_id
-		)
+		) 
+		order by rand()
+		limit 0,#{limit}
 	</select>
 	
 </mapper>

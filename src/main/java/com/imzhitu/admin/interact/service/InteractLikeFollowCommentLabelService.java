@@ -21,6 +21,14 @@ public interface InteractLikeFollowCommentLabelService {
 	public void batchDeleteLikeFollowCommentLabel(String idsStr)throws Exception;
 	
 	/**
+	 * 根据type来查询
+	 * @param type 0表示互赞，1表示互粉
+	 * @return
+	 * @throws Exception
+	 */
+	public List<InteractLikeFollowCommentLabel> queryLikeFollowCommentLabelByType(Integer type) throws Exception;
+	
+	/**
 	 * 根据标签ids查询标签名称
 	 * @param labelIdsStr
 	 * @return
@@ -28,7 +36,7 @@ public interface InteractLikeFollowCommentLabelService {
 	 */
 	public List<InteractLikeFollowCommentLabel> queryCommentLabelNameByLabelIds(String labelIdsStr)throws Exception;
 	
-	/**
+	/**	
 	 * 分页查询
 	 * @param id
 	 * @param labelId

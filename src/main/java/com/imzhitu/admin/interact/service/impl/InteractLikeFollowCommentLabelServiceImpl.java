@@ -39,7 +39,7 @@ public class InteractLikeFollowCommentLabelServiceImpl extends BaseServiceImpl i
 		Integer[] labelIds = StringUtil.convertStringToIds(labelIdsStr);
 		return likeFollowCommentLabelMapper.queryCommentLabelNameByLabelIds(labelIds);
 	}
-
+	
 	@Override
 	public void queryLikeFollowCommentLabel(Integer id, Integer labelId,Integer type, Integer maxId, int page, int rows,
 			Map<String, Object> jsonMap) throws Exception {
@@ -65,6 +65,12 @@ public class InteractLikeFollowCommentLabelServiceImpl extends BaseServiceImpl i
 		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, reMaxId);
 		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+	}
+
+	@Override
+	public List<InteractLikeFollowCommentLabel> queryLikeFollowCommentLabelByType(
+			Integer type) throws Exception {
+		return likeFollowCommentLabelMapper.queryLikeFollowCommentLabelByType(type);
 	}
 
 }

@@ -45,5 +45,5 @@ public interface InteractLikeFollowZombieMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<Integer> queryNRandomNotCommentNotFollowZombieId(@Param("userId")Integer userId,@Param("worldId")Integer worldId);
+	public List<Integer> queryNRandomNotCommentNotFollowZombieId(@Param("userId")Integer userId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
 }

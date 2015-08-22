@@ -26,7 +26,7 @@ public class InteractUserlevelServiceTest extends BaseTest{
 	
 	@Test
 	public void testAddUserlevel()throws Exception{
-		service.AddUserlevel(new UserLevelDto(19,10,20,10,20,10,20,10,20,24,"A-",0));
+//		service.AddUserlevel(new UserLevelDto(19,10,20,10,20,10,20,10,20,24,"A-",0));
 	}
 	
 	@Test

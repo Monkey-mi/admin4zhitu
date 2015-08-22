@@ -75,8 +75,8 @@ public class InteractLikeFollowZombieServiceImpl extends BaseServiceImpl impleme
 	}
 
 	@Override
-	public List<Integer> queryNRandomNotCommentNotFollowZombieId(Integer userId, Integer worldId) throws Exception {
-		return likeFollowZobmieMapper.queryNRandomNotCommentNotFollowZombieId(userId, worldId);
+	public List<Integer> queryNRandomNotCommentNotFollowZombieId(Integer userId, Integer worldId,Integer n) throws Exception {
+		return likeFollowZobmieMapper.queryNRandomNotCommentNotFollowZombieId(userId, worldId,n);
 	}
 
 	@Override

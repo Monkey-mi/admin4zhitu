@@ -26,7 +26,7 @@ public interface InteractLikeFollowZombieService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Integer> queryNRandomNotCommentNotFollowZombieId(Integer userId,Integer worldId)throws Exception;
+	public List<Integer> queryNRandomNotCommentNotFollowZombieId(Integer userId,Integer worldId,Integer n)throws Exception;
 	
 	/**
 	 * 分页查询
