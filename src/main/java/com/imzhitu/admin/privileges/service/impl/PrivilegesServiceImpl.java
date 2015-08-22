@@ -1,5 +1,6 @@
 package com.imzhitu.admin.privileges.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -21,9 +22,11 @@ import com.imzhitu.admin.common.pojo.AdminPrivileges;
 import com.imzhitu.admin.common.pojo.AdminPrivilegesGroup;
 import com.imzhitu.admin.common.pojo.AdminRole;
 import com.imzhitu.admin.common.pojo.AdminSubNavMenu;
+import com.imzhitu.admin.common.pojo.AdminTimeManageDto;
 import com.imzhitu.admin.common.pojo.AdminUser;
 import com.imzhitu.admin.common.pojo.AdminUserPrivileges;
 import com.imzhitu.admin.common.pojo.AdminUserRole;
+import com.imzhitu.admin.common.pojo.InteractPlanCommentLabel;
 import com.imzhitu.admin.privileges.dao.PrivilegesDao;
 import com.imzhitu.admin.privileges.dao.PrivilegesGroupDao;
 import com.imzhitu.admin.privileges.dao.RoleDao;
@@ -623,4 +626,46 @@ public class PrivilegesServiceImpl extends BaseServiceImpl implements Privileges
 		return subMenu;
 	}
 	
+/**
+ * 
+ */
+	@Override
+	public void addAdminTimeManage(Integer userNameId, String workStartTime, String workEndTime, Integer operatorId)
+			throws Exception {
+		Date now  = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+		AdminTimeManageDto dto = new AdminTimeManageDto();
+		dto.setUserNameId(userNameId);
+		dto.setStartTime(df.parse(workStartTime));
+		dto.setEndTime(df.parse(workEndTime));
+		dto.setUpdateTime(now);
+		dto.setOperatorId(operatorId);
+		try {
+			adminUserPrivilegesMapper.insertAdminTimeManage(dto);
+		} catch (Exception e) {
+			System.out.println("-------------------------->数据不唯一<-------------------------------------------------------------------------------");
+		}
+	}
+
+@Override
+public List<AdminTimeManageDto> queryAdminTimeManage(Integer  maxId, Integer page, Integer rows,Map<String , Object> jsonMap) throws Exception {
+	List<AdminTimeManageDto> list = adminUserPrivilegesMapper.queryAdminTimeManage();
+/*	jsonMap.put(OptResult.JSON_KEY_MAX_ID, 100000);
+	jsonMap.put(OptResult.JSON_KEY_TOTAL, 10);*/
+	jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+	return null;
+}
+
+public void deleteAdminTimeManageByUserId(Integer userId) throws Exception{
+	adminUserPrivilegesMapper.deleteAdminTimeManageByUserId(userId);
+}
+
+@Override
+public void deleteAdminTimeManageByUserIds(String idsStr) throws Exception {
+	Integer[] ids = StringUtil.convertStringToIds(idsStr);
+	for(Integer userId: ids){
+		adminUserPrivilegesMapper.deleteAdminTimeManageByUserId(userId);
+	}
+}
+
 }

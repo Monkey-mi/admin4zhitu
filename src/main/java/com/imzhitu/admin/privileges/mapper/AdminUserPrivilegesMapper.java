@@ -5,6 +5,7 @@ import java.util.List;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.AdminPrivileges;
 import com.imzhitu.admin.common.pojo.AdminPrivilegesGroup;
+import com.imzhitu.admin.common.pojo.AdminTimeManageDto;
 import com.imzhitu.admin.common.pojo.AdminUserPrivileges;
 
 public interface AdminUserPrivilegesMapper {
@@ -91,4 +92,31 @@ public interface AdminUserPrivilegesMapper {
 	 */
 	@DataSource("master")
 	public void updateValid(AdminUserPrivileges dto);
+	
+	/**
+	 * 插入时间管理模块数据
+	 * @param dto 
+		*	2015年8月21日
+		*	mishengliang
+	 */
+	@DataSource("master")
+	public void insertAdminTimeManage(AdminTimeManageDto dto)throws Exception;
+	
+	/**
+	 * 查询时间管理模块的数据
+	 * @return 
+		*	2015年8月21日
+		*	mishengliang
+	 */
+	@DataSource("slave")
+	public List<AdminTimeManageDto> queryAdminTimeManage();
+	
+	/**
+	 * 通过userId删除时间管理模块中的数据
+	 * @param userId 
+		*	2015年8月21日
+		*	mishengliang
+	 */
+	@DataSource("master")
+	public void deleteAdminTimeManageByUserId(Integer userId);
 }

@@ -1,12 +1,13 @@
 package com.imzhitu.admin.privileges.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.AdminPrivileges;
 import com.imzhitu.admin.common.pojo.AdminPrivilegesGroup;
 import com.imzhitu.admin.common.pojo.AdminRole;
+import com.imzhitu.admin.common.pojo.AdminTimeManageDto;
 import com.imzhitu.admin.common.pojo.AdminUser;
 
 
@@ -240,4 +241,34 @@ public interface PrivilegesService extends BaseService {
 	 * @throws Exception
 	 */
 	public void deletePrivileges(Integer uid,String privilegeIdsStr,Integer operatorId)throws Exception;
+	/**
+	 * 增加管理员时间管理模块
+	 * @param userNameId 管理员ID
+	 * @param workStartTime 开始时间
+	 * @param workEndTime 结束时间
+	 * @param operatorId 操作者ID
+	 * @throws Exception 
+		*	2015年8月20日
+		*	mishengliang
+	 */
+	public void addAdminTimeManage(Integer userNameId,String workStartTime,String workEndTime,Integer operatorId)throws Exception;
+	
+	/**
+	 *查询管理员时间管理模块
+	 * @throws Exception 
+		*	2015年8月21日
+		*	mishengliang
+	 */
+	public List<AdminTimeManageDto> queryAdminTimeManage(Integer  maxId, Integer page, Integer rows,Map<String , Object> jsonMap)throws Exception;
+	
+	/**
+	 * 删除管理员时间模块
+	 * @param idsStr
+	 * @param operatorId
+	 * @throws Exception 
+		*	2015年8月21日
+		*	mishengliang
+	 */
+	public void deleteAdminTimeManageByUserIds(String idsStr)throws Exception;
+
 }

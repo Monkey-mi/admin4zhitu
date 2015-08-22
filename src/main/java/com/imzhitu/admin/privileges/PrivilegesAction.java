@@ -1,16 +1,21 @@
 package com.imzhitu.admin.privileges;
 
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.crypto.Data;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
@@ -18,6 +23,7 @@ import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.AdminPrivileges;
 import com.imzhitu.admin.common.pojo.AdminPrivilegesGroup;
 import com.imzhitu.admin.common.pojo.AdminRole;
+import com.imzhitu.admin.common.pojo.AdminTimeManageDto;
 import com.imzhitu.admin.common.pojo.AdminUser;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.privileges.service.PrivilegesService;
@@ -47,6 +53,11 @@ public class PrivilegesAction extends BaseCRUDAction {
 	private String ids;
 	private String privilegeIdsStr;	//权限ids 字符串
 	private Integer userId;			//用户id
+
+	private Integer userNameId;
+	private String workStartTime;
+	private String workEndTime;
+	private String userNameIds;
 	
 	@Autowired
 	private PrivilegesService privilegesService;
@@ -125,10 +136,35 @@ public class PrivilegesAction extends BaseCRUDAction {
 		this.groupId = groupId;
 	}
 	
+	
+	public Integer getUserNameId() {
+		return userNameId;
+	}
+
+	public void setUserNameId(Integer userNameId) {
+		this.userNameId = userNameId;
+	}
+
+	public String getWorkStartTime() {
+		return workStartTime;
+	}
+
+	public void setWorkStartTime(String workStartTime) {
+		this.workStartTime = workStartTime;
+	}
+
+	public String getWorkEndTime() {
+		return workEndTime;
+	}
+
+	public void setWorkEndTime(String workEndTime) {
+		this.workEndTime = workEndTime;
+	}
+
+	
 	/*
 	 * 权限分组管理子模块
 	 */
-	
 	/**
 	 * 查询权限分组列表
 	 * @return
@@ -563,5 +599,39 @@ public class PrivilegesAction extends BaseCRUDAction {
 		}
 		return StrutsKey.JSON;
 	}
+	
+	public String addAdminTimeManage(){
+		try{
+			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			privilegesService.addAdminTimeManage(userNameId, workStartTime, workEndTime, user.getId());
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
+	/**
+	 * 查询管理员时间管理模块的信息
+	 * @return
+	 */
+	public String queryAdminTimeManage(){
+		try{
+			privilegesService.queryAdminTimeManage(maxId, page, rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+//		jsonMap.put("result", 0);
+		}catch(Exception e){
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String deleteAdminTimeManageByUserIds(){
+		try{
+			privilegesService.deleteAdminTimeManageByUserIds(userNameIds);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 }
