@@ -105,6 +105,12 @@ public interface InteractWorldService extends BaseService {
 	 */
 	public void batchSaveComment(List<InteractWorldCommentDto> list);
 	
+	/**
+	 * 插入评论
+	 * @param dto
+	 */
+	public void insertWorldComment(InteractWorldCommentDto dto);
+	
 	
 	/**
 	 * 批量添加播放

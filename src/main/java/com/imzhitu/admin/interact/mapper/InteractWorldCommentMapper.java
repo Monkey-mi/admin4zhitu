@@ -8,6 +8,14 @@ import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
 
 public interface InteractWorldCommentMapper {
+	
+	/**
+	 * 批量添加
+	 * @param list
+	 */
+	@DataSource("master")
+	public void insertWorldComment(InteractWorldCommentDto dto);
+	
 	/**
 	 * 批量添加
 	 * @param list

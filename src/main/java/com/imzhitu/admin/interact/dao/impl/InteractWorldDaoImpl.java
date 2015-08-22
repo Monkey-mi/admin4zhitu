@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -290,7 +291,11 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	 */
 	@Override
 	public Integer queryIntegerIdByWorldId(Integer wId){
-		return getJdbcTemplate().queryForObject(QUERY_INTERACT_ID_BY_WORLD_ID, new Object[]{wId}, Integer.class);
+		try{
+			return getJdbcTemplate().queryForObject(QUERY_INTERACT_ID_BY_WORLD_ID, new Object[]{wId}, Integer.class);
+		}catch(EmptyResultDataAccessException e){
+			return null;
+		}
 	}
 	
 }

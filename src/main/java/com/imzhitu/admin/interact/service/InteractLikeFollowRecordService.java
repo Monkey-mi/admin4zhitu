@@ -61,4 +61,12 @@ public interface InteractLikeFollowRecordService {
 	 * @throws Exception
 	 */
 	public void doLikeFollowJob()throws Exception;
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param worldId
+	 * @param type 0赞。
+	 */
+	public void addLikeFollowInteract(Integer userId,Integer worldId,Integer type);
 }

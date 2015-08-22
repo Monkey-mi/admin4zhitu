@@ -195,6 +195,7 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 	 * @param worldId
 	 * @param type 0赞。
 	 */
+	@Override
 	public void addLikeFollowInteract(Integer userId,Integer worldId,Integer type){
 		Date now = new Date();
 		
@@ -237,7 +238,6 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 						if(interactId == null){
 							interactId = keyGenService.generateId(Admin.KEYGEN_INTERACT_WORLD_ID);
 						}
-						List<InteractWorldCommentDto> list = new ArrayList<InteractWorldCommentDto>();
 						InteractWorldCommentDto dto = new InteractWorldCommentDto();
 						dto.setInteractId(interactId);
 						dto.setWorldId(worldId);
@@ -247,11 +247,9 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 						dto.setDateSchedule(dateList.get(0));
 						dto.setValid(Tag.TRUE);
 						dto.setFinished(Tag.FALSE);
-						list.add(dto);
-						worldService.batchSaveComment(list);
-						
+						worldService.insertWorldComment(dto);
 						//生成互动记录
-						insertLikeFollowRecord(zombieList.get(0),worldId,userId,type,Tag.FALSE,interactId);
+						insertLikeFollowRecord(zombieList.get(0),worldId,userId,type,Tag.FALSE,dto.getId());
 					}catch(Exception e){
 						log.warn("userId:"+userId+".worldId:"+worldId+"type:"+type+"labelList"+labelList+"zombieList"+zombieList+e.getMessage());
 						return;

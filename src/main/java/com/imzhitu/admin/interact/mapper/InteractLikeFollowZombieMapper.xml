@@ -60,13 +60,13 @@
 	
 	<!-- query n random unInteract zombie id -->
 	<select id="queryNRandomNotCommentNotFollowZombieId" resultType="Integer">
-		select ilfz.id
+		select ilfz.zombie_id
 		from hts_admin.interact_like_follow_zombie ilfz
 		where not exists(
 			select uc.id from hts.user_concern uc
 			where uc.concern_id=ilfz.zombie_id and uc.user_id=#{userId}
 		) and not exists(
-			select iwc.id from hts_admin.interact_world_comment wc
+			select wc.id from hts_admin.interact_world_comment wc
 			where wc.world_id=#{worldId} and wc.user_id = ilfz.zombie_id
 		) 
 		order by rand()

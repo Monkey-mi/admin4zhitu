@@ -15,9 +15,15 @@
 		<result property="content" column="content" jdbcType="VARCHAR"/>
 	</resultMap>
 	
+	<!-- INSERT -->
+	<insert id="insertWorldComment" useGeneratedKeys="true" keyProperty="id">
+		insert into hts_admin.interact_world_comment
+		(interact_id,world_id,user_id,comment_id,date_added,date_schedule,valid,finished)
+		values (#{interactId},#{worldId},#{userId},#{commentId},#{dateAdded},#{dateSchedule},#{valid},#{finished})
+	</insert>
 	
 	<!-- BATCH SAVE LIKED -->
-	<insert id="batchSaveWorldComment">
+	<insert id="batchSaveWorldComment" >
 		insert into hts_admin.interact_world_comment
 		(interact_id,world_id,user_id,comment_id,date_added,date_schedule,valid,finished)
 		values 

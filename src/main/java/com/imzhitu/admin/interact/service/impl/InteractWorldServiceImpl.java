@@ -834,9 +834,19 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		}
 	}
 	
+	/**
+	 * 批量插入评论
+	 */
 	@Override
 	public void batchSaveComment(List<InteractWorldCommentDto> list){
 		worldCommentMapper.batchSaveWorldComment(list);
+	}
+	
+	/**
+	 * 插入评论
+	 */
+	public void insertWorldComment(InteractWorldCommentDto dto){
+		worldCommentMapper.insertWorldComment(dto);
 	}
 	
 	@Override

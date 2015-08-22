@@ -33,6 +33,9 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<OpUser> im
 	@Override
 	public void updateUserRecommendCache() throws Exception {
 		//更新置顶的
+		if(getRedisTemplate().hasKey(com.hts.web.base.constant.CacheKeies.OP_USER_VERIFY_REC_TOP)){
+			getRedisTemplate().delete(com.hts.web.base.constant.CacheKeies.OP_USER_VERIFY_REC_TOP);
+		}
 		List<OpUser> userRecommendTopList = userRecommendDao.queryWeightUserRecommend(50);
 		int size = 0;
 		if( userRecommendTopList != null && userRecommendTopList.size() > 0){
