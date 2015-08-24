@@ -47,9 +47,10 @@ public class OpWorldTypeDto2CacheDaoImpl extends BaseCacheDaoImpl<OpWorldTypeDto
 				}
 			}
 			
-			updateWeightList(weightList);
-			
 		}
+		
+		updateWeightList(weightList);
+		
 		if(getRedisTemplate().hasKey(CacheKeies.OP_SUPERB_TYPE)) {
 			getRedisTemplate().delete(CacheKeies.OP_SUPERB_TYPE);
 		}
