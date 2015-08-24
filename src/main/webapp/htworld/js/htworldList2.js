@@ -39,35 +39,56 @@ var maxId = 0,
 			$("#endTime").datebox('setValue', todayStr);
 		}
 	},
+	
+	/**
+	 * 查询操作，查询整个区域的
+	 */
 	search = function() {
 		maxId = 0;
-		var startTime = $('#startTime').datetimebox('getValue'),
-			endTime = $('#endTime').datetimebox('getValue'),
-			phoneCode = $('#phoneCode').combobox('getValue'),
-			valid = $("#valid").combobox('getValue'),
-			shield = $("#shield").combobox('getValue'),
-			user_level_id = $("#search_userLevelId").combobox('getValue'),
-			rows = myQueryParams.rows;
+		// 获取起始与结束日期
+		var startTime = $('#startTime').datetimebox('getValue');
+		var	endTime = $('#endTime').datetimebox('getValue');
+		
+		// 判断查询的起始时间与管理员时间跨度是否有冲突，若无冲突则进行查询 
+		var adminUserDateSpanIdValue = $('#search_adminUserDateSpan').combogrid('getValue');
+		// 若管理员时间跨度被选择
+		if ( adminUserDateSpanIdValue != "" ) {
+			// 查询起始时间与结束时间不是同一天，则提示冲突，不进行查询
+			if ( startTime != endTime ) {
+				$.messager.alert('错误提示',"你选择了管理员时间跨度查询，但是起始时间与结束时间不是同一天，请重新选择！");  // 提示冲突信息
+				return;
+			} else {
+				// 若在同一天，则选取管理员时间跨度起始拼接到startTime上，结束拼接到endTime上
+				var adminUserDateSpanDategrid = $('#search_adminUserDateSpan').combogrid("grid");
+				adminUserDateSpanDategrid.datagrid("selectRecord", adminUserDateSpanIdValue);
+				var adminUserDateSpanRow = adminUserDateSpanDategrid.datagrid("getSelected");
+				startTime = startTime + " " + adminUserDateSpanRow.startTime;
+				endTime = endTime + " " +adminUserDateSpanRow.endTime;
+			}
+		} else {
+			// 若管理员时间跨度没有被选择，则在查询前后拼接时间，endTime拼接时间到当天末
+			startTime = startTime + " " + "00:00:00";
+			endTime = endTime + " " + "23:59:59";
+		}
+		alert(startTime)
+		alert(endTime)
+		
+		var	phoneCode = $('#phoneCode').combobox('getValue');
+		var	valid = $("#valid").combobox('getValue');
+		var	shield = $("#shield").combobox('getValue');
+		var	user_level_id = $("#search_userLevelId").combobox('getValue');
+		var	rows = myQueryParams.rows;
 		myQueryParams = {
-			'maxId' : maxId,
-			'startTime':startTime,
-			'endTime':endTime,
-			'phoneCode':phoneCode,
-			'valid':valid,
-			'shield':shield,
-			'user_level_id':user_level_id
+				'maxId' : maxId,
+				'startTime':startTime,
+				'endTime':endTime,
+				'phoneCode':phoneCode,
+				'valid':valid,
+				'shield':shield,
+				'user_level_id':user_level_id
 		};
-		//$("#htm_table").datagrid("load",myQueryParams);
 		loadData(1, rows);
-	},
-	searchByPhoneCode = function(record) {
-		var startTime = $('#startTime').datetimebox('getValue'),
-		endTime = $('#endTime').datetimebox('getValue');
-		myQueryParams.startTime = startTime;
-		myQueryParams.endTime = endTime;
-		myQueryParams.phoneCode = record.value;
-		myQueryParams.maxId = maxId;
-		$("#htm_table").datagrid("load",myQueryParams);
+		
 	},
 	activityQueryParams = {
 		'maxSerial':maxActivitySerial
@@ -741,6 +762,19 @@ var htmTableTitle = "分享列表维护", //表格标题
 				loadTypeComment(rec.id,rec.labelName);
 				$("#labelId_type_interact").combotree('clear');
 			}
+		});
+		
+		/*
+		 * 管理员时间跨度下拉选择，
+		 */
+		$("#search_adminUserDateSpan").combogrid({
+			panelWidth:120,
+			idField:'userNameId',
+		    textField:'userName',
+		    url: "./admin/privileges_queryAdminTimeManage",
+		    columns:[[
+		        {field:'userName', title:'管理员名称 '}
+		    ]]
 		});
 		
 		$("#searchBtn").click(function() {

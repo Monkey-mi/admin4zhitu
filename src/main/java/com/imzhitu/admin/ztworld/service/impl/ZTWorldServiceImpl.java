@@ -146,7 +146,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		dto.setFirstRow((start-1)*limit);
 		Date now = new Date();
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if(startDateStr == null || endDateStr == null) { // 默认查询今天的所有织图
 			dto.setDateAdded(now);
 			dto.setDateModified(new Date(now.getTime()+24*60*60*1000));
@@ -155,7 +155,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 				dto.setDateAdded(date.parse(startDateStr));
 			}
 			if(endDateStr != null){
-				dto.setDateModified(new Date(date.parse(endDateStr).getTime()+24*60*60*1000));
+				dto.setDateModified(date.parse(endDateStr));
 			}
 		}
 		
