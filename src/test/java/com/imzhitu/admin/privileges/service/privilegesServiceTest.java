@@ -22,7 +22,8 @@ public class privilegesServiceTest extends BaseTest {
 		service.addAdminTimeManage(14, "01:00:00", "03:56:14", 11);*/
 		
 		//测试展示数据
-		List<AdminTimeManageDto> list = service.queryAdminTimeManage(null, null, null, null);
+		//方法return就为null
+	/*	service.queryAdminTimeManage(null, null, null, null);*/
 	}
 	
 	/**
