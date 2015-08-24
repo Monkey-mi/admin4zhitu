@@ -1,7 +1,6 @@
 package com.imzhitu.admin.ztworld.service;
 
 import java.util.HashMap;
-import java.util.Date;
 import java.util.Map;
 
 import org.junit.Test;
@@ -50,4 +49,10 @@ public class ZTWorldTypeServiceTest extends BaseTest {
 	public void testPerformTypeWorldSchedula()throws Exception{
 		service.performTypeWorldSchedula();
 	}
+	
+	@Test
+	public void updateTypeWorldCacheTest() throws Exception {
+		service.updateTypeWorldCache();
+	}
+	
 }

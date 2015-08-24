@@ -327,6 +327,9 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void updateTypeWorldWeight(Integer id, Integer weight)
 			throws Exception {
+		if(weight > 0) {
+			weight = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);
+		}
 		worldTypeWorldDao.updateWeight(id, weight);
 	//	opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 	}

@@ -148,6 +148,7 @@ var maxSerial = 0,
   				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}
   		},
+  		/*
   		{field : 'superb',title : '精品',align : 'center',width : 45,
   			formatter: function(value,row,index){
   				if(value == 1) {
@@ -158,11 +159,12 @@ var maxSerial = 0,
   				return "<img title='添加到精品列表' class='htm_column_img pointer' onclick='javascript:addSuperb(\""+ row.id + "\",\"" + index + "\")' src='" + img + "'/>";
   			}
   		},
+  		*/
   		{field : 'weight',title : '置顶',align : 'center',width : 45,
   			formatter: function(value,row,index){
   				if(value > 0) {
   					img = "./common/images/undo.png";
-  					return "<img title='从置顶列表选除' class='htm_column_img pointer' onclick='javascript:removeWeight(\""+ row.id + "\",\"" + index + "\")'  src='" + img + "'/>";
+  					return "<img title='从置顶列表选除' class='htm_column_img pointer' onclick='javascript:removeWeight(\""+ row.id + "\",\"" + index + "\")'  src='" + img + "'/>" + value;
   				}
   				img = "./common/images/edit_add.png";
   				return "<img title='添加到置顶列表' class='htm_column_img pointer' onclick='javascript:addWeight(\""+ row.id + "\",\"" + index + "\")' src='" + img + "'/>";
