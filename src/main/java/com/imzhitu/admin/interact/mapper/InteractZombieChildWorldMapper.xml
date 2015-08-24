@@ -38,4 +38,17 @@
 		select path from hts_admin.zombie_child_world
 		where zombie_world_id = #{zombieWorldId}
 	</select>
+	
+	<!-- 更新织图子图 -->
+	<update id="updateZombieChildWorld">
+		update 
+			hts_admin.zombie_child_world
+		<set>
+			<if test="childWorldDesc != null">
+				child_world_desc = #{childWorldDesc},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
 </mapper>

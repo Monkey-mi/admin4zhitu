@@ -24,4 +24,13 @@ public interface InteractZombieChildWorldMapper {
 	
 	@DataSource("slave")
 	public List<String> queryZombieChildWorldPath(Integer zombieWorldId);
+	
+	/**
+	 * 更新织图子图，目前只能更新子图描述
+	 * 
+	 * @param dto	马甲织图子图数据传输对象
+	 * @author zhangbo	2015年8月24日
+	 */
+	@DataSource("master")
+	public void updateZombieChildWorld(ZombieChildWorld dto);
 }

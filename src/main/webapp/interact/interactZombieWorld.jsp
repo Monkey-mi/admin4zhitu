@@ -97,7 +97,10 @@
 				 * 若changes.worldDesc为undefined，则证明没有改动，什么都不进行操作
 				 */
 				if (changes.worldDesc) {
-					var requestData = {'id':row.id,'worldDesc':row.worldDesc};
+					var requestData = {
+							'id':row.id,
+							'worldDesc':row.worldDesc
+							};
 					$.post('./admin_interact/interactZombieWorld_updateZombieWorld', requestData, function(data){
 						if (data.result == -1) {
 							$.messager.alert("提示","第" + (index+1) + "行，" + data.msg);
