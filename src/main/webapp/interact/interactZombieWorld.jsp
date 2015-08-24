@@ -84,7 +84,7 @@
 			}
 		},
 		{field : 'htworldId', title:'织图ID', align : 'center'},
-		{field : 'channelId',title:'频道ID',align : 'center'},
+		{field : 'channelId',title:'频道ID',align : 'center',editor:'text'},
 		{field : 'channelName',title:'频道名称',align:'center'},
 		{field : 'worldLabel',title:'织图标签',align:'center'}
 		
@@ -101,6 +101,17 @@
 							'id':row.id,
 							'worldDesc':row.worldDesc
 							};
+					$.post('./admin_interact/interactZombieWorld_updateZombieWorld', requestData, function(data){
+						if (data.result == -1) {
+							$.messager.alert("提示","第" + (index+1) + "行，" + data.msg);
+							$('#htm_table').datagrid('rejectChanges');
+						}
+					});
+				} else if (changes.channelId) {
+					var requestData = {
+						'id':row.id,
+						'channelId':row.channelId
+						};
 					$.post('./admin_interact/interactZombieWorld_updateZombieWorld', requestData, function(data){
 						if (data.result == -1) {
 							$.messager.alert("提示","第" + (index+1) + "行，" + data.msg);

@@ -606,19 +606,24 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	}
 
 	@Override
-	public void updateZombieWorld(Integer id, String worldDesc) {
+	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId) {
 		ZombieWorld dto = new ZombieWorld();
 		dto.setId(id);
 		dto.setWorldDesc(worldDesc);
+		dto.setChannelId(channelId);
+		dto.setModifyDate(new Date());
 		zombieWorldMapper.updateZombieWorld(dto);
 		
-		// 根据织图id查询此织图的所有子图
-		List<ZombieChildWorld> zombieChildWorldList = zombieChildWorldMapper.queryZombieChildWorld(id);
-		
-		// 因为获取为顺序的，所以得到第一个子图，然后刷新子图的描述
-		ZombieChildWorld zombieChildWorld = zombieChildWorldList.get(0);
-		zombieChildWorld.setChildWorldDesc(worldDesc);
-		zombieChildWorldMapper.updateZombieChildWorld(zombieChildWorld);
+		// 若织图描述不为空，则要同步刷新第一个子图的描述
+		if ( worldDesc != null ) {
+			// 根据织图id查询此织图的所有子图
+			List<ZombieChildWorld> zombieChildWorldList = zombieChildWorldMapper.queryZombieChildWorld(id);
+			
+			// 因为获取为顺序的，所以得到第一个子图，然后刷新子图的描述
+			ZombieChildWorld zombieChildWorld = zombieChildWorldList.get(0);
+			zombieChildWorld.setChildWorldDesc(worldDesc);
+			zombieChildWorldMapper.updateZombieChildWorld(zombieChildWorld);
+		}
 	}
 
 	/**

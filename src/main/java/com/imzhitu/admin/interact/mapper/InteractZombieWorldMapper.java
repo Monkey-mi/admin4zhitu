@@ -10,13 +10,18 @@ public interface InteractZombieWorldMapper {
 	public void insertZombieWorld(ZombieWorld dto);
 	
 	/**
-	 * 更新马甲织图
-	 * @param dto
+	 * 更新马甲织图，可更新马甲织图的描述，所在频道
+	 * @param dto	马甲织图数据传输对象
 	 * @author zhangbo	2015年7月28日
 	 */
 	@DataSource("master")
 	public void updateZombieWorld(ZombieWorld dto);
 	
+	/**
+	 * TODO 可以合并到updateZombieWorld方法中
+	 * @param dto
+	 * @author zhangbo	2015年8月24日
+	 */
 	@DataSource("master")
 	public void updateComplete(ZombieWorld dto);
 	
@@ -35,6 +40,11 @@ public interface InteractZombieWorldMapper {
 	@DataSource("slave")
 	public long queryZombieWorldTotalCountForTable(ZombieWorld dto);
 	
+	/**
+	 * TODO 可以合并到updateZombieWorld方法中
+	 * @param dto
+	 * @author zhangbo	2015年8月24日
+	 */
 	@DataSource("master")
 	public void updateZombieWorldLabel(ZombieWorld dto);
 	

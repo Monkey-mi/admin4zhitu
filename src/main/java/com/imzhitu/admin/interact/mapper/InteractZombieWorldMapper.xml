@@ -39,7 +39,13 @@
 		update hts_admin.zombie_world
 		<set>
 	      <if test="worldDesc != null">
-	      	world_desc=#{worldDesc}
+	      	world_desc=#{worldDesc},
+	      </if>
+	      <if test="channelId != null">
+	      	channel_id=#{channelId},
+	      </if>
+	      <if test="modifyDate != null">
+	      	date_modify = #{modifyDate}
 	      </if>
 	    </set>
 	  	where id=#{id}

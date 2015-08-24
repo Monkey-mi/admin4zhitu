@@ -68,8 +68,9 @@ public interface InteractZombieService {
 	 * 更新马甲织图
 	 * 
 	 * @param id		马甲织图表主键id
-	 * @param worldDesc	马甲织图描述
+	 * @param worldDesc	马甲织图描述，可以为null
+	 * @param channelId	马甲织图所在频道id，可以为null 
 	 * @author zhangbo	2015年7月28日
 	 */
-	public void updateZombieWorld(Integer id, String worldDesc);
+	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId);
 }
