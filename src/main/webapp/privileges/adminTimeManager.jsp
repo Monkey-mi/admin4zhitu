@@ -29,7 +29,7 @@
 		},
 		loadPageData(initPage);
 	},
-/* 	myOnBeforeRefresh = function(pageNumber, pageSize) {
+ 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
 			maxId = 0;
 			myQueryParams.maxId = maxId;
@@ -42,7 +42,7 @@
 				myQueryParams.maxId = maxId;
 			}
 		}
-	}; */
+	}; 
 	//分页组件,可以重载
 	columnsFields = [
 		{field : 'ck',checkbox : true },
@@ -59,32 +59,6 @@
 		}, 
 	],
 	
-	pageButtons = [{
-        iconCls:'icon-save',
-        text:'保存',
-        handler:function(){
-        	endEditing();
-        	var rows = $("#htm_table").datagrid('getChanges', "updated"); 
-        	$("#htm_table").datagrid('loading');
-        	$.post(updatePageURL,{
-        		'rowJson':JSON.stringify(rows)
-        		},function(result){
-        			if(result['result'] == 0) {
-        				$("#htm_table").datagrid('acceptChanges');
-        			} else {
-        				$.messager.alert('失败提示',result['msg']);  //提示失败信息
-        			}
-        			$("#htm_table").datagrid('loaded');
-        		},"json");
-        }
-    	},{
-        iconCls:'icon-undo',
-        text:'取消',
-        handler:function(){
-        	$("#htm_table").datagrid('rejectChanges');
-        	$("#htm_table").datagrid('loaded');
-        }
-	}],
 	onBeforeInit = function() {
 		showPageLoading();
 	},

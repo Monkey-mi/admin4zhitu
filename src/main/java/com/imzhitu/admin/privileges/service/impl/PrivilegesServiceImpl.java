@@ -1,7 +1,6 @@
 package com.imzhitu.admin.privileges.service.impl;
 
 import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -27,7 +26,6 @@ import com.imzhitu.admin.common.pojo.AdminTimeManageDto;
 import com.imzhitu.admin.common.pojo.AdminUser;
 import com.imzhitu.admin.common.pojo.AdminUserPrivileges;
 import com.imzhitu.admin.common.pojo.AdminUserRole;
-import com.imzhitu.admin.common.pojo.InteractPlanCommentLabel;
 import com.imzhitu.admin.privileges.dao.PrivilegesDao;
 import com.imzhitu.admin.privileges.dao.PrivilegesGroupDao;
 import com.imzhitu.admin.privileges.dao.RoleDao;
@@ -652,8 +650,8 @@ public class PrivilegesServiceImpl extends BaseServiceImpl implements Privileges
 @Override
 public List<AdminTimeManageDto> queryAdminTimeManage(Integer  maxId, Integer page, Integer rows,Map<String , Object> jsonMap) throws Exception {
 	List<AdminTimeManageDto> list = adminUserPrivilegesMapper.queryAdminTimeManage();
-/*	jsonMap.put(OptResult.JSON_KEY_MAX_ID, 100000);
-	jsonMap.put(OptResult.JSON_KEY_TOTAL, 10);*/
+/*	jsonMap.put(OptResult.JSON_KEY_MAX_ID, 100000);*/
+	jsonMap.put(OptResult.JSON_KEY_TOTAL, list.size());
 	
 	jsonMap.put(OptResult.JSON_KEY_ROWS, list);
 	return null;
