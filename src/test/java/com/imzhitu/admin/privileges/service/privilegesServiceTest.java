@@ -23,7 +23,6 @@ public class privilegesServiceTest extends BaseTest {
 		
 		//测试展示数据
 		List<AdminTimeManageDto> list = service.queryAdminTimeManage(null, null, null, null);
-		System.out.println("--------------------------------------------------------------->"+list.get(0).getUserName()+"<------------------------------------------------------------------------");
 	}
 	
 	/**
