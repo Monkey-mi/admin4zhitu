@@ -61,8 +61,8 @@ var maxId = 0,
 			user_level_id = $("#search_userLevelId").combobox('getValue');
 		myQueryParams = {
 			'maxId' : maxId,
-			'startTime':startTime,
-			'endTime':endTime,
+			'startTime':startTime + " " + "00:00:00",
+			'endTime':endTime + " " + "23:59:59",
 			'phoneCode':phoneCode,
 			'valid':valid,
 			'shield':shield,
@@ -277,8 +277,8 @@ var htmTableTitle = "分享列表维护", //表格标题
 		toolbarComponent = '#tb';
 		myQueryParams = {
 			'maxId' : maxId,
-			'startTime':todayStr,
-			'endTime':todayStr,
+			'startTime': todayStr + " " + "00:00:00",
+			'endTime': todayStr + " " + "23:59:59"
 		},
 		loadPageData(initPage);
 	},
