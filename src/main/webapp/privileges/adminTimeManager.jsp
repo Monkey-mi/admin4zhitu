@@ -29,7 +29,7 @@
 		},
 		loadPageData(initPage);
 	},
-	myOnBeforeRefresh = function(pageNumber, pageSize) {
+/* 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
 			maxId = 0;
 			myQueryParams.maxId = maxId;
@@ -42,28 +42,20 @@
 				myQueryParams.maxId = maxId;
 			}
 		}
-	};
+	}; */
 	//分页组件,可以重载
 	columnsFields = [
 		{field : 'ck',checkbox : true },
 		{field : recordIdKey,title : 'ID',align : 'center', width : 45},
 		{field : 'userNameId',title : '时间模块ID',align : 'center',width : 100},
 		{field : 'userName',title : '姓名',align : 'center',width : 100},
- 		{field : 'startTime',title : '开始时间',align : 'center',width : 100,
-  			formatter: function(value,row,index){
-				return baseTools.parseDate(value).format("hh:mm:ss"); 
-			}	 
-		},
-		{field : 'endTime',title : '结束时间',align : 'center',width : 100,
- 			formatter: function(value,row,index){
-				return baseTools.parseDate(value).format("hh:mm:ss");
-			}
-		},
+ 		{field : 'startTime',title : '开始时间',align : 'center',width : 100},
+		{field : 'endTime',title : '结束时间',align : 'center',width : 100},
 		{field : 'operatorName',title : '最后操作者',align : 'center', width: 100},
 		{field : 'updateTime', title:'更新日期', align : 'center',width : 100, 
- 			formatter: function(value,row,index){
+  			formatter: function(value,row,index){
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-			} 
+			}  
 		}, 
 	],
 	
