@@ -70,8 +70,6 @@ var maxId = 0,
 			startTime = startTime + " " + "00:00:00";
 			endTime = endTime + " " + "23:59:59";
 		}
-		alert(startTime)
-		alert(endTime)
 		
 		var	phoneCode = $('#phoneCode').combobox('getValue');
 		var	valid = $("#valid").combobox('getValue');
@@ -630,10 +628,11 @@ var htmTableTitle = "分享列表维护", //表格标题
 	deleteURI = "./admin_ztworld/ztworld_deleteWorld?ids="; //删除请求地址
 	init = function() {
 		toolbarComponent = '#tb';
+		// 查询初始时间设置为当天的00点，到当天末23点59分59秒，时间都以拼接的方式，中间添加空格拼到日期的后面
 		myQueryParams = {
 			'maxId' : maxId,
-			'startTime':todayStr,
-			'endTime':todayStr,
+			'startTime': todayStr + " " + "00:00:00",
+			'endTime': todayStr + " " + "23:59:59",
 			'rows':30
 		},
 		loadData(1, 30);
