@@ -36,15 +36,15 @@ public class AdminTimeManageDto extends AbstractNumberDto implements Serializabl
 	public void setUserNameId(int userNameId) {
 		this.userNameId = userNameId;
 	}
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Date getStartTime() {
+	@JSON(format="HH:mm:ss")
+	public Time getStartTime() {
 		return this.startTime;
 	}
 	public void setStartTime(Time startTime) {
 		this.startTime = startTime;
 	}
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Date getEndTime() {
+	@JSON(format="HH:mm:ss")
+	public Time getEndTime() {
 		return this.endTime;
 	}
 	public void setEndTime(Time endTime) {
