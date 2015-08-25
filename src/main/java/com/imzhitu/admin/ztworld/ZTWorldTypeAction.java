@@ -15,6 +15,7 @@ import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -33,6 +34,8 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 	 * 
 	 */
 	private static final long serialVersionUID = -8783496535887835225L;
+	
+	private static Logger logger = Logger.getLogger(ZTWorldTypeAction.class);
 	
 	private Integer id;
 	private String ids;
@@ -390,7 +393,7 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 			worldTypeService.updateTypeWorldReview(worldId, review);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
-			JSONUtil.optFailed(OptResult.UPDATE_FAILED, jsonMap);
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
@@ -405,7 +408,7 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 			worldTypeService.updateTypeWorldCache();
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
-			JSONUtil.optFailed(OptResult.UPDATE_FAILED, jsonMap);
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
@@ -419,7 +422,7 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 			worldTypeService.updateTypeCache();
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		}catch(Exception e){
-			JSONUtil.optFailed(OptResult.UPDATE_FAILED, jsonMap);
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}

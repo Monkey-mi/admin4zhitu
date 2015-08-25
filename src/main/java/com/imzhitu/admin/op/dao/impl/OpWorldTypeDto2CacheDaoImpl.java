@@ -54,8 +54,10 @@ public class OpWorldTypeDto2CacheDaoImpl extends BaseCacheDaoImpl<OpWorldTypeDto
 		if(getRedisTemplate().hasKey(CacheKeies.OP_SUPERB_TYPE)) {
 			getRedisTemplate().delete(CacheKeies.OP_SUPERB_TYPE);
 		}
-		OpWorldTypeDto[] list = new OpWorldTypeDto[dtoList.size()];
-		getRedisTemplate().opsForList().rightPushAll(CacheKeies.OP_SUPERB_TYPE, dtoList.toArray(list));
+		if(!dtoList.isEmpty()) {
+			OpWorldTypeDto[] list = new OpWorldTypeDto[dtoList.size()];
+			getRedisTemplate().opsForList().rightPushAll(CacheKeies.OP_SUPERB_TYPE, dtoList.toArray(list));
+		}
 
 	}
 	
@@ -68,8 +70,10 @@ public class OpWorldTypeDto2CacheDaoImpl extends BaseCacheDaoImpl<OpWorldTypeDto
 		if(getRedisTemplate().hasKey(CacheKeies.OP_SUPERB_TYPE_WEIGHT)) {
 			getRedisTemplate().delete(CacheKeies.OP_SUPERB_TYPE_WEIGHT);
 		}
-		OpWorldTypeDto[] list = new OpWorldTypeDto[weightList.size()];
-		getRedisTemplate().opsForList().rightPushAll(CacheKeies.OP_SUPERB_TYPE_WEIGHT, weightList.toArray(list));
+		if(!weightList.isEmpty()) {
+			OpWorldTypeDto[] list = new OpWorldTypeDto[weightList.size()];
+			getRedisTemplate().opsForList().rightPushAll(CacheKeies.OP_SUPERB_TYPE_WEIGHT, weightList.toArray(list));
+		}
 	}
 	
 }
