@@ -701,6 +701,9 @@
 		  					<when test="platformVerify == 30 ">
 		  						and platform_verify between 30 and 39
 		  					</when>
+		  					<when test="platformVerify == 40 ">
+		  						and platform_verify between 40 and 49
+		  					</when>
 		  				</choose>
 		  			</if>
 	  			</where>

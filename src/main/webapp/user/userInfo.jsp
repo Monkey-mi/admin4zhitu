@@ -707,6 +707,12 @@ function loadMsgFormValidate() {
 			$.messager.alert('提示',result['msg']);
 		},"json");
 	}
+	
+	function searchUserByPlatformVerify(){
+		var platformVerify = $("#platformVerifyCombobox").combobox('getValue');
+		myQueryParams.platformVerify = platformVerify;
+		$("#htm_table").datagrid('load',myQueryParams);
+	}
 </script>
 </head>
 <body>
@@ -717,6 +723,13 @@ function loadMsgFormValidate() {
 			<!-- <a href="#" class="easyui-linkbutton" style="visibility: hidden;" iconCls="icon-add" plain="true" onclick="javascript:htmWindowAdd();">添加</a>-->
 	   		<input id="ss" class="easyui-searchbox" searcher="search" prompt="请输入昵称/ID搜索用户" style="width:200px;"></input>
 	   		<a href="javascript:void(0);" onclick="javascript:delStar();" class="easyui-linkbutton" title="删除明星" plain="true" iconCls="icon-cut" id="delStar">删除明星</a>
+	   		<select id="platformVerifyCombobox" class="easyui-combobox" data-options="onSelect:searchUserByPlatformVerify" >
+	   			<option value="">所有平台认证</option>
+		        <option value="10">微信认证</option>
+		        <option value="20">新浪认证</option>
+		        <option value="30">人人网认证</option>
+		        <option value="40">qq空间认证</option>
+	   		</select>
    		</div>
 	</div>  
 	

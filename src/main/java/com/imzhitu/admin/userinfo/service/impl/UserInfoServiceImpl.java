@@ -87,6 +87,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		userInfo.setMaxId(maxId);
 		userInfo.setId(userId);
 		userInfo.setUserName(userName);
+		userInfo.setPlatformVerify(platformVerify);
 		
 		long total = userInfoMapper.queryUserInfoTotalCount(userInfo);
 		List<UserInfoDto> list = null;
