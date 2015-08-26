@@ -37,7 +37,7 @@ import com.imzhitu.admin.common.pojo.OpUserRecommendDto;
 import com.imzhitu.admin.op.dao.UserRecommendDao;
 import com.imzhitu.admin.op.dao.UserZombieDao;
 import com.imzhitu.admin.op.service.OpUserService;
-import com.imzhitu.admin.userinfo.dao.UserInfoDao;
+import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
 import com.imzhitu.admin.userinfo.service.impl.UserInfoServiceImpl;
 
@@ -81,7 +81,7 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	private UserRecommendDao userRecommendDao;
 	
 	@Autowired
-	private UserInfoDao userInfoDao;
+	private UserInfoMapper userInfoMapper;
 	
 	@Autowired
 	private com.hts.web.operations.dao.SysMsgDao webSysMsgDao;
@@ -186,19 +186,23 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	public Integer saveRecommendUser(Integer userId, Integer verifyId, 
 			String recommendDesc, Integer recommenderId) {
 		OpUserRecommend recommend = webUserRecommendDao.queryRecommendUserByUID(userId);
+		com.imzhitu.admin.common.pojo.UserInfo userInfo = new com.imzhitu.admin.common.pojo.UserInfo();
+		userInfo.setId(userId);
+		userInfo.setTrust(Tag.TRUE);
 		if(recommend == null) {
 			Date date = new Date();
 			Integer userAccept = UserOperationsServiceImpl.USER_RECOMMEND_ACCEPT;
-			float ver = userInfoDao.queryVer(userId);
+			List<com.imzhitu.admin.common.pojo.UserInfo> userInfoList = userInfoMapper.queryUserInfo(userInfo);
+			float ver = userInfoList.get(0).getVer();
 			Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_USER_REC_ID);
 			if(ver >= Tag.VERSION_2_8_3) {
 				userAccept = UserOperationsServiceImpl.USER_RECOMMEND_PENDING;
 			} else {
-				userInfoDao.updateStarById(userId, verifyId);
+				userInfo.setStar(verifyId);
 			}
 			webUserRecommendDao.saveRecommendUser(new OpUserRecommend(id, userId, verifyId, recommendDesc,
 					recommenderId, date, date, userAccept, UserOperationsServiceImpl.USER_RECOMMEND_PENDING));
-			userInfoDao.updateTrustById(userId, Tag.TRUE);
+			userInfoMapper.updateByIdSelective(userInfo);
 			return id;
 		}
 		return recommend.getId();
@@ -208,7 +212,10 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	public void deleteRecommendUserByUserId(Integer userId, Boolean deleteStar) {
 		userRecommendDao.deleteRecommendUserByUserId(userId);
 		if(deleteStar) {
-			userInfoDao.updateStarById(userId, Tag.FALSE);
+			com.imzhitu.admin.common.pojo.UserInfo userInfo = new com.imzhitu.admin.common.pojo.UserInfo();
+			userInfo.setId(userId);
+			userInfo.setTrust(Tag.FALSE);
+			userInfoMapper.updateByIdSelective(userInfo);
 		}
 	}
 
@@ -269,9 +276,12 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 		if(state.equals(UserOperationsServiceImpl.USER_RECOMMEND_ACCEPT)) {
 //			uidList = userRecommendDao.queryAcceptUserId(ids); // 只更新已经接受推荐的用户明星标记
 //			star = Tag.TRUE;
+			com.imzhitu.admin.common.pojo.UserInfo userInfo = new com.imzhitu.admin.common.pojo.UserInfo();
 			List<OpUserRecommend> list = userRecommendDao.queryAcceptUserId(ids);
 			for(OpUserRecommend rec : list) {
-				userInfoDao.updateStarById(rec.getUserId(), rec.getVerifyId());
+				userInfo.setId(rec.getUserId());
+				userInfo.setStar(rec.getVerifyId());
+				userInfoMapper.updateByIdSelective(userInfo);
 			}
 		} else {
 			List<Integer> uidList = userRecommendDao.queryUserId(ids);
@@ -279,7 +289,7 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 			if(uidList.size() > 0) {
 				Integer[] uids = new Integer[uidList.size()];
 				uidList.toArray(uids);
-				userInfoDao.updateStarByIds(uids, star);
+				userInfoMapper.updateStarByIds(uids, star);
 			}
 		}
 		// 更新系统接受标记
@@ -422,15 +432,6 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 		if(total < length.longValue()) {
 			throw new IndexOutOfBoundsException("getRandomUnFollowUserZombieIds:马甲数量不足,所需" + length + ",只有" + total + "个");
 		}
-//		List<Integer> ids = new ArrayList<Integer>();
-//		for(int i = 0; i < length; i++) {
-////			int index = NumberUtil.getRandomIndex((int)total, usedIndex);
-//			int index = NumberUtil.getUnRepeatRandomIndex((int)total, usedIndex);
-//			usedIndex.add(index);
-//			Integer uid = userZombieDao.queryUnFollowUserIdByPageIndexForInteract(userId,worldId, Tag.FALSE, index);
-//			ids.add(uid);
-//		}
-//		return ids;
 		return userZombieDao.queryRandomUnFollowUserId(userId, worldId, Tag.FALSE, length);
 		
 	}
@@ -473,7 +474,6 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 			ids.add(uid);
 		}
 		return ids;
-//		return userZombieDao.queryRandomZombieFollow(userId, worldId, length);
 	}
 
 	@Override
@@ -481,9 +481,13 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 			throws Exception {
 		OpUserRecommend recommend = userRecommendDao.queryRecommendById(id);
 		if(recommend != null) {
-			Integer star = userInfoDao.queryStar(recommend.getUserId());
+			com.imzhitu.admin.common.pojo.UserInfo userInfo = new com.imzhitu.admin.common.pojo.UserInfo();
+			userInfo.setId(recommend.getUserId());
+			List<com.imzhitu.admin.common.pojo.UserInfo> userInfoList = userInfoMapper.queryUserInfo(userInfo);
+			Integer star = userInfoList.get(0).getStar();
 			if(star != Tag.FALSE) {
-				userInfoDao.updateStarById(recommend.getUserId(), verifyId);
+				userInfo.setStar(verifyId);
+				userInfoMapper.updateByIdSelective(userInfo);
 			}
 			userRecommendDao.updateVerifyId(id, verifyId);
 		}
@@ -492,8 +496,11 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	@Override
 	public void delStar(Integer userId)throws Exception{
 		if(userId == null)return;
-		userRecommendDao.deleteRecommendUserByUserId(userId);		
-		userInfoDao.updateStarById(userId, Tag.FALSE);
+		userRecommendDao.deleteRecommendUserByUserId(userId);	
+		com.imzhitu.admin.common.pojo.UserInfo userInfo = new com.imzhitu.admin.common.pojo.UserInfo();
+		userInfo.setId(userId);
+		userInfo.setStar(Tag.FALSE);
+		userInfoMapper.updateByIdSelective(userInfo);
 	}
 	
 	/**

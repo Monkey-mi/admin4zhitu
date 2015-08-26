@@ -236,4 +236,11 @@ public interface UserZombieDao extends BaseDao {
 	 * @param userId
 	 */
 	public void updateZombieProvinceCity(String province,String city,Integer userId);
+	
+	/**
+	 * 查询是否为马甲
+	 * @param userId
+	 * @return
+	 */
+	public boolean isZombie(Integer userId);
 }

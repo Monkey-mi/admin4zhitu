@@ -25,31 +25,7 @@ public interface UserInfoService extends BaseService {
 	 * @param limit
 	 * @param jsonMap
 	 */
-	public void buildUser(int maxId, int start, int limit, Map<String, Object> jsonMap) throws Exception;
-	
-	/**
-	 * 根据用户id构建用户列表
-	 * 
-	 * @param maxId
-	 * @param start
-	 * @param limit
-	 * @param userId
-	 * @param jsonMap
-	 * @throws Exception
-	 */
-	public void buildUser(int maxId, int start, int limit, Integer userId, Map<String, Object> jsonMap) throws Exception;
-	
-	/**
-	 * 根据用户名构建用户列表
-	 * 
-	 * @param maxId
-	 * @param start
-	 * @param limit
-	 * @param userName
-	 * @param jsonMap
-	 * @throws Exception
-	 */
-	public void buildUser(int maxId, int start, int limit, String userName, Map<String, Object> jsonMap) throws Exception;
+	public void buildUser(Integer  userId,String userName,Integer platformVerify,int maxId, int start, int limit, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 屏蔽用户

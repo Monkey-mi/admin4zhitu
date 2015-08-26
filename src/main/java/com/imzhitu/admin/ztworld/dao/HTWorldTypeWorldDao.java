@@ -216,4 +216,11 @@ public interface HTWorldTypeWorldDao extends BaseDao {
 	 * 修改精选织图点评
 	 */
 	public void updateTypeWorldReview(Integer worldId,String review);
+	
+	/**
+	 * 根据userId查询分类织图总数
+	 * @param userId
+	 * @return
+	 */
+	public long queryTypeWorldCountByUserId(Integer userId);
 }

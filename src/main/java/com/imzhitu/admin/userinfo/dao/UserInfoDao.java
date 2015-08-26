@@ -19,6 +19,7 @@ import com.imzhitu.admin.common.pojo.UserInfoDto;
  * @author ztj
  *
  */
+@Deprecated
 public interface UserInfoDao extends BaseDao {
 	
 	

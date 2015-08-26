@@ -38,6 +38,8 @@ public class UserAction extends BaseCRUDAction {
 	private Integer trust;
 	private String signature;
 	private String userInfoJSON;
+	private Integer platformVerify;
+	
 	
 	@Autowired
 	private UserInfoService userInfoService;
@@ -107,13 +109,13 @@ public class UserAction extends BaseCRUDAction {
 	public String queryUser() {
 		try {
 			if(StringUtil.checkIsNULL(userName)) {
-				userInfoService.buildUser(maxId, page, rows, jsonMap); // 无条件查询
+				userInfoService.buildUser(null,null,platformVerify,maxId, page, rows, jsonMap); // 无条件查询
 			} else {
 				try {
 					Integer userId = Integer.parseInt(userName);
-					userInfoService.buildUser(maxId, page, rows, userId, jsonMap); // 根据id查询
+					userInfoService.buildUser(userId,null,platformVerify,maxId, page, rows, jsonMap); // 根据id查询
 				} catch(NumberFormatException e) {
-					userInfoService.buildUser(maxId, page, rows, userName, jsonMap); // 根据用户名查询
+					userInfoService.buildUser(null ,userName,platformVerify,maxId, page, rows, jsonMap); // 根据用户名查询
 				}
 			}
 			JSONUtil.optSuccess(jsonMap);
@@ -128,7 +130,7 @@ public class UserAction extends BaseCRUDAction {
 	 */
 	public String queryUserByUserId(){
 		try{
-			userInfoService.buildUser(maxId, page, rows, userId, jsonMap);
+			userInfoService.buildUser( userId, null,null,maxId, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -328,6 +330,12 @@ public class UserAction extends BaseCRUDAction {
 	public void setToId(Integer toId) {
 		this.toId = toId;
 	}
+	public void setPlatformVerify(Integer platformVerify){
+		this.platformVerify = platformVerify;
+	}
 	
+	public Integer getPlatformVerify(){
+		return this.platformVerify;
+	}
 	
 }

@@ -94,13 +94,10 @@ public class UserZombieDaoImpl extends BaseDaoImpl implements UserZombieDao {
 	 */
 	private static final String QUERY_USER_ID_BY_PAGE_INDEX = "select DISTINCT user_id from " + table + " where shield=? LIMIT ?,1";
 	
+	
 	/**
 	 * 查询未为跟随的马甲总数
 	 */
-//	private static final String QUERY_UN_FOLLOW_ZOMBIE_COUNT_BY_SHIELD = QUERY_ZOMBIE_USER_COUNT 
-//			+ " where user_id not in"
-//			+ " (select concern_id from " + HTS.USER_CONCERN + " where user_id=? and valid=1)"
-//			+ " and shield=?";
 	private static final String QUERY_UN_FOLLOW_ZOMBIE_COUNT_BY_SHIELD =  "select count(distinct zb.user_id) from " 
 			+ table 
 			+ " zb where not exists ( select uc.user_id from "
@@ -110,10 +107,6 @@ public class UserZombieDaoImpl extends BaseDaoImpl implements UserZombieDao {
 	/**
 	 * 根据页码查询未关注的马甲id
 	 */
-//	private static final String QUERY_UN_FOLLOW_USER_ID_BY_PAGE_INDEX = "select DISTINCT user_id from " + table 
-//			+ " where user_id not in"
-//			+ " (select concern_id from " + HTS.USER_CONCERN + " where user_id=? and valid=1)"
-//			+ " and shield=? LIMIT ?,1";
 	private static final String QUERY_UN_FOLLOW_USER_ID_BY_PAGE_INDEX = "select DISTINCT zb.user_id from " 
 			+ table 
 			+ " zb where not exists ( select uc.user_id from "
@@ -123,16 +116,12 @@ public class UserZombieDaoImpl extends BaseDaoImpl implements UserZombieDao {
 	/**
 	 * 查询userId对应的已关注的马甲总数
 	 */
-//	private static final String QUERY_FOLLOW_ZOMBIE_COUNT_BY_USER_ID = " select count( DISTINCT zb.user_id) from " + HTS.USER_CONCERN + " uc , " 
-//			+ table + " zb ,hts.htworld_htworld hh  where uc.user_id=? and uc.concern_id=zb.user_id and zb.shield=1 and zb.user_id = hh.author_id";
 	private static final String QUERY_FOLLOW_ZOMBIE_COUNT_BY_USER_ID = " select count( DISTINCT zb.user_id) from " + HTS.USER_CONCERN + " uc left join  " 
 			+ table + " zb on uc.user_id=zb.user_id where uc.concern_id=?  and zb.shield=0 ";
 
 	/**
 	 * 查询userId对应的已经关注的马甲列表
 	 */
-//	private static final String QUERY_FOLLOW_ZOMBIE_BY_USER_ID = " select DISTINCT zb.user_id from " + HTS.USER_CONCERN + " uc , " 
-//			+ table + " zb  ,hts.htworld_htworld hh  where uc.user_id=? and uc.concern_id=zb.user_id and zb.shield=1 and zb.user_id = hh.author_id order by hh.id desc limit ?,?";
 	private static final String QUERY_FOLLOW_ZOMBIE_BY_USER_ID = " select DISTINCT zb.user_id from " + HTS.USER_CONCERN + " uc left join " 
 			+ table + " zb  on uc.user_id=zb.user_id where uc.concern_id=? and  zb.shield=0  limit ?,1";
 	
@@ -182,6 +171,9 @@ public class UserZombieDaoImpl extends BaseDaoImpl implements UserZombieDao {
 			+ " where zb.shield=? and not exists ( select uc.id from hts.user_concern as uc where uc.concern_id=? and uc.user_id=zb.user_id) "
 			+ " and not exists (select iwc.user_id  from hts_admin.interact_world_comment iwc where iwc.user_id=zb.user_id and iwc.world_id=?)"
 					+ " LIMIT ?,1";
+	
+	
+	private static final String QUERY_COUNT_BY_USER_ID = "select count(*) from hts.operations_user_zombie zb where zb.user_id=?";
 	
 	
 	/**
@@ -483,6 +475,13 @@ public class UserZombieDaoImpl extends BaseDaoImpl implements UserZombieDao {
 		}catch(EmptyResultDataAccessException e){
 			return null;
 		}
+	}
+	
+	@Override
+	public boolean isZombie(Integer userId){
+		long r = getJdbcTemplate().queryForLong(QUERY_COUNT_BY_USER_ID, userId);
+		if( r == 0)return false;
+		else return true;
 	}
 	
 	/**

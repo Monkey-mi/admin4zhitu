@@ -1,6 +1,5 @@
 package com.imzhitu.admin.userinfo.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Map;
 
 import net.sf.json.JSONArray;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,8 +15,6 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.PlatFormCode;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowCallback;
-import com.hts.web.base.database.RowSelection;
-import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.MD5Encrypt;
@@ -26,17 +22,16 @@ import com.imzhitu.admin.common.UserWithInteract;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.UserInfoDto;
 import com.imzhitu.admin.interact.dao.InteractUserDao;
-import com.imzhitu.admin.userinfo.dao.UserInfoDao;
+import com.imzhitu.admin.op.dao.UserZombieDao;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.mapper.UserLoginPersistentMapper;
 import com.imzhitu.admin.userinfo.mapper.UserSocialAccountMapper;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
+import com.imzhitu.admin.ztworld.dao.HTWorldTypeWorldDao;
 
 @Service
 public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoService {
-	
-	private Logger log = Logger.getLogger(UserInfoService.class);
 	
 	public static final String PASSWORD = "123456";
 
@@ -53,9 +48,6 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
 	
 	@Autowired
-	private UserInfoDao userInfoDao;
-	
-	@Autowired
 	private InteractUserDao interactUserDao;
 	
 	@Autowired
@@ -70,6 +62,12 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	@Autowired
 	private UserLoginPersistentMapper userLoginPersistentMapper;
 	
+	@Autowired
+	private UserZombieDao userZombieDao;
+	
+	@Autowired
+	private HTWorldTypeWorldDao typeWorldDao;
+	
 	@Value("${push.customerServiceId}")
 	private Integer customerServiceId;
 
@@ -81,93 +79,35 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		this.customerServiceId = customerServiceId;
 	}
 	@Override
-	public void buildUser(int maxId, int start, int limit,
+	public void buildUser(Integer  userId,String userName,Integer platformVerify,int maxId, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception {
-		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<UserInfoDto>(){
-
-			@Override
-			public List<UserInfoDto> getSerializables(
-					RowSelection rowSelection) {
-				List<UserInfoDto> userList = userInfoDao.queryUserInfo(rowSelection);
-				extractInteractInfo(userList);
-				webUserInfoService.extractVerify(userList);
-				return userList;
-			}
-
-			@Override
-			public List<UserInfoDto> getSerializableByMaxId(int maxId,
-					RowSelection rowSelection) {
-				List<UserInfoDto> userList = userInfoDao.queryUserInfoByMaxId(maxId, rowSelection);
-				extractInteractInfo(userList);
-				webUserInfoService.extractVerify(userList);
-				return userList;
-			}
-
-			@Override
-			public long getTotalByMaxId(int maxId) {
-//				return userInfoDao.queryUseInfoCountByMaxId(maxId);
-				return 0L;
-			}
-			
-		},OptResult.JSON_KEY_ROWS, OptResult.JSON_KEY_TOTAL, OptResult.JSON_KEY_MAX_ID);
+		UserInfo userInfo = new UserInfo();
+		userInfo.setFirstRow(limit*(start -1 ));
+		userInfo.setLimit(limit);
+		userInfo.setMaxId(maxId);
+		userInfo.setId(userId);
+		userInfo.setUserName(userName);
 		
+		long total = userInfoMapper.queryUserInfoTotalCount(userInfo);
+		List<UserInfoDto> list = null;
+		if( total > 0 ){
+			list = userInfoMapper.queryUserInfoDto(userInfo);
+			if ( list != null && list.size() > 0){
+				maxId = list.get(0).getId();
+				webUserInfoService.extractVerify(list);
+			}
+		}
+		
+			
 		// 临时语句，为了配合数据，强制查询第一页的最大用户id
-		if(maxId == 0)
+		if(maxId <= 0)
 			maxId = userInfoMapper.selectMaxId();
 		
-		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
-		jsonMap.put(OptResult.JSON_KEY_TOTAL, userInfoDao.queryUseInfoCountByMaxId(maxId));
-	}
-	
-	@Override
-	public void buildUser(int maxId, int start, int limit, final String userName, Map<String, Object> jsonMap) throws Exception {
-		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<UserInfoDto>(){
-
-			@Override
-			public List<UserInfoDto> getSerializables(
-					RowSelection rowSelection) {
-				List<UserInfoDto> userList = userInfoDao.queryUserInfoByUserName(userName, rowSelection);
-				extractInteractInfo(userList);
-				webUserInfoService.extractVerify(userList);
-				return userList;
-			}
-
-			@Override
-			public List<UserInfoDto> getSerializableByMaxId(int maxId,
-					RowSelection rowSelection) {
-				List<UserInfoDto> userList = userInfoDao.queryUserInfoByMaxIdAndUserName(maxId, userName, rowSelection);
-				extractInteractInfo(userList);
-				webUserInfoService.extractVerify(userList);
-				return userList;
-			}
-
-			@Override
-			public long getTotalByMaxId(int maxId) {
-				return userInfoDao.queryUseInfoCountByMaxIdAndUserName(maxId, userName);
-			}
-			
-		},OptResult.JSON_KEY_ROWS, OptResult.JSON_KEY_TOTAL, OptResult.JSON_KEY_MAX_ID);
-	}
-	
-	@Override
-	public void buildUser(int maxId, int start, int limit, Integer userId,
-			Map<String, Object> jsonMap) throws Exception {
-		List<UserInfoDto> list = new ArrayList<UserInfoDto>();
-		long total = 0l;
-		UserInfoDto userInfo = userInfoDao.queryUserInfoDtoById(userId);
-		if(userInfo != null) {
-			list.add(userInfo);
-			extractInteractInfo(list);
-			total = 1;
-			maxId = userId;
-		} else {
-			maxId = 0;
-		}
-		webUserInfoService.extractVerify(userInfo);
 		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
-		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 	}
+	
 	
 	/**
 	 * 查询 用户的信息，主要是查询用户的推荐状态
@@ -177,15 +117,21 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	 */
 	@Override
 	public void queryUserInfoByUserId(Integer userId,Map<String,Object>jsonMap)throws Exception{
-		UserInfoDto userInfo =  userInfoDao.queryUserInfoDtoById(userId);
-		jsonMap.put("userInfo", userInfo);
+		UserInfo userInfo = new UserInfo();
+		userInfo.setId(userId);
+		List<UserInfoDto> list = userInfoMapper.queryUserInfoDto(userInfo);
+		
+		jsonMap.put("userInfo", list.get(0));
 	}
 	
 	@Override
 	public void queryUserByUserIdAndCheckIsZombie(Integer userId,Map<String,Object>jsonMap)throws Exception {
-		UserInfoDto userInfo = userInfoDao.queryUserInfoDtoById(userId);
-		boolean r = userInfoDao.queryUserIsZombieByUserId(userId);
-		long superbCount = userInfoDao.queryUserWorldCountByUserId(userId);
+		UserInfo dto = new UserInfo();
+		dto.setId(userId);
+		List<UserInfoDto> list = userInfoMapper.queryUserInfoDto(dto);
+		UserInfoDto userInfo = list.get(0);
+		boolean r = userZombieDao.isZombie(userId);
+		long superbCount = typeWorldDao.queryTypeWorldCountByUserId(userId);
 		jsonMap.put("superbCount", superbCount);
 		if(r)jsonMap.put("zombie", 1);
 		else jsonMap.put("zombie", 0);
@@ -195,12 +141,18 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 
 	@Override
 	public void shieldUser(Integer userId) throws Exception {
-		userInfoDao.updateShield(userId, Tag.TRUE);
+		UserInfo userInfo = new UserInfo();
+		userInfo.setId(userId);
+		userInfo.setShield(Tag.TRUE);
+		userInfoMapper.updateByIdSelective(userInfo);
 	}
 
 	@Override
 	public void unShieldUser(Integer userId)  throws Exception {
-		userInfoDao.updateShield(userId, Tag.FALSE);
+		UserInfo userInfo = new UserInfo();
+		userInfo.setId(userId);
+		userInfo.setShield(Tag.FALSE);
+		userInfoMapper.updateByIdSelective(userInfo);
 	}
 
 	@Override
@@ -216,7 +168,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 
 	@Override
 	public void updateTrust(Integer userId, Integer trust,Integer operatorId) throws Exception {
-		userInfoDao.updateTrustById(userId, trust);
+		userInfoMapper.updateTrust(userId, trust);
 		Date now = new Date();
 		if(userTrustDao.queryUserTrustByUid(userId) == null)
 			userTrustDao.addUserTrust(userId,now , now, trust,operatorId);
@@ -253,11 +205,14 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	@Override
 	public void updateSignature(String userInfoJSON)throws Exception{
 		JSONArray jsna = JSONArray.fromObject(userInfoJSON);
+		UserInfo userInfo = new UserInfo();
 		for(int i=0;i<jsna.size();i++){
 			net.sf.json.JSONObject jsno = jsna.getJSONObject(i);
 			Integer userId = jsno.getInt("userId");
 			String signature = jsno.getString("signature");
-			userInfoDao.updateSignature(userId, signature);
+			userInfo.setId(userId);
+			userInfo.setSignature(signature);
+			userInfoMapper.updateByIdSelective(userInfo);
 		}
 		
 	}

@@ -128,7 +128,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		// 向所有人推送消息
 		if(noticed) {
 			int factor = appPushGroup;
-			int maxUID = userInfoMapper.queryMaxId();
+			int maxUID = userInfoMapper.selectMaxId();
 			int parts = 0;
 			if(maxUID % factor == 0) {
 				parts = maxUID / factor;
@@ -164,31 +164,13 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		}
 	}
 	
-//	private static List<Integer> queryUID(Integer minId, Integer limit) {
-//		List<Integer> list = new ArrayList<Integer>();
-//		for(int i = 10000; i > 10000 - limit && i >= minId; i--) {
-//			if(i != 1948 && i != 16)
-//				list.add(i);
-//		}
-//		return list;
-//	}
-//	
-//	private static List<Integer> queryUID(Integer minId, Integer maxId, Integer limit) {
-//		List<Integer> list = new ArrayList<Integer>();
-//		for(int i = maxId - 1; i >= maxId - limit && i >= minId; i--) {
-//			if(i != 1948 && i != 16)
-//				list.add(i);
-//		}
-//		return list;
-//	}
-	
 	
 	public void batchPushAppMsg(Integer pushAction, String msg, String sid, Integer minId, Integer maxId) {
 		List<Integer> uids = null;
 		if(maxId == -1) {
-			uids = userInfoMapper.queryUID(minId, appPushLimit); // 第一次推送
+			uids = userInfoMapper.queryUID(minId, null,appPushLimit); // 第一次推送
 		} else if(maxId != 0){
-			uids = userInfoMapper.queryUIDByMaxId(minId, maxId, appPushLimit); // 递归推送
+			uids = userInfoMapper.queryUID(minId, maxId, appPushLimit); // 递归推送
 		}
 		
 		if(uids != null && uids.size() > 0) {

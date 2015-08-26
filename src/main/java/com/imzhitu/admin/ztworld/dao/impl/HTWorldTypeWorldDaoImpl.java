@@ -70,6 +70,12 @@ public class HTWorldTypeWorldDaoImpl extends BaseDaoImpl implements
 			+ " where h.id=hw.world_id and ht.id=hw.type_id and ht.valid=1";
 	
 	/**
+	 * 根据userId查询分类织图总数
+	 */
+	private static final String QUERY_TYPE_WORLD_COUNT_BY_USER_ID = "select count(*) from hts.htworld_type_world htw left join hts.htworld_htworld hh on htw.world_id=hh.id"
+			+ " where hh.author_id=? and hh.valid=1 and hh.shield=0 and htw.valid=1 and htw.superb=1";
+	
+	/**
 	 * 更新分类
 	 */
 	private static final String UPDATE_TYPE = "update " + tableTypeWorld 
@@ -242,6 +248,11 @@ public class HTWorldTypeWorldDaoImpl extends BaseDaoImpl implements
 	@Override
 	public long queryTypeWorldCount() {
 		return getJdbcTemplate().queryForLong(QUERY_TYPE_WORLD_COUNT);
+	}
+	
+	@Override
+	public long queryTypeWorldCountByUserId(Integer userId){
+		return getJdbcTemplate().queryForLong(QUERY_TYPE_WORLD_COUNT_BY_USER_ID, userId);
 	}
 	
 	@Override

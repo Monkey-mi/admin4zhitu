@@ -17,14 +17,14 @@ public class UserInfoServiceTest extends BaseTest {
 	@Test
 	public void testBuildUser() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildUser(0, 1, 10, "飘飘", jsonMap);
+		service.buildUser(null, "飘飘",null,0, 1, 10, jsonMap);
 		logObj(jsonMap);
 	}
 	
 	@Test
 	public void testBuildUser2() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildUser(0, 1, 0, 448, jsonMap);
+		service.buildUser(null,null,20,0, 1, 10,  jsonMap);
 		logObj(jsonMap);
 	}
 	

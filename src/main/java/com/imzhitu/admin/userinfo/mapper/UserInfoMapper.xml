@@ -53,6 +53,49 @@
 		<result column="password" property="password" jdbcType="BLOB" />
 	</resultMap>
 	
+	
+	<resultMap id="UserInfoDtoMap" type="com.imzhitu.admin.common.pojo.UserInfoDto">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="platform_code" property="platformCode" jdbcType="INTEGER" />
+		<result column="platform_token" property="platformToken" jdbcType="VARCHAR" />
+		<result column="platform_token_expires" property="platformTokenExpires" jdbcType="BIGINT" />
+		<result column="login_code" property="loginCode" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
+		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+		<result column="concern_count" property="concernCount" jdbcType="INTEGER" />
+		<result column="follow_count" property="followCount" jdbcType="INTEGER" />
+		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
+		<result column="liked_count" property="likedCount" jdbcType="INTEGER" />
+		<result column="keep_count" property="keepCount" jdbcType="INTEGER" />
+		<result column="push_token" property="pushToken" jdbcType="VARCHAR" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
+		<result column="phone_ver" property="phoneVer" jdbcType="REAL" />
+		<result column="online" property="online" jdbcType="INTEGER" />
+		<result column="accept_sys_push" property="acceptSysPush" jdbcType="INTEGER" />
+		<result column="accept_comment_push" property="acceptCommentPush" jdbcType="INTEGER" />
+		<result column="accept_reply_push" property="acceptReplyPush" jdbcType="INTEGER" />
+		<result column="accept_liked_push" property="acceptLikedPush" jdbcType="INTEGER" />
+		<result column="accept_keep_push" property="acceptKeepPush" jdbcType="INTEGER" />
+		<result column="accept_concern_push" property="acceptConcernPush" jdbcType="INTEGER" />
+		<result column="accept_msg_push" property="acceptMsgPush" jdbcType="INTEGER" />
+		<result column="accept_umsg_push" property="acceptUmsgPush" jdbcType="INTEGER" />
+		<result column="ver" property="ver" jdbcType="REAL" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		<result column="trust" property="trust" jdbcType="INTEGER" />
+		<result column="shield" property="shield" jdbcType="INTEGER" />
+		<result column="userAccept" property="userAccept" jdbcType="INTEGER"/>
+		<result column="sysAccept" property="sysAccept" jdbcType="INTEGER"/>
+	</resultMap>
+	
 	<sql id="Base_Column_List">
 		id, platform_code, platform_token, platform_token_expires, platform_sign,
 		platform_verify, login_code, user_name, user_avatar, user_avatar_l, sex, email, address, birthday,
@@ -97,6 +140,17 @@
 		delete from hts.user_info
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
+	
+	<!-- 批量更新star -->
+	<update id="updateStarByIds">
+		update hts.user_info
+		set star = #{star}
+		where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
 	
 	<!-- 保存用户 -->
 	<insert id="insertSelective" parameterType="com.imzhitu.admin.common.pojo.UserInfo">
@@ -540,15 +594,120 @@
 	  </update>
 	  
 	  <select id="queryUID" resultType="int">
-	  	select id from hts.user_info where id>=#{minId} order by id desc limit #{limit};
+	  	select id from hts.user_info where id>=#{minId} 
+	  	<if test="maxId != null and maxId != 0">
+	  		and id <![CDATA[ < ]]> #{maxId}
+	  	</if>
+	  	order by id desc limit #{limit};
 	  </select>
 	  
-	  <select id="queryUIDByMaxId" resultType="int">
-	  	select id from hts.user_info where id>=#{minId} and id <![CDATA[ < ]]> #{maxId} order by id desc limit #{limit};
+	  
+	  <!-- SELECT -->
+	  <select id="queryUserInfo" resultMap="UserInfoMap">
+	  	select u.*, IFNULL(ur.user_accept,-1) as userAccept, IFNULL(ur.sys_accept,-1) as sysAccept
+	  	from
+	  		(
+	  			select * 
+	  			from hts.user_info
+	  			<where>
+	  				id > 0 
+		  			<if test="id != null">
+		  				and id = #{id}
+		  			</if>
+		  			<if test="maxId != null and maxId != 0">
+		  				and <![CDATA[ id <= #{maxId}]]>
+		  			</if>
+		  			<if test="userName != null">
+		  				and userName like CONCAT('%',#{userName},'%')
+		  			</if>
+		  			<if test="platformVerify != null">
+		  				<choose>
+		  					<when test="platformVerify == 10 ">
+		  						and platform_verify between 10 and 19
+		  					</when>
+		  					<when test="platformVerify == 20 ">
+		  						and platform_verify between 20 and 29
+		  					</when>
+		  					<when test="platformVerify == 30 ">
+		  						and platform_verify between 30 and 39
+		  					</when>
+		  				</choose>
+		  			</if>
+	  			</where>
+	  			order by id desc 
+	  			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	  		)as u left join hts.operations_user_recommend as ur on u.id=ur.user_id
 	  </select>
 	  
-	  <select id="queryMaxId" resultType="int">
-	  	select max(id) from hts.user_info;
+	  <!-- SELECT TOTAL COUNT -->
+	  <select id="queryUserInfoTotalCount" resultType="long">
+	  		select count(*) 
+	  			from hts.user_info
+	  			<where>
+	  				id > 0 
+		  			<if test="id != null">
+		  				and id = #{id}
+		  			</if>
+		  			<if test="maxId != null and maxId != 0">
+		  				and <![CDATA[ id <= #{maxId}]]>
+		  			</if>
+		  			<if test="userName != null">
+		  				and userName like CONCAT('%',#{userName},'%')
+		  			</if>
+		  			<if test="platformVerify != null">
+		  				<choose>
+		  					<when test="platformVerify == 10 ">
+		  						and platform_verify between 10 and 19
+		  					</when>
+		  					<when test="platformVerify == 20 ">
+		  						and platform_verify between 20 and 29
+		  					</when>
+		  					<when test="platformVerify == 30 ">
+		  						and platform_verify between 30 and 39
+		  					</when>
+		  				</choose>
+		  			</if>
+	  			</where>
 	  </select>
+	  
+	  
+	  
+	   <!-- SELECT -->
+	  <select id="queryUserInfoDto" resultMap="UserInfoDtoMap">
+	  	select u.*, IFNULL(ur.user_accept,-1) as userAccept, IFNULL(ur.sys_accept,-1) as sysAccept 
+	  	from
+	  		(
+	  			select * 
+	  			from hts.user_info
+	  			<where>
+	  				id > 0 
+		  			<if test="id != null">
+		  				and id = #{id}
+		  			</if>
+		  			<if test="maxId != null and maxId != 0">
+		  				and <![CDATA[ id <= #{maxId}]]>
+		  			</if>
+		  			<if test="userName != null">
+		  				and userName like CONCAT('%',#{userName},'%')
+		  			</if>
+		  			<if test="platformVerify != null">
+		  				<choose>
+		  					<when test="platformVerify == 10 ">
+		  						and platform_verify between 10 and 19
+		  					</when>
+		  					<when test="platformVerify == 20 ">
+		  						and platform_verify between 20 and 29
+		  					</when>
+		  					<when test="platformVerify == 30 ">
+		  						and platform_verify between 30 and 39
+		  					</when>
+		  				</choose>
+		  			</if>
+	  			</where>
+	  			order by id desc 
+	  			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	  		)as u left join hts.operations_user_recommend as ur on u.id=ur.user_id
+	  </select>
+	  
 	  
 </mapper>

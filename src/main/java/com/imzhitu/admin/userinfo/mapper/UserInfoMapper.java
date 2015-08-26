@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.UserInfo;
+import com.imzhitu.admin.common.pojo.UserInfoDto;
 
 public interface UserInfoMapper {
 
@@ -35,13 +36,28 @@ public interface UserInfoMapper {
 			@Param("trust")Integer trust);
 	
 	@DataSource("slave")
-	public List<Integer> queryUID(@Param("minId")Integer minId, @Param("limit")Integer limit);
+	public List<Integer> queryUID(@Param("minId")Integer minId, @Param("maxId")Integer maxId, @Param("limit")Integer limit);
+	
+	/**
+	 * 这个方法与queryUserInfoDto基本是相同的，区别点就是返回值不同
+	 * @param dto
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<UserInfo> queryUserInfo(UserInfo dto);
+	
+	/**
+	 *  这个方法与queryUserInfo基本是相同的，区别点就是返回值不同
+	 * @param dto
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<UserInfoDto> queryUserInfoDto(UserInfo dto);
 	
 	@DataSource("slave")
-	public List<Integer> queryUIDByMaxId(@Param("minId")Integer minId, @Param("maxId")Integer maxId, @Param("limit")Integer limit);
-
-	@DataSource("slave")
-	public Integer queryMaxId();
+	public long queryUserInfoTotalCount(UserInfo dto);
 	
+	@DataSource("master")
+	public void updateStarByIds(@Param("ids")Integer[]ids, @Param("star")Integer star );
 	
 }
