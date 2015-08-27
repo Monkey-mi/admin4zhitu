@@ -1,5 +1,6 @@
 package com.imzhitu.admin.aliyun.service;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public interface OpenSearchService {
@@ -10,4 +11,14 @@ public interface OpenSearchService {
 	 * @throws Exception
 	 */
 	public JSONObject queryChannelLabel(String label)throws Exception;
+	
+	/**
+	 * 查询织图地理位置信息（主要查询结果可使用信息为织图主键id集合）
+	 * 
+	 * @param worldLocation	织图地理位置信息
+	 * @return	JSONObject	内容封装了对应改地理位置模糊匹配后的织图主键id集合
+	 * @throws Exception
+	 * @author zhangbo	2015年8月27日
+	 */
+	public JSONArray queryHTWolrdLocationInfo(String worldLocation)throws Exception;
 }

@@ -4,45 +4,38 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowCallback;
-import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.pojo.HTWorld;
 import com.hts.web.common.pojo.HTWorldFilterLogo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.WorldWithInteract;
 import com.imzhitu.admin.common.pojo.OpActivityWorldValidDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
-import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
 import com.imzhitu.admin.interact.dao.InteractWorldDao;
-import com.imzhitu.admin.interact.service.InteractActiveOperatedService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
-import com.imzhitu.admin.userinfo.dao.UserInfoDao;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldChildWorldDao;
-import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldFilterLogoCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
-import com.imzhitu.admin.ztworld.dao.HTWorldTypeDao;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldMapper;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 /**
  * <p>
  * 世界管理访问业务逻辑对象
@@ -81,13 +74,6 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	private com.hts.web.userinfo.service.UserInfoService webUserInfoService;
 	
 	@Autowired
-	private com.hts.web.userinfo.dao.UserInfoDao webUserInfoDao;
-	
-	@Autowired
-	private com.hts.web.operations.dao.ActivityCacheDao webActivityCacheDao;
-	
-	@Autowired
-//	private HTWorldDao worldDao;
 	private ZTWorldMapper ztWorldMapper;
 	
 	@Autowired
@@ -97,25 +83,13 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	private HTWorldChildWorldDao worldChildWorldDao;
 	
 	@Autowired
-	private UserInfoDao userInfoDao;
-	
-	@Autowired
-	private HTWorldTypeDao worldTypeDao;
-	
-	@Autowired
 	private InteractWorldDao interactWorldDao;
 	
 	@Autowired
 	private HTWorldLabelWorldDao worldLabelWorldDao;
 	
 	@Autowired
-	private InteractUserlevelListDao interactUserlevelListDao;
-	
-	@Autowired
 	private InteractWorldlevelListService interactWorldlevelListService;
-	
-	@Autowired
-	private InteractActiveOperatedService interactActiveOperatedService;
 	
 	@Autowired
 	private HTWorldFilterLogoCacheDao worldFilterLogoCacheDao;
@@ -126,6 +100,9 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	@Autowired
 	private ChannelWorldMapper channelWorldMapper;
 	
+	@Autowired
+	private OpenSearchService openSearchService;
+	
 	public Integer getCacheLatestSize() {
 		return cacheLatestSize;
 	}
@@ -135,17 +112,14 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	}
 
 	@Override
-	public void buildWorld(int maxId, int start, int limit, String startDateStr, 
-			String endDateStr, String shortLink, Integer phoneCode, String label, 
-			String authorName, Integer valid, Integer shield, String worldDesc, 
-			Integer user_level_id,String orderKey,String orderBy, 
-			Map<String, Object> jsonMap) throws Exception{
+	public void buildWorld(int maxId, int start, int limit, String startDateStr, String endDateStr, String shortLink, Integer phoneCode, String label, String authorName, Integer valid, Integer shield, String worldDesc, String worldLocation,
+			Integer user_level_id, String orderKey, String orderBy, Map<String, Object> jsonMap) throws Exception {
 		ZTWorldDto dto = new ZTWorldDto();
 		dto.setMaxId(maxId);
 		dto.setLimit(limit);
-		dto.setFirstRow((start-1)*limit);
+		dto.setFirstRow((start - 1) * limit);
 		Date now = new Date();
-		
+
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if(startDateStr == null || endDateStr == null) { // 默认查询今天的所有织图
 			dto.setDateAdded(now);
@@ -218,6 +192,16 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setDateModified(null);
 		}
 		
+		// 当地理位置信息不为空时，则查询该地理位置对应的world_id集合
+		if ( worldLocation != null ) {
+			Integer[] worldIds = getWorldIdsByLocationWithOpenSearch(worldLocation);
+			if ( worldIds.length != 0 ) {
+				dto.setWorld_Ids(worldIds);
+				dto.setDateAdded(null);
+				dto.setDateModified(null);
+			}
+		}
+		
 		List<ZTWorldDto> dtoList = null;
 		long totalCount = 0l;
 		dto.setMaxId(maxId);
@@ -288,6 +272,27 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 
 	}
 	
+	/**
+	 * 根据查询的地理位置信息，得到相关的织图主键id集合，使用OpenSearch进行查询 
+	 * 
+	 * @param worldLocation
+	 * @return
+	 * @author zhangbo	2015年8月27日
+	 * @throws Exception 
+	 */
+	private Integer[] getWorldIdsByLocationWithOpenSearch(String worldLocation) throws Exception {
+		List<Integer> list = new ArrayList<Integer>();
+		
+		JSONArray resultJsonArray = openSearchService.queryHTWolrdLocationInfo(worldLocation);
+		for (int i = 0; i < resultJsonArray.size(); i++) {
+			JSONObject jObject = resultJsonArray.getJSONObject(i);
+			list.add(jObject.getInt("id"));
+		}
+		Integer[] result = new Integer[1];
+		result = list.toArray(result);  
+		return result;
+	}
+
 	/**
 	 * 转换排序键
 	 * @param orderKey
