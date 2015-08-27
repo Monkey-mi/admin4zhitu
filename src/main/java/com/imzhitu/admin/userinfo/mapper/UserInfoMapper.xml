@@ -688,7 +688,7 @@
 		  				and <![CDATA[ id <= #{maxId}]]>
 		  			</if>
 		  			<if test="userName != null">
-		  				and userName like CONCAT('%',#{userName},'%')
+		  				and user_name like CONCAT('%',#{userName},'%')
 		  			</if>
 		  			<if test="platformVerify != null">
 		  				<choose>
