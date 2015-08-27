@@ -61,7 +61,7 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 //	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP_HEAD = "恭喜！您的织图被推荐上#";
 //	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP_FOOT = "#分类啦";
-	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP = "恭喜!您的织图被推荐上精选啦!";
+	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP = "恭喜！您的织图被推荐上精选啦！";
 	private static final long SPAN_TIME = 10*60*1000;//扫描更新排序计划时间间隔
 	private static Logger logger = Logger.getLogger(ZTWorldTypeServiceImpl.class);		
 	
@@ -497,14 +497,13 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		Integer worldId = dto.getWorldId();
 		String userName = dto.getUserInfo().getUserName();
 		String tip = userName + "," + notifyTip;
-		String shortTip = PushUtil.getShortName(userName) + "," + PushUtil.getShortTip(notifyTip);
 		msgId = webUserMsgService.getValidMessageId(Admin.ZHITU_UID, userId, Tag.USER_MSG_SQUARE_NOTIFY, worldId);
 		if(msgId == null) {
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(userId);
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, userId, tip, 
 					Tag.USER_MSG_SQUARE_NOTIFY, worldId, dto.getWorldType(), String.valueOf(dto.getTypeId()),
 					dto.getTitleThumbPath(), 0);
-			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, shortTip, userPushInfo,
+			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo,
 					Tag.USER_MSG_SQUARE_NOTIFY,
 					new PushFailedCallback() {
 	
