@@ -140,6 +140,8 @@ function loadData(pageNumber, pageSize) {
 					$worldBox.append($worldOpt);
 				}
 				$("#page-loading").hide();
+			} else {
+				$.messager.alert('失败提示',result['msg']);
 			}
 		}, "json");
 }

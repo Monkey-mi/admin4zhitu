@@ -3,9 +3,6 @@ package com.imzhitu.admin.aliyun.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +10,9 @@ import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.opensearch.javasdk.CloudsearchClient;
 import com.opensearch.javasdk.CloudsearchSearch;
 import com.opensearch.javasdk.object.KeyTypeEnum;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class OpenSearchServiceImpl implements OpenSearchService{
@@ -101,7 +101,7 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 	}
 	
 	@Override
-	public JSONArray queryHTWolrdLocationInfo(String worldLocation) throws Exception {
+	public JSONArray queryHTWolrdLocationInfo(String worldLocation, int startHit, int limit) throws Exception {
 		if(null == worldLocation || "".equals(worldLocation.trim())){
 			return null;
 		}
@@ -116,15 +116,21 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 		//添加制定的搜索应用
 		search.addIndex(worldLocationAppName);
 		
-		//指定结果集的条数
-		search.setHits(20);
 		//指定搜索的关键词，如果没有输入索引名称，则使用default
-		//search.setQueryString(question);
-		
 		search.setQueryString("default:'"+worldLocation+"'");
 		
 		//指定搜索返回的格式
 		search.setFormat("json");
+		
+		// 只返回id字段
+		search.addFetchField("id");
+		
+		// 根据id字段进行倒序排序
+		search.addSort("id", CloudsearchSearch.SORT_DECREASE);
+		
+		// 设置分页查询起始位置，和查询条数，即从结果集中的置顶位置开始查询指定条数出来返回
+		search.setStartHit(startHit);
+		search.setHits(limit);
 		
 		//解析结果
 		String result = search.search();

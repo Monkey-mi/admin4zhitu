@@ -303,6 +303,12 @@
 			 	<if test="user_level_id != null">
 			 		and iull.user_level_id = #{user_level_id}
 			 	</if>
+			 	<if test="world_Ids != null">
+			 		and h2.id in
+			 		<foreach collection="world_Ids" item="item" index="index" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+			 	</if>
 			 	<if test="maxId != null and maxId != 0">
 			 		<![CDATA[ AND h2.id<=#{maxId}]]>
 			 	</if>			 	

@@ -194,7 +194,10 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		
 		// 当地理位置信息不为空时，则查询该地理位置对应的world_id集合
 		if ( worldLocation != null ) {
-			Integer[] worldIds = getWorldIdsByLocationWithOpenSearch(worldLocation);
+			// 根据前台传递过来的起始页start，来构造OpenSearch查询分页需要的起始位置startHit，limit与前台传递过来的分页每页数量保持一致
+			int startHit = (start - 1) * limit;
+			
+			Integer[] worldIds = getWorldIdsByLocationWithOpenSearch(worldLocation, startHit, limit);
 			if ( worldIds.length != 0 ) {
 				dto.setWorld_Ids(worldIds);
 				dto.setDateAdded(null);
@@ -275,15 +278,17 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	/**
 	 * 根据查询的地理位置信息，得到相关的织图主键id集合，使用OpenSearch进行查询 
 	 * 
-	 * @param worldLocation
+	 * @param worldLocation	地理位置信息
+	 * @param startHit		OpenSearch开始查询位置 
+	 * @param limit 		OpenSearch本次查询多少条
 	 * @return
 	 * @author zhangbo	2015年8月27日
 	 * @throws Exception 
 	 */
-	private Integer[] getWorldIdsByLocationWithOpenSearch(String worldLocation) throws Exception {
+	private Integer[] getWorldIdsByLocationWithOpenSearch(String worldLocation, int startHit, int limit) throws Exception {
 		List<Integer> list = new ArrayList<Integer>();
 		
-		JSONArray resultJsonArray = openSearchService.queryHTWolrdLocationInfo(worldLocation);
+		JSONArray resultJsonArray = openSearchService.queryHTWolrdLocationInfo(worldLocation, startHit, limit);
 		for (int i = 0; i < resultJsonArray.size(); i++) {
 			JSONObject jObject = resultJsonArray.getJSONObject(i);
 			list.add(jObject.getInt("id"));
