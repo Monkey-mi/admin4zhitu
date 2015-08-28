@@ -101,7 +101,7 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 	}
 	
 	@Override
-	public JSONArray queryHTWolrdLocationInfo(String worldLocation, int startHit, int limit) throws Exception {
+	public JSONObject queryHTWolrdLocationInfo(String worldLocation, int startHit, int limit) throws Exception {
 		if(null == worldLocation || "".equals(worldLocation.trim())){
 			return null;
 		}
@@ -149,7 +149,7 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 			return null;
 		}
 		
-		return items;
+		return resultObj;
 	}
 
 	public String getAliyunAccessKeyId() {

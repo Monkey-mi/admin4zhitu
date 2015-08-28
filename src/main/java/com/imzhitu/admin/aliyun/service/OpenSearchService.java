@@ -1,6 +1,5 @@
 package com.imzhitu.admin.aliyun.service;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public interface OpenSearchService {
@@ -22,5 +21,5 @@ public interface OpenSearchService {
 	 * @throws Exception
 	 * @author zhangbo	2015年8月27日
 	 */
-	public JSONArray queryHTWolrdLocationInfo(String worldLocation, int startHit, int limit)throws Exception;
+	public JSONObject queryHTWolrdLocationInfo(String worldLocation, int startHit, int limit)throws Exception;
 }
