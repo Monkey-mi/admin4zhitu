@@ -29,6 +29,14 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 	@Value("${aliyun.search.host}")
 	private String aliyunHanZouHost;
 	
+	/**
+	 * 阿里云配置的OpenSearch中对应的应用名称
+	 * 
+	 * @author zhangbo	2015年8月27日
+	 */
+	@Value("${aliyun.appName.worldLocation}")
+	private String worldLocationAppName;
+	
 	@Override
 	public JSONObject queryChannelLabel(String label) throws Exception {
 		if(null == label || "".equals(label.trim())){
@@ -91,6 +99,52 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 		
 		return resultObj;
 	}
+	
+	@Override
+	public JSONArray queryHTWolrdLocationInfo(String worldLocation) throws Exception {
+		if(null == worldLocation || "".equals(worldLocation.trim())){
+			return null;
+		}
+		
+		Map<String,Object>opts = new HashMap<String,Object>();
+		
+		opts.put("host", aliyunHanZouHost);
+		
+		CloudsearchClient client = new CloudsearchClient(aliyunAccessKeyId,aliyunAccessKeySecret,opts,KeyTypeEnum.ALIYUN);
+		CloudsearchSearch search = new CloudsearchSearch(client);
+		
+		//添加制定的搜索应用
+		search.addIndex(worldLocationAppName);
+		
+		//指定结果集的条数
+		search.setHits(20);
+		//指定搜索的关键词，如果没有输入索引名称，则使用default
+		//search.setQueryString(question);
+		
+		search.setQueryString("default:'"+worldLocation+"'");
+		
+		//指定搜索返回的格式
+		search.setFormat("json");
+		
+		//解析结果
+		String result = search.search();
+		JSONObject resultObj = JSONObject.fromObject(result).getJSONObject("result");
+		
+		if(resultObj.isNullObject()){
+			return null;
+		}
+		
+		Integer num = resultObj.optInt("num");
+		if ( num ==null || num == 0){
+			return null;
+		}
+		JSONArray items = resultObj.getJSONArray("items");
+		if(items.isEmpty()){
+			return null;
+		}
+		
+		return items;
+	}
 
 	public String getAliyunAccessKeyId() {
 		return aliyunAccessKeyId;
@@ -124,7 +178,5 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 	public void setAliyunHanZouHost(String aliyunHanZouHost) {
 		this.aliyunHanZouHost = aliyunHanZouHost;
 	}
-
-	
 
 }

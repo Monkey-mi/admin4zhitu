@@ -12,4 +12,15 @@ public interface SummaryStatisticsService extends BaseService {
 	
 	public void buidlSummary(Date maxDate, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception;
+	
+	/**
+	 * 构建注册统计
+	 * 
+	 * @param date
+	 * @param interval
+	 * @param jsonMap
+	 * @throws Exception
+	 */
+	public void buildRegisterSum(Date date, Integer interval,
+			Map<String, Object> jsonMap) throws Exception;
 }

@@ -69,6 +69,7 @@
 						<input id="ss_shortLink" searcher="searchByShortLink" class="easyui-searchbox" prompt="输入织图ID或短链搜索" style="width:80px;" />
 						<input id="ss_authorName" searcher="searchByAuthorName" class="easyui-searchbox" prompt="输入用户昵称或ID搜索" style="width:80px;" />
 						<input id="ss_worldDesc" searcher="searchByWorldDesc" class="easyui-searchbox" prompt="输入描述模糊搜索" style="width:80px;" />
+						<input id="ss_worldLocation" searcher="searchByWorldLocation" class="easyui-searchbox" prompt="输入地理位置模糊搜索" style="width:80px;" />
 						<div id="pagination" style="display:inline-block; vertical-align:middle;">
 						</div>
 					</div>

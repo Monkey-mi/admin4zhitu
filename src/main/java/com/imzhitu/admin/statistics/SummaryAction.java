@@ -19,6 +19,7 @@ public class SummaryAction extends BaseCRUDAction {
 	private Date maxDate;
 	private Date beginDate;
 	private Date endDate;
+	private Integer interval;
 	
 	@Autowired
 	private SummaryStatisticsService summaryStatisticsService;
@@ -72,4 +73,18 @@ public class SummaryAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 
+	/**
+	 * 查询注册汇总信息
+	 * 
+	 * @return
+	 */
+	public String queryRegisterSum() {
+		try {
+			summaryStatisticsService.buildRegisterSum(beginDate, interval, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 }

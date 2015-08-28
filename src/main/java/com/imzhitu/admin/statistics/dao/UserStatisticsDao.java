@@ -22,4 +22,6 @@ public interface UserStatisticsDao extends BaseDao {
 	
 	public void queryRegisterCount(Date beginDate, Date endDate,
 			RowCallback<StatisticsCountGroupByDay> callback);
+	
+	
 }

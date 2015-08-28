@@ -12,13 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowCallback;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.common.pojo.StatisticsCountGroupByDay;
+import com.imzhitu.admin.common.pojo.StatisticsRegisterDto;
 import com.imzhitu.admin.common.pojo.StatisticsSummary;
 import com.imzhitu.admin.statistics.dao.UserStatisticsDao;
 import com.imzhitu.admin.statistics.dao.WorldStatisticsDao;
+import com.imzhitu.admin.statistics.mapper.UserStatMapper;
 import com.imzhitu.admin.statistics.service.SummaryStatisticsService;
+import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 
 @Service
 public class SummaryStatisticsServiceImpl extends BaseServiceImpl implements
@@ -32,6 +36,9 @@ public class SummaryStatisticsServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private WorldStatisticsDao worldStatisticsDao;
+	
+	@Autowired
+	private UserStatMapper userStatMapper;
 	
 	private Integer maxSumDay = 30;
 
@@ -155,6 +162,83 @@ public class SummaryStatisticsServiceImpl extends BaseServiceImpl implements
 		jsonMap.put(OptResult.ROWS, sumList);
 		jsonMap.put(OptResult.TOTAL, maxSumDay);
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, fullTimeFormat.format(maxDate));
+	}
+
+	@Override
+	public void buildRegisterSum(Date beginDate, Integer interval, 
+			Map<String, Object> jsonMap) throws Exception {
+		if(beginDate == null) {
+			beginDate = new Date();
+		}
+		if(interval == null || interval == 0) {
+			interval = 1000*60*60;
+		}
+		
+		List<StatisticsRegisterDto> list = new ArrayList<StatisticsRegisterDto>();
+		
+		Date endDate = null;
+		Date today = new Date();
+		
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(today);
+		int nowDay = ca.get(Calendar.DAY_OF_MONTH);
+		
+		ca.setTime(beginDate);
+		int beginDay = ca.get(Calendar.DAY_OF_MONTH);
+		
+		ca.set(Calendar.HOUR_OF_DAY, 0);
+		ca.set(Calendar.MINUTE, 0);
+		ca.set(Calendar.SECOND, 0);
+		beginDate = ca.getTime();
+		
+		if(nowDay == beginDay) {
+			endDate = today;
+		} else {
+			ca.add(Calendar.DAY_OF_MONTH, 1);
+			endDate = ca.getTime();
+		}
+		
+		long startTime = beginDate.getTime();
+		long endTime = endDate.getTime();
+		long sub = endTime-startTime;
+		int queryCount = (int)(sub / interval);
+		if(sub % interval != 0) {
+			queryCount = queryCount+1;
+		}
+		
+		long androidTotal = 0l;
+		long iosTotal = 0l;
+		for(int i = 0; i < queryCount; i++) {
+			endTime = startTime + interval;
+			
+			Date start = new Date(startTime);
+			Date end = new Date(endTime);
+			long androidCnt = userStatMapper.selectCountByInterval(start, end, Tag.ANDROID);
+			long iosCnt = userStatMapper.selectCountByInterval(start, end, Tag.IOS);
+			
+			StatisticsRegisterDto dto = new StatisticsRegisterDto();
+			dto.setAndroidCnt(androidCnt);
+			dto.setIosCnt(iosCnt);
+			dto.setTotal(androidCnt + iosCnt);
+			dto.setStart(start);
+			dto.setEnd(end);
+			list.add(dto);
+			
+			androidTotal+=androidCnt;
+			iosTotal+=iosCnt;
+			
+			startTime+=interval;
+		}
+		
+		StatisticsRegisterDto dto = new StatisticsRegisterDto();
+		dto.setAndroidCnt(androidTotal);
+		dto.setIosCnt(iosTotal);
+		dto.setTotal(androidTotal + iosTotal);
+		list.add(dto);
+		
+		jsonMap.put(OptResult.ROWS, list);
+		jsonMap.put(OptResult.TOTAL, list.size());
+		
 	}
 
 }

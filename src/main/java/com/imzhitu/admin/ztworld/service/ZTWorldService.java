@@ -39,7 +39,7 @@ public interface ZTWorldService extends BaseService {
 	 */
 	public void buildWorld(int maxId, int start, int limit, String startDateStr, String endDateStr, 
 			String shortLink, Integer phoneCode, String label, String authorName, Integer valid,
-			Integer shield, String worldDesc, Integer user_level_id,String orderKey,  
+			Integer shield, String worldDesc, String worldLocation, Integer user_level_id,String orderKey,  
 			String orderBy, Map<String, Object> jsonMap) throws Exception;
 	
 	/**

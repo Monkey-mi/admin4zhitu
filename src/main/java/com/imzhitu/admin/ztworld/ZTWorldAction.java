@@ -66,12 +66,14 @@ public class ZTWorldAction extends BaseCRUDAction {
 	private Integer childId;
 	private Boolean  isNotAddClick = false; // 不添加播放次数标记位
 	
+	private String worldLocation;	// 织图所标记的地理位置信息 
 
 	@Autowired
 	private ZTWorldService worldService;
 	
 	@Autowired
 	private com.hts.web.ztworld.service.ZTWorldService webWorldService;
+
 	
 	/**
 	 * 查询今日更新的世界
@@ -79,7 +81,7 @@ public class ZTWorldAction extends BaseCRUDAction {
 	public String queryHTWorldList() {
 		try {
 			worldService.buildWorld(maxId, page, rows, startTime, endTime, shortLink, 
-					phoneCode, worldLabel, authorName, valid, shield,worldDesc,user_level_id, sort, order, jsonMap);
+					phoneCode, worldLabel, authorName, valid, shield,worldDesc, worldLocation,user_level_id, sort, order, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -519,6 +521,10 @@ public class ZTWorldAction extends BaseCRUDAction {
 
 	public void setWorldDesc(String worldDesc) {
 		this.worldDesc = worldDesc;
+	}
+
+	public void setWorldLocation(String worldLocation) {
+		this.worldLocation = worldLocation;
 	}
 	
 	

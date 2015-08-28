@@ -91,6 +91,8 @@ public class ZTWorldDto extends AbstractNumberDto implements Serializable, World
 	
 	private String orderKey;	//排序的key
 	
+	private Integer[] world_Ids; // 织图主键id集合
+	
 	
 	public Integer getUser_level_id() {
 		return user_level_id;
@@ -626,6 +628,14 @@ public class ZTWorldDto extends AbstractNumberDto implements Serializable, World
 
 	public void setPhoneVer(String phoneVer) {
 		this.phoneVer = phoneVer;
+	}
+	
+	public Integer[] getWorld_Ids() {
+		return world_Ids;
+	}
+	
+	public void setWorld_Ids(Integer[] world_Ids) {
+		this.world_Ids = world_Ids;
 	}
 	
 }

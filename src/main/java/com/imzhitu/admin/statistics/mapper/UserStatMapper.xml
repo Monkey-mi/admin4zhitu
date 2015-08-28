@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.statistics.mapper.UserStatMapper">
+
+	<select id="selectCountByInterval" resultType="long">
+		select count(*) from hts.user_info where register_date 
+		between #{beginDate} and #{endDate} and phone_code=#{phoneCode}
+	</select>
+	
+</mapper>

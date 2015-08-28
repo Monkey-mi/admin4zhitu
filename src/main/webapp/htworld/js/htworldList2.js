@@ -1630,6 +1630,22 @@ var htmTableTitle = "分享列表维护", //表格标题
 	}
 	
 	/**
+	 * 根据织图所标记的地理位置来查询织图
+	 */
+	function searchByWorldLocation() {
+		maxId = 0;
+		var worldLocation = $('#ss_worldLocation').searchbox('getValue');
+		if(worldLocation == "") {
+			return
+		}
+		var rows = myQueryParams.rows;
+		myQueryParams = {
+			'worldLocation' : worldLocation
+		};
+		loadData(1, rows);
+	}
+	
+	/**
 	 * 搜索频道名称
 	 */
 	function searchChannel() {
