@@ -73,7 +73,7 @@
 			 </if>
 		<where>
 			h.id=hw.world_id and h.author_id=u0.id and ht.id=hw.type_id and ht.valid=1 and aui.id=hw.recommender_id and h.valid = 1
-			 <if test="sort != null and order != null">
+			 <if test='sort != null and sort == "schedula"'>
 			 	and hw.world_id=its.world_id
 			 </if>
 			<if test="worldId != null">
