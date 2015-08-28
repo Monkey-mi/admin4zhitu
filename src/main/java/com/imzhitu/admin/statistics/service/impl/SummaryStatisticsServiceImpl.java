@@ -3,6 +3,7 @@ package com.imzhitu.admin.statistics.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -223,7 +224,7 @@ public class SummaryStatisticsServiceImpl extends BaseServiceImpl implements
 			dto.setTotal(androidCnt + iosCnt);
 			dto.setStart(start);
 			dto.setEnd(end);
-			list.add(dto);
+			list.add(0, dto);
 			
 			androidTotal+=androidCnt;
 			iosTotal+=iosCnt;
