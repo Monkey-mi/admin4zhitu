@@ -68,7 +68,7 @@
 			 hts.user_info as u0,
 			 hts.htworld_type as ht,
 			 hts_admin.admin_user_info as aui
-			 <if test="sort != null and order != null">
+			 <if test='sort != null and sort == "schedula"'>
 			 	,hts_admin.interact_type_schedula its 
 			 </if>
 		<where>
@@ -110,8 +110,8 @@
 			-->
 		</where> 
 		<choose>
-			<when test="sort != null and order != null">
-				order by #{sort} #{order}
+			<when test='sort != null and sort == "schedula"'>
+				order by its.schedula desc
 			</when>
 			<otherwise>
 				order by hw.serial desc

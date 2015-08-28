@@ -637,7 +637,7 @@ function searchType() {
 	myQueryParams.endDate= $('#endDate').datetimebox('getValue');
 	if(myQueryParams.isSorted == 1 && myQueryParams.valid != ""){
 		myQueryParams.myOrder=" desc";
-		myQueryParams.mySort="schedulaDate";
+		myQueryParams.mySort="schedula";
 	}
 	$("#htm_table").datagrid("load",myQueryParams);
 }
