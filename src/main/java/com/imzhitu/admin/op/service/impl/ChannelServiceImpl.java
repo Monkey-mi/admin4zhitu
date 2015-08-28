@@ -42,7 +42,7 @@ import com.imzhitu.admin.op.mapper.ChannelTopOneMapper;
 import com.imzhitu.admin.op.mapper.ChannelTopTypeMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.service.ChannelService;
-
+import com.imzhitu.admin.common.PropertiesFileAddAndQuery;
 //@Service
 public class ChannelServiceImpl extends BaseServiceImpl implements
 		ChannelService {
@@ -460,13 +460,19 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public void updateChannelWorldValid(String idsStr, Integer valid)
+	public void updateChannelWorldValid(String idsStr, Integer valid,String channlMsgType)
 			throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		channelWorldMapper.updateValidByIds(ids, valid);
 		if(ids != null && ids.length > 0) {
-			if(valid != null && valid.equals(Tag.TRUE)) // 生效时同时重新排序 
+			if(valid != null && valid.equals(Tag.TRUE)) 
+			{
+				// 生效时同时重新排序 
 				addChannelWorldId(ids);
+				//生效同时发送通知 mishengliang
+				//下面的方法复用了 手动添加通知 的方法，此方法在手动通知中也要调用，为是方便维护，故复用
+				addChannelWorldRecommendMsgs(idsStr,channlMsgType);
+			}
 			OpChannelWorld world = channelWorldMapper.queryChannelWorldById(ids[0]);
 			if(world != null) {
 //				updateChannelWorldCache(world.getChannelId(), 0);
@@ -537,8 +543,10 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		}
 	}
 
+	
+	//mishengliang
 	@Override
-	public void addChannelWorldRecommendMsg(Integer id) throws Exception {
+	public void addChannelWorldRecommendMsg(Integer id,String channlMsgType) throws Exception {
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldById(id);
 		if(world == null) 
 			throw new HTSException("记录已经被删除");
@@ -554,9 +562,13 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
 			Integer msgCode = UserInfoUtil.getSysMsgCode(userPushInfo.getVer(), Tag.USER_MSG_CHANNEL_WORLD);
 			
-			String msg = CHANNEL_WORLD_MSG_HEAD + channelName + CHANNEL_WORLD_MSG_FOOT;
-			String tip = recipientName + msg;
-			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);
+/*			String msg = CHANNEL_WORLD_MSG_HEAD + channelName + CHANNEL_WORLD_MSG_FOOT;
+			String tip = recipientName + msg;*/
+			String filePath = "src/main/resources/channelNotify.properties";
+			String msg = PropertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
+			String tip = msg.replaceAll("userName", recipientName);
+			tip = tip.replaceAll("channelName", channelName);
+/*			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
 			
 			// 保存消息
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
@@ -565,9 +577,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			// 更新推送标记
 			world.setNotified(Tag.TRUE);
 			channelWorldMapper.update(world);
-			
+	
 			// 推送消息
-			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
@@ -576,14 +588,14 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		}
 	}
 	
-	
+	// && notified.equals(Tag.FALSE)
 	@Override
-	public void addChannelWorldRecommendMsgByWorldId(Integer worldId) throws Exception {
+	public void addChannelWorldRecommendMsgByWorldId(Integer worldId,String channlMsgType) throws Exception {
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId);
 		if(world == null) 
 			throw new HTSException("记录已经被删除");
 		Integer notified = world.getNotified();
-		if(notified != null && notified.equals(Tag.FALSE)) {
+		if(notified != null) {
 			OpChannel channel = channelMapper.queryChannelById(world.getChannelId());
 			HTWorldDto worldDto = webWorldDao.queryHTWorldDtoById(world.getWorldId());
 			String thumbPath = worldDto.getTitleThumbPath();
@@ -594,20 +606,32 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
 			Integer msgCode = UserInfoUtil.getSysMsgCode(userPushInfo.getVer(), Tag.USER_MSG_CHANNEL_WORLD);
 			
-			String msg = CHANNEL_WORLD_MSG_HEAD + channelName + CHANNEL_WORLD_MSG_FOOT;
+/*			String msg = CHANNEL_WORLD_MSG_HEAD + channelName + CHANNEL_WORLD_MSG_FOOT;
 			String tip = recipientName + msg;
-			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);
+			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
+			String filePath = "src/main/resources/channelNotify.properties";
+			String msg = PropertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
+			String tip = msg.replaceAll("userName", recipientName);
+			tip = tip.replaceAll("channelName", channelName);
 			
 			// 保存消息
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
 			
 			// 更新推送标记
-			world.setNotified(Tag.TRUE);
-			channelWorldMapper.update(world);
+			//这里需要根据不同的通知设置不同的方法：织图、精选、红人
+			if ("_add".equals(channlMsgType)) {
+				world.setNotified(Tag.TRUE);
+				channelWorldMapper.update(world);
+			} else if("_superb".equals(channlMsgType)){
+				channelWorldMapper.updateSuperbNotified(channelId,worldId);
+			}else if("_star".equals(channlMsgType)){
+				//给红人通知留的接口
+			}
+
 			
 			// 推送消息
-			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
@@ -863,11 +887,13 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		logger.info("更新频道红人Top One 排行榜计划实行完毕，结束时间为："+end+". 花费时间："+(end.getTime() - now.getTime()) + "ms");
 	}
 
+	
+	//mishengliang 添加通知
 	@Override
-	public void addChannelWorldRecommendMsgs(String idsStr) throws Exception {
+	public void addChannelWorldRecommendMsgs(String idsStr,String channlMsgType) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		for(Integer id : ids) {
-			addChannelWorldRecommendMsg(id);
+			addChannelWorldRecommendMsg(id,channlMsgType);
 		}
 	}
 	
@@ -937,9 +963,14 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void updateChannelWorldSuperb(Integer channelId, Integer worldId,
-			Integer superb) throws Exception {
+			Integer superb,String channlMsgType) throws Exception {
+		
 		channelWorldMapper.updateSuperbByWID(channelId, worldId, superb);
 		webChannelService.updateSuperbCount(channelId);
+		//如果更改为精选时推送精选通知
+		if (superb == 1) {
+		addChannelWorldRecommendMsgByWorldId(worldId,channlMsgType);
+		}
 	}
 
 }

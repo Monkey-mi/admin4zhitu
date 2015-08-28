@@ -185,4 +185,14 @@ public interface ChannelWorldMapper {
 	@DataSource("master")
 	public void updateSuperbByWID(@Param("channelId")Integer channelId,
 			@Param("worldId")Integer worldId, @Param("superb")Integer superb);
+	
+	/**
+	 *更新频道中的通知（精选）
+	 * @param channelId
+	 * @param worldId 
+		*	2015年8月28日
+		*	mishengliang
+	 */
+	@DataSource("master")
+	public void updateSuperbNotified(@Param("channelId")Integer channelId,@Param("worldId")Integer worldId);
 }

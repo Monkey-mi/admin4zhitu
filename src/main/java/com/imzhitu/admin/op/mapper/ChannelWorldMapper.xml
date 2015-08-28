@@ -25,6 +25,7 @@
 		<result column="notified" property="notified" jdbcType="INTEGER"/>
 		<result column="weight" property="weight" jdbcType="INTEGER"/>
 		<result column="superb" property="superb" jdbcType="INTEGER"/>
+		<result column="superb_notified" property="superbNotified" jdbcType="INTEGER"/>
 		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
 		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR" />
 		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR" />
@@ -98,11 +99,11 @@
 	<select id="queryChannelWorlds" resultMap="OpChannelWorldDtoMap">
 		select cw.id as channel_world_id,cw.channel_id,cw.world_id,cw.valid as channel_world_valid,
 		ocws.superb as channel_world_schedula_superb,
-		cw.notified,cw.weight,cw.superb,
+		cw.notified,cw.weight,cw.superb,cw.superb_notified,
 		c.channel_name, c.channel_title,c.channel_icon, h.*,u.user_name,u.user_avatar,u.star,u.trust
 		,ISNULL(ocws.finish) as beSchedula ,IFNULL(ocws.finish,0) as schedulaComplete, IFNULL(oct.id, 0) as is_cover
 		from 
-		(select ocw.* from hts.operations_channel_world ocw
+		(select ocw.*,ocn.superb_notified from hts.operations_channel_world ocw,hts_admin.op_channel_notified ocn
 			
 		<where>
 			<if test="channelId != null"> ocw.channel_id=#{channelId}</if>
@@ -113,6 +114,7 @@
 			<if test="weight != null"> AND ocw.weight=#{weight}</if>
 			<if test="notified != null"> AND ocw.notified=#{notified}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ AND ocw.id<=#{maxId}]]></if>
+			AND ocw.channel_id=ocn.channel_id AND ocw.world_id=ocn.world_id
 		</where>
 		order by serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
@@ -155,6 +157,12 @@
 	      <if test="weight != null">weight=#{weight}</if>
 	    </set>
 	  	where id=#{id}
+	</update>
+	
+		<update id="updateSuperbNotified">
+		UPDATE hts_admin.op_channel_notified 
+		SET superb_notified=1 
+	  WHERE channel_id=#{channelId} AND world_id=#{worldId}
 	</update>
 	
 	<update id="updateChannelWorldByWorldIdAndChannelId">

@@ -172,7 +172,7 @@
 			<div>
 				<a href="javascript:void(0);" onclick="javascript:htmUI.htmWindowAdd();" class="easyui-linkbutton" title="添加计划评论标签" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 				<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除计划评论标签" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
-	   		</div>
+	   </div>
 		</div>  
 		<!-- 添加计划评论标签 -->
 		

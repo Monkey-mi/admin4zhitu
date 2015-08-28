@@ -92,7 +92,7 @@ var maxId = 0,
   				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}
   		},
-  		{field : 'channelWorldSchedulaSuperb',title : '加精',align : 'center', width: 45,
+  		{field : 'superb',title : '加精',align : 'center', width: 45,
   			formatter: function(value,row,index) {
   				var superb;
   				switch(value) {
@@ -110,6 +110,16 @@ var maxId = 0,
   				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateSchedulaSuperbOp("+ superb +","+ index +")' src='" + img + "'/>";
   			}
   		},
+		{field : 'superbNotified',title : '加精通知',align : 'center', width : 60,
+			formatter: function(value,row,index) {
+  				if(value >= 1) {
+  					img = "./common/images/ok.png";
+  					return "<img title='已经通知' class='htm_column_img' src='" + img + "'/>";
+  				}
+  				img = "./common/images/tip.png";
+  				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
+  			}
+		},
   		{field : 'beSchedula',title : '计划',align : 'center', width: 45,
   			formatter: function(value,row,index) {
   				if(value == 0) {
@@ -344,7 +354,8 @@ function updateValid(valid) {
 				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 				$('#htm_table').datagrid('loading');
 				$.post(updateValidURL + ids,{
-					"valid" : valid
+					"valid" : valid,
+					"channlMsgType":"_add"
 				},function(result){
 					$('#htm_table').datagrid('loaded');
 					if(result['result'] == 0) {
@@ -471,6 +482,7 @@ function batchNotify() {
 				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 				$('#htm_table').datagrid('loading');
 				$.post(addRecommendMsgURL + ids,{
+					"channlMsgType":"_add"
 				},function(result){
 					$('#htm_table').datagrid('loaded');
 					if(result['result'] == 0) {
@@ -598,7 +610,7 @@ function updateSchedulaSuperbOp(superb, index) {
 	$('#htm_table').datagrid('updateRow',{
 		index: index,
 		row: {
-			channelWorldSchedulaSuperb: superb
+			superb: superb
 		}
 	});
 }

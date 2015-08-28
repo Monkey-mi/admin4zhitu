@@ -318,7 +318,7 @@ public interface ChannelService extends BaseService {
 	 * @param valid
 	 * @throws Exception
 	 */
-	public void updateChannelWorldValid(String idsStr, Integer valid) throws Exception;
+	public void updateChannelWorldValid(String idsStr, Integer valid,String channlMsgType) throws Exception;
 	
 	/**
 	 * 根据wid更新有效性
@@ -345,7 +345,7 @@ public interface ChannelService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateChannelWorldSuperb(Integer channelId,
-			Integer worldId, Integer superb) throws Exception;
+			Integer worldId, Integer superb,String channlMsgType) throws Exception;
 	
 	
 	/**
@@ -354,7 +354,7 @@ public interface ChannelService extends BaseService {
 	 * @param id
 	 * @throws Exception
 	 */
-	public void addChannelWorldRecommendMsg(Integer id) throws Exception;
+	public void addChannelWorldRecommendMsg(Integer id,String channlMsgType) throws Exception;
 	
 	/**
 	 * 添加频道织图推荐消息
@@ -362,7 +362,7 @@ public interface ChannelService extends BaseService {
 	 * @param id
 	 * @throws Exception
 	 */
-	public void addChannelWorldRecommendMsgByWorldId(Integer worldid) throws Exception;
+	public void addChannelWorldRecommendMsgByWorldId(Integer worldid,String channlMsgType) throws Exception;
 	
 	/**
 	 * 批量添加频道织图推荐消息
@@ -370,7 +370,7 @@ public interface ChannelService extends BaseService {
 	 * @param idsStr
 	 * @throws Exception
 	 */
-	public void addChannelWorldRecommendMsgs(String idsStr) throws Exception;
+	public void addChannelWorldRecommendMsgs(String idsStr,String channlMsgType) throws Exception;
 	/**
 	 * 精品最多
 	 * @param dto

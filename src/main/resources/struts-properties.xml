@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" 
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="admin_properties" namespace="/admin_properties" extends="admin-package">
+	
+		<action name="properties_*" class="com.imzhitu.admin.propertiesSet.propertiesSetAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
+	</package>
+
+</struts>
+
+

@@ -210,7 +210,10 @@ function updateSuperb(channelId, worldId, superb, index) {
 	$.post(updateSuperbURL,{
 		"channelId":channelId,
 		"worldId":worldId,
-		"superb":superb
+		"superb":superb,
+		//标记为精选通知
+		//mishengliang
+		"channlMsgType":"_superb"
 	}, function(result){
 		if(result['result'] == 0) {
 			updateValue(index, 'superb', superb);
@@ -218,6 +221,8 @@ function updateSuperb(channelId, worldId, superb, index) {
 			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 		}
 	},"json");
+	
+	
 }
 
 /**
