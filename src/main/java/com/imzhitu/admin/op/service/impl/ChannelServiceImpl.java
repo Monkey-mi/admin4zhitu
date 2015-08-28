@@ -544,7 +544,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	}
 
 	
-	//mishengliang
 	@Override
 	public void addChannelWorldRecommendMsg(Integer id,String channlMsgType) throws Exception {
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldById(id);

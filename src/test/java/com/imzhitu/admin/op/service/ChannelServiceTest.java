@@ -219,7 +219,7 @@ public class ChannelServiceTest extends BaseTest {
 	
 	@Test
 	public void testUpdateChannelWorldValid() throws Exception {
-		service.updateChannelWorldValid("12", Tag.TRUE);
+		service.updateChannelWorldValid("12", Tag.TRUE,"_add");
 	}
 	
 	@Test
@@ -229,7 +229,7 @@ public class ChannelServiceTest extends BaseTest {
 	
 	@Test
 	public void testAddChannelWorldRecommendMsg() throws Exception {
-		service.addChannelWorldRecommendMsg(60);
+		service.addChannelWorldRecommendMsg(60,"_add");
 	}
 	
 	
@@ -388,7 +388,7 @@ public class ChannelServiceTest extends BaseTest {
 
 	@Test
 	public void updateChannelWorldSuperbTest() throws Exception {
-		service.updateChannelWorldSuperb(1, 1, 1);
+		service.updateChannelWorldSuperb(1, 1, 1,"");
 	}
 	
 }
