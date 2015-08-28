@@ -59,7 +59,7 @@
 	
 	<!-- 分页查询 -->
 	<select id="queryTypeWorld" resultMap="ZTWorldTypeWorldMap">
-		select hw.id,hw.world_id,hw.type_id,hw.superb,hw.valid as type_valid,hw.serial,hw.weight,hw.recommender_id,hw.date_add,hw.date_modify,hw.review ,
+		select hw.id,hw.world_id,hw.type_id,hw.superb,hw.valid as type_valid,hw.serial,hw.weight,hw.recommender_id,hw.date_add,hw.date_modify,hw.review ,h.*,
 			   u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
 			   u0.signature,u0.address,u0.province ,u0.city ,u0.register_date,u0.user_label,u0.star,u0.trust,
 			   u0.phone_code,u0.online,u0.platform_verify
