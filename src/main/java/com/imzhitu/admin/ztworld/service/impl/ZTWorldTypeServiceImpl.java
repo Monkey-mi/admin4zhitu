@@ -36,6 +36,7 @@ import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldType;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeWorldDto;
+import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelService;
@@ -48,7 +49,7 @@ import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeDao;
-import com.imzhitu.admin.ztworld.dao.HTWorldTypeWorldDao;
+import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeService;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeWorldSchedulaService;
@@ -88,7 +89,7 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	private HTWorldTypeDao worldTypeDao;
 	
 	@Autowired
-	private HTWorldTypeWorldDao worldTypeWorldDao;
+	private ZTWorldTypeWorldMapper typeWorldMapper;
 	
 	@Autowired
 	private HTWorldLabelWorldDao worldLabelWorldDao;
@@ -129,6 +130,9 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	@Autowired
 	private HTWorldTypeCacheDao typeCacheDao;
 	
+	@Autowired
+	private KeyGenService keyGenService;
+	
 	public Integer getSuperbLimit() {
 		return superbLimit;
 	}
@@ -140,55 +144,70 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void saveTypeWorld(Integer worldId, Integer typeId, String worldType,
 			Integer recommenderId) throws Exception {
-		worldTypeWorldDao.deleteByWorldId(worldId);
+		//删除原有的精选
+		Integer[] worldIds = new Integer[1];
+		worldIds[0] = worldId;
+		typeWorldMapper.batchDeleteTypeWorldByWorldIds(worldIds);
+		
+		//更新，并添加记录
 		worldDao.updateWorldTypeLabel(worldId, typeId, worldType);
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);	
-		worldTypeWorldDao.saveTypeWorld(new HTWorldTypeWorld(id, worldId, typeId, Tag.TRUE, Tag.FALSE,
-				id, 0, recommenderId));
-				
+		Integer serial = keyGenService.generateId(Admin.KEYGEN_ZT_TYPEWORLD_SERIAL);
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		dto.setId(id);
+		dto.setWorldId(worldId);
+		dto.setTypeId(typeId);
+		dto.setSuperb(Tag.TRUE);
+		dto.setValid(Tag.FALSE);
+		dto.setSerial(serial);
+		dto.setWeight(0);
+		dto.setRecommenderId(recommenderId);
+		typeWorldMapper.saveTypeWorld(dto);		
 	}
 	
 	@Override
 	public void updateTypeWorld(Integer worldId, Integer typeId, String worldType,
 			Integer recommenderId) throws Exception{
-		worldTypeWorldDao.updateTypeId(worldId, typeId);
+		if(worldId == null){
+			throw new Exception("worldId is null");
+		}
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		dto.setWorldId(worldId);
+		dto.setTypeId(typeId);
+		typeWorldMapper.updateTypeWorld(dto);
 		worldDao.updateWorldTypeLabel(worldId, typeId, worldType);
 		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 	}
 	
 	@Override
-	public void buildTypeWorld(String beginDate,String endDate,int maxSerial, Integer typeId, Integer valid, Integer superb, Integer weight,Integer recommenderId,
+	public void buildTypeWorld(Date beginDate,Date endDate,int maxSerial, Integer typeId, Integer valid, Integer superb, Integer weight,Integer recommenderId,
 			final String sort, final String order, Integer isSorted,int page, int rows, Map<String, Object> jsonMap) throws Exception{
-		final Map<String, Object> attrMap = new LinkedHashMap<String, Object>();
-		if(typeId != null) attrMap.put("typeId", typeId);
-		if(valid != null) attrMap.put("valid", valid);
-		if(superb != null) attrMap.put("superb", superb);
-		if(weight != null) attrMap.put("weight", weight);
-//		if(recommenderId != null) attrMap.put("recommenderId", recommenderId);
-		if(isSorted !=null )attrMap.put("isSorted", isSorted);
-		if(beginDate !=null && endDate !=null && !(beginDate.trim().equals("")) && !(endDate.trim().equals(""))){
-			try{
-				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				Date begin = df.parse(beginDate);
-				Date end = df.parse(endDate);
-				attrMap.put("beginDate", begin);
-				attrMap.put("endDate", end);
-			}catch(Exception e){
-				e.printStackTrace();
-			}			
-		}
 		
-		buildSerializables("getSerial", maxSerial, page, rows,jsonMap, 
-				new SerializableListAdapter<ZTWorldTypeWorldDto>() {
-
-			@Override
-			public List<ZTWorldTypeWorldDto> getSerializables(
-					RowSelection rowSelection) {
-				List<ZTWorldTypeWorldDto> typeList = 
-						worldTypeWorldDao.queryTypeWorld(sort, order, attrMap, rowSelection);
-				worldService.extractInteractInfo(typeList);
-				webUserInfoService.extractVerify(typeList);
-				for(ZTWorldTypeWorldDto dto: typeList){
+		ZTWorldTypeWorldDto typeWorlddto = new ZTWorldTypeWorldDto();
+		typeWorlddto.setMaxId(maxSerial);
+		typeWorlddto.setFirstRow(rows*(page-1));
+		typeWorlddto.setLimit(rows);
+		typeWorlddto.setTypeId(typeId);
+		typeWorlddto.setValid(valid);
+		typeWorlddto.setSuperb(superb);
+		typeWorlddto.setWeight(weight);
+		typeWorlddto.setAddDate(beginDate);
+		typeWorlddto.setModifyDate(endDate);
+		typeWorlddto.setIsSorted(isSorted);
+		typeWorlddto.setRecommenderId(recommenderId);
+		typeWorlddto.setOrder(order);
+		typeWorlddto.setSort(sort);
+		
+		long total = typeWorldMapper.queryTypeWorldTotalCount(typeWorlddto);
+		List<ZTWorldTypeWorldDto> list = null;
+		if(total > 0 ){
+			list = typeWorldMapper.queryTypeWorld(typeWorlddto);
+			if (list != null && list.size() > 0 ) {
+				maxSerial = list.get(0).getSerial();
+				
+				worldService.extractInteractInfo(list);
+				webUserInfoService.extractVerify(list);
+				for(ZTWorldTypeWorldDto dto: list){
 					//查询每个用户的权限
 					dto.setUserlevel(interactUserlevelListDao.QueryUserlevelByUserId(dto.getAuthorId()));
 					try{
@@ -232,87 +251,40 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 					}
 					
 				}
-				return typeList;
 			}
+		}
+		
+		
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, maxSerial);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+	}
 	
-			@Override
-			public List<ZTWorldTypeWorldDto> getSerializableByMaxId(
-					int maxId, RowSelection rowSelection) {
-				List<ZTWorldTypeWorldDto> typeList = 
-						worldTypeWorldDao.queryTypeWorld(maxId, sort, order, attrMap, rowSelection);
-				worldService.extractInteractInfo(typeList);
-				webUserInfoService.extractVerify(typeList);
-				for(ZTWorldTypeWorldDto dto: typeList){
-					//查询每个用户的权限
-					dto.setUserlevel(interactUserlevelListDao.QueryUserlevelByUserId(dto.getAuthorId()));
-					try{
-						if(interactWorldlevelListService.chechWorldLevelListIsExistByWId(dto.getWorldId())){
-							dto.setTypeInteracted(1);
-						}else{
-							dto.setTypeInteracted(0);
-						}
-					}catch(Exception e){
-						e.printStackTrace();
-					}
-					
-					//查询信任操作人
-					UserTrust userTrust = userTrustDao.queryUserTrustByUid(dto.getAuthorId());
-					if(userTrust != null){
-						dto.setTrustModifyDate(userTrust.getModifyDate());
-						dto.setTrustOperatorId(userTrust.getOperatorId());
-						dto.setTrustOperatorName(userTrust.getOperatorName());
-					}else{
-						SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						try{
-							Date trustModifyDate = df.parse("2011-08-20 00:00:00");
-							dto.setTrustModifyDate(trustModifyDate);
-							dto.setTrustOperatorId(0);
-							dto.setTrustOperatorName("暂无");
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-					}
-					
-					//查询频道信息
-					OpChannelWorld world = new OpChannelWorld();
-					world.setWorldId(dto.getWorldId());
-//					world.setValid(Tag.TRUE);
-					long r = channelWorldMapper.queryChannelWorldCount(world);
-					if(r == 0)dto.setChannelName("NO_EXIST");
-					else {
-//						OpChannelWorld channelWorld = channelWorldMapper.queryChannelWorldByWorldId(dto.getWorldId());
-//						dto.setChannelName(channelWorld.getChannelName());
-						List<String>strList = channelWorldMapper.queryChannelNameByWorldId(dto.getWorldId());
-						dto.setChannelName(strList.toString());
-					}
-				}
-				return typeList;
-			}
-	
-			@Override
-			public long getTotalByMaxId(int maxId) {
-				return worldTypeWorldDao.queryTypeWorldCountByMaxId(maxId, attrMap);
-			}
-			
-		},OptResult.JSON_KEY_ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_SERIAL);
+	@Override
+	public void deleteTypeWorld(Integer id,Integer worldId,Integer operatorId)throws Exception{
+		if(id == null && worldId == null){
+			throw new Exception("id and worldId is null");
+		}
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		dto.setId(id);
+		dto.setWorldId(worldId);
+		dto.setSuperb(Tag.FALSE);
+		dto.setValid(Tag.FALSE);
+		dto.setRecommenderId(operatorId);
+		typeWorldMapper.updateTypeWorld(dto);
 	}
 	
 	@Override
 	public void deleteTypeWorldByWorldId(Integer worldId,Integer operatorId) throws Exception {
-		Date now = new Date();
-		worldTypeWorldDao.updateRecommenderId(worldId, operatorId);
-		worldTypeWorldDao.updateSuperbByWId(worldId, Tag.FALSE);
-		worldTypeWorldDao.updateValidByWorldId(worldId, Tag.FALSE);
-		worldTypeWorldDao.updateModifyDateByWid(worldId, now);
+		deleteTypeWorld(null,worldId,operatorId);
 		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 	}
 	
 	@Override
 	public void batchDeleteTypeWorld(String idsStr,Integer operatorId) throws Exception{
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		List<Integer> worldList = worldTypeWorldDao.queryRecommendWorldIdsByTypeWorldIds(ids);
-		for(Integer worldId : worldList) {
-			deleteTypeWorldByWorldId(worldId,operatorId);
+		for(Integer id:ids){
+			deleteTypeWorld(id,null,operatorId);
 		}
 		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 		
@@ -320,7 +292,10 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void updateTypeWorldSuperb(Integer id, Integer superb) {
-		worldTypeWorldDao.updateSuperb(id, superb);
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		dto.setId(id);
+		dto.setSuperb(superb);
+		typeWorldMapper.updateTypeWorld(dto);
 	//	opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 	}
 	
@@ -330,19 +305,26 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		if(weight > 0) {
 			weight = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);
 		}
-		worldTypeWorldDao.updateWeight(id, weight);
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		dto.setId(id);
+		dto.setWeight(weight);
+		typeWorldMapper.updateTypeWorld(dto);
 	//	opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 	}
 
 	
 	@Override
 	public void batchUpdateTypeWorldSerial(String[] idStrs) {
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		
 		for(int i = idStrs.length - 1; i >= 0; i--) {
 			String idStr = idStrs[i];
 			if(idStr != null && idStr != "") {
 				int id = Integer.parseInt(idStrs[i]);
 				int serial = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);
-				worldTypeWorldDao.updateSerial(id, serial);
+				dto.setId(id);
+				dto.setSerial(serial);
+				typeWorldMapper.updateTypeWorld(dto);
 			}
 		}
 		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
@@ -354,15 +336,18 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	 * @param schedula
 	 */
 	@Override
-	public void addUpdateTypeWorldSerialSchedula(String[] idStrs,Date schedula,Integer operatorId){
-		for(int i= idStrs.length -1;i >= 0; i--){
-			String idStr = idStrs[i];
-			if(idStr !=null && idStr != ""){
-				int id = Integer.parseInt(idStrs[i]);
+	public void addUpdateTypeWorldSerialSchedula(String[] worldIdStrs,Date schedula,Integer operatorId){
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		dto.setIsSorted(Tag.TRUE);
+		for(int i= worldIdStrs.length -1;i >= 0; i--){
+			String worldIdStr = worldIdStrs[i];
+			if(worldIdStr !=null && worldIdStr != ""){
+				int worldId = Integer.parseInt(worldIdStr);
 				long t = schedula.getTime() - i*1000;//用以排序
 				try{
-					typeWorldSchedulaService.addTypeWorldSchedula(id, new Date(t),operatorId, 0);
-					worldTypeWorldDao.updateIsSorted(new Integer[]{id}, 1);
+					typeWorldSchedulaService.addTypeWorldSchedula(worldId, new Date(t),operatorId, 0);
+					dto.setWorldId(worldId);
+					typeWorldMapper.updateTypeWorld(dto);
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -376,16 +361,19 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	 */
 	@Override
 	public void performTypeWorldSchedula(){
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
 		Date begin = new Date();
 		logger.info("begin performTypeWorldSchedula =====>>>"+begin);
 		try{
 			List<Integer> list = typeWorldSchedulaService.getWorldIdBySchedula(new Date(begin.getTime()-SPAN_TIME),begin);//获取在该时间段内的所有计划的worldid
 			if(!list.isEmpty()){//worldId不为空
-				for(Integer id:list){//遍历所有的worldid ，用以更新它对应的序列号
+				for(Integer worldId:list){//遍历所有的worldid ，用以更新它对应的序列号
 					try{//更新序列号
-						int serial = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);
-						worldTypeWorldDao.updateSerial(id, serial);
-						InteractWorldLevelListDto woldlevellistDto = interactWorldlevelListService.queryWorldLevelListByWid(id);//查询对应的织图等级
+						int serial = keyGenService.generateId(Admin.KEYGEN_ZT_TYPEWORLD_SERIAL);
+						dto.setWorldId(worldId);
+						dto.setSerial(serial);
+						typeWorldMapper.updateTypeWorld(dto);
+						InteractWorldLevelListDto woldlevellistDto = interactWorldlevelListService.queryWorldLevelListByWid(worldId);//查询对应的织图等级
 						if(woldlevellistDto !=null){
 							//增加等级织图，将等级对应的数据转成互动计划，
 //							List<InteractWorldlevelWorldLabel> worldLabelList = woldlevellistDto.getWorldLabelList();
@@ -410,24 +398,22 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 //									worldLabelStr, 
 //									worldCommentStr);
 							//一小时内发完80%，剩下的按普通发,用来替代上面的interactWorldlevelService.AddLevelWorld
-							interactWorldlevelService.AddTypeWorldInteract(id, woldlevellistDto.getWorld_level_id(), worldCommentStr);
+							interactWorldlevelService.AddTypeWorldInteract(worldId, woldlevellistDto.getWorld_level_id(), worldCommentStr);
 							
 							//更新等级织图的有效性
-							interactWorldlevelListService.updateWorldlevelListValidity(id, woldlevellistDto.getWorld_level_id(), Tag.TRUE,woldlevellistDto.getOperatorId());
+							interactWorldlevelListService.updateWorldlevelListValidity(worldId, woldlevellistDto.getWorld_level_id(), Tag.TRUE,woldlevellistDto.getOperatorId());
 						}
 					}catch(Exception e){
 						e.printStackTrace();
 					}
 				}
-				Integer[] ids = list.toArray(new Integer[list.size()]);
-				worldTypeWorldDao.updateTypeWorldValidByWorldIds(ids);//更新有效性
-				typeWorldSchedulaService.updateCompleteByIds(ids, 1);//更新计划表中的完成性
+				Integer[] worldIds = list.toArray(new Integer[list.size()]);
+				typeWorldMapper.updateTypeWorldValidByWorldIds(worldIds, Tag.TRUE);
+				typeWorldSchedulaService.updateCompleteByWorldIds(worldIds, Tag.TRUE);//更新计划表中的完成性
 				opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);//更新缓存
-				Integer[] listworldId = new Integer[list.size()];
-				list.toArray(listworldId);
-				List<ZTWorldTypeWorldDto> listworldDto =  worldTypeWorldDao.queryTypeWorldByWids(listworldId);//查询typeworld
-				for(ZTWorldTypeWorldDto dto : listworldDto) {
-					autoCommitUpdateTypeWorldValid(dto);//推送上广场的消息
+				List<ZTWorldTypeWorldDto> listworldDto =  typeWorldMapper.queryTypeWorldByWorldIds(worldIds);//查询typeworld
+				for(ZTWorldTypeWorldDto worldDto : listworldDto) {
+					autoCommitUpdateTypeWorldValid(worldDto);//推送上广场的消息
 				}		
 			}
 			
@@ -440,25 +426,28 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void batchUpdateRecommendTypeWorldValid() throws Exception {
-		List<ZTWorldTypeWorldDto> worldList = worldTypeWorldDao.queryRecommendTypeWorldByValid(Tag.FALSE);
-		worldTypeWorldDao.updateAllRecommendTypeWorldValid(Tag.TRUE);
-		for(ZTWorldTypeWorldDto dto : worldList) {
-			autoCommitUpdateTypeWorldValid(dto);
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		dto.setValid(Tag.FALSE);
+		dto.setRecommenderId(1);//非0的查询，即已经推荐的用户
+		List<ZTWorldTypeWorldDto> worldList = typeWorldMapper.queryTypeWorld(dto);
+		typeWorldMapper.updateAllRecommendTypeWorldValid(Tag.FALSE, Tag.TRUE);
+		for(ZTWorldTypeWorldDto worldDto : worldList) {
+			autoCommitUpdateTypeWorldValid(worldDto);
 		}
 		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 	}
 	
 	@Override
 	public void batchUpdateTypeWorldValid(String idsStr,String widsStr,Integer operatorId) throws Exception {
-		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		worldTypeWorldDao.updateTypeWorldValid(ids);
-		List<ZTWorldTypeWorldDto> worldList = worldTypeWorldDao.queryTypeWorldByIds(ids);
+		Integer[]wids = StringUtil.convertStringToIds(widsStr);
+		typeWorldMapper.updateTypeWorldValidByWorldIds(wids, Tag.TRUE);
+		List<ZTWorldTypeWorldDto> worldList = typeWorldMapper.queryTypeWorldByWorldIds(wids);
 		for(ZTWorldTypeWorldDto dto : worldList) {
 			autoCommitUpdateTypeWorldValid(dto);
 		}
 		
 		//更新织图等级的有效性
-		Integer[]wids = StringUtil.convertStringToIds(widsStr);
+		
 		for(Integer wid:wids){
 			InteractWorldLevelListDto woldlevellistDto = interactWorldlevelListService.queryWorldLevelListByWid(wid);//查询对应的织图等级
 			if(woldlevellistDto !=null){
@@ -593,7 +582,10 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	 */
 	@Override
 	public void updateTypeWorldReview(Integer worldId,String review) throws Exception{
-		worldTypeWorldDao.updateTypeWorldReview(worldId, review);
+		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
+		dto.setWorldId(worldId);
+		dto.setReView(review);
+		typeWorldMapper.updateTypeWorld(dto);
 	}
 	
 	/**
