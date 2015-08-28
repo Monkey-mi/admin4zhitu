@@ -60,7 +60,7 @@ public interface ZTWorldTypeService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void buildTypeWorld(String beginDate,String endDate,int maxId, Integer typeId, Integer valid, Integer superb, Integer weight,Integer recommenderId,
+	public void buildTypeWorld(Date beginDate,Date endDate,int maxId, Integer typeId, Integer valid, Integer superb, Integer weight,Integer recommenderId,
 			String sort, String order,Integer isSorted, int page, int rows, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
@@ -102,6 +102,15 @@ public interface ZTWorldTypeService extends BaseService {
 	 * @param idsStr
 	 */
 	public void batchDeleteTypeWorld(String idsStr,Integer operatorId) throws Exception;
+	
+	/**
+	 * 根据织图id或者worldId删除分类织图
+	 * @param id
+	 * @param worldId
+	 * @param operatorId
+	 * @throws Exception
+	 */
+	public void deleteTypeWorld(Integer id,Integer worldId,Integer operatorId)throws Exception;
 	
 	/**
 	 * 更新排序

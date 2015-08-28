@@ -90,9 +90,9 @@ public class HTWorldTypeWorldSchedulaDaoImpl extends BaseDaoImpl implements HTWo
 	}
 	
 	@Override
-	public void updateCompleteByIds(Integer[] ids,Integer complete){
-		String sql = UPDATE_COMPLETE_BY_WORLD_IDS + SQLUtil.buildInSelection(ids);
-		Object[] args = SQLUtil.getArgsByInCondition(ids, new Object[]{complete}, true);
+	public void updateCompleteByWorldIds(Integer[] worldIds,Integer complete){
+		String sql = UPDATE_COMPLETE_BY_WORLD_IDS + SQLUtil.buildInSelection(worldIds);
+		Object[] args = SQLUtil.getArgsByInCondition(worldIds, new Object[]{complete}, true);
 		getMasterJdbcTemplate().update(sql,args);
 	}
 	

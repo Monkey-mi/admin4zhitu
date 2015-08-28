@@ -16,7 +16,7 @@ public class AdminServiceTest extends BaseTest {
 	@Autowired
 	private AdminService service;
 	
-	@Test
+//	@Test
 	public void testRegister() throws Exception {
 		AdminUser u = new AdminUser();
 		u.setLoginCode("zzzzzz");

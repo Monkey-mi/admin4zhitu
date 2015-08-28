@@ -221,6 +221,12 @@ public class Admin {
 	 */
 	public static final Integer KEYGEN_OP_MSG_START_PAGE_SERIAL = 13;
 	
+	/**
+	 * 分类织图SERIAL
+	 * 
+	 */
+	public static final Integer KEYGEN_ZT_TYPEWORLD_SERIAL	= 14; 
+	
 	
 	/**
 	 * admin系统与daemon守护系统共同操作redis的key值

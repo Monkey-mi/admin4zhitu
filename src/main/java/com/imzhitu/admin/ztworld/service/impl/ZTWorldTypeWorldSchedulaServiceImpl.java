@@ -81,8 +81,8 @@ public class ZTWorldTypeWorldSchedulaServiceImpl extends BaseServiceImpl impleme
 		worldTypeWorldSchedulaDao.delTypeWorldSchedulaByIds(ids);
 	}
 	@Override
-	public void updateCompleteByIds(Integer[] ids,Integer complete)throws Exception{
-		worldTypeWorldSchedulaDao.updateCompleteByIds(ids, complete);
+	public void updateCompleteByWorldIds(Integer[] worldIds,Integer complete)throws Exception{
+		worldTypeWorldSchedulaDao.updateCompleteByWorldIds(worldIds, complete);
 	}
 	
 	@Override

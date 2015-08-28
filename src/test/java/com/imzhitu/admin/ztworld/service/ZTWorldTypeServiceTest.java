@@ -26,7 +26,7 @@ public class ZTWorldTypeServiceTest extends BaseTest {
 	@Test
 	public void testBuildTypeWorld() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildTypeWorld("2014-06-09","2014-06-16",0, 1, null, null, null, null, null,null,0, 1, 10, jsonMap);
+		service.buildTypeWorld(null,null,0, 1, null, null, null, null, "schedulaDate","desc",0, 1, 10, jsonMap);
 		logObj(jsonMap);
 	}
 	

@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
@@ -18,13 +17,14 @@ import com.imzhitu.admin.common.pojo.InteractTypeOptionWorldDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.UserLevelListDto;
 import com.imzhitu.admin.common.pojo.UserTrust;
+import com.imzhitu.admin.common.pojo.ZTWorldTypeWorldDto;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
 import com.imzhitu.admin.interact.mapper.InteractTypeOptionWorldMapper;
 import com.imzhitu.admin.interact.service.InteractTypeOptionWorldService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
-import com.imzhitu.admin.ztworld.dao.HTWorldTypeWorldDao;
+import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeService;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeWorldSchedulaService;
 
@@ -45,7 +45,7 @@ public class InteractTypeOptionWorldServiceImpl  extends BaseServiceImpl impleme
 	@Autowired
 	private ZTWorldTypeWorldSchedulaService typeWorldSchedulaService;
 	@Autowired
-	private HTWorldTypeWorldDao worldTypeWorldDao;
+	private ZTWorldTypeWorldMapper typeWorldMapper;
 	
 	@Value("${urlPrefix}")
 	private String urlPrefix;
@@ -201,6 +201,7 @@ public class InteractTypeOptionWorldServiceImpl  extends BaseServiceImpl impleme
 	 */
 	@Override
 	public void reSort(String[] wids,Date schedula,Integer operatorId)throws Exception{
+		ZTWorldTypeWorldDto worldDto = new ZTWorldTypeWorldDto();
 		for(int i= wids.length -1;i >= 0; i--){
 			String wid = wids[i];
 			if(wid != null && wid != ""){
@@ -211,7 +212,9 @@ public class InteractTypeOptionWorldServiceImpl  extends BaseServiceImpl impleme
 					worldTypeService.saveTypeWorld(worldId, 1, "旅行", operatorId);
 					worldTypeService.updateTypeWorldReview(worldId, dto.getReView());
 					typeWorldSchedulaService.addTypeWorldSchedula(worldId, new Date(t),operatorId, 0);
-					worldTypeWorldDao.updateIsSorted(new Integer[]{worldId}, 1);
+					worldDto.setWorldId(worldId);
+					worldDto.setIsSorted(1);
+					typeWorldMapper.updateTypeWorld(worldDto);
 					typeOptionWorldMapper.delTypeOptionWorldByWid(worldId);
 				}catch(Exception e){
 					e.printStackTrace();

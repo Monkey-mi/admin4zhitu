@@ -45,7 +45,7 @@ public interface ZTWorldTypeWorldSchedulaService extends BaseService{
 	 * @param complete
 	 * @throws Exception
 	 */
-	public void updateCompleteByIds(Integer[] ids,Integer complete)throws Exception;
+	public void updateCompleteByWorldIds(Integer[] worldIds,Integer complete)throws Exception;
 	
 	/**
 	 * 查询分类织图计划

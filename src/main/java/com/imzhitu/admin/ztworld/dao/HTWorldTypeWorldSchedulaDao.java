@@ -15,7 +15,7 @@ public interface HTWorldTypeWorldSchedulaDao extends BaseDao{
 	public long queryTypeWorldSchedulaCountByMaxId(Date maxSchedula,Map<String , Object> attr);
 	public List<HTWorldTypeWorldSchedulaDto> queryTypeWorldSchedula(Date maxSchedula,Map<String , Object> attr,RowSelection rowSelection);
 	public List<HTWorldTypeWorldSchedulaDto> queryTypeWorldSchedula(Map<String , Object> attr,RowSelection rowSelection);
-	public void updateCompleteByIds(Integer[] ids,Integer complete);
+	public void updateCompleteByWorldIds(Integer[] ids,Integer complete);
 	public List<Integer> getWorldIdBySchedula(Date begin,Date end);
 	public boolean checkIsExistByWid(Integer wid);
 	public void updateTypeWorldSchedula(Integer world_id,Date schedula,Date modifyDate,Integer operatorId,Integer complete);

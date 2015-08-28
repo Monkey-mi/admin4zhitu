@@ -59,7 +59,200 @@
 	
 	<!-- 分页查询 -->
 	<select id="queryTypeWorld" resultMap="ZTWorldTypeWorldMap">
-	
+		select hw.id,hw.world_id,hw.type_id,hw.superb,hw.valid as type_valid,hw.serial,hw.weight,hw.recommender_id,hw.date_add,hw.date_modify,hw.review ,
+			   u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
+			   u0.signature,u0.address,u0.province ,u0.city ,u0.register_date,u0.user_label,u0.star,u0.trust,
+			   u0.phone_code,u0.online,u0.platform_verify
+		from hts.htworld_htworld as h,
+			 hts.htworld_type_world hw , 
+			 hts.user_info as u0,
+			 hts.htworld_type as ht,
+			 hts_admin.admin_user_info as aui
+			 <if test="sort != null and order != null">
+			 	,hts_admin.interact_type_schedula its 
+			 </if>
+		<where>
+			h.id=hw.world_id and h.author_id=u0.id and ht.id=hw.type_id and ht.valid=1 and aui.id=hw.recommender_id and h.valid = 1
+			 <if test="sort != null and order != null">
+			 	and hw.world_id=its.world_id
+			 </if>
+			<if test="worldId != null">
+				and hw.world_id = #{worldId}
+			</if>
+			<if test="typeId != null">
+				and hw.type_id = #{typeId}
+			</if>
+			<if test="valid != null">
+				and hw.valid = #{valid}
+			</if>
+			<if test="superb != null">
+				and hw.superb = #{superb}
+			</if>
+			<if test="weight != null">
+				and hw.weight = #{weight}
+			</if>
+			<if test="recommenderId != null and recommenderId == 0 ">
+				and hw.recommender_id = #{recommenderId} 
+			</if>
+			<if test="recommenderId != null and recommenderId != 0 ">
+				and hw.recommender_id != 0
+			</if>
+			<if test="isSorted != null">
+				and hw.is_sorted = #{isSorted}
+			</if>
+			<if test="addDate != null and modifyDate != null">
+				and hw.date_added between #{addDate} and #{modifyDate}
+			</if>
+			<!-- 多种排序，导致maxId的选择多样化，因为数据量的变化少，决定不采用maxId 
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[hw.serial < #{maxId}]]>
+			</if>
+			-->
+		</where> 
+		<choose>
+			<when test="sort != null and order != null">
+				order by #{sort} #{order}
+			</when>
+			<otherwise>
+				order by hw.serial desc
+			</otherwise>
+		</choose>
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
+	<!-- 分页查询总数 -->
+	<select id="queryTypeWorldTotalCount" resultType="long">
+		select count(*)
+		from hts.htworld_htworld as h,
+			 hts.htworld_type_world hw , 
+			 hts.htworld_type as ht
+		<where>
+			h.id=hw.world_id and ht.id=hw.type_id and ht.valid=1  and h.valid = 1
+			<if test="worldId != null">
+				and hw.world_id = #{worldId}
+			</if>
+			<if test="typeId != null">
+				and hw.type_id = #{typeId}
+			</if>
+			<if test="valid != null">
+				and hw.valid = #{valid}
+			</if>
+			<if test="superb != null">
+				and hw.superb = #{superb}
+			</if>
+			<if test="weight != null">
+				and hw.weight = #{weight}
+			</if>
+			<if test="recommenderId != null">
+				and hw.recommender_id = #{recommenderId} 
+			</if>
+			<if test="isSorted != null">
+				and hw.is_sorted = #{isSorted}
+			</if>
+			<if test="addDate != null and modifyDate != null">
+				and hw.date_added between #{addDate} and #{modifyDate}
+			</if>
+			<!-- 多种排序，导致maxId的选择多样化，因为数据量的变化少，决定不采用maxId
+			<if test="maxId != null and maxId != 0">
+				and <![CDATA[hw.serial < #{maxId}]]>
+			</if>
+			-->
+		</where> 
+	</select>
+	
+	
+	<delete id="batchDeleteTypeWorldByWorldIds">
+		delete from hts.htworld_type_world 
+		where world_id in
+		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<delete id="batchDeleteTypeWorldByIds">
+		delete from hts.htworld_type_world 
+		where id in
+		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="updateAllRecommendTypeWorldValid">
+		update hts.htworld_type_world 
+		set valid=#{afterValid} 
+		where recommender_id != 0 and valid=#{beforeValid}
+	</update>
+	
+	<update id="updateTypeWorld">
+		update hts.htworld_type_world 
+		<set>
+			<if test="typeId != null">
+				type_id = #{typeId},
+			</if>
+			<if test="superb != null">
+				superb = #{superb},
+			</if>
+			<if test="weight != null">
+				weight = #{weight},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="serial != null">
+				serial = #{serial},
+			</if>
+			<if test="reView != null">
+				review = #{reView},
+			</if>
+			<if test="recommenderId != null">
+				recommender_id = #{recommenderId},
+			</if>
+			<if test="isSorted != null">
+				is_sorted = #{isSorted},
+			</if>
+			date_modify = NOW()
+		</set>
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+		</where>
+	</update>
+	
+	<update id="updateTypeWorldValidByWorldIds">
+		update hts.htworld_type_world
+		set valid = #{valid}
+		where world_id in
+		<foreach collection="worldIds" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 根据worldIds查询数据 -->
+	<select id="queryTypeWorldByWorldIds" resultMap="ZTWorldTypeWorldMap">
+		select hw.id,hw.world_id,hw.type_id,hw.superb,hw.valid as type_valid,hw.serial,hw.weight,hw.recommender_id,hw.date_add,hw.date_modify,hw.review ,
+			   u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
+			   u0.signature,u0.address,u0.province ,u0.city ,u0.register_date,u0.user_label,u0.star,u0.trust,
+			   u0.phone_code,u0.online,u0.platform_verify
+		from hts.htworld_htworld as h,
+			 hts.htworld_type_world hw , 
+			 hts.user_info as u0,
+			 hts.htworld_type as ht,
+			 hts_admin.admin_user_info as aui
+		where
+			h.id=hw.world_id and ht.id=hw.type_id and ht.valid=1  and h.valid = 1 and h.shield = 0 and hw.world_id in
+		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 根据userId查询分类总数 -->
+	<select id="queryTypeWorldCountByUserId" resultType="long">
+		select count(htw.id)
+		from hts.htworld_type_world htw,hts.htworld_htworld hh 
+		where  htw.world_id=hh.id and hh.author_id=#{userId} and hh.valid=1 and hh.shield=0 and htw.valid=1 and htw.superb=1
+	</select>
 </mapper>

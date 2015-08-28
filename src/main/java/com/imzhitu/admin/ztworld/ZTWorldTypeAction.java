@@ -10,6 +10,7 @@ import com.imzhitu.admin.ztworld.service.ZTWorldTypeService;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import net.sf.json.JSONArray;
@@ -59,8 +60,8 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 	private Integer isSorted;//是否被排序
 	private String schedula;
 	
-	private String beginDate;
-	private String endDate;
+	private Date beginDate;
+	private Date endDate;
 	
 	private String myOrder;//定义自己的排序
 	private String mySort;//定义自己的排序
@@ -93,16 +94,16 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 
 
 	
-	public void setBeginDate(String beginDate){
+	public void setBeginDate(Date beginDate){
 		this.beginDate = beginDate;
 	}
-	public String getBeginDate(){
+	public Date getBeginDate(){
 		return this.beginDate;
 	}
-	public void setEndDate(String endDate){
+	public void setEndDate(Date endDate){
 		this.endDate = endDate;
 	}
-	public String getEndDate(){
+	public Date getEndDate(){
 		return this.endDate;
 	}
 	

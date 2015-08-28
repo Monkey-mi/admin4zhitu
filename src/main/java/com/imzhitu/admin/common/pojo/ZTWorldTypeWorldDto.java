@@ -6,11 +6,12 @@ import java.util.Date;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.hts.web.base.constant.Tag;
+import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.pojo.ObjectWithUserVerify;
 import com.hts.web.common.pojo.UserInfoDto;
 import com.imzhitu.admin.common.WorldWithInteract;
 
-public class ZTWorldTypeWorldDto implements Serializable, WorldWithInteract,
+public class ZTWorldTypeWorldDto extends AbstractNumberDto implements Serializable, WorldWithInteract,
 		ObjectWithUserVerify {
 
 	/**
@@ -78,6 +79,11 @@ public class ZTWorldTypeWorldDto implements Serializable, WorldWithInteract,
 	private Integer trustOperatorId;//添加为信任的人的id
 	
 	private String reView;		//精选点评
+	
+	private Integer isSorted; //是否被排序过，0未排序，1已排序
+	
+	private String order;		//用以数据的排序
+	private String sort;		//用户数据的排序
 	
 	public String getReView() {
 		return reView;
@@ -563,6 +569,24 @@ public class ZTWorldTypeWorldDto implements Serializable, WorldWithInteract,
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Date getModifyDate(){
 		return this.modifyDate;
+	}
+	public Integer getIsSorted() {
+		return isSorted;
+	}
+	public void setIsSorted(Integer isSorted) {
+		this.isSorted = isSorted;
+	}
+	public String getOrder() {
+		return order;
+	}
+	public void setOrder(String order) {
+		this.order = order;
+	}
+	public String getSort() {
+		return sort;
+	}
+	public void setSort(String sort) {
+		this.sort = sort;
 	}
 
 }

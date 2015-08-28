@@ -18,6 +18,7 @@ import com.imzhitu.admin.common.pojo.ZTWorldTypeWorldDto;
  * @author tianjie
  *
  */
+@Deprecated
 public interface HTWorldTypeWorldDao extends BaseDao {
 
 	

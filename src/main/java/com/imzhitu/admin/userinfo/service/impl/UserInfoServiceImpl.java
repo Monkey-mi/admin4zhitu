@@ -29,6 +29,7 @@ import com.imzhitu.admin.userinfo.mapper.UserLoginPersistentMapper;
 import com.imzhitu.admin.userinfo.mapper.UserSocialAccountMapper;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeWorldDao;
+import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper;
 
 @Service
 public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoService {
@@ -66,7 +67,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	private UserZombieDao userZombieDao;
 	
 	@Autowired
-	private HTWorldTypeWorldDao typeWorldDao;
+//	private HTWorldTypeWorldDao typeWorldDao;
+	private ZTWorldTypeWorldMapper typeWorldMapper;
 	
 	@Value("${push.customerServiceId}")
 	private Integer customerServiceId;
@@ -132,7 +134,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		List<UserInfoDto> list = userInfoMapper.queryUserInfoDto(dto);
 		UserInfoDto userInfo = list.get(0);
 		boolean r = userZombieDao.isZombie(userId);
-		long superbCount = typeWorldDao.queryTypeWorldCountByUserId(userId);
+		long superbCount = typeWorldMapper.queryTypeWorldCountByUserId(userId);
 		jsonMap.put("superbCount", superbCount);
 		if(r)jsonMap.put("zombie", 1);
 		else jsonMap.put("zombie", 0);
