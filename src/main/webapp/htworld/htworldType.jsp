@@ -18,7 +18,7 @@ var maxSerial = 0,
 	init = function() {
 		myQueryParams = {
 			'maxSerial' : maxSerial,
-			'recommenderId' : 1,
+//			'recommenderId' : 1,
 			'myOrder':'desc',
 			'mySort' :'serial'
 		},
@@ -638,6 +638,9 @@ function searchType() {
 	if(myQueryParams.isSorted == 1 && myQueryParams.valid != ""){
 		myQueryParams.myOrder=" desc";
 		myQueryParams.mySort="schedula";
+	}else{
+		myQueryParams.myOrder=" desc";
+		myQueryParams.mySort="serial";
 	}
 	$("#htm_table").datagrid("load",myQueryParams);
 }
