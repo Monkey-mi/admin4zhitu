@@ -113,6 +113,9 @@
 			<when test='sort != null and sort == "schedula"'>
 				order by its.schedula desc
 			</when>
+			<when test='sort !=null and sort =="id"'>
+				order by hw.id desc
+			</when>
 			<otherwise>
 				order by hw.serial desc
 			</otherwise>
