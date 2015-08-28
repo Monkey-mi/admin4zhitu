@@ -27,19 +27,22 @@ var maxDate,
 	],
 	onBeforeInit = function() {
 		showPageLoading();
-		$('#startTime').datebox({
-			onSelect: function(date){
-				myQueryParams.beginDate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" 00:00:00";
-				$("#htm_table").load(myQueryParams);
-			}
-		});
+		$('#ss-startTime').datebox();
 		var today = new Date();
-		$('#startTime').datebox('setValue', today.getFullYear()+"-"+(today.getMonth()+1)+"-"+today.getDate());
+		$('#ss-startTime').datebox('setValue', today.getFullYear()+"-"+(today.getMonth()+1)+"-"+today.getDate());
 	},
 	onAfterInit = function() {
 		removePageLoading();
 		$("#main").show();
 	};
+	
+	function querySum() {
+		var date = $('#ss-startTime').datebox('getValue');
+		var interval = $("#ss-interval").combobox('getValue');
+		myQueryParams.beginDate = date+" 00:00:00";
+		myQueryParams.interval = interval;
+		$("#htm_table").datagrid('load', myQueryParams);
+	}
 
 </script>
 </head>
@@ -48,8 +51,14 @@ var maxDate,
 		<table id="htm_table"></table>
 		<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
-	        <span class="search_label">起始时间:</span><input id="startTime" name="beginDate" />
-	</div>  
+	        <span class="search_label">起始时间:</span><input id="ss-startTime" name="beginDate" />
+	        <span class="search_label">间隔:</span>
+	        <select id="ss-interval" class="easyui-combobox" name="shield" style="width:75px;">
+		        <option value="3600000" selected="selected">1小时</option>
+		        <option value="86400000">1天</option>
+	   		</select>
+	   		<a href="javascript:void(0);" onclick="querySum();" class="easyui-linkbutton" title="查询" plain="true" iconCls="icon-search">查询</a>
+		</div>  
 	</div>
 </body>
 </html>

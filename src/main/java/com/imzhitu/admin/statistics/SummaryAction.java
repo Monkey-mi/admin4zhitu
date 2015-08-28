@@ -57,6 +57,15 @@ public class SummaryAction extends BaseCRUDAction {
 		this.maxDate = maxDate;
 	}
 
+	
+	public Integer getInterval() {
+		return interval;
+	}
+
+	public void setInterval(Integer interval) {
+		this.interval = interval;
+	}
+
 	/**
 	 * 查询汇总信息
 	 * 

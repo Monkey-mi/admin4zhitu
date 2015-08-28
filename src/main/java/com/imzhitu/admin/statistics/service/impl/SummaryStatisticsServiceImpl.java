@@ -191,7 +191,8 @@ public class SummaryStatisticsServiceImpl extends BaseServiceImpl implements
 		ca.set(Calendar.SECOND, 0);
 		beginDate = ca.getTime();
 		
-		if(nowDay == beginDay) {
+		// 如果以小时为区间，则只查询当天数据
+		if(nowDay == beginDay || interval > 1000*60*60) {
 			endDate = today;
 		} else {
 			ca.add(Calendar.DAY_OF_MONTH, 1);
