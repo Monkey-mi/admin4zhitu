@@ -195,4 +195,13 @@ public interface ChannelWorldMapper {
 	 */
 	@DataSource("master")
 	public void updateSuperbNotified(@Param("channelId")Integer channelId,@Param("worldId")Integer worldId);
+	
+	/**
+	 * 在增加频道中数据的同时，加入通知表中的基础数据（作者ID，频道ID，织图ID）
+	 * @param world 
+		*	2015年8月28日
+		*	mishengliang
+	 */
+	@DataSource("master")
+	public void saveNotify(OpChannelWorld world);
 }

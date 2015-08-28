@@ -389,6 +389,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			}
 			try {
 				channelWorldMapper.save(world);
+				channelWorldMapper.saveNotify(world);
 			} catch(DuplicateKeyException e) {
 			}
 		}
