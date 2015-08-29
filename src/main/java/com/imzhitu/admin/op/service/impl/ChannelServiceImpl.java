@@ -108,6 +108,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	public Logger logger = Logger.getLogger(ChannelServiceImpl.class);
 	
+	public PropertiesFileAddAndQuery propertiesFileAddAndQuery; 
+	
 	public Integer getChannelStarLimit() {
 		return channelStarLimit;
 	}
@@ -547,6 +549,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void addChannelWorldRecommendMsg(Integer id,String channlMsgType) throws Exception {
+		propertiesFileAddAndQuery = new PropertiesFileAddAndQuery();
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldById(id);
 		if(world == null) 
 			throw new HTSException("记录已经被删除");
@@ -564,8 +567,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			
 /*			String msg = CHANNEL_WORLD_MSG_HEAD + channelName + CHANNEL_WORLD_MSG_FOOT;
 			String tip = recipientName + msg;*/
-			String filePath = "src/main/resources/channelNotify.properties";
-			String msg = PropertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
+			String filePath = "/channelNotify.properties";
+			String msg = propertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
 			String tip = msg.replaceAll("userName", recipientName);
 			tip = tip.replaceAll("channelName", channelName);
 /*			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
@@ -592,6 +595,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void addChannelWorldRecommendMsgByWorldId(Integer worldId,String channlMsgType,Integer channelId) throws Exception {
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId,channelId);
+		propertiesFileAddAndQuery = new PropertiesFileAddAndQuery();
 		if(world == null) 
 			throw new HTSException("记录已经被删除");
 		Integer notified = world.getNotified();
@@ -608,8 +612,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 /*			String msg = CHANNEL_WORLD_MSG_HEAD + channelName + CHANNEL_WORLD_MSG_FOOT;
 			String tip = recipientName + msg;
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
-			String filePath = "src/main/resources/channelNotify.properties";
-			String msg = PropertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
+			String filePath = "/channelNotify.properties";
+			String msg = propertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
 			if (msg == null) throw new Exception("所取的通知为空");
 			String tip = msg.replaceAll("userName", recipientName);
 			tip = tip.replaceAll("channelName", channelName);

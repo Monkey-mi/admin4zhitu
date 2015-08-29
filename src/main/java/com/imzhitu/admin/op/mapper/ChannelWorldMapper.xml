@@ -183,8 +183,8 @@
 	</insert>
 	
 	<insert id="saveNotify">
-		insert into hts_admin.op_channel_notified (author_id,channel_id,world_id)
-	 	values (#{authorId},#{channelId}, #{worldId})
+		insert into hts_admin.op_channel_notified (user_id,channel_id,world_id,superb_notified)
+	 	values (#{authorId},#{channelId}, #{worldId},0)
 	</insert>
 	
 	<update id="updateId">

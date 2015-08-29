@@ -21,8 +21,9 @@ public class PropertiesFileAddAndQuery {
 		*	2015年8月26日
 		*	mishengliang
 	 */
-	public static void add(String key,String value,String filePath,String comments) throws Exception{
-		InputStream in = new FileInputStream(filePath);
+	public  void add(String key,String value,String filePath,String comments) throws Exception{
+//		InputStream in = new FileInputStream(filePath);
+		InputStream in =	this.getClass().getResourceAsStream(filePath);
 		BufferedReader bf = new BufferedReader(new InputStreamReader(in, "utf-8"));
 		Properties props = new Properties();
 		props.load(bf);
@@ -43,9 +44,10 @@ public class PropertiesFileAddAndQuery {
 		*	2015年8月26日
 		*	mishengliang
 	 */
-	public static String  query(String key,String filePath) throws Exception {
+	public  String  query(String key,String filePath) throws Exception {
 		Properties prop = new Properties();
-		InputStream in = new FileInputStream(filePath); 
+//		InputStream in = new FileInputStream(filePath); 
+		InputStream in =	this.getClass().getResourceAsStream(filePath);
 		BufferedReader bf = new BufferedReader(new InputStreamReader(in, "utf-8"));
 		prop.load(bf);
 		in.close();
