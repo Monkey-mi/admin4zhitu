@@ -279,4 +279,36 @@
 		from hts.htworld_type_world htw,hts.htworld_htworld hh 
 		where  htw.world_id=hh.id and hh.author_id=#{userId} and hh.valid=1 and hh.shield=0 and htw.valid=1 and htw.superb=1
 	</select>
+	
+	<!-- 查询总数，为了速度,只查询type_world那张表 -->
+	<select id="selectTypeWorldTotalCount" resultType="long">
+		select count(*)
+		from  hts.htworld_type_world hw 
+		<where>
+			<if test="worldId != null">
+				and hw.world_id = #{worldId}
+			</if>
+			<if test="typeId != null">
+				and hw.type_id = #{typeId}
+			</if>
+			<if test="valid != null">
+				and hw.valid = #{valid}
+			</if>
+			<if test="superb != null">
+				and hw.superb = #{superb}
+			</if>
+			<if test="weight != null">
+				and hw.weight = #{weight}
+			</if>
+			<if test="recommenderId != null">
+				and hw.recommender_id = #{recommenderId} 
+			</if>
+			<if test="isSorted != null">
+				and hw.is_sorted = #{isSorted}
+			</if>
+			<if test="addDate != null and modifyDate != null">
+				and hw.date_added between #{addDate} and #{modifyDate}
+			</if>
+		</where> 
+	</select>
 </mapper>

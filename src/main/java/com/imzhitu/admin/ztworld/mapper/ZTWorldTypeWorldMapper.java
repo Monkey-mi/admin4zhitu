@@ -83,4 +83,12 @@ public interface ZTWorldTypeWorldMapper {
 	 */
 	@DataSource("slave")
 	public long queryTypeWorldCountByUserId(@Param("userId")Integer userId);
+	
+	/**
+	 * 查询总数，为了速度,只查询type_world那张表
+	 * @param dto
+	 * @return
+	 */
+	@DataSource("slave")
+	public long selectTypeWorldTotalCount(ZTWorldTypeWorldDto dto);
 }

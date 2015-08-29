@@ -144,25 +144,34 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void saveTypeWorld(Integer worldId, Integer typeId, String worldType,
 			Integer recommenderId) throws Exception {
-		//删除原有的精选
-		Integer[] worldIds = new Integer[1];
-		worldIds[0] = worldId;
-		typeWorldMapper.batchDeleteTypeWorldByWorldIds(worldIds);
-		
-		//更新，并添加记录
-		worldDao.updateWorldTypeLabel(worldId, typeId, worldType);
-		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);	
-//		Integer serial = keyGenService.generateId(Admin.KEYGEN_ZT_TYPEWORLD_SERIAL);
+		if ( worldId == null){
+			throw new Exception("worldId is null");
+		}
 		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
-		dto.setId(id);
 		dto.setWorldId(worldId);
+		long r = typeWorldMapper.selectTypeWorldTotalCount(dto);
+		
 		dto.setTypeId(typeId);
 		dto.setSuperb(Tag.TRUE);
 		dto.setValid(Tag.FALSE);
-//		dto.setSerial(serial);
 		dto.setWeight(0);
 		dto.setRecommenderId(recommenderId);
-		typeWorldMapper.saveTypeWorld(dto);		
+		
+		if(r == 0 ){
+			//若不存在 则新增
+			Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);	
+			Integer serial = keyGenService.generateId(Admin.KEYGEN_ZT_TYPEWORLD_SERIAL);
+			dto.setId(id);
+			dto.setSerial(serial);
+			typeWorldMapper.saveTypeWorld(dto);	
+		}else{
+			//若存在则修改
+			typeWorldMapper.updateTypeWorld(dto);
+		}
+		
+		//更新，并添加记录
+		worldDao.updateWorldTypeLabel(worldId, typeId, worldType);
+			
 	}
 	
 	@Override
