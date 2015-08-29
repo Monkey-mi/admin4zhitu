@@ -13,8 +13,7 @@ import com.imzhitu.admin.propertiesSet.service.propertiesSetService;
 @Service
 public class propertiesSetServiceImpl implements propertiesSetService {
 	
-public 	PropertiesFileAddAndQuery propertiesFileAddAndQuery; 
-	
+
 /*	
  *    热加载实现
  * private static File File = new File("/channelNotify.properties"); 
@@ -32,6 +31,7 @@ public 	PropertiesFileAddAndQuery propertiesFileAddAndQuery;
 	public String queryNotifyByChannelId(Integer channelId,Map<String , Object> jsonMap) throws Exception {
 		String filePath = "/channelNotify.properties";
 		Map<String, String> notifyMap = new HashMap<String, String>();
+		PropertiesFileAddAndQuery propertiesFileAddAndQuery = new PropertiesFileAddAndQuery();
 		
 		String channelAdd = propertiesFileAddAndQuery.query(channelId+"_add",filePath);
 		String channelStar = propertiesFileAddAndQuery.query(channelId+"_star",filePath);
@@ -47,6 +47,8 @@ public 	PropertiesFileAddAndQuery propertiesFileAddAndQuery;
 	public void addNotifyByChannelId(Integer channelId,Map<String, String> notifyMap,Map<String , Object> jsonMap) throws Exception {
 		String filePath = "/channelNotify.properties";
 	 AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	 PropertiesFileAddAndQuery propertiesFileAddAndQuery = new PropertiesFileAddAndQuery();
+	 
 		Integer userId = user.getId();
 		String comments = userId + "";
 		String channelAdd = notifyMap.get("channelAdd");
