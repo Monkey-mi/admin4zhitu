@@ -99,11 +99,12 @@
 	<select id="queryChannelWorlds" resultMap="OpChannelWorldDtoMap">
 		select cw.id as channel_world_id,cw.channel_id,cw.world_id,cw.valid as channel_world_valid,
 		ocws.superb as channel_world_schedula_superb,
-		cw.notified,cw.weight,cw.superb,cw.superb_notified,
+		cw.notified,cw.weight,cw.superb,
 		c.channel_name, c.channel_title,c.channel_icon, h.*,u.user_name,u.user_avatar,u.star,u.trust
-		,ISNULL(ocws.finish) as beSchedula ,IFNULL(ocws.finish,0) as schedulaComplete, IFNULL(oct.id, 0) as is_cover
+		,ISNULL(ocws.finish) as beSchedula ,IFNULL(ocws.finish,0) as schedulaComplete, IFNULL(oct.id, 0) as is_cover,
+		ISNULL(ocn.superb_notified,0)
 		from 
-		(select ocw.*,ocn.superb_notified from hts.operations_channel_world ocw,hts_admin.op_channel_notified ocn
+		(select ocw.* from hts.operations_channel_world ocw
 			
 		<where>
 			<if test="channelId != null"> ocw.channel_id=#{channelId}</if>
@@ -114,14 +115,15 @@
 			<if test="weight != null"> AND ocw.weight=#{weight}</if>
 			<if test="notified != null"> AND ocw.notified=#{notified}</if>
 			<if test="maxId != null and maxId != 0"><![CDATA[ AND ocw.id<=#{maxId}]]></if>
-			AND ocw.channel_id=ocn.channel_id AND ocw.world_id=ocn.world_id
 		</where>
 		order by serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 		) as cw left join hts_admin.op_channel_world_schedula ocws 
 			on cw.world_id = ocws.world_id and ocws.channel_id=cw.channel_id
 			left join hts_admin.op_channel_thumbnail oct 
-			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id,
+			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id
+			left join hts_admin.op_channel_notified ocn
+			on cw.channel_id=ocn.channel_id and cw.world_id=ocn.world_id,
 			hts.htworld_htworld as h, hts.user_info as u, hts.operations_channel as c
 		 where cw.world_id=h.id and cw.author_id=u.id and cw.channel_id = c.id
 		 order by cw.serial desc
