@@ -197,9 +197,9 @@
 		</div>
 		<div>
 			<span style="font-size: 20px">提示：</span>输入时请用 <span
-				style="color: red">$(userName) </span>代替 <span style="color: blue">用户名</span>
+				style="color: red">  userName  </span>代替 <span style="color: blue">用户名</span>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用 <span
-				style="color: red">$(channelName) </span>代替 <span
+				style="color: red">  channelName  </span>代替 <span
 				style="color: blue">频道名</span>。
 		</div>
 		<hr />

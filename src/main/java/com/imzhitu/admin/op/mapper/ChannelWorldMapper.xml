@@ -258,6 +258,4 @@
 		where channel_id=#{channelId} and world_id=#{worldId};
 	</update>
 	
-	
-	
 </mapper>
