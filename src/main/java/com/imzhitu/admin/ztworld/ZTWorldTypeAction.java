@@ -211,7 +211,7 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 				setMyOrder(order);
 			}
 				
-			worldTypeService.buildTypeWorld(beginDate,endDate,maxSerial, typeId, valid, superb, weight,recommenderId, mySort, myOrder, isSorted,page, rows, jsonMap);
+			worldTypeService.buildTypeWorld(worldId,beginDate,endDate,maxSerial, typeId, valid, superb, weight,recommenderId, mySort, myOrder, isSorted,page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

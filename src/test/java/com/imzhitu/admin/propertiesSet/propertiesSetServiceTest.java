@@ -20,7 +20,7 @@ public class propertiesSetServiceTest extends BaseTest {
 		 service.queryNotifyByChannelId(null,jsonMap);
 	}
 	
-	@Test
+//	@Test
 	public void addChannelNotifyTest() throws Exception {
 	Map<String, Object> jsonMap = new HashMap<String, Object>();
 	Map<String, String> notifyMap =new HashMap<String, String>();

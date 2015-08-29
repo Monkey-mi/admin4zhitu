@@ -152,14 +152,14 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		//更新，并添加记录
 		worldDao.updateWorldTypeLabel(worldId, typeId, worldType);
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);	
-		Integer serial = keyGenService.generateId(Admin.KEYGEN_ZT_TYPEWORLD_SERIAL);
+//		Integer serial = keyGenService.generateId(Admin.KEYGEN_ZT_TYPEWORLD_SERIAL);
 		ZTWorldTypeWorldDto dto = new ZTWorldTypeWorldDto();
 		dto.setId(id);
 		dto.setWorldId(worldId);
 		dto.setTypeId(typeId);
 		dto.setSuperb(Tag.TRUE);
 		dto.setValid(Tag.FALSE);
-		dto.setSerial(serial);
+//		dto.setSerial(serial);
 		dto.setWeight(0);
 		dto.setRecommenderId(recommenderId);
 		typeWorldMapper.saveTypeWorld(dto);		
@@ -180,7 +180,7 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	}
 	
 	@Override
-	public void buildTypeWorld(Date beginDate,Date endDate,int maxSerial, Integer typeId, Integer valid, Integer superb, Integer weight,Integer recommenderId,
+	public void buildTypeWorld(Integer worldId,Date beginDate,Date endDate,int maxSerial, Integer typeId, Integer valid, Integer superb, Integer weight,Integer recommenderId,
 			final String sort, final String order, Integer isSorted,int page, int rows, Map<String, Object> jsonMap) throws Exception{
 		
 		ZTWorldTypeWorldDto typeWorlddto = new ZTWorldTypeWorldDto();
@@ -197,6 +197,7 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		typeWorlddto.setRecommenderId(recommenderId);
 		typeWorlddto.setOrder(order);
 		typeWorlddto.setSort(sort);
+		typeWorlddto.setWorldId(worldId);
 		
 		long total = typeWorldMapper.queryTypeWorldTotalCount(typeWorlddto);
 		List<ZTWorldTypeWorldDto> list = null;

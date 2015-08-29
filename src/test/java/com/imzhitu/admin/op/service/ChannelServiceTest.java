@@ -182,7 +182,7 @@ public class ChannelServiceTest extends BaseTest {
 		});
 	}
 	
-	@Test
+//	@Test
 	public void testSaveChannelWorld() throws Exception {
 		OpChannelWorld world = new OpChannelWorld();
 		world.setChannelId(1);
@@ -217,7 +217,7 @@ public class ChannelServiceTest extends BaseTest {
 	}
 	
 	
-	@Test
+//	@Test
 	public void testUpdateChannelWorldValid() throws Exception {
 		service.updateChannelWorldValid("12", Tag.TRUE,"_add");
 	}

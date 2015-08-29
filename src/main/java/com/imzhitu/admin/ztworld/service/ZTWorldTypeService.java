@@ -60,7 +60,7 @@ public interface ZTWorldTypeService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void buildTypeWorld(Date beginDate,Date endDate,int maxId, Integer typeId, Integer valid, Integer superb, Integer weight,Integer recommenderId,
+	public void buildTypeWorld(Integer worldId,Date beginDate,Date endDate,int maxId, Integer typeId, Integer valid, Integer superb, Integer weight,Integer recommenderId,
 			String sort, String order,Integer isSorted, int page, int rows, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
