@@ -102,7 +102,7 @@
 		cw.notified,cw.weight,cw.superb,
 		c.channel_name, c.channel_title,c.channel_icon, h.*,u.user_name,u.user_avatar,u.star,u.trust
 		,ISNULL(ocws.finish) as beSchedula ,IFNULL(ocws.finish,0) as schedulaComplete, IFNULL(oct.id, 0) as is_cover,
-		ISNULL(ocn.superb_notified,0)
+		IFNULL(ocn.superb_notified,0) as superb_notified
 		from 
 		(select ocw.* from hts.operations_channel_world ocw
 			
