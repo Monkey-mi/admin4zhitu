@@ -48,6 +48,23 @@
 		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
 		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
 		<result property="reView" column="review" jdbcType="VARCHAR"/>
+		
+		<result property="userInfo.id" column="author_id" jdbcType="INTEGER"/>
+		<result property="userInfo.userName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="userInfo.userAvatar" column="user_avatar" jdbcType="VARCHAR"/>
+		<result property="userInfo.userAvatarL" column="user_avatar_l" jdbcType="VARCHAR"/>
+		<result property="userInfo.sex" column="sex" jdbcType="INTEGER"/>
+		<result property="userInfo.email" column="email" jdbcType="VARCHAR"/>
+		<result property="userInfo.address" column="address" jdbcType="VARCHAR"/>
+		<result property="userInfo.province" column="province" jdbcType="VARCHAR"/>
+		<result property="userInfo.city" column="city" jdbcType="VARCHAR"/>
+		<result property="userInfo.registerDate" column="register_date" jdbcType="TIMESTAMP"/>
+		<result property="userInfo.signature" column="signature" jdbcType="VARCHAR"/>
+		<result property="userInfo.userLabel" column="user_label" jdbcType="VARCHAR"/>
+		<result property="userInfo.star" column="star" jdbcType="INTEGER"/>
+		<result property="userInfo.phoneCode" column="phone_code" jdbcType="INTEGER"/>
+		<result property="userInfo.online" column="online" jdbcType="INTEGER"/>
+		<result property="userInfo.platformVerify" column="platform_verify" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<!-- INSERT -->
@@ -236,20 +253,24 @@
 	
 	<!-- 根据worldIds查询数据 -->
 	<select id="queryTypeWorldByWorldIds" resultMap="ZTWorldTypeWorldMap">
-		select hw.id,hw.world_id,hw.type_id,hw.superb,hw.valid as type_valid,hw.serial,hw.weight,hw.recommender_id,hw.date_add,hw.date_modify,hw.review ,
+		select hw.id,hw.world_id,hw.type_id,hw.superb,hw.valid as type_valid,hw.serial,hw.weight,hw.recommender_id,hw.date_add,hw.date_modify,hw.review ,h.*,
 			   u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
 			   u0.signature,u0.address,u0.province ,u0.city ,u0.register_date,u0.user_label,u0.star,u0.trust,
 			   u0.phone_code,u0.online,u0.platform_verify
-		from hts.htworld_htworld as h,
-			 hts.htworld_type_world hw , 
-			 hts.user_info as u0,
-			 hts.htworld_type as ht,
-			 hts_admin.admin_user_info as aui
+		from (select * from hts.htworld_type_world where world_id in 
+				<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			 ) as hw LEFT JOIN 
+				hts.htworld_htworld as h ON h.id=hw.world_id
+			  LEFT JOIN 
+			 hts.user_info as u0 ON h.author_id=u0.id
+				LEFT JOIN 
+			 hts.htworld_type as ht ON ht.id=hw.type_id
+				LEFT JOIN
+			 hts_admin.admin_user_info as aui ON hw.recommender_id = aui.id
 		where
-			h.id=hw.world_id and ht.id=hw.type_id and ht.valid=1  and h.valid = 1 and h.shield = 0 and hw.world_id in
-		<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
-			#{item}
-		</foreach>
+			 ht.valid=1  and h.valid = 1 and h.shield = 0
 	</select>
 	
 	<!-- 根据userId查询分类总数 -->
