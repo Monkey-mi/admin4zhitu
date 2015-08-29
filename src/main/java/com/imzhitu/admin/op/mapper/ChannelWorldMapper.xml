@@ -93,7 +93,7 @@
 	<select id="queryChannelWorldByWorldId" resultMap="ChannelWorldMapForWorldId">
 		select ocw.*,oc.channel_name 
 			FROM hts.operations_channel_world ocw LEFT JOIN hts.operations_channel oc ON ocw.channel_id=oc.id
-			WHERE ocw.world_id=#{worldId} and ocw.valid=1
+			WHERE ocw.world_id=#{worldId} and ocw.channel_id=#{channelId} and ocw.valid=1
 	</select>
 	
 	<select id="queryChannelWorlds" resultMap="OpChannelWorldDtoMap">

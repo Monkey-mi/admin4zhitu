@@ -147,7 +147,7 @@ public interface ChannelWorldMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public OpChannelWorld queryChannelWorldByWorldId(Integer worldId);
+	public OpChannelWorld queryChannelWorldByWorldId(@Param("worldId")Integer worldId,@Param("channelId")Integer channelId);
 	
 	/**
 	 * 根据织图id，查询该织图入选了哪些频道
