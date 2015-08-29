@@ -8,16 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hts.web.base.StrutsKey;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.propertiesSet.service.propertiesSetService;
+import com.imzhitu.admin.propertiesSet.service.PropertiesSetService;
 
-public class propertiesSetAction extends BaseCRUDAction {
+public class PropertiesSetAction extends BaseCRUDAction {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1844920769848520753L;
 	
 	@Autowired
-	public propertiesSetService service;
+	public PropertiesSetService service;
 	private Integer channelId;
 	private String channelAdd;
 	private String channelStar;

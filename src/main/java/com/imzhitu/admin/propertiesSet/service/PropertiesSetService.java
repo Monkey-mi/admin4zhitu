@@ -2,7 +2,7 @@ package com.imzhitu.admin.propertiesSet.service;
 
 import java.util.Map;
 
-public interface propertiesSetService {
+public interface PropertiesSetService {
 	/**
 	 * 
 	 * @param channelId

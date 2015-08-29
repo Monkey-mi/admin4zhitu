@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.imzhitu.admin.common.PropertiesFileAddAndQuery;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
-import com.imzhitu.admin.propertiesSet.service.propertiesSetService;
+import com.imzhitu.admin.propertiesSet.service.PropertiesSetService;
 
 @Service
-public class propertiesSetServiceImpl implements propertiesSetService {
+public class PropertiesSetServiceImpl implements PropertiesSetService {
 	
 
 /*	
