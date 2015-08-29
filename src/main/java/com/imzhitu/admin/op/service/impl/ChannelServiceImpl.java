@@ -569,25 +569,32 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String tip = recipientName + msg;*/
 			String filePath = "/channelNotify.properties";
 			String msg = propertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
+			if (msg == null&&"_add".equals(channlMsgType)){
+				msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 啦！期待你的新作哦！";
+			}else if(msg == null&&"_superb".equals(channlMsgType)){
+				msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 精选啦！期待你的新作哦！";
+			}else if(msg == null&&"_star".equals(channlMsgType)){
+			//红人默认通知
+			}
 			String tip = msg.replaceAll("userName", recipientName);
 			tip = tip.replaceAll("channelName", channelName);
 /*			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
 			
-			// 保存消息
+/*			// 保存消息
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
 			
 			// 更新推送标记
 			world.setNotified(Tag.TRUE);
 			channelWorldMapper.update(world);
-	
-			// 推送消息
+	*/
+/*			// 推送消息
 			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
 				}
-			});
+			});*/
 		}
 	}
 	
@@ -614,7 +621,13 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
 			String filePath = "/channelNotify.properties";
 			String msg = propertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
-			if (msg == null) throw new Exception("所取的通知为空");
+			if (msg == null&&"_add".equals(channlMsgType)){
+				msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 啦！期待你的新作哦！";
+			}else if(msg == null&&"_superb".equals(channlMsgType)){
+				msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 精选啦！期待你的新作哦！";
+			}else if(msg == null&&"_star".equals(channlMsgType)){
+			//红人默认通知
+			}
 			String tip = msg.replaceAll("userName", recipientName);
 			tip = tip.replaceAll("channelName", channelName);
 			// 保存消息
