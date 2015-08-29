@@ -362,7 +362,7 @@ public interface ChannelService extends BaseService {
 	 * @param id
 	 * @throws Exception
 	 */
-	public void addChannelWorldRecommendMsgByWorldId(Integer worldid,String channlMsgType) throws Exception;
+	public void addChannelWorldRecommendMsgByWorldId(Integer worldid,String channlMsgType,Integer channelId) throws Exception;
 	
 	/**
 	 * 批量添加频道织图推荐消息

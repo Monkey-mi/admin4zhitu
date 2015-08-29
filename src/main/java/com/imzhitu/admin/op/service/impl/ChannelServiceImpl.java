@@ -590,8 +590,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	// && notified.equals(Tag.FALSE)
 	@Override
-	public void addChannelWorldRecommendMsgByWorldId(Integer worldId,String channlMsgType) throws Exception {
-		OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId);
+	public void addChannelWorldRecommendMsgByWorldId(Integer worldId,String channlMsgType,Integer channelId) throws Exception {
+		OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId,channelId);
 		if(world == null) 
 			throw new HTSException("记录已经被删除");
 		Integer notified = world.getNotified();
@@ -601,7 +601,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String thumbPath = worldDto.getTitleThumbPath();
 			String channelName = channel.getChannelName();
 			Integer recipientId = world.getAuthorId();
-			Integer channelId = world.getChannelId();
 			String recipientName = webUserInfoDao.queryUserNameById(recipientId);
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
 			Integer msgCode = UserInfoUtil.getSysMsgCode(userPushInfo.getVer(), Tag.USER_MSG_CHANNEL_WORLD);
@@ -611,9 +610,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
 			String filePath = "src/main/resources/channelNotify.properties";
 			String msg = PropertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
+			if (msg == null) throw new Exception("所取的通知为空");
 			String tip = msg.replaceAll("userName", recipientName);
 			tip = tip.replaceAll("channelName", channelName);
-			
 			// 保存消息
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
@@ -969,7 +968,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 		webChannelService.updateSuperbCount(channelId);
 		//如果更改为精选时推送精选通知
 		if (superb == 1) {
-		addChannelWorldRecommendMsgByWorldId(worldId,channlMsgType);
+		addChannelWorldRecommendMsgByWorldId(worldId,channlMsgType,channelId);
 		}
 	}
 

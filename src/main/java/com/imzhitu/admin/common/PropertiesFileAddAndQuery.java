@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class PropertiesFileAddAndQuery {
 	/**
-	 * 向properties文件中增加记录的通用方法
+	 * 向properties文件中增加记录的方法
 	 * @param key  
 	 * @param value
 	 * @param filePath 文件路径
