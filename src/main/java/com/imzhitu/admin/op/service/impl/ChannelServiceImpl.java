@@ -474,7 +474,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 				addChannelWorldId(ids);
 				//生效同时发送通知 mishengliang
 				//下面的方法复用了 手动添加通知 的方法，此方法在手动通知中也要调用，为是方便维护，故复用
-				addChannelWorldRecommendMsgs(idsStr,channlMsgType);
+				
+/*				现在注释掉，为了做出避免重复发出通知的功能，做出时可以解开注释
+				addChannelWorldRecommendMsgs(idsStr,channlMsgType);*/
 			}
 			OpChannelWorld world = channelWorldMapper.queryChannelWorldById(ids[0]);
 			if(world != null) {
@@ -578,23 +580,23 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			}
 			String tip = msg.replaceAll("userName", recipientName);
 			tip = tip.replaceAll("channelName", channelName);
-/*			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
+  /*		String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
 			
-/*			// 保存消息
+			// 保存消息
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
 					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
 			
 			// 更新推送标记
 			world.setNotified(Tag.TRUE);
 			channelWorldMapper.update(world);
-	*/
-/*			// 推送消息
+	
+			// 推送消息
 			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
 	
 				@Override
 				public void onPushFailed(Exception e) {
 				}
-			});*/
+			});
 		}
 	}
 	
