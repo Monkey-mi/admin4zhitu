@@ -34,7 +34,7 @@ public interface OpUserService extends BaseService {
 	 */
 	public void buildRecommendUser(Integer maxId, int page, int rows, 
 			Integer userAccept, Integer sysAccept, Integer notified,Integer fixPos,
-			Integer verifyId, String userName,Integer lastUsed, Map<String, Object> jsonMap) throws Exception;
+			Integer verifyId, String userName,Integer lastUsed,Date begin,Date end ,Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 保存推荐用户

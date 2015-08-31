@@ -376,8 +376,11 @@ body {
 	interactQueryParams = {},
 	interactCommentUpdatePageURL = "./admin_interact/comment_updateCommentByJSON",
 	interactCommentDeleteURI = "./admin_interact/interact_deleteInteractCommentByIds?interactWorldCommentIds=",
-	interactInit = function() {		
-		interactQueryParams.interactId=interactId,
+	interactInit = function() {
+		if( !interactId){
+			interactId = 0;
+		}		
+		interactQueryParams.interactId=interactId;
 		interactQueryParams.maxId=interactMaxId;
 		interactLoadPageData(1);
 	},

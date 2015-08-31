@@ -501,6 +501,7 @@
         </property>
     </bean>
 	
+	<!-- 
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -527,5 +528,5 @@
             </list>
         </property>
     </bean>
-    
+     -->
 </beans>

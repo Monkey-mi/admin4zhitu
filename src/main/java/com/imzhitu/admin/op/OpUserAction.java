@@ -94,7 +94,7 @@ public class OpUserAction extends BaseCRUDAction {
 	public String queryRecommendUser() {
 		try {
 			opUserService.buildRecommendUser(maxId, page, rows,
-					userAccept, sysAccept, notified, weight, verifyId, userName,lastUsed, jsonMap);
+					userAccept, sysAccept, notified, weight, verifyId, userName,lastUsed, begin,end ,jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

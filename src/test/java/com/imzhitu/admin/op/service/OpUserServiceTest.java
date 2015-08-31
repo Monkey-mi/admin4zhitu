@@ -27,7 +27,9 @@ public class OpUserServiceTest extends BaseTest {
 	@Test
 	public void testBuildRecommendUser() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildRecommendUser(0, 1, 10, null, null, null,null, null, null,1, jsonMap);
+		Date now = new Date();
+		Date end = new Date(now.getTime() - 10*60*60*1000L);
+		service.buildRecommendUser(0, 1, 10, null, null, null,null, null, null,1,end,now ,jsonMap);
 		logObj(jsonMap);
 	}
 	

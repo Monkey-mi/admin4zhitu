@@ -693,6 +693,8 @@ function searchRecommend() {
 	myQueryParams.weight = $('#ss-weight').combobox('getValue');
 	myQueryParams.verifyId = $('#ss-verifyId').combobox('getValue');
 	myQueryParams.lastUsed = $('#ss-lastUsed').combobox('getValue');
+	myQueryParams.begin = $('#beginDate').datetimebox("getValue");
+	myQueryParams.end = $('#endDate').datetimebox("getValue");
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
@@ -885,33 +887,37 @@ function refreshUserRecommendCache(){
 			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="推荐用户排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
 			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量提醒" plain="true" iconCls="icon-converter" id="batchNotifyBtn">提醒</a>
 			<a href="javascript:void(0);" onclick="javascript:refreshUserRecommendCache();" class="easyui-linkbutton" title="刷新用户推荐缓存" plain="true" iconCls="icon-converter" >刷新缓存</a>
-			<input id="ss-verifyId" value="所有认证类型" style="width:100px" />
-			<select id="ss-sysAccept" class="easyui-combobox" style="width:110px;">
+			<input id="ss-verifyId" value="所有认证类型" style="width:80px" />
+			<select id="ss-sysAccept" class="easyui-combobox" style="width:95px;">
 		        <option value="">所有系统状态</option>
 		        <option value="0">待定</option>
 		        <option value="1">通过</option>
 		        <option value="2">拒绝</option>
 	   		</select>
-	   		<select id="ss-userAccept" class="easyui-combobox" style="width:110px;">
+	   		<select id="ss-userAccept" class="easyui-combobox" style="width:95px;">
 		        <option value="">所有用户状态</option>
 		        <option value="0">待定</option>
 		        <option value="1">通过</option>
 		        <option value="2">拒绝</option>
 	   		</select>
-	   		<select id="ss-notified" class="easyui-combobox" style="width:110px;">
+	   		<select id="ss-notified" class="easyui-combobox" style="width:95px;">
 		        <option value="">所有通知状态</option>
 		        <option value="0">未通知</option>
 		        <option value="1">已通知</option>
 	   		</select>
-	   		<select id="ss-weight" class="easyui-combobox" style="width:110px;">
+	   		<select id="ss-weight" class="easyui-combobox" style="width:90px;">
 	   			<option value="">置顶和未置顶</option>
 	   			<option value="1">已置顶</option>
 	   			<option value="0">未置顶</option>
 	   		</select>
-	   		<select id="ss-lastUsed" class="easyui-combobox" style="width:120px;">
+	   		<select id="ss-lastUsed" class="easyui-combobox" style="width:95px;">
 	   			<option value="">所有登录时间</option>
 	   			<option value="1">一个月没登录</option>
 	   		</select>
+	   		<span>起始时间：</span>
+	   		<input id="beginDate" name="beginDate" class="easyui-datetimebox" style="width:80px"/>
+	   		<span>结束时间：</span>
+	   		<input id="endDate" name="endDate" class="easyui-datetimebox" style="width:80px"/>
 	   		<a href="javascript:void(0);" onclick="javascript:searchRecommend();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 	   		
 	   		<div style="display: inline-block; vertical-align:middle; float: right;">

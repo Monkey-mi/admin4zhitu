@@ -89,7 +89,7 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	@Override
 	public void buildRecommendUser(Integer maxId, int page, int rows,
 			Integer userAccept, Integer sysAccept, Integer notified,Integer weight,
-			Integer verifyId, String userName,Integer lastUsed, Map<String, Object> jsonMap) throws Exception {
+			Integer verifyId, String userName,Integer lastUsed, Date begin,Date end,Map<String, Object> jsonMap) throws Exception {
 		
 		final Map<String, Object> attrMap = new LinkedHashMap<String, Object>();
 		
@@ -125,6 +125,13 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 			}
 			buildRecommendUser(maxId, page, rows, attrMap, jsonMap);
 			return;
+		}
+		
+		if ( begin != null ) {
+			attrMap.put("begin", begin);
+		}
+		if ( end != null ) {
+			attrMap.put("end", end);
 		}
 		
 		buildSerializables(maxId, page, rows, jsonMap, new SerializableListAdapter<OpUserRecommendDto>() {

@@ -246,7 +246,11 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 					builder.append(" and ur0.").append(keies[i]).append(" =?");
 				else
 					builder.append(" and ur0.").append(keies[i]).append(" >=?");
-			}else
+			} else if(keies[i].equals("begin")){
+					builder.append(" and ur0.date_modified >=?");
+			}else if(keies[i].equals("end")){
+				builder.append(" and ur0.date_modified <=?");
+			} else
 				builder.append(" and ur0.").append(keies[i]).append("=?");
 		}
 		return builder.toString();
