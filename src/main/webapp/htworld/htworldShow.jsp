@@ -683,7 +683,7 @@
 							</tr>
 							
 							<tr>
-								<td class="leftTd"><div style="width:120px;" >织图等级：</div></td>
+								<td class="leftTd"><div style="width:150px;" >织图等级：</div></td>
 								<td><input style="width:120px" class="easyui-combobox" id="levelId" name="id"  onchange="validateSubmitOnce=true;" 
 									data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel'"/></td>
 								<td class="rightTd"><div id="levelId_Tip" class="tipDIV" style="padding-left:10px;">已添加：播放【<span id="clickSum_interact">0</span>】&nbsp;喜欢【<span id="likedSum_interact">0</span>】&nbsp;评论【<span id="commentSum_interact">0</span>】</div></td>
@@ -699,8 +699,8 @@
 									<a class="easyui-linkbutton hideBtn expertBtn" style="display:none;" id="waitExpertBtn" iconCls="icon-tip" >达人</a>
 									<a class="easyui-linkbutton hideBtn expertBtn" style="display:none;" id="rejectExpertBtn" iconCls="icon-no" >达人</a>
 									<a class="easyui-linkbutton hideBtn expertBtn" style="display:none;" id="okExpertBtn" iconCls="icon-ok" >达人</a>
-									<a class="easyui-linkbutton hideBtn superbBtn" style="display:none;" id="addSuperbBtn" iconCls="icon-add" onclick="toBeSuperb();">精选</a>
-									<a class="easyui-linkbutton hideBtn superbBtn" style="display:none;" id="okSuperbBtn" iconCls="icon-ok">精选</a>
+									<a class="easyui-linkbutton hideBtn superbBtn" style="display:none;" id="addSuperbBtn" iconCls="icon-add" onclick="toBeSuperb();">精选备选</a>
+									<a class="easyui-linkbutton hideBtn superbBtn" style="display:none;" id="okSuperbBtn" iconCls="icon-ok">精选备选</a>
 								</td>
 								<td style="text-align: center;padding-top: 15px;">
 									<a class="easyui-linkbutton" iconCls="icon-ok" onclick="interactSubmit();">添加</a> 

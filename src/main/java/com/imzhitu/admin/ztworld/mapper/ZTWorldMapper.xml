@@ -187,7 +187,7 @@
 	
 	<!-- 分页查询 -->
 	<select id="queryHTWorldByAttrMapByMaxId" resultMap="ztWorldDto">
-		select h.*, 1-ISNULL(hq.world_id) as squarerecd 
+		select h.*, IF(itow.world_id != 'NULL',1,0) as squarerecd
 		from
 		(	select h2.*,u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
 			u0.signature,u0.address,u0.province as u_province,u0.city as u_city,u0.register_date,u0.user_label,u0.star,u0.trust,
@@ -244,18 +244,11 @@
 			 		<![CDATA[ AND h2.id<=#{maxId}]]>
 			 	</if>			 	
 		 	</where>
-		 	<choose>
-		 		<when test="orderKey != null">
-		 			order by h2.id desc
-		 		</when>
-		 		<otherwise>
-		 			order by id desc
-		 		</otherwise>
-		 	</choose>
 		 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
-		 ) as h 
-		 left join hts.htworld_type_world as hq
-		 on h.id = hq.world_id and hq.recommender_id != 0
+		 ) as h
+		 left join hts_admin.interact_type_option_world itow
+		 on h.id = itow.world_id
+		 order by h.id desc
 	</select>
 	
 	<!-- 分页查询总数 -->
