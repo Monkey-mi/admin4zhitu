@@ -388,7 +388,7 @@ public class ChannelServiceTest extends BaseTest {
 
 	@Test
 	public void updateChannelWorldSuperbTest() throws Exception {
-		service.updateChannelWorldSuperb(11823, 27787, 1,"_superb");
+//		service.updateChannelWorldSuperb(11823, 27787, 1,"_superb");
 	}
 	
 }
