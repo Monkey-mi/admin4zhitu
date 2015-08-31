@@ -798,6 +798,7 @@ function updateTypeWorldCache(){
 		        <option value="1">旅行</option>
 		        <option value="2">穿搭</option>
 		        <option value="3">美食</option>
+		        <option value="5">其他</option>
 		        <option value="6">故事</option>
 		        <option value="7">心情</option>
 	   		</select>

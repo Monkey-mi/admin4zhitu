@@ -594,15 +594,15 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 				$("#htm_type .loading").show();
 				$.post("./admin_ztworld/type_saveTypeWorld",{
 					'worldId':worldId,
-					'worldType':"旅行",
-					'typeId':"1",
+					'worldType':"其他",
+					'typeId':"5",
 					'isAdd':isAdd
 					},function(result){
 						formSubmitOnce = true;
 						$("#htm_type .opt_btn").show();
 						$("#htm_type .loading").hide();
 						if(result['result'] == 0) {
-							updateValues(index,['recommenderId','worldType'],['1','旅行']);
+							updateValues(index,['recommenderId','worldType'],['5','其他']);
 						} else {
 							$.messager.alert('失败提示',result['msg']);  //提示失败信息
 						}

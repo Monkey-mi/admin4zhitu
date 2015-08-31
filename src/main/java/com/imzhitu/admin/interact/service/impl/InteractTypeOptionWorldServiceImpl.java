@@ -209,7 +209,7 @@ public class InteractTypeOptionWorldServiceImpl  extends BaseServiceImpl impleme
 				long t = schedula.getTime() - i*1000;//用以排序
 				try{
 					InteractTypeOptionWorldDto dto = queryTypeOptionWorld(worldId);
-					worldTypeService.saveTypeWorld(worldId, 1, "旅行", operatorId);
+					worldTypeService.saveTypeWorld(worldId, 5, "其他", operatorId);
 					worldTypeService.updateTypeWorldReview(worldId, dto.getReView());
 					typeWorldSchedulaService.addTypeWorldSchedula(worldId, new Date(t),operatorId, 0);
 					worldDto.setWorldId(worldId);

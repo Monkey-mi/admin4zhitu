@@ -211,7 +211,7 @@ function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
 							$("#htm_type .opt_btn").show();
 							$("#htm_type .loading").hide();
 							if(result['result'] == 0) {
-								updateValues(index,['squarerecd','worldType'],['1','旅行']);
+								updateValues(index,['squarerecd','worldType'],['5','其他']);
 								
 							} else {
 								$.messager.alert('失败提示',result['msg']);  //提示失败信息
