@@ -6,12 +6,11 @@
 <struts>
 	<package name="admin_properties" namespace="/admin_properties" extends="admin-package">
 	
-		<action name="properties_*" class="com.imzhitu.admin.propertiesSet.propertiesSetAction" method="{1}">
+		<action name="properties_*" class="com.imzhitu.admin.propertiesSet.PropertiesSetAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>
 		</action>
-		
 	</package>
 
 </struts>

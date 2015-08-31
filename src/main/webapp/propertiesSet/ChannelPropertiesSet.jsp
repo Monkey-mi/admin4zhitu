@@ -12,7 +12,7 @@
 }
 </style>
 <link type="text/css" rel="stylesheet"
-	href="${webRootPath }/operations/css/channelOutlineV2.css"></link>
+	href="${webRootPath}/operations/css/channelOutlineV2.css"></link>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <script type="text/javascript">
 	var queryChannelNotifyByIdURL = "./admin_properties/properties_queryNotifyByChannelId";// 根据id查询
@@ -198,9 +198,12 @@
 		<div>
 			<span style="font-size: 20px">提示：</span>输入时请用 <span
 				style="color: red">  userName  </span>代替 <span style="color: blue">用户名</span>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用 <span
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用 <span
 				style="color: red">  channelName  </span>代替 <span
-				style="color: blue">频道名</span>。
+				style="color: blue">频道名</span>。（织图通知对同一频道同一个用户的多次织图 <span
+				style="color: red">一周 </span>内只发一次通知）
+				<br />
+				<span style="font-size: 20px">例如：</span>亲爱的 <span style="color: red">userName</span>，由于你的织图帮帮哒，已被收录到我们的频道 <span style="color: red">channelName</span>中了，再接再厉，你可以织出更好的图奥！
 		</div>
 		<hr />
 		<div id="channel-info-wrap">
@@ -245,7 +248,7 @@
 				</p>
 				<p>
 					<textarea id="channelStar" class="textarea" rows="3" cols="60"
-						readonly=true">请输入添加红人的通知文本</textarea>
+						readonly=true>请输入添加红人的通知文本</textarea>
 				</p>
 			</div>
 		</div>

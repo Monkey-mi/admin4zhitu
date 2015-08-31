@@ -30,4 +30,8 @@
 			obj_meta2, obj_id, sender_id, msg_date, thumb_path) 
 			values (#{recipientId},#{content},#{objType}, #{objMeta},#{objMeta2},#{objId},#{senderId},#{msgDate},#{thumbPath})
 	</insert>
+	
+ 	<select id="queryMsg" resultMap="OpSysMsgMap">
+	select * from hts.operations_sys_msg where recipient_id=#{recipientId} and obj_meta2=#{objMeta2} order by id desc limit 0,1;
+	</select> 
 </mapper>

@@ -26,6 +26,7 @@ import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.common.PropertiesFileAddAndQuery;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannel;
 import com.imzhitu.admin.common.pojo.OpChannelNameDto;
@@ -42,7 +43,7 @@ import com.imzhitu.admin.op.mapper.ChannelTopOneMapper;
 import com.imzhitu.admin.op.mapper.ChannelTopTypeMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.service.ChannelService;
-import com.imzhitu.admin.common.PropertiesFileAddAndQuery;
+import com.imzhitu.admin.common.pojo.OpSysMsg;
 //@Service
 public class ChannelServiceImpl extends BaseServiceImpl implements
 		ChannelService {
@@ -103,6 +104,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private com.hts.web.operations.service.ChannelService webChannelService;
+	
+	@Autowired
+	private com.imzhitu.admin.op.mapper.SysMsgMapper sysMsgMapper;
 
 	private Integer channelCoverLimit = 5;
 
@@ -475,8 +479,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 				//生效同时发送通知 mishengliang
 				//下面的方法复用了 手动添加通知 的方法，此方法在手动通知中也要调用，为是方便维护，故复用
 				
-/*				现在注释掉，为了做出避免重复发出通知的功能，做出时可以解开注释
-				addChannelWorldRecommendMsgs(idsStr,channlMsgType);*/
+/*				现在注释掉，为了做出避免重复发出通知的功能，做出时可以解开注释*/
+				addChannelWorldRecommendMsgs(idsStr,channlMsgType);
 			}
 			OpChannelWorld world = channelWorldMapper.queryChannelWorldById(ids[0]);
 			if(world != null) {
@@ -550,13 +554,13 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 	
 	@Override
-	public void addChannelWorldRecommendMsg(Integer id,String channlMsgType) throws Exception {
+	public void addChannelWorldRecommendMsg(Integer id, String channlMsgType) throws Exception {
 		propertiesFileAddAndQuery = new PropertiesFileAddAndQuery();
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldById(id);
-		if(world == null) 
+		if (world == null)
 			throw new HTSException("记录已经被删除");
 		Integer notified = world.getNotified();
-		if(notified != null && notified.equals(Tag.FALSE)) {
+		if (notified != null && notified.equals(Tag.FALSE)) {
 			OpChannel channel = channelMapper.queryChannelById(world.getChannelId());
 			HTWorldDto worldDto = webWorldDao.queryHTWorldDtoById(world.getWorldId());
 			String thumbPath = worldDto.getTitleThumbPath();
@@ -566,37 +570,45 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			String recipientName = webUserInfoDao.queryUserNameById(recipientId);
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
 			Integer msgCode = UserInfoUtil.getSysMsgCode(userPushInfo.getVer(), Tag.USER_MSG_CHANNEL_WORLD);
-			
-/*			String msg = CHANNEL_WORLD_MSG_HEAD + channelName + CHANNEL_WORLD_MSG_FOOT;
-			String tip = recipientName + msg;*/
-			String filePath = "/channelNotify.properties";
-			String msg = propertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
-			if (msg == null&&"_add".equals(channlMsgType)){
-				msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 啦！期待你的新作哦！";
-			}else if(msg == null&&"_superb".equals(channlMsgType)){
-				msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 精选啦！期待你的新作哦！";
-			}else if(msg == null&&"_star".equals(channlMsgType)){
-			//红人默认通知
-			}
-			String tip = msg.replaceAll("userName", recipientName);
-			tip = tip.replaceAll("channelName", channelName);
-  /*		String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
-			
-			// 保存消息
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
-					tip, msgCode, world.getWorldId(), channelName, String.valueOf(channelId), thumbPath, 0);
-			
-			// 更新推送标记
-			world.setNotified(Tag.TRUE);
-			channelWorldMapper.update(world);
-	
-			// 推送消息
-			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
-	
-				@Override
-				public void onPushFailed(Exception e) {
+			Date date = new Date();
+			// 查询出这次发送消息中对应recipientId和channelId数据中的数据，以此判断上次给他发送时间是否大于一周
+			// mishengliang
+			OpSysMsg msgObject = sysMsgMapper.queryMsg(recipientId, channelId + "");
+			Date lastDate = msgObject.getMsgDate();
+			long limitTime = 7 * 24 * 60 * 60 * 60 * 1000;
+			long now = date.getTime();
+			long last = lastDate.getTime();
+
+			//相隔时间大于一周的 或者 为空 可以发送消息
+			if (last - now >= limitTime || msgObject == null) {
+				String filePath = "/channelNotify.properties";
+				String msg = propertiesFileAddAndQuery.query(channelId + channlMsgType, filePath);
+				if (msg == null && "_add".equals(channlMsgType)) {
+					msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 啦！期待你的新作哦！";
+				} else if (msg == null && "_superb".equals(channlMsgType)) {
+					msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 精选啦！期待你的新作哦！";
+				} else if (msg == null && "_star".equals(channlMsgType)) {
+					// 红人默认通知
 				}
-			});
+				String tip = msg.replaceAll("userName", recipientName);
+				tip = tip.replaceAll("channelName", channelName);
+
+				// 保存消息
+				webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, tip, msgCode, world.getWorldId(),
+						channelName, String.valueOf(channelId), thumbPath, 0);
+
+				// 更新推送标记
+				world.setNotified(Tag.TRUE);
+				channelWorldMapper.update(world);
+
+				// 推送消息
+				pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, msgCode, new PushFailedCallback() {
+
+					@Override
+					public void onPushFailed(Exception e) {
+					}
+				});
+			}else{/* throw new Exception("通知在一周内不能重复发出奥");*/ }
 		}
 	}
 	
