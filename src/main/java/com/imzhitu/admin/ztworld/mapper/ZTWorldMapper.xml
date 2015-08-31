@@ -242,8 +242,9 @@
 			 	</if>
 			 	<if test="maxId != null and maxId != 0">
 			 		<![CDATA[ AND h2.id<=#{maxId}]]>
-			 	</if>			 	
+			 	</if>
 		 	</where>
+		 	order by h2.id desc
 		 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 		 ) as h
 		 left join hts_admin.interact_type_option_world itow
