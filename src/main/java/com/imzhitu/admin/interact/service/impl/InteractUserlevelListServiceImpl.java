@@ -43,7 +43,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	
 	private static Logger logger = Logger.getLogger(InteractUserlevelListServiceImpl.class);
 	
-	private static final long WORK_TIME = 105*60*1000;//毫秒级工作时间，当前时间-work_time 至 当前时间 范围内的新发的织图5*60*1000
+	private static final long WORK_TIME = 5*60*1000;//毫秒级工作时间，当前时间-work_time 至 当前时间 范围内的新发的织图5*60*1000
 	
 	@Value("${plan.comment.common.userlevel.id}")
 	private Integer commonUserLevelId;
