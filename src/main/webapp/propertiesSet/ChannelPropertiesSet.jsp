@@ -137,6 +137,7 @@
 			alert("请您先选择频道后做编辑操作!");
 		} else {
 			$('#channelAdd').attr("readonly", false);
+			$('#channelAdd').focus();
 		}
 	}
 	function editChannelStar() {
@@ -144,6 +145,7 @@
 			alert("请您先选择频道后做编辑操作!");
 		} else {
 			$('#channelStar').attr("readonly", false);
+			$('#channelStar').focus();
 		}
 	}
 	function editChannelSuperb() {
@@ -151,6 +153,7 @@
 			alert("请您先选择频道后做编辑操作!");
 		} else {
 			$('#channelSuperb').attr("readonly", false);
+			$('#channelSuperb').focus();
 		}
 	}
 
