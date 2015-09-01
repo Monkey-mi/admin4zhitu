@@ -44,6 +44,7 @@ import com.imzhitu.admin.op.mapper.ChannelTopTypeMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.service.ChannelService;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
+import com.imzhitu.admin.notifySet.mapper.NotifyMapper;
 //@Service
 public class ChannelServiceImpl extends BaseServiceImpl implements
 		ChannelService {
@@ -107,12 +108,14 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private com.imzhitu.admin.op.mapper.SysMsgMapper sysMsgMapper;
+	
+	@Autowired	
+	private NotifyMapper mapper;
 
 	private Integer channelCoverLimit = 5;
 
 	public Logger logger = Logger.getLogger(ChannelServiceImpl.class);
 	
-	public PropertiesFileAddAndQuery propertiesFileAddAndQuery; 
 	
 	public Integer getChannelStarLimit() {
 		return channelStarLimit;
@@ -555,7 +558,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void addChannelWorldRecommendMsg(Integer id, String channlMsgType) throws Exception {
-		propertiesFileAddAndQuery = new PropertiesFileAddAndQuery();
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldById(id);
 		if (world == null)
 			throw new HTSException("记录已经被删除");
@@ -581,8 +583,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 
 			//相隔时间大于一周的 或者 为空 可以发送消息
 			if (last - now >= limitTime || msgObject == null) {
-				String filePath = "/channelNotify.properties";
-				String msg = propertiesFileAddAndQuery.query(channelId + channlMsgType, filePath);
+				String msg = mapper.queryNotify(channelId + channlMsgType);
 				if (msg == null && "_add".equals(channlMsgType)) {
 					msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 啦！期待你的新作哦！";
 				} else if (msg == null && "_superb".equals(channlMsgType)) {
@@ -608,7 +609,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 					public void onPushFailed(Exception e) {
 					}
 				});
-			}else{/* throw new Exception("通知在一周内不能重复发出奥");*/ }
+			}else{/* throw new Exception("通知在一周内不会重复发出奥");*/ }
 		}
 	}
 	
@@ -616,7 +617,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void addChannelWorldRecommendMsgByWorldId(Integer worldId,String channlMsgType,Integer channelId) throws Exception {
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId,channelId);
-		propertiesFileAddAndQuery = new PropertiesFileAddAndQuery();
 		if(world == null) 
 			throw new HTSException("记录已经被删除");
 		Integer notified = world.getNotified();
@@ -633,8 +633,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 /*			String msg = CHANNEL_WORLD_MSG_HEAD + channelName + CHANNEL_WORLD_MSG_FOOT;
 			String tip = recipientName + msg;
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(msg);*/
-			String filePath = "/channelNotify.properties";
-			String msg = propertiesFileAddAndQuery.query(channelId+channlMsgType,filePath);
+			String msg = mapper.queryNotify(channelId+channlMsgType);
 			if (msg == null&&"_add".equals(channlMsgType)){
 				msg = "亲爱的 userName 恭喜！由于你的织图棒棒的，入选 channelName 啦！期待你的新作哦！";
 			}else if(msg == null&&"_superb".equals(channlMsgType)){

@@ -1,4 +1,4 @@
-package com.imzhitu.admin.propertiesSet;
+package com.imzhitu.admin.notifySet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,16 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hts.web.base.StrutsKey;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.propertiesSet.service.PropertiesSetService;
+import com.imzhitu.admin.notifySet.service.NotifySetService;
 
-public class PropertiesSetAction extends BaseCRUDAction {
+public class NotifySetAction extends BaseCRUDAction {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1844920769848520753L;
 	
 	@Autowired
-	public PropertiesSetService service;
+	public NotifySetService service;
 	private Integer channelId;
 	private String channelAdd;
 	private String channelStar;

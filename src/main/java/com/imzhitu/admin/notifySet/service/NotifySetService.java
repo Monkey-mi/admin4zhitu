@@ -1,8 +1,8 @@
-package com.imzhitu.admin.propertiesSet.service;
+package com.imzhitu.admin.notifySet.service;
 
 import java.util.Map;
 
-public interface PropertiesSetService {
+public interface NotifySetService {
 	/**
 	 * 
 	 * @param channelId
