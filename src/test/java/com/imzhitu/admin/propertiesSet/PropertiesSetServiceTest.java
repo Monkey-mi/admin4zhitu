@@ -7,12 +7,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.imzhitu.admin.base.BaseTest;
-import com.imzhitu.admin.propertiesSet.service.PropertiesSetService;
+import com.imzhitu.admin.notifySet.service.NotifySetService;
 
 public class PropertiesSetServiceTest extends BaseTest {
 
 	@Autowired
-	private PropertiesSetService service;
+	private NotifySetService service;
 	
 	@Test
 	public void queryChannelNotifyTest() throws Exception {

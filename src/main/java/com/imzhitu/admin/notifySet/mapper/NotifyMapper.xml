@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.notifySet.mapper.NotifyMapper">
+
+	<select id="queryNotify" resultType="String">
+		select notify from hts_admin.op_notify where notify_type = #{notifyType};
+	</select>
+	
+	<insert id="addNotify">
+	replace into hts_admin.op_notify(notify_type,notify) values (#{notifyType},#{notify});
+	</insert>
+</mapper>

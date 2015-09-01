@@ -4,9 +4,9 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-	<package name="admin_properties" namespace="/admin_properties" extends="admin-package">
+	<package name="admin_notify" namespace="/admin_notify" extends="admin-package">
 	
-		<action name="properties_*" class="com.imzhitu.admin.propertiesSet.PropertiesSetAction" method="{1}">
+		<action name="notify_*" class="com.imzhitu.admin.notifySet.NotifySetAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>

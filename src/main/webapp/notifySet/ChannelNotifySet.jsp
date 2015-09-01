@@ -15,8 +15,8 @@
 	href="${webRootPath}/operations/css/channelOutlineV2.css"></link>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <script type="text/javascript">
-	var queryChannelNotifyByIdURL = "./admin_properties/properties_queryNotifyByChannelId";// 根据id查询
-	var addChannelNotifyByIdURL = "./admin_properties/properties_addNotifyByChannelId";
+	var queryChannelNotifyByIdURL = "./admin_notify/notify_queryNotifyByChannelId";// 根据id查询
+	var addChannelNotifyByIdURL = "./admin_notify/notify_addNotifyByChannelId";
 	var searchChannelMaxId = 0, searchChannelQueryParams = {
 		'maxId' : searchChannelMaxId
 	};
