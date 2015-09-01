@@ -4,17 +4,26 @@ import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
 
+/**
+ * 自动回复业务接口
+ * 
+ * @author zhangbo	2015年9月1日
+ *
+ */
 public interface InteractAutoResponseService extends BaseService{
 	/**
 	 * 分页查询未完成的回复
-	 * @param maxId
-	 * @param start
-	 * @param limit
-	 * @param groupId
-	 * @param jsonMap
+	 * 
+	 * @param maxId			页面传递本次查询最大主键id，作为标记位
+	 * @param start			分页起始位置
+	 * @param limit			分页每页数据数量
+	 * @param userLevelId	用户等级主键id
+	 * @param userLevelId	频道主键id
+	 * @param jsonMap		返回的结果集jsonMap
+	 * 
 	 * @throws Exception
 	 */
-	public void queryUncompleteResponse(Integer maxId, int start, int limit,Integer userLevelId,  Map<String, Object> jsonMap) throws Exception;
+	public void queryUncompleteResponse(Integer maxId, int start, int limit,Integer userLevelId, Integer channelId, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 更新回复完成状态

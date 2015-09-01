@@ -53,11 +53,12 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	private InteractAutoResponseSchedulaService interactAutoResponseSchedulaService;
 	
 	@Override
-	public void queryUncompleteResponse(Integer maxId, int start, int limit, Integer userLevelId,
+	public void queryUncompleteResponse(Integer maxId, int start, int limit, Integer userLevelId, Integer channelId,
 			 Map<String, Object> jsonMap) throws Exception{
 		InteractAutoResponseDto dto = new InteractAutoResponseDto();
 		dto.setMaxId(maxId);
 		dto.setUserLevelId(userLevelId);
+		dto.setChannelId(channelId);
 		buildNumberDtos(dto,start,limit,jsonMap,new NumberDtoListAdapter<InteractAutoResponseDto>(){
 			@Override
 			public List< ? extends AbstractNumberDto> queryList(InteractAutoResponseDto dto){

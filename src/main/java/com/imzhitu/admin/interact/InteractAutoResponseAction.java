@@ -21,68 +21,78 @@ public class InteractAutoResponseAction extends BaseCRUDAction{
 	private String answer;
 	private Integer userLevelId;
 	
+	/**
+	 * 频道id，根据频道查询结果集时使用
+	 * @author zhangbo	2015年9月1日
+	 */
+	private Integer channelId;
+	
+	public String getIdsStr() {
+		return idsStr;
+	}
+
+	public void setIdsStr(String idsStr) {
+		this.idsStr = idsStr;
+	}
+
+	public Integer getAutoResponseId() {
+		return autoResponseId;
+	}
+
+	public void setAutoResponseId(Integer autoResponseId) {
+		this.autoResponseId = autoResponseId;
+	}
+
+	public String getResponseIdsStr() {
+		return responseIdsStr;
+	}
+
+	public void setResponseIdsStr(String responseIdsStr) {
+		this.responseIdsStr = responseIdsStr;
+	}
+
+	public String getRowJson() {
+		return rowJson;
+	}
+
+	public void setRowJson(String rowJson) {
+		this.rowJson = rowJson;
+	}
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
 	public Integer getUserLevelId() {
 		return userLevelId;
 	}
+
 	public void setUserLevelId(Integer userLevelId) {
 		this.userLevelId = userLevelId;
+	}
+
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
 	}
 
 	@Autowired
 	private InteractAutoResponseService interactAutoResponseService;
 	
-	public void setQuestion(String question){
-		this.question = question;
-	}
-	public String getQuestion(){
-		return this.question;
-	}
-	
-	public void setAnswer(String answer){
-		this.answer = answer;
-	}
-	public String getAnswer(){
-		return this.answer;
-	}
-	
-	public void setInteractAutoResponseService(InteractAutoResponseService interactAutoResponseService){
-		this.interactAutoResponseService = interactAutoResponseService;
-	}
-	public InteractAutoResponseService getInteractAutoResponseService(){
-		return this.interactAutoResponseService;
-	}
-	
-	public void setResponseIdsStr(String responseIdsStr){
-		this.responseIdsStr = responseIdsStr;
-	}
-	public String getResponseIdsStr(){
-		return this.responseIdsStr;
-	}
-	
-	public void setRowJson(String rowJson){
-		this.rowJson = rowJson;
-	}
-	public String getRowJson(){
-		return this.rowJson;
-	}
-	
-	public void setAutoResponseId(Integer autoResponseId){
-		this.autoResponseId = autoResponseId;
-	}
-	public Integer getAutoResponseId(){
-		return this.autoResponseId;
-	}
-	
-	public void setIdsStr(String idsStr){
-		this.idsStr = idsStr;
-	}
-	public String getIdsStr(){
-		return this.idsStr;
-	}
-	
 	public String queryUncompleteResponse(){
 		try{
-			interactAutoResponseService.queryUncompleteResponse(maxId, page, rows,userLevelId, jsonMap);
+			interactAutoResponseService.queryUncompleteResponse(maxId, page, rows,userLevelId, channelId, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

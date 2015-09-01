@@ -29,6 +29,12 @@ public class InteractAutoResponseDto extends AbstractNumberDto implements Serial
 	private Integer preReId;	//上上次评论id
 	private Integer userLevelId;	//用户等级
 	private String shortLink;
+	
+	/**
+	 * 频道主键id
+	 * @author zhangbo	2015年9月1日
+	 */
+	private Integer channelId;
 
 	public String getShortLink() {
 		return shortLink;
@@ -156,6 +162,18 @@ public class InteractAutoResponseDto extends AbstractNumberDto implements Serial
 		return this.complete;
 	}
 	
+	/**
+	 * @return the channelId
+	 */
+	public Integer getChannelId() {
+		return channelId;
+	}
+	/**
+	 * @param channelId the channelId to set
+	 */
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
+	}
 	public InteractAutoResponseDto(){
 		super();
 	}

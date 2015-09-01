@@ -56,7 +56,10 @@
 			  hts.user_info as ui,
 		      hts.htworld_comment as hc1,
 		      hts.htworld_comment as hc2,
-			  hts.htworld_htworld as hh		
+			  hts.htworld_htworld as hh
+			  <if test="channelId != null">
+			  ,hts.operations_channel_world ocw
+	    	</if>
 		where hc1.id = ar.comment_id
 		  and hc2.id = ar.response_id
 		  and uz.id = ar.author
@@ -66,6 +69,10 @@
 	    and hh.valid = 1
 	    <if test="userLevelId != null">
 	    	and iull.user_level_id = #{userLevelId}
+	    </if>
+	    <if test="channelId != null">
+	    	and ocw.world_id = ar.world_id
+	    	and ocw.channel_id = #{channelId}
 	    </if>
 	    <if test="maxId != null and maxId != 0"> 
 	    	<![CDATA[and ar.id<=#{maxId}]]>

@@ -102,7 +102,8 @@ var maxId = 0,
 	        	$("#htm_table").datagrid('rejectChanges');
 	        	$("#htm_table").datagrid('loaded');
 	        }
-	}],
+	}];
+	
 	onAfterInit = function() {
 		$("#teachRobot form").show();
 		$("#teachRobot").window({
@@ -124,13 +125,40 @@ var maxId = 0,
 			}
 		});
 		
+		$('#ss-channel').combogrid({
+			panelWidth : 500,
+		    panelHeight : 350,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [5,10,20],
+			toolbar:"#search-channel-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'channelName',
+		    url : './admin_op/channel_searchChannel',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'id',align : 'center',width : 80},
+				{field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
+					formatter:function(value,row,index) {
+						return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+					}
+				},
+				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
+		    ]]
+		});
 	
 	};
-		
-	function searchByUserLevel() {
+	
+	/**
+	 * 根据条件查询自动回复数据结果集
+	 */
+	function searchAutoResponseList() {
 		var userLevelId = $("#userLevelId_userLevel").combobox('getValue');
+		var channelId = $("#ss-channel").combobox('getValue');
 		myQueryParams.maxId=0;
 		myQueryParams.userLevelId = userLevelId;
+		myQueryParams.channelId = channelId;
 		
 		$('#htm_table').datagrid('load',myQueryParams);
 		
@@ -184,9 +212,16 @@ var maxId = 0,
 				
 	}
 	
+	/**
+	 * 打开调教机器人窗口方法
+	 */
 	function teachRobot(){
 		$("#teachRobot").window("open");
-	}
+	};
+	
+	/**
+	 * 调教机器人数据提交方法
+	 */
 	function teachRobotSubmit(){
 		var teachForm = $("#teachRobotForm");
 		$.post(teachForm.attr("action"),teachForm.serialize(),function(result){
@@ -199,6 +234,15 @@ var maxId = 0,
 				$.messager.alert('错误提示',result['msg']);
 			}
 		});
+	};
+	
+	/**
+	 * 搜索频道名称
+	 * @author zhangbo 2015-09-01
+	 */
+	function searchChannel() {
+		params.query = $('#channel-searchbox').searchbox('getValue');
+		$("#ss-channel").combogrid('grid').datagrid("load",params);
 	}
 	
 </script>
@@ -212,7 +256,12 @@ var maxId = 0,
 		<a href="javascript:void(0);" onclick="javascript:teachRobot();" class="easyui-linkbutton" title="调教机器人" plain="true" iconCls="icon-add" id="updateValidBtn">调教机器人</a>
 		<input class="easyui-combobox"  id="userLevelId_userLevel" onchange="validateSubmitOnce=true;" style="width:150px"
 								data-options="valueField:'id',textField:'level_description',url:'./admin_interact/userlevel_QueryUserLevel'"/>
-		<a href="javascript:void(0);" onclick="javascript:searchByUserLevel();" class="easyui-linkbutton" title="查询" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
+		<input id="ss-channel" style="width:150px;" />
+		<a href="javascript:void(0);" onclick="javascript:searchAutoResponseList();" class="easyui-linkbutton" title="查询" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
+	</div>
+	
+	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
+		<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
 	</div>
 	
 	<!-- 调教机器人 -->
