@@ -241,7 +241,9 @@ var maxId = 0,
 	 * @author zhangbo 2015-09-01
 	 */
 	function searchChannel() {
-		params.query = $('#channel-searchbox').searchbox('getValue');
+		var params = {
+			query : $('#channel-searchbox').searchbox('getValue')
+		};
 		$("#ss-channel").combogrid('grid').datagrid("load",params);
 	}
 	
