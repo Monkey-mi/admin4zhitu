@@ -23,7 +23,7 @@ public class InteractAutoResponseServiceTest extends BaseTest {
 	@Test
 	public void queryUncompleteResponseTest()throws Exception{
 		Map<String, Object> jsonMap = new HashMap<String,Object>();
-		service.queryUncompleteResponse(null,1,10,null,jsonMap);
+		service.queryUncompleteResponse(null,1,10,null,null,jsonMap);
 		log.info(jsonMap);
 	}
 	
