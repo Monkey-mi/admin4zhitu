@@ -24,7 +24,6 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	private Integer notified;
 	private Integer weight;	// 权重，即置顶，0为不置顶，1为置顶
 	private Integer superb;	// 加精，0为不加精，1为加精
-	private Integer superbNotified; //加精通知，0为没有通知，1为已经通知
 	
 	private String channelName;
 	private String channelTitle;
@@ -123,14 +122,6 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	    this.superb = superb;
 	}
 	
-	public Integer getSuperbNotified() {
-		return superbNotified;
-	}
-
-	public void setSuperbNotified(Integer superbNotified) {
-		this.superbNotified = superbNotified;
-	}
-
 	public Integer getAuthorId() {
 		return authorId;
 	}

@@ -25,7 +25,6 @@
 		<result column="notified" property="notified" jdbcType="INTEGER"/>
 		<result column="weight" property="weight" jdbcType="INTEGER"/>
 		<result column="superb" property="superb" jdbcType="INTEGER"/>
-		<result column="superb_notified" property="superbNotified" jdbcType="INTEGER"/>
 		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
 		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR" />
 		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR" />
@@ -97,36 +96,55 @@
 	</select>
 	
 	<select id="queryChannelWorlds" resultMap="OpChannelWorldDtoMap">
-		select cw.id as channel_world_id,cw.channel_id,cw.world_id,cw.valid as channel_world_valid,
-		ocws.superb as channel_world_schedula_superb,
-		cw.notified,cw.weight,cw.superb,
-		c.channel_name, c.channel_title,c.channel_icon, h.*,u.user_name,u.user_avatar,u.star,u.trust
-		,ISNULL(ocws.finish) as beSchedula ,IFNULL(ocws.finish,0) as schedulaComplete, IFNULL(oct.id, 0) as is_cover,
-		IFNULL(ocn.superb_notified,0) as superb_notified
+		select 
+			cw.id as channel_world_id,
+			cw.channel_id,
+			cw.world_id,
+			cw.valid as channel_world_valid,
+			ocws.superb as channel_world_schedula_superb,
+			cw.notified,
+			cw.weight,
+			cw.superb,
+			c.channel_name, 
+			c.channel_title,
+			c.channel_icon,
+			h.*,
+			u.user_name,
+			u.user_avatar,
+			u.star,
+			u.trust,
+			ISNULL(ocws.finish) as beSchedula,
+			IFNULL(ocws.finish,0) as schedulaComplete,
+			IFNULL(oct.id, 0) as is_cover
 		from 
-		(select ocw.* from hts.operations_channel_world ocw
-			
-		<where>
-			<if test="channelId != null"> ocw.channel_id=#{channelId}</if>
-			<if test="worldId != null"> AND ocw.world_id=#{worldId}</if>
-			<if test="authorId != null"> AND ocw.author_id=#{authorId}</if>
-			<if test="valid != null"> AND ocw.valid=#{valid}</if>
-			<if test="superb != null"> AND ocw.superb=#{superb}</if>
-			<if test="weight != null"> AND ocw.weight=#{weight}</if>
-			<if test="notified != null"> AND ocw.notified=#{notified}</if>
-			<if test="maxId != null and maxId != 0"><![CDATA[ AND ocw.id<=#{maxId}]]></if>
-		</where>
-		order by serial desc
-		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
-		) as cw left join hts_admin.op_channel_world_schedula ocws 
+			(select ocw.* from hts.operations_channel_world ocw
+				
+			<where>
+				<if test="channelId != null"> ocw.channel_id=#{channelId}</if>
+				<if test="worldId != null"> AND ocw.world_id=#{worldId}</if>
+				<if test="authorId != null"> AND ocw.author_id=#{authorId}</if>
+				<if test="valid != null"> AND ocw.valid=#{valid}</if>
+				<if test="superb != null"> AND ocw.superb=#{superb}</if>
+				<if test="weight != null"> AND ocw.weight=#{weight}</if>
+				<if test="notified != null"> AND ocw.notified=#{notified}</if>
+				<if test="maxId != null and maxId != 0"><![CDATA[ AND ocw.id<=#{maxId}]]></if>
+			</where>
+			order by serial desc
+			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+			) as cw 
+			left join hts_admin.op_channel_world_schedula ocws 
 			on cw.world_id = ocws.world_id and ocws.channel_id=cw.channel_id
 			left join hts_admin.op_channel_thumbnail oct 
-			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id
-			left join hts_admin.op_channel_notified ocn
-			on cw.channel_id=ocn.channel_id and cw.world_id=ocn.world_id,
-			hts.htworld_htworld as h, hts.user_info as u, hts.operations_channel as c
-		 where cw.world_id=h.id and cw.author_id=u.id and cw.channel_id = c.id
-		 order by cw.serial desc
+			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id,
+			hts.htworld_htworld as h,
+			hts.user_info as u,
+			hts.operations_channel as c
+		 where 
+		 	cw.world_id=h.id 
+		 	and cw.author_id=u.id 
+		 	and cw.channel_id = c.id
+		 order by 
+		 	cw.serial desc
 	</select>
 	
 	<select id="queryChannelWorldCount" resultType="long">
@@ -161,12 +179,6 @@
 	  	where id=#{id}
 	</update>
 	
-		<update id="updateSuperbNotified">
-		UPDATE hts_admin.op_channel_notified 
-		SET superb_notified=1 
-	  WHERE channel_id=#{channelId} AND world_id=#{worldId}
-	</update>
-	
 	<update id="updateChannelWorldByWorldIdAndChannelId">
 		update hts.operations_channel_world
 		<set>
@@ -182,11 +194,6 @@
 	<insert id="save">
 		insert into hts.operations_channel_world (id,channel_id,world_id,author_id,date_added,valid,notified,superb,weight,serial)
 	 		values (#{id}, #{channelId}, #{worldId}, #{authorId}, #{dateAdded}, #{valid}, #{notified},#{superb},#{weight},#{serial})
-	</insert>
-	
-	<insert id="saveNotify">
-		insert into hts_admin.op_channel_notified (user_id,channel_id,world_id,superb_notified)
-	 	values (#{authorId},#{channelId}, #{worldId},0)
 	</insert>
 	
 	<update id="updateId">
