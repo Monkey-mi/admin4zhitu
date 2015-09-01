@@ -58,9 +58,9 @@
 				{field :'type',title: '类型',align : 'center',width : 100,
 					formatter: function(value,row,index) {
 						switch(value){
-							case 0:
-								return "互粉";
 							case 1:
+								return "互粉";
+							case 0:
 								return "互赞";
 							default:
 								return "未知类型";
