@@ -336,14 +336,14 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 				objMeta = UserOperationsServiceImpl.USER_RECOMMEND_ACCEPT + 1;
 			}
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
-					msg, Tag.USER_MSG_USER_RECOMMEND, recipientId, String.valueOf(objMeta), recommendType, null, weight);
+					msg, Tag.USER_MSG_USER_RECOMMEND, recipientId, String.valueOf(objMeta), recommendType, null, 0);
 		}
 		userRecommendDao.updateNotified(id, ++notified);
 		
 		String tip = recipientName + "," + msg;
-		String shortTip = PushUtil.getShortName(recipientName) + "," + PushUtil.getShortTip(msg);
+//		String shortTip = PushUtil.getShortName(recipientName) + "," + PushUtil.getShortTip(msg);
 		UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
-		pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_USER_RECOMMEND, new PushFailedCallback() {
+		pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_USER_RECOMMEND, new PushFailedCallback() {
 
 			@Override
 			public void onPushFailed(Exception e) {
