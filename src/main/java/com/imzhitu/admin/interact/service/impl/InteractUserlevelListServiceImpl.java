@@ -27,6 +27,7 @@ import com.imzhitu.admin.common.pojo.UserLevelListDto;
 import com.imzhitu.admin.interact.dao.InteractUserlevelDao;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
 import com.imzhitu.admin.interact.dao.InteractWorldLabelCommentLabelDao;
+import com.imzhitu.admin.interact.service.InteractLikeFollowRecordService;
 import com.imzhitu.admin.interact.service.InteractPlanCommentLabelService;
 import com.imzhitu.admin.interact.service.InteractPlanCommentService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
@@ -42,7 +43,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	
 	private static Logger logger = Logger.getLogger(InteractUserlevelListServiceImpl.class);
 	
-	private static final long WORK_TIME = 5*60*1000;//毫秒级工作时间，当前时间-work_time 至 当前时间 范围内的新发的织图5*60*1000
+	private static final long WORK_TIME = 105*60*1000;//毫秒级工作时间，当前时间-work_time 至 当前时间 范围内的新发的织图5*60*1000
 	
 	@Value("${plan.comment.common.userlevel.id}")
 	private Integer commonUserLevelId;
@@ -91,6 +92,9 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
+	
+	@Autowired
+	private InteractLikeFollowRecordService likeFollowRecordService;
 	
 	public Integer getCommonZombieDegreeId() {
 		return commonZombieDegreeId;
@@ -194,6 +198,16 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 							interactUserlevelListDao.UpdateUserlevelByUserId(userLevelListDto);
 							o.setUser_level_id(starUserLevelId);
 						}
+						
+						//明星用户增加互赞
+						if (  Math.random() < 0.2 ) {
+							likeFollowRecordService.addLikeFollowInteract(o.getUser_id(), o.getWorldId(), 0);
+						}
+						//明星用户增加互粉
+						if (  Math.random() < 0.2 ) {
+							likeFollowRecordService.addLikeFollowInteract(o.getUser_id(), o.getWorldId(), 1);
+						}
+						
 						
 					} else {//非明星用户
 						//普通用户，发图超过10个，并且人工也点了信任用户

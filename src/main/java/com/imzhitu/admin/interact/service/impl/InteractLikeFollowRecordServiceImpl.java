@@ -27,7 +27,7 @@ import com.imzhitu.admin.interact.service.InteractLikeFollowRecordService;
 import com.imzhitu.admin.interact.service.InteractLikeFollowZombieService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 
-@Service
+//@Service
 public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl implements InteractLikeFollowRecordService{
 
 	@Autowired
@@ -50,6 +50,11 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 	
 	private Logger log = Logger.getLogger(InteractLikeFollowRecordServiceImpl.class);
 	
+	/**
+	 * 插入互赞互粉，
+	 * @param type 类型，用以区分互粉还是互赞。0表示互赞，1表示互粉
+	 * @return
+	 */
 	@Override
 	public void insertLikeFollowRecord(Integer zombieId, Integer worldId,
 			Integer userId, Integer type, Integer complete,Integer interactWorldCommentId) throws Exception {

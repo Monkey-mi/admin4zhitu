@@ -19,6 +19,7 @@
 	<bean id="interactZombieWorldSchedulaService" class="com.imzhitu.admin.interact.service.impl.InteractZombieWorldSchedulaServiceImpl"/>
 	<bean id="dailyDataStatisticsService" class="com.imzhitu.admin.statistics.service.impl.DailyDataStatisticsServiceImpl"/>
 	<bean id="opUserRecommendCacheService" class="com.imzhitu.admin.op.service.impl.OpUserRecommendCacheServiceImpl"/>
+	<bean id="interactLikeFollowRecordService" class="com.imzhitu.admin.interact.service.impl.InteractLikeFollowRecordServiceImpl"/>
 
 		
 	<!-- 互动播放定时任务 -->
@@ -500,12 +501,33 @@
             <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
         </property>
     </bean>
+    
+    <!-- 互粉互赞 -->
+    <bean id="likeFollowJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="interactLikeFollowRecordService"/>
+        </property>
+        <property name="targetMethod">
+            <value>doLikeFollowJob</value>
+        </property>
+    </bean>
+    
+	<!-- 互粉互赞 -->
+    <bean id="likeFollowJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="likeFollowJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
+        </property>
+    </bean>
 	
-	<!-- 
+	<!--
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
-            <list>  
+            <list>   
                 <ref bean="interactCommentJobTrigger" />
                 <ref bean="interactClickJobTrigger"/>
                 <ref bean="interactLikedJobTrigger" />
@@ -524,9 +546,10 @@
                 <ref bean="starRecommendCacheTrigger" />
                 <ref bean="zombieWorldSchedulaJobTrigger" />
                 <ref bean="dailyDataStatisticsSchedulaJobTrigger" />
-                <ref bean="userRecommendCacheTrigger" />
+                <ref bean="userRecommendCacheTrigger" /> 
+                <ref bean="likeFollowJobTrigger" />
             </list>
         </property>
     </bean>
-     -->
+    -->
 </beans>
