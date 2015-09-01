@@ -186,22 +186,4 @@ public interface ChannelWorldMapper {
 	public void updateSuperbByWID(@Param("channelId")Integer channelId,
 			@Param("worldId")Integer worldId, @Param("superb")Integer superb);
 	
-	/**
-	 *更新频道中的通知（精选）
-	 * @param channelId
-	 * @param worldId 
-		*	2015年8月28日
-		*	mishengliang
-	 */
-	@DataSource("master")
-	public void updateSuperbNotified(@Param("channelId")Integer channelId,@Param("worldId")Integer worldId);
-	
-	/**
-	 * 在增加频道中数据的同时，加入通知表中的基础数据（作者ID，频道ID，织图ID）
-	 * @param world 
-		*	2015年8月28日
-		*	mishengliang
-	 */
-	@DataSource("master")
-	public void saveNotify(OpChannelWorld world);
 }

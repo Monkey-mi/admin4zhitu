@@ -58,8 +58,8 @@
 		      hts.htworld_comment as hc2,
 			  hts.htworld_htworld as hh
 			  <if test="channelId != null">
-			  ,hts.operations_channel_world ocw
-	    	</if>
+			  	,hts.operations_channel_world ocw
+	    	  </if>
 		where hc1.id = ar.comment_id
 		  and hc2.id = ar.response_id
 		  and uz.id = ar.author
@@ -88,11 +88,18 @@
 			(
 				select ar.* 
 				from hts_admin.interact_auto_response as ar left join hts_admin.interact_user_level_list iull on iull.user_id=ar.re_author
+				<if test="channelId != null">
+			  		,hts.operations_channel_world ocw
+	    	  	</if>
 				where 
 					ar.complete=0 
 					<if test="userLevelId != null">
 				    	and iull.user_level_id = #{userLevelId}
 				    </if>
+				    <if test="channelId != null">
+	    				and ocw.world_id = ar.world_id
+	    				and ocw.channel_id = #{channelId}
+	    			</if>
 					<if test="maxId != null and maxId != 0"> 
 				    	<![CDATA[and ar.id<=#{maxId}]]>
 				    </if>

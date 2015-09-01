@@ -398,7 +398,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			}
 			try {
 				channelWorldMapper.save(world);
-				channelWorldMapper.saveNotify(world);
 			} catch(DuplicateKeyException e) {
 			}
 		}
@@ -653,7 +652,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 				world.setNotified(Tag.TRUE);
 				channelWorldMapper.update(world);
 			} else if("_superb".equals(channlMsgType)){
-				channelWorldMapper.updateSuperbNotified(channelId,worldId);
 			}else if("_star".equals(channlMsgType)){
 				//给红人通知留的接口
 			}

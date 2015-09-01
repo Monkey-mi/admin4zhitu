@@ -207,7 +207,7 @@
 							<td>
 								<select id="s-type"  style="width:173px">
 									<option value="0">互赞</option>
-									<option value="0">互粉</option>
+									<option value="1">互粉</option>
 								</select>
 							</td>
 						</tr>
