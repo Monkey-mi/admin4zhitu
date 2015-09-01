@@ -200,11 +200,11 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						}
 						
 						//明星用户增加互赞
-						if (  Math.random() < 0.2 ) {
+						if (  Math.random() < 0.12 ) {
 							likeFollowRecordService.addLikeFollowInteract(o.getUser_id(), o.getWorldId(), 0);
 						}
 						//明星用户增加互粉
-						if (  Math.random() < 0.2 ) {
+						if (  Math.random() < 0.12 ) {
 							likeFollowRecordService.addLikeFollowInteract(o.getUser_id(), o.getWorldId(), 1);
 						}
 						
