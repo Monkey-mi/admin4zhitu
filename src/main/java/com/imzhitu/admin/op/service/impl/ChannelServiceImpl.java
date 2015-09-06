@@ -26,7 +26,6 @@ import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
-import com.imzhitu.admin.common.PropertiesFileAddAndQuery;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannel;
 import com.imzhitu.admin.common.pojo.OpChannelNameDto;
@@ -36,6 +35,8 @@ import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
+import com.imzhitu.admin.common.pojo.OpSysMsg;
+import com.imzhitu.admin.notifySet.mapper.NotifyMapper;
 import com.imzhitu.admin.op.dao.ChannelTopOneCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneTitleCacheDao;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
@@ -43,8 +44,6 @@ import com.imzhitu.admin.op.mapper.ChannelTopOneMapper;
 import com.imzhitu.admin.op.mapper.ChannelTopTypeMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.service.ChannelService;
-import com.imzhitu.admin.common.pojo.OpSysMsg;
-import com.imzhitu.admin.notifySet.mapper.NotifyMapper;
 //@Service
 public class ChannelServiceImpl extends BaseServiceImpl implements
 		ChannelService {
@@ -956,7 +955,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			Map<String, Object> jsonMap) throws Exception {
 		final OpChannel channel = new OpChannel();
 		channel.setMaxId(maxId);
-		channel.setValid(Tag.TRUE); // 只查询有效频道
+		// XXX 由于业务需求，先放开限制，然后业务整合时再一起讨论
+//		channel.setValid(Tag.TRUE); // 只查询有效频道
 		if(!StringUtil.checkIsNULL(query)) {
 			try {
 				Integer id = Integer.parseInt(query);
