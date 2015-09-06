@@ -43,10 +43,10 @@
 	<!-- insert -->
 	<insert id="insertOpChannel">
 		insert into hts.operations_channel 
-			(channel_desc, channel_icon, sub_icon, banner, review, channel_name,
+			(id, channel_desc, channel_icon, sub_icon, banner, review, channel_name,
 			channel_type, owner_id, theme_id)
 		values
-			(#{channelDesc},#{channelIcon},#{channelSubIcon},#{channelBanner},
+			(#{channelId}, #{channelDesc},#{channelIcon},#{channelSubIcon},#{channelBanner},
 			#{channelReview},#{channelName},#{channelTypeId},#{ownerId},#{themeId})
 	</insert>
 	

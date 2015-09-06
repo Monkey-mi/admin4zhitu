@@ -89,7 +89,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	public void insertOpChannel(String channelDesc, String channelIcon, String channelSubIcon, String channelBanner, String channelReview, String channelName, Integer channelTypeId, Integer ownerId, Integer themeId) throws Exception {
 		OpChannelV2Dto dto = new OpChannelV2Dto();
 		Date now = new Date();
-		Integer channelId = keyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
+		Integer channelId = keyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_ID);
 		dto.setChannelId(channelId);
 		dto.setOwnerId(ownerId);
 		dto.setChannelName(channelName);
