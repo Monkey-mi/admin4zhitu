@@ -52,7 +52,7 @@
 				return "<img width='100px' height='100px' class='htm_column_img' src='" + imgSrc + "' />";
 			}
 		},
-		{field : 'worldDesc', title:'织图描述', align : 'center',width:300,editor:'text'},
+		{field : 'worldDesc', title:'织图描述', align : 'center',width:280,editor:'text'},
 		{field : 'addDate', title:'添加日期', align : 'center', 
 			formatter: function(value,row,index){
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
@@ -63,7 +63,7 @@
 				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 			}
 		},
-		{field : 'complete',title : '完成',align : 'center',
+ 		{field : 'complete',title : '完成',align : 'center',
   			formatter: function(value,row,index) {
   				if(value == 1) {
   					img = "./common/images/ok.png";
@@ -72,7 +72,7 @@
   				img = "./common/images/tip.png";
   				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}
-  		},
+  		}, 
   		{field : 'shortLink', title:'短链',align : 'center',
 			styler: function(value,row,index){ 
 				return 'cursor:pointer;';
@@ -86,7 +86,23 @@
 		{field : 'htworldId', title:'织图ID', align : 'center'},
 		{field : 'channelId',title:'频道ID',align : 'center',editor:'text'},
 		{field : 'channelName',title:'频道名称',align:'center'},
-		{field : 'worldLabel',title:'织图标签',align:'center'}
+ 		{field : 'worldLabel',title:'织图标签',align:'center'}, 
+		{
+			field : 'comment',
+			title : '完成状态',
+			align : 'center',
+			width : 100,
+ 			formatter : function(value, row, index) {
+				title = "批量添加评论";
+				authorId = 1;
+  			if(value == 1) {
+  					img = "./common/images/ok.png";
+  					return "<img title='已生效' class='htm_column_img'  src='" + img + "'/>";
+  				}
+				img = "./common/images/edit_add.png";
+				return "<img title='" + title + "' class='htm_column_img pointer' onclick='addComments("+ row.authorId +")' src='" + img + "'/>";
+			} 
+		} 
 		
 	];
 	onAfterInit = function() {
@@ -207,6 +223,26 @@
 		
 		removePageLoading();
 		$("#main").show();
+		
+		$("#addComment").window({
+			title : '批量添加评论',
+			modal : true,
+			width : 420,
+			height : 190,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-add',
+			resizable : false,
+	 		onClose : function(){
+				$("#beginSaveTime").datetimebox('clear');	
+				$("#timeSpan").numberbox('clear');
+				$("#random_flag").removeAttr('checked');
+			} 
+		});
+		
 	};
 
 	
@@ -368,6 +404,19 @@
 			});				
 		}	
 	}
+	
+	//打开添加文件的窗口
+	function addComments(authorId){
+		$('#addComment').window('open');
+	}
+	
+	//mishengliang
+	//点击确定添加后的操作
+	function addComment(){
+		$('#addComment').window('close');
+ 		var file = $('#commentFile')[0];
+		file.value = ""; 
+	}
 </script>
 
 </head>
@@ -459,5 +508,27 @@
 			</table>
 		</form>
 	</div>
+	
+  		<div id='addComment'>
+			<form id='addCommentFile' action="" method='post'>
+			<table class="htm_edit_table" width="340">
+			<tbody>
+			<tr>
+				<td align="center" style='height:100'>
+				<input id='commentFile' type="file" name='commentFile'>
+				</td>
+			</tr>
+			<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addComment();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#addComment').window('close');">取消</a>
+						</td>
+			</tr>
+			</tbody>
+			</table>
+			</form>
+		</div> 
+		
+		
 </body>
 </html>

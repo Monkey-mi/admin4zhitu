@@ -206,6 +206,8 @@
 		$('#htm_add').window('open');
 	}
 	
+	
+	//mishengliang
 	function addSubmit(){
 		var addForm = $('#add_form');
 		$('#htm_add .opt_btn').hide();
@@ -222,12 +224,12 @@
 					$.messager.alert('提示',result['msg']);
 				}
 			},
-			url:       addForm.attr("action"),
-	        type:      'post',
-	        dataType:  'json' 
+			url : addForm.attr("action"),
+			type : 'post',
+			dataType : 'json'
 		});
 	}
-	
+
 	/**
 	 * 搜索频道名称
 	 */
@@ -237,23 +239,25 @@
 		var query = $('#channel-searchbox').searchbox('getValue');
 		searchChannelQueryParams.maxId = searchChannelMaxId;
 		searchChannelQueryParams.query = query;
-		$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
+		$("#ss-channel").combogrid('grid').datagrid("load",
+				searchChannelQueryParams);
 	}
-	
+
 	$(function() {
-		
+
 		/*
 		add by mishengliang 07-31-2015
 		马甲频道管理中加入频道ID搜索
-		*/
-		$('#channelId').combogrid(
+		 */
+		$('#channelId')
+				.combogrid(
 						{
 							panelWidth : 440,
 							panelHeight : 330,
 							loadMsg : '加载中，请稍后...',
 							pageList : [ 4, 10, 20 ],
 							pageSize : 4,
- 							toolbar : "#search-channel-tb01", 
+							toolbar : "#search-channel-tb01",
 							multiple : false,
 							required : false,
 							idField : 'id',
@@ -282,7 +286,7 @@
 										align : 'center',
 										width : 280
 									} ] ],
- 							queryParams : searchChannelQueryParams,
+							queryParams : searchChannelQueryParams,
 							onLoadSuccess : function(data) {
 								if (data.result == 0) {
 									if (data.maxId > searchChannelMaxId) {
@@ -290,37 +294,37 @@
 										searchChannelQueryParams.maxId = searchChannelMaxId;
 									}
 								}
-							}, 
-							onSelect : function(rowIndex,rowData) {
+								htm_add
+							},
+							onSelect : function(rowIndex, rowData) {
 								channelId = rowData.id;
 								tableQueryParams.channelId = channelId;
-								$("#htm_table").datagrid('load',tableQueryParams);
+								$("#htm_table").datagrid('load',
+										tableQueryParams);
 							}
 						});
-		
+
 		/*
 		add by mishengliang 07-31-2015
 		在马甲频道管理中加入用户ID搜索
-		*/
+		 */
 		$('#userId').searchbox({
-			searcher : function(value){
+			searcher : function(value) {
 				tableQueryParams.userId = value;
-				$("#htm_table").datagrid("load",tableQueryParams);
+				$("#htm_table").datagrid("load", tableQueryParams);
 			}
 		});
 	});
-	
+
 	function searchChannel01() {
 		searchChannelMaxId = 0;
 		maxId = 0;
 		var query = $('#channel-searchbox01').searchbox('getValue');
 		searchChannelQueryParams.maxId = searchChannelMaxId;
 		searchChannelQueryParams.query = query;
-		$("#channelId").combogrid('grid').datagrid("load",searchChannelQueryParams);
+		$("#channelId").combogrid('grid').datagrid("load",
+				searchChannelQueryParams);
 	}
-	
-
-	
 </script>
 </head>
 <body>
