@@ -530,16 +530,16 @@
 			<tbody>
 			<tr>
 				<td style='height:100'>
-				马甲织图ID：<input type="text" id="zombieWorldId" name='zombieWorldId'>
+				马甲织图ID：<input type="text" id="zombieWorldId" name='zombieWorldId' readonly="readonly">
 				</td>
 			</tr>
-			<tr>
+<!-- 			<tr>
 				<td>织图等级&nbsp;&nbsp;&nbsp;: <input style="width:120px" class="easyui-combobox" id="levelId" name="id"  onchange="validateSubmitOnce=true;" 
 					data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel'"/></td>
-			</tr>
+			</tr> -->
 			<tr>
 				<td style='height:100' >
-				<input id='commentsFile' type="file" name='commentsFile'>
+				<input id='commentsFile' type="file" name='commentsFile' >
 				</td>
 			</tr>
 			<tr>

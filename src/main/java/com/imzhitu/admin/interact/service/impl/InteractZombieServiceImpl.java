@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -743,6 +744,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		detector.add(ASCIIDetector.getInstance()); 
 		detector.add(UnicodeDetector.getInstance()); 
 		java.nio.charset.Charset set = null;
+		
+		if (commentsFile == null) throw new Exception("你没有选择文件。");
 		set = detector.detectCodepage(commentsFile.toURI().toURL());
 		String charsetName = set.name();
 		
