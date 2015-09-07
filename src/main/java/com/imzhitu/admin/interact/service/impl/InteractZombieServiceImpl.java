@@ -1,5 +1,11 @@
 package com.imzhitu.admin.interact.service.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +18,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +40,7 @@ import com.hts.web.ztworld.dao.HTWorldDao;
 import com.hts.web.ztworld.dao.HTWorldLabelDao;
 import com.hts.web.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.common.database.Admin;
+import com.imzhitu.admin.common.pojo.InteractComment;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.ZombieChildWorld;
 import com.imzhitu.admin.common.pojo.ZombieWorld;
@@ -44,6 +52,11 @@ import com.imzhitu.admin.interact.service.InteractZombieService;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 
+import info.monitorenter.cpdetector.io.ASCIIDetector;
+import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
+import info.monitorenter.cpdetector.io.JChardetFacade;
+import info.monitorenter.cpdetector.io.ParsingDetector;
+import info.monitorenter.cpdetector.io.UnicodeDetector;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -84,7 +97,18 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 
 	@Autowired
 	private com.hts.web.operations.service.ChannelService webChannelService;
+
+	@Autowired
+	private com.imzhitu.admin.interact.dao.InteractCommentDao interactCommentDao;
+
+	@Autowired
+	private com.imzhitu.admin.interact.mapper.InteractAutoResponseMapper interactAutoResponseMapper;
 	
+	@Autowired
+	com.imzhitu.admin.interact.service.impl.InteractWorldlevelServiceImpl interactWorldlevelServiceImpl;
+	
+	private Logger log = Logger.getLogger(InteractZombieServiceImpl.class);
+
 	private String baseThumbPathAixin = "http://static.imzhitu.com/world/thumbs/1403056393000.png";
 	private String baseThumbPathXing = "http://static.imzhitu.com/world/thumbs/1403057093000.png";
 	private String baseThumbPathHuabian = "http://static.imzhitu.com/world/thumbs/1403056953000.png";
@@ -92,8 +116,10 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Integer saveZombieWorld(String childsJSON, Integer titleId, Integer authorId, String worldName, String worldDesc, String worldLabel, String labelIds, String coverPath, String titlePath, String titleThumbPath, Double longitude,
-			Double latitude, String locationAddr, Integer size, Integer channelId) throws Exception {
+	public Integer saveZombieWorld(String childsJSON, Integer titleId, Integer authorId, String worldName,
+			String worldDesc, String worldLabel, String labelIds, String coverPath, String titlePath,
+			String titleThumbPath, Double longitude, Double latitude, String locationAddr, Integer size,
+			Integer channelId) throws Exception {
 		Date now = new Date();
 		ZombieWorld zombieWorld = new ZombieWorld();
 		Integer id = keyGenService.generateId(Admin.KEYGEN_ZOMBIE_WORLD);
@@ -230,7 +256,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 					}
 				}
 				Integer lwid = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_WORLD_ID);
-				worldLabelWorldDao.saveLabelWorld(new HTWorldLabelWorld(lwid, worldId, zw.getAuthorId(), labelId, valid, lwid, 0));
+				worldLabelWorldDao.saveLabelWorld(
+						new HTWorldLabelWorld(lwid, worldId, zw.getAuthorId(), labelId, valid, lwid, 0));
 				int count = 0;
 				if (label.getLabelState().equals(Tag.WORLD_LABEL_NORMAL)) { // 普通标签算真实总数，其他标签等审核
 					Long labelWorldCount = worldLabelWorldDao.queryWorldCountByLabelId(labelId);
@@ -330,7 +357,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	 * @throws Exception
 	 */
 	@Override
-	public void queryZombieWorldForTable(Integer channelId, int maxId, Date addDate, Date modifyDate, int page, int rows, Integer complete, Integer schedulaFlag, Map<String, Object> jsonMap) throws Exception {
+	public void queryZombieWorldForTable(Integer channelId, int maxId, Date addDate, Date modifyDate, int page,
+			int rows, Integer complete, Integer schedulaFlag, Map<String, Object> jsonMap) throws Exception {
 		ZombieWorld dto = new ZombieWorld();
 		dto.setComplete(complete);
 		dto.setMaxId(maxId);
@@ -380,7 +408,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 
 			// 遍历保存子世界缩略图
 			for (int i = 1; i < childArray.size(); i++) {
-				HTWorldChildWorldThumb thumb = (HTWorldChildWorldThumb) JSONUtil.toBean(childArray.get(i), HTWorldChildWorldThumb.class);
+				HTWorldChildWorldThumb thumb = (HTWorldChildWorldThumb) JSONUtil.toBean(childArray.get(i),
+						HTWorldChildWorldThumb.class);
 				childWorld.addThumb(thumb); // 向子世界中添加其缩略图信息
 				thumbsMap.put(thumb.getToId(), thumb);
 			}
@@ -388,7 +417,9 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		return worldInfo;
 	}
 
-	private void saveChildWorldInfo(Integer childId, Map<Integer, ZombieChildWorld> childWorldMap, Map<Integer, HTWorldChildWorldThumb> thumbMap, Integer worldId, Integer phoneCode, Float userVer) throws Exception {
+	private void saveChildWorldInfo(Integer childId, Map<Integer, ZombieChildWorld> childWorldMap,
+			Map<Integer, HTWorldChildWorldThumb> thumbMap, Integer worldId, Integer phoneCode, Float userVer)
+					throws Exception {
 		ZombieChildWorld childWorld = childWorldMap.get(childId);
 		childWorld.setZombieWorldId(worldId);
 		String childworldDesc = StringUtil.filterXSS(childWorld.getChildWorldDesc());
@@ -510,7 +541,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 
 	}
 
-	private void setUpTitleZombieWorld(Integer titleId, String titleThumbPath, String titlePath, Map<Integer, ZombieChildWorld> childWorldMap, Integer phoneCode, Float userVer) {
+	private void setUpTitleZombieWorld(Integer titleId, String titleThumbPath, String titlePath,
+			Map<Integer, ZombieChildWorld> childWorldMap, Integer phoneCode, Float userVer) {
 		ZombieChildWorld titleChild = childWorldMap.get(titleId);
 		titleChild.setThumbPath(titleThumbPath);
 		titleChild.setIsTitle(1); // 设置封面标志
@@ -573,6 +605,14 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			// 正式发布织图
 			Integer worldId = saveZombieWorldToHtWorld(zombieWorldId);
 
+			/**
+			 * mishengliang 15-09-07
+			 * 马甲生效后自动生成评论 
+			 * id 获取的马甲织图等级,现在先指定为 23 ，积极用户
+			 */
+			Integer id = 23;
+			saveAutoComments(zombieWorldId, worldId, id);
+			
 			// 添加到频道
 			if (zw.getChannelId() != null && zw.getChannelId() != 0) {
 				if (channelMapper.queryChannelById(zw.getChannelId()) != null) {
@@ -613,12 +653,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		dto.setChannelId(channelId);
 		dto.setModifyDate(new Date());
 		zombieWorldMapper.updateZombieWorld(dto);
-		
+
 		// 若织图描述不为空，则要同步刷新第一个子图的描述
-		if ( worldDesc != null ) {
+		if (worldDesc != null) {
 			// 根据织图id查询此织图的所有子图
 			List<ZombieChildWorld> zombieChildWorldList = zombieChildWorldMapper.queryZombieChildWorld(id);
-			
+
 			// 因为获取为顺序的，所以得到第一个子图，然后刷新子图的描述
 			ZombieChildWorld zombieChildWorld = zombieChildWorldList.get(0);
 			zombieChildWorld.setChildWorldDesc(worldDesc);
@@ -627,8 +667,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	}
 
 	/**
-	 * 处理织图描述，过滤掉不需要的字符 
-	 * 如：html标签，与html标签中间所携带的内容，样式关键字“class=”与之后的内容 
+	 * 处理织图描述，过滤掉不需要的字符 如：html标签，与html标签中间所携带的内容，样式关键字“class=”与之后的内容
 	 * 原因：因为马甲织图都来源于网络，粘贴过程中，会携带网页上隐藏的内容，转化为文本后，会显示出来，故要做处理
 	 * 
 	 * @param worldDesc
@@ -644,7 +683,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		// 匹配各种单独的html起始标签，如<div>
 		String regex2 = "<[A-Za-z]*>";
 
-		// 匹配各种单独的html起始标签，并且有属性配置的，如<SPAN class="emoji emoji2764" title="heavy black heart">
+		// 匹配各种单独的html起始标签，并且有属性配置的，如<SPAN class="emoji emoji2764" title="heavy
+		// black heart">
 		String regex3 = "<[A-Za-z0-9\\s\\`~!@#$%^&*()_+-=\"\']*>";
 
 		// 匹配各种单独的html起始标签，如<div>
@@ -688,4 +728,69 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		return sb.toString();
 	}
 
+	/**
+	 * mishengliang
+	 * 出于要获得新增评论的id，没有去直接复用插入评论的方法；否则还要调用新写一个获取新增ID的方法
+	 */
+	@Override
+	public void addCommentsFile(File commentsFile, Integer zombieWorldId) throws Exception {
+		//默认的评论加入的标签           5为其他旧的ID
+		Integer labelId  = 5;
+		List<Integer> list = new ArrayList<Integer>();
+		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
+		detector.add(new ParsingDetector(false)); 
+		detector.add(JChardetFacade.getInstance());
+		detector.add(ASCIIDetector.getInstance()); 
+		detector.add(UnicodeDetector.getInstance()); 
+		java.nio.charset.Charset set = null;
+		set = detector.detectCodepage(commentsFile.toURI().toURL());
+		String charsetName = set.name();
+		
+		// 除了GB开头的编码，其他一律用UTF-8
+		String charset = charsetName != null && charsetName.startsWith("GB") ? charsetName : "UTF-8";
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(commentsFile), charset));
+			String line = null;
+			while((line = reader.readLine()) != null) {
+				try{
+					String commentStr = line.trim();
+					Integer commentId = keyGenService.generateId(Admin.INTERACT_COMMENT_KEYID);
+					if (!"".equals(commentStr)) {
+						interactCommentDao.saveComment(new InteractComment(commentId, commentStr, labelId));
+						//将评论的id和马甲织图id对应的放入一个表中
+						interactAutoResponseMapper.insertZombieAutoResponse(zombieWorldId, commentId);
+					}
+				}catch(Exception e){
+					log.warn("batchInsertZombieChannel error. line:"+line+".zombieId:"+zombieWorldId+"\ncause:"+e.getMessage());
+				}
+			}
+		}finally {
+			reader.close();
+		}
+		
+	}
+
+	/**
+	 * 
+	 * @param worldId  织图ID
+	 * @param id  织图等级
+		*	2015年9月7日
+		*	mishengliang	
+	 * @throws Exception 
+	 */
+	public void saveAutoComments(Integer zombieWorldId,Integer worldId,Integer id) throws Exception{
+		List<Integer> commentsId = interactAutoResponseMapper.queryZombieCommentId(zombieWorldId);
+		String comments = "";
+		if (commentsId != null && commentsId.size() > 0) {
+			for(int i = 0;i<commentsId.size();i++){
+				if (i == commentsId.size()-1) {
+					comments += commentsId.get(i).toString(); 
+				} else {
+					comments += commentsId.get(i).toString() + ",";
+				}
+			}
+			interactWorldlevelServiceImpl.AddLevelWorld(worldId, id, null, comments);
+		}
+	}
 }

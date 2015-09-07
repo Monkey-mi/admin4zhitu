@@ -50,7 +50,7 @@ public interface InteractWorldlevelService extends BaseService {
 	/**
 	 * 增加织图等级
 	 * @param world_id
-	 * @param id
+	 * @param id   织图等级（前台指定的数据）
 	 * @param labelsStr
 	 * @param comments
 	 * @throws Exception

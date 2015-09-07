@@ -7,9 +7,11 @@
 <title>马甲发图计划管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/htmCRUD20131111.css"></link>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery.form.min.js"></script>
 <script type="text/javascript">
 	var maxId = 0;
 	var worldURLPrefix = 'http://www.imzhitu.com/DT';
@@ -88,19 +90,19 @@
 		{field : 'channelName',title:'频道名称',align:'center'},
  		{field : 'worldLabel',title:'织图标签',align:'center'}, 
 		{
-			field : 'comment',
-			title : '完成状态',
+			field : 'commnet',
+			title : '添加评论',
 			align : 'center',
 			width : 100,
  			formatter : function(value, row, index) {
 				title = "批量添加评论";
-				authorId = 1;
-  			if(value == 1) {
+				var completeValue = row.complete;
+  			if(completeValue == 1) {
   					img = "./common/images/ok.png";
   					return "<img title='已生效' class='htm_column_img'  src='" + img + "'/>";
   				}
 				img = "./common/images/edit_add.png";
-				return "<img title='" + title + "' class='htm_column_img pointer' onclick='addComments("+ row.authorId +")' src='" + img + "'/>";
+				return "<img title='" + title + "' class='htm_column_img pointer' onclick='addComments("+ row.id +")' src='" + img + "'/>";
 			} 
 		} 
 		
@@ -406,17 +408,30 @@
 	}
 	
 	//打开添加文件的窗口
-	function addComments(authorId){
+	function addComments(zombieWorldId){
 		$('#addComment').window('open');
+		$('#zombieWorldId').val(zombieWorldId);
 	}
 	
 	//mishengliang
 	//点击确定添加后的操作
 	function addComment(){
+		var addCommentsFile = $('#addCommentsFile');
 		$('#addComment').window('close');
- 		var file = $('#commentFile')[0];
-		file.value = ""; 
+		addCommentsFile.ajaxSubmit({
+			success:function(result){
+			if (result['result'] == 0) {
+				$.messager.alert('提示',"成功！");
+			} else {
+				$.messager.alert('提示',result['msg']);
+			}
+			},
+			url : addCommentsFile.attr('action'),
+			type : 'post',
+			dataType : 'json'
+		});
 	}
+	
 </script>
 
 </head>
@@ -436,7 +451,7 @@
 		        <option value="1">已计划</option>
 	   	</select>
 	   	<span>起始时间：</span>
-   		<input id="beginDate"  class="easyui-datetimebox"/>
+   		<input id="beginDate"  class="easyui-datetimebox"/>id
    		<span>结束时间：</span>
    		<input id="endDate"  class="easyui-datetimebox"/>
    		<span>频道ID</span>
@@ -510,16 +525,25 @@
 	</div>
 	
   		<div id='addComment'>
-			<form id='addCommentFile' action="" method='post'>
+			<form id='addCommentsFile' action="./admin_interact/interactZombieWorld_addCommentsFile" method='post'>
 			<table class="htm_edit_table" width="340">
 			<tbody>
 			<tr>
-				<td align="center" style='height:100'>
-				<input id='commentFile' type="file" name='commentFile'>
+				<td style='height:100'>
+				马甲织图ID：<input type="text" id="zombieWorldId" name='zombieWorldId'>
 				</td>
 			</tr>
 			<tr>
-						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+				<td>织图等级&nbsp;&nbsp;&nbsp;: <input style="width:120px" class="easyui-combobox" id="levelId" name="id"  onchange="validateSubmitOnce=true;" 
+					data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel'"/></td>
+			</tr>
+			<tr>
+				<td style='height:100' >
+				<input id='commentsFile' type="file" name='commentsFile'>
+				</td>
+			</tr>
+			<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 20px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addComment();">确定</a>
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#addComment').window('close');">取消</a>
 						</td>

@@ -166,4 +166,12 @@
 		</foreach>
 	</delete>
 	
+	
+	<insert id="insertZombieAutoResponse">
+	insert into interact_zombie_auto_comments(zombie_world_id,comment_id) values (#{zombieWorldId},#{commentId});
+	</insert>
+	
+	<select id="queryZombieCommentId" resultType="Integer">
+	select comment_id from interact_zombie_auto_comments where zombie_world_id = #{zombieWorldId};
+	</select>
 </mapper>

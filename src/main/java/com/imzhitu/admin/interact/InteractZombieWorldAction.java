@@ -1,5 +1,6 @@
 package com.imzhitu.admin.interact;
 
+import java.io.File;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,14 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
     private Date addDate;
     private Date modifyDate;
     private Integer channelId;
+    private Integer zombieWorldId;
 
-    private String ids;// 批量发织图
+
+	private File commentsFile;
+
+
+
+	private String ids;// 批量发织图
     private Date begin;// 开始执行计划的时间
     private Integer timeSpan;//
 
@@ -157,6 +164,24 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
 	}
 	return StrutsKey.JSON;
+    }
+    
+/**
+ *     根据上传文件中的评论加入到库中
+ * @param commetsFile 评论文件
+ * @param authorId  马甲ID
+ * @return 
+	*	2015年9月6日
+	*	mishengliang
+ */
+    public String addCommentsFile(){
+		try{
+			service.addCommentsFile(commentsFile, zombieWorldId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
     }
 
     public String getImgPath() {
@@ -350,4 +375,20 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
     public void setSchedulaFlag(Integer schedulaFlag) {
 	this.schedulaFlag = schedulaFlag;
     }
+    
+	public File getCommentsFile() {
+		return commentsFile;
+	}
+
+	public void setCommentsFile(File commentsFile) {
+		this.commentsFile = commentsFile;
+	}
+	
+    public Integer getZombieWorldId() {
+		return zombieWorldId;
+	}
+
+	public void setZombieWorldId(Integer zombieWorldId) {
+		this.zombieWorldId = zombieWorldId;
+	}
 }

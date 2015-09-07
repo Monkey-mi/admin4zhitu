@@ -1,5 +1,7 @@
 package com.imzhitu.admin.interact.service;
 
+import java.io.File;
+import java.security.PublicKey;
 import java.util.Date;
 import java.util.Map;
 
@@ -73,4 +75,14 @@ public interface InteractZombieService {
 	 * @author zhangbo	2015年7月28日
 	 */
 	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId);
+	
+	
+	/**
+	 * 将文件中的评论解析，并且加入到指定的评论标签（‘其他旧’）中
+	 * @param commentsFile 上传的评论文件
+	 * @param authorId 马甲ID
+		*	2015年9月6日
+		*	mishengliang
+	 */
+	public void addCommentsFile(File commentsFile,Integer zombieWorldId)throws Exception;
 }

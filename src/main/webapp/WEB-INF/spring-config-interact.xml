@@ -522,9 +522,15 @@
             <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
         </property>
     </bean>
+<<<<<<< HEAD
 	
 	
 	
+=======
+
+<!--production tag-->
+
+>>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 	<!--
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">

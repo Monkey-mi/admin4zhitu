@@ -207,7 +207,6 @@
 	}
 	
 	
-	//mishengliang
 	function addSubmit(){
 		var addForm = $('#add_form');
 		$('#htm_add .opt_btn').hide();

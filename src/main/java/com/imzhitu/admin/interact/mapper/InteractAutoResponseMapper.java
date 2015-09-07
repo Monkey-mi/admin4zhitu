@@ -2,6 +2,8 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.InteractAutoResponseDto;
 
@@ -83,4 +85,23 @@ public interface InteractAutoResponseMapper {
 	 */
 	@DataSource("slave")
 	public InteractAutoResponseDto queryRespnse(Integer id);
+	
+	/**
+	 * 插入评论ID和马甲ID的关系表
+	 * @param zombieId
+	 * @param commentId 
+		*	2015年9月6日
+		*	mishengliang
+	 */
+	@DataSource("master")
+	public void insertZombieAutoResponse(@Param("zombieWorldId")Integer zombieWorldId,@Param("commentId")Integer commentId);
+	
+	/**
+	 *查询马甲织图对应对应的自动评论ID
+	 * @param zombieId
+	 * @return 
+		*	2015年9月7日
+		*	mishengliang
+	 */
+	public List<Integer> queryZombieCommentId(@Param("zombieWorldId")Integer zombieWorldId);
 }

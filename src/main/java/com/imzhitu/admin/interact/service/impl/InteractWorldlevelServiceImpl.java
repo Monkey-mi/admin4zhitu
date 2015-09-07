@@ -3,9 +3,6 @@ package com.imzhitu.admin.interact.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +18,9 @@ import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements InteractWorldlevelService {
@@ -128,6 +128,9 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 	
 	/**
 	 * 增加等级织图
+	 * world_id 织图ID
+	 * id 织图等级
+	 * comments 评论
 	 */
 	@Override
 	public void AddLevelWorld(Integer world_id,Integer id,String labelsStr,String comments)throws Exception{
@@ -136,7 +139,7 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 			throw new Exception("AddLevelWorld:world_id is null");
 		}
 		
-		//查询对应的马甲zombieDegreeId
+		//查询对应的马甲zombieDegreeId -- 作者ID
 		Integer uid = interactWorldlevelDao.QueryUIDByWID(world_id);
 		
 		//添加互动
