@@ -1,5 +1,6 @@
 package com.imzhitu.admin.ztworld.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,18 @@ public class HTWorldTypeCacheDaoImpl extends BaseCacheDaoImpl<HTWorldType>
 	
 	@Autowired
 	private ZTWorldTypeMapper typeMapper;
-
+	
+	private static final int OTHER_TYPE_ID = 5;
+	
 	@Override
 	public void updateTypeCache() {
 		List<HTWorldType> list = typeMapper.queryCacheType();
+		for(int i = 0; i < list.size(); i++) {
+			if(list.get(i).getId().equals(OTHER_TYPE_ID)) {
+				list.remove(i);
+				--i;
+			}
+		}
 		if (getRedisTemplate().hasKey(CacheKeies.ZTWORLD_TYPE)) {
 			getRedisTemplate().delete(CacheKeies.ZTWORLD_TYPE);
 		}

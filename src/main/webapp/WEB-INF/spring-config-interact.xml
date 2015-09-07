@@ -522,7 +522,9 @@
             <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
         </property>
     </bean>
-	
+
+<!--production tag-->
+
 	<!--
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
