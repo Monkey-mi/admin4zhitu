@@ -955,10 +955,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements
 			Map<String, Object> jsonMap) throws Exception {
 		final OpChannel channel = new OpChannel();
 		channel.setMaxId(maxId);
-<<<<<<< HEAD
-=======
 		// XXX 由于业务需求，先放开限制，然后业务整合时再一起讨论
->>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 //		channel.setValid(Tag.TRUE); // 只查询有效频道
 		if(!StringUtil.checkIsNULL(query)) {
 			try {

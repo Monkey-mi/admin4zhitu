@@ -32,7 +32,7 @@
             <value>commitClick</value>
         </property>
         <property name="concurrent"> 
-			<value>true</value>  <!-- 作业并发调度  -->
+			<value>true</value>
 		</property> 
     </bean>
 
@@ -522,15 +522,9 @@
             <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
         </property>
     </bean>
-<<<<<<< HEAD
-	
-	
-	
-=======
 
 <!--production tag-->
 
->>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 	<!--
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
