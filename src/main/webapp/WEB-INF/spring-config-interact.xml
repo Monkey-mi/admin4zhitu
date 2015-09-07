@@ -32,7 +32,7 @@
             <value>commitClick</value>
         </property>
         <property name="concurrent"> 
-			<value>true</value>
+			<value>true</value>  <!-- 作业并发调度  -->
 		</property> 
     </bean>
 
@@ -522,6 +522,8 @@
             <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
         </property>
     </bean>
+	
+	
 	
 	<!--
     <bean name="startQuertz" lazy-init="false"
