@@ -591,11 +591,52 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			List<Integer> zombieIdList = new ArrayList<Integer>();
 			int followCommentSize = Math.round(commentCount * commentFromFollowRate);
 			int i,j;
-			for( i = 0; i < followCommentSize && i < fzListLength ; i++) {
+/*			for( i = 0; i < followCommentSize && i < fzListLength ; i++) {
 				zombieIdList.add(fzList.get(i));
 			}
 			for(j = 0; j < commentCount - i && j < unFzList.size(); j++){
 				zombieIdList.add(unFzList.get(j));
+			}
+			*/
+			
+			/**
+			 * mishengliang
+			 * fc=followCommentSize 理论上需要的粉丝数
+			 * ufc=commentCount-followCommentSize 理论上需要的非粉丝数
+			 * 
+			 * if(查询出的粉丝数和非粉丝数 的和 大于需要的评论数){
+			 * 		if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 大于等于 需论数*0.8){}
+			 * else if(粉丝数 小于 需论数*0.2 && 非粉丝数 大于等于 需论数*0.8){}
+			 * else if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 小于 需论数*0.8){}
+			 * }
+			 */
+			if (fzListLength+unFzList.size() < commentCount) {
+				int fc=followCommentSize ;
+				int ufc=commentCount-followCommentSize;
+				if (fzListLength >= fc && unFzList.size() >= ufc) {
+					for( i = 0; i < fc ; i++) {
+						zombieIdList.add(fzList.get(i));
+					}
+					for( j = 0; j < ufc; j++){
+						zombieIdList.add(unFzList.get(j));
+					}
+				} else if(fzListLength < fc && unFzList.size() >= ufc){
+					for( i = 0; i < fzListLength ; i++) {
+						zombieIdList.add(fzList.get(i));
+					}
+					for( j = 0; j < commentCount -fzListLength; j++){
+						zombieIdList.add(unFzList.get(j));
+					}
+				}else if(fzListLength >= fc && unFzList.size() < ufc){
+					for( i = 0; i < commentCount - unFzList.size() ; i++) {
+						zombieIdList.add(fzList.get(i));
+					}
+					for( j = 0; j < unFzList.size(); j++){
+						zombieIdList.add(unFzList.get(j));
+					}
+				}
+			} else {
+				throw new Exception("没有足够的马甲数");
 			}
 			
 			batchSaveComment(interactId, worldId, zombieIdList, cids, dateAdded, scheduleDateList);
