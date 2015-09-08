@@ -110,24 +110,6 @@ var maxId = 0,
   				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateSchedulaSuperbOp("+ superb +","+ index +")' src='" + img + "'/>";
   			}
   		},
-  		{field : 'channelWorldSchedulaSuperb',title : '计划加精',align : 'center', width: 45,
-  			formatter: function(value,row,index) {
-  				var superb;
-  				switch(value) {
-  				case 1:
-  					tip = "加精状态已加入计划当中";
-  					img = "./common/images/ok.png";
-  					superb = 0;
-  					break;
-  				default:
-  					tip = "计划中为未加精状态";
-  					img = "./common/images/tip.png";
-  					superb = 1;
-  					break;
-  				}
-  				return "<img title='"+ tip + "' class='htm_column_img pointer' src='" + img + "'/>";
-  			}
-  		},
   		{field : 'beSchedula',title : '计划',align : 'center', width: 45,
   			formatter: function(value,row,index) {
   				if(value == 0) {
@@ -400,7 +382,7 @@ function reIndexed() {
 	for(var i=0;i<rows.length;i++){
 		wids.push(rows[i].worldId);
 		
-		if (rows[i].superb==1){
+		if (rows[i].channelWorldSchedulaSuperb==1){
 			superbWids.push(rows[i].worldId);
 		}
 	}
