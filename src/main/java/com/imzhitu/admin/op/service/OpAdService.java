@@ -3,6 +3,8 @@ package com.imzhitu.admin.op.service;
 import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
+import com.imzhitu.admin.common.pojo.OpAdAppLink;
+import com.imzhitu.admin.common.pojo.OpAdAppLinkRecord;
 
 /**
  * <p>
@@ -27,8 +29,15 @@ public interface OpAdService extends BaseService {
 	 * @param open
 	 * @throws Exception
 	 */
-	public void saveAppLink(String appName, String appIcon, String appDesc, String appLink,
-			Integer phoneCode, Integer open) throws Exception;
+	public void saveAppLink(OpAdAppLink link) throws Exception;
+	
+	/**
+	 * 更新链接
+	 * 
+	 * @param link
+	 * @throws Exception
+	 */
+	public void updateAppLink(OpAdAppLink link) throws Exception;
 	
 	/**
 	 * 更新排序
@@ -38,26 +47,13 @@ public interface OpAdService extends BaseService {
 	public void updateAppLinkSerial(String[] idStrs) throws Exception;
 	
 	/**
-	 * 根据JSON更新链接
+	 * 更新有效性
 	 * 
-	 * @param json
+	 * @param idsStr
 	 * @throws Exception
 	 */
-	public void updateAppLinkByJSON(String json) throws Exception;
+	public void updateAppLinkValid(String idsStr, Integer valid) throws Exception;
 
-	/**
-	 * 构建APP点击记录列表
-	 * 
-	 * @param appId
-	 * @param maxId
-	 * @param start
-	 * @param limit
-	 * @param jsonMap
-	 * @throws Exception
-	 */
-	public void buildAppLinkRecord(Integer appId, int maxId, int start,
-			int limit, Map<String, Object> jsonMap) throws Exception;
-	
 	/**
 	 * 构建APP链接列表
 	 * 
@@ -69,7 +65,7 @@ public interface OpAdService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void buildAppLink(Integer open, Integer phoneCode, int maxSerial, int start, 
+	public void buildAppLink(OpAdAppLink link, int start, 
 			int limit, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
@@ -79,6 +75,27 @@ public interface OpAdService extends BaseService {
 	 * @throws Exception
 	 */
 	public void deleteAppLink(String idsStr) throws Exception;
+	
+	/**
+	 * 根据id查询applink
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public void buildAppLinkById(Integer id, Map<String, Object> jsonMap) throws Exception;
+	
+	/**
+	 * 构建APP点击记录列表
+	 * 
+	 * @param record
+	 * @param start
+	 * @param limit
+	 * @param jsonMap
+	 * @throws Exception
+	 */
+	public void buildAppLinkRecord(OpAdAppLinkRecord record, int start,
+			int limit, Map<String, Object> jsonMap) throws Exception;
 	
 	
 }

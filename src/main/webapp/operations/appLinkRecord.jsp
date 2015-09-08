@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>广场推送管理</title>
+<title>换量访问记录管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 <script type="text/javascript">
@@ -15,17 +15,34 @@ var maxId = 0,
 	toolbarComponent = [],
 	init = function() {
 		myQueryParams = {
-			'maxId' : maxId,
-			'appId' : appId
+			'record.maxId' : maxId,
+			'record.appId' : appId
 		},
 		loadPageData(initPage);
 	},
+	
+	myOnBeforeRefresh = function(pageNumber, pageSize) {
+		if(pageNumber <= 1) {
+			maxId = 0;
+			myQueryParams['record.maxId'] = maxId;
+		}
+	},
+	
+	myOnLoadSuccess = function(data) {
+		if(data.result == 0) {
+			if(data.maxId > maxId) {
+				maxId = data.maxId;
+				myQueryParams['record.maxId'] = maxId;
+			}
+		}
+	},
+	
 	htmTableTitle = "点击记录列表", //表格标题
 	loadDataURL = "./admin_op/ad_queryAppLinkRecord", //数据装载请求地址
 	
 	columnsFields = [
 		{field : 'id',title : 'ID',align : 'center', width : 60},
-		{field : 'recordip',title : 'IP',align : 'center', width : 180},
+		{field : 'recordIp',title : 'IP',align : 'center', width : 180},
 		{field : 'recordDate',title : '日期',align : 'center', width : 180}
     ];
 </script>

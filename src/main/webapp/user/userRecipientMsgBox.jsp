@@ -185,7 +185,8 @@ var maxId = 0,
 			maximizable : false,
 			collapsible : false,
 			iconCls : 'icon-add',
-			resizable : false,
+			resizable : false
+			/*
 			onClose : function() {
 				clearFormData($("#appmsg_form"));
 				$(".notice_appmsg").attr('checked', 'checked');
@@ -194,6 +195,7 @@ var maxId = 0,
 				$('#htm_appmsg .opt_btn').show();
 				$('#htm_appmsg .loading').hide();
 			}
+		*/
 		});
 		
 		$('#activityName_appmsg').combogrid({

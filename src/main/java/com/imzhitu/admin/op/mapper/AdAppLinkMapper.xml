@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.AdAppLinkMapper">
+
+	<resultMap type="com.imzhitu.admin.common.pojo.OpAdAppLink" id="OpAdAppLinkMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="app_name" property="appName" jdbcType="VARCHAR"/>
+		<result column="app_icon" property="appIcon" jdbcType="VARCHAR"/>
+		<result column="app_icon_l" property="appIconL" jdbcType="VARCHAR"/>
+		<result column="app_desc" property="appDesc" jdbcType="VARCHAR"/>
+		<result column="app_link" property="appLink" jdbcType="VARCHAR"/>
+		<result column="short_link" property="shortLink" jdbcType="VARCHAR"/>
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER"/>
+		<result column="click_count" property="clickCount" jdbcType="INTEGER"/>
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="open" property="open" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<select id="queryLink" resultMap="OpAdAppLinkMap">
+		select * from hts.operations_ad_applink
+		<where>
+			<if test="appName != null">app_name=#{appName}</if>
+			<if test="phoneCode != null"> AND phone_code=#{phoneCode}</if>
+	      	<if test="open != null"> AND open=#{open}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND serial<=#{maxId}]]></if>
+		</where>
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryLinkCount" resultType="long">
+		select count(*) from hts.operations_ad_applink
+		<where>
+			<if test="appName != null">app_name=#{appName}</if>
+			<if test="phoneCode != null"> AND phone_code=#{phoneCode}</if>
+	      	<if test="open != null"> AND open=#{open}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND serial<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<update id="update">
+		update hts.operations_ad_applink
+		<set>
+	      <if test="appName != null">app_name=#{appName},</if>
+	      <if test="appIcon != null">app_icon=#{appIcon},</if>
+	      <if test="appIconL != null">app_icon_l=#{appIconL},</if>
+	      <if test="appDesc != null">app_desc=#{appDesc},</if>
+	      <if test="appLink != null">app_link=#{appLink},</if>
+	      <if test="shortLink != null">short_link=#{shortLink},</if>
+	      <if test="phoneCode != null">phone_code=#{phoneCode},</if>
+	      <if test="open != null">open=#{open},</if>
+	      <if test="serial != null">serial=#{serial}</if>
+	    </set>
+	  	where id=#{id}
+	</update>
+	
+	<insert id="save" keyProperty="id">
+		insert into hts.operations_ad_applink (id,app_name,app_icon,app_icon_l,
+			app_desc,app_link,short_link,phone_code,open,serial)
+	 		values (#{id},#{appName},#{appIcon},#{appIconL},#{appDesc},#{appLink},#{shortLink},
+	 		#{phoneCode}, #{open}, #{serial})
+	</insert>
+	
+	<update id="updateValidByIds">
+		update hts.operations_ad_applink set open=#{valid} where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</update>
+	
+	<delete id="deleteByIds">
+		delete from hts.operations_ad_applink where id in
+		<foreach item="item" index="index" collection="array"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
+	<select id="queryLinkById" resultMap="OpAdAppLinkMap"> 
+		select * from hts.operations_ad_applink where id=#{id}
+	</select>
+	
+	<update id="updateSerialById">
+		update hts.operations_ad_applink set serial=#{serial} where id=#{id}
+	</update>
+	
+</mapper>

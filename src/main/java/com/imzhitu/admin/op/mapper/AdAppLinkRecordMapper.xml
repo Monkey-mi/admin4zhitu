@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.AdAppLinkRecordMapper">
+
+	<resultMap type="com.imzhitu.admin.common.pojo.OpAdAppLinkRecord" id="OpAdAppLinkRecordMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="record_ip" property="recordIp" jdbcType="VARCHAR"/>
+		<result column="record_date" property="recordDate" jdbcType="TIMESTAMP" />
+		<result column="app_id" property="appId" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<select id="queryRecord" resultMap="OpAdAppLinkRecordMap">
+		select * from hts.operations_ad_applink_record
+		<where>
+			<if test="appId != null">app_id=#{appId}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryRecordCount" resultType="long">
+		select count(*) from hts.operations_ad_applink_record
+		<where>
+			<if test="appId != null">app_id=#{appId}</if>
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ AND id<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+	<delete id="deleteByAppId">
+		delete from hts.operations_ad_applink_record where app_id=#{appId}
+	</delete>
+	
+	
+</mapper>
