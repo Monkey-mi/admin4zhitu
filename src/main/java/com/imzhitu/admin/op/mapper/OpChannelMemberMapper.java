@@ -12,6 +12,8 @@ import com.imzhitu.admin.common.pojo.OpChannelMemberDTO;
  * 频道成员相关数据接口
  * 作为持久层操作，对数据库进行的一系列操作
  * 
+ * TODO 对红人表的操作，单拿出来一个Mapper去操作，一个Mapper只操作一张表
+ * 
  * @author zhangbo	2015年8月18日
  *
  */

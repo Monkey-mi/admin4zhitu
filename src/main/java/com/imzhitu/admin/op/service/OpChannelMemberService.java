@@ -66,12 +66,22 @@ public interface OpChannelMemberService extends BaseService {
 
 	/**
 	 * 推送消息给频道红人，通知其成为频道红人
+	 * TODO 批量通知要废弃掉，十一以后要废掉，现在通知都涵盖在了成为红人后，就直接发通知出去了
 	 * 
 	 * @param channelStarId	频道红人表主键id
 	 * @author zhangbo	2015年8月18日
 	 */
 	public void addStarRecommendMsg(Integer channelStarIds) throws Exception;
 
+	/**
+	 * 更新频道红人的通知状态
+	 * 
+	 * @param channelStarId	频道红人表主键id
+	 * @param notified	通知状态	1：已通知	0：未通知
+	 * @author zhangbo	2015年9月6日
+	 */
+	void updateChannelStarNotified(Integer channelStarId, Integer notified);
+	
 	/**
 	 * 对频道红人进行重新排序
 	 * 

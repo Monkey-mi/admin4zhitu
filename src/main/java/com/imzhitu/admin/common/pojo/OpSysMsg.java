@@ -2,6 +2,13 @@ package com.imzhitu.admin.common.pojo;
 
 import java.util.Date;
 
+/**
+ * 系统通知对象 
+ * ORM对象，用于记录发送的系统通知
+ * 
+ * @author zhangbo	2015年9月7日
+ *
+ */
 public class OpSysMsg {
 
 	private Integer id;

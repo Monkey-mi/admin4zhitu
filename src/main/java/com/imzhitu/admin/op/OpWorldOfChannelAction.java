@@ -287,7 +287,7 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	    // 若为有效，即在回收站中恢复
 	    if( isValid() ) {
 		// 在回收站中恢复，为批量，且valid设置为1
-		cannelService.updateChannelWorldValid(getIds(),1,"_add");
+		cannelService.updateChannelWorldValid(getIds(),1);
 		
 		// 由于是恢复，那么要把中间表中对应数据删除掉
 		Integer[] ids = StringUtil.convertStringToIds(getIds());
@@ -298,7 +298,7 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
 	    // 若为无效，即在页面点击删除
 	    else {
 		// 在主表中更新被删除的valid字段为0
-		cannelService.updateChannelWorldValid(getId().toString(),0,"");
+		cannelService.updateChannelWorldValid(getId().toString(),0);
 		
 		OpWorldOfCannelDto dto = new OpWorldOfCannelDto();
 		dto.setId(getId());

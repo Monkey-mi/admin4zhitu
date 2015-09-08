@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpChannelNoticeMapper">
+
+	<!-- 保存频道通知 -->
+	<insert id="insertChannelNotice">
+		insert hts_admin.op_channel_notice
+			(channel_id, notice_type, notice_template_id)
+		values
+			(#{channelId}, #{noticeType}, #{noticeTmplId})
+	</insert>
+
+	<!-- 更新频道通知，根据频道id和频道通知类型 -->
+	<update id="updateChannelNotice">
+		update 
+			hts_admin.op_channel_notice
+		<set>
+			notice_template_id = #{noticeTmplId},
+		</set>
+		where
+			channel_id = #{channelId}
+			and notice_type = #{noticeType} 
+	</update>
+	
+	<!-- 根据频道通知类型获取通知信息模板id -->
+	<select id="getNoticeTpmlIdByType" resultType="java.lang.Integer">
+		select
+			notice_template_id
+		from
+			hts_admin.op_channel_notice 
+		where 
+			channel_id = #{channelId}
+			and notice_type = #{noticeType} 
+	</select>
+	
+</mapper>

@@ -219,19 +219,13 @@ public class ChannelServiceTest extends BaseTest {
 	
 //	@Test
 	public void testUpdateChannelWorldValid() throws Exception {
-		service.updateChannelWorldValid("12", Tag.TRUE,"_add");
+		service.updateChannelWorldValid("12", Tag.TRUE);
 	}
 	
 	@Test
 	public void testAddTopOneRecommendMsg() throws Exception {
 		service.addTopOneRecommendMsg(11);
 	}
-	
-	@Test
-	public void testAddChannelWorldRecommendMsg() throws Exception {
-		service.addChannelWorldRecommendMsg(60,"_add");
-	}
-	
 	
 	@Test
 	public void queryLabelTopOneTest()throws Exception{

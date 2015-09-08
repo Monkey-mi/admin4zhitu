@@ -12,6 +12,7 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
@@ -19,6 +20,7 @@ import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelWorldSchedulaMapper;
 import com.imzhitu.admin.op.service.ChannelService;
 import com.imzhitu.admin.op.service.OpChannelWorldSchedulaService;
+import com.imzhitu.admin.op.service.OpMsgService;
 
 //@Service
 public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implements OpChannelWorldSchedulaService{
@@ -26,6 +28,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	
 	@Autowired
 	private ChannelService channelService;
+	
+	@Autowired
+	private OpMsgService msgService;
 	
 	@Autowired
 	private OpChannelWorldSchedulaMapper channelWorldSchedulaMapper;
@@ -191,6 +196,12 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    // 刷新频道织图的serial，让10:50的织图排在最新，即serial最大
 		    channelService.addChannelWorldId(schedulaDto.getChannelId(), schedulaDto.getWorldId());
 		    
+		    // 若为加精状态则进行通知
+		    if ( schedulaDto.getSuperb() == 1 ) {
+		    	OpChannelWorld channelWorld = channelWorldMapper.queryChannelWorldByWorldId(schedulaDto.getWorldId(), schedulaDto.getChannelId());
+		    	msgService.sendChannelSystemNotice(channelWorld.getAuthorId(), Admin.NOTICE_CHANNELWORLD_TO_SUPERB, schedulaDto.getChannelId(), schedulaDto.getWorldId());
+		    }
+		    
         	    /*
         	     * 下列注释，是针对以前频道的玩法：一张织图添加到频道中，会推送消息给用户 现在频道玩法变化，故先注释
         	     */
@@ -199,6 +210,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 //        	    } catch (Exception e) {
 //        
 //        	    }
+		    
 		}
 		
 		//通知

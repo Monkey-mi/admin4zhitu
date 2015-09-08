@@ -14,7 +14,10 @@
   <script type="text/javascript">
 	var maxId = 0;
 	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") ? baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") : "";
-	batchEnableTip = "您确定要使已选中的用户生效吗？", batchDisableTip = "您确定要使已选中的用户失效吗？",
+	var batchEnableTip = "您确定要使已选中的用户生效吗？";
+	var batchDisableTip = "您确定要使已选中的用户失效吗？";
+	
+	htmTableTitle = "频道红人管理";
 
 	myQueryParams['channelId'] = channelId;
 	

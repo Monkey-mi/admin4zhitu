@@ -241,4 +241,25 @@ public class Admin {
 	 */
 	public static final Integer ZHITU_UID = 2063;
 	
+	/**
+	 * 织图被选入频道给用户发送通知的标记位
+	 * 
+	 * @author zhangbo	2015年9月2日
+	 */
+	public static final String NOTICE_WORLD_INTO_CHANNEL = "world_into_channel";
+	
+	/**
+	 * 频道织图被选为精选给用户发送通知的标记位
+	 * 
+	 * @author zhangbo	2015年9月2日
+	 */
+	public static final String NOTICE_CHANNELWORLD_TO_SUPERB = "channelworld_to_superb";
+	
+	/**
+	 * 频道成员被选为红人给用户发送通知的标记位
+	 * 
+	 * @author zhangbo	2015年9月2日
+	 */
+	public static final String NOTICE_CHANNELMEMBER_TO_STAR = "channelmember_to_star";
+	
 }

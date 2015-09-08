@@ -210,10 +210,7 @@ function updateSuperb(channelId, worldId, superb, index) {
 	$.post(updateSuperbURL,{
 		"channelId":channelId,
 		"worldId":worldId,
-		"superb":superb,
-		//标记为精选通知
-		//mishengliang
-		"channlMsgType":"_superb"
+		"superb":superb
 	}, function(result){
 		if(result['result'] == 0) {
 			updateValue(index, 'superb', superb);

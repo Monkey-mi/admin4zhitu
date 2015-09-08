@@ -1,7 +1,6 @@
 package com.imzhitu.admin.common.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.hts.web.base.constant.Tag;
 

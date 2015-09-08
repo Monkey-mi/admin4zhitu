@@ -53,8 +53,6 @@ public class ChannelAction extends BaseCRUDAction{
 	private String query;
 	private Integer superb;
 	
-	private String channlMsgType;
-
 	/**
 	 * 更新频道top one title缓存
 	 * 
@@ -288,9 +286,6 @@ public class ChannelAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	//mishengliang
-	//addChannelWorldRecommendMsgByWorldId
-	
 	/**
 	 * 删除频道织图
 	 * 
@@ -313,7 +308,7 @@ public class ChannelAction extends BaseCRUDAction{
 	 */
 	public String updateChannelWorldValid() {
 		try {
-			channelService.updateChannelWorldValid(ids, valid,channlMsgType);
+			channelService.updateChannelWorldValid(ids, valid);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch(Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -337,14 +332,14 @@ public class ChannelAction extends BaseCRUDAction{
 	}
 	
 	/**
-	 * mishengliang
-	 * 更新精选标记和通知用户入选精选
 	 * 
+	 * 更新精选标记和通知用户入选精选
+	 * @author mishengliang
 	 * @return
 	 */
 	public String updateWorldSuperbByWID() {
 		try {
-			channelService.updateChannelWorldSuperb(channelId, worldId, superb,channlMsgType);
+			channelService.updateChannelWorldSuperb(channelId, worldId, superb);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch(Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -375,7 +370,7 @@ public class ChannelAction extends BaseCRUDAction{
 	 */
 	public String addChannelWorldRecommendMsgs() {
 		try {
-			channelService.addChannelWorldRecommendMsgs(ids,channlMsgType);
+			channelService.addChannelWorldNoticeMsgs(ids);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -714,15 +709,6 @@ public class ChannelAction extends BaseCRUDAction{
 
 	public void setSuperb(Integer superb) {
 		this.superb = superb;
-	}
-	
-	
-	public String getChannlMsgType() {
-		return channlMsgType;
-	}
-
-	public void setChannlMsgType(String channlMsgType) {
-		this.channlMsgType = channlMsgType;
 	}
 
 }

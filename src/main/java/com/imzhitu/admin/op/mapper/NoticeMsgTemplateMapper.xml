@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.NoticeMsgTemplateMapper">
+
+	<!-- 插入数据到通知信息模板表 -->
+	<insert id="insertNoticeMsgTemplate" parameterType="com.imzhitu.admin.common.pojo.NoticeMsgTemplate" useGeneratedKeys="true" keyProperty="id">
+		insert hts_admin.op_notice_msg_tmpl
+			(content_template,operator)
+		values
+			(#{contentTmpl},#{operator})
+	</insert>
+
+	<!-- 更新通知信息模板表数据 -->
+	<update id="updateNoticeMsgTemplate">
+		update 
+			hts_admin.op_notice_msg_tmpl
+		<set>
+			<if test="contentTmpl != null">
+				content_template = #{contentTmpl},
+			</if>
+			<if test="operator != null">
+				operator = #{operator}
+			</if>
+		</set> 
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+		</where>
+	</update>
+	
+	<!-- 根据通知信息内容模板获取对应的主键id -->
+	<select id="getContentTmplId" resultType="java.lang.Integer">
+		select
+			id
+		from
+			hts_admin.op_notice_msg_tmpl 
+		where 
+			content_template = #{contentTmpl}
+	</select>
+	
+	<!-- 根据id获取通知信息模板内容 -->
+	<select id="getContentTmplById" resultType="java.lang.String">
+		select
+			content_template
+		from
+			hts_admin.op_notice_msg_tmpl 
+		where 
+			id = #{id}
+	</select>
+	
+</mapper>

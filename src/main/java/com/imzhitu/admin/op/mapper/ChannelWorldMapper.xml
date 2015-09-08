@@ -70,18 +70,6 @@
 		
 	</resultMap>
 	
-	<!-- 用以根据id来查询的频道织图 -->
-	<resultMap id="ChannelWorldMapForWorldId" type="com.imzhitu.admin.common.pojo.OpChannelWorld">
-		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
-		<result column="world_id" property="worldId" jdbcType="INTEGER"/>
-		<result column="author_id" property="authorId" jdbcType="INTEGER" />
-		<result column="date_added" property="dateAdded" jdbcType="TIMESTAMP"/>
-		<result column="valid" property="valid" jdbcType="INTEGER"/>
-		<result column="notified" property="notified" jdbcType="INTEGER"/>
-		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
-	</resultMap>
-	
 	<!-- 频道名称 -->
 	<resultMap id="ChannelNameDtoMap" type="com.imzhitu.admin.common.pojo.OpChannelNameDto">
 		<id column="world_id" property="worldId" jdbcType="INTEGER"/>
@@ -89,10 +77,13 @@
 	</resultMap>
 	
 	<!-- 根据织图id来查询频道织图 -->
-	<select id="queryChannelWorldByWorldId" resultMap="ChannelWorldMapForWorldId">
-		select ocw.*,oc.channel_name 
-			FROM hts.operations_channel_world ocw LEFT JOIN hts.operations_channel oc ON ocw.channel_id=oc.id
-			WHERE ocw.world_id=#{worldId} and ocw.channel_id=#{channelId} and ocw.valid=1
+	<select id="queryChannelWorldByWorldId" resultMap="OpChannelWorldMap">
+		select * 
+		from 
+			hts.operations_channel_world 
+		where 
+			world_id=#{worldId} 
+			and channel_id=#{channelId}
 	</select>
 	
 	<select id="queryChannelWorlds" resultMap="OpChannelWorldDtoMap">
