@@ -238,11 +238,6 @@
 			collapsible : false,
 			iconCls : 'icon-add',
 			resizable : false,
-	 		onClose : function(){
-				$("#beginSaveTime").datetimebox('clear');	
-				$("#timeSpan").numberbox('clear');
-				$("#random_flag").removeAttr('checked');
-			} 
 		});
 		
 	};

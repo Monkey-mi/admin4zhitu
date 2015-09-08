@@ -609,9 +609,9 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			/**
 			 * mishengliang 15-09-07
 			 * 马甲生效后自动生成评论 
-			 * id 获取的马甲织图等级,现在先指定为 23 ，积极用户
+			 * id 获取的马甲织图等级,现在先指定为 55 ，积极用户 在interact_world_level表中
 			 */
-			Integer id = 23;
+			Integer id = 55;
 			saveAutoComments(zombieWorldId, worldId, id);
 			
 			// 添加到频道
@@ -794,6 +794,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 				}
 			}
 			interactWorldlevelServiceImpl.AddLevelWorld(worldId, id, null, comments);
+			System.out.println("-------------------<><><><>1122<><><>--------------------------");
 		}
 	}
 }
