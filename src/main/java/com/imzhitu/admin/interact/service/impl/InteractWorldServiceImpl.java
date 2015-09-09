@@ -595,13 +595,13 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			List<Integer> zombieIdList = new ArrayList<Integer>();
 			int followCommentSize = Math.round(commentCount * commentFromFollowRate);
 			int i,j;
-/*			for( i = 0; i < followCommentSize && i < fzListLength ; i++) {
+			for( i = 0; i < followCommentSize && i < fzListLength ; i++) {
 				zombieIdList.add(fzList.get(i));
 			}
 			for(j = 0; j < commentCount - i && j < unFzList.size(); j++){
 				zombieIdList.add(unFzList.get(j));
 			}
-			*/
+			
 			
 			/**
 			 * mishengliang
@@ -614,7 +614,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			 * else if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 小于 需论数*0.8){}
 			 * }
 			 */
-			if (fzListTotalCount+unFzListTotalCount > commentCount) {
+/*			if (fzListTotalCount+unFzListTotalCount > commentCount) {
 				int fc=followCommentSize ;
 				int ufc=commentCount-followCommentSize;
 				if (fzListTotalCount >= fc && unFzListTotalCount >= ufc) {
@@ -641,7 +641,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 				}
 			} else {
 				throw new Exception("没有足够的马甲数");
-			}
+			}*/
 			
 			batchSaveComment(interactId, worldId, zombieIdList, cids, dateAdded, scheduleDateList);
 		}
