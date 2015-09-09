@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.springframework.aop.ThrowsAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,6 +104,9 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	
 	@Autowired
 	com.imzhitu.admin.interact.service.impl.InteractWorldlevelServiceImpl interactWorldlevelServiceImpl;
+	
+	@Autowired
+	com.imzhitu.admin.interact.mapper.InteractChannelLevelMapper interactChannelLevelMapper;
 	
 	private Logger log = Logger.getLogger(InteractZombieServiceImpl.class);
 
@@ -606,14 +606,6 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			// 正式发布织图
 			Integer worldId = saveZombieWorldToHtWorld(zombieWorldId);
 
-			/**
-			 * mishengliang 15-09-07
-			 * 马甲生效后自动生成评论 
-			 * id 获取的马甲织图等级,现在先指定为 55 ，积极用户 在interact_world_level表中
-			 */
-			Integer id = 55;
-			saveAutoComments(zombieWorldId, worldId, id);
-			
 			// 添加到频道
 			if (zw.getChannelId() != null && zw.getChannelId() != 0) {
 				if (channelMapper.queryChannelById(zw.getChannelId()) != null) {
@@ -633,6 +625,19 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 					// 更新频道图片总数
 					webChannelService.updateWorldAndChildCount(zw.getChannelId());
 				}
+				
+				/**
+				 * mishengliang 15-09-07
+				 * 马甲生效后自动生成评论 
+				* id 根据频道等级 获取对应的织图等级，若没有频道是不会有评论的数据的。
+				 * 在添加到频道后 根据频道等级加入评论计划
+				 */
+				Integer id = 55;
+/*				InteractChannelLevel channelLevel = new InteractChannelLevel();
+				channelLevel.setChannelId(zw.getChannelId());
+				List<InteractChannelLevel> list = interactChannelLevelMapper.queryChannelLevel(channelLevel); 
+				Integer id = list.get(0).getId();*/
+				saveAutoComments(zombieWorldId, worldId, id);
 			}
 		}
 	}
@@ -794,7 +799,6 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 				}
 			}
 			interactWorldlevelServiceImpl.AddLevelWorld(worldId, id, null, comments);
-			System.out.println("-------------------<><><><>1122<><><>--------------------------");
 		}
 	}
 }
