@@ -139,6 +139,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setChannelReview(channelReview);
 		dto.setChannelTypeId(channelTypeId);
 		dto.setThemeId(themeId);
+		dto.setLastModifiedTime(new Date().getTime());
 
 		opChannelV2Mapper.updateOpChannel(dto);
 
