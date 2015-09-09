@@ -469,6 +469,7 @@ public class UserRecommendDaoImpl extends BaseDaoImpl implements
 	
 	public OpUser buildOpUser(ResultSet rs)throws SQLException{
 		OpUser dto = new OpUser();
+		dto.setRecommendId(rs.getInt("serial"));
 		dto.setId(rs.getInt("user_id"));
 		dto.setUserName(rs.getString("user_name"));
 		dto.setUserAvatar(rs.getString("user_avatar"));

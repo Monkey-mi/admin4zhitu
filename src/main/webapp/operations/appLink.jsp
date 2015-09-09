@@ -12,6 +12,7 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript">
 var maxId = 0,
+	selectedIds = [],
 	hideIdColumn = false,
 	toolbarComponent = '#tb',
 	init = function() {
@@ -36,7 +37,26 @@ var maxId = 0,
 			}
 		}
 	},
-	
+	myOnCheck = function(rowIndex, rowData) {
+		selectedIds.push(rowData.id);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnUncheck = function(rowIndex, rowData) {
+		for(var i = 0; i < selectedIds.length; i++)
+			if(rowData.id == selectedIds[i])
+				selectedIds.splice(i,1);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnCheckAll = function(rows) {
+		selectedIds = [];
+		for(var i = 0; i < rows.length; i++)
+			selectedIds.push(rows[i]['id']);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnUncheckAll = function(rows) {
+		selectedIds = [];
+		updateSortingCount(0);
+	}
 	htmTableTitle = "App链接维护", //表格标题
 	recordIdKey = "id",
 	loadDataURL = "./admin_op/ad_queryAppLink", //数据装载请求地址
@@ -156,7 +176,7 @@ var maxId = 0,
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
 				$("#appIconImg_edit").attr("src", "./base/images/bg_empty.png");
-				$("#appIconImg_edit").attr("src", "./base/images/bg_empty.png");
+				$("#appIconLImg_edit").attr("src", "./base/images/bg_empty.png");
 				$("#phoneCode_edit").combobox('clear');
 				$("#edit_form").hide();
 				$("#edit_loading").show();
@@ -198,7 +218,13 @@ function initSerialWindow() {
 function reSerial() {
 	$('#htm_serial .opt_btn').show();
 	$('#htm_serial .loading').hide();
-	initSerialWindow();
+	$("#serial_form").find('input[name="reIndexId"]').val('');
+	if(selectedIds.length > 0) {
+		for(var i = 0; i < selectedIds.length; i++) {
+			$("#serial_form").find('input[name="reIndexId"]').eq(i).val(selectedIds[i]);
+			$("#serial_form").form('validate');
+		}
+	}
 	// 打开添加窗口
 	$("#htm_serial").window('open');
 }
@@ -207,7 +233,13 @@ function reSerial() {
  * 清空索引排序
  */
 function clearSerialForm() {
-	$("#serial_form").find('input[name="reIndexId"]').val('');	
+	$("#serial_form").find('input[name="reIndexId"]').val('');
+	selectedIds = [];
+	updateSortingCount(0);
+}
+
+function updateSortingCount(count) {
+	$("#sorting-count").text(count);
 }
 
 
@@ -224,6 +256,7 @@ function submitSerialForm() {
 				$('#htm_serial .loading').hide();
 				if(result['result'] == 0) { 
 					$('#htm_serial').window('close');  //关闭添加窗口
+					clearSerialForm();
 					maxId = 0;
 					myQueryParams['link.maxId'] = maxId;
 					loadPageData(1);
@@ -326,10 +359,10 @@ function loadEditFormValidate(index, isUpdate) {
 	});
 	
 	$("#appIcon_edit")
-	.formValidator({empty:false, onshow:"300x300|jpg",onfocus:"请选图标",oncorrect:"正确！"});
+	.formValidator({empty:false, onshow:"300x300(jpg)",onfocus:"请选图标",oncorrect:"正确！"});
 	
 	$("#appIconL_edit")
-	.formValidator({empty:false, onshow:"300x600|jpg",onfocus:"请选Banner",oncorrect:"正确！"});
+	.formValidator({empty:false, onshow:"375x192(jpg)",onfocus:"请选Banner",oncorrect:"正确！"});
 	
 	$("#appName_edit")
 	.formValidator({empty:false, onshow:"请输入名字（必填）",onfocus:"最多15个字符",oncorrect:"正确！"})
@@ -398,7 +431,7 @@ function searchAppLink() {
 			<a href="javascript:void(0);" onclick="javascript:htmDelete('id');" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut">删除</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
 			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
-			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重新排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序</a>
+			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重新排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序+<span id="sorting-count">0</span></a>
 			<select id="ss-phoneCode" class="easyui-combobox" style="width:100px;">
 	   			<option value="">所有客户端</option>
 	   			<option value="0" selected="selected">IOS</option>

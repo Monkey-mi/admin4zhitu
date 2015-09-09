@@ -1,5 +1,8 @@
 package com.imzhitu.admin.op.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.constant.CacheKeies;
+import com.hts.web.base.constant.Tag;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
 import com.hts.web.common.pojo.OpUser;
 import com.hts.web.common.pojo.OpUserVerifyDto;
@@ -49,13 +53,19 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<OpUser> im
 		
 		//非置顶的
 		List<OpUserVerifyDto> userVerifyList = opUserVerifyDtoCacheDao.queryVerify();
-		for(OpUserVerifyDto userVerify : userVerifyList ){
-			updateUserRecommendCache(userVerify.getId());
+		/*
+		 * 并不直接查询＂所有分类＂缓存列表，而是取每种分类的前5个，加上明星分类中的前50个汇总成一个列表
+		 * allVerifyCollector用于收集
+		 */
+		List<OpUser> allVerifyCollector = new ArrayList<OpUser>();
+		for(OpUserVerifyDto userVerify : userVerifyList){
+			updateUserRecommendCache(userVerify.getId(), allVerifyCollector);
 		}
+		updateAllTypeVerify(allVerifyCollector);
 	}
 
-	@Override
-	public void updateUserRecommendCache(Integer verifyId) throws Exception {
+//	@Override
+	public void updateUserRecommendCache(Integer verifyId, List<OpUser> allVerifyCollector) throws Exception {
 		String key = CacheKeies.OP_USER_VERIFY_REC + verifyId;
 		if(getRedisTemplate().hasKey(key)){
 			getRedisTemplate().delete(key);
@@ -74,6 +84,45 @@ public class OpUserRecommendCacheServiceImpl extends BaseCacheDaoImpl<OpUser> im
 			getRedisTemplate().opsForList().rightPushAll(key,userRecommendNotTopList.toArray(userInfoArray));
 		}
 		
+		// 用collector收集该分类下的前5个人
+		for(int i = 0; i < 5; i++) {
+			allVerifyCollector.add(userRecommendNotTopList.get(i));
+		}
+	}
+	
+	/**
+	 * 更新＂全部＂分类下的达人推荐，此分类用0标记
+	 * 
+	 * @throws Exception
+	 */
+	private void updateAllTypeVerify(List<OpUser> allVerifyCollector) throws Exception {
+		String key = CacheKeies.OP_USER_VERIFY_REC + 0;
+		if(getRedisTemplate().hasKey(key)){
+			getRedisTemplate().delete(key);
+		}
+		
+		//　对收集回来的数据排序
+		Collections.sort(allVerifyCollector, new Comparator<OpUser>() {
+
+			@Override
+			public int compare(OpUser o1, OpUser o2) {
+				if(o1.getRecommendId() > o2.getRecommendId()) {
+					return 1;
+				} else if(o1.getRecommendId() < o2.getRecommendId()){
+					return -1;
+				}
+				return 0;
+			}
+		});
+		
+		//查询明星用户
+		List<OpUser> starList = userRecommendDao.queryNotWeightUserRecommendByVerifyId(Tag.VERIFY_SUPER_STAR_ID, 50);
+		starList.addAll(allVerifyCollector);
+		
+		if(starList.size() > 0) {
+			OpUser[] userInfoArray = new OpUser[starList.size()];
+			getRedisTemplate().opsForList().rightPushAll(key,starList.toArray(userInfoArray));
+		}
 	}
 	
 	/**

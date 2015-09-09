@@ -10,7 +10,7 @@ public interface OpUserRecommendCacheService {
 	/**
 	 * 跟新某种分类的缓存
 	 */
-	public void updateUserRecommendCache(Integer verifyId)throws Exception;
+//	public void updateUserRecommendCache(Integer verifyId)throws Exception;
 	
 	/**
 	 * 更新用户推荐缓存job

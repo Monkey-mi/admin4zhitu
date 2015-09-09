@@ -19,7 +19,7 @@ public class OpUserVerifyDtoCacheDaoImpl extends
 
 	@Autowired
 	private UserVerifyDao userVerifyDao;
-
+	
 	@Override
 	public void updateVerifyDto(RowSelection rowSelection) {
 		List<UserVerify> list = userVerifyDao.queryVerify(rowSelection);
@@ -38,4 +38,5 @@ public class OpUserVerifyDtoCacheDaoImpl extends
 					CacheKeies.OP_USER_VERIFY, dtos);
 		}
 	}
+	
 }
