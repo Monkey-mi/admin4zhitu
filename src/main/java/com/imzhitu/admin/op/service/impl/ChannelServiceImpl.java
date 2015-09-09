@@ -899,6 +899,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
 		channelWorldMapper.updateValidAndSerialByWID(channelId, worldId, valid, serial);
 		webChannelService.updateWorldAndChildCount(channelId);
+		// TODO 这块也要一起整改，统一频道更新接口 zhangbo 2015-09-09
+		OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId, channelId);
+		addChannelWorldNoticeMsg(world.getId());
 	}
 
 	@Override
