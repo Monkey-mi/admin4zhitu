@@ -532,8 +532,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		//
 		List<Integer> fzList = null;
 		List<Integer> unFzList = null;
-		Integer fzListTotalCount = null;
-		Integer unFzListTotalCount = null;
+//		Integer fzListTotalCount = null;
+//		Integer unFzListTotalCount = null;
 		int fzListLength=0;
 		
 		//计算粉丝马甲数
@@ -546,7 +546,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		if ( followZombiesTotal > 0){
 			try{
 				fzList = zombieMapper.queryNotInteractNRandomFollowZombie(userId, worldId,followZombiesTotal);
-				fzListTotalCount = zombieMapper.queryNotInteractNRandomFollowZombieCount(userId, worldId,followZombiesTotal);
+//				fzListTotalCount = zombieMapper.queryNotInteractNRandomFollowZombieCount(userId, worldId,followZombiesTotal);
 				if(fzList != null){
 					fzListLength = fzList.size();
 				}
@@ -562,7 +562,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			int unFollowZombieNeedTotal = followZombiesTotal + unFollowZombiesTotal - fzListLength;
 			if(unFollowZombieNeedTotal > 0){
 				unFzList = zombieMapper.queryNotInteractNRandomNotFollowZombie(userId, degreeId,worldId,unFollowZombieNeedTotal);
-				unFzListTotalCount = zombieMapper.queryNotInteractNRandomNotFollowZombieCount(userId, degreeId,worldId,unFollowZombieNeedTotal);
+//				unFzListTotalCount = zombieMapper.queryNotInteractNRandomNotFollowZombieCount(userId, degreeId,worldId,unFollowZombieNeedTotal);
 				if( null == unFzList){
 					logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
 					throw new Exception("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
