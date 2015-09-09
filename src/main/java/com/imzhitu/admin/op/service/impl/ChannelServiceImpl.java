@@ -825,12 +825,17 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		sysMsg.setObjMeta2(String.valueOf(world.getChannelId()));	// 要查询的消息中，附加消息objMeta2存储的为频道id
 		
 		OpSysMsg msgObject = sysMsgMapper.getLastMsg(sysMsg);
-		long now = new Date().getTime();
-		long last = msgObject.getMsgDate().getTime();
 		
-		// 相隔时间大于一周的 或者 查询结果为空 可以发送消息
-		if (last - now >= CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS || msgObject == null) {
+		// 查询结果为空，可以发送消息
+		if ( msgObject == null ) {
 			msgService.sendChannelSystemNotice(world.getAuthorId(), Admin.NOTICE_WORLD_INTO_CHANNEL, world.getChannelId(), world.getWorldId());
+		} else {
+			long now = new Date().getTime();
+			long last = msgObject.getMsgDate().getTime();
+			// 相隔时间大于一周的，可以发送消息
+			if (last - now >= CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS) {
+				msgService.sendChannelSystemNotice(world.getAuthorId(), Admin.NOTICE_WORLD_INTO_CHANNEL, world.getChannelId(), world.getWorldId());
+			}
 		}
 	}
 

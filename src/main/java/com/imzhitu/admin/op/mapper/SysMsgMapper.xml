@@ -31,25 +31,25 @@
 			values (#{recipientId},#{content},#{objType}, #{objMeta},#{objMeta2},#{objId},#{senderId},#{msgDate},#{thumbPath})
 	</insert>
 	<!-- 查询发送的信息 -->
- 	<select id="getMsg" resultMap="OpSysMsgMap">
+ 	<select id="getLastMsg" resultMap="OpSysMsgMap">
 		select * 
 		from 
 			hts.operations_sys_msg 
 		<where>
 			<if test="senderId != null">
-				sender_id = #{senderId},
+				sender_id = #{senderId}
 			</if>
 			<if test="recipientId != null">
-				and recipient_id = #{recipientId},
+				and recipient_id = #{recipientId}
 			</if>
 			<if test="objType != null">
-				and obj_type = #{objType},
+				and obj_type = #{objType}
 			</if>
 			<if test="objId != null">
-				and obj_id = #{objId},
+				and obj_id = #{objId}
 			</if>
 			<if test="objMeta != null">
-				and obj_meta = #{objMeta},
+				and obj_meta = #{objMeta}
 			</if>
 			<if test="objMeta2 != null">
 				and obj_meta2 = #{objMeta2}
