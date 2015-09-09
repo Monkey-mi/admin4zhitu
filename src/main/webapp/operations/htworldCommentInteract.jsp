@@ -83,6 +83,26 @@
 				$('#ss_searchLabel').combobox('clear');
 			}
 		});
+		
+		
+		/*  
+		mishengliang
+		2015-09-08
+		*/
+		
+		$("#addComment").window({
+			title : '批量添加评论',
+			modal : true,
+			width : 420,
+			height : 190,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-add',
+			resizable : false,
+		});
 	};
 	
 	/**
@@ -154,6 +174,31 @@
 		});
 	};
 	
+	//打开添加文件的窗口
+	function addComments(){
+		$('#addComment').window('open');
+		$('#zombieWorldId').val(worldId);
+	}
+	
+	//mishengliang
+	//点击确定添加后的操作
+	function addComment(){
+		var addCommentsFile = $('#addCommentsFile');
+		$('#addComment').window('close');
+		addCommentsFile.ajaxSubmit({
+			success:function(result){
+			if (result['result'] == 0) {
+				$.messager.alert('提示',"成功！");
+			} else {
+				$.messager.alert('提示',result['msg']);
+			}
+			},
+			url : addCommentsFile.attr('action'),
+			type : 'post',
+			dataType : 'json'
+		});
+	}
+	
 </script>
 </head>
 <body>
@@ -162,6 +207,7 @@
 	
 	<div id="comment_tb" style="padding:5px;" class="none">
 		<a href="#htm_add_comment" onclick="addComment(0);" class="easyui-linkbutton" style="vertical-align:middle;" title="添加评论" plain="true" iconCls="icon-add" id="addCommentBtn">添加</a>
+				<a href="#htm_add_comment" onclick="addComments();" class="easyui-linkbutton" style="vertical-align:middle;" title="添加评论" plain="true" iconCls="icon-add" id="addCommentBtn">批量添加评论</a>
 		<a href="#htm_submit_comment" onclick="submitComment();" class="easyui-linkbutton" style="vertical-align:middle;" title="计划互动评论" plain="true" iconCls="icon-ok" id="addCommentBtn">计划互动评论</a>
 		<span>已选：<span id="selectionCount">0</span></span>
 		<span>&nbsp;&nbsp;</span>
@@ -173,5 +219,33 @@
 		<div id="worldLabelDiv" style="margin:8px 0 5px 3px;"></div>
 	</div>
 
+  <div id='addComment'>
+			<form id='addCommentsFile' action="" method='post'>
+			<table class="htm_edit_table" width="340">
+			<tbody>
+			<tr>
+				<td style='height:100'>
+				马甲织图ID：<input type="text" id="zombieWorldId" name='zombieWorldId' readonly="readonly">
+				</td>
+			</tr>
+<!-- 			<tr>
+				<td>织图等级&nbsp;&nbsp;&nbsp;: <input style="width:120px" class="easyui-combobox" id="levelId" name="id"  onchange="validateSubmitOnce=true;" 
+					data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel'"/></td>
+			</tr> -->
+			<tr>
+				<td style='height:100' >
+				<input id='commentsFile' type="file" name='commentsFile' >
+				</td>
+			</tr>
+			<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 20px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addComment();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#addComment').window('close');">取消</a>
+						</td>
+			</tr>
+			</tbody>
+			</table>
+			</form>
+		</div> 
 </body>
 </html>
