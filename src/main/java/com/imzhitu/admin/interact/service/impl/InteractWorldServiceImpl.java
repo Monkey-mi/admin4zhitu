@@ -614,7 +614,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			 * else if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 小于 需论数*0.8){}
 			 * }
 			 */
-			if (fzListTotalCount+unFzListTotalCount < commentCount) {
+			if (fzListTotalCount+unFzListTotalCount > commentCount) {
 				int fc=followCommentSize ;
 				int ufc=commentCount-followCommentSize;
 				if (fzListTotalCount >= fc && unFzListTotalCount >= ufc) {
