@@ -181,8 +181,11 @@
 	
 	<!-- 分页查询总数 -->
 	<select id="queryOpChannelTotalCount" resultType="long">
-		select count(*) from hts.operations_channel oc
-		left join hts_admin.op_channel_top ctop on ctop.channel_id=oc.id
+		select 
+			count(*) 
+		from 
+			hts.operations_channel oc
+			left join hts_admin.op_channel_top ctop on ctop.channel_id=oc.id
 		<where>
 			<if test="channelId != null">
 				oc.id = #{channelId}
@@ -218,7 +221,7 @@
 				and oc.theme_id = #{themeId}
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[and oc.id <= #{maxId}]]>
+				<![CDATA[and oc.serial <= #{maxId}]]>
 			</if>
 			<if test="top != null">
 				and ctop.top = #{top}
