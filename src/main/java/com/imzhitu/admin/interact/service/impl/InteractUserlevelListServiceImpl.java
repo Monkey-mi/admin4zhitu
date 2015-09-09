@@ -199,15 +199,20 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 							o.setUser_level_id(starUserLevelId);
 						}
 						
-						//明星用户增加互赞
-						if (  Math.random() < 0.12 ) {
-							likeFollowRecordService.addLikeFollowInteract(o.getUser_id(), o.getWorldId(), 0);
+						int likeFollowTotal = 1;
+						if(o.getUser_id() == 2063){//官号就多添加几个,否则就添加一次
+							likeFollowTotal = 10;
 						}
-						//明星用户增加互粉
-						if (  Math.random() < 0.12 ) {
-							likeFollowRecordService.addLikeFollowInteract(o.getUser_id(), o.getWorldId(), 1);
+						for(int lf = 0; lf < likeFollowTotal; lf++){
+							//明星用户增加互赞
+							if (  Math.random() < 0.12 ) {
+								likeFollowRecordService.addLikeFollowInteract(o.getUser_id(), o.getWorldId(), 0);
+							}
+							//明星用户增加互粉
+							if (  Math.random() < 0.12 ) {
+								likeFollowRecordService.addLikeFollowInteract(o.getUser_id(), o.getWorldId(), 1);
+							}
 						}
-						
 						
 					} else {//非明星用户
 						//普通用户，发图超过10个，并且人工也点了信任用户
