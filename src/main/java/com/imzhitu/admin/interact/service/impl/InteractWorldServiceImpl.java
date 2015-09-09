@@ -532,6 +532,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		//
 		List<Integer> fzList = null;
 		List<Integer> unFzList = null;
+		Integer fzListTotalCount = null;
+		Integer unFzListTotalCount = null;
 		int fzListLength=0;
 		
 		//计算粉丝马甲数
@@ -544,6 +546,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		if ( followZombiesTotal > 0){
 			try{
 				fzList = zombieMapper.queryNotInteractNRandomFollowZombie(userId, worldId,followZombiesTotal);
+				fzListTotalCount = zombieMapper.queryNotInteractNRandomFollowZombieCount(userId, worldId,followZombiesTotal);
 				if(fzList != null){
 					fzListLength = fzList.size();
 				}
@@ -559,6 +562,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			int unFollowZombieNeedTotal = followZombiesTotal + unFollowZombiesTotal - fzListLength;
 			if(unFollowZombieNeedTotal > 0){
 				unFzList = zombieMapper.queryNotInteractNRandomNotFollowZombie(userId, degreeId,worldId,unFollowZombieNeedTotal);
+				unFzListTotalCount = zombieMapper.queryNotInteractNRandomNotFollowZombieCount(userId, degreeId,worldId,unFollowZombieNeedTotal);
 				if( null == unFzList){
 					logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
 					throw new Exception("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
@@ -610,25 +614,25 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			 * else if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 小于 需论数*0.8){}
 			 * }
 			 */
-			if (fzListLength+unFzList.size() < commentCount) {
+			if (fzListTotalCount+unFzListTotalCount < commentCount) {
 				int fc=followCommentSize ;
 				int ufc=commentCount-followCommentSize;
-				if (fzListLength >= fc && unFzList.size() >= ufc) {
+				if (fzListTotalCount >= fc && unFzListTotalCount >= ufc) {
 					for( i = 0; i < fc ; i++) {
 						zombieIdList.add(fzList.get(i));
 					}
 					for( j = 0; j < ufc; j++){
 						zombieIdList.add(unFzList.get(j));
 					}
-				} else if(fzListLength < fc && unFzList.size() >= ufc){
+				} else if(fzListTotalCount < fc && unFzListTotalCount >= ufc){
 					for( i = 0; i < fzListLength ; i++) {
 						zombieIdList.add(fzList.get(i));
 					}
-					for( j = 0; j < commentCount -fzListLength; j++){
+					for( j = 0; j < commentCount -fzListTotalCount; j++){
 						zombieIdList.add(unFzList.get(j));
 					}
-				}else if(fzListLength >= fc && unFzList.size() < ufc){
-					for( i = 0; i < commentCount - unFzList.size() ; i++) {
+				}else if(fzListTotalCount >= fc && unFzListTotalCount < ufc){
+					for( i = 0; i < commentCount - unFzListTotalCount ; i++) {
 						zombieIdList.add(fzList.get(i));
 					}
 					for( j = 0; j < unFzList.size(); j++){

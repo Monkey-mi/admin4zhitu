@@ -67,6 +67,11 @@ public interface OpZombieMapper {
 	@DataSource("slave")
 	public List<Integer> queryNotInteractNRandomFollowZombie(@Param("userId")Integer userId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
 	
+	
+	@DataSource("slave")
+	public Integer queryNotInteractNRandomFollowZombieCount(@Param("userId")Integer userId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
+	
+	
 	/**
 	 * 随机查询n个没有互动的非粉丝马甲
 	 * @param concernId 被关注的人的id,即非马甲
@@ -75,6 +80,11 @@ public interface OpZombieMapper {
 	 */
 	@DataSource("master")
 	public List<Integer> queryNotInteractNRandomNotFollowZombie(@Param("concernId")Integer concernId,@Param("degreeId")Integer degreeId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
+	
+	
+	@DataSource("master")
+	public Integer queryNotInteractNRandomNotFollowZombieCount(@Param("concernId")Integer concernId,@Param("degreeId")Integer degreeId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
+	
 	
 	/**
 	 * 
