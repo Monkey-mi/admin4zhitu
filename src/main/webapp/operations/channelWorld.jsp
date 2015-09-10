@@ -677,7 +677,7 @@ function batchToChannel(){
 function searchBatchToChannel() {
 	var params = {
 			maxId: 0,
-			query: $('#channel-searchbox').searchbox('getValue')
+			query: $('#batch-channel-searchbox').searchbox('getValue')
 	};
 	$("#ss_batch_channel").combogrid('grid').datagrid("load",params);
 }
@@ -889,7 +889,7 @@ function saveBatchWorldToChannelSubmit(){
 		</div>
 		
 		<div id="search-batch-to-channel-tb" style="padding:5px;height:auto" class="none">
-			<input id="channel-searchbox" searcher="searchBatchToChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
+			<input id="batch-channel-searchbox" searcher="searchBatchToChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
 		</div>
 		
 	</div>
