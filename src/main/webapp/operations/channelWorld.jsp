@@ -252,6 +252,66 @@ var maxId = 0,
 			}
 		});
 		
+		$("#htm_batch_channel").window({
+			title : '批量频道织图添加',
+			modal : true,
+			width : 450,
+			height : 150,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-add',
+			resizable : false,
+			onClose : function(){
+				$("#ss_batch_channel").combobox('clear');
+			}
+		});
+		
+		$('#ss_batch_channel').combogrid({
+			panelWidth : 440,
+			panelHeight : 330,
+			loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#search-batch-to-channel-tb",
+			multiple : false,
+			required : false,
+			idField : 'id',
+			textField : 'channelName',
+			url : './admin_op/channel_searchChannel',
+			pagination : true,
+			columns:[[
+			          {field : 'id',title : 'id',align : 'center',width : 80},
+			          {field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
+			        	  formatter:function(value,row,index) {
+			        		  return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+			        	  }
+			          },
+			          {field : 'channelName',title : '频道名称',align : 'center',width : 280}
+			          ]],
+			          queryParams:searchChannelQueryParams,
+			          onLoadSuccess:function(data) {
+			        	  if(data.result == 0) {
+			        		  if(data.maxId > searchChannelMaxId) {
+			        			  searchChannelMaxId = data.maxId;
+			        			  searchChannelQueryParams.maxId = searchChannelMaxId;
+			        		  }
+			        	  }
+			          },
+		});
+		
+		var pp = $('#ss_batch_channel').combogrid('grid').datagrid('getPager');
+		pp.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					searchChannelMaxId = 0;
+					searchChannelQueryParams.maxId = searchChannelMaxId;
+				}
+			}
+		});
+		
 		removePageLoading();
 		$("#main").show();
 		
@@ -268,8 +328,7 @@ function searchChannel() {
 	searchChannelQueryParams.query = query;
 	$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
 }
-	
-	
+
 //初始化添加窗口
 function initAddWindow() {
 	var addForm = $('#add_form');
@@ -601,165 +660,238 @@ function updateSchedulaSuperbOp(superb, index) {
 			superb: superb
 		}
 	});
+};
+
+/**
+ * 批量添加织图到频道
+ * @author zhangbo 2015-09-10
+ */
+function batchToChannel(){
+	$("#htm_batch_channel").window('open');
+};
+
+/**
+ * 批量添加到频道功能的搜索频道
+ * @author zhangbo 2015-09-10
+ */
+function searchBatchToChannel() {
+	var params = {
+			maxId: 0,
+			query: $('#channel-searchbox').searchbox('getValue')
+	};
+	$("#ss_batch_channel").combogrid('grid').datagrid("load",params);
+}
+
+/**
+ * 批量保存频道织图到所选频道中
+ * @author zhangbo 2015-09-10
+ */
+function saveBatchWorldToChannelSubmit(){
+	var channelId = $("#ss_batch_channel").combogrid('getValue');
+	
+	var rows = $("#htm_table").datagrid('getSelections');
+	for (var i=0;i<rows.length;i++) {
+		//该织图进入频道
+		$.post("./admin_op/channel_saveChannelWorld",{
+			'world.channelId':channelId,
+			'world.worldId'  :rows[i].worldId,
+			'world.valid'	 :0,
+			'world.notified' :0
+		},function(result){
+			if(result['result'] != 0){
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+		},"json");
+	}
+	$("#htm_table").datagrid('reload');
+	$("#htm_table").datagrid('clearSelections');
+	$("#htm_batch_channel").window('close');
 }
 
 </script>
 </head>
 <body>
 	<div id="main" style="display: none;">
-	<table id="htm_table"></table>
+		<table id="htm_table"></table>
 	
-	<div id="tb" style="padding:5px;height:auto" class="none">
-		<div>
-			<a href="./page_operations_channelWorldV3" title="瀑布流模式">
-			<img class="switch-icon" src="./htworld/images/grid-icon.png" style="width:15px;vertical-align:middle;"  /></a>
-			<a href="./page_operations_channelWorld" title="列表模式">
-				<img class="switch-icon" src="./htworld/images/list-icon.png" style="width:15px;vertical-align:middle;"  /></a>
-			<span class="search_label">请选择频道：</span>
-			<input id="ss-channel" style="width:100px;" />
-			<span id="htm_opt_btn" class="none">
-			<a href="javascript:void(0);" onclick="javascript:htmUI.htmWindowAdd();" class="easyui-linkbutton" title="添加频道红人" plain="true" iconCls="icon-add">添加</a>
-			<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>
-			<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
-			<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
-			<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
-			<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照时间重新排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">按照时间重新排序</a>
-			<select id="ss-notified" class="easyui-combobox" style="width:100px;">
-		        <option value="">所有通知状态</option>
-		        <option value="0">未通知</option>
-		        <option value="1">已通知</option>
-	   		</select>
-	   		<select id="ss-valid" class="easyui-combobox" style="width:100px;">
-		        <option value="">所有生效状态</option>
-		        <option value="0">未生效</option>
-		        <option value="1">生效</option>
-	   		</select>
-	   		<a href="javascript:void(0);" onclick="javascript:searchWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
-	   		<span style="display: inline-block; vertical-align:middle; float: right;">
-		        <input id="ss-worldId" class="easyui-searchbox" searcher="searchByWID" prompt="输入织图ID搜索" style="width:150px;" />
-			</span>
-			</span>
-   		</div>
-	</div> 
+		<div id="tb" style="padding:5px;height:auto" class="none">
+			<div>
+				<a href="./page_operations_channelWorldV3" title="瀑布流模式">
+				<img class="switch-icon" src="./htworld/images/grid-icon.png" style="width:15px;vertical-align:middle;"  /></a>
+				<a href="./page_operations_channelWorld" title="列表模式">
+					<img class="switch-icon" src="./htworld/images/list-icon.png" style="width:15px;vertical-align:middle;"  /></a>
+				<span class="search_label">请选择频道：</span>
+				<input id="ss-channel" style="width:100px;" />
+				<span id="htm_opt_btn" class="none">
+				<a href="javascript:void(0);" onclick="javascript:htmUI.htmWindowAdd();" class="easyui-linkbutton" title="添加频道红人" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>
+				<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
+				<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
+				<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
+				<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照时间重新排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">按照时间重新排序</a>
+				<select id="ss-notified" class="easyui-combobox" style="width:100px;">
+			        <option value="">所有通知状态</option>
+			        <option value="0">未通知</option>
+			        <option value="1">已通知</option>
+		   		</select>
+		   		<select id="ss-valid" class="easyui-combobox" style="width:100px;">
+			        <option value="">所有生效状态</option>
+			        <option value="0">未生效</option>
+			        <option value="1">生效</option>
+		   		</select>
+		   		<a href="javascript:void(0);" onclick="javascript:searchWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
+		   		
+		   		<div style="display:inline-block; vertical-align:middle;">
+	   				<a href="javascript:void(0);" onclick="javascript:batchToChannel();" class="easyui-linkbutton" plain="true" iconCls="icon-add">批量添加到频道</a>
+	   			</div>
+	   			
+		   		<span style="display: inline-block; vertical-align:middle; float: right;">
+			        <input id="ss-worldId" class="easyui-searchbox" searcher="searchByWID" prompt="输入织图ID搜索" style="width:150px;" />
+				</span>
+				</span>
+	   		</div>
+		</div> 
 
-	<!-- 添加记录 -->
-	<div id="htm_add">
-		<form id="add_form" action="./admin_op/channel_saveChannelWorld" method="post">
-			<table class="htm_edit_table" width="480">
-				<tbody>
-					<tr>
-						<td class="leftTd">频道：</td>
-						<td><span id="channelName_add"></span></td>
-						<td class="rightTd"></td>
-					</tr>
-					<tr>
-						<td class="leftTd">织图id：</td>
-						<td><input type="text" name="world.worldId" id="worldId_add" onchange="validateSubmitOnce=true;"/></td>
-						<td class="rightTd"><div id="worldId_addTip" class="tipDIV"></div></td>
-					</tr>
-					<tr >
-						<td class="leftTd">频道id：</td>
-						<td ><input type="text" name="world.channelId" id="channelId_add" onchange="validateSubmitOnce=true;" readonly="readonly"/></td>
-						<td class="rightTd"></td>
-					</tr>
-					<tr class="none">
-						<td colspan="3"><input type="text" name="world.valid" id="valid_add" onchange="validateSubmitOnce=true;"/></td>
-					</tr>
-					<tr class="none">
-						<td colspan="3"><input type="text" name="world.notified" id="notified_add" onchange="validateSubmitOnce=true;"/></td>
-					</tr>
-					<tr>
-						<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addSubmit();">添加</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_add').window('close');">取消</a>
-						</td>
-					</tr>
-					<tr class="loading none">
-						<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
-							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-							<span style="vertical-align:middle;">提交中...</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-	</div>
+		<!-- 添加记录 -->
+		<div id="htm_add">
+			<form id="add_form" action="./admin_op/channel_saveChannelWorld" method="post">
+				<table class="htm_edit_table" width="480">
+					<tbody>
+						<tr>
+							<td class="leftTd">频道：</td>
+							<td><span id="channelName_add"></span></td>
+							<td class="rightTd"></td>
+						</tr>
+						<tr>
+							<td class="leftTd">织图id：</td>
+							<td><input type="text" name="world.worldId" id="worldId_add" onchange="validateSubmitOnce=true;"/></td>
+							<td class="rightTd"><div id="worldId_addTip" class="tipDIV"></div></td>
+						</tr>
+						<tr >
+							<td class="leftTd">频道id：</td>
+							<td ><input type="text" name="world.channelId" id="channelId_add" onchange="validateSubmitOnce=true;" readonly="readonly"/></td>
+							<td class="rightTd"></td>
+						</tr>
+						<tr class="none">
+							<td colspan="3"><input type="text" name="world.valid" id="valid_add" onchange="validateSubmitOnce=true;"/></td>
+						</tr>
+						<tr class="none">
+							<td colspan="3"><input type="text" name="world.notified" id="notified_add" onchange="validateSubmitOnce=true;"/></td>
+						</tr>
+						<tr>
+							<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addSubmit();">添加</a>
+								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_add').window('close');">取消</a>
+							</td>
+						</tr>
+						<tr class="loading none">
+							<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+								<span style="vertical-align:middle;">提交中...</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
 	
-	<!-- 重排索引 -->
-	<div id="htm_indexed">
-		<form id="indexed_form" action="./admin_op/cwSchedula_batchAddChannelWorldSchedula" method="post">
-			<table class="htm_edit_table" width="660">
+		<!-- 重排索引 -->
+		<div id="htm_indexed">
+			<form id="indexed_form" action="./admin_op/cwSchedula_batchAddChannelWorldSchedula" method="post">
+				<table class="htm_edit_table" width="660">
+					<tbody>
+						<tr>
+							<td class="leftTd">计划更新时间：</td>
+							<td><input id="schedula" name="schedula" class="easyui-datetimebox" required="true"></td>
+						</tr>
+						<tr>
+							<td class="leftTd">时间间隔(分钟)：</td>
+							<td>
+								<input  name="minuteTimeSpan" class="easyui-numberbox" value="5" style="width:171px"/>
+							</td>
+						</tr>
+						<tr class="none">
+							<td colspan="2"><input type="text" name="channelId" id="channelId_indexed" /></td>
+						</tr>
+						<tr class="none">
+						<td colspan="2"><input type="text" name="wids" id="wids_indexed" /></td>
+						</tr>
+						<tr class="none">
+							<td colspan="2"><input type="text" name="superbWids" id="superbWids_indexed" /></td>
+						</tr>
+						<tr>
+							<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReIndexForm();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_indexed').window('close');$('#htm_table').datagrid('clearSelections');">取消</a>
+							</td>
+						</tr>
+						<tr class="loading none">
+							<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+								<span style="vertical-align:middle;">排序中...</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	
+		<!-- 刷新窗口窗口 -->
+		<div id="htm_refresh">
+			<form id="refresh_form" action="./admin_op/channel_updateChannelWorldCache" method="post">
+				<table class="htm_edit_table"  width="480" class="none">
+					<tbody>
+						<tr>
+							<td class="leftTd">图片基数：</td>
+							<td><input type="text" name="childCountBase" id="childCount_refresh" style="width:205px;"/></td>
+							<td class="rightTd"><div id="childCount_refreshTip" class="tipDIV"></div></td>
+						</tr>
+						<tr class="none">
+							<td><input type="text" name="world.channelId" id="channelId_refresh" style="width:205px;"/></td>
+						</tr>
+						<tr class="opt_btn">
+							<td colspan="3" style="text-align: center;padding-top: 10px;">
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="$('#refresh_form').submit();">确定</a> 
+								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_refresh').window('close');">取消</a>
+							</td>
+						</tr>
+						<tr class="loading none">
+							<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+								<span style="vertical-align:middle;">请稍后...</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	
+		<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
+			<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
+		</div>
+		
+		<!-- 批量添加到频道 -->
+		<div id="htm_batch_channel">
+			<table class="htm_edit_table" width="450">
 				<tbody>
 					<tr>
-						<td class="leftTd">计划更新时间：</td>
-						<td><input id="schedula" name="schedula" class="easyui-datetimebox" required="true"></td>
-					</tr>
-					<tr>
-						<td class="leftTd">时间间隔(分钟)：</td>
-						<td>
-							<input  name="minuteTimeSpan" class="easyui-numberbox" value="5" style="width:171px"/>
-						</td>
-					</tr>
-					<tr class="none">
-						<td colspan="2"><input type="text" name="channelId" id="channelId_indexed" /></td>
-					</tr>
-					<tr class="none">
-					<td colspan="2"><input type="text" name="wids" id="wids_indexed" /></td>
-					</tr>
-					<tr class="none">
-						<td colspan="2"><input type="text" name="superbWids" id="superbWids_indexed" /></td>
+						<td class="leftTd">频道名称：</td>
+						<td><input id="ss_batch_channel" name="channelId" style="width:200px;" /></td>
 					</tr>
 					<tr>
 						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReIndexForm();">确定</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_indexed').window('close');$('#htm_table').datagrid('clearSelections');">取消</a>
-						</td>
-					</tr>
-					<tr class="loading none">
-						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
-							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-							<span style="vertical-align:middle;">排序中...</span>
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="saveBatchWorldToChannelSubmit();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_batch_channel').window('close');">取消</a>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-		</form>
-	</div>
-	
-	
-	<!-- 刷新窗口窗口 -->
-	<div id="htm_refresh">
-		<form id="refresh_form" action="./admin_op/channel_updateChannelWorldCache" method="post">
-			<table class="htm_edit_table"  width="480" class="none">
-				<tbody>
-					<tr>
-						<td class="leftTd">图片基数：</td>
-						<td><input type="text" name="childCountBase" id="childCount_refresh" style="width:205px;"/></td>
-						<td class="rightTd"><div id="childCount_refreshTip" class="tipDIV"></div></td>
-					</tr>
-					<tr class="none">
-						<td><input type="text" name="world.channelId" id="channelId_refresh" style="width:205px;"/></td>
-					</tr>
-					<tr class="opt_btn">
-						<td colspan="3" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="$('#refresh_form').submit();">确定</a> 
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_refresh').window('close');">取消</a>
-						</td>
-					</tr>
-					<tr class="loading none">
-						<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
-							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-							<span style="vertical-align:middle;">请稍后...</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-	</div>
-	
-	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
-		<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
-	</div>
+		</div>
+		
+		<div id="search-batch-to-channel-tb" style="padding:5px;height:auto" class="none">
+			<input id="channel-searchbox" searcher="searchBatchToChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
+		</div>
+		
 	</div>
 </body>
 </html>

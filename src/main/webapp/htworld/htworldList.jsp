@@ -1366,12 +1366,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 		
 		var rows = $("#htm_table").datagrid('getSelections');
 		for (var i=0;i<rows.length;i++) {
-			var indx = $("#htm_table").datagrid('getRowIndex',rows[i]);
-			//成为频道用户
-			$.post("./admin_op/chuser_addChannelUserByWorldId",{
-				'worldId':rows[i].worldId,
-				'channelId':channelId
-			},function(result){},"json");
 			//该织图进入频道
 			$.post("./admin_op/channel_saveChannelWorld",{
 				'world.channelId':channelId,
