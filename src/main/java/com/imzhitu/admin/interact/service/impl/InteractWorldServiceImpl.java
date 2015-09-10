@@ -536,6 +536,51 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 //		Integer unFzListTotalCount = null;
 		int fzListLength=0;
 		
+//		fzListTotalCount = zombieMapper.queryNotInteractNRandomFollowZombieCount(userId, worldId,0);
+//		unFzListTotalCount = zombieMapper.queryNotInteractNRandomNotFollowZombieCount(userId, degreeId,worldId,0);
+
+		/**
+		 * mishengliang
+		 * fc=followCommentSize 理论上需要的粉丝数
+		 * ufc=commentCount-followCommentSize 理论上需要的非粉丝数
+		 * 
+		 * if(查询出的粉丝数和非粉丝数 的和 大于需要的评论数){
+		 * 		if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 大于等于 需论数*0.8){}
+		 * else if(粉丝数 小于 需论数*0.2 && 非粉丝数 大于等于 需论数*0.8){}
+		 * else if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 小于 需论数*0.8){}
+		 * }
+		 */
+/*			if (fzListTotalCount+unFzListTotalCount > commentCount) {
+			int fc=followCommentSize ;
+			int ufc=commentCount-followCommentSize;
+			if (fzListTotalCount >= fc && unFzListTotalCount >= ufc) {
+				for( i = 0; i < fc ; i++) {
+					zombieIdList.add(fzList.get(i));
+				}
+				for( j = 0; j < ufc; j++){
+					zombieIdList.add(unFzList.get(j));
+				}
+			} else if(fzListTotalCount < fc && unFzListTotalCount >= ufc){
+				for( i = 0; i < fzListLength ; i++) {
+					zombieIdList.add(fzList.get(i));
+				}
+				for( j = 0; j < commentCount -fzListTotalCount; j++){
+					zombieIdList.add(unFzList.get(j));
+				}
+			}else if(fzListTotalCount >= fc && unFzListTotalCount < ufc){
+				for( i = 0; i < commentCount - unFzListTotalCount ; i++) {
+					zombieIdList.add(fzList.get(i));
+				}
+				for( j = 0; j < unFzList.size(); j++){
+					zombieIdList.add(unFzList.get(j));
+				}
+			}
+		} else {
+			throw new Exception("没有足够的马甲数");
+		}*/
+		
+		
+		
 		//计算粉丝马甲数
 		int followZombiesTotal = likedCount * likeFromFollowRate + likedCount * ( 100 -  likeFromFollowRate)* likeToFollowRate
 				> commentCount * commentFromFollowRate ? likedCount * likeFromFollowRate : commentCount * commentFromFollowRate;
@@ -557,12 +602,11 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			}
 		}
 		
-		//非粉丝马甲
+		//查询非粉丝马甲
 		try{
 			int unFollowZombieNeedTotal = followZombiesTotal + unFollowZombiesTotal - fzListLength;
 			if(unFollowZombieNeedTotal > 0){
 				unFzList = zombieMapper.queryNotInteractNRandomNotFollowZombie(userId, degreeId,worldId,unFollowZombieNeedTotal);
-//				unFzListTotalCount = zombieMapper.queryNotInteractNRandomNotFollowZombieCount(userId, degreeId,worldId,unFollowZombieNeedTotal);
 				if( null == unFzList){
 					logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
 					throw new Exception("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
@@ -601,48 +645,6 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			for(j = 0; j < commentCount - i && j < unFzList.size(); j++){
 				zombieIdList.add(unFzList.get(j));
 			}
-			
-			
-			/**
-			 * mishengliang
-			 * fc=followCommentSize 理论上需要的粉丝数
-			 * ufc=commentCount-followCommentSize 理论上需要的非粉丝数
-			 * 
-			 * if(查询出的粉丝数和非粉丝数 的和 大于需要的评论数){
-			 * 		if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 大于等于 需论数*0.8){}
-			 * else if(粉丝数 小于 需论数*0.2 && 非粉丝数 大于等于 需论数*0.8){}
-			 * else if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 小于 需论数*0.8){}
-			 * }
-			 */
-/*			if (fzListTotalCount+unFzListTotalCount > commentCount) {
-				int fc=followCommentSize ;
-				int ufc=commentCount-followCommentSize;
-				if (fzListTotalCount >= fc && unFzListTotalCount >= ufc) {
-					for( i = 0; i < fc ; i++) {
-						zombieIdList.add(fzList.get(i));
-					}
-					for( j = 0; j < ufc; j++){
-						zombieIdList.add(unFzList.get(j));
-					}
-				} else if(fzListTotalCount < fc && unFzListTotalCount >= ufc){
-					for( i = 0; i < fzListLength ; i++) {
-						zombieIdList.add(fzList.get(i));
-					}
-					for( j = 0; j < commentCount -fzListTotalCount; j++){
-						zombieIdList.add(unFzList.get(j));
-					}
-				}else if(fzListTotalCount >= fc && unFzListTotalCount < ufc){
-					for( i = 0; i < commentCount - unFzListTotalCount ; i++) {
-						zombieIdList.add(fzList.get(i));
-					}
-					for( j = 0; j < unFzList.size(); j++){
-						zombieIdList.add(unFzList.get(j));
-					}
-				}
-			} else {
-				throw new Exception("没有足够的马甲数");
-			}*/
-			
 			batchSaveComment(interactId, worldId, zombieIdList, cids, dateAdded, scheduleDateList);
 		}
 		

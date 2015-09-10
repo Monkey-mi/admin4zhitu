@@ -43,6 +43,7 @@ import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.ZombieChildWorld;
 import com.imzhitu.admin.common.pojo.ZombieWorld;
 import com.imzhitu.admin.common.service.KeyGenService;
+import com.imzhitu.admin.interact.dao.InteractWorldlevelDao;
 import com.imzhitu.admin.interact.mapper.InteractZombieChildWorldMapper;
 import com.imzhitu.admin.interact.mapper.InteractZombieImgMapper;
 import com.imzhitu.admin.interact.mapper.InteractZombieWorldMapper;
@@ -107,6 +108,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	
 	@Autowired
 	com.imzhitu.admin.interact.mapper.InteractChannelLevelMapper interactChannelLevelMapper;
+	
+	@Autowired
+	com.imzhitu.admin.interact.service.impl.InteractWorldServiceImpl interactWorldServiceImpl;
+	
+	@Autowired
+	private InteractWorldlevelDao interactWorldlevelDao;
 	
 	private Logger log = Logger.getLogger(InteractZombieServiceImpl.class);
 
@@ -789,16 +796,17 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	 */
 	public void saveAutoComments(Integer zombieWorldId,Integer worldId,Integer id) throws Exception{
 		List<Integer> commentsId = interactAutoResponseMapper.queryZombieCommentId(zombieWorldId);
-		String comments = "";
+		Integer userId = interactWorldlevelDao.QueryUIDByWID(worldId);
+		Integer clickCount = 6;
+		Integer likedCount = 6;
+		Integer minuteDuration = 120;
+		Integer degreeId = 3;
 		if (commentsId != null && commentsId.size() > 0) {
-			for(int i = 0;i<commentsId.size();i++){
-				if (i == commentsId.size()-1) {
-					comments += commentsId.get(i).toString(); 
-				} else {
-					comments += commentsId.get(i).toString() + ",";
-				}
+			String comments = commentsId.toString();
+			comments = comments.substring(1,comments.length() - 1 ).trim();
+			if (!comments.equals("")) {
+					interactWorldServiceImpl.saveInteractV3(userId,degreeId,worldId,clickCount,likedCount,comments.split(","),minuteDuration);
 			}
-			interactWorldlevelServiceImpl.AddLevelWorld(worldId, id, null, comments);
 		}
 	}
 }
