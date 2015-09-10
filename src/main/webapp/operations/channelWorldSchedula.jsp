@@ -4,14 +4,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>频道用户管理</title>
+<title>频道织图有效性计划管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/htmCRUD20131111.css"></link>
 <script type="text/javascript">
-	var maxId=0,
-	loadDateUrl="./admin_op/cwSchedula_queryChannelWorldSchedulaForList",
-	delUrl="./admin_op/cwSchedula_delChannelWorldSchedula?idsStr=",
-	tableQueryParams = {},
+	var maxId=0;
+	var searchChannelMaxId = 0;
+	var searchChannelQueryParams = {
+		'maxId' : searchChannelMaxId
+	};
+	loadDateUrl="./admin_op/cwSchedula_queryChannelWorldSchedulaForList";
+	delUrl="./admin_op/cwSchedula_delChannelWorldSchedula?idsStr=";
+	var tableQueryParams = {};
 	tableInit = function() {
 		tableLoadDate(1);
 	};
@@ -33,7 +37,7 @@
 	function tableLoadDate(pageNum){
 		$("#htm_table").datagrid(
 				{
-					title  :"频道织图计划管理",
+					title  :"频道织图有效性计划管理",
 					width  :1200,
 					pageList : [10,30,50,100],
 					loadMsg:"加载中....",
@@ -115,7 +119,68 @@
 			iconCls : 'icon-tip',
 			resizable : false
 		});
+		
 		tableInit();
+		
+		$('#ss-channel').combogrid({
+			panelWidth : 440,
+			panelHeight : 330,
+			loadMsg : '加载中，请稍后...',
+			pageList : [ 4, 10, 20 ],
+			pageSize : 4,
+			toolbar : "#search-channel-tb",
+			multiple : false,
+			required : false,
+			idField : 'id',
+			textField : 'channelName',
+			url : './admin_op/channel_searchChannel',
+			pagination : true,
+			columns : [ [
+					{
+						field : 'id',
+						title : 'id',
+						align : 'center',
+						width : 80
+					},
+					{
+						field : 'channelIcon',
+						title : 'icon',
+						align : 'center',
+						width : 60,
+						height : 60,
+						formatter : function(
+								value, row,
+								index) {
+							return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+						}
+					}, {
+						field : 'channelName',
+						title : '频道名称',
+						align : 'center',
+						width : 280
+					} ] ],
+			queryParams : searchChannelQueryParams,
+			onLoadSuccess : function(data) {
+				if (data.result == 0) {
+					if (data.maxId > searchChannelMaxId) {
+						searchChannelMaxId = data.maxId;
+						searchChannelQueryParams.maxId = searchChannelMaxId;
+					}
+				}
+			}
+
+		});
+		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber,
+					pageSize) {
+				if (pageNumber <= 1) {
+					searchChannelMaxId = 0;
+					searchChannelQueryParams.maxId = searchChannelMaxId;
+				}
+			}
+		});
+			
 		$("#main").show();
 	});
 	
@@ -180,7 +245,6 @@
 	 */
 	function reSortInit() {
 		$("#resort_form").find('input[name="reIndexId"]').val('');
-		//$("#schedula").datetimebox('clear');
 		$('#htm_resort .opt_btn').show();
 		$('#htm_resort .loading').hide();
 		
@@ -222,13 +286,28 @@
 	function searchChannelWorldSchedula(){
 		var valid = $("#ss_valid").combobox('getValue');
 		var finish = $("#ss_finish").combobox('getValue');
+		var channelId = $("#ss-channel").combogrid('getValue');
 		var queryParams = {
 				'valid':valid,
-				'finish':finish
+				'finish':finish,
+				'channelId':channelId
 		};
 		$("#htm_table").datagrid("load",queryParams);
 		
 	}
+	
+	/**
+	 * 搜索频道名称或id
+	 */
+	function searchChannel() {
+		searchChannelMaxId = 0;
+		var query = $('#channel-searchbox').searchbox('getValue');
+		searchChannelQueryParams.maxId = searchChannelMaxId;
+		searchChannelQueryParams.query = query;
+		$("#ss-channel").combogrid('grid').datagrid("load",
+				searchChannelQueryParams);
+	}
+	
 </script>
 </head>
 <body>
@@ -246,6 +325,10 @@
 		        <option value="0">未完成</option>
 		        <option value="1">已完成</option>
 	   		</select>
+	   		<span id="ss-channel-wrap">
+	   			<label>频道选择: </label>
+	   			<input id="ss-channel" />
+			</span>
 	   		<a href="javascript:void(0);" onclick="javascript:searchChannelWorldSchedula();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 		</div>
 		<table id="htm_table"></table>
@@ -325,7 +408,12 @@
 					</tbody>
 				</table>
 			</form>
-		</div> 
+		</div>
+		
+		<div id="search-channel-tb" style="padding: 5px; height: auto" class="none">
+			<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width: 200px;" />
+		</div>
+		
 	</div>
 </body>
 </html>
