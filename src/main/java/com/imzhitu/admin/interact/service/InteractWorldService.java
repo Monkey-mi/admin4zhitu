@@ -1,9 +1,11 @@
 package com.imzhitu.admin.interact.service;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gxp.org.apache.xerces.impl.xs.identity.Field;
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.InteractUser;
 import com.imzhitu.admin.common.pojo.InteractUserFollow;
@@ -412,6 +414,15 @@ public interface InteractWorldService extends BaseService {
 	 * @throws Exception
 	 */
 	public void saveUserInteract(Integer userId,Integer followCount,Integer minuteDuration)throws Exception;
+	
+	/**
+	 * 通过文件批量加入评论
+	 * @param commentsFile 文件名
+	 * @param worldId 织图ID
+		*	2015年9月10日
+		*	mishengliang
+	 */
+	public void addCommentsByFile (File commentsFile ,Integer worldId) throws Exception ; 
 	
 	/**
 	 * 根据worldId来添加用户粉丝互动

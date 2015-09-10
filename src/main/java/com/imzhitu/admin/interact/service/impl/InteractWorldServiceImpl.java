@@ -1,5 +1,9 @@
 package com.imzhitu.admin.interact.service.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +29,7 @@ import com.hts.web.common.util.NumberUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.common.database.Admin;
+import com.imzhitu.admin.common.pojo.InteractComment;
 import com.imzhitu.admin.common.pojo.InteractTracker;
 import com.imzhitu.admin.common.pojo.InteractUser;
 import com.imzhitu.admin.common.pojo.InteractUserFollow;
@@ -36,26 +41,26 @@ import com.imzhitu.admin.common.pojo.OpZombieDegreeUserLevel;
 import com.imzhitu.admin.common.pojo.UserLevelListDto;
 import com.imzhitu.admin.common.pojo.ZTWorldLevelDto;
 import com.imzhitu.admin.common.service.KeyGenService;
-import com.imzhitu.admin.interact.dao.InteractCommentDao;
 import com.imzhitu.admin.interact.dao.InteractTrackerDao;
 import com.imzhitu.admin.interact.dao.InteractUserDao;
 import com.imzhitu.admin.interact.dao.InteractWorldDao;
 import com.imzhitu.admin.interact.dao.InteractWorldlevelDao;
-import com.imzhitu.admin.interact.dao.InteractWorldlevelListDao;
 import com.imzhitu.admin.interact.mapper.InteractUserFollowMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldClickMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldCommentMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldLikedMapper;
 import com.imzhitu.admin.interact.service.InteractCommentService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
-import com.imzhitu.admin.interact.service.InteractUserlevelService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
-import com.imzhitu.admin.op.dao.UserZombieDao;
 import com.imzhitu.admin.op.mapper.OpZombieMapper;
-import com.imzhitu.admin.op.service.OpUserService;
 import com.imzhitu.admin.op.service.OpZombieChannelService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
-import com.imzhitu.admin.ztworld.dao.HTWorldDao;
+
+import info.monitorenter.cpdetector.io.ASCIIDetector;
+import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
+import info.monitorenter.cpdetector.io.JChardetFacade;
+import info.monitorenter.cpdetector.io.ParsingDetector;
+import info.monitorenter.cpdetector.io.UnicodeDetector;
 
 //@Service
 public class InteractWorldServiceImpl extends BaseServiceImpl implements
@@ -192,6 +197,14 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private OpZombieChannelService zombieChannelService;
+	
+	@Autowired
+	private com.imzhitu.admin.interact.dao.InteractCommentDao interactCommentDao;
+	
+	@Autowired
+	private com.imzhitu.admin.interact.mapper.InteractAutoResponseMapper interactAutoResponseMapper;
+	
+	private Logger log = Logger.getLogger(InteractWorldServiceImpl.class);
 	
 	public Integer getCommonZombieDegreeId() {
 		return commonZombieDegreeId;
@@ -532,54 +545,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		//
 		List<Integer> fzList = null;
 		List<Integer> unFzList = null;
-//		Integer fzListTotalCount = null;
-//		Integer unFzListTotalCount = null;
 		int fzListLength=0;
-		
-//		fzListTotalCount = zombieMapper.queryNotInteractNRandomFollowZombieCount(userId, worldId,0);
-//		unFzListTotalCount = zombieMapper.queryNotInteractNRandomNotFollowZombieCount(userId, degreeId,worldId,0);
-
-		/**
-		 * mishengliang
-		 * fc=followCommentSize 理论上需要的粉丝数
-		 * ufc=commentCount-followCommentSize 理论上需要的非粉丝数
-		 * 
-		 * if(查询出的粉丝数和非粉丝数 的和 大于需要的评论数){
-		 * 		if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 大于等于 需论数*0.8){}
-		 * else if(粉丝数 小于 需论数*0.2 && 非粉丝数 大于等于 需论数*0.8){}
-		 * else if(粉丝数 大于等于 需论数*0.2 && 非粉丝数 小于 需论数*0.8){}
-		 * }
-		 */
-/*			if (fzListTotalCount+unFzListTotalCount > commentCount) {
-			int fc=followCommentSize ;
-			int ufc=commentCount-followCommentSize;
-			if (fzListTotalCount >= fc && unFzListTotalCount >= ufc) {
-				for( i = 0; i < fc ; i++) {
-					zombieIdList.add(fzList.get(i));
-				}
-				for( j = 0; j < ufc; j++){
-					zombieIdList.add(unFzList.get(j));
-				}
-			} else if(fzListTotalCount < fc && unFzListTotalCount >= ufc){
-				for( i = 0; i < fzListLength ; i++) {
-					zombieIdList.add(fzList.get(i));
-				}
-				for( j = 0; j < commentCount -fzListTotalCount; j++){
-					zombieIdList.add(unFzList.get(j));
-				}
-			}else if(fzListTotalCount >= fc && unFzListTotalCount < ufc){
-				for( i = 0; i < commentCount - unFzListTotalCount ; i++) {
-					zombieIdList.add(fzList.get(i));
-				}
-				for( j = 0; j < unFzList.size(); j++){
-					zombieIdList.add(unFzList.get(j));
-				}
-			}
-		} else {
-			throw new Exception("没有足够的马甲数");
-		}*/
-		
-		
 		
 		//计算粉丝马甲数
 		int followZombiesTotal = likedCount * likeFromFollowRate + likedCount * ( 100 -  likeFromFollowRate)* likeToFollowRate
@@ -587,11 +553,32 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		followZombiesTotal = Math.round(followZombiesTotal / 100.00f);
 		int unFollowZombiesTotal = likedCount > commentCount ? likedCount - followZombiesTotal : commentCount - followZombiesTotal;
 		
+		/**
+		 * 对比需要数和总的数据库中的数据对比
+			mishengliang
+		 */
+		Integer fzListTotalCount = 0;
+		Integer unFzListTotalCount = 0;
+		fzListTotalCount = zombieMapper.queryNotInteractNRandomFollowZombieCount(userId, worldId,0);
+		unFzListTotalCount = zombieMapper.queryNotInteractNRandomNotFollowZombieCount(userId, degreeId,worldId,0);
+		int total = likedCount > commentCount ? likedCount : commentCount;
+		if(fzListTotalCount + unFzListTotalCount > total){
+			if (followZombiesTotal < fzListTotalCount&&unFollowZombiesTotal >= unFzListTotalCount) {
+				followZombiesTotal = total - unFzListTotalCount;
+			} else if(followZombiesTotal >= fzListTotalCount&&unFollowZombiesTotal < unFzListTotalCount){
+				unFollowZombiesTotal = total - followZombiesTotal;
+			}else if((followZombiesTotal < fzListTotalCount&&unFollowZombiesTotal < unFzListTotalCount)){
+				
+			}
+		}else {
+			throw new Exception("没有足够的马甲数");
+		}
+		
+		
 		//查询粉丝马甲
 		if ( followZombiesTotal > 0){
 			try{
 				fzList = zombieMapper.queryNotInteractNRandomFollowZombie(userId, worldId,followZombiesTotal);
-//				fzListTotalCount = zombieMapper.queryNotInteractNRandomFollowZombieCount(userId, worldId,followZombiesTotal);
 				if(fzList != null){
 					fzListLength = fzList.size();
 				}
@@ -1686,6 +1673,59 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			throw new Exception("saveUserInteract:userLevelListService.QueryUserlevelByUserId is null.\nuserId="+userId);
 		}
 		saveUserInteract(userId,needZombieDegreeId,followCount,minuteDuration);
+	}
+	
+	/**
+	 * mishengliang
+	 * 通过文件增加评论
+	 * @throws Exception 
+	 */
+	@Override
+	public void addCommentsByFile(File commentsFile ,Integer worldId) throws Exception{
+		//默认的评论加入的标签           5为其他旧的ID
+		Integer labelId  = 5;
+		String commentIds = "";
+//		List<Integer> list = new ArrayList<Integer>();
+		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
+		detector.add(new ParsingDetector(false)); 
+		detector.add(JChardetFacade.getInstance());
+		detector.add(ASCIIDetector.getInstance()); 
+		detector.add(UnicodeDetector.getInstance()); 
+		java.nio.charset.Charset set = null;
+		
+		if (commentsFile == null) throw new Exception("你没有选择文件。");
+		set = detector.detectCodepage(commentsFile.toURI().toURL());
+		String charsetName = set.name();
+		
+		// 除了GB开头的编码，其他一律用UTF-8
+		String charset = charsetName != null && charsetName.startsWith("GB") ? charsetName : "UTF-8";
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(commentsFile), charset));
+			String line = null;
+			while((line = reader.readLine()) != null) {
+				try{
+					String commentStr = line.trim();
+					Integer commentId = keyGenService.generateId(Admin.INTERACT_COMMENT_KEYID);
+					if (!"".equals(commentStr)) {
+						interactCommentDao.saveComment(new InteractComment(commentId, commentStr, labelId));
+						commentIds += commentId + ",";
+					}
+				}catch(Exception e){
+					log.warn("batchInsertZombieChannel error. line:"+line+".zombieId:"+worldId+"\ncause:"+e.getMessage());
+				}
+			}
+
+		}finally {
+			reader.close();
+		}
+		
+		commentIds = commentIds.substring(0, commentIds.length()-1);
+		//将评论添加进计划评论中
+		Integer userId = interactWorldlevelDao.QueryUIDByWID(worldId);
+		if (!commentIds.equals("")) {
+		saveInteractV3(userId,3,worldId,6,6,commentIds.split(","),120);
+	}
 	}
 	
 	@Override

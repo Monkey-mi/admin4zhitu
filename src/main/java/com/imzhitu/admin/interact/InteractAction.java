@@ -1,5 +1,6 @@
 package com.imzhitu.admin.interact;
 
+import java.io.File;
 import java.io.PrintWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,8 @@ public class InteractAction extends BaseCRUDAction {
 	private Integer userId;
 	private String interactWorldCommentIds;
 	
+	private File commentsFile;
+
 	@Autowired
 	private InteractWorldService interactWorldService;
 	
@@ -261,6 +264,22 @@ public class InteractAction extends BaseCRUDAction {
 	}
 	
 	/**
+	 * 通过文件批量添加评论
+	 * @return 
+		*	2015年9月10日
+		*	mishengliang
+	 */
+	public String addCommentsByFile(){
+		try {
+			interactWorldService.addCommentsByFile(commentsFile , worldId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
 	 * 删除用户互动
 	 * @return
 	 */
@@ -439,4 +458,11 @@ public class InteractAction extends BaseCRUDAction {
 	}
 	
 	
+	public File getCommentsFile() {
+		return commentsFile;
+	}
+
+	public void setCommentsFile(File commentsFile) {
+		this.commentsFile = commentsFile;
+	}
 }

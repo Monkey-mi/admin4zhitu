@@ -220,18 +220,14 @@
 	</div>
 
   <div id='addComment'>
-			<form id='addCommentsFile' action="" method='post'>
+			<form id='addCommentsFile' action="./admin_interact/interact_addCommentsByFile" method='post'>
 			<table class="htm_edit_table" width="340">
 			<tbody>
 			<tr>
 				<td style='height:100'>
-				马甲织图ID：<input type="text" id="zombieWorldId" name='zombieWorldId' readonly="readonly">
+				织图ID：<input type="text" id="worldId" name='worldId' value="<%= worldId %>" readonly="readonly">
 				</td>
 			</tr>
-<!-- 			<tr>
-				<td>织图等级&nbsp;&nbsp;&nbsp;: <input style="width:120px" class="easyui-combobox" id="levelId" name="id"  onchange="validateSubmitOnce=true;" 
-					data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel'"/></td>
-			</tr> -->
 			<tr>
 				<td style='height:100' >
 				<input id='commentsFile' type="file" name='commentsFile' >
