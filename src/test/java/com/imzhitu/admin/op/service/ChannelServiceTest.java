@@ -34,13 +34,6 @@ public class ChannelServiceTest extends BaseTest {
 	}
 	
 	@Test
-	public void testUpdateChannelWorldCache() throws Exception {
-		OpChannelWorld world = new OpChannelWorld();
-		world.setChannelId(1);
-		service.updateChannelWorldCache(world, 20);
-	}
-	
-	@Test
 	public void testBuildChannel() throws Exception {
 		logNumberList(logger, new TestNumberListAdapter(){
 
