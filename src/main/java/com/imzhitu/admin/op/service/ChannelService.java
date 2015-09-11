@@ -39,14 +39,6 @@ public interface ChannelService extends BaseService {
 	public void updateTopOneTitleCache(Date beginDate, Date endDate) throws Exception;
 
 	/**
-	 * 更新频道织图缓存
-	 * 
-	 * @param world
-	 * @throws Exception
-	 */
-	public void updateChannelWorldCache(OpChannelWorld world, Integer childCountBase) throws Exception;
-
-	/**
 	 * 构建频道列表
 	 * 
 	 * @param channel

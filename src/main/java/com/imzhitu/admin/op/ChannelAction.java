@@ -84,23 +84,6 @@ public class ChannelAction extends BaseCRUDAction{
 	}
 	
 	/**
-	 * 更新频道织图缓存
-	 * 
-	 * @return
-	 */
-	public String updateChannelWorldCache() {
-		try {
-			if(childCountBase == null || childCountBase.equals(0))
-				childCountBase = -1;
-			channelService.updateChannelWorldCache(world, childCountBase);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
 	 * 查询频道列表
 	 * 
 	 * @return

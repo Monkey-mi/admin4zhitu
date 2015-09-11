@@ -152,11 +152,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	}
 
 	@Override
-	public void updateChannelWorldCache(OpChannelWorld world, Integer childCountBase) throws Exception {
-		webChannelService.updateWorldAndChildCount(world.getChannelId());
-	}
-
-	@Override
 	public void buildChannel(final OpChannel channel, int page, int rows, Map<String, Object> jsonMap) throws Exception {
 		buildNumberDtos(OptResult.JSON_KEY_ROWS, OptResult.JSON_KEY_TOTAL, OptResult.JSON_KEY_MAX_ID, "getSerial", channel, page, rows, jsonMap, new NumberDtoListAdapter<OpChannel>() {
 
