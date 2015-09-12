@@ -27,7 +27,6 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	private Date modifyDate;	//最后修改时间
 	private String idsStr;		//id 字符串
 	private Date schedula;		//计划时间字符串
-	private String superbWids;		//计划时间字符串
 	private Integer minuteTimeSpan;//计划时间间隔
 
 	
@@ -42,8 +41,6 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		this.service = service;
 	}
 
-	
-	
 	public Date getSchedula() {
 		return schedula;
 	}
@@ -63,9 +60,44 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 
+	 * @return 
+		*	2015年9月12日
+		*	mishengliang
+	 */
+	public String queryChannelWorldSuperbSchedulaForList(){
+		try{
+			service.queryChannelWorldSuperbSchedulaForList(maxId, page, rows, id, userId, worldId, channelId, finish, valid, addDate, modifyDate, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			e.printStackTrace();
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public String delChannelWorldSchedula(){
 		try{
 			service.delChannelWorldSchedula(idsStr);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			e.printStackTrace();
+			JSONUtil.optFailed(OptResult.DELETE_FAILED, jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	
+	/**
+	 * 
+	 * @return 
+		*	2015年9月12日
+		*	mishengliang
+	 */
+	public String delChannelWorldSuperbSchedula(){
+		try{
+			service.delChannelWorldSuperbSchedula(idsStr);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -78,7 +110,7 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		try{
 			String[] wids = StringUtil.convertStringToStrs(request.getParameter("wids"));
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			service.batchAddChannelWorldSchedula(wids, getSuperbWids(), schedula,minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
+			service.batchAddChannelWorldSchedula(wids, schedula,minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -88,13 +120,31 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	}
 	
 	/**
-	 * 重新排序
+	 *有效性 重新排序
 	 */
 	public String reSort(){
 		try{
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			String[] ids = request.getParameterValues("reIndexId");
 			service.reSort(ids, schedula,minuteTimeSpan, user.getId());
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 精选 重新排序
+	 * @return 
+		*	2015年9月12日
+		*	mishengliang
+	 */
+	public String reSortSuperb(){
+		try{
+			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String[] ids = request.getParameterValues("reIndexId");
+			service.reSortSuperb(ids, schedula,minuteTimeSpan, user.getId());
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -156,21 +206,6 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	public void setIdsStr(String idsStr) {
 		this.idsStr = idsStr;
 	}
-
-	/**
-	 * @return the superbWids
-	 */
-	public String getSuperbWids() {
-	    return superbWids;
-	}
-
-	/**
-	 * @param superbWids the superbWids to set
-	 */
-	public void setSuperbWids(String superbWids) {
-	    this.superbWids = superbWids;
-	}
-
 	
 	public Integer getMinuteTimeSpan() {
 		return minuteTimeSpan;

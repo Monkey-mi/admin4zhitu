@@ -14,7 +14,6 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
-import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelWorldSchedulaMapper;
@@ -51,7 +50,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	Logger logger = Logger.getLogger(OpChannelWorldSchedulaServiceImpl.class);
 
 	/**
-	 * 分页查询
+	 * 分页查询频道织图计划
 	 * @throws Exception
 	 */
 	@Override
@@ -86,6 +85,42 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	}
 	
 	/**
+	 * mishengliang
+	 * 分页查询频道精选计划
+	 * @throws Exception
+	 */
+	@Override
+	public void queryChannelWorldSuperbSchedulaForList(Integer maxId, int page, int rows, 
+			Integer id, Integer userId, Integer worldId,Integer channelId,Integer finish,
+			Integer valid,Date addDate,Date modifyDate, Map<String, Object> jsonMap)throws Exception{
+		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
+		dto.setAddDate(addDate);
+		dto.setChannelId(channelId);
+		dto.setFinish(finish);
+		dto.setModifyDate(modifyDate);
+		dto.setId(id);
+		dto.setValid(valid);
+		dto.setUserId(userId);
+		dto.setWorldId(worldId);
+		buildNumberDtos(dto,page,rows,jsonMap,new NumberDtoListAdapter<OpChannelWorldSchedulaDto>(){
+			@Override
+			public long queryTotal(OpChannelWorldSchedulaDto dto){
+				return channelWorldSchedulaMapper.queryChannelWorldSuperbSchedulaCount(dto);
+			}
+			
+			@Override
+			public List< ? extends AbstractNumberDto> queryList(OpChannelWorldSchedulaDto dto){
+				List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldSuperbSchedulaForList(dto);
+				for(OpChannelWorldSchedulaDto o:list){
+					o.setWorldLink(urlPrefix + o.getWorldLink());
+				}
+				return list;
+			}
+			
+		});
+	}
+	
+	/**
 	 * 更新 
 	 * @throws Exception
 	 */
@@ -105,8 +140,29 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		channelWorldSchedulaMapper.updateChannelWorldSchedula(dto);
 	}
 	
+	
 	/**
-	 * 批量删除
+	 * 更新 频道精选计划
+	 * @throws Exception
+	 */
+	@Override
+	public void updateChannelWorldSuperbSchedula(Integer id,Integer userId,Integer worldId,
+			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception{
+		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
+		Date now = new Date();
+		dto.setChannelId(channelId);
+		dto.setFinish(finish);
+		dto.setModifyDate(now);
+		dto.setId(id);
+		dto.setValid(valid);
+		dto.setWorldId(worldId);
+		dto.setOperatorId(operatorId);
+		dto.setSchedulaDate(schedulaDate);
+		channelWorldSchedulaMapper.updateChannelWorldSuperbSchedula(dto);
+	}
+	
+	/**
+	 * 批量删除频道有效计划
 	 * @param idsStr
 	 * @throws Exception
 	 */
@@ -116,10 +172,22 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		channelWorldSchedulaMapper.delChannelWorldSchedula(ids);
 	}
 	
+	
+	/**
+	 * 批量删除频道精选计划
+	 * @param idsStr
+	 * @throws Exception
+	 */
+	@Override
+	public void delChannelWorldSuperbSchedula(String idsStr)throws Exception{
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		channelWorldSchedulaMapper.delChannelWorldSuperbSchedula(ids);
+	}
+	
 	/**
 	 * 批量添加
 	 */
-	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
+	public void batchAddChannelWorldSchedula(String[] wIds, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
 			Integer valid,Integer operatorId)throws Exception{
 		Date now = new Date();
 		long timeSpan = minuteTimeSpan*60*1000L;
@@ -132,7 +200,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			OpChannelWorld cwDto = new OpChannelWorld();
 			cwDto.setChannelId(channelId);
 			cwDto.setWorldId(worldId);
-			List<OpChannelWorldDto> cwList = channelWorldMapper.queryChannelWorlds(cwDto);
 			
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
 			dto.setWorldId(worldId);
@@ -146,17 +213,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setValid(valid);
 			dto.setOperatorId(operatorId);
 			
-			if (superbWids.contains(s)) {	// 若加精的集合中包含当前操作的worldId，则设置加精
-			    dto.setSuperb(1);
-			} else {
-			    // 若不在加精集合中，先判断此对象在频道织图中是否已经是加精的，已经为加精则依旧设置计划加精为1
-			    if ( cwList.get(0).getSuperb() == 1) {
-				dto.setSuperb(1);
-			    } else {
-				dto.setSuperb(0);
-			    }
-			}
-
 			if(0 == r){
 				channelWorldSchedulaMapper.insertChannelWorldSchedula(dto);
 			}else{
@@ -239,4 +295,16 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		}
 	}
 	
+	@Override
+	public void reSortSuperb(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception{
+		long timeSpan = minuteTimeSpan*60*1000L;
+		for(int i=  0;i < ids.length; i++){
+			String idStr = ids[i];
+			if(idStr != null && idStr != ""){
+				int id = Integer.parseInt(ids[i]);
+				long t = schedula.getTime() + i*timeSpan;//用以排序
+				updateChannelWorldSchedula(id, null, null, null, null, null, operator, new Date(t));
+			}
+		}
+	}
 }
