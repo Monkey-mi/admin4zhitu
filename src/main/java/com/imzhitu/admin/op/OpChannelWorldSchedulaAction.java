@@ -28,27 +28,46 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	private String idsStr;		//id 字符串
 	private Date schedula;		//计划时间字符串
 	private Integer minuteTimeSpan;//计划时间间隔
-
 	
-	@Autowired
-	private OpChannelWorldSchedulaService service;
-	
-	public OpChannelWorldSchedulaService getService() {
-		return service;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public void setService(OpChannelWorldSchedulaService service) {
-		this.service = service;
+	public void setWorldId(Integer worldId) {
+		this.worldId = worldId;
 	}
 
-	public Date getSchedula() {
-		return schedula;
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
+	}
+
+	public void setFinish(Integer finish) {
+		this.finish = finish;
+	}
+
+	public void setAddDate(Date addDate) {
+		this.addDate = addDate;
+	}
+
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+
+	public void setIdsStr(String idsStr) {
+		this.idsStr = idsStr;
 	}
 
 	public void setSchedula(Date schedula) {
 		this.schedula = schedula;
 	}
 
+	public void setMinuteTimeSpan(Integer minuteTimeSpan) {
+		this.minuteTimeSpan = minuteTimeSpan;
+	}
+
+	@Autowired
+	private OpChannelWorldSchedulaService service;
+	
 	public String queryChannelWorldSchedulaForList(){
 		try{
 			service.queryChannelWorldSchedulaForList(maxId, page, rows, id, userId, worldId, channelId, finish, valid, addDate, modifyDate, jsonMap);
@@ -152,70 +171,4 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public Integer getUserId() {
-		return userId;
-	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
-	public Integer getWorldId() {
-		return worldId;
-	}
-	public void setWorldId(Integer worldId) {
-		this.worldId = worldId;
-	}
-	public Integer getChannelId() {
-		return channelId;
-	}
-	public void setChannelId(Integer channelId) {
-		this.channelId = channelId;
-	}
-	public Integer getFinish() {
-		return finish;
-	}
-	public void setFinish(Integer finish) {
-		this.finish = finish;
-	}
-	public Integer getValid() {
-		return valid;
-	}
-	public void setValid(Integer valid) {
-		this.valid = valid;
-	}
-	public Date getAddDate() {
-		return addDate;
-	}
-	public void setAddDate(Date addDate) {
-		this.addDate = addDate;
-	}
-	public Date getModifyDate() {
-		return modifyDate;
-	}
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
-	}
-	public String getIdsStr() {
-		return idsStr;
-	}
-	public void setIdsStr(String idsStr) {
-		this.idsStr = idsStr;
-	}
-	
-	public Integer getMinuteTimeSpan() {
-		return minuteTimeSpan;
-	}
-
-	public void setMinuteTimeSpan(Integer minuteTimeSpan) {
-		this.minuteTimeSpan = minuteTimeSpan;
-	}
-
-	
-	
-
 }
