@@ -24,7 +24,7 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	@Test
 	public void queryChannelWorldSchedulaForListTest()throws Exception{
 		Map<String, Object> jsonMap = new HashMap<String , Object>();
-		service.queryChannelWorldSchedulaForList(0, 1, 10, null, null, null, 1, null, null, null, null, jsonMap);
+		service.queryChannelWorldValidSchedulaForList(0, 1, 10, null, null, null, 1, null, null, null, null, jsonMap);
 		logger.info(jsonMap.toString());
 	}
 	

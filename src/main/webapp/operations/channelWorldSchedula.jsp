@@ -13,7 +13,7 @@
 	var searchChannelQueryParams = {
 		'maxId' : searchChannelMaxId
 	};
-	loadDateUrl="./admin_op/cwSchedula_queryChannelWorldSchedulaForList";
+	loadDateUrl="./admin_op/cwSchedula_queryChannelWorldValidSchedulaForList";
 	delUrl="./admin_op/cwSchedula_delChannelWorldSchedula?idsStr=";
 	var tableQueryParams = {};
 	tableInit = function() {
@@ -56,17 +56,7 @@
 						{field : 'channelName',title: '频道名称',align : 'center',width : 130},
 						{field : 'userId',title: '用户ID',align : 'center',width : 100},
 						{field : 'userName',title: '用户名称',align : 'center',width : 130},
-/* 						{field : 'valid',title : '有效性',align : 'center', width: 45,
-				  			formatter: function(value,row,index) {
-				  				if(value == 1) {
-				  					img = "./common/images/ok.png";
-				  					return "<img title='有效' class='htm_column_img'  src='" + img + "'/>";
-				  				}
-				  				img = "./common/images/tip.png";
-				  				return "<img title='无效' class='htm_column_img' src='" + img + "'/>";
-				  			}
-				  		}, */
-				  		{field : 'finish',title : '完成标志',align : 'center', width: 65,
+				  	{field : 'finish',title : '完成标志',align : 'center', width: 65,
 				  			formatter: function(value,row,index) {
 				  				if(value == 1) {
 				  					img = "./common/images/ok.png";
