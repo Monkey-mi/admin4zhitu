@@ -29,6 +29,12 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	private Date schedula;		//计划时间字符串
 	private Integer minuteTimeSpan;//计划时间间隔
 	
+	/**
+	 * 织图id集合
+	 * @author zhangbo	2015年9月12日
+	 */
+	private String wids;
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -65,12 +71,16 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		this.minuteTimeSpan = minuteTimeSpan;
 	}
 
+	public void setWids(String wids) {
+		this.wids = wids;
+	}
+
 	@Autowired
 	private OpChannelWorldSchedulaService service;
 	
-	public String queryChannelWorldSchedulaForList(){
+	public String queryChannelWorldValidSchedulaForList(){
 		try{
-			service.queryChannelWorldSchedulaForList(maxId, page, rows, id, userId, worldId, channelId, finish, valid, addDate, modifyDate, jsonMap);
+			service.queryChannelWorldValidSchedulaForList(maxId, page, rows, id, userId, worldId, channelId, finish, valid, addDate, modifyDate, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -130,6 +140,18 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 			String[] wids = StringUtil.convertStringToStrs(request.getParameter("wids"));
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			service.batchAddChannelWorldSchedula(wids, schedula,minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		}catch(Exception e){
+			e.printStackTrace();
+			JSONUtil.optFailed(OptResult.ADD_FAILED, jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String batchChannelWorldToSuperbSchedula() {
+		try{
+			Integer[] worldIds = StringUtil.convertStringToIds(wids);
+			service.batchChannelWorldToSuperbSchedula(channelId, worldIds, schedula, minuteTimeSpan);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();

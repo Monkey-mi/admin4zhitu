@@ -11,7 +11,7 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * 分页查询频道有效性
 	 * @throws Exception
 	 */
-	public void queryChannelWorldSchedulaForList(Integer maxId, int page, int rows, 
+	public void queryChannelWorldValidSchedulaForList(Integer maxId, int page, int rows, 
 			Integer id, Integer userId, Integer worldId,Integer channelId,Integer finish,
 			Integer valid,Date addDate,Date modifyDate, Map<String, Object> jsonMap)throws Exception;
 	
@@ -57,7 +57,6 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	/**
 	 * 批量添加
 	 * @param wIds
-	 * @param superbWids	加精的worldid集合，用,分割
 	 * @param channelId
 	 * @param finish
 	 * @param valid
@@ -74,7 +73,7 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	public void channelWorldSchedula()throws Exception;
 	
 	/**
-	 * 重新排序
+	 * 重新排序频道有效性计划
 	 * @param wIds
 	 * @param schedula
 	 * @param operator
@@ -84,12 +83,23 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	
 	
 	/**
-	 * 重新排序
+	 * 重新排序频道精选计划
 	 * @param wIds
 	 * @param schedula
 	 * @param operator
 	 * @throws Exception
 	 */
 	public void reSortSuperb(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception;
+
+	/**
+	 * 批量频道织图计划加精
+	 * 
+	 * @param channelId			频道id
+	 * @param worldIds			织图id集合
+	 * @param schedula			计划执行时间
+	 * @param minuteTimeSpan	每个织图在执行时间上的间隔的时间
+	 * @author zhangbo	2015年9月12日
+	 */
+	public void batchChannelWorldToSuperbSchedula(Integer channelId, Integer[] worldIds, Date schedula, Integer minuteTimeSpan);
 
 }

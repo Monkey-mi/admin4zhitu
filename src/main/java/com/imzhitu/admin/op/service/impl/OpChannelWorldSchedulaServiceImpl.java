@@ -15,6 +15,7 @@ import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
+import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelWorldSchedulaMapper;
 import com.imzhitu.admin.op.service.ChannelService;
@@ -54,7 +55,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	 * @throws Exception
 	 */
 	@Override
-	public void queryChannelWorldSchedulaForList(Integer maxId, int page, int rows, 
+	public void queryChannelWorldValidSchedulaForList(Integer maxId, int page, int rows, 
 			Integer id, Integer userId, Integer worldId,Integer channelId,Integer finish,
 			Integer valid,Date addDate,Date modifyDate, Map<String, Object> jsonMap)throws Exception{
 		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
@@ -69,12 +70,12 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		buildNumberDtos(dto,page,rows,jsonMap,new NumberDtoListAdapter<OpChannelWorldSchedulaDto>(){
 			@Override
 			public long queryTotal(OpChannelWorldSchedulaDto dto){
-				return channelWorldSchedulaMapper.queryChannelWorldSchedulaCount(dto);
+				return channelWorldSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
 			}
 			
 			@Override
 			public List< ? extends AbstractNumberDto> queryList(OpChannelWorldSchedulaDto dto){
-				List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldSchedulaForList(dto);
+				List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldValidSchedulaForList(dto);
 				for(OpChannelWorldSchedulaDto o:list){
 					o.setWorldLink(urlPrefix + o.getWorldLink());
 				}
@@ -197,20 +198,47 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			Integer worldId = Integer.parseInt(s);
 			
 			// 查询频道织图，list查出来应该只有一个对象
-			OpChannelWorld cwDto = new OpChannelWorld();
-			cwDto.setChannelId(channelId);
-			cwDto.setWorldId(worldId);
-			
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
 			dto.setWorldId(worldId);
 			dto.setChannelId(channelId);
-			long r = channelWorldSchedulaMapper.queryChannelWorldSchedulaCount(dto);
+			long r = channelWorldSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
 			
 			dto.setModifyDate(now);
 			dto.setAddDate(now);
 			dto.setSchedulaDate(new Date(schedula.getTime()+timeSpan*i));
 			dto.setFinish(finish);
 			dto.setValid(valid);
+			dto.setOperatorId(operatorId);
+			
+			if(0 == r){
+				channelWorldSchedulaMapper.insertChannelWorldSchedula(dto);
+			}else{
+				channelWorldSchedulaMapper.updateChannelWorldSchedula(dto);
+			}
+		}
+	}
+	
+	@Override
+	public void batchChannelWorldToSuperbSchedula(Integer channelId, Integer[] worldIds, Date schedula, Integer minuteTimeSpan) {
+		// 获取当前登陆的管理员账号id
+		Integer operatorId = AdminLoginUtil.getCurrentLoginId();
+		Date now = new Date();
+		
+		// 根据时间间隔转化为毫秒
+		long timeSpan = minuteTimeSpan * 60 * 1000L;
+		
+		for(int i=0;i<worldIds.length; i++){
+			Integer worldId = worldIds[i];
+			
+			// 查询频道织图，list查出来应该只有一个对象
+			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();		
+			dto.setWorldId(worldId);
+			dto.setChannelId(channelId);
+			long r = channelWorldSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
+			
+			dto.setModifyDate(now);
+			dto.setAddDate(now);
+			dto.setSchedulaDate(new Date(schedula.getTime() + timeSpan * i));
 			dto.setOperatorId(operatorId);
 			
 			if(0 == r){
@@ -303,8 +331,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			if(idStr != null && idStr != ""){
 				int id = Integer.parseInt(ids[i]);
 				long t = schedula.getTime() + i*timeSpan;//用以排序
-				updateChannelWorldSchedula(id, null, null, null, null, null, operator, new Date(t));
+				updateChannelWorldSuperbSchedula(id, null, null, null, null, null, operator, new Date(t));
 			}
 		}
 	}
+
 }
