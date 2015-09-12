@@ -54,7 +54,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	 * @throws Exception
 	 */
 	@Override
-	public void queryChannelWorldSchedulaForList(Integer maxId, int page, int rows, 
+	public void queryChannelWorldValidSchedulaForList(Integer maxId, int page, int rows, 
 			Integer id, Integer userId, Integer worldId,Integer channelId,Integer finish,
 			Integer valid,Date addDate,Date modifyDate, Map<String, Object> jsonMap)throws Exception{
 		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
@@ -69,12 +69,12 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		buildNumberDtos(dto,page,rows,jsonMap,new NumberDtoListAdapter<OpChannelWorldSchedulaDto>(){
 			@Override
 			public long queryTotal(OpChannelWorldSchedulaDto dto){
-				return channelWorldSchedulaMapper.queryChannelWorldSchedulaCount(dto);
+				return channelWorldSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
 			}
 			
 			@Override
 			public List< ? extends AbstractNumberDto> queryList(OpChannelWorldSchedulaDto dto){
-				List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldSchedulaForList(dto);
+				List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldValidSchedulaForList(dto);
 				for(OpChannelWorldSchedulaDto o:list){
 					o.setWorldLink(urlPrefix + o.getWorldLink());
 				}
@@ -204,7 +204,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
 			dto.setWorldId(worldId);
 			dto.setChannelId(channelId);
-			long r = channelWorldSchedulaMapper.queryChannelWorldSchedulaCount(dto);
+			long r = channelWorldSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
 			
 			dto.setModifyDate(now);
 			dto.setAddDate(now);
@@ -303,7 +303,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			if(idStr != null && idStr != ""){
 				int id = Integer.parseInt(ids[i]);
 				long t = schedula.getTime() + i*timeSpan;//用以排序
-				updateChannelWorldSchedula(id, null, null, null, null, null, operator, new Date(t));
+				updateChannelWorldSuperbSchedula(id, null, null, null, null, null, operator, new Date(t));
 			}
 		}
 	}

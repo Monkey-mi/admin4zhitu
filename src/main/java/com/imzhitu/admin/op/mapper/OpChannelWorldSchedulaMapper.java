@@ -30,7 +30,7 @@ public interface OpChannelWorldSchedulaMapper {
 	public void delChannelWorldSuperbSchedula(Integer[] ids);
 	
 	/**
-	 * 更新
+	 * 更新频道有效性计划
 	 * @param dto
 	 */
 	@DataSource("master")
@@ -38,7 +38,7 @@ public interface OpChannelWorldSchedulaMapper {
 	
 	
 	/**
-	 * 更新
+	 * 更新频道精选计划
 	 * @param dto
 	 */
 	@DataSource("master")
@@ -50,7 +50,7 @@ public interface OpChannelWorldSchedulaMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<OpChannelWorldSchedulaDto> queryChannelWorldSchedulaForList(OpChannelWorldSchedulaDto dto);
+	public List<OpChannelWorldSchedulaDto> queryChannelWorldValidSchedulaForList(OpChannelWorldSchedulaDto dto);
 	
 	/**
 	 * mishengliang 
@@ -68,7 +68,7 @@ public interface OpChannelWorldSchedulaMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public long queryChannelWorldSchedulaCount(OpChannelWorldSchedulaDto dto);
+	public long queryChannelWorldValidSchedulaCount(OpChannelWorldSchedulaDto dto);
 	
 	/**
 	 * 分页查询精选总数

@@ -40,7 +40,7 @@
 	
 	<!-- 删除频道有效性计划 -->
 	<delete id="delChannelWorldSchedula">
-		delete from hts_admin.op_channel_world_schedula
+		delete from hts_admin.op_channel_world_validate_schedula
 		<where>
 			id in
 			<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
@@ -49,7 +49,7 @@
 		</where>
 	</delete>
 	
-<!-- 删除频道有效性计划 -->
+<!-- 删除频道精选计划 -->
 	<delete id="delChannelWorldSuperbSchedula">
 		delete from hts_admin.op_channel_world_superb_schedula
 		<where>
@@ -62,19 +62,13 @@
 	
 	<!-- 修改 -->
 	<update id="updateChannelWorldSchedula">
-		update hts_admin.op_channel_world_schedula
+		update hts_admin.op_channel_world_validate_schedula
 		set 
 			<if test="schedulaDate != null">
 				date_schedula = #{schedulaDate,jdbcType=TIMESTAMP},
 			</if>
 			<if test="operatorId != null">
 				operator_id = #{operatorId},
-			</if>
-			<if test="valid != null">
-				valid = #{valid},
-			</if>
-			<if test="superb != null">
-				superb = #{superb},
 			</if>
 			<if test="finish != null">
 				finish = #{finish},
@@ -100,12 +94,6 @@
 			<if test="operatorId != null">
 				operator_id = #{operatorId},
 			</if>
-			<if test="valid != null">
-				valid = #{valid},
-			</if>
-			<if test="superb != null">
-				superb = #{superb},
-			</if>
 			<if test="finish != null">
 				finish = #{finish},
 			</if>
@@ -121,7 +109,7 @@
 	</update>
 	
 	<!-- 分页查询频道织图计划 -->
-	<select id="queryChannelWorldSchedulaForList" resultMap="ChannelWorldSchedulaMapper">
+	<select id="queryChannelWorldValidSchedulaForList" resultMap="ChannelWorldSchedulaMapper">
 		select ocwvs.*,aui.user_name as operator_name,hh.short_link,hh.author_id as user_id,oc.channel_name,ui.user_name from
 		hts_admin.op_channel_world_validate_schedula ocwvs
 		
@@ -209,7 +197,7 @@
 	</select>
 	
 	<!-- 分页查询有效性总数 -->
-	<select id="queryChannelWorldSchedulaCount" resultType="long">
+	<select id="queryChannelWorldValidSchedulaCount" resultType="long">
 		select count(ocwvs.id)
 		from hts_admin.op_channel_world_validate_schedula ocwvs
 		<where>

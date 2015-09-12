@@ -68,9 +68,9 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	@Autowired
 	private OpChannelWorldSchedulaService service;
 	
-	public String queryChannelWorldSchedulaForList(){
+	public String queryChannelWorldValidSchedulaForList(){
 		try{
-			service.queryChannelWorldSchedulaForList(maxId, page, rows, id, userId, worldId, channelId, finish, valid, addDate, modifyDate, jsonMap);
+			service.queryChannelWorldValidSchedulaForList(maxId, page, rows, id, userId, worldId, channelId, finish, valid, addDate, modifyDate, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();

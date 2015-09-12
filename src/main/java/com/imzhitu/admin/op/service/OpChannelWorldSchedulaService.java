@@ -11,7 +11,7 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * 分页查询频道有效性
 	 * @throws Exception
 	 */
-	public void queryChannelWorldSchedulaForList(Integer maxId, int page, int rows, 
+	public void queryChannelWorldValidSchedulaForList(Integer maxId, int page, int rows, 
 			Integer id, Integer userId, Integer worldId,Integer channelId,Integer finish,
 			Integer valid,Date addDate,Date modifyDate, Map<String, Object> jsonMap)throws Exception;
 	
@@ -74,7 +74,7 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	public void channelWorldSchedula()throws Exception;
 	
 	/**
-	 * 重新排序
+	 * 重新排序频道有效性计划
 	 * @param wIds
 	 * @param schedula
 	 * @param operator
@@ -84,7 +84,7 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	
 	
 	/**
-	 * 重新排序
+	 * 重新排序频道精选计划
 	 * @param wIds
 	 * @param schedula
 	 * @param operator
