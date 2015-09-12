@@ -38,9 +38,20 @@
 			#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{schedulaDate},#{finish})
 	</insert>
 	
-	<!-- 删除 -->
+	<!-- 删除频道有效性计划 -->
 	<delete id="delChannelWorldSchedula">
 		delete from hts_admin.op_channel_world_schedula
+		<where>
+			id in
+			<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</where>
+	</delete>
+	
+<!-- 删除频道有效性计划 -->
+	<delete id="delChannelWorldSuperbSchedula">
+		delete from hts_admin.op_channel_world_superb_schedula
 		<where>
 			id in
 			<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
@@ -79,81 +90,178 @@
 		</where>
 	</update>
 	
-	<!-- 分页查询 -->
+		<!-- 修改频道精选有效性计划 -->
+	<update id="updateChannelWorldSuperbSchedula">
+		update hts_admin.op_channel_world_superb_schedula
+		set 
+			<if test="schedulaDate != null">
+				date_schedula = #{schedulaDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatorId != null">
+				operator_id = #{operatorId},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+			<if test="superb != null">
+				superb = #{superb},
+			</if>
+			<if test="finish != null">
+				finish = #{finish},
+			</if>
+			date_modify=#{modifyDate,jdbcType=TIMESTAMP}
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="worldId != null">
+				and world_id=#{worldId}
+			</if>
+		</where>
+	</update>
+	
+	<!-- 分页查询频道织图计划 -->
 	<select id="queryChannelWorldSchedulaForList" resultMap="ChannelWorldSchedulaMapper">
-		select ocws.*,aui.user_name as operator_name,hh.short_link,hh.author_id as user_id,oc.channel_name,ui.user_name from
-		hts_admin.op_channel_world_schedula ocws
+		select ocwvs.*,aui.user_name as operator_name,hh.short_link,hh.author_id as user_id,oc.channel_name,ui.user_name from
+		hts_admin.op_channel_world_validate_schedula ocwvs
 		
 		left join 
 		hts_admin.admin_user_info aui
-		on ocws.operator_id = aui.id
+		on ocwvs.operator_id = aui.id
 		left join
 		hts.operations_channel oc
-		on ocws.channel_id=oc.id
+		on ocwvs.channel_id=oc.id
 		left join 
 		hts.htworld_htworld hh
-		on ocws.world_id = hh.id
+		on ocwvs.world_id = hh.id
 		left join
 		hts.user_info ui
 		on hh.author_id = ui.id
 		<where>
 			<if test="id != null">
-				ocws.id = #{id}
+				ocwvs.id = #{id}
 			</if>
 			<if test="worldId != null">
-				ocws.world_id = #{worldId}
+				ocwvs.world_id = #{worldId}
 			</if>
 			<if test="channelId != null">
-				and ocws.channel_id = #{channelId}
+				and ocwvs.channel_id = #{channelId}
 			</if>
 			<if test="finish != null">
-				and ocws.finish = #{finish}
-			</if>
-			<if test="valid != null">
-				and ocws.valid = #{valid}
+				and ocwvs.finish = #{finish}
 			</if>
 			<if test="addDate != null">
-				<![CDATA[ and ocws.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
+				<![CDATA[ and ocwvs.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
 			</if>
 			<if test="modifyDate != null">
-				<![CDATA[ and ocws.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
+				<![CDATA[ and ocwvs.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[ and ocws.id <= #{maxId}]]>
+				<![CDATA[ and ocwvs.id <= #{maxId}]]>
 			</if>
 		</where>
-		order by ocws.id desc
+		order by ocwvs.id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
-	<!-- 分页查询总数 -->
-	<select id="queryChannelWorldSchedulaCount" resultType="long">
-		select count(ocws.id)
-		from hts_admin.op_channel_world_schedula ocws
+		<!-- 分页查询频道精选计划 -->
+	<select id="queryChannelWorldSuperbSchedulaForList" resultMap="ChannelWorldSchedulaMapper">
+		select ocwss.*,aui.user_name as operator_name,hh.short_link,hh.author_id as user_id,oc.channel_name,ui.user_name from
+		hts_admin.op_channel_world_superb_schedula ocwss
+		
+		left join 
+		hts_admin.admin_user_info aui
+		on ocwss.operator_id = aui.id
+		left join
+		hts.operations_channel oc
+		on ocwss.channel_id=oc.id
+		left join 
+		hts.htworld_htworld hh
+		on ocwss.world_id = hh.id
+		left join
+		hts.user_info ui
+		on hh.author_id = ui.id
 		<where>
 			<if test="id != null">
-				ocws.id = #{id}
+				ocwss.id = #{id}
 			</if>
 			<if test="worldId != null">
-				ocws.world_id = #{worldId}
+				ocwss.world_id = #{worldId}
 			</if>
 			<if test="channelId != null">
-				and ocws.channel_id = #{channelId}
+				and ocwss.channel_id = #{channelId}
 			</if>
 			<if test="finish != null">
 				and ocws.finish = #{finish}
 			</if>
-			<if test="valid != null">
-				and ocws.valid = #{valid}
-			</if>
 			<if test="addDate != null">
-				<![CDATA[ and ocws.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
+				<![CDATA[ and ocwss.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
 			</if>
 			<if test="modifyDate != null">
-				<![CDATA[ and ocws.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
+				<![CDATA[ and ocwss.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
 			</if>
 			<if test="maxId != null and maxId != 0">
-				<![CDATA[ and ocws.id <= #{maxId}]]>
+				<![CDATA[ and ocwss.id <= #{maxId}]]>
+			</if>
+		</where>
+		order by ocwss.id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 分页查询有效性总数 -->
+	<select id="queryChannelWorldSchedulaCount" resultType="long">
+		select count(ocwvs.id)
+		from hts_admin.op_channel_world_validate_schedula ocwvs
+		<where>
+			<if test="id != null">
+				ocwvs.id = #{id}
+			</if>
+			<if test="worldId != null">
+				ocwvs.world_id = #{worldId}
+			</if>
+			<if test="channelId != null">
+				and ocwvs.channel_id = #{channelId}
+			</if>
+			<if test="finish != null">
+				and ocwvs.finish = #{finish}
+			</if>
+			<if test="addDate != null">
+				<![CDATA[ and ocwvs.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="modifyDate != null">
+				<![CDATA[ and ocwvs.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and ocwvs.id <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+		<!-- 分页查询精选总数 -->
+	<select id="queryChannelWorldSuperbSchedulaCount" resultType="long">
+		select count(ocwss.id)
+		from hts_admin.op_channel_world_superb_schedula ocwss
+		<where>
+			<if test="id != null">
+				ocwss.id = #{id}
+			</if>
+			<if test="worldId != null">
+				ocwss.world_id = #{worldId}
+			</if>
+			<if test="channelId != null">
+				and ocwss.channel_id = #{channelId}
+			</if>
+			<if test="finish != null">
+				and ocwss.finish = #{finish}
+			</if>
+			<if test="addDate != null">
+				<![CDATA[ and ocwss.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="modifyDate != null">
+				<![CDATA[ and ocwss.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and ocwss.id <= #{maxId}]]>
 			</if>
 		</where>
 	</select>

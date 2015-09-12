@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>频道织图有效性计划管理</title>
+<title>频道精选有效性计划管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/htmCRUD20131111.css"></link>
 <script type="text/javascript">
@@ -13,8 +13,8 @@
 	var searchChannelQueryParams = {
 		'maxId' : searchChannelMaxId
 	};
-	loadDateUrl="./admin_op/cwSchedula_queryChannelWorldSchedulaForList";
-	delUrl="./admin_op/cwSchedula_delChannelWorldSchedula?idsStr=";
+	loadDateUrl="./admin_op/cwSchedula_queryChannelWorldSuperbSchedulaForList";
+	delUrl="./admin_op/cwSchedula_delChannelWorldSuperbSchedula?idsStr=";
 	var tableQueryParams = {};
 	tableInit = function() {
 		tableLoadDate(1);
@@ -56,16 +56,6 @@
 						{field : 'channelName',title: '频道名称',align : 'center',width : 130},
 						{field : 'userId',title: '用户ID',align : 'center',width : 100},
 						{field : 'userName',title: '用户名称',align : 'center',width : 130},
-/* 						{field : 'valid',title : '有效性',align : 'center', width: 45,
-				  			formatter: function(value,row,index) {
-				  				if(value == 1) {
-				  					img = "./common/images/ok.png";
-				  					return "<img title='有效' class='htm_column_img'  src='" + img + "'/>";
-				  				}
-				  				img = "./common/images/tip.png";
-				  				return "<img title='无效' class='htm_column_img' src='" + img + "'/>";
-				  			}
-				  		}, */
 				  		{field : 'finish',title : '完成标志',align : 'center', width: 65,
 				  			formatter: function(value,row,index) {
 				  				if(value == 1) {
@@ -335,7 +325,7 @@
 		
 		<!-- 重排频道织图计划 -->
 		<div id="htm_resort">
-			<form id="resort_form" action="./admin_op/cwSchedula_reSort" method="post">
+			<form id="resort_form" action="./admin_op/cwSchedula_reSortSuperb" method="post">
 				<table class="htm_resort_table" width="580">
 					<tbody>
 						<tr>

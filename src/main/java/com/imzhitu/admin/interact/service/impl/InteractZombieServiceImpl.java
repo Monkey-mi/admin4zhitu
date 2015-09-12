@@ -640,7 +640,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 				 * 在添加到频道后 根据频道等级加入评论计划
 				 */
 				Integer id = 55;
-/*				InteractChannelLevel channelLevel = new InteractChannelLevel();
+/*	不能根据频道的等级来确定织图等级，织图的等级 和 频道等级没有完全匹配			
+ * InteractChannelLevel channelLevel = new InteractChannelLevel();
 				channelLevel.setChannelId(zw.getChannelId());
 				List<InteractChannelLevel> list = interactChannelLevelMapper.queryChannelLevel(channelLevel); 
 				Integer id = list.get(0).getId();*/
