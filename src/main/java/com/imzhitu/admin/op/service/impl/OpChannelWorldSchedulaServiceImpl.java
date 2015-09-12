@@ -14,7 +14,6 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
-import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelWorldSchedulaMapper;
@@ -119,7 +118,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	/**
 	 * 批量添加
 	 */
-	public void batchAddChannelWorldSchedula(String[] wIds, String superbWids, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
+	public void batchAddChannelWorldSchedula(String[] wIds, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
 			Integer valid,Integer operatorId)throws Exception{
 		Date now = new Date();
 		long timeSpan = minuteTimeSpan*60*1000L;
@@ -132,7 +131,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			OpChannelWorld cwDto = new OpChannelWorld();
 			cwDto.setChannelId(channelId);
 			cwDto.setWorldId(worldId);
-			List<OpChannelWorldDto> cwList = channelWorldMapper.queryChannelWorlds(cwDto);
 			
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
 			dto.setWorldId(worldId);
@@ -146,17 +144,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setValid(valid);
 			dto.setOperatorId(operatorId);
 			
-			if (superbWids.contains(s)) {	// 若加精的集合中包含当前操作的worldId，则设置加精
-			    dto.setSuperb(1);
-			} else {
-			    // 若不在加精集合中，先判断此对象在频道织图中是否已经是加精的，已经为加精则依旧设置计划加精为1
-			    if ( cwList.get(0).getSuperb() == 1) {
-				dto.setSuperb(1);
-			    } else {
-				dto.setSuperb(0);
-			    }
-			}
-
 			if(0 == r){
 				channelWorldSchedulaMapper.insertChannelWorldSchedula(dto);
 			}else{
