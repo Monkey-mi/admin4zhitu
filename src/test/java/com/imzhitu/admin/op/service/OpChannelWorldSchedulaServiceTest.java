@@ -18,7 +18,7 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	
 	@Test
 	public void updateChannelWorldSchedulaTest()throws Exception{
-		service.updateChannelWorldSchedula(null, null, 1163, 2, 1, 1, 1, new Date());
+		service.updateChannelWorldValidSchedula(null, null, 1163, 2, 1, 1, 1, new Date());
 	}
 	
 	@Test
@@ -30,7 +30,7 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	
 	@Test
 	public  void delChannelWorldSchedulaTest()throws Exception{
-		service.delChannelWorldSchedula("1,2,3,4");
+		service.delChannelWorldValidSchedula("1,2,3,4");
 	}
 
 	@Test

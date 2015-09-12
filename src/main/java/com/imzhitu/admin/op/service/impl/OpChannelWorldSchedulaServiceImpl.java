@@ -16,7 +16,8 @@ import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
-import com.imzhitu.admin.op.mapper.OpChannelWorldSchedulaMapper;
+import com.imzhitu.admin.op.mapper.OpChannelWorldValidSchedulaMapper;
+import com.imzhitu.admin.op.mapper.OpChannelWorldSuperbSchedulaMapper;
 import com.imzhitu.admin.op.service.ChannelService;
 import com.imzhitu.admin.op.service.OpChannelWorldSchedulaService;
 import com.imzhitu.admin.op.service.OpMsgService;
@@ -32,7 +33,10 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	private OpMsgService msgService;
 	
 	@Autowired
-	private OpChannelWorldSchedulaMapper channelWorldSchedulaMapper;
+	private OpChannelWorldValidSchedulaMapper channelWorldValidSchedulaMapper;
+	
+	@Autowired
+	private OpChannelWorldSuperbSchedulaMapper channelWorldSuperbSchedulaMapper;
 	
 	@Autowired
 	private ChannelWorldMapper channelWorldMapper;
@@ -69,12 +73,12 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		buildNumberDtos(dto,page,rows,jsonMap,new NumberDtoListAdapter<OpChannelWorldSchedulaDto>(){
 			@Override
 			public long queryTotal(OpChannelWorldSchedulaDto dto){
-				return channelWorldSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
+				return channelWorldValidSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
 			}
 			
 			@Override
 			public List< ? extends AbstractNumberDto> queryList(OpChannelWorldSchedulaDto dto){
-				List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldValidSchedulaForList(dto);
+				List<OpChannelWorldSchedulaDto> list = channelWorldValidSchedulaMapper.queryChannelWorldValidSchedulaForList(dto);
 				for(OpChannelWorldSchedulaDto o:list){
 					o.setWorldLink(urlPrefix + o.getWorldLink());
 				}
@@ -105,12 +109,12 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		buildNumberDtos(dto,page,rows,jsonMap,new NumberDtoListAdapter<OpChannelWorldSchedulaDto>(){
 			@Override
 			public long queryTotal(OpChannelWorldSchedulaDto dto){
-				return channelWorldSchedulaMapper.queryChannelWorldSuperbSchedulaCount(dto);
+				return channelWorldSuperbSchedulaMapper.queryChannelWorldSuperbSchedulaCount(dto);
 			}
 			
 			@Override
 			public List< ? extends AbstractNumberDto> queryList(OpChannelWorldSchedulaDto dto){
-				List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldSuperbSchedulaForList(dto);
+				List<OpChannelWorldSchedulaDto> list = channelWorldSuperbSchedulaMapper.queryChannelWorldSuperbSchedulaForList(dto);
 				for(OpChannelWorldSchedulaDto o:list){
 					o.setWorldLink(urlPrefix + o.getWorldLink());
 				}
@@ -122,10 +126,11 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	
 	/**
 	 * 更新 
+	 * mishegnliang
 	 * @throws Exception
 	 */
 	@Override
-	public void updateChannelWorldSchedula(Integer id,Integer userId,Integer worldId,
+	public void updateChannelWorldValidSchedula(Integer id,Integer userId,Integer worldId,
 			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception{
 		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
 		Date now = new Date();
@@ -137,29 +142,30 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		dto.setWorldId(worldId);
 		dto.setOperatorId(operatorId);
 		dto.setSchedulaDate(schedulaDate);
-		channelWorldSchedulaMapper.updateChannelWorldSchedula(dto);
+		channelWorldValidSchedulaMapper.updateChannelWorldValidSchedula(dto);
 	}
 	
 	
-	/**
-	 * 更新 频道精选计划
-	 * @throws Exception
-	 */
-	@Override
-	public void updateChannelWorldSuperbSchedula(Integer id,Integer userId,Integer worldId,
-			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception{
-		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
-		Date now = new Date();
-		dto.setChannelId(channelId);
-		dto.setFinish(finish);
-		dto.setModifyDate(now);
-		dto.setId(id);
-		dto.setValid(valid);
-		dto.setWorldId(worldId);
-		dto.setOperatorId(operatorId);
-		dto.setSchedulaDate(schedulaDate);
-		channelWorldSchedulaMapper.updateChannelWorldSuperbSchedula(dto);
-	}
+//	/**
+//	 * mishengliang 
+//	 * 更新 频道精选计划
+//	 * @throws Exception
+//	 */
+//	@Override
+//	public void updateChannelWorldSuperbSchedula(Integer id,Integer userId,Integer worldId,
+//			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception{
+//		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
+//		Date now = new Date();
+//		dto.setChannelId(channelId);
+//		dto.setFinish(finish);
+//		dto.setModifyDate(now);
+//		dto.setId(id);
+//		dto.setValid(valid);
+//		dto.setWorldId(worldId);
+//		dto.setOperatorId(operatorId);
+//		dto.setSchedulaDate(schedulaDate);
+//		channelWorldSchedulaMapper.updateChannelWorldSuperbSchedula(dto);
+//	}
 	
 	/**
 	 * 批量删除频道有效计划
@@ -167,9 +173,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	 * @throws Exception
 	 */
 	@Override
-	public void delChannelWorldSchedula(String idsStr)throws Exception{
+	public void delChannelWorldValidSchedula(String idsStr)throws Exception{
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		channelWorldSchedulaMapper.delChannelWorldSchedula(ids);
+		channelWorldValidSchedulaMapper.delChannelWorldValidSchedula(ids);
 	}
 	
 	
@@ -181,7 +187,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	@Override
 	public void delChannelWorldSuperbSchedula(String idsStr)throws Exception{
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		channelWorldSchedulaMapper.delChannelWorldSuperbSchedula(ids);
+		channelWorldSuperbSchedulaMapper.delChannelWorldSuperbSchedula(ids);
 	}
 	
 	/**
@@ -204,7 +210,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
 			dto.setWorldId(worldId);
 			dto.setChannelId(channelId);
-			long r = channelWorldSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
+			long r = channelWorldValidSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
 			
 			dto.setModifyDate(now);
 			dto.setAddDate(now);
@@ -214,9 +220,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setOperatorId(operatorId);
 			
 			if(0 == r){
-				channelWorldSchedulaMapper.insertChannelWorldSchedula(dto);
+				channelWorldValidSchedulaMapper.insertChannelWorldSchedula(dto);
 			}else{
-				channelWorldSchedulaMapper.updateChannelWorldSchedula(dto);
+				channelWorldValidSchedulaMapper.updateChannelWorldValidSchedula(dto);
 			}
 		}
 	}
@@ -232,7 +238,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		dto.setFinish(Tag.FALSE);
 		
 		// 获取出的集合是按照调度时间的正序来排列的，如：第一个数据为10:00，最后一个数据为10:50
-		List<OpChannelWorldSchedulaDto> list = channelWorldSchedulaMapper.queryChannelWorldSchedula(dto);
+		List<OpChannelWorldSchedulaDto> list = channelWorldValidSchedulaMapper.queryChannelWorldSchedula(dto);
 		
 		for (OpChannelWorldSchedulaDto schedulaDto : list) {
 		    
@@ -240,7 +246,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		     * 优先执行调度表的刷新，若下列更新频道表失败，则人为操作，重新设置有效性与加精
 		     * 因为考虑到若频道表刷新执行失败，那么调度表不会被置为成功，每次都会执行，会加大服务器压力
 		     */
-		    updateChannelWorldSchedula(schedulaDto.getId(),null,null,null,Tag.TRUE,null,null,null);
+		    updateChannelWorldValidSchedula(schedulaDto.getId(),null,null,null,Tag.TRUE,null,null,null);
 		    
 		    OpChannelWorld world = new OpChannelWorld();
 		    world.setChannelId(schedulaDto.getChannelId());
@@ -283,14 +289,14 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	 * @throws Exception
 	 */
 	@Override
-	public void reSort(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception{
+	public void reSortValid(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception{
 		long timeSpan = minuteTimeSpan*60*1000L;
 		for(int i=  0;i < ids.length; i++){
 			String idStr = ids[i];
 			if(idStr != null && idStr != ""){
 				int id = Integer.parseInt(ids[i]);
 				long t = schedula.getTime() + i*timeSpan;//用以排序
-				updateChannelWorldSchedula(id, null, null, null, null, null, operator, new Date(t));
+				updateChannelWorldValidSchedula(id, null, null, null, null, null, operator, new Date(t));
 			}
 		}
 	}
@@ -298,12 +304,22 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	@Override
 	public void reSortSuperb(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception{
 		long timeSpan = minuteTimeSpan*60*1000L;
+		
+		OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();
+		Date now = new Date();
+
+		
 		for(int i=  0;i < ids.length; i++){
 			String idStr = ids[i];
 			if(idStr != null && idStr != ""){
 				int id = Integer.parseInt(ids[i]);
 				long t = schedula.getTime() + i*timeSpan;//用以排序
-				updateChannelWorldSuperbSchedula(id, null, null, null, null, null, operator, new Date(t));
+//				updateChannelWorldSuperbSchedula(id, null, null, null, null, null, operator, new Date(t));
+				dto.setModifyDate(now);
+				dto.setId(id);
+				dto.setOperatorId(operator);
+				dto.setSchedulaDate(new Date(t));
+				channelWorldSuperbSchedulaMapper.updateChannelWorldSuperbSchedula(dto);
 			}
 		}
 	}

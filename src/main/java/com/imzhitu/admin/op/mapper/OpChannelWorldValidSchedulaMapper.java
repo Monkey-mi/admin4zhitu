@@ -5,7 +5,7 @@ import java.util.List;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
 
-public interface OpChannelWorldSchedulaMapper {
+public interface OpChannelWorldValidSchedulaMapper {
 	/**
 	 * 增加
 	 * @param dto
@@ -18,31 +18,14 @@ public interface OpChannelWorldSchedulaMapper {
 	 * @param ids
 	 */
 	@DataSource("master")
-	public void delChannelWorldSchedula(Integer[] ids);
-	
-	
-	/**
-	 * 删除频道精选计划
-	 * mishengliang
-	 * @param ids
-	 */
-	@DataSource("master")
-	public void delChannelWorldSuperbSchedula(Integer[] ids);
+	public void delChannelWorldValidSchedula(Integer[] ids);
 	
 	/**
 	 * 更新频道有效性计划
 	 * @param dto
 	 */
 	@DataSource("master")
-	public void updateChannelWorldSchedula(OpChannelWorldSchedulaDto dto);
-	
-	
-	/**
-	 * 更新频道精选计划
-	 * @param dto
-	 */
-	@DataSource("master")
-	public void updateChannelWorldSuperbSchedula(OpChannelWorldSchedulaDto dto);
+	public void updateChannelWorldValidSchedula(OpChannelWorldSchedulaDto dto);
 	
 	/**
 	 * 分页查询频道织图计划
@@ -53,31 +36,12 @@ public interface OpChannelWorldSchedulaMapper {
 	public List<OpChannelWorldSchedulaDto> queryChannelWorldValidSchedulaForList(OpChannelWorldSchedulaDto dto);
 	
 	/**
-	 * mishengliang 
-	 * 2015-09-12
-	 * 分页查询频道精选计划
-	 * @param dto
-	 * @return
-	 */
-	@DataSource("slave")
-	public List<OpChannelWorldSchedulaDto> queryChannelWorldSuperbSchedulaForList(OpChannelWorldSchedulaDto dto);
-	
-	/**
 	 * 分页查询有效性总数
 	 * @param dto
 	 * @return
 	 */
 	@DataSource("slave")
 	public long queryChannelWorldValidSchedulaCount(OpChannelWorldSchedulaDto dto);
-	
-	/**
-	 * 分页查询精选总数
-	 * mishengliang
-	 * @param dto
-	 * @return
-	 */
-	@DataSource("slave")
-	public long queryChannelWorldSuperbSchedulaCount(OpChannelWorldSchedulaDto dto);
 	
 	/**
 	 * 查询
