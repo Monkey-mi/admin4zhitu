@@ -29,23 +29,23 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * 更新 
 	 * @throws Exception
 	 */
-	public void updateChannelWorldSchedula(Integer id,Integer userId,Integer worldId,
+	public void updateChannelWorldValidSchedula(Integer id,Integer userId,Integer worldId,
 			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception;
 	
-	
-	/**
+/*	
+	*//**
 	*更新 频道精选计划
 	 * @throws Exception
-	 */
+	 *//*
 	public void updateChannelWorldSuperbSchedula(Integer id,Integer userId,Integer worldId,
-			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception;
+			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception;*/
 	
 	/**
 	 * 批量删除
 	 * @param idsStr
 	 * @throws Exception
 	 */
-	public void delChannelWorldSchedula(String idsStr)throws Exception;
+	public void delChannelWorldValidSchedula(String idsStr)throws Exception;
 	
 	/**
 	 * 批量删除
@@ -79,7 +79,7 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * @param operator
 	 * @throws Exception
 	 */
-	public void reSort(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception;
+	public void reSortValid(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception;
 	
 	
 	/**

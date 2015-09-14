@@ -14,7 +14,7 @@
 		'maxId' : searchChannelMaxId
 	};
 	loadDateUrl="./admin_op/cwSchedula_queryChannelWorldValidSchedulaForList";
-	delUrl="./admin_op/cwSchedula_delChannelWorldSchedula?idsStr=";
+	delUrl="./admin_op/cwSchedula_delChannelWorldValidSchedula?idsStr=";
 	var tableQueryParams = {};
 	tableInit = function() {
 		tableLoadDate(1);
@@ -325,7 +325,7 @@
 		
 		<!-- 重排频道织图计划 -->
 		<div id="htm_resort">
-			<form id="resort_form" action="./admin_op/cwSchedula_reSort" method="post">
+			<form id="resort_form" action="./admin_op/cwSchedula_reSortValid" method="post">
 				<table class="htm_resort_table" width="580">
 					<tbody>
 						<tr>

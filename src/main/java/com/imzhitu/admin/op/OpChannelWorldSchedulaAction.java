@@ -106,9 +106,9 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	public String delChannelWorldSchedula(){
+	public String delChannelWorldValidSchedula(){
 		try{
-			service.delChannelWorldSchedula(idsStr);
+			service.delChannelWorldValidSchedula(idsStr);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -163,11 +163,11 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	/**
 	 *有效性 重新排序
 	 */
-	public String reSort(){
+	public String reSortValid(){
 		try{
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			String[] ids = request.getParameterValues("reIndexId");
-			service.reSort(ids, schedula,minuteTimeSpan, user.getId());
+			service.reSortValid(ids, schedula,minuteTimeSpan, user.getId());
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
