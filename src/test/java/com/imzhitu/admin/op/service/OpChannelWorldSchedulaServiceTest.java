@@ -33,8 +33,4 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 		service.delChannelWorldValidSchedula("1,2,3,4");
 	}
 
-	@Test
-	public void channelWorldSchedulaTest()throws Exception{
-		service.channelWorldSchedula();
-	}
 }
