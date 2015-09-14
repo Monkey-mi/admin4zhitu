@@ -402,8 +402,14 @@
 		}	
 	}
 	
+	//在窗口打开前需要重新设定窗口的Top和 Left
 	//打开添加文件的窗口
 	function addComments(zombieWorldId){
+ 		$('#addComment').window({
+ 			top : $(document).scrollTop() + ($(window).height() - 190) / 2,
+ 			left : ($(window).width()-420) / 2,
+ 		});
+		
 		$('#addComment').window('open');
 		$('#zombieWorldId').val(zombieWorldId);
 	}
