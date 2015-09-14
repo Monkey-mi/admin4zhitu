@@ -1,7 +1,6 @@
 package com.imzhitu.admin.op.service;
 
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,11 +16,6 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	private Logger logger = Logger.getLogger(OpChannelWorldSchedulaServiceTest.class);
 	
 	@Test
-	public void updateChannelWorldSchedulaTest()throws Exception{
-		service.updateChannelWorldValidSchedula(null, null, 1163, 2, 1, 1, 1, new Date());
-	}
-	
-	@Test
 	public void queryChannelWorldSchedulaForListTest()throws Exception{
 		Map<String, Object> jsonMap = new HashMap<String , Object>();
 		service.queryChannelWorldValidSchedulaForList(0, 1, 10, null, null, null, 1, null, null, null, null, jsonMap);
@@ -29,8 +23,13 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	}
 	
 	@Test
-	public  void delChannelWorldSchedulaTest()throws Exception{
+	public void delChannelWorldSchedulaTest()throws Exception{
 		service.delChannelWorldValidSchedula("1,2,3,4");
+	}
+	
+	@Test
+	public void channelWorldSchedulaTest()throws Exception{
+		service.channelWorldSchedula();
 	}
 
 }

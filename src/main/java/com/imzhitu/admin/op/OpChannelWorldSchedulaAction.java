@@ -135,11 +135,17 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	public String batchAddChannelWorldSchedula(){
+	/**
+	 * 批量频道织图计划排序和生效
+	 * 
+	 * @return
+	 * @author zhangbo	2015年9月14日
+	 */
+	public String batchChannelWorldToSortAndValidSchedula(){
 		try{
 			String[] wids = StringUtil.convertStringToStrs(request.getParameter("wids"));
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			service.batchAddChannelWorldSchedula(wids, schedula,minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
+			service.batchChannelWorldToSortAndValidSchedula(wids, schedula,minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -148,6 +154,12 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 批量计划频道织图加精
+	 * 
+	 * @return
+	 * @author zhangbo	2015年9月14日
+	 */
 	public String batchChannelWorldToSuperbSchedula() {
 		try{
 			Integer[] worldIds = StringUtil.convertStringToIds(wids);

@@ -12,22 +12,32 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/common/js/worldmaintain2014021801.js"></script>
 <script type="text/javascript">
-var maxId = 0,
-	channelId = 0,
-	notifyIndex = 0,
-	currentIndex = 0,
-	batchEnableTip = "您确定要使已选中的织图生效吗？",
-	batchDisableTip = "您确定要使已选中的织图失效吗？",
-	htmTablePageList = [10,30,50,100],
-	init = function() {
-		loadPageData(initPage);
-	},
+	var maxId = 0;
+	var uidKey = "userId";
+	myRowStyler = function(index, row) {
+		if(!row.valid) {
+			return inValidWorld;
+		}
+		return null;
+	};
+	hideIdColumn = true,
+	htmTableTitle = "频道织图列表", //表格标题
+	toolbarComponent = '#tb',
+	htmTablePageList = [10,30,50,100];
+	myIdField = "channelWorldId",
+	recordIdKey = "channelWorldId",
+	loadDataURL = "./admin_op/channel_queryChannelWorld"; //数据装载请求地址
+	deleteURI = "./admin_op/channel_deleteChannelWorld?ids=", //删除请求地址
+	updateValidURL = "./admin_op/channel_updateChannelWorldValid?ids=",
+	addRecommendMsgURL = "./admin_op/channel_addChannelWorldRecommendMsgs?ids=",
+	queryChannelURL = "./admin_op/channel_queryChannelById",
+	queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName",// 根据id或民称查询频道
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
 			maxId = 0;
 			myQueryParams['world.maxId'] = maxId;
 		}
-	},
+	};
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
 			if(data.maxId > maxId) {
@@ -35,24 +45,7 @@ var maxId = 0,
 				myQueryParams['world.maxId'] = maxId;
 			}
 		}
-	},
-	myRowStyler = function(index, row) {
-		if(!row.valid)
-			return inValidWorld;
-		return null;
-	},
-	hideIdColumn = true,
-	htmTableTitle = "频道织图列表", //表格标题
-	toolbarComponent = '#tb',
-	myIdField = "channelWorldId",
-	recordIdKey = "channelWorldId",
-	uidKey = "userId",
-	loadDataURL = "./admin_op/channel_queryChannelWorld", //数据装载请求地址
-	deleteURI = "./admin_op/channel_deleteChannelWorld?ids=", //删除请求地址
-	updateValidURL = "./admin_op/channel_updateChannelWorldValid?ids=",
-	addRecommendMsgURL = "./admin_op/channel_addChannelWorldRecommendMsgs?ids=",
-	queryChannelURL = "./admin_op/channel_queryChannelById",
-	queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName",// 根据id或民称查询频道
+	};
 	columnsFields = [
 		{field : 'ck',checkbox : true },
 		{field : recordIdKey,title : '序号',align : 'center',width : 60},
@@ -94,20 +87,15 @@ var maxId = 0,
   		},
   		{field : 'superb',title : '加精',align : 'center', width: 45,
   			formatter: function(value,row,index) {
-  				var superb;
   				switch(value) {
   				case 1:
-  					tip = "已加精,点击取消加精";
   					img = "./common/images/ok.png";
-  					superb = 0;
   					break;
   				default:
-  					tip = "点击加精";
   					img = "./common/images/tip.png";
-  					superb = 1;
   					break;
   				}
-  				return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='updateSchedulaSuperbOp("+ superb +","+ index +")' src='" + img + "'/>";
+  				return "<img class='htm_column_img pointer' src='" + img + "'/>";
   			}
   		},
   		{field : 'beSchedula',title : '计划',align : 'center', width: 45,
@@ -152,7 +140,7 @@ var maxId = 0,
 	onAfterInit = function() {
 		
 		$('#htm_indexed').window({
-			title : '按照时间重新排序',
+			title : '按照时间计划重新排序，并生效',
 			modal : true,
 			width : 660,
 			height : 235,
@@ -165,21 +153,21 @@ var maxId = 0,
 			resizable : false
 		});
 		
-		$('#htm_refresh').window({
-			title : '刷新频道',
+		$('#batch_to_superb_win').window({
+			title : '按照时间计划加精',
 			modal : true,
-			width : 520,
-			height : 145,
+			width : 660,
+			height : 235,
 			shadow : false,
 			closed : true,
 			minimizable : false,
 			maximizable : false,
 			collapsible : false,
-			iconCls : 'icon-edit',
+			iconCls : 'icon-converter',
 			resizable : false,
 			onClose : function() {
-				var $form = $('#refresh_form');
-				clearFormData($form);
+				// 关闭时重置批量计划加精的form，因为时间与form中隐藏的ids都要重新赋值
+				$('#batch_to_superb_form').form('reset');
 			}
 		});
 		
@@ -233,9 +221,8 @@ var maxId = 0,
 				$("#htm_opt_btn").show();
 				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 				maxId = 0;
-				channelId = row.id;
 				myQueryParams['world.maxId'] = maxId;
-				myQueryParams['world.channelId'] = channelId;
+				myQueryParams['world.channelId'] = row.id;
 				myQueryParams['world.worldId'] = "";
 				myQueryParams['world.notified'] = "";
 				myQueryParams['world.valid'] = "";
@@ -329,71 +316,16 @@ function searchChannel() {
 	$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
 }
 
-//初始化添加窗口
-function initAddWindow() {
-	var addForm = $('#add_form');
-	clearFormData(addForm);
-	var channelName = $('#ss-channel').combogrid('getText');
-	var channelId = $('#ss-channel').combogrid('getValue');
-	$("#channelName_add").text(channelName);
-	$("#channelId_add").val(channelId);
-	$("#valid_add").val(0);
-	$("#notified_add").val(0);
-	$("#add_form .opt_btn").show();
-	$("#add_form .loading").hide();
-}
-
-//提交表单，以后补充装载验证信息
-function loadAddFormValidate() {
-	var addForm = $('#add_form');
-	formSubmitOnce = true;
-	$("#worldId_add").focus();  //光标定位
-	$.formValidator.initConfig({
-		formid : addForm.attr("id"),
-		onsuccess : function() {
-			if(formSubmitOnce==true){
-				//第一次提交表单前formSubmitOnnce设为false，避免重复提交表单
-				formSubmitOnce = false;
-				//验证成功后以异步方式提交表单
-				$("#add_form .opt_btn").hide();
-				$("#add_form .loading").show();
-				$.post(addForm.attr("action"),addForm.serialize(),
-					function(result){
-						formSubmitOnce = true;
-						$("#add_form .opt_btn").show();
-						$("#add_form .loading").hide();
-						if(result['result'] == 0) {
-							$('#htm_add').window('close');  //关闭添加窗口
-							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
-							maxId = 0;
-							myQueryParams['world.maxId'] = maxId;
-							myQueryParams['world.channelId'] = channelId;
-							loadPageData(1); //重新装载第1页数据
-						} else {
-							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-						}
-					},"json");				
-				return false;
-			}
-		}
-	});
-
-	$("#worldId_add")
-	.formValidator({empty:false,onshow:"请输入织图id",onfocus:"例如:12",oncorrect:"设置成功"})
-	.inputValidator({min:1,empty:{leftempty:false,rightempty:false,emptyerror:"两边不能输入空格"},onerror:"由数字组成"});
-}
-
-
 /**
  * 更新有效性
  */
 function updateValid(valid) {
 	var rows = $('#htm_table').datagrid('getSelections');	
 	if(rows.length > 0){
-		var tip = batchEnableTip;
-		if(valid == 0) 
-			tip = batchDisableTip;
+		var tip = "您确定要使已选中的织图生效吗？";
+		if(valid == 0) {
+			tip = "您确定要使已选中的织图失效吗？";
+		}
 		$.messager.confirm('更新记录', tip, function(r){ 	
 			if(r){				
 				var ids = [];
@@ -430,24 +362,16 @@ function updateValid(valid) {
 function reIndexed() {
 	$('#htm_indexed .opt_btn').show();
 	$('#htm_indexed .loading').hide();
-	var channelId = $('#ss-channel').combogrid('getValue');
-	$("#channelId_indexed").val(channelId);
+	$("#channelId_indexed").val($('#ss-channel').combogrid('getValue'));
 	
 	var rows = $("#htm_table").datagrid('getSelections');
 	// 定义重新排序织图id集合
 	var wids = [];
-	// 定义存储加精织图id集合
-	var superbWids = [];
 	for(var i=0;i<rows.length;i++){
 		wids.push(rows[i].worldId);
-		
-		if (rows[i].channelWorldSchedulaSuperb==1){
-			superbWids.push(rows[i].worldId);
-		}
 	}
 	
 	$("#wids_indexed").val(wids);
-	$("#superbWids_indexed").val(superbWids);
 	
 	// 打开添加窗口
 	$("#htm_indexed").window('open');
@@ -547,78 +471,6 @@ function batchNotify() {
 }
 
 /**
- * 刷新
- */
-function refresh() {
-	$('#htm_refresh .opt_btn').show();
-	$('#htm_refresh .loading').hide();
-	$('#channelId_refresh').val(channelId);
-	loadRefreshFormValidate();
-	// 打开添加窗口
-	$("#htm_refresh").window('open');
-	var cid = $("#ss-channel").combogrid("getValue");
-	$.post(queryChannelURL,{
-		'id':cid
-		},function(result){
-			if(result['result'] == 0) {
-				var cbase = result['obj']['childCountBase'];
-				$("#childCount_refresh").val(cbase);
-			} else {
-				$.messager.alert('提示',result['msg']);
-			}
-		},"json");
-	
-}
-
-//提交表单，以后补充装载验证信息
-function loadRefreshFormValidate() {
-	var $form = $('#refresh_form');
-	formSubmitOnce = true; //每次打开窗口formSubmitOnce都重新设为true
-	$.formValidator.initConfig({
-		formid : $form.attr("id"),			
-		onsuccess : function() {
-			if(formSubmitOnce==true){
-				//第一次提交表单前formSubmitOnnce设为false，避免重复提交表单
-				formSubmitOnce = false;
-				$("#refresh_form .opt_btn").hide();
-				$("#refresh_form .loading").show();
-				//验证成功后以异步方式提交表单
-				$.post($form.attr("action"),$form.serialize(),
-					function(result){
-						formSubmitOnce = true;
-						$("#refresh_form .opt_btn").show();
-						$("#refresh_form .loading").hide();
-						if(result['result'] == 0) {
-							$('#htm_refresh').window('close');  //关闭添加窗口
-							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-						} else {
-							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-						}
-					},"json");
-				return false;
-			}
-		}
-	});
-	
-	$("#childCount_refresh")
-	.formValidator({empty:true,onshow:"图片数=实际图片数+基数",onfocus:"例如:10",oncorrect:"设置成功"});
-	
-}
-
-
-function addSubmit(){
-	$('#add_form').submit();
-	var channelId = $("#channelId_add").val();
-	var	 worldId = $("#worldId_add").val();
-	$.post("./admin_op/chuser_addChannelUserByWorldId",{
-		'cover.worldId':worldId,
-		'cover.channelId':channelId
-	},function(result){
-		
-	},"json");
-}
-
-/**
  * 根据频道Id或名字查询频道
  */
 function queryChannelByIdOrName(){
@@ -652,16 +504,6 @@ function queryChannelByIdOrName(){
 	}
 };
 
-// 更新计划加精列点击后图片
-function updateSchedulaSuperbOp(superb, index) {
-	$('#htm_table').datagrid('updateRow',{
-		index: index,
-		row: {
-			superb: superb
-		}
-	});
-};
-
 /**
  * 批量添加织图到频道
  * @author zhangbo 2015-09-10
@@ -687,16 +529,14 @@ function searchBatchToChannel() {
  * @author zhangbo 2015-09-10
  */
 function saveBatchWorldToChannelSubmit(){
-	var channelId = $("#ss_batch_channel").combogrid('getValue');
-	
 	var rows = $("#htm_table").datagrid('getSelections');
 	for (var i=0;i<rows.length;i++) {
 		//该织图进入频道
 		$.post("./admin_op/channel_saveChannelWorld",{
-			'world.channelId':channelId,
-			'world.worldId'  :rows[i].worldId,
-			'world.valid'	 :0,
-			'world.notified' :0
+			'world.channelId': $("#ss_batch_channel").combogrid('getValue'),
+			'world.worldId'  : rows[i].worldId,
+			'world.valid'	 : 0,
+			'world.notified' : 0
 		},function(result){
 			if(result['result'] != 0){
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
@@ -706,6 +546,55 @@ function saveBatchWorldToChannelSubmit(){
 	$("#htm_table").datagrid('reload');
 	$("#htm_table").datagrid('clearSelections');
 	$("#htm_batch_channel").window('close');
+}
+
+/**
+ * 计划加精设置时间窗口打开
+ * @author zhangbo 2015-09-11
+ */
+function openScheduleSuperbWindow(){
+	// 设置
+	$("#batch_to_superb_channelId").val($('#ss-channel').combogrid('getValue'));
+	var rows = $("#htm_table").datagrid('getSelections');
+	var worldIds = [];
+	for (var i=0;i<rows.length;i++) {
+		//提示添加信息失败
+		if ( rows[i].valid == 0 ) {
+			$.messager.alert("温馨提示","你所选择的频道织图中有未生效的，不能进行计划加精操作，请选择已生效的织图来加精！");
+			$("#batch_to_superb_win").window('close');
+			return;
+		}
+		worldIds.push(rows[i].worldId);
+	}
+	$("#batch_to_superb_worldIds").val(worldIds.toString());
+	
+	$("#htm_table").datagrid('clearSelections');
+	$("#batch_to_superb_win").window('open');
+};
+
+/**
+ * 计划加精提交
+ * @author zhangbo	2015-09-11
+ */
+function batchChannelWorldToSuperbSubmit() {
+	var $form = $('#batch_to_superb_form');
+	if($form.form('validate')) {
+		$('#batch_to_superb_form .opt_btn').hide();
+		$('#batch_to_superb_form .loading').show();
+		$form.form('submit', {
+			url: $form.attr('action'),
+			success: function(data){
+				var result = $.parseJSON(data);
+				$('#batch_to_superb_form .opt_btn').show();
+				$('#batch_to_superb_form .loading').hide();
+				if(result['result'] == 0) {
+					$('#batch_to_superb_win').window('close');  // 关闭计划加精设置时间窗口
+				} else {
+					$.messager.alert('错误提示',result['msg']);  // 提示失败信息
+				}
+			}
+		});
+	}
 }
 
 </script>
@@ -723,12 +612,12 @@ function saveBatchWorldToChannelSubmit(){
 				<span class="search_label">请选择频道：</span>
 				<input id="ss-channel" style="width:100px;" />
 				<span id="htm_opt_btn" class="none">
-				<a href="javascript:void(0);" onclick="javascript:htmUI.htmWindowAdd();" class="easyui-linkbutton" title="添加频道红人" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>
 				<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
 				<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
 				<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
-				<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照时间重新排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">按照时间重新排序</a>
+				<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照勾选顺序重新排序，并且生效" plain="true" iconCls="icon-converter" id="reIndexedBtn">计划重新排序并生效</a>
+				<a href="javascript:void(0);" onclick="javascript:openScheduleSuperbWindow();" class="easyui-linkbutton" title="按照计划的时间，使频道织图加精" plain="true" iconCls="icon-converter">计划加精</a>
 				<select id="ss-notified" class="easyui-combobox" style="width:100px;">
 			        <option value="">所有通知状态</option>
 			        <option value="0">未通知</option>
@@ -752,52 +641,9 @@ function saveBatchWorldToChannelSubmit(){
 	   		</div>
 		</div> 
 
-		<!-- 添加记录 -->
-		<div id="htm_add">
-			<form id="add_form" action="./admin_op/channel_saveChannelWorld" method="post">
-				<table class="htm_edit_table" width="480">
-					<tbody>
-						<tr>
-							<td class="leftTd">频道：</td>
-							<td><span id="channelName_add"></span></td>
-							<td class="rightTd"></td>
-						</tr>
-						<tr>
-							<td class="leftTd">织图id：</td>
-							<td><input type="text" name="world.worldId" id="worldId_add" onchange="validateSubmitOnce=true;"/></td>
-							<td class="rightTd"><div id="worldId_addTip" class="tipDIV"></div></td>
-						</tr>
-						<tr >
-							<td class="leftTd">频道id：</td>
-							<td ><input type="text" name="world.channelId" id="channelId_add" onchange="validateSubmitOnce=true;" readonly="readonly"/></td>
-							<td class="rightTd"></td>
-						</tr>
-						<tr class="none">
-							<td colspan="3"><input type="text" name="world.valid" id="valid_add" onchange="validateSubmitOnce=true;"/></td>
-						</tr>
-						<tr class="none">
-							<td colspan="3"><input type="text" name="world.notified" id="notified_add" onchange="validateSubmitOnce=true;"/></td>
-						</tr>
-						<tr>
-							<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
-								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addSubmit();">添加</a>
-								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_add').window('close');">取消</a>
-							</td>
-						</tr>
-						<tr class="loading none">
-							<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
-								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-								<span style="vertical-align:middle;">提交中...</span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
-		</div>
-	
-		<!-- 重排索引 -->
+		<!-- 计划重新排序并生效 -->
 		<div id="htm_indexed">
-			<form id="indexed_form" action="./admin_op/cwSchedula_batchAddChannelWorldSchedula" method="post">
+			<form id="indexed_form" action="./admin_op/cwSchedula_batchChannelWorldToSortAndValidSchedula" method="post">
 				<table class="htm_edit_table" width="660">
 					<tbody>
 						<tr>
@@ -816,9 +662,6 @@ function saveBatchWorldToChannelSubmit(){
 						<tr class="none">
 						<td colspan="2"><input type="text" name="wids" id="wids_indexed" /></td>
 						</tr>
-						<tr class="none">
-							<td colspan="2"><input type="text" name="superbWids" id="superbWids_indexed" /></td>
-						</tr>
 						<tr>
 							<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
 								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReIndexForm();">确定</a>
@@ -835,57 +678,62 @@ function saveBatchWorldToChannelSubmit(){
 				</table>
 			</form>
 		</div>
-	
-		<!-- 刷新窗口窗口 -->
-		<div id="htm_refresh">
-			<form id="refresh_form" action="./admin_op/channel_updateChannelWorldCache" method="post">
-				<table class="htm_edit_table"  width="480" class="none">
-					<tbody>
-						<tr>
-							<td class="leftTd">图片基数：</td>
-							<td><input type="text" name="childCountBase" id="childCount_refresh" style="width:205px;"/></td>
-							<td class="rightTd"><div id="childCount_refreshTip" class="tipDIV"></div></td>
-						</tr>
-						<tr class="none">
-							<td><input type="text" name="world.channelId" id="channelId_refresh" style="width:205px;"/></td>
-						</tr>
-						<tr class="opt_btn">
-							<td colspan="3" style="text-align: center;padding-top: 10px;">
-								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="$('#refresh_form').submit();">确定</a> 
-								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_refresh').window('close');">取消</a>
-							</td>
-						</tr>
-						<tr class="loading none">
-							<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
-								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-								<span style="vertical-align:middle;">请稍后...</span>
-							</td>
-						</tr>
-					</tbody>
+		
+		<!-- 计划加精 -->
+		<div id="batch_to_superb_win">
+			<form id="batch_to_superb_form" action="./admin_op/cwSchedula_batchChannelWorldToSuperbSchedula" method="post">
+				<table class="htm_edit_table" width="660">
+					<tr>
+						<td class="leftTd">计划更新时间：</td>
+						<td><input id="schedula" name="schedula" class="easyui-datetimebox" required="true"></td>
+					</tr>
+					<tr>
+						<td class="leftTd">时间间隔(分钟)：</td>
+						<td>
+							<input  name="minuteTimeSpan" class="easyui-numberbox" value="5" style="width:171px"/>
+						</td>
+					</tr>
+					<tr class="none">
+						<td colspan="2"><input type="text" name="channelId" id="batch_to_superb_channelId" /></td>
+					</tr>
+					<tr class="none">
+						<td colspan="2"><input type="text" name="wids" id="batch_to_superb_worldIds" /></td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="batchChannelWorldToSuperbSubmit();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#batch_to_superb_win').window('close');$('#htm_table').datagrid('clearSelections');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">排序中...</span>
+						</td>
+					</tr>
 				</table>
 			</form>
 		</div>
 	
-		<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
-			<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
-		</div>
-		
 		<!-- 批量添加到频道 -->
 		<div id="htm_batch_channel">
 			<table class="htm_edit_table" width="450">
-				<tbody>
-					<tr>
-						<td class="leftTd">频道名称：</td>
-						<td><input id="ss_batch_channel" name="channelId" style="width:200px;" /></td>
-					</tr>
-					<tr>
-						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="saveBatchWorldToChannelSubmit();">确定</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_batch_channel').window('close');">取消</a>
-						</td>
-					</tr>
-				</tbody>
+				<tr>
+					<td class="leftTd">频道名称：</td>
+					<td><input id="ss_batch_channel" name="channelId" style="width:200px;" /></td>
+				</tr>
+				<tr>
+					<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+						<a class="easyui-linkbutton" iconCls="icon-ok" onclick="saveBatchWorldToChannelSubmit();">确定</a>
+						<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_batch_channel').window('close');">取消</a>
+					</td>
+				</tr>
 			</table>
+		</div>
+		
+		<!-- 频道织图toolbar上的搜索频道 -->
+		<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
+			<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
 		</div>
 		
 		<div id="search-batch-to-channel-tb" style="padding:5px;height:auto" class="none">

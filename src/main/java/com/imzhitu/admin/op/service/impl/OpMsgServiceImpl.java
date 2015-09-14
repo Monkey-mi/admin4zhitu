@@ -295,33 +295,34 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		// 获取通知信息模板
 		String contentTpml = getChannelNoticeTemplateByType(channelId, Admin.NOTICE_WORLD_INTO_CHANNEL);
 		if ( contentTpml == null || "".equals(contentTpml)  ) {
-			throw new HTSException("此频道未配置织图被选入频道中的通知信息模板！请在<频道通知配置>功能中进行配置。");
+//			throw new HTSException("此频道未配置织图被选入频道中的通知信息模板！请在<频道通知配置>功能中进行配置。");
+			appPushLogger.error("此频道未配置织图被选入频道中的通知信息模板！请在<频道通知配置>功能中进行配置。");
+		} else {
+			// 根据织图id获取织图相关信息
+			HTWorldDto worldDto = webWorldDao.queryHTWorldDtoById(worldId);
+			
+			// 获取频道对象信息
+			OpChannel channel = channelMapper.queryChannelById(channelId);
+			
+			// 获取用户推送信息对象
+			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(receiverId);
+			
+			// 要推送到客户端的最终信息
+			String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
+			
+			// 保存消息
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_WORLD, worldId,
+					channel.getChannelName(), String.valueOf(channelId), worldDto.getTitleThumbPath(), 0);
+			
+			// 推送消息
+			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_WORLD, new PushFailedCallback() {
+				
+				@Override
+				public void onPushFailed(Exception e) {
+					// XXX 处理织图选入频道通知的问题，应该要更新通知标志
+				}
+			});
 		}
-		
-		// 根据织图id获取织图相关信息
-		HTWorldDto worldDto = webWorldDao.queryHTWorldDtoById(worldId);
-		
-		// 获取频道对象信息
-		OpChannel channel = channelMapper.queryChannelById(channelId);
-		
-		// 获取用户推送信息对象
-		UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(receiverId);
-		
-		// 要推送到客户端的最终信息
-		String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
-		
-		// 保存消息
-		webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_WORLD, worldId,
-				channel.getChannelName(), String.valueOf(channelId), worldDto.getTitleThumbPath(), 0);
-		
-		// 推送消息
-		pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_WORLD, new PushFailedCallback() {
-
-			@Override
-			public void onPushFailed(Exception e) {
-				// XXX 处理织图选入频道通知的问题，应该要更新通知标志
-			}
-		});
 	}
 
 	/**
@@ -336,33 +337,34 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		// 获取通知信息模板
 		String contentTpml = getChannelNoticeTemplateByType(channelId, Admin.NOTICE_CHANNELWORLD_TO_SUPERB);
 		if ( contentTpml == null || "".equals(contentTpml) ) {
-			throw new HTSException("此频道未配置频道织图被选为精选的通知信息模板！请在<频道通知配置>功能中进行配置。");
+//			throw new HTSException("此频道未配置频道织图被选为精选的通知信息模板！请在<频道通知配置>功能中进行配置。");
+			appPushLogger.error("此频道未配置织图被选入频道中的通知信息模板！请在<频道通知配置>功能中进行配置。");
+		} else {
+			// 根据织图id获取织图相关信息
+			HTWorldDto worldDto = webWorldDao.queryHTWorldDtoById(worldId);
+			
+			// 获取频道对象信息
+			OpChannel channel = channelMapper.queryChannelById(channelId);
+			
+			// 获取用户推送信息对象
+			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(receiverId);
+			
+			// 要推送到客户端的最终信息 
+			String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
+			
+			// 保存消息
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_SUPERB, worldId,
+					channel.getChannelName(), String.valueOf(channelId), worldDto.getTitleThumbPath(), 0);
+			
+			// 推送消息
+			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_SUPERB, new PushFailedCallback() {
+				
+				@Override
+				public void onPushFailed(Exception e) {
+					// XXX 处理织图选入频道通知的问题，应该要更新通知标志
+				}
+			});
 		}
-
-		// 根据织图id获取织图相关信息
-		HTWorldDto worldDto = webWorldDao.queryHTWorldDtoById(worldId);
-		
-		// 获取频道对象信息
-		OpChannel channel = channelMapper.queryChannelById(channelId);
-		
-		// 获取用户推送信息对象
-		UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(receiverId);
-		
-		// 要推送到客户端的最终信息 
-		String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
-		
-		// 保存消息
-		webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_SUPERB, worldId,
-				channel.getChannelName(), String.valueOf(channelId), worldDto.getTitleThumbPath(), 0);
-		
-		// 推送消息
-		pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_SUPERB, new PushFailedCallback() {
-
-			@Override
-			public void onPushFailed(Exception e) {
-				// XXX 处理织图选入频道通知的问题，应该要更新通知标志
-			}
-		});
 	}
 
 	/**
@@ -377,31 +379,32 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		// 获取通知信息模板
 		String contentTpml = getChannelNoticeTemplateByType(channelId, Admin.NOTICE_CHANNELMEMBER_TO_STAR);
 		if ( contentTpml == null || "".equals(contentTpml)  ) {
-			throw new HTSException("此频道未配置频道成员被选为红人的通知信息模板！请在<频道通知配置>功能中进行配置。");
+//			throw new HTSException("此频道未配置频道成员被选为红人的通知信息模板！请在<频道通知配置>功能中进行配置。");
+			appPushLogger.error("此频道未配置织图被选入频道中的通知信息模板！请在<频道通知配置>功能中进行配置。");
+		} else {
+			// 获取频道对象信息
+			OpChannel channel = channelMapper.queryChannelById(channelId);
+			
+			// 获取用户推送信息对象
+			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(receiverId);
+			
+			// 要推送到客户端的最终信息 
+			String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
+			
+			// 保存消息，保存的内容为频道红人的通知，故objId与thumbPath可以传递为null
+			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_STAR, null, channel.getChannelName(), String.valueOf(channelId), null, 0);
+			
+			// 推送消息
+			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_STAR, new PushFailedCallback() {
+				
+				@Override
+				public void onPushFailed(Exception e) {
+					// 若操作失败，则把频道红人的通知状态改未通知
+					OpChannelMemberDTO channelStar = channelMemberService.getChannelStarByChannelIdAndUserId(channelId, receiverId);
+					channelMemberService.updateChannelStarNotified(channelStar.getChannelMemberId(), Tag.FALSE);
+				}
+			});
 		}
-		
-		// 获取频道对象信息
-		OpChannel channel = channelMapper.queryChannelById(channelId);
-		
-		// 获取用户推送信息对象
-		UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(receiverId);
-		
-		// 要推送到客户端的最终信息 
-		String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
-		
-		// 保存消息，保存的内容为频道红人的通知，故objId与thumbPath可以传递为null
-		webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_STAR, null, channel.getChannelName(), String.valueOf(channelId), null, 0);
-		
-		// 推送消息
-		pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_STAR, new PushFailedCallback() {
-
-			@Override
-			public void onPushFailed(Exception e) {
-				// 若操作失败，则把频道红人的通知状态改未通知
-				OpChannelMemberDTO channelStar = channelMemberService.getChannelStarByChannelIdAndUserId(channelId, receiverId);
-				channelMemberService.updateChannelStarNotified(channelStar.getChannelMemberId(), Tag.FALSE);
-			}
-		});
 	}
 	
 	/**

@@ -11,7 +11,7 @@ public interface OpChannelWorldSuperbSchedulaMapper {
 	 * @param dto
 	 */
 	@DataSource("master")
-	public void insertChannelWorldSchedula(OpChannelWorldSchedulaDto dto);
+	public void insertChannelWorldSuperbSchedula(OpChannelWorldSchedulaDto dto);
 	
 	/**
 	 * 删除频道精选计划
@@ -46,14 +46,5 @@ public interface OpChannelWorldSuperbSchedulaMapper {
 	 */
 	@DataSource("slave")
 	public long queryChannelWorldSuperbSchedulaCount(OpChannelWorldSchedulaDto dto);
-	
-	/**
-	 * 查询
-	 * @param dto
-	 * @param dto.addDate 和 modifyDate 是用来先限定 schedulaDate 的
-	 * @return
-	 */
-	@DataSource("slave")
-	public List<OpChannelWorldSchedulaDto>queryChannelWorldSchedula(OpChannelWorldSchedulaDto dto);
 	
 }

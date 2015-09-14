@@ -30,17 +30,16 @@
 	</resultMap>
 	
 	<!-- 增加 -->
-	<insert id="insertChannelWorldSchedula">
-		insert into hts_admin.op_channel_world_schedula 
-		(world_id,channel_id,valid,superb,operator_id,date_add,date_modify,date_schedula,finish)
+	<insert id="insertChannelWorldValidSchedula">
+		insert into hts_admin.op_channel_world_valid_schedula 
+			(world_id, channel_id, operator_id, date_add, date_modify, date_schedula)
 		values
-		(#{worldId},#{channelId},#{valid},#{superb},#{operatorId},
-			#{addDate,jdbcType=TIMESTAMP},#{modifyDate,jdbcType=TIMESTAMP},#{schedulaDate},#{finish})
+			(#{worldId}, #{channelId}, #{operatorId}, #{addDate}, #{modifyDate}, #{schedulaDate})
 	</insert>
 	
 	<!-- 删除频道有效性计划 -->
 	<delete id="delChannelWorldValidSchedula">
-		delete from hts_admin.op_channel_world_validate_schedula
+		delete from hts_admin.op_channel_world_valid_schedula
 		<where>
 			id in
 			<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
@@ -52,8 +51,8 @@
 	
 	<!-- 修改 -->
 	<update id="updateChannelWorldValidSchedula">
-		update hts_admin.op_channel_world_validate_schedula
-		set 
+		update hts_admin.op_channel_world_valid_schedula
+		<set>
 			<if test="schedulaDate != null">
 				date_schedula = #{schedulaDate,jdbcType=TIMESTAMP},
 			</if>
@@ -63,21 +62,24 @@
 			<if test="finish != null">
 				finish = #{finish},
 			</if>
-			date_modify=#{modifyDate,jdbcType=TIMESTAMP}
-		<where>
+			date_modify = #{modifyDate,jdbcType=TIMESTAMP}
+		</set>
+		where
 			<if test="id != null">
 				id = #{id}
 			</if>
-			<if test="worldId != null">
-				and world_id=#{worldId}
-			</if>
-		</where>
+			<trim prefix="" prefixOverrides="AND |OR ">
+				<if test="channelId != null and worldId != null">
+					and world_id = #{worldId}
+					and channel_id = #{channelId}
+				</if>
+			</trim>
 	</update>
 	
 	<!-- 分页查询频道织图计划 -->
 	<select id="queryChannelWorldValidSchedulaForList" resultMap="ChannelWorldSchedulaMapper">
 		select ocwvs.*,aui.user_name as operator_name,hh.short_link,hh.author_id as user_id,oc.channel_name,ui.user_name from
-		hts_admin.op_channel_world_validate_schedula ocwvs
+		hts_admin.op_channel_world_valid_schedula ocwvs
 		
 		left join 
 		hts_admin.admin_user_info aui
@@ -122,7 +124,7 @@
 	<!-- 分页查询有效性总数 -->
 	<select id="queryChannelWorldValidSchedulaCount" resultType="long">
 		select count(ocwvs.id)
-		from hts_admin.op_channel_world_validate_schedula ocwvs
+		from hts_admin.op_channel_world_valid_schedula ocwvs
 		<where>
 			<if test="id != null">
 				ocwvs.id = #{id}
@@ -146,36 +148,6 @@
 				<![CDATA[ and ocwvs.id <= #{maxId}]]>
 			</if>
 		</where>
-	</select>
-	
-	
-	<!-- 查询 -->
-	<select id="queryChannelWorldSchedula" resultMap="SchedulaMapper">
-		select * from hts_admin.op_channel_world_schedula ocws
-		<where>
-			<if test="id != null">
-				ocws.id = #{id}
-			</if>
-			<if test="worldId != null">
-				ocws.world_id = #{worldId}
-			</if>
-			<if test="channelId != null">
-				and ocws.channel_id = #{channelId}
-			</if>
-			<if test="finish != null">
-				and ocws.finish = #{finish}
-			</if>
-			<if test="valid != null">
-				and ocws.valid = #{valid}
-			</if>
-			<if test="addDate != null">
-				<![CDATA[ and ocws.date_schedula >= #{addDate,jdbcType=TIMESTAMP} ]]>
-			</if>
-			<if test="modifyDate != null">
-				<![CDATA[ and ocws.date_schedula <= #{modifyDate,jdbcType=TIMESTAMP} ]]>
-			</if>
-		</where>
-		order by ocws.date_schedula
 	</select>
 	
 </mapper>

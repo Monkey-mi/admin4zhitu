@@ -24,22 +24,6 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 			Integer id, Integer userId, Integer worldId,Integer channelId,Integer finish,
 			Integer valid,Date addDate,Date modifyDate, Map<String, Object> jsonMap)throws Exception;
 	
-	
-	/**
-	 * 更新 
-	 * @throws Exception
-	 */
-	public void updateChannelWorldValidSchedula(Integer id,Integer userId,Integer worldId,
-			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception;
-	
-/*	
-	*//**
-	*更新 频道精选计划
-	 * @throws Exception
-	 *//*
-	public void updateChannelWorldSuperbSchedula(Integer id,Integer userId,Integer worldId,
-			Integer channelId,Integer finish,Integer valid,Integer operatorId,Date schedulaDate)throws Exception;*/
-	
 	/**
 	 * 批量删除
 	 * @param idsStr
@@ -55,7 +39,7 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	public void delChannelWorldSuperbSchedula(String idsStr)throws Exception;
 	
 	/**
-	 * 批量添加
+	 * 批量频道织图计划排序和生效
 	 * @param wIds
 	 * @param channelId
 	 * @param finish
@@ -63,8 +47,19 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * @param operator
 	 * @throws Exception
 	 */
-	public void batchAddChannelWorldSchedula(String[] wIds,Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
+	public void batchChannelWorldToSortAndValidSchedula(String[] wIds,Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
 			Integer valid,Integer operator)throws Exception;
+	
+	/**
+	 * 批量频道织图计划加精
+	 * 
+	 * @param channelId			频道id
+	 * @param worldIds			织图id集合
+	 * @param schedula			计划执行时间
+	 * @param minuteTimeSpan	每个织图在执行时间上的间隔的时间
+	 * @author zhangbo	2015年9月12日
+	 */
+	public void batchChannelWorldToSuperbSchedula(Integer channelId, Integer[] worldIds, Date schedula, Integer minuteTimeSpan);
 	
 	/**
 	 * 更新计划
@@ -90,16 +85,5 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * @throws Exception
 	 */
 	public void reSortSuperb(String[] ids,Date schedula,Integer minuteTimeSpan,Integer operator)throws Exception;
-
-	/**
-	 * 批量频道织图计划加精
-	 * 
-	 * @param channelId			频道id
-	 * @param worldIds			织图id集合
-	 * @param schedula			计划执行时间
-	 * @param minuteTimeSpan	每个织图在执行时间上的间隔的时间
-	 * @author zhangbo	2015年9月12日
-	 */
-	public void batchChannelWorldToSuperbSchedula(Integer channelId, Integer[] worldIds, Date schedula, Integer minuteTimeSpan);
 
 }
