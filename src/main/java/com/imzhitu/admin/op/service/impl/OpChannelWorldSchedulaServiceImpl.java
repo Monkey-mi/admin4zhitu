@@ -217,9 +217,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setOperatorId(operatorId);
 			
 			if(0 == r){
-				channelWorldSchedulaMapper.insertChannelWorldSchedula(dto);
+				channelWorldValidSchedulaMapper.insertChannelWorldSchedula(dto);
 			}else{
-				channelWorldSchedulaMapper.updateChannelWorldSchedula(dto);
+				channelWorldValidSchedulaMapper.updateChannelWorldValidSchedula(dto);
 			}
 		}
 	}
@@ -240,7 +240,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();		
 			dto.setWorldId(worldId);
 			dto.setChannelId(channelId);
-			long r = channelWorldSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
+			long r = channelWorldValidSchedulaMapper.queryChannelWorldValidSchedulaCount(dto);
 			
 			dto.setModifyDate(now);
 			dto.setAddDate(now);
