@@ -456,8 +456,6 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 				if (hourOfDay != 7) {//如果为7点，则用及时的时间做开始时间，否则生效开始时间会早于计划时间
 					beginTime = tmpDate.getTime() + 7*3600000L;
 				} 
-				
-				beginTime = tmpDate.getTime() + 7*3600000L;
 			}catch(Exception e){
 				Log.warn("getScheduleV3: convert time failed!");
 			}
