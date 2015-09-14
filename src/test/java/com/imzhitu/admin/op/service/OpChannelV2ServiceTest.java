@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hts.web.base.constant.Tag;
 import com.imzhitu.admin.base.BaseTest;
 
 
@@ -40,7 +39,6 @@ public class OpChannelV2ServiceTest extends BaseTest {
 //		service.updateOpChannel();
 	}
 	
-	
 	@Test
 	public void queryYestodayWorldIncreasementTest()throws Exception{
 //		long r = service.queryYestodayWorldIncreasement(null, null, 11834);
@@ -51,6 +49,11 @@ public class OpChannelV2ServiceTest extends BaseTest {
 	public void queryYestodayMemberIncreasementTest()throws Exception{
 		long r = service.queryYestodayMemberIncreasement(null, null, 11834);
 		log.info("====================>"+r);
+	}
+
+	@Test
+	public void addAutoPassIdTest() throws Exception {
+		service.addAutoPassId(12);
 	}
 	
 }

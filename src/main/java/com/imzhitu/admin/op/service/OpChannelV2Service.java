@@ -248,5 +248,21 @@ public interface OpChannelV2Service extends BaseService{
 	 * @author zhangbo 2015年6月17日
 	 */
 	public List<OpChannelTheme> queryChannelThemeList();
-
+	
+	/**
+	 * 添加频道自动通过id
+	 * 
+	 * @param channelId
+	 * @author lynch 2015-09-14
+	 */
+	public void addAutoPassId(Integer channelId) throws Exception;
+	
+	/**
+	 * 删除频道自动通过id
+	 * 
+	 * @param channelId
+	 * @throws Exception
+	 */
+	public void deleteAutoPassId(Integer channelId) throws Exception;
+	
 }

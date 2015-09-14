@@ -461,6 +461,38 @@ public class OpChannelV2Action extends BaseCRUDAction {
 			out.close();
 		}
 	}
+	
+	/**
+	 * 添加自动通过id
+	 * 
+	 * @return
+	 * @author lynch 2015-09-14
+	 */
+	public String addAutoPassId() {
+		try {
+			opChannelV2Service.addAutoPassId(channelId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 删除自动通过id
+	 * 
+	 * @return
+	 * @author lynch 2015-09-14
+	 */
+	public String deleteAutoPassId() {
+		try {
+			opChannelV2Service.deleteAutoPassId(channelId);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
 	private Integer channelId; // 频道id
 	private Integer ownerId; // 拥有者ID
