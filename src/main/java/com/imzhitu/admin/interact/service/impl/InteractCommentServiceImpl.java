@@ -303,4 +303,11 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements Inter
 		return list;
 	}
 
+	@Override
+	public Integer saveComment(String content, Integer labelId) throws Exception {
+		Integer id = keyGenService.generateId(Admin.INTERACT_COMMENT_KEYID);
+		interactCommentDao.saveComment(new InteractComment(id, content, labelId));
+		return id;
+	}
+
 }

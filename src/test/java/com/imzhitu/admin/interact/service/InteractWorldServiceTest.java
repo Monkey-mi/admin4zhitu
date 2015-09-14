@@ -1,18 +1,16 @@
 package com.imzhitu.admin.interact.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONObject;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.base.BaseTest;
+
+import net.sf.json.JSONObject;
 
 public class InteractWorldServiceTest extends BaseTest {
 

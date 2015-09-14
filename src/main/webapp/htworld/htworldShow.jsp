@@ -371,6 +371,8 @@
 		var interactForm = $('#interact_form');
 		$(".opt_btn").hide();
 		$(".loading").show();
+		// 为form表单中的评论字符串设值
+		$('#commentStrs_interact').val($("#rl_exp_input").val());
 		interactForm.ajaxSubmit({
 			success: function(result){
 				if(result['result'] == 0) {
@@ -597,32 +599,28 @@
 	/**
 	 * 保存评论
 	 */
-	function saveComment() {
-		var commentsStr = $("#rl_exp_input").val(),
-			//labelId = $("#labelId_comment").combobox('getValue');
-			labelId = 5;
-		if(labelId == "") {
-			labelId = 5;
-		}
-		if(commentsStr == "") {
-			$.messager.alert('提示',"请输入评论内容");
-			return;
-		}
-		$("#saveBtn").hide();
-		$("#div-add-comment .loading").show();
-		$.post("./admin_interact/comment_batchSaveComment",{
-			'labelId':labelId,
-			'commentsStr':commentsStr
-		}, function(result){
-			if(result['result'] == 0) {
-				$("#rl_exp_input").val('');
-			} else {
-				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-			}
-			$("#saveBtn").show();
-			$("#div-add-comment .loading").hide();
-		},'json');
-	}
+//	function saveComment() {
+//		var commentsStr = $("#rl_exp_input").val(),
+//			//labelId = $("#labelId_comment").combobox('getValue');
+//			labelId = 5;
+//		if(labelId == "") {
+//			labelId = 5;
+//		}
+//		if(commentsStr == "") {
+////			$.messager.alert('提示',"请输入评论内容");
+//			return;
+//		}
+//		$.post("./admin_interact/comment_batchSaveComment",{
+//			'labelId':labelId,
+//			'commentsStr':commentsStr
+//		}, function(result){
+//			if(result['result'] == 0) {
+//				$("#rl_exp_input").val('');
+//			} else {
+//				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+//			}
+//		},'json');
+//	}
 	
 </script>
 
@@ -685,7 +683,7 @@
 							<tr>
 								<td class="leftTd"><div style="width:150px;" >织图等级：</div></td>
 								<td><input style="width:120px" class="easyui-combobox" id="levelId" name="id"  onchange="validateSubmitOnce=true;" 
-									data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel'"/></td>
+									data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel',value:'54'"/></td>
 								<td class="rightTd"><div id="levelId_Tip" class="tipDIV" style="padding-left:10px;">已添加：播放【<span id="clickSum_interact">0</span>】&nbsp;喜欢【<span id="likedSum_interact">0</span>】&nbsp;评论【<span id="commentSum_interact">0</span>】</div></td>
 							</tr>
 							<tr>
@@ -713,6 +711,9 @@
 									<a class="easyui-linkbutton hideBtn" style="display:none;" id="cancelTrust" iconCls="icon-cancel" onclick="removeTrust();">取消信任</a>
 								</td>
 							</tr>
+							<tr style="display:none;">
+								<td colspan="3"><textarea name="commentStrs" id="commentStrs_interact" rows="13"></textarea></td>
+							</tr>
 							<tr class="loading none">
 								<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
 									<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
@@ -733,14 +734,6 @@
 			<div style="width:50%;height: 230px;float:left;">
 				<div id="comment" class="comment-main">
 					<textarea name="content" id="rl_exp_input" rows="13"></textarea>
-					<div class="div-comment-opt">
-						<a id="saveBtn" class="easyui-linkbutton" iconCls="icon-ok" title="保存评论" onclick="javascript:saveComment()" href="javascript:void(0);">确定</a>
-						<span class="loading none">
-						<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-						<span style="vertical-align:middle;">请稍后...</span>
-						</span>
-						<a class="easyui-linkbutton" iconCls="icon-cancel" title="关闭窗口" onclick="closePage();">取消</a>
-					</div>
 				</div>
 			</div>
 			
