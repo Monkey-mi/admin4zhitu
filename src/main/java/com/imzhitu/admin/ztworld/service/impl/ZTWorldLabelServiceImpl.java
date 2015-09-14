@@ -60,12 +60,6 @@ public class ZTWorldLabelServiceImpl extends BaseServiceImpl implements
 	private ZTWorldService worldService;
 	
 	@Autowired
-	private ActivityDao activityDao;
-	
-	@Autowired
-	private ActivitySponsorDao activitySponsorDao;
-	
-	@Autowired
 	private ActivityCacheDao activityCacheDao;
 	
 	@Autowired
