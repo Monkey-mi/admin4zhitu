@@ -32,7 +32,7 @@ import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpDataStatisticsDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
-import com.imzhitu.admin.op.dao.ChannelAutoPassIdCacheDao;
+import com.imzhitu.admin.op.dao.ChannelAutoRejectIdCacheDao;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
 import com.imzhitu.admin.op.service.OpChannelMemberService;
@@ -87,7 +87,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	private com.hts.web.operations.dao.ChannelThemeDao webChannelThemeDao;
 	
 	@Autowired
-	private ChannelAutoPassIdCacheDao channelAutoPassIdCacheDao;
+	private ChannelAutoRejectIdCacheDao channelAutoPassIdCacheDao;
 
 	@Override
 	public void insertOpChannel(String channelDesc, String channelIcon, String channelSubIcon, String channelBanner, String channelReview, String channelName, Integer channelTypeId, Integer ownerId, Integer themeId) throws Exception {
@@ -696,7 +696,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @author lynch 2015-09-14
 	 */
 	@Override
-	public void addAutoPassId(Integer channelId) {
+	public void addAutoRejectId(Integer channelId) {
 		channelAutoPassIdCacheDao.addId(channelId);
 	}
 	
@@ -704,7 +704,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * @author lynch 2015-09-14
 	 */
 	@Override
-	public void deleteAutoPassId(Integer channelId) {
+	public void deleteAutoRejectId(Integer channelId) {
 		channelAutoPassIdCacheDao.deleteId(channelId);
 	}
 

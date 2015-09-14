@@ -8,7 +8,7 @@ import com.hts.web.common.dao.BaseCacheDao;
  * @author lynch 2015-09-14
  * @version 3.0.0
  */
-public interface ChannelAutoPassIdCacheDao extends BaseCacheDao {
+public interface ChannelAutoRejectIdCacheDao extends BaseCacheDao {
 
 	/**
 	 * 添加自动通过id

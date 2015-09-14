@@ -468,9 +468,9 @@ public class OpChannelV2Action extends BaseCRUDAction {
 	 * @return
 	 * @author lynch 2015-09-14
 	 */
-	public String addAutoPassId() {
+	public String addAutoRejectId() {
 		try {
-			opChannelV2Service.addAutoPassId(channelId);
+			opChannelV2Service.addAutoRejectId(channelId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -484,9 +484,9 @@ public class OpChannelV2Action extends BaseCRUDAction {
 	 * @return
 	 * @author lynch 2015-09-14
 	 */
-	public String deleteAutoPassId() {
+	public String deleteAutoRejectId() {
 		try {
-			opChannelV2Service.deleteAutoPassId(channelId);
+			opChannelV2Service.deleteAutoRejectId(channelId);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

@@ -53,7 +53,7 @@ public class OpChannelV2ServiceTest extends BaseTest {
 
 	@Test
 	public void addAutoPassIdTest() throws Exception {
-		service.addAutoPassId(12);
+		service.addAutoRejectId(12);
 	}
 	
 }

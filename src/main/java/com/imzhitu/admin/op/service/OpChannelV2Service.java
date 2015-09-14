@@ -255,7 +255,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId
 	 * @author lynch 2015-09-14
 	 */
-	public void addAutoPassId(Integer channelId) throws Exception;
+	public void addAutoRejectId(Integer channelId) throws Exception;
 	
 	/**
 	 * 删除频道自动通过id
@@ -263,6 +263,6 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId
 	 * @throws Exception
 	 */
-	public void deleteAutoPassId(Integer channelId) throws Exception;
+	public void deleteAutoRejectId(Integer channelId) throws Exception;
 	
 }
