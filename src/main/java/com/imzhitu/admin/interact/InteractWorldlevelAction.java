@@ -1,19 +1,21 @@
 package com.imzhitu.admin.interact;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.interact.service.InteractWorldlevelService;
 import com.imzhitu.admin.common.pojo.ZTWorldLevelDto;
+import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.InteractWorldlevelService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * 织图等级管理
@@ -42,9 +44,13 @@ public class InteractWorldlevelAction extends BaseCRUDAction{
 	private String comments;
 	private String rowJson;
 	private Integer weight;//权重
+	private String commentStrs;
 	
 	@Autowired
 	private InteractWorldlevelService interactWorldlevelService;
+	
+	@Autowired
+	private InteractCommentService interactCommentService;
 	
 	
 	public Integer getWeight() {
@@ -174,6 +180,9 @@ public class InteractWorldlevelAction extends BaseCRUDAction{
 		return this.level_description;
 	}
 	
+	public void setCommentStrs(String commentStrs) {
+		this.commentStrs = commentStrs;
+	}
 	/**
 	 * 查询织图等级列表
 	 * @return
@@ -253,6 +262,20 @@ public class InteractWorldlevelAction extends BaseCRUDAction{
 	public String AddLevelWorld(){
 		try{
 			interactWorldlevelService.AddLevelWorld(world_id,id,null,comments);
+			
+			if(commentStrs != null && !"".equals(commentStrs.trim())){
+				String[] comments = commentStrs.split("\n");
+				String commentIds = new String();
+				for(String str:comments){
+					if(!"".equals(str.trim())) {
+						// 保存评论到“其他”分类下，labelId=5，目前先写死
+						Integer commentId = interactCommentService.saveComment(str, 5);
+						commentIds += String.valueOf(commentId) + ",";
+					}
+				}
+				interactWorldlevelService.AddLevelWorld(world_id,id,null,commentIds);
+			}
+			
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

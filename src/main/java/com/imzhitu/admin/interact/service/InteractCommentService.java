@@ -30,6 +30,17 @@ public interface InteractCommentService extends BaseService {
 	public void saveComment(File file, String content, Integer labelId) throws Exception;
 	
 	/**
+	 * 保存评论
+	 * 
+	 * @param content	评论内容
+	 * @param labelId	所属评论标签id
+	 * @return	评论内容表主键id
+	 * @throws Exception
+	 * @author zhangbo	2015年9月14日
+	 */
+	public Integer saveComment(String content, Integer labelId) throws Exception;
+	
+	/**
 	 * 
 	 * @param labelId
 	 * @param comment
