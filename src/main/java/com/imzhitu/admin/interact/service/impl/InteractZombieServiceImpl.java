@@ -255,7 +255,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 				if (label == null) {
 					labelId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
 					String pinyin = StringUtil.getPinYin(name);
-					label = new HTWorldLabel(labelId, name, pinyin, 0, new Date(), Tag.FALSE, Tag.TRUE, 0, 0);
+					label = new HTWorldLabel(labelId, name, pinyin, 0, 0, new Date(), Tag.FALSE, Tag.TRUE, 0, 0);
 					worldLabelDao.saveLabel(label);
 				} else {
 					labelId = label.getId();

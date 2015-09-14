@@ -570,7 +570,8 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 				if(!labelName.equals("")) {
 					Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_LABEL_ID);
 					String labelPinyin = StringUtil.getPinYin(labelName);
-					worldLabelDao.saveLabel(new HTWorldLabel(id, labelName, labelPinyin, 0, new Date(), Tag.TRUE, Tag.TRUE, id, 0));
+					worldLabelDao.saveLabel(new HTWorldLabel(id, labelName, labelPinyin, 0, 0,
+							new Date(), Tag.TRUE, Tag.TRUE, id, 0));
 				}
 			}
 		} finally {

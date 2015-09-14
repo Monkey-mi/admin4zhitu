@@ -154,7 +154,8 @@ public class ZTWorldLabelServiceImpl extends BaseServiceImpl implements
 			worldLabelDao.updateSerial(label.getId(), id);
 		} else {
 			String pinyin = StringUtil.getPinYin(labelName);
-			worldLabelDao.saveLabel(new HTWorldLabel(id, labelName, pinyin, 0, new Date(), Tag.FALSE, Tag.TRUE, id, 0));
+			worldLabelDao.saveLabel(new HTWorldLabel(id, labelName, pinyin, 0,
+					0, new Date(), Tag.FALSE, Tag.TRUE, id, 0));
 		}
 		return id;
 	}

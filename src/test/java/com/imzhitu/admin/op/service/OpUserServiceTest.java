@@ -60,7 +60,7 @@ public class OpUserServiceTest extends BaseTest {
 	
 	@Test
 	public void testUserAcceptRecommendDirect()throws Exception{
-		service.userAcceptRecommendDirect(1595, 1);
+		service.userAcceptRecommendDirect(485, 1);
 	}
 	
 	@Test

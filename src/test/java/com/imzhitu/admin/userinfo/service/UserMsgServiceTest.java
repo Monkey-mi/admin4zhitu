@@ -20,8 +20,8 @@ public class UserMsgServiceTest extends BaseTest {
 	
 	@Test
 	public void testPushListMsg() throws Exception {
-		String idsStr = "527";
-		service.pushListMsg("多用户群推送测试", 12046, null, idsStr);
+//		String idsStr = "527";
+//		service.pushListMsg("多用户群推送测试", 12046, null, idsStr);
 	}
 	
 	@Test
