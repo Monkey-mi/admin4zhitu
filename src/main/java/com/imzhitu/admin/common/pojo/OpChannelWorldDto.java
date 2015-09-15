@@ -28,32 +28,25 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	private String channelName;
 	private String channelTitle;
 	private String channelIcon;
-	private Integer beSchedula;				//是否被计划
-	private Integer schedulaComplete;		//计划完成情况
-	
 	private Integer isCover = Tag.FALSE;
+	
+	/**
+	 * 有效性计划完成情况
+	 * 1、null：未做有效性计划，2、0：做了有效性计划，计划未完成，3：1：做了有效性计划，计划已经完成
+	 * @author zhangbo	2015年9月15日
+	 */
+	private Integer validSchedula;
+	
+	/**
+	 * 加精计划完成情况
+	 * 1、null：未做加精计划，2、0：做了加精计划，计划未完成，3：1：做了加精计划，计划已经完成
+	 * @author zhangbo	2015年9月15日
+	 */
+	private Integer superbSchedula;
 
 	// 存在于多个频道
 	private List<String> multiple = new ArrayList<String>();
 	
-	private Integer channelWorldSchedulaSuperb;	// 计划中加精，0为不加精，1为加精
-	
-	public Integer getBeSchedula() {
-		return beSchedula;
-	}
-
-	public void setBeSchedula(Integer beSchedula) {
-		this.beSchedula = beSchedula;
-	}
-
-	public Integer getSchedulaComplete() {
-		return schedulaComplete;
-	}
-
-	public void setSchedulaComplete(Integer schedulaComplete) {
-		this.schedulaComplete = schedulaComplete;
-	}
-
 	public Integer getChannelWorldId() {
 		return channelWorldId;
 	}
@@ -171,26 +164,28 @@ public class OpChannelWorldDto extends ZTWorldBase {
 		this.isCover = isCover;
 	}
 
+	public Integer getValidSchedula() {
+		return validSchedula;
+	}
+
+	public void setValidSchedula(Integer validSchedula) {
+		this.validSchedula = validSchedula;
+	}
+
+	public Integer getSuperbSchedula() {
+		return superbSchedula;
+	}
+
+	public void setSuperbSchedula(Integer superbSchedula) {
+		this.superbSchedula = superbSchedula;
+	}
+
 	public List<String> getMultiple() {
 		return multiple;
 	}
 
 	public void setMultiple(List<String> multiple) {
 		this.multiple = multiple;
-	}
-
-	/**
-	 * @return the channelWorldSchedulaSuperb
-	 */
-	public Integer getChannelWorldSchedulaSuperb() {
-	    return channelWorldSchedulaSuperb;
-	}
-
-	/**
-	 * @param channelWorldSchedulaSuperb the channelWorldSchedulaSuperb to set
-	 */
-	public void setChannelWorldSchedulaSuperb(Integer channelWorldSchedulaSuperb) {
-	    this.channelWorldSchedulaSuperb = channelWorldSchedulaSuperb;
 	}
 
 }

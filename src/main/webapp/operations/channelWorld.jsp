@@ -98,27 +98,35 @@
   				return "<img class='htm_column_img pointer' src='" + img + "'/>";
   			}
   		},
-  		{field : 'beSchedula',title : '计划',align : 'center', width: 45,
+  		{field : 'validSchedula',title : '有效性计划',align : 'center', width: 50,
   			formatter: function(value,row,index) {
-  				if(value == 0) {
-  					img = "./common/images/ok.png";
-  					return "<img title='已生效' class='htm_column_img'  src='" + img + "'/>";
+  				switch(value) {
+  				case 0:
+  					return "<img title='已加入有效性计划，未完成' class='htm_column_img'  src='./common/images/tip.png'/>";
+  					break;
+  				case 1:
+  					return "<img title='有效性计划已经完成' class='htm_column_img'  src='./common/images/ok.png'/>";
+  					break;
+  				default:
+  					return "";
+  					break;
   				}
-  				img = "./common/images/tip.png";
-  				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
   			}  			
   		},
-  		{field : 'schedulaComplete',title : '计划完成情况',align : 'center', width: 45,
+  		{field : 'superbSchedula',title : '加精计划',align : 'center', width: 45,
   			formatter: function(value,row,index) {
-  				if(value == 1 && row.beSchedula == 0) {
-  					img = "./common/images/ok.png";
-  					return "<img title='已生效' class='htm_column_img'  src='" + img + "'/>";
-  				}else if(value == 0 && row.beSchedula == 0){
-	  				img = "./common/images/tip.png";
-	  				return "<img title='等待中' class='htm_column_img' src='" + img + "'/>";
+  				switch(value) {
+  				case 0:
+  					return "<img title='已加入加精计划，未完成' class='htm_column_img'  src='./common/images/tip.png'/>";
+  					break;
+  				case 1:
+  					return "<img title='加精计划已经完成' class='htm_column_img'  src='./common/images/ok.png'/>";
+  					break;
+  				default:
+  					return "";
+  					break;
   				}
-  				return '';
-  			} 			
+  			}  			
   		},
   		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160},
   		dateModified,
