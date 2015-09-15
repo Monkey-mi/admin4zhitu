@@ -99,7 +99,7 @@ public class OpServiceTest extends BaseTest{
 	
 	@Test
 	public void testQueryActivityById() throws Exception {
-		service.queryActivityById(33);
+		service.queryActivityById(34);
 	}
 	
 	@Test
