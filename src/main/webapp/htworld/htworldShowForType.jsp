@@ -388,9 +388,7 @@
 				}
 				$(".opt_btn").show();
 				$(".loading").hide();
-				parent.updateInteracted(index);
 				parent.$.fancybox.close();
-				refreshRow(index);
 				return false;
 			},
 			error: function(XmlHttpRequest, textStatus, errorThrown){  
