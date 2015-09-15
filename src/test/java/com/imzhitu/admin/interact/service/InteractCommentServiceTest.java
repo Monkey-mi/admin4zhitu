@@ -32,7 +32,7 @@ public class InteractCommentServiceTest extends BaseTest {
 	
 	@Test
 	public void testGetRandomCommentIds() throws Exception {
-		List<Integer> list = service.getRandomCommentIds(1, 10);
+		List<Integer> list = service.getRandomCommentIds(1, 8);
 		for(Integer id : list) {
 			logger.debug(id);
 		}
