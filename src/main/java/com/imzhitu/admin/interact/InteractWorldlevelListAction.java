@@ -13,6 +13,7 @@ import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
+import com.imzhitu.admin.interact.service.InteractCommentService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.common.pojo.InteractWorldLevelListDto;
@@ -36,9 +37,13 @@ public class InteractWorldlevelListAction extends BaseCRUDAction{
 	private Integer timeType;//时间类型，0计划时间，1，添加时间，2修改时间.用来代表beginTime、和endTime的类型
 	private Date beginTime;
 	private Date endTime;
+	private String commentStrs;
 	
 	@Autowired
 	private InteractWorldlevelListService interactWorldlevelListService;
+	
+	@Autowired
+	private InteractCommentService interactCommentService;
 	
 	public void setTimeType(Integer timeType){
 		this.timeType = timeType;
@@ -116,6 +121,13 @@ public class InteractWorldlevelListAction extends BaseCRUDAction{
 	}
 	
 	/**
+	 * @param commentStrs the commentStrs to set
+	 */
+	public void setCommentStrs(String commentStrs) {
+		this.commentStrs = commentStrs;
+	}
+	
+	/**
 	 * 查询等级织图列表
 	 * @return
 	 */
@@ -140,6 +152,20 @@ public class InteractWorldlevelListAction extends BaseCRUDAction{
 		try{
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			interactWorldlevelListService.addWorldlevelList(world_id, world_level_id,validity,comment_ids,label_ids,user.getId());
+			
+			if(commentStrs != null && !"".equals(commentStrs.trim())){
+				String[] comments = commentStrs.split("\n");
+				String commentIds = new String();
+				for(String str:comments){
+					if(!"".equals(str.trim())) {
+						// 保存评论到“其他”分类下，labelId=5，目前先写死
+						Integer commentId = interactCommentService.saveComment(str, 5);
+						commentIds += String.valueOf(commentId) + ",";
+					}
+				}
+				interactWorldlevelListService.addWorldlevelList(world_id,world_level_id,validity,commentIds,label_ids,user.getId());
+			}
+			
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

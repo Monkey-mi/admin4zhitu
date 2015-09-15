@@ -97,7 +97,48 @@ var maxSerial = 0,
   		likeCountColumn,
   		commentCountColumn,
   		worldURLColumn,
-  		worldIdColumn,
+  		{field : 'worldId',title : '织图ID',align : 'center', sortable: true, 
+			formatter : function(value, row, index) {
+				//精品按钮控制
+				var superbFlag = 2;//显示添加精品按钮
+				var trustFlag = 0;//信任标志
+				var latestFlag = 0;//最新
+				
+				if(row.valid == 0 || row.shield == 1) {
+					superbFlag = 0;	//不显示精品按钮
+				} else if(row.squarerecd == 1) {
+					superbFlag = 1; //显示已经是精品按钮
+				} 
+				if(row.trust == 1){
+					trustFlag = 1;//信任
+				}
+				if(row.latestValid >= 1){
+					latestFlag = 1;
+				}
+				var wurl;
+				if(row['worldURL'] == '' || row['worldURL'] == undefined){
+					var slink;
+					if(row['shortLink'] == '')
+						slink = row[worldKey];
+					else 
+						slink = row['shortLink'];
+					wurl = worldURLPrefix + slink;
+				} else {
+					wurl = row['worldURL'];
+				}
+				
+				return "<a title='添加互动' class='updateInfo' href='javascript:showWorldAndInteractForType(\"" 
+				+ "page_htworld_htworldShowForType" + "?worldId=" + value + "&userId=" + row['authorId'] 
+				+ "&index=" + index
+				+ "&superbFlag=" +superbFlag + "&trustFlag=" + trustFlag 
+				+ "&lastestFlag=" + latestFlag + "&worldLabel=" + row['worldLabel'] + "&shortLink=" + wurl + "\")'>"+value+"</a>";
+			},
+			styler:function(value,row,index){
+				if(row.typeInteracted == 1){
+					return 'background-color:#fdf9bb;';
+				}
+			}
+		},
   		titleThumbPathColumn,
   		worldLabelColumn,
   		{field : 'channelName',title :'频道',align : 'center',width:100,
@@ -776,6 +817,22 @@ function updateTypeWorldCache(){
 					}
 				},"json");				
 		}
+	});
+}
+
+/**
+ * worldId显示界面初始化
+ */
+function showWorldAndInteractForType(uri){
+	$.fancybox({
+		'margin'			: 20,
+		'width'				: '100%',
+		'height'			: '100%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe',
+		'href'				: uri
 	});
 }
 
