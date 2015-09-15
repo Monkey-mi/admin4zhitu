@@ -27,6 +27,7 @@ import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.constant.LoggerKeies;
 import com.imzhitu.admin.op.dao.NoticeCacheDao;
+import com.imzhitu.admin.op.dao.OpBatchPushLockCacheDao;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
 import com.imzhitu.admin.op.mapper.NoticeMsgTemplateMapper;
 import com.imzhitu.admin.op.mapper.OpChannelNoticeMapper;
@@ -76,6 +77,9 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	@Autowired
 	private OpChannelMemberService channelMemberService;
 	
+	@Autowired
+	private OpBatchPushLockCacheDao batchPushLockDao;
+	
 
 	/**
 	 * 系统推送通知发送人ID，即官方账号ID
@@ -85,11 +89,14 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	private Integer appMsgSenderId = Admin.ZHITU_UID;
 
 	/**
-	 * app推送限定条数
+	 * 一次推送限定条数
 	 */
-	private Integer appPushLimit = 300;
+	private Integer oncePushLimit = 300;
 
-	private Integer appPushGroup = 300000;
+	/**
+	 * 单条线程最大推送条数
+	 */
+	private Integer singleThreadPushLimit = 300000;
 	
 	/**
 	 * 频道通知模板中用户名的代替符
@@ -136,6 +143,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	public void pushAppMsg(final OpSysMsg msg, Boolean inApp, Boolean noticed, Integer uid) throws Exception {
 
 		Integer pushAction = Tag.PUSH_ACTION_SYS;
+		String sid = null;
 
 		if (msg.getObjId() == null || msg.getObjId() == 0) {
 			Integer objId = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
@@ -144,7 +152,6 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		msg.setSenderId(appMsgSenderId);
 		msg.setMsgDate(new Date());
 
-		String sid = null;
 		if (msg.getObjType().equals(Tag.USER_MSG_STAR_RECOMMEND)) {
 			pushAction = Tag.PUSH_ACTION_USER_REC_MSG;
 			sid = String.valueOf(msg.getObjId());
@@ -166,64 +173,83 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 
 		// 向所有人推送消息
 		if (noticed) {
-			int factor = appPushGroup;
-			int maxUID = userInfoMapper.selectMaxId();
-			int parts = 0;
-			if (maxUID % factor == 0) {
-				parts = maxUID / factor;
+			
+			appPushLogger.info("----------------- batch push on " + new Date() + "--------------------");
+			
+			batchPushLockDao.lock();
+			
+			/*
+			 * 1.计算总共要分多少条线程进行
+			 * 2.一条线程每次向oncePushLimit个用户推送消息
+			 */
+			int maxUID; // 最大用户id
+			int threadCount; // 线程总数
+			int maxId;
+			int minId;
+			
+			maxUID = userInfoMapper.selectMaxId();
+			
+			if (maxUID % singleThreadPushLimit == 0) {
+				threadCount = maxUID / singleThreadPushLimit;
 			} else {
-				parts = maxUID / factor + 1;
+				threadCount = maxUID / singleThreadPushLimit + 1;
 			}
-			for (int i = 0; i < parts; i++) {
-				int maxId = 0;
-				int minId = 0;
-				if (i == 0) {
-					maxId = -1;
-				} else {
-					maxId = maxUID;
-				}
-				if (i == (parts - 1)) {
+			
+			for (int i = 0; i < threadCount; i++) {
+				maxId = maxUID;
+				if (i == (threadCount - 1)) {
 					minId = 1;
 				} else {
-					maxUID -= factor;
-					minId = maxUID;
+					maxUID -= singleThreadPushLimit;
+					minId = maxUID + 1;
 				}
+				
+				// 初始化线程资源并执行推送
 				final int maxId4Thread = maxId;
 				final int minId4Thread = minId;
 				final String sidThread = sid;
 				final int pushActionThread = pushAction;
-				pushService.getPushExecutor().execute(new Runnable() {
-
+				new Thread(new Runnable() {
+					
 					@Override
 					public void run() {
 						batchPushAppMsg(pushActionThread, msg.getContent(), sidThread, minId4Thread, maxId4Thread);
 					}
-				});
+				}).start();
 			}
 		}
 	}
 
+	/**
+	 * 循环批量推送消息
+	 * 
+	 * @param pushAction
+	 * @param msg
+	 * @param sid
+	 * @param minId
+	 * @param maxId
+	 */
 	public void batchPushAppMsg(Integer pushAction, String msg, String sid, Integer minId, Integer maxId) {
-		List<Integer> uids = null;
-		if (maxId == -1) {
-			uids = userInfoMapper.queryUID(minId, null, appPushLimit); // 第一次推送
-		} else if (maxId != 0) {
-			uids = userInfoMapper.queryUID(minId, maxId, appPushLimit); // 递归推送
-		}
-
-		if (uids != null && uids.size() > 0) {
-			int startId = uids.get(0);
-			int endId = uids.get(uids.size() - 1);
-			try {
-				pushService.pushBulletin(pushAction, msg, sid, uids);
-			} catch (Exception e) {
-				appPushLogger.warn("push app msg error : " + e.getMessage());
+		appPushLogger.info("start push from " + minId + " to " + maxId);
+		List<Integer> uids = new ArrayList<Integer>();
+		int counter = 0; 
+		for(int i = minId; i <= maxId; i++) {
+			uids.add(i);
+			++counter;
+			// 触发推送条件
+			if(counter == oncePushLimit || i == maxId) {
+				try {
+					pushService.pushBulletin(pushAction, msg, sid, uids);
+				} catch (Exception e) {
+					// 推送失败暂时不处理
+				}
+				uids.clear();
+				counter = 0;
 			}
-			appPushLogger.info("push app msg from " + startId + "-" + endId);
-			batchPushAppMsg(pushAction, msg, sid, minId, endId);
 		}
+		appPushLogger.info("push from " + minId + " to " + maxId + " finished");
 	}
-
+	
 	@Override
 	public void saveChannelNoticeTemplate(Integer channelId, String contentTmpl, String channelNoticeType) throws Exception {
 		if ( !(contentTmpl.contains(notice_userName_flag) && contentTmpl.contains(notice_channelName_flag)) ) {

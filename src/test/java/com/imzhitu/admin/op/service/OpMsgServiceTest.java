@@ -24,7 +24,7 @@ public class OpMsgServiceTest extends BaseTest {
 	
 	@Test
 	public void testSaveNotice() throws Exception {
-		service.saveNotice("http://static.imzhitu.com/op/notice/2014081101.jpg", "http://www.imzhitu.com", Tag.IOS);
+//		service.saveNotice("http://static.imzhitu.com/op/notice/2014081101.jpg", "http://www.imzhitu.com", Tag.IOS);
 	}
 	
 	@Test
@@ -32,7 +32,7 @@ public class OpMsgServiceTest extends BaseTest {
 //		OpSysMsg msg = new OpSysMsg();
 //		msg.setObjType(Tag.USER_MSG_STAR_RECOMMEND);
 //		msg.setContent("江映蓉入驻织图啦！】当年那个快女冠军如今已蜕变成国际范儿，她来织图和大家见面了，Are you ready！ ");
-//		service.pushAppMsg(msg, true, true, 4);
+//		service.pushAppMsg(msg, false, true, 0);
 	}
 
 //	@Test

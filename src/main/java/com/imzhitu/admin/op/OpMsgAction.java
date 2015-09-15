@@ -107,6 +107,11 @@ public class OpMsgAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 保存推送消息
+	 * 
+	 * @return
+	 */
 	public String saveAppMsg() {
 		Boolean inApp = false;
 		Boolean notify = false;
@@ -125,6 +130,7 @@ public class OpMsgAction extends BaseCRUDAction {
 			opMsgService.pushAppMsg(sysMsg, inApp, notify, userId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch(Exception e) {
+			e.printStackTrace();
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;

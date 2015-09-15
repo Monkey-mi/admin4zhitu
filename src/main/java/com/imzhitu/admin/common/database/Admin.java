@@ -235,6 +235,11 @@ public class Admin {
 	public static final String ADMIN_DAEMON_ADCACHEKEY = "admin:daemon:ADCacheKey";
 	
 	/**
+	 * 批量推送lock标记位,用于批量发送消息时,禁止daemon查询查询历史推送数据
+	 */
+	public static final String ADMIN_BATCH_PUSH_LOCK = "admin:batchPushLock";
+	
+	/**
 	 * 织图官方账号id
 	 * 
 	 * @author zhangbo	2015年8月18日
