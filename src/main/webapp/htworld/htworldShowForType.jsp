@@ -228,6 +228,9 @@
 		removePageLoading();
 		$("#main").show();
 		$(".loading").hide();
+		
+		// 刷新播放喜欢评论数
+		refreshInteractSum(worldId);
 	});
 	
 	
@@ -595,6 +598,32 @@
 			},"json");
 	}
 	
+	function refreshInteractSum(worldId) {
+		
+		$.post("./admin_interact/worldlevelList_queryWorldUNInteractCount",{
+			'world_id':worldId
+			},function(data){
+				if(data["result"] == 0){
+				$("#unValid_clickSum_interact").text(data["clickCount"]);
+				$("#unValid_likedSum_interact").text(data["likedCount"]);
+				$("#unValid_commentSum_interact").text(data["commentCount"]);
+				}else{
+					$.messager.alert('错误提示',data['msg']);  //提示添加信息失败
+				}
+		},"json");
+		
+		$.post("./admin_interact/interact_queryInteractSum",{
+			'worldId':worldId
+		},function(result){
+			if(result['result'] == 0) {
+				$("#clickSum_interact").text(result["clickCount"]);
+				$("#likedSum_interact").text(result["likedCount"]);
+				$("#commentSum_interact").text(result["commentCount"]);
+			} else {
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+		},"json");
+	}
 	
 </script>
 
@@ -655,10 +684,19 @@
 							</tr>
 							
 							<tr>
+								<td class="leftTd">已添加：</td>
+								<td colspan="2">播放【<span id="clickSum_interact">0</span>】&nbsp;喜欢【<span id="likedSum_interact">0</span>】&nbsp;评论【<span id="commentSum_interact">0</span>】</td>
+							</tr>
+						
+							<tr>
+								<td class="leftTd">分类互动：</td>
+								<td colspan="2">播放【<span id="unValid_clickSum_interact">0</span>】&nbsp;喜欢【<span id="unValid_likedSum_interact">0</span>】&nbsp;评论【<span id="unValid_commentSum_interact">0</span>】</td>
+							</tr>
+							
+							<tr>
 								<td class="leftTd"><div style="width:150px;" >织图等级：</div></td>
 								<td><input style="width:120px" class="easyui-combobox" id="levelId" name="world_level_id"  onchange="validateSubmitOnce=true;" 
 									data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel',value:'54'"/></td>
-								<td class="rightTd"><div id="levelId_Tip" class="tipDIV" style="padding-left:10px;">已添加：播放【<span id="clickSum_interact">0</span>】&nbsp;喜欢【<span id="likedSum_interact">0</span>】&nbsp;评论【<span id="commentSum_interact">0</span>】</div></td>
 							</tr>
 							<tr>
 								<td class="leftTd" style="padding-top: 8px;">评论：</td>
