@@ -64,6 +64,12 @@ public class HTWorldLabelDaoImpl extends BaseDaoImpl implements HTWorldLabelDao 
 			+ " set world_count=? where id=?";
 	
 	/**
+	 * 更新精选总数
+	 */
+	private static final String UPDATE_SUPERB_COUNT = "update " + table 
+			+ " set superb_count=? where id=?";
+	
+	/**
 	 * 更新标签属性
 	 */
 	private static final String UPDATE_LABEL_STATE = "update " + table
@@ -74,6 +80,12 @@ public class HTWorldLabelDaoImpl extends BaseDaoImpl implements HTWorldLabelDao 
 	 */
 	private static final String QUERY_LABEL_BY_IDS = "select * from " + table
 			+ " where id in ";
+	
+	/**
+	 * 根据id查询加精数
+	 */
+	private static final String QUERY_SUPERB_COUNT_BY_ID = "select superb_count from " 
+			+ table + " where id=?";
 
 	@Autowired
 	private com.hts.web.ztworld.dao.HTWorldLabelDao webWorldLabelDao;
@@ -189,6 +201,16 @@ public class HTWorldLabelDaoImpl extends BaseDaoImpl implements HTWorldLabelDao 
 	@Override
 	public void updateWorldCount(Integer id, Integer worldCount) {
 		getMasterJdbcTemplate().update(UPDATE_WORLD_COUNT, new Object[]{worldCount, id});
+	}
+	
+	@Override
+	public Integer querySuperbCount(Integer labelId) {
+		return getJdbcTemplate().queryForInt(QUERY_SUPERB_COUNT_BY_ID, labelId);
+	}
+	
+	@Override
+	public void updateSuperbCount(Integer id, Integer superbCount) {
+		getMasterJdbcTemplate().update(UPDATE_SUPERB_COUNT, new Object[]{superbCount, id});
 	}
 
 	@Override

@@ -8,9 +8,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
@@ -19,17 +16,18 @@ import com.hts.web.common.pojo.HTWorldLabel;
 import com.hts.web.common.pojo.HTWorldLabelWorld;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
-import com.hts.web.ztworld.dao.impl.HTWorldLabelCacheDaoImpl;
 import com.hts.web.common.util.StringUtil;
-import com.hts.web.operations.dao.ActivitySponsorDao;
+import com.hts.web.ztworld.dao.impl.HTWorldLabelCacheDaoImpl;
 import com.imzhitu.admin.common.pojo.ZTWorldLabelWorldDto;
 import com.imzhitu.admin.op.dao.ActivityCacheDao;
-import com.imzhitu.admin.op.dao.ActivityDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelCacehDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.ztworld.service.ZTWorldLabelService;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class ZTWorldLabelServiceImpl extends BaseServiceImpl implements

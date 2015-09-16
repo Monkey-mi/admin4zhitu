@@ -32,6 +32,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	@Autowired
 	private OpChannelWorldSuperbSchedulaMapper channelWorldSuperbSchedulaMapper;
 	
+	@Autowired
+    private com.hts.web.operations.service.ChannelService webCannelService;
+	
 	@Value("${urlPrefix}")
 	private String urlPrefix;
 	public String getUrlPrefix() {
@@ -194,6 +197,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			if(0 == r){
 				channelWorldSuperbSchedulaMapper.insertChannelWorldSuperbSchedula(dto);
 			}else{
+				dto.setFinish(Tag.FALSE);
 				channelWorldSuperbSchedulaMapper.updateChannelWorldSuperbSchedula(dto);
 			}
 		}
@@ -247,6 +251,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    
 		    // 刷新频道织图的serial，让10:50的织图排在最新，即serial最大
 		    channelService.addChannelWorldId(schedulaDto.getChannelId(), schedulaDto.getWorldId());
+		    
+		    // 更新织图和图片总数,删除时候调用
+		    webCannelService.updateWorldAndChildCount(schedulaDto.getChannelId());
 		}
 	}
 	
@@ -279,6 +286,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    channelWorldSuperbSchedulaMapper.updateChannelWorldSuperbSchedula(updateSchedulaDto);
 		    
 		    channelService.updateChannelWorldSuperb(schedulaDto.getChannelId(), schedulaDto.getWorldId(), Tag.TRUE);
+		    
+		    // 更新精选总数, 加精和取消加精调用
+		    webCannelService.updateSuperbCount(schedulaDto.getChannelId());
 		}
 	}
 	

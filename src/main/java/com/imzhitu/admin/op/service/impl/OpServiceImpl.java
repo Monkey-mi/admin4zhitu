@@ -594,5 +594,11 @@ public class OpServiceImpl extends BaseServiceImpl
 		Integer activityWorldSuperb = superb == 1 ? Tag.TRUE : Tag.FALSE;
 		OpActivityWorldDto activityWorldDto = activityWorldDao.queryLabelActivityWorld(id);
 		worldLabelWorldDao.updateLabelWorldSuperb(activityWorldDto.getActivityWorldId(), activityWorldSuperb);
+		Integer count = worldLabelDao.querySuperbCount(activityWorldDto.getActivityId());
+		if ( superb == 1 ) {
+			worldLabelDao.updateSuperbCount(activityWorldDto.getActivityId(), ++count);
+		} else if ( superb == 0 && count != 0 ) {
+			worldLabelDao.updateSuperbCount(activityWorldDto.getActivityId(), --count);
+		}
 	}
 }

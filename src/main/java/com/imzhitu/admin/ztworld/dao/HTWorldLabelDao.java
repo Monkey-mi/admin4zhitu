@@ -101,6 +101,22 @@ public interface HTWorldLabelDao extends BaseDao {
 	public void updateWorldCount(Integer id, Integer worldCount);
 	
 	/**
+	 * 查询当前标签加精数
+	 * 
+	 * @param id
+	 * @param worldCount
+	 */
+	public Integer querySuperbCount(Integer id);
+	
+	/**
+	 * 更新精选数
+	 * 
+	 * @param id
+	 * @param worldCount
+	 */
+	public void updateSuperbCount(Integer id, Integer superbCount);
+	
+	/**
 	 * 更新标签属性
 	 * 
 	 * @param id
