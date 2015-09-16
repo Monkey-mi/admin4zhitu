@@ -71,7 +71,7 @@ public class OpServiceTest extends BaseTest{
 	@Test
 	public void testBuildActivityWorld() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildActivityWorld(6308, 7, null, null, null,null, null,null, 2, 10, jsonMap);
+		service.buildActivityWorld(6308, 7, null, null, null,null,null, null,null, 2, 10, jsonMap);
 //		service.buildActivityWorld(0, 7, null, null, null,null,null, null, 1, 10, jsonMap);
 		List<OpActivityWorldDto> list = (List<OpActivityWorldDto>) jsonMap.get(OptResult.ROWS);
 //		logObj(jsonMap);
