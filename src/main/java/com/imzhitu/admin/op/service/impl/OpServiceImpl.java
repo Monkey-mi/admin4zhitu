@@ -225,7 +225,7 @@ public class OpServiceImpl extends BaseServiceImpl
 	
 	@Override
 	public void buildActivityWorld(final Integer maxId, final Integer activityId, Integer valid,
-			Integer weight, Integer worldId,Integer userId,String userName, final Integer isWinner, int page, int rows,
+			Integer weight, Integer superb, Integer worldId,Integer userId,String userName, final Integer isWinner, int page, int rows,
 			final Map<String, Object> jsonMap) throws Exception {
 		final LinkedHashMap<String, Object> attrMap = new LinkedHashMap<String, Object>();
 		if((isWinner == null || isWinner.equals(Tag.FALSE)) && valid != null) {
@@ -242,6 +242,9 @@ public class OpServiceImpl extends BaseServiceImpl
 		}
 		if(userName != null && !userName.trim().equals("")){
 			attrMap.put("user_name","%"+userName+"%");
+		}
+		if (superb != null) {
+			attrMap.put("superb", superb);
 		}
 		
 		if(isWinner == null || isWinner.equals(Tag.FALSE)) {
@@ -584,5 +587,12 @@ public class OpServiceImpl extends BaseServiceImpl
 	public void updateActivityWinnerAward(Integer activityId, Integer worldId,
 			Integer awardId) throws Exception {
 		activityWinnerDao.updateAwardId(activityId, worldId,awardId);
+	}
+
+	@Override
+	public void updateActivityWorldSuperb(Integer id, Integer superb) {
+		Integer activityWorldSuperb = superb == 1 ? Tag.TRUE : Tag.FALSE;
+		OpActivityWorldDto activityWorldDto = activityWorldDao.queryLabelActivityWorld(id);
+		worldLabelWorldDao.updateLabelWorldSuperb(activityWorldDto.getActivityWorldId(), activityWorldSuperb);
 	}
 }

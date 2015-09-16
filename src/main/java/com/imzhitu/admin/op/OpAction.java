@@ -227,7 +227,7 @@ public class OpAction extends BaseCRUDAction {
 			}
 		}
 		try {
-			opService.buildActivityWorld(maxId, activityId, valid, weight, worldId,userId,userName,
+			opService.buildActivityWorld(maxId, activityId, valid, weight, superb, worldId,userId,userName,
 					isWinner, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch(Exception e) {
@@ -522,6 +522,21 @@ public class OpAction extends BaseCRUDAction {
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			e.printStackTrace();
+			JSONUtil.optSuccess(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新活动织图加精状态
+	 * @return
+	 * @author zhangbo	2015年9月16日
+	 */
+	public String updateActivityWorldSuperb() {
+		try {
+			opService.updateActivityWorldSuperb(id, superb);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;

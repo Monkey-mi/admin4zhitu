@@ -74,5 +74,15 @@ public interface ActivityWorldDao extends BaseDao {
 	 * @throws SQLException
 	 */
 	public OpActivityWorldDto buildActivityWorldDto(ResultSet rs) throws SQLException;
+
+	/**
+	 * 根据织图标签表主键id查询对应的活动织图
+	 * 活动其实也是一个标签
+	 * 
+	 * @param id
+	 * @return
+	 * @author zhangbo	2015年9月16日
+	 */
+	public OpActivityWorldDto queryLabelActivityWorld(Integer id);
 	
 }

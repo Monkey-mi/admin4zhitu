@@ -29,7 +29,7 @@ public class ActivityWorldDaoImpl extends BaseDaoImpl implements
 	 * 查询活动织图公用头部
 	 */
 	private static final String QUERY_ACTIVITY_WORLD_HEAD = "select h.*, 1-ISNULL(aw.world_id) as iswinner, awa.id as award_id,awa.award_name,awa.icon_thumb_path from "
-			+ "(select lw0.label_id as activity_id,lw0.id as activity_world_id,lw0.world_id,lw0.valid as lw_valid,lw0.serial,lw0.weight,h0.*," + U0_INFO
+			+ "(select lw0.label_id as activity_id,lw0.id as activity_world_id,lw0.world_id,lw0.valid as lw_valid,lw0.serial,lw0.weight,lw0.superb as lw_superb,h0.*," + U0_INFO
 			+ " from " + HTS.HTWORLD_HTWORLD + " as h0," + HTS.USER_INFO + " as u0," + HTS.HTWORLD_LABEL_WORLD + " as lw0"
 			+ " where lw0.world_id=h0.id and h0.author_id=u0.id and lw0.label_id=? and h0.valid=1 and h0.shield=0";
 	
@@ -56,6 +56,8 @@ public class ActivityWorldDaoImpl extends BaseDaoImpl implements
 	private static final String QUERY_ACTIVITY_WORLD_CHECK_FOOT = " ) as aw," + HTS.HTWORLD_LABEL 
 			+ " as a," + HTS.USER_INFO + " as u where aw.label_id=a.id and aw.user_id=u.id";
 	
+	private static final String QUERY_ACTIVITY_WORLD_LABEL = "select awl.* from " + HTS.HTWORLD_LABEL_WORLD + " awl where id = ?";
+	
 	
 	@Override
 	public List<OpActivityWorldDto> queryActivityWorldDto(
@@ -78,6 +80,7 @@ public class ActivityWorldDaoImpl extends BaseDaoImpl implements
 				dto.setAwardName(rs.getString("award_name"));
 				dto.setAwardThumbPath(rs.getString("icon_thumb_path"));
 				dto.setIsWinner(rs.getObject("iswinner"));
+				dto.setSuperb(rs.getInt("lw_superb"));
 				return dto;
 			}
 			
@@ -149,6 +152,9 @@ public class ActivityWorldDaoImpl extends BaseDaoImpl implements
 		if(attrMap.get("user_name") != null){
 			builder.append(" and u0.user_name like ? ");
 		}
+		if(attrMap.get("superb") != null){
+			builder.append(" and lw0.superb=? ");
+		}
 		return builder.toString();
 	}
 	
@@ -208,9 +214,34 @@ public class ActivityWorldDaoImpl extends BaseDaoImpl implements
 				rs.getInt("activity_world_id"),
 				rs.getInt("lw_valid"),
 				rs.getInt("serial"),
-				rs.getInt("weight"));
+				rs.getInt("weight"),
+				rs.getInt("lw_superb"));
 		dto.setWorldURL(urlPrefix + dto.getShortLink());
 		return dto;
 		
+	}
+	
+	@Override
+	public OpActivityWorldDto queryLabelActivityWorld(Integer id) {
+		String sql = QUERY_ACTIVITY_WORLD_LABEL;
+		List<Object> args = new ArrayList<Object>();
+		args.add(id);
+		return getJdbcTemplate().queryForObject(sql, args.toArray(), new RowMapper<OpActivityWorldDto>() {
+
+			@Override
+			public OpActivityWorldDto mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+				OpActivityWorldDto dto = new OpActivityWorldDto();
+				dto.setActivityWorldId(rs.getInt("id"));
+				dto.setId(rs.getInt("world_id"));
+				dto.setActivityId(rs.getInt("label_id"));
+				dto.setAuthorId(rs.getInt("user_id"));
+				dto.setValid(rs.getInt("valid"));
+				dto.setWeight(rs.getInt("weight"));
+				dto.setSerial(rs.getInt("serial"));
+				dto.setSuperb(rs.getInt("superb"));
+				return dto;
+			}
+		});
 	}
 }

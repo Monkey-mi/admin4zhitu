@@ -143,6 +143,14 @@ public interface HTWorldLabelWorldDao extends BaseDao {
 	public void updateLabelWorldValid(Integer id, Integer valid);
 	
 	/**
+	 * 更新标签织图加精
+	 * 
+	 * @param id
+	 * @param superb
+	 */
+	public void updateLabelWorldSuperb(Integer id, Integer superb);
+	
+	/**
 	 * 更新标签织图序号
 	 * 
 	 * @param id

@@ -110,6 +110,12 @@ public class HTWorldLabelWorldDaoImpl extends BaseDaoImpl implements HTWorldLabe
 			+ " set valid=? where id=?";
 	
 	/**
+	 * 更新标签织图加精
+	 */
+	private static final String UPDATE_LABEL_WORLD_SUPERB_BY_ID = "update " + table
+			+ " set superb=? where id=?";
+	
+	/**
 	 * 更新标签织图序号
 	 */
 	private static final String UPDATE_LABEL_WORLD_SERIAL = "update " + table
@@ -286,6 +292,11 @@ public class HTWorldLabelWorldDaoImpl extends BaseDaoImpl implements HTWorldLabe
 	@Override
 	public void updateLabelWorldValid(Integer id, Integer valid) {
 		getMasterJdbcTemplate().update(UPDATE_LABEL_WORLD_VALID_BY_ID, new Object[]{valid,id});
+	}
+	
+	@Override
+	public void updateLabelWorldSuperb(Integer id, Integer superb) {
+		getMasterJdbcTemplate().update(UPDATE_LABEL_WORLD_SUPERB_BY_ID, new Object[]{superb,id});
 	}
 	
 	@Override

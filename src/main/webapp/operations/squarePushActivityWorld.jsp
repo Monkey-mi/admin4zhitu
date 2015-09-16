@@ -85,6 +85,24 @@ var maxId = 0,
   						 + row.authorId +"\",\"" + row.authorName +  "\",\"" + row.activityWorldId +  "\",\"" + row.activityId +"\",\"" + index + "\")' src='" + img + "'/>";
   			}
   		},
+  		{field : 'superb',title : '是否精选',align : 'center',width : 45,
+  			formatter: function(value,row,index){
+  				var superb;
+  				switch(value) {
+  				case 1:
+  					img = "./common/images/ok.png";
+  					title = "已经成为精选";
+  					superb = 0;
+  					break;
+  				default:
+  					img = "./common/images/tip.png";
+  					title = "未成为精选";
+  					superb = 1;
+  					break;
+  				}
+  				return "<img title='" +title+ "' class='htm_column_img pointer' onclick='javascript:setActivityWorldSuperb(" + row.activityWorldId + "," + superb + ")' src='" + img + "'/>";
+  			}
+  		},
   		
   		{field : 'awardName',title : '奖品',align : 'center',width : 120,
   			formatter: function(value,row,index){
@@ -400,6 +418,7 @@ function searchWorld() {
 	myQueryParams.activityId = actId;
 	myQueryParams.isWinner = isWinner;
 	myQueryParams.valid = $("#ss_valid").combobox('getValue');
+	myQueryParams.superb = $("#ss_superb").combobox('getValue');
 	$("#htm_table").datagrid("load",myQueryParams);
 	
 }
@@ -442,7 +461,7 @@ function checkWorlds(idKey, valid) {
 	var rows = $('#htm_table').datagrid('getSelections');	
 	if(isSelected(rows)){
 		$.messager.confirm('审核织图', '您确定要审核已选中的记录?', function(r){ 	
-			if(r){				
+			if(r){			
 				var ids = [];
 				for(var i=0;i<rows.length;i+=1){		
 					ids.push(rows[i][idKey]);	
@@ -466,6 +485,23 @@ function checkWorlds(idKey, valid) {
 		});		
 	}	
 }
+
+function setActivityWorldSuperb(id, superb) {
+	$.messager.confirm('对活动织图加精', '您确定要使选中的织图成为精选?', function(r){ 	
+		if(r){
+			$.post("./admin_op/op_updateActivityWorldSuperb",{
+				'id': id,
+				'superb':superb
+			},function(result){
+				if(result['result'] == 0) {
+					$("#htm_table").datagrid("reload");
+				} else {
+					$.messager.alert('提示',result['msg']);
+				}
+			});				
+		}	
+	});
+}
 </script>
 </head>
 <body>
@@ -487,6 +523,12 @@ function checkWorlds(idKey, valid) {
    			<option value="0">未生效</option>
    			<option value="1">生效</option>
    			<option value="2">拒绝</option>
+   		</select>
+   		<span class="search_label">活动精选：</span>
+   		<select id="ss_superb" class="easyui-combobox" style="width:80px;">
+   		<option value="">所有状态</option>
+   		<option value="0">未加精</option>
+   		<option value="1">加精</option>
    		</select>
    		<span class="search_label">获奖状态：</span>
 		<select id="ss_isWinner" class="easyui-combobox" style="width:80px;">

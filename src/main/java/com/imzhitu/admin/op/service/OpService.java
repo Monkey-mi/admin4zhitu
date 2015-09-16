@@ -121,7 +121,7 @@ public interface OpService extends BaseService {
 	 * @param rows
 	 * @param jsonMap
 	 */
-	public void buildActivityWorld(Integer maxId, Integer activityId, Integer valid, Integer weight, Integer worldId,Integer userId,String userName,
+	public void buildActivityWorld(Integer maxId, Integer activityId, Integer valid, Integer weight, Integer superb, Integer worldId,Integer userId,String userName,
 			Integer isWinner, int page, int rows, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
@@ -349,4 +349,13 @@ public interface OpService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateOpWorldType() throws Exception;
+
+	/**
+	 * 更新活动织图的加精状态
+	 * 
+	 * @param id		
+	 * @param superb	加精状态，1：加精，2：未加精
+	 * @author zhangbo	2015年9月16日
+	 */
+	public void updateActivityWorldSuperb(Integer id, Integer superb);
 }

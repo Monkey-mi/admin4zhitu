@@ -73,6 +73,7 @@ public class OpActivityWorldDto implements Serializable, WorldWithInteract, Obje
 	private String awardName;
 	private String awardThumbPath;
 	private Integer interacted = Tag.FALSE;
+	private Integer superb; // 是否为活动加精标记，1：加精，0：未加精
 	
 	public OpActivityWorldDto() {
 		super();
@@ -88,7 +89,7 @@ public class OpActivityWorldDto implements Serializable, WorldWithInteract, Obje
 			Double longitude, Double latitude, String locationDesc,
 			String locationAddr, Integer phoneCode, String province,
 			String city, Integer size, Integer childCount,
-			Integer activityId, Integer activityWorldId, Integer valid, Integer serial, Integer weight) {
+			Integer activityId, Integer activityWorldId, Integer valid, Integer serial, Integer weight, Integer superb) {
 		this.id = id;
 		this.shortLink = shortLink;
 		this.worldName = worldName;
@@ -124,6 +125,7 @@ public class OpActivityWorldDto implements Serializable, WorldWithInteract, Obje
 		this.valid = valid;
 		this.serial = serial;
 		this.weight = weight;
+		this.superb = superb;
 	}
 
 	public Integer getId() {
@@ -482,6 +484,14 @@ public class OpActivityWorldDto implements Serializable, WorldWithInteract, Obje
 	@Override
 	public Integer getVerifyId() {
 		return star;
+	}
+
+	public Integer getSuperb() {
+		return superb;
+	}
+
+	public void setSuperb(Integer superb) {
+		this.superb = superb;
 	}
 
 }
