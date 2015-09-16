@@ -7,7 +7,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
-import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
@@ -143,9 +142,8 @@ public class OpChannelWorldSchedulaAction extends BaseCRUDAction{
 	 */
 	public String batchChannelWorldToSortAndValidSchedula(){
 		try{
-			String[] wids = StringUtil.convertStringToStrs(request.getParameter("wids"));
-			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			service.batchChannelWorldToSortAndValidSchedula(wids, schedula,minuteTimeSpan, channelId, Tag.FALSE, Tag.TRUE, user.getId());
+			Integer[] worldIds = StringUtil.convertStringToIds(wids);
+			service.batchChannelWorldToSortAndValidSchedula(channelId, worldIds, schedula, minuteTimeSpan);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		}catch(Exception e){
 			e.printStackTrace();

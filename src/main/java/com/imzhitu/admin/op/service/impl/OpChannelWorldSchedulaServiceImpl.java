@@ -142,14 +142,13 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	/**
 	 * 批量添加
 	 */
-	public void batchChannelWorldToSortAndValidSchedula(String[] wIds, Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
-			Integer valid,Integer operatorId)throws Exception{
+	public void batchChannelWorldToSortAndValidSchedula(Integer channelId, Integer[] worldIds, Date schedula, Integer minuteTimeSpan)throws Exception{
+		// 获取当前登陆的管理员账号id
+		Integer operatorId = AdminLoginUtil.getCurrentLoginId();
 		Date now = new Date();
 		long timeSpan = minuteTimeSpan*60*1000L;
-		for(int i=0;i<wIds.length; i++){
-			String s = wIds[i];
-			if(s.equals(""))continue;
-			Integer worldId = Integer.parseInt(s);
+		for(int i=0;i<worldIds.length; i++){
+			Integer worldId = worldIds[i];
 			
 			// 查询频道织图，list查出来应该只有一个对象
 			OpChannelWorldSchedulaDto dto = new OpChannelWorldSchedulaDto();			
@@ -160,7 +159,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setModifyDate(now);
 			dto.setAddDate(now);
 			dto.setSchedulaDate(new Date(schedula.getTime()+timeSpan*i));
-			dto.setFinish(finish);
+			dto.setFinish(Tag.FALSE);
 			dto.setOperatorId(operatorId);
 			
 			if(0 == r){
@@ -193,11 +192,11 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			dto.setAddDate(now);
 			dto.setSchedulaDate(new Date(schedula.getTime() + timeSpan * i));
 			dto.setOperatorId(operatorId);
+			dto.setFinish(Tag.FALSE);
 			
 			if(0 == r){
 				channelWorldSuperbSchedulaMapper.insertChannelWorldSuperbSchedula(dto);
 			}else{
-				dto.setFinish(Tag.FALSE);
 				channelWorldSuperbSchedulaMapper.updateChannelWorldSuperbSchedula(dto);
 			}
 		}

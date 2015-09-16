@@ -47,8 +47,7 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	 * @param operator
 	 * @throws Exception
 	 */
-	public void batchChannelWorldToSortAndValidSchedula(String[] wIds,Date schedula,Integer minuteTimeSpan,Integer channelId,Integer finish,
-			Integer valid,Integer operator)throws Exception;
+	public void batchChannelWorldToSortAndValidSchedula(Integer channelId, Integer[] worldIds, Date schedula, Integer minuteTimeSpan)throws Exception;
 	
 	/**
 	 * 批量频道织图计划加精

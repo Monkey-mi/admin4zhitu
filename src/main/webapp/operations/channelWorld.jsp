@@ -374,12 +374,12 @@ function reIndexed() {
 	
 	var rows = $("#htm_table").datagrid('getSelections');
 	// 定义重新排序织图id集合
-	var wids = [];
+	var worldIds = [];
 	for(var i=0;i<rows.length;i++){
-		wids.push(rows[i].worldId);
+		worldIds.push(rows[i].worldId);
 	}
 	
-	$("#wids_indexed").val(wids);
+	$("#batch_to_valid_worldIds").val(worldIds.toString());
 	
 	// 打开添加窗口
 	$("#htm_indexed").window('open');
@@ -668,7 +668,7 @@ function batchChannelWorldToSuperbSubmit() {
 							<td colspan="2"><input type="text" name="channelId" id="channelId_indexed" /></td>
 						</tr>
 						<tr class="none">
-						<td colspan="2"><input type="text" name="wids" id="wids_indexed" /></td>
+						<td colspan="2"><input type="text" name="wids" id="batch_to_valid_worldIds" /></td>
 						</tr>
 						<tr>
 							<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
