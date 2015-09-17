@@ -298,6 +298,8 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    
 		    channelService.updateChannelWorldSuperb(schedulaDto.getChannelId(), schedulaDto.getWorldId(), Tag.TRUE);
 		    
+		    channelService.updateChannelWorldSuperbSerial(schedulaDto.getChannelId(), schedulaDto.getWorldId());
+		    
 		    // 更新精选总数, 加精和取消加精调用
 		    webCannelService.updateSuperbCount(schedulaDto.getChannelId());
 		}
