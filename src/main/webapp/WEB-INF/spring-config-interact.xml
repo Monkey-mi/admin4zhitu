@@ -275,7 +275,6 @@
   		</property>
 	</bean>
 	
-	
 	<!-- 频道织图定时更新 -->
 	<bean id="updateChannelWorldSchedulaJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -291,6 +290,24 @@
 		</property>
 		<property name="cronExpression">
   			<value>0 0/5 * * * ?</value><!-- 每半个钟执行 -->
+  		</property>
+	</bean>
+	
+	<!-- 频道织图定时打乱精选前五个顺序 -->
+	<bean id="randomChannelWorldSuperbTopJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="channelWorldSchedulaService"/>
+		</property>
+		<property name="targetMethod">
+			<value>randomChannelWorldSuperbTop</value>
+		</property>
+	</bean>
+	<bean id="randomChannelWorldSuperbTopTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="randomChannelWorldSuperbTopJob"/>
+		</property>
+		<property name="cronExpression">
+  			<value>0 0/5 * * * ?</value><!-- 每5分钟执行 -->
   		</property>
 	</bean>
 	
@@ -551,6 +568,7 @@
                 <ref bean="userRecommendCacheTrigger" /> 
                 <ref bean="likeFollowJobTrigger" />
                 <ref bean="sortChannelStarSchedulaJobTrigger" />
+                <ref bean="randomChannelWorldSuperbTopTrigger" />
             </list>
         </property>
     </bean>

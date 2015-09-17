@@ -24,8 +24,8 @@ public class OpChannelWorld extends AbstractNumberDto {
 	private Integer superb;
 	private Integer weight;
 	private Integer serial;
+	private Integer superbSerial;
 	
-
 	public Integer getSuperb() {
 		return superb;
 	}
@@ -114,7 +114,13 @@ public class OpChannelWorld extends AbstractNumberDto {
 	public void setDateAdded(Date dateAdded) {
 		this.dateAdded = dateAdded;
 	}
-	
-	
 
+	public Integer getSuperbSerial() {
+		return superbSerial;
+	}
+
+	public void setSuperbSerial(Integer superbSerial) {
+		this.superbSerial = superbSerial;
+	}
+	
 }

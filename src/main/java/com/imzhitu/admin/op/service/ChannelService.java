@@ -330,7 +330,7 @@ public interface ChannelService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateChannelWorldSuperb(Integer channelId, Integer worldId, Integer superb) throws Exception;
-
+	
 	/**
 	 * 批量添加频道织图通知消息
 	 * TODO 这个功能要从接口方法中拿下来，保留一个月，到十一放假以后撤掉，变为实现类中的private方法
@@ -432,5 +432,13 @@ public interface ChannelService extends BaseService {
 	 * @throws Exception
 	 */
 	public void searchChannel(String query, Integer maxId, Integer start, Integer limit, Map<String, Object> jsonMap) throws Exception;
+	
+	/**
+	 * 更新织图排序位Serial
+	 * 
+	 * @param superb
+	 * @throws Exception
+	 */
+	public void updateChannelWorldSuperbSerial(Integer channelId, Integer worldId) throws Exception;
 
 }

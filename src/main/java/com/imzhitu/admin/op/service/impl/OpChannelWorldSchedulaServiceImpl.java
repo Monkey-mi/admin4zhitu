@@ -1,5 +1,6 @@
 package com.imzhitu.admin.op.service.impl;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,13 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
+import com.imzhitu.admin.common.pojo.OpChannelWorld;
+import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
 import com.imzhitu.admin.common.util.AdminLoginUtil;
+import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
+import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
 import com.imzhitu.admin.op.mapper.OpChannelWorldSuperbSchedulaMapper;
 import com.imzhitu.admin.op.mapper.OpChannelWorldValidSchedulaMapper;
 import com.imzhitu.admin.op.service.ChannelService;
@@ -27,13 +33,19 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	private ChannelService channelService;
 	
 	@Autowired
+	private com.hts.web.operations.service.ChannelService webCannelService;
+	
+	@Autowired
 	private OpChannelWorldValidSchedulaMapper channelWorldValidSchedulaMapper;
 	
 	@Autowired
 	private OpChannelWorldSuperbSchedulaMapper channelWorldSuperbSchedulaMapper;
 	
 	@Autowired
-    private com.hts.web.operations.service.ChannelService webCannelService;
+	private OpChannelV2Mapper channelMapper;
+	
+	@Autowired
+	private ChannelWorldMapper channelWorldMapper;
 	
 	@Value("${urlPrefix}")
 	private String urlPrefix;
@@ -333,6 +345,40 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 				dto.setSchedulaDate(new Date(t));
 				channelWorldSuperbSchedulaMapper.updateChannelWorldSuperbSchedula(dto);
 			}
+		}
+	}
+	
+	/**
+	 * 定时随机频道织图精选前5个织图
+	 * 
+	 * @author zhangbo	2015年9月16日
+	 */
+	public void randomChannelWorldSuperbTop() {
+		OpChannelV2Dto queryDto = new OpChannelV2Dto();
+		queryDto.setValid(Tag.TRUE);
+		List<OpChannelV2Dto> channelList = channelMapper.queryOpChannel(queryDto);
+		for (OpChannelV2Dto channelDto : channelList) {
+			// 获取频道加精织图的最新5个
+			OpChannelWorld queryChannelWorldDto = new OpChannelWorld();
+			queryChannelWorldDto.setChannelId(channelDto.getChannelId());
+			queryChannelWorldDto.setValid(Tag.TRUE);
+			queryChannelWorldDto.setSuperb(Tag.TRUE);
+			queryChannelWorldDto.setFirstRow(0);
+			queryChannelWorldDto.setLimit(5);
+			List<OpChannelWorldDto> channelWorldSuperbTop5List = channelWorldMapper.queryChannelWorlds(queryChannelWorldDto);
+			
+			// 随机打乱频道加精织图前5个集合
+			Collections.shuffle(channelWorldSuperbTop5List);
+			
+			for (OpChannelWorldDto channelWorldSuperb : channelWorldSuperbTop5List) {
+				// 刷新频道织图的精选排序，即superb_serial，因为已经乱序了，所以就直接刷新就可以
+			    try {
+					channelService.updateChannelWorldSuperbSerial(channelWorldSuperb.getChannelId(), channelWorldSuperb.getWorldId());
+				} catch (Exception e) {
+					logger.error("刷新频道织图精选排序，superb_serial失败", e);
+				}
+			}
+			
 		}
 	}
 

@@ -258,4 +258,22 @@
 		where channel_id=#{channelId} and world_id=#{worldId};
 	</update>
 	
+	<!-- 更新排序字段 -->
+	<update id="updateSuperbSerial">
+		update 
+			hts.operations_channel_world 
+		set 
+			superb_serial=#{superbSerial} 
+		where 
+			<if test="channelId != null and worldId != null">
+					channel_id = #{channelId}
+					and world_id = #{worldId}
+			</if>
+			<trim prefix="" prefixOverrides="AND |OR ">
+				<if test="id != null">
+					and id = #{id}
+				</if>
+			</trim>
+	</update>
+	
 </mapper>

@@ -917,4 +917,15 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		}
 	}
 	
+	@Override
+	public void updateChannelWorldSuperbSerial(Integer channelId, Integer worldId) throws Exception {
+		Integer newSuperbSerial = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_SUPERB_SERIAL);
+		OpChannelWorld world = new OpChannelWorld();
+		world.setWorldId(worldId);
+		world.setChannelId(channelId);
+		world.setSuperbSerial(newSuperbSerial);
+		channelWorldMapper.updateSuperbSerial(world);
+		
+	}
+	
 }

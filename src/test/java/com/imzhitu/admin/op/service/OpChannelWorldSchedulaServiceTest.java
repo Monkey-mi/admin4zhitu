@@ -9,11 +9,15 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.imzhitu.admin.base.BaseTest;
+import com.imzhitu.admin.op.service.impl.OpChannelWorldSchedulaServiceImpl;
 
 public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	@Autowired
 	private OpChannelWorldSchedulaService service;
 	private Logger logger = Logger.getLogger(OpChannelWorldSchedulaServiceTest.class);
+	
+	@Autowired
+	private OpChannelWorldSchedulaServiceImpl serviceImpl;
 	
 	@Test
 	public void queryChannelWorldSchedulaForListTest()throws Exception{
@@ -30,6 +34,11 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	@Test
 	public void channelWorldSchedulaTest()throws Exception{
 		service.channelWorldSchedula();
+	}
+	
+	@Test
+	public void randomChannelWorldSuperbTopTest()throws Exception{
+		serviceImpl.randomChannelWorldSuperbTop();
 	}
 
 }
