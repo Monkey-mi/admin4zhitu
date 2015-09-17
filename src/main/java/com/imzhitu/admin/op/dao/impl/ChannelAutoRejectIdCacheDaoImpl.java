@@ -1,5 +1,7 @@
 package com.imzhitu.admin.op.dao.impl;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.constant.CacheKeies;
@@ -20,4 +22,9 @@ public class ChannelAutoRejectIdCacheDaoImpl extends BaseCacheDaoImpl<Integer>
 		getRedisTemplate().boundSetOps(CacheKeies.OP_CHANNEL_AUTO_REJECT_ID).remove(channelId);
 	}
 
+	@Override
+	public Set<Integer> getAutoRejectChannelCache() {
+		return getRedisTemplate().boundSetOps(CacheKeies.OP_CHANNEL_AUTO_REJECT_ID).members();
+	}
+	
 }

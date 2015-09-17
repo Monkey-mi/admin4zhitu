@@ -1,5 +1,7 @@
 package com.imzhitu.admin.op.dao;
 
+import java.util.Set;
+
 import com.hts.web.common.dao.BaseCacheDao;
 
 /**
@@ -26,4 +28,14 @@ public interface ChannelAutoRejectIdCacheDao extends BaseCacheDao {
 	 * 
 	 */
 	public void deleteId(Integer channelId);
+	
+	/**
+	 * 获取用户发图到频道中不生效的频道id集合
+	 * 
+	 * @return
+	 * @author zhangbo	2015年9月17日
+	 */
+	public Set<Integer> getAutoRejectChannelCache();
+	
+	
 }

@@ -35,6 +35,7 @@ import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
+import com.imzhitu.admin.op.dao.ChannelAutoRejectIdCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneTitleCacheDao;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
@@ -60,13 +61,22 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	private static final long CHANNEL_TOP_ONE_UPDATE_TIME_SPAN_MS = 3 * 24 * 60 * 60 * 1000;
 
 	/**
-	 * 织图被选入频道通知发送时间间隔，单位ms
+	 * 织图被选入普通频道（往频道中发图直接生效的为普通频道）通知发送时间间隔，单位ms
 	 * 间隔：一周
 	 * 含义：一周内用户的织图被选入频道只提示一次
 	 * 
 	 * @author zhangbo	2015年9月7日
 	 */
-	private static final long CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS = 7 * 24 * 60 * 60 * 1000;
+	private static final long NORMAL_CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS = 7 * 24 * 60 * 60 * 1000;
+	
+	/**
+	 * 织图被选入拒绝频道（往频道中发图需要小编审核后生效的为拒绝频道）通知发送时间间隔，单位ms
+	 * 间隔：二周
+	 * 含义：二周内用户的织图被选入频道只提示一次
+	 * 
+	 * @author zhangbo	2015年9月17日
+	 */
+	private static final long REJECT_CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS = 2 * 7 * 24 * 60 * 60 * 1000;
 
 	@Value("${admin.op.channelStarLimit}")
 	private Integer channelStarLimit;
@@ -115,6 +125,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 
 	@Autowired
 	private OpMsgService msgService;
+	
+	@Autowired
+	private ChannelAutoRejectIdCacheDao rejectChannelCacheDao;
 
 	private Integer channelCoverLimit = 5;
 
@@ -827,13 +840,22 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		} else {
 			long now = new Date().getTime();
 			long last = msgObject.getMsgDate().getTime();
-			// 相隔时间大于一周的，可以发送消息
-			if (last - now >= CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS) {
-				msgService.sendChannelSystemNotice(world.getAuthorId(), Admin.NOTICE_WORLD_INTO_CHANNEL, world.getChannelId(), world.getWorldId());
+			
+			// 若织图所在频道为拒绝频道（往频道中发图需要小编审核后生效的为拒绝频道），则要判断发送通知的时间间隔是否大于两周，其他频道则判断是否大于一周
+			if ( rejectChannelCacheDao.getAutoRejectChannelCache().contains(world.getChannelId()) ) {
+				// 相隔时间大于二周的，可以发送消息
+				if (last - now >= REJECT_CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS) {
+					msgService.sendChannelSystemNotice(world.getAuthorId(), Admin.NOTICE_WORLD_INTO_CHANNEL, world.getChannelId(), world.getWorldId());
+				}
+			} else {
+				// 相隔时间大于一周的，可以发送消息
+				if (last - now >= NORMAL_CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS) {
+					msgService.sendChannelSystemNotice(world.getAuthorId(), Admin.NOTICE_WORLD_INTO_CHANNEL, world.getChannelId(), world.getWorldId());
+				}
 			}
 		}
 	}
-
+	
 	/**
 	 * 构建插入top one榜所需的dto
 	 * @param userId
@@ -897,6 +919,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		// TODO 这块也要一起整改，统一频道更新接口 zhangbo 2015-09-09
 		if ( valid == 1) {
 			OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId, channelId);
+			
 			addChannelWorldNoticeMsg(world.getId());
 		}
 	}
