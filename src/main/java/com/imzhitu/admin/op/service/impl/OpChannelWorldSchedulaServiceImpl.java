@@ -214,17 +214,20 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		}
 	}
 	
-	@Override
-	public void channelWorldSchedula()throws Exception{
+	public void channelWorldSchedula() {
 		Date begin = new Date();
 		logger.info("频道织图计划开始。开始时间：" + begin.toString());
 		
 		Date endTime = new Date();
 		Date beginTime = new Date(endTime.getTime() - workingTime);
 		
-		channelWorldValidSchedula(beginTime, endTime);
-		
-		channelWorldSuperbSchedula(beginTime, endTime);
+		try {
+			channelWorldValidSchedula(beginTime, endTime);
+			
+			channelWorldSuperbSchedula(beginTime, endTime);
+		} catch (Exception e) {
+			logger.error("execute the ChannelWorld Valid Or Superb Schedule fail", e);
+		}
 		
 		Date end = new Date();
 		logger.info("频道织图计划结束。结束时间：" + end.toString() + ". 花费: " + (end.getTime() - begin.getTime()) + "ms.");
@@ -380,7 +383,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 					logger.error("刷新频道织图精选排序，superb_serial失败", e);
 				}
 			}
-			
 		}
 	}
 

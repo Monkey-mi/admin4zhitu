@@ -61,12 +61,6 @@ public interface OpChannelWorldSchedulaService extends BaseService{
 	public void batchChannelWorldToSuperbSchedula(Integer channelId, Integer[] worldIds, Date schedula, Integer minuteTimeSpan);
 	
 	/**
-	 * 更新计划
-	 * @throws Exception
-	 */
-	public void channelWorldSchedula()throws Exception;
-	
-	/**
 	 * 重新排序频道有效性计划
 	 * @param wIds
 	 * @param schedula

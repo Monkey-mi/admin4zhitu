@@ -33,7 +33,7 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 	
 	@Test
 	public void channelWorldSchedulaTest()throws Exception{
-		service.channelWorldSchedula();
+		serviceImpl.channelWorldSchedula();
 	}
 	
 	@Test
