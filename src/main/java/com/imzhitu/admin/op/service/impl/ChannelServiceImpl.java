@@ -914,7 +914,12 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	@Override
 	public void updateChannelWorldValid(Integer channelId, Integer worldId, Integer valid) throws Exception {
 		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
+		logger.info("channelId>>" + channelId);
+		logger.info("WorldId>>" + worldId);
+		logger.info("valid>>" + valid);
+		logger.info("serial>>" + serial);
 		channelWorldMapper.updateValidAndSerialByWID(channelId, worldId, valid, serial);
+		logger.info("channelWorldMapper.updateValidAndSerialByWID Success!");
 		webChannelService.updateWorldAndChildCount(channelId);
 		// TODO 这块也要一起整改，统一频道更新接口 zhangbo 2015-09-09
 		if ( valid == 1) {

@@ -216,7 +216,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	
 	public void channelWorldSchedula() {
 		Date begin = new Date();
-		logger.info("频道织图计划开始。开始时间：" + begin.toString());
+		logger.info("channelWorld Schedula Begin:" + begin.toString());
 		
 		Date endTime = new Date();
 		Date beginTime = new Date(endTime.getTime() - workingTime);
@@ -230,7 +230,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		}
 		
 		Date end = new Date();
-		logger.info("频道织图计划结束。结束时间：" + end.toString() + ". 花费: " + (end.getTime() - begin.getTime()) + "ms.");
+		logger.info("channelWorld Schedula End:" + end.toString() + ". Cost: " + (end.getTime() - begin.getTime()) + "ms.");
 	}
 	
 	/**
@@ -250,7 +250,8 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		List<OpChannelWorldSchedulaDto> list = channelWorldValidSchedulaMapper.queryChannelWorldValidSchedulaForList(queryDto);
 		
 		for (OpChannelWorldSchedulaDto schedulaDto : list) {
-		    
+			logger.info("channelId>>" + schedulaDto.getChannelId());
+			logger.info("WorldId>>" + schedulaDto.getWorldId());
 		    /*
 		     * 优先执行调度表的刷新，若下列更新频道表失败，则人为操作，重新设置有效性与加精
 		     * 因为考虑到若频道表刷新执行失败，那么调度表不会被置为成功，每次都会执行，会加大服务器压力
@@ -262,6 +263,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    channelWorldValidSchedulaMapper.updateChannelWorldValidSchedula(updateSchedulaDto);
 		    
 		    channelService.updateChannelWorldValid(schedulaDto.getChannelId(), schedulaDto.getWorldId(), Tag.TRUE);
+		    logger.info("channelService.updateChannelWorldValid is Success!!!");
 		    
 		    // 刷新频道织图的serial，让10:50的织图排在最新，即serial最大
 		    channelService.addChannelWorldId(schedulaDto.getChannelId(), schedulaDto.getWorldId());
@@ -380,7 +382,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 			    try {
 					channelService.updateChannelWorldSuperbSerial(channelWorldSuperb.getChannelId(), channelWorldSuperb.getWorldId());
 				} catch (Exception e) {
-					logger.error("刷新频道织图精选排序，superb_serial失败", e);
+					logger.error("Refresh ChannelWorld Superb Serial as superb_serial Fail:", e);
 				}
 			}
 		}
