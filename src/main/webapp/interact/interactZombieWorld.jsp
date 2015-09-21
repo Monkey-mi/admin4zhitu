@@ -47,7 +47,7 @@
 	columnsFields = [
 		{field : 'ck',checkbox : true },
 		{field : 'id',title : 'ID',align : 'center'},
-		{field : 'authorId',title : '马甲ID',align : 'center'},
+		{field : 'authorId',title : '马甲ID',align : 'center',editor:'text'},
 		{field : 'thumbTitlePath',title : '缩略图',align : 'center',
 			formatter: function(value,row,index){
 				var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png');
@@ -136,6 +136,17 @@
 							$('#htm_table').datagrid('rejectChanges');
 						}
 					});
+				} else if (changes.authorId) {
+					var requestData = {
+							'id':row.id,
+							'authorId':row.authorId
+							};
+						$.post('./admin_interact/interactZombieWorld_updateZombieWorld', requestData, function(data){
+							if (data.result == -1) {
+								$.messager.alert("提示","第" + (index+1) + "行，" + data.msg);
+								$('#htm_table').datagrid('rejectChanges');
+							}
+						});
 				} else {
 					$('#htm_table').datagrid('rejectChanges');
 				}

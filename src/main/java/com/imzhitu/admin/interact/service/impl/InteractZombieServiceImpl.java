@@ -43,7 +43,6 @@ import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.ZombieChildWorld;
 import com.imzhitu.admin.common.pojo.ZombieWorld;
 import com.imzhitu.admin.common.service.KeyGenService;
-import com.imzhitu.admin.interact.dao.InteractWorldlevelDao;
 import com.imzhitu.admin.interact.mapper.InteractZombieChildWorldMapper;
 import com.imzhitu.admin.interact.mapper.InteractZombieImgMapper;
 import com.imzhitu.admin.interact.mapper.InteractZombieWorldMapper;
@@ -111,9 +110,6 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	
 	@Autowired
 	com.imzhitu.admin.interact.service.impl.InteractWorldServiceImpl interactWorldServiceImpl;
-	
-	@Autowired
-	private InteractWorldlevelDao interactWorldlevelDao;
 	
 	private Logger log = Logger.getLogger(InteractZombieServiceImpl.class);
 
@@ -660,11 +656,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	}
 
 	@Override
-	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId) {
+	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId, Integer authorId) {
 		ZombieWorld dto = new ZombieWorld();
 		dto.setId(id);
 		dto.setWorldDesc(worldDesc);
 		dto.setChannelId(channelId);
+		dto.setAuthorId(authorId);
 		dto.setModifyDate(new Date());
 		zombieWorldMapper.updateZombieWorld(dto);
 
@@ -750,7 +747,6 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	public void addCommentsFile(File commentsFile, Integer zombieWorldId) throws Exception {
 		//默认的评论加入的标签           5为其他旧的ID
 		Integer labelId  = 5;
-		List<Integer> list = new ArrayList<Integer>();
 		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
 		detector.add(new ParsingDetector(false)); 
 		detector.add(JChardetFacade.getInstance());

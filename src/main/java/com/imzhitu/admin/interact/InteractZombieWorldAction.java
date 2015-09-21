@@ -158,7 +158,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
      */
     public String updateZombieWorld() {
 	try {
-	    service.updateZombieWorld(id, worldDesc, channelId);
+	    service.updateZombieWorld(id, worldDesc, channelId, authorId);
 	    JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
