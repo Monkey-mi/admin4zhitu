@@ -12,7 +12,6 @@ public class OsPushServiceTest extends BaseTest {
 	
 	@Test
 	public void pushUpdateTest() throws InterruptedException {
-		service.pushUpdate();
-		Thread.sleep(3000);
+//		service.pushUpdate();
 	}
 }
