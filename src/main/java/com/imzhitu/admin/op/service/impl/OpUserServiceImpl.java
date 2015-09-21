@@ -87,6 +87,9 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	@Autowired
 	private com.hts.web.operations.dao.SysMsgDao webSysMsgDao;
 	
+	@Autowired
+	private com.hts.web.aliyun.service.OsUserInfoService webOsUserInfoService;
+	
 	/**
 	 * 达人邀请缩略图链接
 	 */
@@ -202,7 +205,7 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	
 	@Override
 	public Integer saveRecommendUser(Integer userId, Integer verifyId, 
-			String recommendDesc, Integer recommenderId) {
+			String recommendDesc, Integer recommenderId) throws Exception {
 		OpUserRecommend recommend = webUserRecommendDao.queryRecommendUserByUID(userId);
 		com.imzhitu.admin.common.pojo.UserInfo userInfo = new com.imzhitu.admin.common.pojo.UserInfo();
 		userInfo.setId(userId);
@@ -221,6 +224,7 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 			webUserRecommendDao.saveRecommendUser(new OpUserRecommend(id, userId, verifyId, recommendDesc,
 					recommenderId, date, date, userAccept, UserOperationsServiceImpl.USER_RECOMMEND_PENDING));
 			userInfoMapper.updateByIdSelective(userInfo);
+			webOsUserInfoService.updateUserWithoutNULL(userId, null, null, null, null, verifyId, null); // 更新opensearch明星标记
 			return id;
 		}
 		return recommend.getId();
