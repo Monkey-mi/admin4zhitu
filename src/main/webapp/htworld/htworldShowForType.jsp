@@ -28,13 +28,14 @@
 	superbFlag = <%= superbFlag %>,
 	lastestFlag = <%= lastestFlag %>,
 	trustFlag  = <%= trustFlag  %>,
-	worldLabel = "<%=new String(request.getParameter("worldLabel").getBytes("iso8859-1"),"utf-8")%>",
 	expertBtnFlag=2,
 	loadDateUrl="./admin_interact/comment_queryCommentListByLabel",
 	commentQueryParams = {},
 	tableInit = function() {
 		tableLoadDate(1);
 	};
+	var worldLabel = "<%=new String(request.getParameter("worldLabel").getBytes("iso8859-1"),"utf-8")%>";
+	worldLabel = worldLabel.replace(";;qqq;;","'");
 	
 	function tableLoadDate(pageNum){
 		$("#comments_interact_table").datagrid(
