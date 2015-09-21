@@ -86,6 +86,16 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	@Autowired
 	private com.hts.web.operations.dao.SysMsgDao webSysMsgDao;
 	
+	/**
+	 * 达人邀请缩略图链接
+	 */
+	private static final String SYS_INVITE_THUMB = "http://imzhitu.qiniudn.com/op/notice/sysinvite.png";
+	
+	/**
+	 * 达人邀请通知
+	 */
+	private static final String SYS_INVITE_MSG = "您收到一封神秘的信，点击查看>>";
+	
 	@Override
 	public void buildRecommendUser(Integer maxId, int page, int rows,
 			Integer userAccept, Integer sysAccept, Integer notified,Integer weight,
@@ -322,28 +332,34 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	public void addRecommendUserMsg(final Integer id, Integer recipientId, 
 			String recipientName, String msg, String recommendType, Integer userAccept, Boolean accepted) throws Exception {
 		
+		String fullMsg;
+		UserPushInfo userPushInfo; 
+		
+		userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
+		
+		if(userPushInfo.getVer() >= Tag.VERSION_3_0) {
+			fullMsg = recipientName + "，" + SYS_INVITE_MSG;
+		} else {
+			fullMsg = recipientName + "，" + msg;
+		}
+		
 		Integer notified = userRecommendDao.queryNotified(id);
 		if(notified == null || notified.equals(0)) {
 			notified = 0;
 			// +1为了避免null值客户端解析为0
 			Integer objMeta = UserOperationsServiceImpl.USER_RECOMMEND_PENDING + 1;
-			Integer weight = 1;
 			if(!accepted) {
-				weight = 0;
 				objMeta = UserOperationsServiceImpl.USER_RECOMMEND_REJECT + 1;
 			} else if(userAccept.equals(UserOperationsServiceImpl.USER_RECOMMEND_ACCEPT)) {
-				weight = 0;
 				objMeta = UserOperationsServiceImpl.USER_RECOMMEND_ACCEPT + 1;
 			}
 			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
-					msg, Tag.USER_MSG_USER_RECOMMEND, recipientId, String.valueOf(objMeta), recommendType, null, 0);
+					fullMsg, Tag.USER_MSG_USER_RECOMMEND, recipientId, String.valueOf(objMeta), recommendType,
+					SYS_INVITE_THUMB, 0);
 		}
 		userRecommendDao.updateNotified(id, ++notified);
 		
-		String tip = recipientName + "," + msg;
-//		String shortTip = PushUtil.getShortName(recipientName) + "," + PushUtil.getShortTip(msg);
-		UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
-		pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_USER_RECOMMEND, new PushFailedCallback() {
+		pushService.pushSysMessage(fullMsg, Admin.ZHITU_UID, fullMsg, userPushInfo, Tag.USER_MSG_USER_RECOMMEND, new PushFailedCallback() {
 
 			@Override
 			public void onPushFailed(Exception e) {

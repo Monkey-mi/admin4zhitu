@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.constant.PlatFormCode;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
@@ -70,8 +71,8 @@ public class UserAction extends BaseCRUDAction {
 	 */
 	public String checkLoginCodeExists() {
 		try {
-			boolean isExists = webUserInfoService.checkLoginCodeExists(loginCode);
-			if(isExists) {
+			Integer isExists = webUserInfoService.checkLoginCodeExists(loginCode, PlatFormCode.ZHITU);
+			if(isExists == Tag.TRUE) {
 				JSONUtil.optResult(Tag.EXIST, UserInfoServiceImpl.TIP_LOGIN_CODE_EXIST, jsonMap);
 			} else {
 				JSONUtil.optResult(Tag.NOT_EXIST, UserInfoServiceImpl.TIP_LOGIN_CODE_NOT_EXIST, jsonMap);
