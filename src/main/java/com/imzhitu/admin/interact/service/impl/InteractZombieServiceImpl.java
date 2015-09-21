@@ -645,7 +645,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 				channelLevel.setChannelId(zw.getChannelId());
 				List<InteractChannelLevel> list = interactChannelLevelMapper.queryChannelLevel(channelLevel); 
 				Integer id = list.get(0).getId();*/
-				saveAutoComments(zombieWorldId, worldId, id);
+				saveAutoComments(zombieWorldId, worldId, id, zw.getAuthorId());
 			}
 		}
 	}
@@ -795,9 +795,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		*	mishengliang	
 	 * @throws Exception 
 	 */
-	public void saveAutoComments(Integer zombieWorldId,Integer worldId,Integer id) throws Exception{
+	public void saveAutoComments(Integer zombieWorldId,Integer worldId,Integer id, Integer userId) throws Exception{
 		List<Integer> commentsId = interactAutoResponseMapper.queryZombieCommentId(zombieWorldId);
-		Integer userId = interactWorldlevelDao.QueryUIDByWID(worldId);
+		/*
+		 * 获取userId改为传递
+		 * Integer userId = interactWorldlevelDao.QueryUIDByWID(worldId);
+		 */
 		Integer clickCount = 6;
 		Integer likedCount = 6;
 		Integer minuteDuration = 120;
