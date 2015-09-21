@@ -25,6 +25,7 @@ import com.hts.web.common.pojo.UserInfo;
 import com.hts.web.common.pojo.UserPushInfo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
+import com.hts.web.common.util.Log;
 import com.hts.web.common.util.MD5Encrypt;
 import com.hts.web.common.util.NumberUtil;
 import com.hts.web.common.util.PushUtil;

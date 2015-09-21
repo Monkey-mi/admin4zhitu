@@ -75,7 +75,6 @@ public class OpUserAction extends BaseCRUDAction {
 	/*
 	 *******用户推荐模块******
 	 */
-	
 	public String updateUserRecommendCache(){
 		try{
 			opUserRecommendCacheService.updateUserRecommendCache();
