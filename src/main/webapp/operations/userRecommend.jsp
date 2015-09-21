@@ -14,14 +14,14 @@
 <script type="text/javascript">
 var maxId = 0,
 	notifyIndex = 0,
-	acceptTipHead = '恭喜!您被推荐为',
-	acceptTipFoot = '了!',
-	passTipHead = '恭喜!您被推荐为',
-	passTipFoot = '，赶快到广场查看吧!',
+	acceptTipHead = '恭喜！您被推荐为',
+	acceptTipFoot = '了！',
+	passTipHead = '恭喜！您被推荐为',
+	passTipFoot = '，赶快到广场查看吧！',
 	rejectTipHead = '抱歉,您还未满足',
 	rejectTipFoot = '条件,小织暂时还不能通过您的申请',
-	batchAcceptTip = "您确定要通过已选中的用户吗?",
-	batchRejectTip = "您确定要拒绝以选中的用户吗?",
+	batchAcceptTip = "您确定要通过已选中的用户吗？",
+	batchRejectTip = "您确定要拒绝以选中的用户吗？",
 	init = function() {
 		myQueryParams = {
 			'maxId' : maxId
