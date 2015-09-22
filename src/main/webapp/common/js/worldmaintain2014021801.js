@@ -824,11 +824,16 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 					wurl = row['worldURL'];
 				}
 				
+				var wLabel = row['worldLabel'];
+				if (row['worldLabel'].indexOf("'") > 0 ) {
+					wLabel = wLabel.replace("'",";;qqq;;");
+				}
+				
 				return "<a title='添加互动' class='updateInfo' href='javascript:showWorldAndInteract(\"" 
 				+ showWorldAndInteractPage + "?worldId=" + value + "&userId=" + row['authorId'] 
 				+ "&index=" + index
 				+ "&superbFlag=" +superbFlag + "&trustFlag=" + trustFlag 
-				+ "&lastestFlag=" + latestFlag + "&worldLabel=" + row['worldLabel'] + "&shortLink=" + wurl + "\")'>"+value+"</a>";
+				+ "&lastestFlag=" + latestFlag + "&worldLabel=" + wLabel + "&shortLink=" + wurl + "\")'>"+value+"</a>";
 			},
 			styler:function(value,row,index){
 				if(row.typeInteracted == 1){
