@@ -57,4 +57,10 @@ public class InteractWorldlevelServiceTest extends BaseTest{
 		}while(l<mi);
 		logger.info("======================================>l is "+l);
 	}
+	
+	@Test
+	public void testAddTypeWorldInteract() throws Exception{
+		service.AddTypeWorldInteract(11956,62,"");
+	}
+	
 }

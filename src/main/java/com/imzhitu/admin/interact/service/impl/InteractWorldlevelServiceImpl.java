@@ -174,18 +174,18 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 		if(worldId == null || worldId == 0){//若织图id为空，则什么都不做
 			throw new Exception("AddLevelWorld:world_id is null");
 		}
-		if(worldLevelId == null || worldLevelId == 0){//若织图id为空，则什么都不做
+		if(worldLevelId == null || worldLevelId == 0){//若织图等级id为空，则什么都不做
 			throw new Exception("AddLevelWorld:worldLevelId is null");
 		}
 		
 		ZTWorldLevelDto worldLevel = interactWorldlevelDao.QueryWorldlevelById(worldLevelId);
 		if(worldLevel != null){
-			if(commentStr != null && !"".equals(commentStr.trim())){//有评论
+//			if(commentStr != null && !"".equals(commentStr.trim())){//有评论
 				String[] commentIds = commentStr.split(",");
 				Integer likeCount = worldLevel.getMax_liked_count() + worldLevel.getMin_liked_count() / 2;
 				Integer playCount = worldLevel.getMax_play_times() + worldLevel.getMin_play_times() / 2;
 				interactWorldService.saveInteractV3(worldId, playCount, likeCount, commentIds, worldLevel.getTime());
-			}
+//			}
 			
 			Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
 			interactWorldService.saveUserInteract(uid, GetLongRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),worldLevel.getTime());			
