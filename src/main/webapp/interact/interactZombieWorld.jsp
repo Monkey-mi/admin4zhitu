@@ -12,6 +12,7 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery.form.min.js"></script>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=ce70d50e8ce9f0cc3ce59b9c1f30794e"></script>
 <script type="text/javascript">
 	var maxId = 0;
 	var worldURLPrefix = 'http://www.imzhitu.com/DT';
@@ -104,8 +105,19 @@
 				img = "./common/images/edit_add.png";
 				return "<img title='" + title + "' class='htm_column_img pointer' onclick='addComments("+ row.id +")' src='" + img + "'/>";
 			} 
-		} 
-		
+		},
+		{
+			field : 'opt',
+			title : '操作',
+			align : 'center',
+ 			formatter : function(value, row, index) {
+ 				if (row.complete == 1) {
+ 					return "";
+ 				} else {
+ 					return "<img title='" + title + "' class='htm_column_img' onclick='openPlaceSearchWin("+ row.id +")' src='./common/images/edit_add.png'/>";
+ 				}
+			} 
+		}
 	];
 	onAfterInit = function() {
 		$('#htm_table').datagrid({
@@ -249,6 +261,29 @@
 			collapsible : false,
 			iconCls : 'icon-add',
 			resizable : false,
+		});
+		
+		$("#place_search_win").window({
+			title : '地理位置搜索',
+			modal : true,
+			width : 650,
+			height : 250,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-add',
+			resizable : false,
+			onClose : function(){
+				$("#place_search_form").form("reset");
+			}
+		});
+		
+		$('#place_search_combobox').combobox({
+		    valueField:'id',
+		    textField:'text',
+		    data:[]
 		});
 		
 	};
@@ -444,6 +479,107 @@
 		});
 	}
 	
+	/**
+	 * 打开地理位置搜索设置窗口
+	 */
+	function openPlaceSearchWin(zombieWorldId) {
+		$('#place_search_win').window('open');
+		$('#place_search_zombieWorldId').val(zombieWorldId)
+	}
+	
+	/**
+	 * 根据城市与关键字查询地理位置
+	 */
+	function searchPlace() {
+		// 查询清空
+		$('#place_search_combobox').combobox("clear");
+		$('#place_search_combobox').combobox("clear");
+		
+		var city = $('#place_search_city_text').val();
+		var keyword = $('#place_search_keyWord_text').val();
+		
+		// 如果城市信息不为空，则把查询按钮设置为不可用
+		if ( city != "" ) {
+			$('#place_search_set_city_btn').linkbutton("disable");
+		} else {
+			$('#place_search_set_city_btn').linkbutton("enable");
+		}
+		
+		AMap.service('AMap.PlaceSearch',function(){//回调函数
+	        //实例化PlaceSearch
+	        placeSearch= new AMap.PlaceSearch();
+	    });
+		var map = new AMap.Map('container');
+		var placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+		    pageSize: 20,
+		    pageIndex: 1,
+		    city: city, //城市
+		    map: map
+		});
+		
+		//关键字查询
+		placeSearch.search(keyword, function(status, result) {
+			var data = [];
+			var cityList = result.cityList;
+			if (cityList != undefined) {
+				for (var i=0; i<cityList.length; i++) {
+					var item = {};
+					item.id = cityList[i].citycode;
+					item.text = cityList[i].name + ", 结果：" + cityList[i].count;
+					data.push(item);
+				}
+				$('#place_search_combobox').combobox("loadData", data);
+				// 默认选择第一个
+				$('#place_search_combobox').combobox("select", cityList[0].citycode);
+			} else {
+				var list = result.poiList.pois
+				for (var i=0; i<list.length; i++) {
+					var item = {};
+					item.id = list[i].name + "," + list[i].address + "," + list[i].location.lng + "," + list[i].location.lat + "," + list[i].cityname + "," + list[i].pname;
+					item.text = list[i].name + "," + list[i].address + "," + list[i].cityname + "," + list[i].pname;
+					data.push(item);
+				}
+				$('#place_search_combobox').combobox("loadData", data);
+				// 默认选择第一个
+				$('#place_search_combobox').combobox("select", list[0].name + "," + list[0].address + "," + list[0].location.lng + "," + list[0].location.lat + "," + list[0].cityname + "," + list[0].pname);
+			}
+		});
+	};
+	
+	/**
+	 * 设置城市
+	 */
+	function setCity() {
+		$('#place_search_city_text').val($('#place_search_combobox').combobox("getValue"));
+	}
+	
+	/**
+	 * 提交地理位置信息到后台，存入马甲织图地理信息中
+	 */
+	function addAddress() {
+		// 根据逗号分隔地理位置信息
+		var addressInfo = $('#place_search_combobox').combobox("getValue").split(",");
+		
+		// 设置返回后台参数
+		var params = {};
+		params.id = $('#place_search_zombieWorldId').val();
+		params.locationDesc = addressInfo[0];
+		params.locationAddr = addressInfo[1];
+		params.longitude = addressInfo[2];
+		params.latitude = addressInfo[3];
+		params.city = addressInfo[4];
+		params.province = addressInfo[5];
+		
+		$.post("./admin_interact/interactZombieWorld_updateZombieWorldAddressinfo", params, function(result){
+			if(result['result'] == 0) {
+				$("#htm_table").datagrid("reload");
+			} else {
+				$.messager.alert('提示',result['msg']);
+			}
+			
+		});
+	}
+	
 </script>
 
 </head>
@@ -536,35 +672,79 @@
 		</form>
 	</div>
 	
-  		<div id='addComment'>
-			<form id='addCommentsFile' action="./admin_interact/interactZombieWorld_addCommentsFile" method='post'>
-			<table class="htm_edit_table" width="340">
-			<tbody>
-			<tr>
-				<td style='height:100'>
-				马甲织图ID：<input type="text" id="zombieWorldId" name='zombieWorldId' readonly="readonly">
-				</td>
+	<div id='addComment'>
+		<form id='addCommentsFile' action="./admin_interact/interactZombieWorld_addCommentsFile" method='post'>
+		<table class="htm_edit_table" width="340">
+		<tbody>
+		<tr>
+			<td style='height:100'>
+			马甲织图ID：<input type="text" id="zombieWorldId" name='zombieWorldId' readonly="readonly">
+			</td>
 			</tr>
 <!-- 			<tr>
 				<td>织图等级&nbsp;&nbsp;&nbsp;: <input style="width:120px" class="easyui-combobox" id="levelId" name="id"  onchange="validateSubmitOnce=true;" 
-					data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel'"/></td>
-			</tr> -->
-			<tr>
-				<td style='height:100' >
-				<input id='commentsFile' type="file" name='commentsFile' >
-				</td>
-			</tr>
-			<tr>
-						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 20px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addComment();">确定</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#addComment').window('close');">取消</a>
-						</td>
-			</tr>
-			</tbody>
+				data-options="valueField:'id',textField:'level_description',url:'./admin_interact/worldlevel_QueryoWorldLevel'"/></td>
+		</tr> -->
+		<tr>
+			<td style='height:100' >
+			<input id='commentsFile' type="file" name='commentsFile' >
+			</td>
+		</tr>
+		<tr>
+					<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 20px;">
+						<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addComment();">确定</a>
+						<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#addComment').window('close');">取消</a>
+					</td>
+		</tr>
+		</tbody>
+		</table>
+		</form>
+	</div>
+	
+	<div id="container" style="hidden:true"></div> 
+	
+	<div id="place_search_win">
+		<form id="place_search_form" method="post">
+			<span style="display:inline-block;height:15px;width:100px;padding:15px 5px 10px 20px">请输入地理位置：</span>
+			<table class="htm_edit_table">
+				<tr>
+					<td>城市：</td>
+					<td>
+						<input type="text" id="place_search_city_text"></input>
+					</td>
+					<td>关键字：</td>
+					<td>
+						<input type="text" id="place_search_keyWord_text"></input>
+					</td>
+					<td>
+						<a class="easyui-linkbutton" onclick="searchPlace();">查询</a>
+					</td>
+				</tr>
+				<tr>
+					<td>结果：</td>
+					<td colspan="3">
+						<input id="place_search_combobox" class="easyui-combobox" style="width:400px;"></input>
+					</td>
+					<td colspan="3">
+						<a class="easyui-linkbutton" id="place_search_set_city_btn" onclick="setCity();">设置城市</a>
+					</td>
+				</tr>
+				<tr  class="none">
+					<td  colspan="5">
+						<input id="place_search_zombieWorldId" style="hidden:true"></input>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addAddress();">确定</a>
+					</td>
+					<td colspan="3">
+						<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#place_search_win').window('close');">取消</a>
+					</td>
+				</tr>
 			</table>
-			</form>
-		</div> 
-		
+		</form>
+	</div>
 		
 </body>
 </html>

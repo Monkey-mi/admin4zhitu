@@ -213,8 +213,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		htworld.setWorldLabel(zw.getWorldLabel());
 		htworld.setDateAdded(now);
 		htworld.setDateModified(now);
-		htworld.setLatitude(zw.getLatitude());
-		htworld.setLongitude(zw.getLongitude());
+		htworld.setLatitude(zw.getLatitude());	// 设置纬度
+		htworld.setLongitude(zw.getLongitude());	// 设置经度
+		htworld.setLocationAddr(zw.getLocationAddr());	// 设置位置地址
+		htworld.setLocationDesc(zw.getLocationDesc());	// 设置位置描述
+		htworld.setProvince(zw.getProvince());	// 设置所在省份
+		htworld.setCity(zw.getCity());	// 设置所在城市
 		htworld.setShield(0);
 		htworld.setVer(1);
 		htworld.setClickCount(0);
@@ -656,7 +660,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	}
 
 	@Override
-	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId, Integer authorId) {
+	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId, Integer authorId) throws Exception {
 		ZombieWorld dto = new ZombieWorld();
 		dto.setId(id);
 		dto.setWorldDesc(worldDesc);
@@ -808,5 +812,20 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 					interactWorldServiceImpl.saveInteractV3(userId,degreeId,worldId,clickCount,likedCount,comments.split(","),minuteDuration);
 			}
 		}
+	}
+
+	@Override
+	public void updateZombieWorldAddressinfo(Integer id, String locationDesc, String locationAddr, Double longitude, Double latitude, String province, String city) throws Exception {
+
+		ZombieWorld dto = new ZombieWorld();
+		dto.setId(id);
+		dto.setLocationDesc(locationDesc);
+		dto.setLocationAddr(locationAddr);
+		dto.setLongitude(longitude);
+		dto.setLatitude(latitude);
+		dto.setProvince(province);
+		dto.setCity(city);
+		dto.setModifyDate(new Date());
+		zombieWorldMapper.updateZombieWorld(dto);
 	}
 }

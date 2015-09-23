@@ -12,370 +12,384 @@ import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.interact.service.InteractZombieService;
 
 public class InteractZombieWorldAction extends BaseCRUDAction {
-    private static final long serialVersionUID = -2234348047212019979L;
-    private Integer id;
-    private String worldName;
-    private String worldDesc;
-    private String worldLabel;
-    private String worldLabelIds;
-    private Integer authorId;
-    private String coverPath;
-    private String titlePath;
-    private String thumbTitlePath;
-    private Double longitude;
-    private Double latitude;
-    private String locationAddr;
-    private Integer size;
-    private Integer complete;
-    private String childs;
-    private String imgPath;
-    private Integer titleId;
-    private Date addDate;
-    private Date modifyDate;
-    private Integer channelId;
-    private Integer zombieWorldId;
-
+	private static final long serialVersionUID = -2234348047212019979L;
+	private Integer id;
+	private String worldName;
+	private String worldDesc;
+	private String worldLabel;
+	private String worldLabelIds;
+	private Integer authorId;
+	private String coverPath;
+	private String titlePath;
+	private String thumbTitlePath;
+	private Double longitude;	// 经度
+	private Double latitude;	// 纬度
+	private String locationAddr;	// 位置地址
+	private String locationDesc;// 位置描述
+	private String province;// 所在省份
+	private String city;// 所在城市
+	private Integer size;
+	private Integer complete;
+	private String childs;
+	private String imgPath;
+	private Integer titleId;
+	private Date addDate;
+	private Date modifyDate;
+	private Integer channelId;
+	private Integer zombieWorldId;
 
 	private File commentsFile;
 
-
-
 	private String ids;// 批量发织图
-    private Date begin;// 开始执行计划的时间
-    private Integer timeSpan;//
+	private Date begin;// 开始执行计划的时间
+	private Integer timeSpan;//
 
-    private Integer schedulaFlag;
+	private Integer schedulaFlag;
 
-    @Autowired
-    private InteractZombieService service;
+	@Autowired
+	private InteractZombieService service;
 
-    /**
-     * 分页查询
-     */
-    public String queryZombieWorldForTable() {
-	try {
-	    service.queryZombieWorldForTable(channelId, maxId, addDate, modifyDate, page, rows, complete, schedulaFlag,
-		    jsonMap);
-	    JSONUtil.optSuccess(jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	}
-	return StrutsKey.JSON;
-    }
-
-    /**
-     * 检查图片是否被下载过
-     * 
-     * @return
-     */
-    public String beenDownload() {
-
-	try {
-	    Integer result = service.beenDownload(imgPath);
-	    JSONUtil.optResult(result, "success", jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optResult(-1, "fail", jsonMap);
-	}
-	return StrutsKey.JSON;
-    }
-
-    /**
-     * 保存编辑完的数据格式
-     * 
-     * @return
-     */
-    public String saveZombieWorld() {
-	try {
-	    service.saveZombieWorld(childs, titleId, authorId, worldName, worldDesc, worldLabel, null, coverPath,
-		    titlePath, thumbTitlePath, longitude, latitude, locationAddr, size, channelId);
-	    JSONUtil.optResult(0, "success", jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optResult(-1, "fail", jsonMap);
-	}
-	return StrutsKey.JSON;
-    }
-
-    /**
-     * 下载编辑过的数据，用以上传
-     * 
-     * @return
-     */
-    public String queryZombieWorldInfo() {
-	try {
-	    service.queryZombieWorld(jsonMap, 20);
-	    JSONUtil.optResult(0, "success", jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optResult(-1, "fail", jsonMap);
-	}
-	return StrutsKey.JSON;
-    }
-
-    /**
-     * 发布织图
-     * 
-     * @return
-     */
-    public String saveZombieWorldToHtWorld() {
-	try {
-	    service.saveZombieWorldToHtWorld(id);
-	    JSONUtil.optResult(0, "success", jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optResult(-1, "fail", jsonMap);
-	}
-	return StrutsKey.JSON;
-    }
-
-    public String batchUpdateZombieWorldlabel() {
-	try {
-	    service.batchUpdateZombieWorldLabel(ids, worldLabel);
-	    JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	}
-	return StrutsKey.JSON;
-    }
-
-    /**
-     * 批量删除
-     * 
-     * @return
-     */
-    public String batchDeleteZombieWorld() {
-	try {
-	    service.batchDeleteZombieWorld(ids);
-	    JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	}
-	return StrutsKey.JSON;
-    }
-
-    /**
-     * 更新马甲织图
-     * 
-     * @return
-     * @author zhangbo	2015年7月28日
-     */
-    public String updateZombieWorld() {
-	try {
-	    service.updateZombieWorld(id, worldDesc, channelId, authorId);
-	    JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-	} catch (Exception e) {
-	    JSONUtil.optFailed(e.getMessage(), jsonMap);
-	}
-	return StrutsKey.JSON;
-    }
-    
-/**
- *     根据上传文件中的评论加入到库中
- * @param commetsFile 评论文件
- * @param authorId  马甲ID
- * @return 
-	*	2015年9月6日
-	*	mishengliang
- */
-    public String addCommentsFile(){
-		try{
-			service.addCommentsFile(commentsFile, zombieWorldId);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
-		}catch(Exception e){
+	/**
+	 * 分页查询
+	 */
+	public String queryZombieWorldForTable() {
+		try {
+			service.queryZombieWorldForTable(channelId, maxId, addDate, modifyDate, page, rows, complete, schedulaFlag, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
-    }
+	}
 
-    public String getImgPath() {
-	return imgPath;
-    }
+	/**
+	 * 检查图片是否被下载过
+	 * 
+	 * @return
+	 */
+	public String beenDownload() {
 
-    public void setImgPath(String imgPath) {
-	this.imgPath = imgPath;
-    }
+		try {
+			Integer result = service.beenDownload(imgPath);
+			JSONUtil.optResult(result, "success", jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optResult(-1, "fail", jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public String getChilds() {
-	return childs;
-    }
+	/**
+	 * 保存编辑完的数据格式
+	 * 
+	 * @return
+	 */
+	public String saveZombieWorld() {
+		try {
+			service.saveZombieWorld(childs, titleId, authorId, worldName, worldDesc, worldLabel, null, coverPath, titlePath, thumbTitlePath, longitude, latitude, locationAddr, size, channelId);
+			JSONUtil.optResult(0, "success", jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optResult(-1, "fail", jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public void setChilds(String childs) {
-	this.childs = childs;
-    }
+	/**
+	 * 下载编辑过的数据，用以上传
+	 * 
+	 * @return
+	 */
+	public String queryZombieWorldInfo() {
+		try {
+			service.queryZombieWorld(jsonMap, 20);
+			JSONUtil.optResult(0, "success", jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optResult(-1, "fail", jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public Integer getId() {
-	return id;
-    }
+	/**
+	 * 发布织图
+	 * 
+	 * @return
+	 */
+	public String saveZombieWorldToHtWorld() {
+		try {
+			service.saveZombieWorldToHtWorld(id);
+			JSONUtil.optResult(0, "success", jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optResult(-1, "fail", jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public void setId(Integer id) {
-	this.id = id;
-    }
+	public String batchUpdateZombieWorldlabel() {
+		try {
+			service.batchUpdateZombieWorldLabel(ids, worldLabel);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public String getWorldName() {
-	return worldName;
-    }
+	/**
+	 * 批量删除
+	 * 
+	 * @return
+	 */
+	public String batchDeleteZombieWorld() {
+		try {
+			service.batchDeleteZombieWorld(ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public void setWorldName(String worldName) {
-	this.worldName = worldName;
-    }
+	/**
+	 * 更新马甲织图
+	 * 
+	 * @return
+	 * @author zhangbo	2015年7月28日
+	 */
+	public String updateZombieWorld() {
+		try {
+			service.updateZombieWorld(id, worldDesc, channelId, authorId);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public String getWorldDesc() {
-	return worldDesc;
-    }
+	/**
+	 * 更新马甲织图地理位置信息
+	 * 
+	 * @return
+	 * @author zhangbo	2015年7月28日
+	 */
+	public String updateZombieWorldAddressinfo() {
+		try {
+			service.updateZombieWorldAddressinfo(id, locationDesc, locationAddr, longitude, latitude, province, city);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public void setWorldDesc(String worldDesc) {
-	this.worldDesc = worldDesc;
-    }
+	/**
+	 *     根据上传文件中的评论加入到库中
+	 * @param commetsFile 评论文件
+	 * @param authorId  马甲ID
+	 * @return 
+		*	2015年9月6日
+		*	mishengliang
+	 */
+	public String addCommentsFile() {
+		try {
+			service.addCommentsFile(commentsFile, zombieWorldId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
-    public String getWorldLabel() {
-	return worldLabel;
-    }
+	public String getImgPath() {
+		return imgPath;
+	}
 
-    public void setWorldLabel(String worldLabel) {
-	this.worldLabel = worldLabel;
-    }
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
 
-    public String getWorldLabelIds() {
-	return worldLabelIds;
-    }
+	public String getChilds() {
+		return childs;
+	}
 
-    public void setWorldLabelIds(String worldLabelIds) {
-	this.worldLabelIds = worldLabelIds;
-    }
+	public void setChilds(String childs) {
+		this.childs = childs;
+	}
 
-    public Integer getAuthorId() {
-	return authorId;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setAuthorId(Integer authorId) {
-	this.authorId = authorId;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getCoverPath() {
-	return coverPath;
-    }
+	public String getWorldName() {
+		return worldName;
+	}
 
-    public void setCoverPath(String coverPath) {
-	this.coverPath = coverPath;
-    }
+	public void setWorldName(String worldName) {
+		this.worldName = worldName;
+	}
 
-    public String getTitlePath() {
-	return titlePath;
-    }
+	public String getWorldDesc() {
+		return worldDesc;
+	}
 
-    public void setTitlePath(String titlePath) {
-	this.titlePath = titlePath;
-    }
+	public void setWorldDesc(String worldDesc) {
+		this.worldDesc = worldDesc;
+	}
 
-    public String getThumbTitlePath() {
-	return thumbTitlePath;
-    }
+	public String getWorldLabel() {
+		return worldLabel;
+	}
 
-    public void setThumbTitlePath(String thumbTitlePath) {
-	this.thumbTitlePath = thumbTitlePath;
-    }
+	public void setWorldLabel(String worldLabel) {
+		this.worldLabel = worldLabel;
+	}
 
-    public Double getLongitude() {
-	return longitude;
-    }
+	public String getWorldLabelIds() {
+		return worldLabelIds;
+	}
 
-    public void setLongitude(Double longitude) {
-	this.longitude = longitude;
-    }
+	public void setWorldLabelIds(String worldLabelIds) {
+		this.worldLabelIds = worldLabelIds;
+	}
 
-    public Double getLatitude() {
-	return latitude;
-    }
+	public Integer getAuthorId() {
+		return authorId;
+	}
 
-    public void setLatitude(Double latitude) {
-	this.latitude = latitude;
-    }
+	public void setAuthorId(Integer authorId) {
+		this.authorId = authorId;
+	}
 
-    public String getLocationAddr() {
-	return locationAddr;
-    }
+	public String getCoverPath() {
+		return coverPath;
+	}
 
-    public void setLocationAddr(String locationAddr) {
-	this.locationAddr = locationAddr;
-    }
+	public void setCoverPath(String coverPath) {
+		this.coverPath = coverPath;
+	}
 
-    public Integer getSize() {
-	return size;
-    }
+	public String getTitlePath() {
+		return titlePath;
+	}
 
-    public void setSize(Integer size) {
-	this.size = size;
-    }
+	public void setTitlePath(String titlePath) {
+		this.titlePath = titlePath;
+	}
 
-    public Integer getComplete() {
-	return complete;
-    }
+	public String getThumbTitlePath() {
+		return thumbTitlePath;
+	}
 
-    public void setComplete(Integer complete) {
-	this.complete = complete;
-    }
+	public void setThumbTitlePath(String thumbTitlePath) {
+		this.thumbTitlePath = thumbTitlePath;
+	}
 
-    public Integer getTitleId() {
-	return titleId;
-    }
+	public Double getLongitude() {
+		return longitude;
+	}
 
-    public void setTitleId(Integer titleId) {
-	this.titleId = titleId;
-    }
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
 
-    public String getIds() {
-	return ids;
-    }
+	public Double getLatitude() {
+		return latitude;
+	}
 
-    public void setIds(String ids) {
-	this.ids = ids;
-    }
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
 
-    public Date getBegin() {
-	return begin;
-    }
+	public String getLocationAddr() {
+		return locationAddr;
+	}
 
-    public void setBegin(Date begin) {
-	this.begin = begin;
-    }
+	public void setLocationAddr(String locationAddr) {
+		this.locationAddr = locationAddr;
+	}
 
-    public Integer getTimeSpan() {
-	return timeSpan;
-    }
+	public Integer getSize() {
+		return size;
+	}
 
-    public void setTimeSpan(Integer timeSpan) {
-	this.timeSpan = timeSpan;
-    }
+	public void setSize(Integer size) {
+		this.size = size;
+	}
 
-    public Date getAddDate() {
-	return addDate;
-    }
+	public Integer getComplete() {
+		return complete;
+	}
 
-    public void setAddDate(Date addDate) {
-	this.addDate = addDate;
-    }
+	public void setComplete(Integer complete) {
+		this.complete = complete;
+	}
 
-    public Date getModifyDate() {
-	return modifyDate;
-    }
+	public Integer getTitleId() {
+		return titleId;
+	}
 
-    public void setModifyDate(Date modifyDate) {
-	this.modifyDate = modifyDate;
-    }
+	public void setTitleId(Integer titleId) {
+		this.titleId = titleId;
+	}
 
-    public Integer getChannelId() {
-	return channelId;
-    }
+	public String getIds() {
+		return ids;
+	}
 
-    public void setChannelId(Integer channelId) {
-	this.channelId = channelId;
-    }
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
 
-    public Integer getSchedulaFlag() {
-	return schedulaFlag;
-    }
+	public Date getBegin() {
+		return begin;
+	}
 
-    public void setSchedulaFlag(Integer schedulaFlag) {
-	this.schedulaFlag = schedulaFlag;
-    }
-    
+	public void setBegin(Date begin) {
+		this.begin = begin;
+	}
+
+	public Integer getTimeSpan() {
+		return timeSpan;
+	}
+
+	public void setTimeSpan(Integer timeSpan) {
+		this.timeSpan = timeSpan;
+	}
+
+	public Date getAddDate() {
+		return addDate;
+	}
+
+	public void setAddDate(Date addDate) {
+		this.addDate = addDate;
+	}
+
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+
+	public Integer getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
+	}
+
+	public Integer getSchedulaFlag() {
+		return schedulaFlag;
+	}
+
+	public void setSchedulaFlag(Integer schedulaFlag) {
+		this.schedulaFlag = schedulaFlag;
+	}
+
 	public File getCommentsFile() {
 		return commentsFile;
 	}
@@ -383,12 +397,24 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
 	public void setCommentsFile(File commentsFile) {
 		this.commentsFile = commentsFile;
 	}
-	
-    public Integer getZombieWorldId() {
+
+	public Integer getZombieWorldId() {
 		return zombieWorldId;
 	}
 
 	public void setZombieWorldId(Integer zombieWorldId) {
 		this.zombieWorldId = zombieWorldId;
+	}
+
+	public void setLocationDesc(String locationDesc) {
+		this.locationDesc = locationDesc;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 }

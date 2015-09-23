@@ -74,7 +74,7 @@ public interface InteractZombieService {
 	 * @param authorId	马甲织图作者id，可以为null 
 	 * @author zhangbo	2015年7月28日
 	 */
-	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId, Integer authorId);
+	public void updateZombieWorld(Integer id, String worldDesc, Integer channelId, Integer authorId) throws Exception;
 	
 	
 	/**
@@ -85,4 +85,18 @@ public interface InteractZombieService {
 		*	mishengliang
 	 */
 	public void addCommentsFile(File commentsFile,Integer zombieWorldId)throws Exception;
+
+	/**
+	 * 更新马甲织图地理位置信息
+	 * 
+	 * @param id			马甲织图表主键id
+	 * @param locationDesc	位置描述，可以为null
+	 * @param locationAddr	位置地址，可以为null
+	 * @param longitude		经度，可以为null
+	 * @param latitude		纬度，可以为null
+	 * @param province		所在省份，可以为null
+	 * @param city			所在城市，可以为null
+	 * @author zhangbo	2015年9月23日
+	 */
+	public void updateZombieWorldAddressinfo(Integer id, String locationDesc, String locationAddr, Double longitude, Double latitude, String province, String city) throws Exception;
 }

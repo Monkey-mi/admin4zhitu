@@ -14,6 +14,9 @@
 		<result column="longitude" property="longitude" jdbcType="DOUBLE"/>
 		<result column="latitude" property="latitude" jdbcType="DOUBLE"/>
 		<result column="location_addr" property="locationAddr" jdbcType="VARCHAR"/>
+		<result column="location_desc" property="locationDesc" jdbcType="VARCHAR"/>
+		<result column="province" property="province" jdbcType="VARCHAR"/>
+		<result column="city" property="city" jdbcType="VARCHAR"/>
 		<result column="size" property="size" jdbcType="INTEGER"/>
 		<result column="complete" property="complete" jdbcType="INTEGER"/>
 		<result column="date_add" property="addDate" jdbcType="TIMESTAMP"/>
@@ -39,13 +42,31 @@
 		update hts_admin.zombie_world
 		<set>
 	      <if test="worldDesc != null">
-	      	world_desc=#{worldDesc},
+	      	world_desc = #{worldDesc},
 	      </if>
 	      <if test="channelId != null">
-	      	channel_id=#{channelId},
+	      	channel_id = #{channelId},
 	      </if>
 	      <if test="authorId != null">
-	      	author_id=#{authorId},
+	      	author_id = #{authorId},
+	      </if>
+	      <if test="locationDesc != null">
+	      	location_desc = #{locationDesc},
+	      </if>
+	      <if test="locationAddr != null">
+	      	location_addr = #{locationAddr},
+	      </if>
+	      <if test="longitude != null">
+	      	longitude = #{longitude},
+	      </if>
+	      <if test="latitude != null">
+	      	latitude = #{latitude},
+	      </if>
+	      <if test="province != null">
+	      	province = #{province},
+	      </if>
+	      <if test="city != null">
+	      	city = #{city},
 	      </if>
 	      <if test="modifyDate != null">
 	      	date_modify = #{modifyDate}

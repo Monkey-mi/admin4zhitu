@@ -21,6 +21,9 @@ public class ZombieWorld  extends AbstractNumberDto{
 	private Double longitude;
 	private Double latitude;
 	private String locationAddr;
+	private String locationDesc;// 位置描述
+	private String province;// 所在省份
+	private String city;// 所在城市
 	private Integer size;
 	private Integer complete;
 	private Date addDate;
@@ -170,6 +173,30 @@ public class ZombieWorld  extends AbstractNumberDto{
 	}
 	public void setSchedulaFlag(Integer schedulaFlag) {
 		this.schedulaFlag = schedulaFlag;
+	}
+
+	public String getLocationDesc() {
+		return locationDesc;
+	}
+
+	public void setLocationDesc(String locationDesc) {
+		this.locationDesc = locationDesc;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 }
