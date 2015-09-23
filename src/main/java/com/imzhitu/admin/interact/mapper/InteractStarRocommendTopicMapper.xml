@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractStarRocommendTopicMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.StarRecommendTopic" id="StarRecommendTopic">
+	<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="backgroundColor" column="background_color" jdbcType="VARCHAR"/>
+		<result property="fileName" column="file_name" jdbcType="VARCHAR"/>
+		<result property="title" column="title" jdbcType="VARCHAR"/>
+		<result property="introduceHead" column="introduce_head" jdbcType="VARCHAR"/>
+		<result property="introduceFoot" column="introduce_foot" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- 增加模块信息 -->
+	<insert id="addStarRecommendTopic">
+		insert into 
+			hts_admin.star_recommend_topic
+				(background_color,file_name,title,introduce_head,introduce_foot) 
+			values 
+				(#{backgroundColor},#{fileName},#{title},#{introduceHead},#{introduceFoot})
+	</insert>
+	
+	<select id="getStarRecommendTopic"  resultMap="StarRecommendTopic">
+	select *
+	 from hts_admin.star_recommend_topic
+	</select>
+	
+	<update id="updateStarRecommendTopic">
+	update hts_admin.star_recommend_topic
+	<set>
+	<if test="backgroundColor!=null">
+	background_color=#{backgroundColor},
+	</if>
+	<if test="fileName!=null">
+	file_name=#{fileName},
+	</if>
+	<if test="title!=null">
+	title=#{title},
+	</if>
+	<if test="introduceHead!=null">
+	introduce_head=#{introduceHead},
+	</if>
+	<if test="introduceFoot!=null">
+	introduce_foot=#{introduceFoot}
+	</if>
+	</set>
+	where 
+		id=#{id}
+	</update>
+	
+	<delete id="destoryStarRecommendTopic">
+	delete from hts_admin.star_recommend_topic
+	where 
+		id=#{id}
+	</delete>
+</mapper>

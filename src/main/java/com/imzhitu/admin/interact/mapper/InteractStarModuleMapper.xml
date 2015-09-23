@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.interact.mapper.InteractStarModuleMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.StarModule" id="StarModule">
+	<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="title1" column="title1" jdbcType="VARCHAR"/>
+		<result property="title2" column="title2" jdbcType="VARCHAR"/>
+		<result property="userId" column="userId" jdbcType="INTEGER"/>
+		<result property="pics" column="pics" jdbcType="VARCHAR"/>
+		<result property="intro" column="intro" jdbcType="VARCHAR"/>
+		<result property="topicId" column="topic_id" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- 增加模块信息 -->
+	<insert id="addStarModule">
+		insert into 
+			hts_admin.star_module_info
+				(title1,title2,userId,pics,intro,topic_id) 
+			values 
+				(#{title1},#{title2},#{userId},#{pics},#{intro},1)
+	</insert>
+	
+	<select id="getStarModule"  resultMap="StarModule">
+	select *
+	 from hts_admin.star_module_info
+ 	 <where>
+	 <if test="topicId!=null and topicId!=0">
+	 topic_id = #{topicId}
+	 </if>
+	 </where>
+	</select>
+	
+	<update id="updateStarModule">
+	update hts_admin.star_module_info
+	<set>
+	<if test="title1!=null">
+	title1=#{title1},
+	</if>
+	<if test="title2!=null">
+	title2=#{title2},
+	</if>
+	<if test="userId!=null">
+	userId=#{userId},
+	</if>
+	<if test="pics!=null">
+	pics=#{pics},
+	</if>
+	<if test="intro!=null">
+	intro=#{intro}
+	</if>
+	</set>
+	where 
+		id=#{id}
+	</update>
+	
+	<delete id="destory">
+	delete from hts_admin.star_module_info
+	where 
+		id=#{id}
+	</delete>
+</mapper>

@@ -393,7 +393,6 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 		}else{
 			return null;
 		}
-		
 	}
 	
 	/**
