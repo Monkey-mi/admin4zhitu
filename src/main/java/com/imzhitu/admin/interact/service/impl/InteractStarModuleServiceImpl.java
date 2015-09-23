@@ -30,13 +30,14 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 		*	mishengliang
 	 */
 	@Override
-	public void add(String title1,String title2,Integer userId,String pics,String intro)  throws Exception{
+	public void add(String title1,String title2,Integer userId,String pics,String intro,Integer topicId)  throws Exception{
 		StarModule dto  = new StarModule();
 		dto.setTitle1(title1);
 		dto.setTitle2(title2);
 		dto.setUserId(userId);
 		dto.setPics(pics);
 		dto.setIntro(intro);
+		dto.setTopicId(topicId);
 		mapper.addStarModule(dto);
 	}
 

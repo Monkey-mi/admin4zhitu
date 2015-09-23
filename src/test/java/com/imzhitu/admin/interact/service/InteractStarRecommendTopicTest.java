@@ -1,6 +1,5 @@
 package com.imzhitu.admin.interact.service;
 
-import java.util.List;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,7 @@ public class InteractStarRecommendTopicTest extends BaseTest{
 	
 	@Test
 	public void  getTopicId() throws Exception{
-	List<Integer>  list  = 	interactStarRecommendTopicService.getTopicId();
-/*	for(Integer i : list){
-
-	}*/
+/*	interactStarRecommendTopicService.getTopicId();*/
 	}
 	
 }

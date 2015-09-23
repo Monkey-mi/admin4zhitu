@@ -30,34 +30,38 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">New User</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">Edit User</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">Remove User</a>
-        <input id="topicId" value="">
+        <input id="topicId" >
     </div>
     
     <div id="dlg" class="easyui-dialog" style="width:400px;height:300px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
         <div class="ftitle"> Information</div>
-        <form id="fm" method="post" novalidate>
+        <form id="fm" method="post" >
             <div class="fitem">
                 <label>Title1:</label>
-                <input name="title1" class="easyui-textbox" >
+                <input name="title1" >
             </div>
             <div class="fitem">
                 <label>Title2:</label>
-                <input name="title2" class="easyui-textbox" >
+                <input name="title2"  >
             </div>
             <div class="fitem">
                 <label>UserId:</label>
-                <input name="userId" class="easyui-textbox">
+                <input name="userId" >
             </div>
              <div class="fitem">
                 <label>Pics:</label>
-                <input name="pics" class="easyui-textbox" >
+                <input name="pics"  >
             </div>
             <div class="fitem">
                 <label>Intro:</label>
-                <input name="intro" class="easyui-textbox">
+                <input name="intro"  >
             </div>
-        </form>
+ 			<div class="fitem">
+				<label>TopicId:</label> 
+				<input id='topicIdIn' name="topicId"  readonly="true">
+			</div>
+		</form>
     </div>
     <div id="dlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">Save</a>
@@ -65,9 +69,12 @@
     </div>
     <script type="text/javascript">
         var url;
+        
         function newUser(){
+        	var topicId = $('#topicId').combobox('getValue');
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','New User');
             $('#fm').form('clear');
+            $('#topicIdIn').val(topicId);
             url = './admin_interact/addModule_add';
         }
         function editUser(){

@@ -17,7 +17,7 @@
 			hts_admin.star_module_info
 				(title1,title2,userId,pics,intro,topic_id) 
 			values 
-				(#{title1},#{title2},#{userId},#{pics},#{intro},1)
+				(#{title1},#{title2},#{userId},#{pics},#{intro},#{topicId})
 	</insert>
 	
 	<select id="getStarModule"  resultMap="StarModule">

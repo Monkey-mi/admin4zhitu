@@ -32,7 +32,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
 	public String add(){
 		try {
-			interactStarModuleService.add(title1,title2,userId,pics,intro);
+			interactStarModuleService.add(title1,title2,userId,pics,intro,topicId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);

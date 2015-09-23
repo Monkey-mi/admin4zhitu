@@ -60,7 +60,7 @@ public class InteractWorldlevelServiceTest extends BaseTest{
 	
 	@Test
 	public void testAddTypeWorldInteract() throws Exception{
-		service.AddTypeWorldInteract(11956,62,"");
+/*		service.AddTypeWorldInteract(11956,62,"");*/
 	}
 	
 }

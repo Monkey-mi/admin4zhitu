@@ -17,7 +17,7 @@ public interface InteractStarModuleService {
 		*	2015年9月21日
 		*	mishengliang
 	 */
-	public void add(String title1,String title2,Integer userId,String pics,String Intro)  throws Exception;
+	public void add(String title1,String title2,Integer userId,String pics,String Intro,Integer topicId)  throws Exception;
 
 	/**
 	 * 获取模块信息
