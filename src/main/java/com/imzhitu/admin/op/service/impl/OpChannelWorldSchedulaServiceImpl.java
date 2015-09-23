@@ -250,8 +250,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		List<OpChannelWorldSchedulaDto> list = channelWorldValidSchedulaMapper.queryChannelWorldValidSchedulaForList(queryDto);
 		
 		for (OpChannelWorldSchedulaDto schedulaDto : list) {
-			logger.info("channelId>>" + schedulaDto.getChannelId());
-			logger.info("WorldId>>" + schedulaDto.getWorldId());
 		    /*
 		     * 优先执行调度表的刷新，若下列更新频道表失败，则人为操作，重新设置有效性与加精
 		     * 因为考虑到若频道表刷新执行失败，那么调度表不会被置为成功，每次都会执行，会加大服务器压力
@@ -263,7 +261,6 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    channelWorldValidSchedulaMapper.updateChannelWorldValidSchedula(updateSchedulaDto);
 		    
 		    channelService.updateChannelWorldValid(schedulaDto.getChannelId(), schedulaDto.getWorldId(), Tag.TRUE);
-		    logger.info("channelService.updateChannelWorldValid is Success!!!");
 		    
 		    // 刷新频道织图的serial，让10:50的织图排在最新，即serial最大
 		    channelService.addChannelWorldId(schedulaDto.getChannelId(), schedulaDto.getWorldId());
