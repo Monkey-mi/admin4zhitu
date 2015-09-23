@@ -244,7 +244,8 @@
 	
 	<update id="updateTypeWorldValidByWorldIds">
 		update hts.htworld_type_world
-		set valid = #{valid}
+		set valid = #{valid},
+		date_add = NOW()	
 		where world_id in
 		<foreach collection="worldIds" index="index" item="item" open="(" close=")" separator=",">
 			#{item}
