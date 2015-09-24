@@ -112,7 +112,7 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	@Override
 	public InteractWorld queryInteractByWorldId(Integer worldId) {
 		try {
-			return getJdbcTemplate().queryForObject(QUERY_INTERACT_BY_WID, new Object[]{worldId}, new RowMapper<InteractWorld>() {
+			return getMasterJdbcTemplate().queryForObject(QUERY_INTERACT_BY_WID, new Object[]{worldId}, new RowMapper<InteractWorld>() {
 
 				@Override
 				public InteractWorld mapRow(ResultSet rs, int rowNum)
