@@ -32,7 +32,7 @@ public interface InteractWorldDao extends BaseDao {
 	 * @param worldId
 	 * @return
 	 */
-	public InteractWorld queryInteractByWorldId(Integer worldId);
+	public InteractWorld queryInteractByWorldId(Integer worldId) throws Exception;
 	
 	/**
 	 * 更新互动信息

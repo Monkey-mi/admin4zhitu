@@ -163,6 +163,7 @@ public class InteractWorldlevelListAction extends BaseCRUDAction{
 						commentIds += String.valueOf(commentId) + ",";
 					}
 				}
+				commentIds = commentIds.substring(0, commentIds.length()-1);
 				interactWorldlevelListService.addWorldlevelList(world_id,world_level_id,validity,commentIds,label_ids,user.getId());
 			}
 			

@@ -110,7 +110,7 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	}
 
 	@Override
-	public InteractWorld queryInteractByWorldId(Integer worldId) {
+	public InteractWorld queryInteractByWorldId(Integer worldId) throws Exception{
 		try {
 			return getMasterJdbcTemplate().queryForObject(QUERY_INTERACT_BY_WID, new Object[]{worldId}, new RowMapper<InteractWorld>() {
 
@@ -121,7 +121,7 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 				}
 				
 			});
-		} catch(DataAccessException e) {
+		} catch(EmptyResultDataAccessException e) {
 			return null; // 没有查询记录
 		}
 		
