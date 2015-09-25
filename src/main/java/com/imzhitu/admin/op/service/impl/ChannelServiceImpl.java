@@ -830,7 +830,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		// 查询出最后一次给此用户推送的通知，取出时间，与此时比较，大于一周的再发送通知，不超过一周的不发送通知	mishengliang
 		OpSysMsg sysMsg = new OpSysMsg();
 		sysMsg.setRecipientId(world.getAuthorId()); // 织图作者作为接收人
-		sysMsg.setObjId(Tag.USER_MSG_CHANNEL_WORLD);	// 通知消息类型为织图被选入频道
+		sysMsg.setObjType(Tag.USER_MSG_CHANNEL_WORLD);	// 通知消息类型为织图被选入频道
 		sysMsg.setObjMeta2(String.valueOf(world.getChannelId()));	// 要查询的消息中，附加消息objMeta2存储的为频道id
 		
 		OpSysMsg msgObject = sysMsgMapper.getLastMsg(sysMsg);
