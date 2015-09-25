@@ -380,12 +380,11 @@
 		interactForm.ajaxSubmit({
 			success: function(result){
 				if(result['result'] == 0) {
-					$.messager.alert('成功提示',result['msg']);
 					$('#comments_interact_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 					$('#comments_interact').combobox('clear');
 		   			$("#selected_comment_count").text('0');
 				} else {
-					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+					alert(result['msg']);  //提示添加信息失败
 				}
 				$(".opt_btn").show();
 				$(".loading").hide();
