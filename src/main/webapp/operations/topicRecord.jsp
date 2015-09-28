@@ -10,7 +10,7 @@
 <body>
     <h2>Add Topic Information</h2>
     
-    <table id="dg" title="My Users" style="width:900px;height:400px"></table>
+    <table id="dg" title="My Users" style="width:1200px;height:400px"></table>
     <div id="toolbar">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">New User</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">Edit User</a>
@@ -40,6 +40,18 @@
             <div class="fitem">
                 <label>IntroduceFoot:</label>
                 <input name="introduceFoot" class="easyui-textbox">
+            </div>
+                   <div class="fitem">
+                <label>stickerButton:</label>
+                <input name="stickerButton" class="easyui-textbox">
+            </div>
+                   <div class="fitem">
+                <label>shareButton:</label>
+                <input name="shareButton" class="easyui-textbox">
+            </div>
+            <div class="fitem">
+                <label>foot:</label>
+                <input name="foot" class="easyui-textbox">
             </div>
         </form>
     </div>
@@ -115,7 +127,10 @@
                 {field:'fileName',title:'FileName',width:100,align:"center"},
                 {field:'title',title:'Title',width:100,align:"center"},
                 {field:'introduceHead',title:'IntroduceHead',width:100,align:"center"},
-                {field:'introduceFoot',title:'IntroduceFoot',width:300,align:"center"}
+                {field:'introduceFoot',title:'IntroduceFoot',width:300,align:"center"},
+                {field:'stickerButton',title:'stickerButton',width:100,align:"center"},
+                {field:'shareButton',title:'shareButton',width:100,align:"center"},
+                {field:'foot',title:'foot',width:100,align:"center"}
             ]]
         });
         

@@ -28,10 +28,13 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	private String title;
 	private String introduceHead;
 	private String introduceFoot;
+	private String stickerButton;
+	private String shareButton;
+	private String foot;
 	
 	public String add(){
 		try {
-			interactStarRecommendTopicService.addTopic(backgroundColor,fileName,title,introduceHead,introduceFoot);
+			interactStarRecommendTopicService.addTopic(backgroundColor,fileName,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -65,7 +68,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String update(){
 		try {
-			interactStarRecommendTopicService.updateTopic(id,backgroundColor,fileName,title,introduceHead,introduceFoot);
+			interactStarRecommendTopicService.updateTopic(id,backgroundColor,fileName,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -132,5 +135,30 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	public void setIntroduceFoot(String introduceFoot) {
 		this.introduceFoot = introduceFoot;
 	}
+
+	public String getStickerButton() {
+		return stickerButton;
+	}
+
+	public void setStickerButton(String stickerButton) {
+		this.stickerButton = stickerButton;
+	}
+
+	public String getShareButton() {
+		return shareButton;
+	}
+
+	public void setShareButton(String shareButton) {
+		this.shareButton = shareButton;
+	}
+
+	public String getFoot() {
+		return foot;
+	}
+
+	public void setFoot(String foot) {
+		this.foot = foot;
+	}
+	
 	
 }
