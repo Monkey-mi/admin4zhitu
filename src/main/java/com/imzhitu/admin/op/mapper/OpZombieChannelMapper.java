@@ -45,11 +45,53 @@ public interface OpZombieChannelMapper {
 	public long queryZombieChannelTotalCount(OpZombieChannel dto);
 	
 	/**
+	 * 随机查询n个没有互动的粉丝马甲
+	 * 
+	 * @param concernId	被关注的人的id,即非马甲
+	 * @param channelId	频道id
+	 * @param worldId	织图主键id
+	 * @param limit		查询数量的上限
+	 * @return
+	 * @author zhangbo	2015年9月28日
+	 */
+	@DataSource("master")
+	public List<Integer> queryNotInteractNRandomFollowZombie(@Param("concernId")Integer concernId,@Param("channelId")Integer channelId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
+	
+	/**
+	 * 查询n个没有互动的频道粉丝马甲总数
+	 * 
+	 * @param concernId	被关注的人的id,即非马甲
+	 * @param channelId	频道id
+	 * @param worldId	织图主键id
+	 * @param limit		查询数量的上限
+	 * @return
+	 * @author zhangbo	2015年9月28日
+	 */
+	@DataSource("slave")
+	public Integer queryNotInteractNRandomFollowZombieCount(@Param("concernId")Integer concernId,@Param("channelId")Integer channelId,@Param("worldId")Integer worldId);
+	
+	/**
 	 * 随机查询n个没有互动的非粉丝马甲
-	 * @param concernId 被关注的人的id,即非马甲
-	 * @param degreeId
+	 * @param concernId	被关注的人的id,即非马甲
+	 * @param channelId	频道id
+	 * @param worldId	织图主键id
+	 * @param limit		查询数量的上限
 	 * @return
 	 */
 	@DataSource("master")
 	public List<Integer> queryNotInteractNRandomNotFollowZombie(@Param("concernId")Integer concernId,@Param("channelId")Integer channelId,@Param("worldId")Integer worldId,@Param("limit")Integer limit);
+	
+	/**
+	 * 查询n个没有互动的非粉丝马甲总数 
+	 * 
+	 * @param concernId	被关注的人的id,即非马甲
+	 * @param channelId	频道id
+	 * @param worldId	织图主键id
+	 * @param limit		查询数量的上限
+	 * @return
+	 * @author zhangbo	2015年9月28日
+	 */
+	@DataSource("slave")
+	public Integer queryNotInteractNRandomNotFollowZombieCount(@Param("concernId")Integer concernId,@Param("channelId")Integer channelId,@Param("worldId")Integer worldId);
+	
 }
