@@ -292,7 +292,7 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	@Override
 	public Integer queryIntegerIdByWorldId(Integer wId){
 		try{
-			return getJdbcTemplate().queryForObject(QUERY_INTERACT_ID_BY_WORLD_ID, new Object[]{wId}, Integer.class);
+			return getMasterJdbcTemplate().queryForObject(QUERY_INTERACT_ID_BY_WORLD_ID, new Object[]{wId}, Integer.class);
 		}catch(EmptyResultDataAccessException e){
 			return null;
 		}
