@@ -176,7 +176,7 @@ var maxId = 0,
 		$('#htm_appmsg').window({
 			modal : true,
 			width : 820,
-			height : 480,
+			height : 520,
 			top: 10,
 			title : '推送App消息',
 			shadow : false,
@@ -344,6 +344,8 @@ function loadAppMsgFormValidate() {
 	.formValidator({onshow:"请输入消息（必填）",onfocus:"2-140个字符",oncorrect:"输入正确！"})
 	.inputValidator({min:2,empty:{leftempty:false,rightempty:false,emptyerror:"两边不能输入空格"},onerror:"请输入2-140个字符"});
 	
+	$("#uids-str")
+	.formValidator({onshow:"请输入接受者Id",onfocus:"Id之间英文逗号分隔，例如：123,124,125",oncorrect:"输入正确！"});
 }
 
 function appmsgObjTypeSelect(rec){
@@ -411,9 +413,10 @@ function searchBySenderId(){
 					</tr>
 					<tr>
 						<td class="leftTd">接收用户：</td>
-						<td colspan="2">
-							<input type="text" name="userId" />
+						<td >
+							<textarea type="text" name="uidsStr" id="uids-str" style="width:500px;"></textarea>
 						</td>
+						<td class="rightTd"><div id="uids-strTip" class="tipDIV"></div></td>
 					</tr>
 					
 					<tr>

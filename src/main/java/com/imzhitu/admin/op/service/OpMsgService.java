@@ -64,7 +64,7 @@ public interface OpMsgService extends BaseService {
 	 * 
 	 * @param msg
 	 */
-	public void pushAppMsg(OpSysMsg msg, Boolean inApp, Boolean noticed, Integer uid) throws Exception;
+	public void pushAppMsg(OpSysMsg msg, Boolean inApp, Boolean noticed, String uidsStr) throws Exception;
 
 	/**
 	 * 保存频道通知模板内容
