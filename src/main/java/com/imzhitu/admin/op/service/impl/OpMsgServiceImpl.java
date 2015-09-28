@@ -140,7 +140,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	}
 
 	@Override
-	public void pushAppMsg(final OpSysMsg msg, Boolean inApp, Boolean noticed, Integer uid) throws Exception {
+	public void pushAppMsg(final OpSysMsg msg, Boolean inApp, Boolean noticed, String uidsStr) throws Exception {
 
 		Integer pushAction = Tag.PUSH_ACTION_SYS;
 		String sid = null;
@@ -157,12 +157,17 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			sid = String.valueOf(msg.getObjId());
 		}
 
-		if (uid != null && uid != 0) {
-			msg.setRecipientId(uid);
-			sysMsgMapper.saveMsg(msg);
+		if (uidsStr != null && !"".equals(uidsStr.trim()) ) {
+			Integer[] uids = StringUtil.convertStringToIds(uidsStr);
 			List<Integer> ulist = new ArrayList<Integer>();
-			ulist.add(uid);
-			pushService.pushBulletin(pushAction, msg.getContent(), sid, ulist);
+			for(Integer uid : uids){
+				msg.setRecipientId(uid);
+				sysMsgMapper.saveMsg(msg);
+				ulist.add(uid);
+			}
+			if ( ulist.size() > 0 ){			
+				pushService.pushBulletin(pushAction, msg.getContent(), sid, ulist);
+			}
 			return;
 		}
 
@@ -249,6 +254,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		}
 		appPushLogger.info("push from " + minId + " to " + maxId + " finished");
 	}
+	
 	
 	@Override
 	public void saveChannelNoticeTemplate(Integer channelId, String contentTmpl, String channelNoticeType) throws Exception {

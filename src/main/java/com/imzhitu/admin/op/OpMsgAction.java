@@ -27,6 +27,7 @@ public class OpMsgAction extends BaseCRUDAction {
 	private String link;
 	private String path;
 	private Integer userId;
+	private String uidsStr;		//用户ids的String类型，eg：123,124,125
 	
 	private OpSysMsg sysMsg = new OpSysMsg();
 	
@@ -127,7 +128,7 @@ public class OpMsgAction extends BaseCRUDAction {
 					notify = true;
 				}
 			}
-			opMsgService.pushAppMsg(sysMsg, inApp, notify, userId);
+			opMsgService.pushAppMsg(sysMsg, inApp, notify, uidsStr);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -199,6 +200,14 @@ public class OpMsgAction extends BaseCRUDAction {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public String getUidsStr() {
+		return uidsStr;
+	}
+
+	public void setUidsStr(String uidsStr) {
+		this.uidsStr = uidsStr;
 	}
 	
 }
