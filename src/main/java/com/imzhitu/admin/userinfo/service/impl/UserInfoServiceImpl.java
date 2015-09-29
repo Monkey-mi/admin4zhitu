@@ -247,4 +247,12 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		
 	}
 	
+	public void privateUpdateName() {
+		Integer maxUID;
+		maxUID = userInfoMapper.selectMaxId();
+		for(int i = 0; i < maxUID + 1; i++) {
+//			webUserInfoService.updateUserName(userId, userName);
+		}
+	}
+	
 }

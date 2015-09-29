@@ -252,6 +252,10 @@ public class UserAction extends BaseCRUDAction {
 		}
 		return StrutsKey.JSON;
 	}
+
+	public String privateUpateName() {
+		return StrutsKey.JSON;
+	}
 	
 	public Integer getUserId() {
 		return userId;

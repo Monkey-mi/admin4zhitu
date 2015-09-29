@@ -59,5 +59,5 @@ public interface UserInfoMapper {
 	
 	@DataSource("master")
 	public void updateStarByIds(@Param("ids")Integer[]ids, @Param("star")Integer star );
-	
+
 }

@@ -123,9 +123,11 @@ public class ZTWorldInteractAction extends BaseCRUDAction {
 	public String saveComment() {
 		try {
 			if(reId == null || reId == 0) {
-				webWorldInteractService.saveComment(false, worldId, null, authorId, " : " + content);
+				webWorldInteractService.saveComment(false, worldId, null, authorId, " : " + content,
+						null,null,jsonMap);
 			} else {
-				webWorldInteractService.saveReply(false, worldId, null, authorId, content, reId, null);
+				webWorldInteractService.saveReply(false, worldId, null, authorId,
+						content, reId, null, null, null, jsonMap);
 			}
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
