@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1199,7 +1200,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			try {
 				successId.add(comment.getId());
 				webWorldInteractService.saveComment(false, comment.getWorldId(), null,
-						comment.getUserId(), " : " + comment.getContent());
+						comment.getUserId(), " : " + comment.getContent(), null, null, new HashMap<String, Object>());
 				successfullyFinishCount++;
 			} catch (Exception e3) {
 				logger.info("commitComment:webWorldInteractService.saveComment\n"+e3.getMessage());
