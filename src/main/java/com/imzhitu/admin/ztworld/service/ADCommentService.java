@@ -33,7 +33,7 @@ public interface ADCommentService extends BaseService {
      * @throws Exception
      * @author zhangbo	2015年7月15日
      */
-    public void updateADComment(ZTWorldCommentDto dto) throws Exception;
+    public void updateADComment(Integer adCommentId, Integer valid) throws Exception;
 
     /**
      * 批量删除广告评论

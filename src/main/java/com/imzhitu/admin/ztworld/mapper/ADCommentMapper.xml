@@ -46,8 +46,17 @@
 		select count(*) from hts_admin.ad_comment_shield 
 	</select>
 	
+	<!-- 查询广告评论集合 -->
+	<select id="queryADCommentById" resultMap="ADCommentMap">
+		select 
+			acs.* 
+		from 
+			hts_admin.ad_comment_shield acs
+		where id = #{id}
+	</select>
+	
 	<!-- 更新广告评论 -->
-	<update id="updateADComment" parameterType="com.imzhitu.admin.common.pojo.ZTWorldCommentDto">
+	<update id="updateADComment">
 		update hts_admin.ad_comment_shield acs
 		<set>
 			<if test="valid != null">acs.valid = #{valid}</if>

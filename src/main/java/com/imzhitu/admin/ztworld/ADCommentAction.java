@@ -9,7 +9,6 @@ import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.ADKeywordDTO;
 import com.imzhitu.admin.common.pojo.ZTWorldCommentDto;
-import com.imzhitu.admin.ztworld.dao.HTWorldCommentDao;
 import com.imzhitu.admin.ztworld.service.ADCommentService;
 
 /**
@@ -26,7 +25,7 @@ public class ADCommentAction extends BaseCRUDAction {
     private static final long serialVersionUID = -1772704045512006158L;
 
     /**
-     * 织图评论ID
+     * 广告评论主键id
      * 
      * @author zhangbo 2015年7月15日
      */
@@ -46,35 +45,20 @@ public class ADCommentAction extends BaseCRUDAction {
      */
     private String ids;
 
-    /**
-     * @param worldCommnetId
-     *            the worldCommnetId to set
-     */
     public void setWorldCommnetId(Integer worldCommnetId) {
 	this.worldCommnetId = worldCommnetId;
     }
 
-    /**
-     * @param valid
-     *            the valid to set
-     */
     public void setValid(Integer valid) {
 	this.valid = valid;
     }
 
-    /**
-     * @param ids
-     *            the ids to set
-     */
     public void setIds(String ids) {
 	this.ids = ids;
     }
 
     @Autowired
     private ADCommentService adService;
-
-    @Autowired
-    private HTWorldCommentDao htWorldCommentDao;
 
     /**
      * 查询广告评论列表
@@ -102,13 +86,7 @@ public class ADCommentAction extends BaseCRUDAction {
     public String updateADComment() {
 	try {
 	    // 更新广告评论
-	    ZTWorldCommentDto dto = new ZTWorldCommentDto();
-	    dto.setId(worldCommnetId);
-	    dto.setValid(valid);
-	    adService.updateADComment(dto);
-
-	    // 更新织图评论
-	    htWorldCommentDao.updateCommentValid(worldCommnetId, valid);
+	    adService.updateADComment(worldCommnetId, valid);
 	    JSONUtil.optSuccess(jsonMap);
 	} catch (Exception e) {
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);

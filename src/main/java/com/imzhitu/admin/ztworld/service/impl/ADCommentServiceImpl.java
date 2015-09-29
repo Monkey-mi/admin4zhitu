@@ -1,15 +1,19 @@
 package com.imzhitu.admin.ztworld.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hts.web.base.constant.Tag;
+import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.common.pojo.ADKeywordDTO;
 import com.imzhitu.admin.common.pojo.ZTWorldCommentDto;
+import com.imzhitu.admin.ztworld.dao.HTWorldCommentDao;
 import com.imzhitu.admin.ztworld.mapper.ADCommentMapper;
 import com.imzhitu.admin.ztworld.service.ADCommentService;
 import com.imzhitu.admin.ztworld.service.ADKeywordCacheService;
@@ -28,6 +32,9 @@ public class ADCommentServiceImpl extends BaseServiceImpl implements ADCommentSe
 
 	@Autowired
 	private ADKeywordCacheService cacheService;
+	
+	@Autowired
+    private HTWorldCommentDao htWorldCommentDao;
 
 	@Override
 	public void queryADCommentList(ZTWorldCommentDto dto, Integer page, Integer rows, Map<String, Object> jsonMap)
@@ -48,8 +55,34 @@ public class ADCommentServiceImpl extends BaseServiceImpl implements ADCommentSe
 	}
 
 	@Override
-	public void updateADComment(ZTWorldCommentDto dto) throws Exception {
-		mapper.updateADComment(dto);
+	public void updateADComment(Integer adCommentId, Integer valid) throws Exception {
+		
+		// 更新广告评论表屏蔽状态
+		mapper.updateADComment(adCommentId, valid);
+		
+		// 根据广告评论主键id，查询此条广告评论
+		ZTWorldCommentDto adComment = mapper.queryADCommentById(adCommentId);
+
+		// 根据评论内容，织图id，作者id，查询此条评论
+		Map<String, Object> attrMap = new HashMap<String, Object>();
+		attrMap.put("content", adComment.getContent());
+		attrMap.put("world_id", adComment.getWorldId());
+		attrMap.put("author_id", adComment.getAuthorId());
+		
+		Map<String, Object> userAttrMap = new HashMap<String, Object>();
+		userAttrMap.put("id", adComment.getAuthorId());
+		
+		List<ZTWorldCommentDto> worldCommentList = htWorldCommentDao.queryComment(attrMap , userAttrMap, new RowSelection(1, 1));
+		
+		// 更新织图评论的有效性，理论上只能获取出唯一条评论，故取第一个
+	    htWorldCommentDao.updateCommentValid(worldCommentList.get(0).getId(), valid);
+	    
+	    // 若为生效，则屏蔽状态设置为0，若为失效，屏蔽状态设置为1
+	    if (valid == Tag.TRUE) {
+	    	htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.FALSE);
+	    } else {
+	    	htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.TRUE);
+	    }
 	}
 
 	@Override

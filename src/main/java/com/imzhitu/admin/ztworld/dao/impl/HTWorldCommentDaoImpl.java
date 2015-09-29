@@ -84,11 +84,16 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public List<ZTWorldCommentDto> queryComment(Map<String, Object> attrMap, Map<String, Object> userAttrMap, RowSelection rowSelection) {
-		String sql = buildSelectWorldSQL(QUERY_COMMENT_HEAD, QUERY_COMMENT_FOOT, attrMap, userAttrMap);
+		/*
+		 * 此方法目前在正式环境上被用到的，只有广告评论状态更改时，所以去掉了foot中valid的限制
+		 * 以此可以获得只根据查询条件attrMap得到的结果集
+		 * @ modify by zhangbo 2015-09-29
+		 */
+		String sql = buildSelectWorldSQL(QUERY_COMMENT_HEAD, "", attrMap, userAttrMap);
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
+//		argsList.add(Tag.TRUE);
 		return queryForPage(sql, argsList.toArray(), new RowMapper<ZTWorldCommentDto>() {
 
 			@Override
