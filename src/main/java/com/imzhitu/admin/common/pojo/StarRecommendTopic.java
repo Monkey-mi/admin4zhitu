@@ -27,6 +27,9 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	private String title;
 	private String introduceHead;
 	private String introduceFoot;
+	private String stickerButton;
+	private String shareButton;
+	private String foot;
 	public Integer getId() {
 		return id;
 	}
@@ -64,11 +67,32 @@ public class StarRecommendTopic extends AbstractNumberDto{
 		this.introduceFoot = introduceFoot;
 	}
 	
+	public String getStickerButton() {
+		return stickerButton;
+	}
+	public void setStickerButton(String stickerButton) {
+		this.stickerButton = stickerButton;
+	}
+	
+	public String getShareButton() {
+		return shareButton;
+	}
+	public void setShareButton(String shareButton) {
+		this.shareButton = shareButton;
+	}
+	public String getFoot() {
+		return foot;
+	}
+	public void setFoot(String foot) {
+		this.foot = foot;
+	}
 	@Override
 	public String toString() {
 		return "StarRecommendTopic [id=" + id + ", backgroundColor=" + backgroundColor + ", fileName=" + fileName
-				+ ", title=" + title + ", introduceHead=" + introduceHead + ", introduceFoot=" + introduceFoot + "]";
+				+ ", title=" + title + ", introduceHead=" + introduceHead + ", introduceFoot=" + introduceFoot
+				+ ", foot=" + foot + "]";
 	}
+
 	
 	
 }

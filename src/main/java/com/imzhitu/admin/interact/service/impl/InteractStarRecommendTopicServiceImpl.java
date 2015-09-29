@@ -30,13 +30,16 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 		*	mishengliang
 	 */
 	@Override
-	public void addTopic(String backgroundColor,String fileName,String title,String introduceHead,String introduceFoot)  throws Exception{
+	public void addTopic(String backgroundColor,String fileName,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception{
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setBackgroundColor(backgroundColor);
 		dto.setFileName(fileName);
 		dto.setTitle(title);
 		dto.setIntroduceHead(introduceHead);
 		dto.setIntroduceFoot(introduceFoot);
+		dto.setStickerButton(stickerButton);
+		dto.setShareButton(shareButton);
+		dto.setFoot(foot);
 		mapper.addStarRecommendTopic(dto);
 	}
 
@@ -52,7 +55,7 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 	}
 	
 	@Override
-	public void updateTopic(Integer id,String backgroundColor,String fileName,String title,String introduceHead,String introduceFoot)  throws Exception{
+	public void updateTopic(Integer id,String backgroundColor,String fileName,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception{
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setId(id);
 		dto.setBackgroundColor(backgroundColor);
@@ -60,6 +63,9 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 		dto.setTitle(title);
 		dto.setIntroduceHead(introduceHead);
 		dto.setIntroduceFoot(introduceFoot);
+		dto.setStickerButton(stickerButton);
+		dto.setShareButton(shareButton);
+		dto.setFoot(foot);
 		mapper.updateStarRecommendTopic(dto);
 	}
 	

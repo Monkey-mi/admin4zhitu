@@ -53,6 +53,7 @@ import com.imzhitu.admin.interact.mapper.InteractWorldLikedMapper;
 import com.imzhitu.admin.interact.service.InteractCommentService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
+import com.imzhitu.admin.op.mapper.OpZombieChannelMapper;
 import com.imzhitu.admin.op.mapper.OpZombieMapper;
 import com.imzhitu.admin.op.service.OpZombieChannelService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
@@ -203,7 +204,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	private com.imzhitu.admin.interact.dao.InteractCommentDao interactCommentDao;
 	
 	@Autowired
-	private com.imzhitu.admin.interact.mapper.InteractAutoResponseMapper interactAutoResponseMapper;
+	private OpZombieChannelMapper zombieChannelMapper;
 	
 	private Logger log = Logger.getLogger(InteractWorldServiceImpl.class);
 	
@@ -733,10 +734,29 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		followZombiesTotal = Math.round(followZombiesTotal / 100.00f);
 		int unFollowZombiesTotal = likedCount > commentCount ? likedCount - followZombiesTotal : commentCount - followZombiesTotal;
 		
+		/*
+		 * 对比需要数和总的数据库中的数据对比
+		 * @modify by zhangbo 2015-09-28
+		 */
+		Integer fzListTotalCount = 0;	// 频道粉丝马甲总数
+		Integer unFzListTotalCount = 0;	// 频道非粉丝马甲总数
+		fzListTotalCount = zombieChannelMapper.queryNotInteractNRandomFollowZombieCount(userId, channelId, worldId);
+		unFzListTotalCount = zombieChannelMapper.queryNotInteractNRandomNotFollowZombieCount(userId, channelId, worldId);
+		int total = likedCount > commentCount ? likedCount : commentCount;
+		if(fzListTotalCount + unFzListTotalCount > total){
+			if (followZombiesTotal < fzListTotalCount&&unFollowZombiesTotal >= unFzListTotalCount) {
+				followZombiesTotal = total - unFzListTotalCount;
+			} else if(followZombiesTotal >= fzListTotalCount&&unFollowZombiesTotal < unFzListTotalCount){
+				unFollowZombiesTotal = total - followZombiesTotal;
+			}
+		}else {
+			throw new Exception("没有足够的马甲数");
+		}
+		
 		//查询粉丝马甲
 		if ( followZombiesTotal > 0){
 			try{
-				fzList = zombieMapper.queryNotInteractNRandomFollowZombie(userId, worldId,followZombiesTotal);
+				fzList = zombieChannelMapper.queryNotInteractNRandomFollowZombie(userId, channelId, worldId,followZombiesTotal);
 				if(fzList != null){
 					fzListLength = fzList.size();
 				}

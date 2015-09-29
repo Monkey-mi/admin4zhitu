@@ -8,24 +8,27 @@
 		<result property="title" column="title" jdbcType="VARCHAR"/>
 		<result property="introduceHead" column="introduce_head" jdbcType="VARCHAR"/>
 		<result property="introduceFoot" column="introduce_foot" jdbcType="VARCHAR"/>
+		<result property="stickerButton" column="sticker_button" jdbcType="VARCHAR"/>
+		<result property="shareButton" column="share_button" jdbcType="VARCHAR"/>
+		<result property="foot" column="foot" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- 增加模块信息 -->
 	<insert id="addStarRecommendTopic">
 		insert into 
-			hts_admin.star_recommend_topic
-				(background_color,file_name,title,introduce_head,introduce_foot) 
+			hts.operations_channel_topic
+				(background_color,file_name,title,introduce_head,introduce_foot,sticker_button,share_button,foot) 
 			values 
-				(#{backgroundColor},#{fileName},#{title},#{introduceHead},#{introduceFoot})
+				(#{backgroundColor},#{fileName},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton},#{foot})
 	</insert>
 	
 	<select id="getStarRecommendTopic"  resultMap="StarRecommendTopic">
 	select *
-	 from hts_admin.star_recommend_topic
+	 from hts.operations_channel_topic
 	</select>
 	
 	<update id="updateStarRecommendTopic">
-	update hts_admin.star_recommend_topic
+	update hts.operations_channel_topic
 	<set>
 	<if test="backgroundColor!=null">
 	background_color=#{backgroundColor},
@@ -40,7 +43,16 @@
 	introduce_head=#{introduceHead},
 	</if>
 	<if test="introduceFoot!=null">
-	introduce_foot=#{introduceFoot}
+	introduce_foot=#{introduceFoot},
+	</if>
+	<if test="stickerButton!=null">
+	sticker_button=#{stickerButton},
+	</if>
+	<if test="shareButton!=null">
+	share_button=#{shareButton},
+	</if>
+	<if test="foot!=null">
+	foot=#{foot}
 	</if>
 	</set>
 	where 
@@ -48,7 +60,7 @@
 	</update>
 	
 	<delete id="destoryStarRecommendTopic">
-	delete from hts_admin.star_recommend_topic
+	delete from hts.operations_channel_topic
 	where 
 		id=#{id}
 	</delete>

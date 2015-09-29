@@ -5,7 +5,7 @@
 	<result property="id" column="id" jdbcType="INTEGER"/>
 		<result property="title1" column="title1" jdbcType="VARCHAR"/>
 		<result property="title2" column="title2" jdbcType="VARCHAR"/>
-		<result property="userId" column="userId" jdbcType="INTEGER"/>
+		<result property="userId" column="user_id" jdbcType="INTEGER"/>
 		<result property="pics" column="pics" jdbcType="VARCHAR"/>
 		<result property="intro" column="intro" jdbcType="VARCHAR"/>
 		<result property="topicId" column="topic_id" jdbcType="INTEGER"/>
@@ -14,15 +14,15 @@
 	<!-- 增加模块信息 -->
 	<insert id="addStarModule">
 		insert into 
-			hts_admin.star_module_info
-				(title1,title2,userId,pics,intro,topic_id) 
+			hts.operations_channel_topic_module
+				(title1,title2,user_id,pics,intro,topic_id) 
 			values 
 				(#{title1},#{title2},#{userId},#{pics},#{intro},#{topicId})
 	</insert>
 	
 	<select id="getStarModule"  resultMap="StarModule">
 	select *
-	 from hts_admin.star_module_info
+	 from hts.operations_channel_topic_module
  	 <where>
 	 <if test="topicId!=null and topicId!=0">
 	 topic_id = #{topicId}
@@ -31,7 +31,7 @@
 	</select>
 	
 	<update id="updateStarModule">
-	update hts_admin.star_module_info
+	update hts.operations_channel_topic_module
 	<set>
 	<if test="title1!=null">
 	title1=#{title1},
@@ -40,7 +40,7 @@
 	title2=#{title2},
 	</if>
 	<if test="userId!=null">
-	userId=#{userId},
+	user_id=#{userId},
 	</if>
 	<if test="pics!=null">
 	pics=#{pics},
@@ -54,7 +54,7 @@
 	</update>
 	
 	<delete id="destory">
-	delete from hts_admin.star_module_info
+	delete from hts.operations_channel_topic_module
 	where 
 		id=#{id}
 	</delete>
