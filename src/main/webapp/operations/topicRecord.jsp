@@ -4,53 +4,52 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>添加主题信息</title>
+<title>主题信息</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 </head>
 <body>
-    <h2>Add Topic Information</h2>
+    <h2>主题信息</h2>
     
-    <table id="dg" title="My Users" style="width:1200px;height:400px"></table>
-    <div id="toolbar">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">New User</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">Edit User</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">Remove User</a>
+    <table id="dg" title="主题信息" style="height:400px"></table>
+    <div id="toolbar" >
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新建</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="destroyUser()">删除</a>
     </div>
     
     <div id="dlg" class="easyui-dialog" style="width:400px;height:300px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
-        <div class="ftitle"> Information</div>
-        <form id="fm" method="post" novalidate>
+        <form id="fm" method="post" >
+<!--             <div class="fitem">
+                <label>背景色:</label>
+                <input name="backgroundColor" class="easyui-textbox"  data-options="width:20px">
+            </div> -->
             <div class="fitem">
-                <label>BackgroundColor:</label>
-                <input name="backgroundColor" class="easyui-textbox" >
-            </div>
-            <div class="fitem">
-                <label>FileName:</label>
+                <label>文件名:</label>
                 <input name="fileName" class="easyui-textbox" >
             </div>
             <div class="fitem">
-                <label>Title:</label>
+                <label>主题名:</label>
                 <input name="title" class="easyui-textbox">
             </div>
              <div class="fitem">
-                <label>IntroduceHead:</label>
+                <label>前介绍:</label>
                 <input name="introduceHead" class="easyui-textbox" >
             </div>
             <div class="fitem">
-                <label>IntroduceFoot:</label>
+                <label>后介绍:</label>
                 <input name="introduceFoot" class="easyui-textbox">
             </div>
                    <div class="fitem">
-                <label>stickerButton:</label>
-                <input name="stickerButton" class="easyui-textbox">
+                <label>发图按钮:</label>
+                <input id="stickerButton"  name="stickerButton"  class="easyui-textbox"  >
             </div>
-                   <div class="fitem">
-                <label>shareButton:</label>
-                <input name="shareButton" class="easyui-textbox">
+                   <div class="fitem">	
+                <label>分享按钮:</label>
+                <input id="shareButton" name="shareButton" class="easyui-textbox" >
             </div>
             <div class="fitem">
-                <label>foot:</label>
+                <label>来自织图	:</label>
                 <input name="foot" class="easyui-textbox">
             </div>
         </form>
@@ -62,8 +61,10 @@
     <script type="text/javascript">
         var url;
         function newUser(){
-            $('#dlg').dialog('open').dialog('center').dialog('setTitle','New User');
+            $('#dlg').dialog('open').dialog('center').dialog('setTitle','增加主题');
             $('#fm').form('clear');
+            $('#stickerButton').val('我也来一发');
+            $('#shareButton').val('分享出去');
             url = './admin_interact/starRecommendTopic_add';
         }
         function editUser(){
@@ -120,17 +121,17 @@
             pagination:true,
             singleSelect:true,
             rownumbers:true,
-         //   fitColumns:true,
+            fitColumns:true,
             columns:[[
 				{field:'id',title:'ID',width:100,align:"center"},
-				 {field:'backgroundColor',title:'BackgroundColor',width:100,align:"center"},
-                {field:'fileName',title:'FileName',width:100,align:"center"},
-                {field:'title',title:'Title',width:100,align:"center"},
-                {field:'introduceHead',title:'IntroduceHead',width:100,align:"center"},
-                {field:'introduceFoot',title:'IntroduceFoot',width:300,align:"center"},
-                {field:'stickerButton',title:'stickerButton',width:100,align:"center"},
-                {field:'shareButton',title:'shareButton',width:100,align:"center"},
-                {field:'foot',title:'foot',width:100,align:"center"}
+		//		 {field:'backgroundColor',title:'背景色',width:100,align:"center"},
+                {field:'fileName',title:'文件名',width:100,align:"center"},
+                {field:'title',title:'主题',width:100,align:"center"},
+                {field:'introduceHead',title:'前介绍',width:100,align:"center"},
+                {field:'introduceFoot',title:'后介绍',width:300,align:"center"},
+                {field:'stickerButton',title:'发图按钮',width:100,align:"center"},
+                {field:'shareButton',title:'分享按钮',width:100,align:"center"},
+                {field:'foot',title:'来自织图',width:100,align:"center"}
             ]]
         });
         
@@ -158,5 +159,7 @@
             width:160px;
         }
     </style>
+    
+    
 </body>
 </html>
