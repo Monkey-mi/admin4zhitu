@@ -415,6 +415,24 @@ body {
 			  		{field : 'id',title : 'ID',align : 'center', width : 45},
 			  		{field : 'commentId',title : '评论ID',hidden:'true'},
 					{field : 'userId',title : '用户ID',align : 'center',width : 80},
+					{field : 'userAvatar',title : '头像',align : 'center', 
+						formatter: function(value, row, index) {
+							imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg');
+							return "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "' onclick='openModifyUserInfoWin(" + row.userId + ",\"" + row.userName + "\"," + row.sex + ")'/>";
+						}
+					},
+					{field : 'userName',title : '用户名称',align : 'center'},
+					{field : 'sex',title : '用户性别',align : 'center',width : 80, 
+						formatter: function(value, row, index) {
+							if(value==1) {
+								return "男";
+							} else if(value==2) {
+								return "女";
+							} else {
+								return "未知";
+							}
+						}
+					},
 					{field : 'content',title : '评论',align : 'left',width : 430,editor:'text'},
 					{field : 'dateSchedule', title:'计划日期', align : 'center',width : 150, 
 						formatter: function(value,row,index){
@@ -630,8 +648,64 @@ body {
 			resizable : false
 		});
 		
+		$("#user_info_win").window({
+			title:'修改马甲用户信息',
+			modal : true,
+			width : 700,
+			height : 200,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-edit',
+			resizable : false,
+			onClose : function() {
+				$("#user_info_form").form('reset');
+			}
+		});
+		
 		worldOnAfterInit();
 	});
+	
+	/**
+	 * 打开修改用户信息窗口
+	 */
+	function openModifyUserInfoWin(userId, userName, sex) {
+		$("#user_info_form_userId").val(userId);
+		$("#user_info_form_name").val(userName);
+		$("#user_info_form_sex").combobox("setValue",sex);
+//		$("#user_info_form_sex").val(sex);
+		
+		$("#user_info_win").window("open");
+	};
+	
+	/**
+	 * 修改用户信息
+	 */
+	function modifyUserInfoSubmit() {
+		// 若添加的用户名为空，则直接返回
+		if ($("#user_info_form_name").val().replace(/(^\s*)|(\s*$)/g,'') == "") {
+			$.messager.alert("温馨提示","修改的用户名称不能为空！");
+			return;
+		} else {
+			var $form = $('#user_info_form');
+			$form.form('submit', {
+			    url:$form.attr("action"),
+			    success:function(data){
+					var result = $.parseJSON(data);
+					if(result['result'] == 0) {
+						$.messager.alert('提示',result['msg']);  //提示添加信息成功
+						$('#user_info_win').window('close');  //关闭添加窗口
+						$("#interactComment").datagrid("reload");
+					} else {
+						$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+					}
+			    }
+			});
+		}
+	};
+	
 </script>
 
 </head>
@@ -680,6 +754,46 @@ body {
 		<a href="javascript:void(0);" onclick="interactDelete('id');" class="easyui-linkbutton" title="长处用户等级" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
 	</div>
 	<table id="interactComment"></table>
+	
+	<!-- 修改马甲用户信息 -->
+	<div id="user_info_win">
+		<form id="user_info_form" action="./admin_user/user_updateUserNameAndSex" method="post">
+			<table class="htm_edit_table" width="600">
+				<tr>
+					<td class="leftTd">用户名称：</td>
+					<td>
+						<input id="user_info_form_name" type="text" name="userName" onchange="validateSubmitOnce=true;"></input>
+					</td>
+				</tr>
+				<tr>
+					<td class="leftTd">用户性别：</td>
+					<td>
+						<select id="user_info_form_sex" name="sex" class="easyui-combobox" style="width:100px;">
+							<option value="0">未知</option>
+				        	<option value="1">男</option>
+				        	<option value="2">女</option>
+				        </select>
+					</td>
+				</tr>
+				<tr class="none">
+					<td colspan="2"><input type="text" name="userId" id="user_info_form_userId" /></td>
+				</tr>
+				<tr>
+					<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+						<a class="easyui-linkbutton" iconCls="icon-ok" onclick="modifyUserInfoSubmit();">确定</a>
+						<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#user_info_win').window('close');">取消</a>
+					</td>
+				</tr>
+				<tr class="loading none">
+					<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+						<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+						<span style="vertical-align:middle;">排序中...</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
   </div>
 </body>
 </html>

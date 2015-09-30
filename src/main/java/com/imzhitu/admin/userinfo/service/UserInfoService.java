@@ -94,7 +94,7 @@ public interface UserInfoService extends BaseService {
 	 * @throws Exception
 	 */
 	public void queryUserInfoByUserId(Integer userId,Map<String,Object>jsonMap)throws Exception;
-	
+
 }
 
 

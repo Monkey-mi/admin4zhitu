@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
 
 public class InteractWorldCommentDto  extends AbstractNumberDto{
@@ -17,6 +18,9 @@ public class InteractWorldCommentDto  extends AbstractNumberDto{
 	private Integer interactId;
 	private Integer worldId; // 织图id
 	private Integer userId;
+	private String userName;
+	private String userAvatar;
+	private Integer sex = Tag.SEX_UNKNOWN;
 	private Integer commentId;
 	private Date dateAdded;
 	private Date dateSchedule;
@@ -33,7 +37,7 @@ public class InteractWorldCommentDto  extends AbstractNumberDto{
 	public InteractWorldCommentDto(Integer id, Integer interactId,
 			Integer worldId, Integer userId, Integer commentId, Date dateAdded,
 			Date dateSchedule, Integer valid, Integer finished, Integer commentValid, 
-			String content) {
+			String content, String userName, String userAvatar, Integer sex) {
 		this.id = id;
 		this.interactId = interactId;
 		this.worldId = worldId;
@@ -45,6 +49,9 @@ public class InteractWorldCommentDto  extends AbstractNumberDto{
 		this.finished = finished;
 		this.commentValid = commentValid;
 		this.content = content;
+		this.userName = userName;
+		this.userAvatar = userAvatar;
+		this.sex = sex;
 	}
 
 	public Integer getId() {
@@ -136,6 +143,48 @@ public class InteractWorldCommentDto  extends AbstractNumberDto{
 
 	public void setCommentValid(Integer commentValid) {
 		this.commentValid = commentValid;
+	}
+
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	 * @return the userAvatar
+	 */
+	public String getUserAvatar() {
+		return userAvatar;
+	}
+
+	/**
+	 * @param userAvatar the userAvatar to set
+	 */
+	public void setUserAvatar(String userAvatar) {
+		this.userAvatar = userAvatar;
+	}
+
+	/**
+	 * @return the sex
+	 */
+	public Integer getSex() {
+		return sex;
+	}
+
+	/**
+	 * @param sex the sex to set
+	 */
+	public void setSex(Integer sex) {
+		this.sex = sex;
 	}
 	
 	

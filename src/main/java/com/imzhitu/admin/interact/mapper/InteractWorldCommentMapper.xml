@@ -13,6 +13,9 @@
 		<result property="dateSchedule" column="date_schedule" jdbcType="TIMESTAMP"/>
 		<result property="commentValid" column="comment_valid" jdbcType="INTEGER"/>
 		<result property="content" column="content" jdbcType="VARCHAR"/>
+		<result property="userName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="userAvatar" column="user_avatar" jdbcType="VARCHAR"/>
+		<result property="sex" column="sex" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- INSERT -->
@@ -107,8 +110,12 @@
 	
 	<!-- SELECT -->
 	<select id="queryWorldComment" resultMap="WorldCommentMap">
-		select wc.* ,ic.valid as comment_valid,ic.content
-		from hts_admin.interact_world_comment wc,hts_admin.interact_comment ic
+		select 
+			wc.* ,ic.valid as comment_valid,ic.content,u.user_name,u.user_avatar,u.sex
+		from 
+			hts_admin.interact_world_comment wc,
+			hts_admin.interact_comment ic,
+			hts.user_info u
 		<where>
 			<if test="id != null">
 				wc.id = #{id}
@@ -135,6 +142,7 @@
 				and wc.date_schedule between #{dateAdded} and #{dateSchedule}
 			</if>
 			and wc.comment_id=ic.id
+			and u.id=wc.user_id
 		</where>
 		order by id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
