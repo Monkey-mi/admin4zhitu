@@ -11,23 +11,8 @@
 <body>
     <h2>添加小模块信息</h2>
     
-<!--     <table id="dg" title="My Users" class="easyui-datagrid" style="width:900px;height:400px"
-             url="./admin_interact/addModule_get"
-            toolbar="#toolbar" pagination="true"
-            rownumbers="true" fitColumns="true" singleSelect="true">
-        <thead>
-            <tr>
-                <th data-options="field:'title1',width:100">Title1</th>
-                <th data-options="field:'title2',width:100">Title2</th>
-                <th data-options="field:'userId',width:100">UserId</th>
-                <th data-options="field:'pics',width:100">Pics</th>	
-                <th data-options="field:'intro',width:100">Intro</th> 
-            </tr>
-        </thead>
-    </table> -->
-    
     <table id="dg" title="模块信息" style="height:400px"></table>
-    <div id="toolbar">
+    <div id="toolbar"  >
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新建</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="destroyUser()">删除</a>
@@ -35,7 +20,7 @@
     </div>
     
     <div id="dlg" class="easyui-dialog" style="width:800px;height:555px;padding:10px 20px"
-            closed="true" buttons="#dlg-buttons">
+            closed="true" buttons="#dlg-buttons"  >
         <form id="fm" method="post" >
             <div class="fitem">
                 <label>小标题:</label>
@@ -89,7 +74,7 @@
 			</div>
 		</form>
     </div>
-    <div id="dlg-buttons">
+    <div id="dlg-buttons" >
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">Save</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
     </div>
@@ -102,7 +87,7 @@
         
         function newUser(){
         	var topicId = $('#topicId').combobox('getValue');
-            $('#dlg').dialog('open').dialog('center').dialog('setTitle','New User');
+            $('#dlg').dialog('open').dialog('center').dialog('setTitle','新建模块信息');
             $('#fm').form('clear');
             $('#topicIdIn').val(topicId);
             url = './admin_interact/addModule_add';
@@ -167,19 +152,18 @@
             fitColumns:true,
             columns:[[
 				{field:'id',title:'ID',width:100,align:"center"},
-                {field:'title1',title:'小标题',width:100,align:"center"},
-                {field:'title2',title:'小副标题',width:100,align:"center"},
+                {field:'title',title:'小标题',width:100,align:"center"},
+                {field:'subtitle',title:'小副标题',width:100,align:"center"},
                 {field:'userId',title:'用户ID',width:100,align:"center"},
                 {field:'pics',title:'展示图片',width:100,align:"center"},
                 {field:'intro',title:'模块介绍',width:300,align:"center"},
-                {field:'topicId',title:'主题ID',width:50,align:"center"}
-            ]]
+                {field:'topicId',title:'主题ID',width:50,align:"center"}            ]]
         });
         
         $("#topicId").combobox({
         	url:"./admin_interact/starRecommendTopic_get",
         	valueField:'id',
-        	textField:'id',
+        	textField:'title',
         	onSelect:function(rec){
         		$("#dg").datagrid('load',{topicId:rec.id});
         	}

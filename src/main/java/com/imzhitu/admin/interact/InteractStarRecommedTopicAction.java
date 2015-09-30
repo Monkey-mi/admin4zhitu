@@ -31,6 +31,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	private String stickerButton;
 	private String shareButton;
 	private String foot;
+	private String link;
 	
 	public String add(){
 		try {
@@ -159,6 +160,13 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	public void setFoot(String foot) {
 		this.foot = foot;
 	}
-	
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
 	
 }

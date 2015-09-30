@@ -121,7 +121,7 @@
             pagination:true,
             singleSelect:true,
             rownumbers:true,
-            fitColumns:true,
+            //fitColumns:true,
             columns:[[
 				{field:'id',title:'ID',width:100,align:"center"},
 		//		 {field:'backgroundColor',title:'背景色',width:100,align:"center"},
@@ -131,7 +131,10 @@
                 {field:'introduceFoot',title:'后介绍',width:300,align:"center"},
                 {field:'stickerButton',title:'发图按钮',width:100,align:"center"},
                 {field:'shareButton',title:'分享按钮',width:100,align:"center"},
-                {field:'foot',title:'来自织图',width:100,align:"center"}
+                {field:'foot',title:'来自织图',width:100,align:"center"},
+                {field:'link',title:'访问链接',width:300,align:"center",formatter:function(value,row,index){
+                	return "<a style='text-decoration:none;'  href="+value+">" + value + "</a>";
+                }}
             ]]
         });
         

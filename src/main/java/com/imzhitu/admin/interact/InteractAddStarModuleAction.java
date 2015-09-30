@@ -23,8 +23,8 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	private InteractStarModuleService interactStarModuleService;
 
 	private Integer id;
-	private String  title1;
-	private String  title2;
+	private String  title;
+	private String  subtitle;
 	private Integer userId;
 	private String pics;
 	private String intro;
@@ -32,7 +32,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
 	public String add(){
 		try {
-			interactStarModuleService.add(title1,title2,userId,pics,intro,topicId);
+			interactStarModuleService.add(title,subtitle,userId,pics,intro,topicId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -65,7 +65,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
 	public String update(){
 		try {
-			interactStarModuleService.update(id,title1,title2,userId,pics,intro);
+			interactStarModuleService.update(id,title,subtitle,userId,pics,intro);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -92,18 +92,23 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getTitle1() {
-		return title1;
+
+	public String getTitle() {
+		return title;
 	}
-	public void setTitle1(String title1) {
-		this.title1 = title1;
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
-	public String getTitle2() {
-		return title2;
+
+	public String getSubtitle() {
+		return subtitle;
 	}
-	public void setTitle2(String title2) {
-		this.title2 = title2;
+
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
 	}
+
 	public Integer getUserId() {
 		return userId;
 	}

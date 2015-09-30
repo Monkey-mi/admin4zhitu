@@ -22,8 +22,8 @@ public class StarModule extends AbstractNumberDto{
 	private static final long serialVersionUID = -8989404256705818104L;
 
 	private Integer  id;
-	private String  title1;
-	private String  title2;
+	private String  title;
+	private String  subtitle;
 	private Integer userId;
 	private String pics;
 	private String intro;
@@ -42,18 +42,17 @@ public class StarModule extends AbstractNumberDto{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
-	public String getTitle1() {
-		return title1;
+	public String getTitle() {
+		return title;
 	}
-	public void setTitle1(String title1) {
-		this.title1 = title1;
+	public void setTitle(String title) {
+		this.title = title;
 	}
-	public String getTitle2() {
-		return title2;
+	public String getSubtitle() {
+		return subtitle;
 	}
-	public void setTitle2(String title2) {
-		this.title2 = title2;
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
 	}
 	public Integer getUserId() {
 		return userId;
@@ -75,7 +74,7 @@ public class StarModule extends AbstractNumberDto{
 	}
 	@Override
 	public String toString() {
-		return "StarModule [id=" + id + ", title1=" + title1 + ", title2=" + title2 + ", userId=" + userId + ", pics="
+		return "StarModule [id=" + id + ", title=" + title + ", subtitle=" + subtitle + ", userId=" + userId + ", pics="
 				+ pics + ", intro=" + intro + ", topicId=" + topicId + "]";
 	}
 	

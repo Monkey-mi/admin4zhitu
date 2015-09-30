@@ -11,6 +11,7 @@
 		<result property="stickerButton" column="sticker_button" jdbcType="VARCHAR"/>
 		<result property="shareButton" column="share_button" jdbcType="VARCHAR"/>
 		<result property="foot" column="foot" jdbcType="VARCHAR"/>
+		<result property="link" column="link" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- 增加模块信息 -->
@@ -23,7 +24,7 @@
 	</insert>
 	
 	<select id="getStarRecommendTopic"  resultMap="StarRecommendTopic">
-	select *
+	select *,concat("http://imzhitu.com/operations/starModule.html?topicId=", id) link
 	 from hts.operations_channel_topic
 	</select>
 	

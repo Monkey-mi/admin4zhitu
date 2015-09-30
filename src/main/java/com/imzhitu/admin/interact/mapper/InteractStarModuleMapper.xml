@@ -3,8 +3,8 @@
 <mapper namespace="com.imzhitu.admin.interact.mapper.InteractStarModuleMapper">
 	<resultMap type="com.imzhitu.admin.common.pojo.StarModule" id="StarModule">
 	<result property="id" column="id" jdbcType="INTEGER"/>
-		<result property="title1" column="title1" jdbcType="VARCHAR"/>
-		<result property="title2" column="title2" jdbcType="VARCHAR"/>
+		<result property="title" column="title" jdbcType="VARCHAR"/>
+		<result property="subtitle" column="subtitle" jdbcType="VARCHAR"/>
 		<result property="userId" column="user_id" jdbcType="INTEGER"/>
 		<result property="pics" column="pics" jdbcType="VARCHAR"/>
 		<result property="intro" column="intro" jdbcType="VARCHAR"/>
@@ -15,9 +15,9 @@
 	<insert id="addStarModule">
 		insert into 
 			hts.operations_channel_topic_module
-				(title1,title2,user_id,pics,intro,topic_id) 
+				(title1,subtitle,user_id,pics,intro,topic_id) 
 			values 
-				(#{title1},#{title2},#{userId},#{pics},#{intro},#{topicId})
+				(#{title},#{subtitle},#{userId},#{pics},#{intro},#{topicId})
 	</insert>
 	
 	<select id="getStarModule"  resultMap="StarModule">
@@ -36,8 +36,8 @@
 	<if test="title1!=null">
 	title1=#{title1},
 	</if>
-	<if test="title2!=null">
-	title2=#{title2},
+	<if test="subtitle!=null">
+	subtitle=#{subtitle},
 	</if>
 	<if test="userId!=null">
 	user_id=#{userId},

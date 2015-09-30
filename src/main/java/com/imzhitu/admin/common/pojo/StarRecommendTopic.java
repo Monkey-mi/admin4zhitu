@@ -30,6 +30,7 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	private String stickerButton;
 	private String shareButton;
 	private String foot;
+	private String link;
 	public Integer getId() {
 		return id;
 	}
@@ -86,13 +87,13 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	public void setFoot(String foot) {
 		this.foot = foot;
 	}
-	@Override
-	public String toString() {
-		return "StarRecommendTopic [id=" + id + ", backgroundColor=" + backgroundColor + ", fileName=" + fileName
-				+ ", title=" + title + ", introduceHead=" + introduceHead + ", introduceFoot=" + introduceFoot
-				+ ", foot=" + foot + "]";
+	
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
 	}
 
-	
 	
 }
