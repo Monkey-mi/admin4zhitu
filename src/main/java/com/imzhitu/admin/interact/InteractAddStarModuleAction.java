@@ -27,12 +27,15 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	private String  subtitle;
 	private Integer userId;
 	private String pics;
+	private String pic02;
+	private String pic03;
+	private String pic04;
 	private String intro;
 	private Integer topicId;
 	
 	public String add(){
 		try {
-			interactStarModuleService.add(title,subtitle,userId,pics,intro,topicId);
+			interactStarModuleService.add(title,subtitle,userId,pics,pic02,pic03,pic04,intro,topicId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -65,7 +68,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
 	public String update(){
 		try {
-			interactStarModuleService.update(id,title,subtitle,userId,pics,intro);
+			interactStarModuleService.update(id,title,subtitle,userId,pics,pic02,pic03,pic04,intro);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -121,6 +124,31 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	public void setPics(String pics) {
 		this.pics = pics;
 	}
+	
+	public String getPic02() {
+		return pic02;
+	}
+
+	public void setPic02(String pic02) {
+		this.pic02 = pic02;
+	}
+
+	public String getPic03() {
+		return pic03;
+	}
+
+	public void setPic03(String pic03) {
+		this.pic03 = pic03;
+	}
+
+	public String getPic04() {
+		return pic04;
+	}
+
+	public void setPic04(String pic04) {
+		this.pic04 = pic04;
+	}
+
 	public String getIntro() {
 		return intro;
 	}

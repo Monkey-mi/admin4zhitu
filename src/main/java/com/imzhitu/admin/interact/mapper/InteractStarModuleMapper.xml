@@ -7,6 +7,9 @@
 		<result property="subtitle" column="subtitle" jdbcType="VARCHAR"/>
 		<result property="userId" column="user_id" jdbcType="INTEGER"/>
 		<result property="pics" column="pics" jdbcType="VARCHAR"/>
+		<result property="pic02" column="pic02" jdbcType="VARCHAR"/>
+		<result property="pic03" column="pic03" jdbcType="VARCHAR"/>
+		<result property="pic04" column="pic04" jdbcType="VARCHAR"/>
 		<result property="intro" column="intro" jdbcType="VARCHAR"/>
 		<result property="topicId" column="topic_id" jdbcType="INTEGER"/>
 	</resultMap>
@@ -15,9 +18,9 @@
 	<insert id="addStarModule">
 		insert into 
 			hts.operations_channel_topic_module
-				(title,subtitle,user_id,pics,intro,topic_id) 
+				(title,subtitle,user_id,pics,pic02,pic03,pic04,intro,topic_id) 
 			values 
-				(#{title},#{subtitle},#{userId},#{pics},#{intro},#{topicId})
+				(#{title},#{subtitle},#{userId},#{pics},#{pic02},#{pic03},#{pic04},#{intro},#{topicId})
 	</insert>
 	
 	<select id="getStarModule"  resultMap="StarModule">
@@ -44,6 +47,15 @@
 	</if>
 	<if test="pics!=null">
 	pics=#{pics},
+	</if>
+	<if test="pic02!=null">
+	pic02=#{pic02},
+	</if>
+	<if test="pic03!=null">
+	pic03=#{pic03},
+	</if>
+	<if test="pic04!=null">
+	pic04=#{pic04},
 	</if>
 	<if test="intro!=null">
 	intro=#{intro}
