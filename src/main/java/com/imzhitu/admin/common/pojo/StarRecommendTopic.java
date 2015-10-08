@@ -23,7 +23,7 @@ public class StarRecommendTopic extends AbstractNumberDto{
 
 	private Integer  id;
 	private String  backgroundColor;
-	private String  fileName;
+	private String  bannerPic;
 	private String title;
 	private String introduceHead;
 	private String introduceFoot;
@@ -43,11 +43,11 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	public void setBackgroundColor(String backgroundColor) {
 		this.backgroundColor = backgroundColor;
 	}
-	public String getFileName() {
-		return fileName;
+	public String getBannerPic() {
+		return bannerPic;
 	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setBannerPic(String bannerPic) {
+		this.bannerPic = bannerPic;
 	}
 	public String getTitle() {
 		return title;

@@ -15,7 +15,7 @@
 	<insert id="addStarModule">
 		insert into 
 			hts.operations_channel_topic_module
-				(title1,subtitle,user_id,pics,intro,topic_id) 
+				(title,subtitle,user_id,pics,intro,topic_id) 
 			values 
 				(#{title},#{subtitle},#{userId},#{pics},#{intro},#{topicId})
 	</insert>
@@ -33,8 +33,8 @@
 	<update id="updateStarModule">
 	update hts.operations_channel_topic_module
 	<set>
-	<if test="title1!=null">
-	title1=#{title1},
+	<if test="title!=null">
+	title=#{title},
 	</if>
 	<if test="subtitle!=null">
 	subtitle=#{subtitle},

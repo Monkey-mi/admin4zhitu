@@ -24,7 +24,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 
 	private Integer id;
 	private String  backgroundColor; 
-	private String  fileName;
+	private String  bannerPic;
 	private String title;
 	private String introduceHead;
 	private String introduceFoot;
@@ -35,7 +35,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String add(){
 		try {
-			interactStarRecommendTopicService.addTopic(backgroundColor,fileName,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
+			interactStarRecommendTopicService.addTopic(backgroundColor,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -69,7 +69,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String update(){
 		try {
-			interactStarRecommendTopicService.updateTopic(id,backgroundColor,fileName,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
+			interactStarRecommendTopicService.updateTopic(id,backgroundColor,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -105,12 +105,12 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 		this.backgroundColor = backgroundColor;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public String getBannerPic() {
+		return bannerPic;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setBannerPic(String bannerPic) {
+		this.bannerPic = bannerPic;
 	}
 
 	public String getTitle() {

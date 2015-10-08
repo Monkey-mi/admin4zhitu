@@ -12,70 +12,89 @@
     <h2>添加小模块信息</h2>
     
     <table id="dg" title="模块信息" style="height:400px"></table>
-    <div id="toolbar"  >
+    <div id="toolbar"  style="display:none">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新建</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="destroyUser()">删除</a>
-        <input id="topicId" >
+        <input id="i-topicId" >
     </div>
     
-    <div id="dlg" class="easyui-dialog" style="width:800px;height:555px;padding:10px 20px"
+<div id="dlg" class="easyui-dialog" style="width:580px;height:450px;padding:10px 20px;"
             closed="true" buttons="#dlg-buttons"  >
-        <form id="fm" method="post" >
-            <div class="fitem">
-                <label>小标题:</label>
-                <input name="title1" >
-            </div>
-            <div class="fitem">
-                <label>小副标题:</label>
-                <input name="title2"  >
-            </div>
-            <div class="fitem">
-                <label>用户ID:</label>
-                <input name="userId" > 	
-            </div>
-             <div class="fitem">
-<!--                 <input name="pics"  > -->
-<table>
+<form id="fm" method="post"  style="display:none">
+        
+ <table border="0">
 <tr>
 <td>
                 <label>展示图片:</label>
 </td>
-<td>
-			<input class="none" type="text" name="pic01" id="channelBanner_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-			<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-			<img id="channelBannerImg_edit01"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="205px" height="90px">
-			<div id="channelBanner_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span></div>
+<td style="height: 90px;">
+						<input class="none" type="text" name="pics" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+						<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 10px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+						<img id="channelImg_edit01"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90" height="90px">
+						<div id="channelIcon_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
+						</div>
+</td><!-- 
+<td style="height: 90px;">
+						<input class="none" type="text" name="channelIcon" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+						<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 10px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+						<img id="channelImg_edit02"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90" height="90px">
+						<div id="channelIcon_edit_upload_status02" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
+						</div>
 </td>
+<td style="height: 90px;">
+						<input class="none" type="text" name="channelIcon" id="channelIcon_edit03"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+						<a id="pic_edit_upload_btn03" style="position: absolute; margin:30px 0 0 10px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+						<img id="channelImg_edit03"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90" height="90px">
+						<div id="channelIcon_edit_upload_status03" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
+						</div>
+</td> -->
+</tr>
+<tr>
 <td>
-			<input class="none" type="text" name="pic02" id="channelBanner_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-			<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-			<img id="channelBannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="205px" height="90px">
-			<div id="channelBanner_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span></div>
+                <label>小标题:</label>
 </td>
-<td>
-			<input class="none" type="text" name="channelBanner" id="channelBanner_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-			<a id="pic_edit_upload_btn03" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-			<img id="channelBannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="205px" height="90px">
-			<div id="channelBanner_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span></div>
+<td colspan="2">
+<textarea rows="2"  name="title" ></textarea>
 </td>
 </tr>
-</table>
-					
-            </div>
-            <div class="fitem">
+<tr>
+<td>
+                <label>小副标题:</label>
+</td>
+<td colspan="2">
+<textarea rows="2"  name="subtitle" ></textarea>
+</td>
+</tr>
+<tr>
+<td>
+                <label>用户ID:</label>
+</td>
+<td colspan="2">
+<textarea rows="2"  name="userId" ></textarea>
+</td>
+</tr>
+<tr>
+<td>
                 <label>模块介绍:</label>
-<!--                 <input name="intro" > -->
-                <textarea rows="4" cols="40" name="intro"></textarea>
-            </div>
- 			<div class="fitem">
-				<label>主题ID:</label> 
-				<input id='topicIdIn' name="topicId"  readonly="true">
-			</div>
-		</form>
+</td>
+<td colspan="2">
+<textarea rows="2"  name="intro" ></textarea>
+</td>
+</tr>
+<tr>
+<td>
+                <label>主题ID:</label>
+</td>
+<td colspan="2">
+<textarea rows="2"  id="topicIdIn"  name="topicId" readonly ></textarea>
+</td>
+</tr>
+</table> 
+</form>
     </div>
-    <div id="dlg-buttons" >
-        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">Save</a>
+    <div id="dlg-buttons" style="display:none;text-align:center" >
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px" >Save</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
     </div>
   
@@ -86,17 +105,25 @@
         var url;
         
         function newUser(){
-        	var topicId = $('#topicId').combobox('getValue');
+        	var topicId = $('#i-topicId').combobox('getValue');
+        	if(topicId == ""){
+        		alert("请先选择主题号");
+        		return;
+        	}
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','新建模块信息');
-            $('#fm').form('clear');
+           
             $('#topicIdIn').val(topicId);
+            $('#fm').show();
             url = './admin_interact/addModule_add';
         }
+        
         function editUser(){
             var row = $('#dg').datagrid('getSelected');
             if (row){
-                $('#dlg').dialog('open').dialog('center').dialog('setTitle','Edit User');
+                $('#dlg').dialog('open').dialog('center').dialog('setTitle','编辑模块');
                 $('#fm').form('load',row);
+                $("#channelImg_edit01").attr('src', row.pics);
+                $('#fm').show();
                 url = './admin_interact/addModule_update?id='+row.id;
             }
         }
@@ -155,12 +182,16 @@
                 {field:'title',title:'小标题',width:100,align:"center"},
                 {field:'subtitle',title:'小副标题',width:100,align:"center"},
                 {field:'userId',title:'用户ID',width:100,align:"center"},
-                {field:'pics',title:'展示图片',width:100,align:"center"},
+                {field:'pics',title:'展示图片',width:100,align:"center",
+        			formatter:function(value,row,index) {
+        				return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+        			}	
+                },
                 {field:'intro',title:'模块介绍',width:300,align:"center"},
                 {field:'topicId',title:'主题ID',width:50,align:"center"}            ]]
         });
         
-        $("#topicId").combobox({
+        $("#i-topicId").combobox({
         	url:"./admin_interact/starRecommendTopic_get",
         	valueField:'id',
         	textField:'title',
@@ -170,58 +201,55 @@
         });
         
         
-        // 此为展示图片上传组件 
-        Qiniu.uploader({
-        	runtimes: 'html5,flash,html4',
-        	browse_button: 'pic_edit_upload_btn01',
-        	max_file_size: '100mb',
-        	flash_swf_url: 'js/plupload/Moxie.swf',
-        	chunk_size: '4mb',
-        	uptoken_url: './admin_qiniu/uptoken',
-        	domain: 'http://static.imzhitu.com/',
-        	unique_names: false,
-        	save_key: false,
-        	auto_start: true,
-        	init: {
-        		'FilesAdded': function(up, files) {
-        			$("#pic_edit_upload_btn01").hide();
-        			$("#channelBannerImg_edit01").hide();
-        			var $status = $("#channelBanner_edit_upload_status");
-        			// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，banner获取第三个
-        			$status.find('.upload_progress:eq(0)').text(0);
-        			$status.show();
-        			
-        		},
-        		'BeforeUpload': function(up, file) {
-        		},
-        		
-        		'UploadProgress': function(up, file) {
-        			var $status = $("#channelBanner_edit_upload_status");
-        			// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，banner获取第三个
-        			$status.find('.upload_progress:eq(0)').text(file.percent);
-        			
-        		},
-        		'UploadComplete': function() {
-        			$("#channelBanner_edit_upload_btn").show();
-        			$("#channelBannerImg_edit").show();
-        			$("#channelBanner_edit_upload_status").hide();
-        		},
-        		'FileUploaded': function(up, file, info) {
-        			var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
-        			$("#channelBannerImg_edit").attr('src', url);
-        			$("#channelBanner_edit").val(url);
-        		},
-        		'Error': function(up, err, errTip) {
-        			$.messager.alert('上传失败',errTip);
-        		},
-        		'Key': function(up, file) {
-        			var timestamp = Date.parse(new Date());
-        			var suffix = /\.[^\.]+/.exec(file.name);
-        			var key = "op/channel/" + timestamp+suffix;
-        			return key;
-        		}
-    		}
-    	});
+  // 此为展示图片上传组件 
+	Qiniu.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'pic_edit_upload_btn01',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        chunk_size: '4mb',
+        uptoken_url: './admin_qiniu/uptoken',
+        domain: 'http://static.imzhitu.com/',
+        unique_names: false,
+        save_key: false,
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+            	$("#pic_edit_upload_btn01").hide();
+            	$("#channelImg_edit01").hide();
+            	var $status = $("#channelIcon_edit_upload_status01");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(0);
+            	$status.show();
+            },
+            'BeforeUpload': function(up, file) {
+            },
+            'UploadProgress': function(up, file) {
+            	var $status = $("#pic_edit_upload_btn01");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(file.percent);
+            },
+            'UploadComplete': function() {
+            	$("#pic_edit_upload_btn01").show();
+            	$("#channelImg_edit01").show();
+            	$("#channelIcon_edit_upload_status01").hide();
+            },
+            'FileUploaded': function(up, file, info) {
+            	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+            	$("#channelImg_edit01").attr('src', url);
+            	$("#channelIcon_edit01").val(url);
+            },
+            'Error': function(up, err, errTip) {
+                $.messager.alert('上传失败',errTip);
+             },
+            'Key': function(up, file) {
+            	var timestamp = Date.parse(new Date());
+            	var suffix = /\.[^\.]+/.exec(file.name);
+                var key = "op/sticker/test/" + timestamp+suffix;
+                return key;
+            }
+        }
+    });
     </script>
     <style type="text/css">
         #fm{
