@@ -81,5 +81,18 @@
 		delete from hts_admin.admin_user_relationship_binding
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
+	
+	<!-- 根据管理员账号id与织图用户id来查询管理员账号与织图用户的关联关系 -->
+	<select id="queryByAdminIdAndUserId" resultMap="AdminAndUserRelationshipMap">
+		select 
+			relationship.id, 
+			relationship.admin_user_id, 
+			relationship.user_id
+		from 
+			hts_admin.admin_user_relationship_binding relationship 
+		where 
+			relationship.admin_user_id = #{adminUserId,jdbcType=INTEGER}
+			and relationship.user_id = #{userId,jdbcType=INTEGER}
+	</select>
 	  
 </mapper>

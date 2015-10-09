@@ -24,7 +24,7 @@ public interface AdminAndUserRelationshipService extends BaseService {
      * @throws Exception
      * @author zhangbo 2015-05-13
      */
-    public boolean createAdminAndUserRelationship(Integer adminId, Integer userId) throws Exception;
+    public void createAdminAndUserRelationship(Integer adminId, Integer userId) throws Exception;
     
     /**
      * 更新管理员账号与织图用户之间的关联关系
