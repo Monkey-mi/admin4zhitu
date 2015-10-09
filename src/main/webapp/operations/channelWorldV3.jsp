@@ -39,6 +39,7 @@ var maxId = 0,
 	 onBeforeInit = function() {
 		showPageLoading();
 	},
+	showWorldAndInteractPage="page_htworld_htworldShow";
 	
 	onAfterInit = function() {
 	
@@ -236,6 +237,22 @@ function updateDeleteStatus(channelId, worldId, valid, index) {
 	}
 });
 }
+
+/**
+ * worldId显示界面初始化
+ */
+function showWorldAndInteract(uri){
+	$.fancybox({
+		'margin'			: 20,
+		'width'				: '100%',
+		'height'			: '100%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe',
+		'href'				: uri
+	});
+};
 
 </script>
 </head>

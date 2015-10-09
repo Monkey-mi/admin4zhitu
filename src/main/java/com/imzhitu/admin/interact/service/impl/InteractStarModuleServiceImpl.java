@@ -30,12 +30,15 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 		*	mishengliang
 	 */
 	@Override
-	public void add(String title,String subtitle,Integer userId,String pics,String intro,Integer topicId)  throws Exception{
+	public void add(String title,String subtitle,Integer userId,String pics,String pic02,String pic03,String pic04,String intro,Integer topicId)  throws Exception{
 		StarModule dto  = new StarModule();
 		dto.setTitle(title);
 		dto.setSubtitle(subtitle);
 		dto.setUserId(userId);
 		dto.setPics(pics);
+		dto.setPic02(pic02);
+		dto.setPic03(pic03);
+		dto.setPic04(pic04);
 		dto.setIntro(intro);
 		dto.setTopicId(topicId);
 		mapper.addStarModule(dto);
@@ -49,13 +52,16 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 
 	
 	@Override
-	public void update(Integer id,String title,String subtitle,Integer userId,String pics,String intro)  throws Exception{
+	public void update(Integer id,String title,String subtitle,Integer userId,String pics,String pic02,String pic03,String pic04,String intro)  throws Exception{
 		StarModule dto  = new StarModule();
 		dto.setId(id);
 		dto.setTitle(title);
 		dto.setSubtitle(subtitle);
 		dto.setUserId(userId);
 		dto.setPics(pics);
+		dto.setPic02(pic02);
+		dto.setPic03(pic03);
+		dto.setPic04(pic04);
 		dto.setIntro(intro);
 		mapper.updateStarModule(dto);
 	}
