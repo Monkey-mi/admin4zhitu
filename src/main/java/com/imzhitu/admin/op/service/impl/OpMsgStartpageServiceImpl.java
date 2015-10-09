@@ -159,11 +159,10 @@ public class OpMsgStartpageServiceImpl extends BaseServiceImpl implements OpMsgS
 		List<OpMsgStartpage> list = startpageMapper.queryMsgBulletinByIds(ids);
 		List<com.hts.web.common.pojo.OpMsgStartPage> webStarpageList = new ArrayList<com.hts.web.common.pojo.OpMsgStartPage>();
 		
-		for(int i=0; i < ids.length; i++){
-			
+		for(int i=0; i < ids.length; i++){			
 			//排序
 			for(int j=0; j < list.size(); j++){
-				if(ids[i] == list.get(j).getId()){
+				if(ids[i].equals( list.get(j).getId())){
 					OpMsgStartpage dto = list.get(j);
 					com.hts.web.common.pojo.OpMsgStartPage webStartpage = new com.hts.web.common.pojo.OpMsgStartPage();
 					webStartpage.setBeginDate(dto.getBeginDate());
