@@ -94,5 +94,17 @@
 			relationship.admin_user_id = #{adminUserId,jdbcType=INTEGER}
 			and relationship.user_id = #{userId,jdbcType=INTEGER}
 	</select>
+	
+	<!-- 根据关联关系表主键id来查询管理员账号与织图用户的关联关系 -->
+	<select id="queryById" resultMap="AdminAndUserRelationshipMap">
+		select 
+			relationship.id, 
+			relationship.admin_user_id, 
+			relationship.user_id
+		from 
+			hts_admin.admin_user_relationship_binding relationship 
+		where 
+			relationship.id = #{id,jdbcType=INTEGER}
+	</select>
 	  
 </mapper>

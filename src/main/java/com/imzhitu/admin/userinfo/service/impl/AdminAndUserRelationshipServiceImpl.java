@@ -55,6 +55,7 @@ public class AdminAndUserRelationshipServiceImpl extends BaseServiceImpl impleme
 
 			AdminAndUserRelationshipDto relationDto = relationshipMapper.queryByAdminIdAndUserId(adminId, userId);
 
+			// 若不存在则创建，否则抛出异常
 			if (relationDto == null) {
 				// 定义输入的DTO
 				AdminAndUserRelationshipDto dto = new AdminAndUserRelationshipDto();
@@ -74,20 +75,28 @@ public class AdminAndUserRelationshipServiceImpl extends BaseServiceImpl impleme
 	}
 
 	@Override
-	public boolean updateAdminAndUserRelationship(Integer id, Integer userId) throws Exception {
+	public void updateAdminAndUserRelationship(Integer id, Integer userId) throws Exception {
 		// 若查询用户存在，则执行更新，否则返回false
 		if (isExistUser(userId)) {
-			// 定义输入的DTO
-			AdminAndUserRelationshipDto dto = new AdminAndUserRelationshipDto();
-			dto.setId(id);
-			dto.setUserId(userId);
-
-			// 通过DTO更新管理员账号与织图用户的关联关系
-			relationshipMapper.updateByDTO(dto);
-
-			return true;
+			
+			// 根据主键id获取数据，然后再查询此管理员账号与用户id是否存在
+			AdminAndUserRelationshipDto relationDtoById = relationshipMapper.queryById(id);
+			AdminAndUserRelationshipDto relationDto = relationshipMapper.queryByAdminIdAndUserId(relationDtoById.getAdminUserId(), userId);
+			
+			// 若不存在则更新 ，否则抛出异常
+			if ( relationDto == null ) {
+				// 定义输入的DTO
+				AdminAndUserRelationshipDto dto = new AdminAndUserRelationshipDto();
+				dto.setId(id);
+				dto.setUserId(userId);
+				
+				// 通过DTO更新管理员账号与织图用户的关联关系
+				relationshipMapper.updateByDTO(dto);
+			} else {
+				throw new Exception("输入的织图用户id已经与现在的管理员账号绑定了！");
+			}
 		} else {
-			return false;
+			throw new Exception("绑定的用户Id不存在，请填写正确的用户Id");
 		}
 	}
 

@@ -73,4 +73,14 @@ public interface AdminAndUserRelationshipMapper {
      */
     @DataSource("slave")
 	public AdminAndUserRelationshipDto queryByAdminIdAndUserId(@Param("adminUserId")Integer adminUserId, @Param("userId")Integer userId);
+    
+    /**
+     * 根据关联关系表主键id来查询管理员账号与织图用户的关联关系
+     * 
+     * @param id	关联关系表主键id	
+     * @return
+     * @author zhangbo	2015年10月9日
+     */
+    @DataSource("slave")
+    public AdminAndUserRelationshipDto queryById(@Param("id")Integer id);
 }

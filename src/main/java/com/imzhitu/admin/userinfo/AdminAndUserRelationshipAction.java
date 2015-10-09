@@ -57,7 +57,6 @@ public class AdminAndUserRelationshipAction extends BaseCRUDAction {
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
-		;
 		return StrutsKey.JSON;
 	}
 
@@ -70,19 +69,11 @@ public class AdminAndUserRelationshipAction extends BaseCRUDAction {
 	public String updateAdminAndUserRelationship() {
 		try {
 			// 更新关联关系
-			boolean result = adminUserRelationship.updateAdminAndUserRelationship(id, userId);
-
-			if (result) {
-				// 返回更新成功信息
-				JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-			} else {
-				// 返回更新不成功信息
-				JSONUtil.optFailed("填写的用户Id不存在，请填写正确的用户Id", jsonMap);
-			}
+			adminUserRelationship.updateAdminAndUserRelationship(id, userId);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
-		;
 		return StrutsKey.JSON;
 	}
 
