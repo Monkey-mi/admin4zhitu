@@ -94,6 +94,13 @@ public interface UserInfoService extends BaseService {
 	 * @throws Exception
 	 */
 	public void queryUserInfoByUserId(Integer userId,Map<String,Object>jsonMap)throws Exception;
+
+	/**
+	 * 全局过滤用户名
+	 * 
+	 * @throws Exception
+	 */
+	public void trimUserName() throws Exception;
 	
 }
 

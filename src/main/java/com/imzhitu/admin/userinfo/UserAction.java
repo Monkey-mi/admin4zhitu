@@ -40,6 +40,7 @@ public class UserAction extends BaseCRUDAction {
 	private String signature;
 	private String userInfoJSON;
 	private Integer platformVerify;
+	private Integer sex;
 	
 	
 	@Autowired
@@ -253,7 +254,35 @@ public class UserAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 
-	public String privateUpateName() {
+	/**
+	 * 全局过滤用户名
+	 * 
+	 * @return
+	 */
+	public String trimUserName(){
+		try {
+			userInfoService.trimUserName();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新用户名及性别 
+	 * 
+	 * @return
+	 * @author zhangbo	2015年9月30日
+	 */
+	public String updateUserNameAndSex() {
+		try {
+			webUserInfoService.updateUserName(userId, userName);
+			webUserInfoService.updateSex(userId, sex);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
 		return StrutsKey.JSON;
 	}
 	
@@ -341,6 +370,10 @@ public class UserAction extends BaseCRUDAction {
 	
 	public Integer getPlatformVerify(){
 		return this.platformVerify;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
 	}
 	
 }
