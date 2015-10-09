@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.CommentMapper">
+
+	<select id="queryMaxId" resultType="int">
+		select max(id) from hts.htworld_comment;
+	</select>
+	
+	<select id="queryContent" resultType="string">
+		select content from hts.htworld_comment where id=#{id}
+	</select>
+	
+	<update id="updateContent">
+		update hts.htworld_comment set content=#{content} where id=#{id}
+	</update>
+
+</mapper>
