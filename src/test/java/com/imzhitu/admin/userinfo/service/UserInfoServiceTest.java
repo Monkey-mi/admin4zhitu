@@ -33,8 +33,4 @@ public class UserInfoServiceTest extends BaseTest {
 		service.updateExchangeUsers(485, 349);
 	}
 	
-	@Test
-	public void trimUserNameTest() throws Exception {
-		service.trimUserName();
-	}
 }
