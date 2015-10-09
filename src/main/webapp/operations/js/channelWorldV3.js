@@ -89,7 +89,7 @@ function drawWorld($worldOpt, worlds, index) {
 			+'<span class="world-author-name">'+getAuthorName(world['authorName'],world,index) +'</span>'
 			+'<span>'+phoneCodeColumn.formatter(world['phoneCode'],world,index) +'</span>'
 			+'<hr class="divider"></hr>'
-			+'<div>织图ID:'+ world['worldId']
+			+'<div>织图ID:' + worldIdAndShowWorldColumn.formatter(world['worldId'],world,index)
 			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span>'
 			+'</div>'
 			+'<div>用户ID:'+world['authorId']
