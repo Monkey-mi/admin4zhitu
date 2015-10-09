@@ -16,7 +16,9 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.service.impl.BaseServiceImpl;
+import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.InteractPlanComment;
 import com.imzhitu.admin.common.pojo.InteractPlanCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractWorldLabelDto;
@@ -34,7 +36,9 @@ import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractCommentService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
+import com.imzhitu.admin.userinfo.mapper.AdminAndUserRelationshipMapper;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
+import com.imzhitu.admin.userinfo.service.UserMsgService;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldMapper;
 
@@ -95,6 +99,12 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private InteractLikeFollowRecordService likeFollowRecordService;
+	
+	@Autowired
+	private AdminAndUserRelationshipMapper relationshipMapper;
+	
+	@Autowired
+	private UserMsgService userMsgService;
 	
 	public Integer getCommonZombieDegreeId() {
 		return commonZombieDegreeId;
@@ -188,7 +198,8 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 					//查看该用户是否为明星用户
 					UserInfo userInfo = userInfoMapper.selectById(o.getUser_id());
 					if(userInfo.getStar() > 0){//明星用户
-						if(o.getUser_level_id() != superStarUserLevelId && o.getUser_level_id() != starUserLevelId){//改用户当前等级不为超级明星，也不是明星,则设置其为明星等级
+						//改用户当前等级不为超级明星，也不是明星,则设置其为明星等级
+						if(!(o.getUser_level_id().equals(superStarUserLevelId)) && !(o.getUser_level_id().equals(starUserLevelId))){
 							UserLevelListDto userLevelListDto = new UserLevelListDto();
 							userLevelListDto.setUser_id(o.getUser_id());
 							userLevelListDto.setUser_level_id(starUserLevelId);
@@ -199,6 +210,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 							o.setUser_level_id(starUserLevelId);
 						}
 						
+						//互赞互粉
 						int likeFollowTotal = 1;
 						if(o.getUser_id() == 2063){//官号就多添加几个,否则就添加一次
 							likeFollowTotal = 10;
@@ -214,9 +226,31 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 							}
 						}
 						
+						//真实明星发图，小秘书通知运营成员
+						if(userInfo.getStar() == 10030 && o.getUser_id() != 2063){
+							List<AdminAndUserRelationshipDto> relationList = relationshipMapper.queryAllResults();
+							if (relationList != null && relationList.size() > 0){
+								List<Integer> userIdArrayList = new ArrayList<Integer>();
+								for(AdminAndUserRelationshipDto relationDto:relationList){
+									if(!(userIdArrayList.contains(relationDto.getUserId()))){
+										userIdArrayList.add(relationDto.getUserId());
+									}
+								}
+								if(userIdArrayList.size() > 0){
+									String zhituUserIdsStr = userIdArrayList.toString();
+									zhituUserIdsStr = zhituUserIdsStr.substring(1, zhituUserIdsStr.length()-1);
+									try{
+										userMsgService.pushSysMsg(zhituUserIdsStr, "明显用户"+o.getUser_id()+"发了织图"+o.getWorldId());
+									}catch(Exception e){
+										logger.info("note operations failed!\n"+e);
+									}
+								}
+							}
+						}
+						
 					} else {//非明星用户
 						//普通用户，发图超过10个，并且人工也点了信任用户
-						if(o.getUser_level_id() == commonUserLevelId && userInfo.getTrust() == Tag.TRUE){
+						if(o.getUser_level_id().equals(commonUserLevelId )&& userInfo.getTrust() == Tag.TRUE){
 							long worldCount = ztworldMapper.queryWorldCountByUserId(o.getUser_id());
 							if(worldCount > 10){
 								UserLevelListDto userLevelListDto = new UserLevelListDto();
@@ -252,7 +286,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 					try{
 						needZombieDegreeId = null;
 						for(OpZombieDegreeUserLevel oz:zombieDegreeUserLevelList){
-							if(oz.getUserLevelId() == userLevelMap.get(o.getUser_id())){
+							if(oz.getUserLevelId().equals(userLevelMap.get(o.getUser_id()))){
 								needZombieDegreeId = oz.getZombieDegreeId();
 								break;
 							}
