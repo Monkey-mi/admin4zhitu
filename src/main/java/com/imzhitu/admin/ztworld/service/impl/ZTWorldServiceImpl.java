@@ -207,6 +207,9 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 				dto.setWorld_Ids(worldIds);
 				dto.setDateAdded(null);
 				dto.setDateModified(null);
+				// 因为在OpenSearch时已经分页过了，所以在查询时不使用limit，设置为null
+				dto.setLimit(null);
+				dto.setFirstRow(null);
 			}
 		}
 		
