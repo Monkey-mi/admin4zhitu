@@ -36,7 +36,7 @@ public class OpChannelWorldSchedulaServiceTest extends BaseTest{
 		serviceImpl.channelWorldSchedula();
 	}
 	
-	@Test
+//	@Test
 	public void randomChannelWorldSuperbTopTest()throws Exception{
 		serviceImpl.randomChannelWorldSuperbTop();
 	}

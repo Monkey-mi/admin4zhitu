@@ -3,38 +3,35 @@
 <mapper namespace="com.imzhitu.admin.interact.mapper.InteractStarRocommendTopicMapper">
 	<resultMap type="com.imzhitu.admin.common.pojo.StarRecommendTopic" id="StarRecommendTopic">
 	<result property="id" column="id" jdbcType="INTEGER"/>
-		<result property="backgroundColor" column="background_color" jdbcType="VARCHAR"/>
-		<result property="fileName" column="file_name" jdbcType="VARCHAR"/>
+		<result property="bannerPic" column="banner_pic" jdbcType="VARCHAR"/>
 		<result property="title" column="title" jdbcType="VARCHAR"/>
 		<result property="introduceHead" column="introduce_head" jdbcType="VARCHAR"/>
 		<result property="introduceFoot" column="introduce_foot" jdbcType="VARCHAR"/>
 		<result property="stickerButton" column="sticker_button" jdbcType="VARCHAR"/>
 		<result property="shareButton" column="share_button" jdbcType="VARCHAR"/>
 		<result property="foot" column="foot" jdbcType="VARCHAR"/>
+		<result property="link" column="link" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- 增加模块信息 -->
 	<insert id="addStarRecommendTopic">
 		insert into 
 			hts.operations_channel_topic
-				(background_color,file_name,title,introduce_head,introduce_foot,sticker_button,share_button,foot) 
+				(banner_pic,title,introduce_head,introduce_foot,sticker_button,share_button,foot) 
 			values 
-				(#{backgroundColor},#{fileName},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton},#{foot})
+				(#{bannerPic},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton},#{foot})
 	</insert>
 	
 	<select id="getStarRecommendTopic"  resultMap="StarRecommendTopic">
-	select *
+	select *,concat("http://imzhitu.com/operations/starModule.html?topicId=", id) link
 	 from hts.operations_channel_topic
 	</select>
 	
 	<update id="updateStarRecommendTopic">
 	update hts.operations_channel_topic
 	<set>
-	<if test="backgroundColor!=null">
-	background_color=#{backgroundColor},
-	</if>
-	<if test="fileName!=null">
-	file_name=#{fileName},
+	<if test="bannerPic!=null">
+	banner_pic=#{bannerPic},
 	</if>
 	<if test="title!=null">
 	title=#{title},

@@ -712,5 +712,8 @@
 	  		)as u left join hts.operations_user_recommend as ur on u.id=ur.user_id
 	  </select>
 	  
+	  <select id="queryUserName" resultType="string">
+	  	select user_name from hts.user_info where id=#{id}
+	  </select>
 	  
 </mapper>

@@ -16,6 +16,7 @@ import com.hts.web.common.pojo.HTWorld;
 import com.hts.web.common.pojo.HTWorldFilterLogo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
+import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.WorldWithInteract;
@@ -201,10 +202,14 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			
 			openSearchMap = getWorldIdsByLocationWithOpenSearch(worldLocation, startHit, limit);
 			Integer[] worldIds = (Integer[]) openSearchMap.get("worldIds");
+			Log.info("worldLocation query result worldIds' length : " + worldIds.length);
 			if ( worldIds.length != 0 ) {
 				dto.setWorld_Ids(worldIds);
 				dto.setDateAdded(null);
 				dto.setDateModified(null);
+				// 因为在OpenSearch时已经分页过了，所以在查询时不使用limit，设置为null
+				dto.setLimit(null);
+				dto.setFirstRow(null);
 			}
 		}
 		
@@ -309,6 +314,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		}
 		Integer[] result = new Integer[1];
 		result = list.toArray(result);
+		Log.info("OpenSearch result worldIds' length : " + result.length);
 		resultMap.put("worldIds", result);
 		resultMap.put("worldTotal", resultJson.getLong("total"));
 		return resultMap;

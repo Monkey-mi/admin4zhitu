@@ -20,8 +20,8 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 
 	/**
 	 * 
-	 * @param title1  小标题
-	 * @param title2 小副标题	 
+	 * @param title  小标题
+	 * @param subtitle 小副标题	 
 	 * @param userId  用户ID
 	 * @param pics  图片名
 	 * @param Intro 图片介绍
@@ -30,12 +30,15 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 		*	mishengliang
 	 */
 	@Override
-	public void add(String title1,String title2,Integer userId,String pics,String intro,Integer topicId)  throws Exception{
+	public void add(String title,String subtitle,Integer userId,String pics,String pic02,String pic03,String pic04,String intro,Integer topicId)  throws Exception{
 		StarModule dto  = new StarModule();
-		dto.setTitle1(title1);
-		dto.setTitle2(title2);
+		dto.setTitle(title);
+		dto.setSubtitle(subtitle);
 		dto.setUserId(userId);
 		dto.setPics(pics);
+		dto.setPic02(pic02);
+		dto.setPic03(pic03);
+		dto.setPic04(pic04);
 		dto.setIntro(intro);
 		dto.setTopicId(topicId);
 		mapper.addStarModule(dto);
@@ -49,13 +52,16 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 
 	
 	@Override
-	public void update(Integer id,String title1,String title2,Integer userId,String pics,String intro)  throws Exception{
+	public void update(Integer id,String title,String subtitle,Integer userId,String pics,String pic02,String pic03,String pic04,String intro)  throws Exception{
 		StarModule dto  = new StarModule();
 		dto.setId(id);
-		dto.setTitle1(title1);
-		dto.setTitle2(title2);
+		dto.setTitle(title);
+		dto.setSubtitle(subtitle);
 		dto.setUserId(userId);
 		dto.setPics(pics);
+		dto.setPic02(pic02);
+		dto.setPic03(pic03);
+		dto.setPic04(pic04);
 		dto.setIntro(intro);
 		mapper.updateStarModule(dto);
 	}

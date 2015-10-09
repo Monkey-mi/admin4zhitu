@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.constant.Tag;
-import com.hts.web.base.database.HTS;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.base.database.SQLUtil;
 import com.hts.web.common.dao.impl.BaseDaoImpl;
@@ -171,7 +170,7 @@ public class InteractWorldCommentDaoImpl extends BaseDaoImpl implements
 				rs.getInt("valid"),
 				rs.getInt("finished"),
 				rs.getInt("comment_valid"),
-				rs.getString("content"));
+				rs.getString("content"),null,null,null);
 	}
 	
 	/**
@@ -189,7 +188,7 @@ public class InteractWorldCommentDaoImpl extends BaseDaoImpl implements
 				rs.getInt("valid"),
 				rs.getInt("finished"),
 				rs.getInt("comment_valid"),
-				null);
+				null,null,null,null);
 	}
 
 	/**

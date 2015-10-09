@@ -59,5 +59,17 @@ public interface UserInfoMapper {
 	
 	@DataSource("master")
 	public void updateStarByIds(@Param("ids")Integer[]ids, @Param("star")Integer star );
+	
+	/**
+	 * 查询用户名
+	 * 
+	 * @param id
+	 * @return
+	 * 
+	 * @version 3.0.5
+	 * @author lynch 2015-09-29
+	 */
+	@DataSource("slave")
+	public String queryUserName(@Param("id")Integer id);
 
 }

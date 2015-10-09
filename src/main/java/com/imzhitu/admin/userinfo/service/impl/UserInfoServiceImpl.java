@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.sf.json.JSONArray;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import com.hts.web.base.database.RowCallback;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.MD5Encrypt;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.UserWithInteract;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.UserInfoDto;
@@ -33,6 +35,9 @@ import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper;
 
 @Service
 public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoService {
+	
+	
+	private static Logger log = Logger.getLogger(UserInfoService.class);
 	
 	public static final String PASSWORD = "123456";
 
@@ -247,12 +252,28 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		
 	}
 	
-	public void privateUpdateName() {
-		Integer maxUID;
-		maxUID = userInfoMapper.selectMaxId();
-		for(int i = 0; i < maxUID + 1; i++) {
-//			webUserInfoService.updateUserName(userId, userName);
+	@Override
+	public void trimUserName() {
+		Integer maxId;
+		String userName;
+		int finishFlag;
+		int finishStep = 10000;
+		
+		finishFlag = finishStep;
+		
+		maxId = userInfoMapper.selectMaxId();
+		for(int i = 0; i <= maxId; i++) {
+			userName = userInfoMapper.queryUserName(i);
+			if(userName != null) {
+				userName = StringUtil.trimName(userName);
+				webUserInfoDao.updateUserName(i, userName);
+			}
+			if(i > finishFlag || i == maxId) {
+				finishFlag += finishStep;
+				log.info("i=" + i + ",trim user name finished " + Float.valueOf(i)/maxId*100 + "%");
+			}
 		}
+		
 	}
 	
 }

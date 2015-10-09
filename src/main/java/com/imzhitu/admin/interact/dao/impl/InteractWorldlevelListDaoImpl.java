@@ -92,7 +92,7 @@ public class InteractWorldlevelListDaoImpl extends BaseDaoImpl implements Intera
 	@Override
 	public InteractWorldLevelListDto queryWorldLevelListByWid(Integer wid){
 		try{
-			return queryForObjectWithNULL(QUERY_WORLD_LEVEL_LIST_BY_WID, new Object[]{wid}, new RowMapper<InteractWorldLevelListDto>(){
+			return getMasterJdbcTemplate().queryForObject(QUERY_WORLD_LEVEL_LIST_BY_WID, new Object[]{wid}, new RowMapper<InteractWorldLevelListDto>(){
 				@Override
 				public InteractWorldLevelListDto mapRow(ResultSet rs,int num)throws SQLException{
 					return buildWorldLevelList(rs);

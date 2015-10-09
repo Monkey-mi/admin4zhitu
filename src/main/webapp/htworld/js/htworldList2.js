@@ -1259,7 +1259,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 		});
 		
 		$("#pagination").pagination({
-			pageList: [30,50,100,10],
+			pageList: [30,50,100,300],
 			onBeforeRefresh : function(pageNumber, pageSize) {
 				if(pageNumber <= 1) {
 					maxId = 0;

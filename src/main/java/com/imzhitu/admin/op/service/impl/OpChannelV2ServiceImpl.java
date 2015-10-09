@@ -106,6 +106,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		dto.setThemeId(themeId);
 		dto.setCreateTime(now.getTime());
 		dto.setLastModifiedTime(now.getTime());
+		// 由于客户端计算的需要，默认的serial为0会出现查询的问题，所以在创建时赋个初始值10
+		dto.setSerial(10);
 
 		opChannelV2Mapper.insertOpChannel(dto);
 		

@@ -3,10 +3,13 @@
 <mapper namespace="com.imzhitu.admin.interact.mapper.InteractStarModuleMapper">
 	<resultMap type="com.imzhitu.admin.common.pojo.StarModule" id="StarModule">
 	<result property="id" column="id" jdbcType="INTEGER"/>
-		<result property="title1" column="title1" jdbcType="VARCHAR"/>
-		<result property="title2" column="title2" jdbcType="VARCHAR"/>
+		<result property="title" column="title" jdbcType="VARCHAR"/>
+		<result property="subtitle" column="subtitle" jdbcType="VARCHAR"/>
 		<result property="userId" column="user_id" jdbcType="INTEGER"/>
 		<result property="pics" column="pics" jdbcType="VARCHAR"/>
+		<result property="pic02" column="pic02" jdbcType="VARCHAR"/>
+		<result property="pic03" column="pic03" jdbcType="VARCHAR"/>
+		<result property="pic04" column="pic04" jdbcType="VARCHAR"/>
 		<result property="intro" column="intro" jdbcType="VARCHAR"/>
 		<result property="topicId" column="topic_id" jdbcType="INTEGER"/>
 	</resultMap>
@@ -15,9 +18,9 @@
 	<insert id="addStarModule">
 		insert into 
 			hts.operations_channel_topic_module
-				(title1,title2,user_id,pics,intro,topic_id) 
+				(title,subtitle,user_id,pics,pic02,pic03,pic04,intro,topic_id) 
 			values 
-				(#{title1},#{title2},#{userId},#{pics},#{intro},#{topicId})
+				(#{title},#{subtitle},#{userId},#{pics},#{pic02},#{pic03},#{pic04},#{intro},#{topicId})
 	</insert>
 	
 	<select id="getStarModule"  resultMap="StarModule">
@@ -33,17 +36,26 @@
 	<update id="updateStarModule">
 	update hts.operations_channel_topic_module
 	<set>
-	<if test="title1!=null">
-	title1=#{title1},
+	<if test="title!=null">
+	title=#{title},
 	</if>
-	<if test="title2!=null">
-	title2=#{title2},
+	<if test="subtitle!=null">
+	subtitle=#{subtitle},
 	</if>
 	<if test="userId!=null">
 	user_id=#{userId},
 	</if>
 	<if test="pics!=null">
 	pics=#{pics},
+	</if>
+	<if test="pic02!=null">
+	pic02=#{pic02},
+	</if>
+	<if test="pic03!=null">
+	pic03=#{pic03},
+	</if>
+	<if test="pic04!=null">
+	pic04=#{pic04},
 	</if>
 	<if test="intro!=null">
 	intro=#{intro}

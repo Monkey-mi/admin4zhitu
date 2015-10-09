@@ -137,4 +137,11 @@ public interface ZTWorldInteractService extends BaseService {
 	 * @throws Exception
 	 */
 	public void deleteReportById(String idsStr) throws Exception;
+	
+	/**
+	 * 全局过滤评论
+	 * 
+	 * @throws Exception
+	 */
+	public void trimComment() throws Exception;
 }

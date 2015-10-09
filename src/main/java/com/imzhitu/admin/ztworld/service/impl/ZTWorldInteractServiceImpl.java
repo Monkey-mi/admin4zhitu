@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,14 @@ import com.imzhitu.admin.ztworld.dao.HTWorldCommentDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldKeepDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLikedDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldReportDao;
+import com.imzhitu.admin.ztworld.mapper.CommentMapper;
 import com.imzhitu.admin.ztworld.service.ZTWorldInteractService;
 
 @Service
 public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 		ZTWorldInteractService {
+	
+	private static Logger log = Logger.getLogger(ZTWorldInteractService.class);
 	
 	@Autowired
 	private HTWorldCommentDao worldCommentDao;
@@ -56,7 +60,9 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 	@Autowired
 	private com.hts.web.userinfo.service.UserInfoService webUserInfoService;
 	
-
+	@Autowired
+	private CommentMapper commentMapper;
+	
 	@Override
 	public void buildComments(Integer sinceId, Integer maxId, int start,
 			int limit, Integer worldId, String authorName, 
@@ -250,6 +256,33 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 	public void deleteReportById(String idsStr)throws Exception{
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		worldReportDao.deleteReportById(ids);
+	}
+
+	@Override
+	public void trimComment() throws Exception {
+		Integer maxId;
+		String content;
+		int finishFlag;
+		int finishStep = 10000;
+		
+		finishFlag = finishStep;
+		maxId = commentMapper.queryMaxId();
+		
+		for(int i = 1; i <= maxId; i++) {
+			content = commentMapper.queryContent(i);
+			if(content != null && content.length() > 1) {
+				if(content.charAt(1) == ':') {
+					content = content.replaceFirst(" : ", "");
+				} else if(content.charAt(1) == '@') {
+					content = content.replaceFirst(" @", "回复");
+				}
+				commentMapper.updateContent(i, content.trim());
+				if(i > finishFlag || i == maxId) {
+					finishFlag += finishStep;
+					log.info("i=" + i + ",trim comment finished " + Float.valueOf(i)/maxId*100 + "%");
+				}
+			}
+		}
 	}
 	
 

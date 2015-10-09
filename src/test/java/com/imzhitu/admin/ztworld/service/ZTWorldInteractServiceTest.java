@@ -15,5 +15,5 @@ public class ZTWorldInteractServiceTest extends BaseTest{
 	public void shieldCommentByUserIdTest()throws Exception{
 		service.updateCommentShieldByUserId(1592, Tag.TRUE);
 	}
-
+	
 }
