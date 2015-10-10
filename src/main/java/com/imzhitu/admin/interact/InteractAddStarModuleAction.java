@@ -1,19 +1,12 @@
 package com.imzhitu.admin.interact;
 
-import java.io.PrintWriter;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.common.pojo.StarModule;
 import com.imzhitu.admin.interact.service.InteractStarModuleService;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
@@ -33,6 +26,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	private String intro;
 	private Integer topicId;
 	
+	
 	public String add(){
 		try {
 			interactStarModuleService.add(title,subtitle,userId,pics,pic02,pic03,pic04,intro,topicId);
@@ -45,7 +39,8 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	}
 	
 	public String get(){
-		PrintWriter out  = null;
+/*用流直接将数据传到前台，不经过jsonMap传值		
+ * PrintWriter out  = null;
 		try {
 			out = response.getWriter();
 			List<StarModule> list  = interactStarModuleService.get(topicId);
@@ -62,6 +57,12 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 		}
 		finally {
 			out.close();
+		}*/
+		try {
+			interactStarModuleService.get(page,rows,maxId,topicId,jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
@@ -163,6 +164,5 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	public void setTopicId(Integer topicId) {
 		this.topicId = topicId;
 	}
-	
-	
+
 }
