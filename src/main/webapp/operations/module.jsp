@@ -9,9 +9,7 @@
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 </head>
 <body>
-    <h2>添加小模块信息</h2>
-    
-    <table id="dg" title="模块信息" style="height:400px"></table>
+    <table id="dg" title="模块信息" style="height:680px"></table>
     <div id="toolbar"  style="display:none">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新建</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
@@ -110,6 +108,8 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
     <script type="text/javascript">
         var url;
+        var myQueryParams = {};
+        var maxId = 0;
         
         function newUser(){
         	var topicId = $('#i-topicId').combobox('getValue');
@@ -178,15 +178,34 @@
         }
         
         
+    	 var myOnBeforeRefresh = function(pageNumber, pageSize) {
+   		if(pageNumber <= 1) {
+   			maxId = 0;
+   			myQueryParams.maxId = maxId;
+   		}
+   	}; 
+   	
+    	 var  myOnLoadSuccess = function(data) {
+   		if(data.result == 0) {
+   			if(data.maxId > maxId) {
+   				maxId = data.maxId;
+   				myQueryParams.maxId = maxId;
+   			}
+   		}
+   	}; 
+        
         
         $('#dg').datagrid({
             url:"./admin_interact/addModule_get",
             method:'post',
             toolbar:"#toolbar",
             pagination:true,
-            singleSelect:true,
+/*        singleSelect:true, */
             rownumbers:true,
-            fitColumns:true,
+            fitColumns:true,  
+            queryParams:myQueryParams,
+            onLoadSuccess:myOnLoadSuccess, 
+            width: $(document.body).width(),
             columns:[[
 				{field:'id',title:'ID',width:100,align:"center"},
                 {field:'title',title:'小标题',width:100,align:"center"},
@@ -222,6 +241,18 @@
                 {field:'topicId',title:'主题ID',width:50,align:"center"}            ]]
         });
         
+        var p = $('#dg').datagrid('getPager'); 
+        $(p).pagination({ 
+            pageNumber: 1,
+            pageSize: 10,//每页显示的记录条数，默认为10 
+            pageList: [10,15,20],//可以设置每页记录条数的列表 
+            beforePageText: '第',//页数文本框前显示的汉字 
+            afterPageText: '页    共 {pages} 页', 
+            displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+    		buttons:pageButtons,
+    		onBeforeRefresh:myOnBeforeRefresh,
+        }); 
+
         $("#i-topicId").combobox({
         	url:"./admin_interact/starRecommendTopic_get",
         	valueField:'id',

@@ -45,9 +45,17 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 	}
 
 	@Override
-	public List<StarModule> get(Integer topicId) throws Exception {
-		List<StarModule> list  =  mapper.getStarModule(topicId);
-		return list;
+	public  void get(Integer page,Integer rows,Integer maxId,Integer topicId,Map<String, Object> jsonMap) throws Exception {
+		Integer start = (page - 1) * rows;
+		Integer limites = rows; 
+		Integer total  = mapper.getStarModuleCount(topicId);
+		List<StarModule> list  =  mapper.getStarModule(start,limites,maxId,topicId);
+		if(page <= 1){
+			 maxId = list.get(0).getId();
+		}
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
 	}
 
 	

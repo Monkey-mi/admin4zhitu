@@ -22,8 +22,13 @@ public interface InteractStarModuleMapper {
 	@DataSource("master")
 	public void addStarModule(StarModule dto);
 	
+
 	@DataSource("slave")
-	public List<StarModule>  getStarModule(@Param("topicId")Integer topicId);
+	public Integer  getStarModuleCount(@Param("topicId")Integer topicId);
+	
+	
+	@DataSource("slave")
+	public List<StarModule>  getStarModule(@Param("start")Integer start,@Param("limites")Integer rows,@Param("maxId")Integer maxId,@Param("topicId")Integer topicId);
 	
 	@DataSource("master")
 	public void updateStarModule(StarModule dto);

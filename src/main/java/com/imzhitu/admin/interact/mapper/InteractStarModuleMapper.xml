@@ -23,6 +23,18 @@
 				(#{title},#{subtitle},#{userId},#{pics},#{pic02},#{pic03},#{pic04},#{intro},#{topicId})
 	</insert>
 	
+	
+	<select id="getStarModuleCount"  resultType="Integer">
+	select count(*)
+	 from hts.operations_channel_topic_module
+ 	 <where>
+	 <if test="topicId!=null and topicId!=0">
+	 topic_id = #{topicId}
+	 </if>
+	 </where>
+	</select>
+	
+	
 	<select id="getStarModule"  resultMap="StarModule">
 	select *
 	 from hts.operations_channel_topic_module
@@ -30,7 +42,12 @@
 	 <if test="topicId!=null and topicId!=0">
 	 topic_id = #{topicId}
 	 </if>
+<!-- 	 <if test="maxId!=null and maxId!=0">
+	and<![CDATA[id < #{maxId}]]>
+	 </if> -->
 	 </where>
+	 order by id desc
+	 <![CDATA[ limit #{start}, #{limites}]]>
 	</select>
 	
 	<update id="updateStarModule">

@@ -1,9 +1,6 @@
 package com.imzhitu.admin.interact.service;
 
-import java.util.List;
 import java.util.Map;
-
-import com.imzhitu.admin.common.pojo.StarModule;
 
 public interface InteractStarModuleService {
 
@@ -28,7 +25,7 @@ public interface InteractStarModuleService {
 		*	2015年9月21日
 		*	mishengliang
 	 */
-	public List<StarModule> get(Integer topicId)  throws Exception;
+	public void get(Integer page,Integer rows,Integer maxId,Integer topicId,Map<String, Object> jsonMap)  throws Exception;
 	
 	
 	/**
