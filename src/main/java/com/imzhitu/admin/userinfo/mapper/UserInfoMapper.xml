@@ -716,4 +716,15 @@
 	  	select user_name from hts.user_info where id=#{id}
 	  </select>
 	  
+	<select id="queryUserInfoDtoByIds" resultMap="UserInfoDtoMap">
+		select u.*, IFNULL(ur.user_accept,-1) as userAccept, IFNULL(ur.sys_accept,-1) as sysAccept
+		from 
+		(select * from hts.user_info where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	 	) as u left join hts.operations_user_recommend as ur on u.id=ur.user_id
+	</select>
+	  
 </mapper>

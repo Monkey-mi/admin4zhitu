@@ -71,5 +71,14 @@ public interface UserInfoMapper {
 	 */
 	@DataSource("slave")
 	public String queryUserName(@Param("id")Integer id);
+	
+	/**
+	 * 根据ids查询用户信息列表
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<UserInfoDto> queryUserInfoDtoByIds(@Param("ids")Integer[] ids);
 
 }

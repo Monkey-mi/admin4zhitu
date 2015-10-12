@@ -1,11 +1,12 @@
 package com.imzhitu.admin.userinfo.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.json.JSONArray;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.MD5Encrypt;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.aliyun.dao.OsUserInfoDao;
 import com.imzhitu.admin.common.UserWithInteract;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.UserInfoDto;
@@ -30,8 +32,10 @@ import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.mapper.UserLoginPersistentMapper;
 import com.imzhitu.admin.userinfo.mapper.UserSocialAccountMapper;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
-import com.imzhitu.admin.ztworld.dao.HTWorldTypeWorldDao;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoService {
@@ -77,6 +81,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	
 	@Value("${push.customerServiceId}")
 	private Integer customerServiceId;
+	
+	@Autowired
+	private OsUserInfoDao osUserInfoDao;
 
 	public Integer getCustomerServiceId() {
 		return customerServiceId;
@@ -86,8 +93,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		this.customerServiceId = customerServiceId;
 	}
 	@Override
-	public void buildUser(Integer  userId,String userName,Integer platformVerify,int maxId, int start, int limit,
+	public void buildUser(Integer userId, String userName,Integer platformVerify,int maxId, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception {
+		long total = 0l;
+		List<UserInfoDto> list = null;
+		
 		UserInfo userInfo = new UserInfo();
 		userInfo.setFirstRow(limit*(start -1 ));
 		userInfo.setLimit(limit);
@@ -96,26 +106,51 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		userInfo.setUserName(userName);
 		userInfo.setPlatformVerify(platformVerify);
 		
-		long total = userInfoMapper.queryUserInfoTotalCount(userInfo);
-		List<UserInfoDto> list = null;
-		if( total > 0 ){
-			list = userInfoMapper.queryUserInfoDto(userInfo);
-			if ( list != null && list.size() > 0){
-				maxId = list.get(0).getId();
-				webUserInfoService.extractVerify(list);
+		if(userId != null) {
+			total = userInfoMapper.queryUserInfoTotalCount(userInfo);
+			if( total > 0 ){
+				list = userInfoMapper.queryUserInfoDto(userInfo);
+			}
+		} else {
+			final Map<Integer, Integer> idx = new HashMap<Integer, Integer>();
+			JSONObject jsObj = osUserInfoDao.searchId(userName, userInfo.getFirstRow(),
+					userInfo.getLimit());
+			JSONArray items = jsObj.getJSONArray("items");
+			Integer[] ids = new Integer[items.size()];
+			total = jsObj.getInt("total");
+			for(int i = 0; i < ids.length; i++) {
+				Integer id = items.getJSONObject(i).getInt("id");
+				ids[i] = id;
+				idx.put(id, i);
+			}
+			if(ids != null && ids.length > 0) {
+				list = userInfoMapper.queryUserInfoDtoByIds(ids);
+				Collections.sort(list, new Comparator<UserInfoDto>() {
+	
+					@Override
+					public int compare(UserInfoDto o1, UserInfoDto o2) {
+						Integer idx1 = idx.get(o1.getId());
+						Integer idx2 = idx.get(o2.getId());
+						if(idx1 > idx2) {
+							return 1;
+						} else if(idx1 < idx2) {
+							return -1;
+						}
+						return 0;
+					}
+					
+				});
 			}
 		}
 		
-			
-		// 临时语句，为了配合数据，强制查询第一页的最大用户id
-		if(maxId <= 0)
-			maxId = userInfoMapper.selectMaxId();
+		if (list != null && list.size() > 0){
+			webUserInfoService.extractVerify(list);
+		}
 		
 		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
 		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 	}
-	
 	
 	/**
 	 * 查询 用户的信息，主要是查询用户的推荐状态

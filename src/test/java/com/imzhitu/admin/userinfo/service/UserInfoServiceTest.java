@@ -17,7 +17,7 @@ public class UserInfoServiceTest extends BaseTest {
 	@Test
 	public void testBuildUser() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildUser(null, "飘飘",null,0, 1, 10, jsonMap);
+		service.buildUser(485, null,null,0, 1, 10, jsonMap);
 		logObj(jsonMap);
 	}
 	
