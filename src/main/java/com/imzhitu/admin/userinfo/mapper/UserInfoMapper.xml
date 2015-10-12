@@ -719,7 +719,8 @@
 	<select id="queryUserInfoDtoByIds" resultMap="UserInfoDtoMap">
 		select u.*, IFNULL(ur.user_accept,-1) as userAccept, IFNULL(ur.sys_accept,-1) as sysAccept
 		from 
-		(select * from hts.user_info where id in
+		(select * from hts.user_info where 
+		id in
 		<foreach item="item" index="index" collection="ids"
 	    	open="(" separator="," close=")">
 	       		#{item}

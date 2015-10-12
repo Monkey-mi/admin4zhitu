@@ -106,7 +106,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		userInfo.setUserName(userName);
 		userInfo.setPlatformVerify(platformVerify);
 		
-		if(userId != null) {
+		// 通过id或需要第三方认证信息时使用数据库搜索
+		if(userId != null || platformVerify != null) {
 			total = userInfoMapper.queryUserInfoTotalCount(userInfo);
 			if( total > 0 ){
 				list = userInfoMapper.queryUserInfoDto(userInfo);
