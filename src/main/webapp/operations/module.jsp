@@ -60,7 +60,7 @@
                 <label>小标题:</label>
 </td>
 <td colspan="4">
-<textarea rows="2"  name="title" ></textarea>
+<textarea rows="2"  name="title"  id="title"></textarea>
 </td>
 </tr>
 <tr>
@@ -68,7 +68,7 @@
                 <label>小副标题:</label>
 </td>
 <td colspan="4">
-<textarea rows="2"  name="subtitle" ></textarea>
+<textarea rows="2"  name="subtitle"  id="subtitle"></textarea>
 </td>
 </tr>
 <tr>
@@ -76,7 +76,7 @@
                 <label>用户ID:</label>
 </td>
 <td colspan="4">
-<textarea rows="2"  name="userId" ></textarea>
+<textarea rows="2"  name="userId" id="userId"></textarea>
 </td>
 </tr>
 <tr>
@@ -84,7 +84,7 @@
                 <label>模块介绍:</label>
 </td>
 <td colspan="4">
-<textarea rows="2"  name="intro" ></textarea>
+<textarea rows="2"  name="intro" id="intro"></textarea>
 </td>
 </tr>
 <tr>
@@ -119,10 +119,14 @@
         	}
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','新建模块信息');
            
-            $('channelImg_edit01').attr('src','${webRootPath }/base/images/bg_empty.png');
-            $('channelImg_edit02').attr('src','${webRootPath }/base/images/bg_empty.png');
-            $('channelImg_edit03').attr('src','${webRootPath }/base/images/bg_empty.png');
-            $('channelImg_edit04').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('#channelImg_edit01').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('#channelImg_edit02').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('#channelImg_edit03').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('#channelImg_edit04').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('#title').val('');
+            $('#subtitle').val('');
+            $('#userId').val('');
+            $('#intro').val('');
             $('#topicIdIn').val(topicId);
             $('#fm').show();
             url = './admin_interact/addModule_add';
