@@ -3,6 +3,7 @@ package com.imzhitu.admin.interact.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.StarModule;
@@ -35,4 +36,7 @@ public interface InteractStarModuleMapper {
 	
 	@DataSource("master")
 	public void destory(Integer id);
+	
+	@DataSource("master")
+	public void destoryByTopicId(Integer topicId);
 }

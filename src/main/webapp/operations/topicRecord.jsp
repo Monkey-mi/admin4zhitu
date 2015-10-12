@@ -9,9 +9,8 @@
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 </head>
 <body>
-    <h2>主题信息</h2>
     
-    <table id="dg" title="主题信息" style="height:400px"></table>
+    <table id="dg" title="主题信息" style="height:680px"></table>
     <div id="toolbar" style="display:none">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新建</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
@@ -66,7 +65,7 @@
             		<label>发图按钮:</label>
             		</td>
             		<td>
-            		<textarea rows="2" cols="20" name="stickerButton"></textarea>
+            		<textarea rows="2" cols="20" name="stickerButton" id="stickerButton" ></textarea>
             		</td>
             	</tr>
             	 <tr>
@@ -74,7 +73,7 @@
             		<label>分享按钮:</label>
             		</td>
             		<td>
-            		<textarea rows="2" cols="20" name="shareButton"></textarea>
+            		<textarea rows="2" cols="20" name="shareButton" id="shareButton"></textarea>
             		</td>
             	</tr>
             	<tr>
@@ -86,34 +85,6 @@
             		</td>
             	</tr>            	
             </table>
-         <!--    <div class="fitem">
-                <label>文件名:</label>
-                <input name="fileName" class="easyui-textbox" >
-            </div>
-            <div class="fitem">
-                <label>主题名:</label>
-                <input name="title" class="easyui-textbox">
-            </div>
-             <div class="fitem">
-                <label>前介绍:</label>
-                <input name="introduceHead" class="easyui-textbox" >
-            </div>
-            <div class="fitem">
-                <label>后介绍:</label>
-                <input name="introduceFoot" class="easyui-textbox">
-            </div>
-                   <div class="fitem">
-                <label>发图按钮:</label>
-                <input id="stickerButton"  name="stickerButton"  class="easyui-textbox"  >
-            </div>
-                   <div class="fitem">	
-                <label>分享按钮:</label>
-                <input id="shareButton" name="shareButton" class="easyui-textbox" >
-            </div>
-            <div class="fitem">
-                <label>来自织图	:</label>
-                <input name="foot" class="easyui-textbox">
-            </div> -->
         </form>
     </div>
     <div id="dlg-buttons" style="display:none;text-align:center">
@@ -127,7 +98,7 @@
         var url;
         function newUser(){
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','增加主题');
-/*             $('#fm').form('clear'); */
+    /*          $('#fm').form('clear');  */
             $('#stickerButton').val('我也来一发');
             $('#shareButton').val('分享出去');
             $('#fm').show();
@@ -165,8 +136,9 @@
         }
         function destroyUser(){
             var row = $('#dg').datagrid('getSelected');
+            $.messager.defaults = { ok: "当然", cancel: "手抖了" };
             if (row){
-                $.messager.confirm('Confirm','Are you sure you want to destroy this user?',function(r){
+                $.messager.confirm('Confirm','同学，你真的要删除这期吗?',function(r){
                     if (r){
                         $.post('./admin_interact/starRecommendTopic_destroy',{id:row.id},function(result){
                             if (result.result == 0){
@@ -192,7 +164,6 @@
             //fitColumns:true,
             columns:[[
 				{field:'id',title:'ID',width:100,align:"center"},
-		//		 {field:'backgroundColor',title:'背景色',width:100,align:"center"},
                 {field:'title',title:'主题',width:100,align:"center"},
                 {field:'bannerPic',title:'banner图',width:100,align:"center",
         			formatter:function(value,row,index) {
@@ -209,6 +180,16 @@
                 }}
             ]]
         });
+        
+        var p = $('#dg').datagrid('getPager'); 
+        $(p).pagination({ 
+            pageNumber: 1,
+            pageSize: 10,//每页显示的记录条数，默认为10 
+            pageList: [10,15,20],//可以设置每页记录条数的列表 
+            beforePageText: '第',//页数文本框前显示的汉字 
+            afterPageText: '页    共 {pages} 页', 
+            displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+        }); 
         
         // 此为频道banner上传组件 
         Qiniu.uploader({

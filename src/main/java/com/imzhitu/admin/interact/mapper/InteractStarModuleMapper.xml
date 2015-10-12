@@ -87,4 +87,10 @@
 	where 
 		id=#{id}
 	</delete>
+	
+	<delete id="destoryByTopicId">
+	delete from hts.operations_channel_topic_module
+	where 
+		topic_id=#{topicId}
+	</delete>
 </mapper>
