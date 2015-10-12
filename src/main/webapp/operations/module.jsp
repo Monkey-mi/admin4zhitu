@@ -119,6 +119,10 @@
         	}
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','新建模块信息');
            
+            $('channelImg_edit01').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('channelImg_edit02').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('channelImg_edit03').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('channelImg_edit04').attr('src','${webRootPath }/base/images/bg_empty.png');
             $('#topicIdIn').val(topicId);
             $('#fm').show();
             url = './admin_interact/addModule_add';

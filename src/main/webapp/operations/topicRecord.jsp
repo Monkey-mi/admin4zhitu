@@ -98,9 +98,16 @@
         var url;
         function newUser(){
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','增加主题');
-    /*          $('#fm').form('clear');  */
+            
+    		//用$('#fm').form('clear'); 会影响图片的上传，用这种笨拙的办法代替
+    		$('#channelBannerImg_edit').attr('src','${webRootPath }/base/images/bg_empty.png');
+            $('#title').val('');
+            $('#introduceHead').val('');
+            $('#introduceFoot').val('');
             $('#stickerButton').val('我也来一发');
             $('#shareButton').val('分享出去');
+            $('#foot').val('');
+            
             $('#fm').show();
             url = './admin_interact/starRecommendTopic_add';
         }
@@ -109,7 +116,8 @@
             if (row){
                 $('#dlg').dialog('open').dialog('center').dialog('setTitle','Edit User');
                 $('#fm').form('load',row);
-                $("#channelBanner_edit").attr('src', row.pics);
+                alert(row.bannerPic);
+                $("#channelBannerImg_edit").attr('src', row.bannerPic);
                 $('#fm').show();
                 url = './admin_interact/starRecommendTopic_update?id='+row.id;
             }
