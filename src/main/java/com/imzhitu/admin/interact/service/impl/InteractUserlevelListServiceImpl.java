@@ -64,6 +64,9 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	@Value("${admin.interact.zombie.common.degree.id}")
 	private Integer commonZombieDegreeId;
 	
+	@Value("${admin.interact.adminToUserIds}")
+	private String zhituAdminToUserIdsStr;
+	
 	@Autowired
 	private InteractUserlevelListDao interactUserlevelListDao;
 	
@@ -228,23 +231,29 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						
 						//真实明星发图，小秘书通知运营成员
 						if(userInfo.getStar() == 10030 && o.getUser_id() != 2063){
-							List<AdminAndUserRelationshipDto> relationList = relationshipMapper.queryAllResults();
-							if (relationList != null && relationList.size() > 0){
-								List<Integer> userIdArrayList = new ArrayList<Integer>();
-								for(AdminAndUserRelationshipDto relationDto:relationList){
-									if(!(userIdArrayList.contains(relationDto.getUserId()))){
-										userIdArrayList.add(relationDto.getUserId());
-									}
-								}
-								if(userIdArrayList.size() > 0){
-									String zhituUserIdsStr = userIdArrayList.toString();
-									zhituUserIdsStr = zhituUserIdsStr.substring(1, zhituUserIdsStr.length()-1);
-									try{
-										userMsgService.pushSysMsg(zhituUserIdsStr, "明显用户"+o.getUser_id()+"发了织图"+o.getWorldId());
-									}catch(Exception e){
-										logger.info("note operations failed!\n"+e);
-									}
-								}
+//							List<AdminAndUserRelationshipDto> relationList = relationshipMapper.queryAllResults();
+//							if (relationList != null && relationList.size() > 0){
+//								List<Integer> userIdArrayList = new ArrayList<Integer>();
+//								for(AdminAndUserRelationshipDto relationDto:relationList){
+//									if(!(userIdArrayList.contains(relationDto.getUserId()))){
+//										userIdArrayList.add(relationDto.getUserId());
+//									}
+//								}
+//								if(userIdArrayList.size() > 0){
+//									String zhituUserIdsStr = userIdArrayList.toString();
+//									zhituUserIdsStr = zhituUserIdsStr.substring(1, zhituUserIdsStr.length()-1);
+//									try{
+//										userMsgService.pushSysMsg(zhituUserIdsStr, "明显用户"+o.getUser_id()+"发了织图"+o.getWorldId());
+//									}catch(Exception e){
+//										logger.info("note operations failed!\n"+e);
+//									}
+//								}
+//							}
+							
+							try {
+								userMsgService.pushSysMsg(zhituAdminToUserIdsStr, "明显用户"+o.getUser_id()+"发了织图"+o.getWorldId());
+							} catch (Exception e) {
+								logger.info("note operations failed!\n"+e);
 							}
 						}
 						
