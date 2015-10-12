@@ -41,7 +41,7 @@
             		<label>主题名:</label>
             		</td>
             		<td>
-            		<textarea rows="2" cols="20" name="title"></textarea>
+            		<textarea rows="2" cols="20" name="title" id="title"></textarea>
             		</td>
             	</tr>
             	<tr>
@@ -49,7 +49,7 @@
             		<label>前介绍:</label>
             		</td>
             		<td>
-            		<textarea rows="2" cols="20" name="introduceHead"></textarea>
+            		<textarea rows="2" cols="20" name="introduceHead" id="introduceHead"></textarea>
             		</td>
             	</tr>
             	  <tr>
@@ -57,7 +57,7 @@
             		<label>后介绍:</label>
             		</td>
             		<td>
-            		<textarea rows="2" cols="20" name="introduceFoot"></textarea>
+            		<textarea rows="2" cols="20" name="introduceFoot" id="introduceFoot"></textarea>
             		</td>
             	</tr>
             	<tr>
@@ -81,7 +81,7 @@
             		<label>来自织图:</label>
             		</td>
             		<td>
-            		<textarea rows="2" cols="20" name="foot"></textarea>
+            		<textarea rows="2" cols="20" name="foot" id="foot"></textarea>
             		</td>
             	</tr>            	
             </table>
