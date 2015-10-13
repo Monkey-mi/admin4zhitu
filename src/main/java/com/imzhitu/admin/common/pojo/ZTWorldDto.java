@@ -82,6 +82,7 @@ public class ZTWorldDto extends AbstractNumberDto implements Serializable, World
 
 	private Integer activeOperated = -1;// 活动是否被添加过
 	private String channelName;	//频道名称
+	private String channelId;	//频道id，以“,”分隔，来区分存在多个频道中
 	
 	
 
@@ -117,6 +118,14 @@ public class ZTWorldDto extends AbstractNumberDto implements Serializable, World
 	}
 	public void setChannelName(String channelName) {
 		this.channelName = channelName;
+	}
+	
+	public String getChannelId() {
+		return channelId;
+	}
+	
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
 	}
 	
 	public void setTrustOperatorName(String trustOperatorName){

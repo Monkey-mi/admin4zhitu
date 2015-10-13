@@ -230,9 +230,25 @@
 	
 	<!-- 根据织图id查询其频道名称 -->
 	<select id="queryChannelNameByWorldId" resultType="String">
-		select oc.channel_name 
-			FROM hts.operations_channel_world ocw LEFT JOIN hts.operations_channel oc ON ocw.channel_id=oc.id
-			WHERE ocw.world_id=#{worldId} 
+		select 
+			oc.channel_name 
+		from 
+			hts.operations_channel_world ocw 
+			LEFT JOIN 
+			hts.operations_channel oc ON ocw.channel_id=oc.id
+		where ocw.world_id = #{worldId} 
+		order by  ocw.channel_id	
+	</select>
+	
+	<!-- 根据织图id查询其所在频道ID -->
+	<select id="queryChannelIdsByWorldId" resultType="Integer">
+		select 
+			ocw.channel_id 
+		from 
+			hts.operations_channel_world ocw
+		where 
+			ocw.world_id = #{worldId}
+		order by  ocw.channel_id
 	</select>
 	
 	<update id="updateSerialById">

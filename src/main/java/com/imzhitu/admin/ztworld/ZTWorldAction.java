@@ -1,17 +1,18 @@
 package com.imzhitu.admin.ztworld;
 
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.common.pojo.HTWorld;
 import com.hts.web.common.pojo.HTWorldFilterLogo;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.ztworld.service.impl.ZTWorldServiceImpl;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
+
+import net.sf.json.JSONObject;
 
 /**
  * 世界管理控制器
@@ -253,6 +254,22 @@ public class ZTWorldAction extends BaseCRUDAction {
 		try {
 			worldService.updateFilterLogo(ver, logoPath, logoDesc, valid);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询织图信息
+	 * 
+	 * @return
+	 * @author zhangbo	2015年10月13日
+	 */
+	public String queryWorld() {
+		try {
+			HTWorld world = webWorldService.getWorldById(worldId, false);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, world, OptResult.JSON_KEY_HTWORLD, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}

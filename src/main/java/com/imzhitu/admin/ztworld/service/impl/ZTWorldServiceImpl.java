@@ -502,4 +502,49 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		ztWorldMapper.updateLatestInvalid(authorId);
 	}
 
+	@Override
+	public void refreshChannelNamesAndChannelIds(Integer worldId) throws Exception {
+		
+		//查询频道
+		OpChannelWorld world = new OpChannelWorld();
+		world.setWorldId(worldId);
+		long r = channelWorldMapper.queryChannelWorldCount(world);
+		if(r != 0) {
+			List<String> channelNameList = channelWorldMapper.queryChannelNameByWorldId(worldId);
+			List<Integer> channelIdList = channelWorldMapper.queryChannelIdsByWorldId(worldId);
+			
+			String channelNames = "";
+			String channelIds = "";
+			
+			for (int i = 0; i < channelNameList.size(); i++) {
+				if ( i == 0 ) {
+					channelNames += channelNameList.get(i);
+				} else {
+					channelNames += "," + channelNameList.get(i);
+				}
+			}
+			
+			for (int i = 0; i < channelIdList.size(); i++) {
+				if ( i == 0 ) {
+					channelIds += channelIdList.get(i);
+				} else {
+					channelIds += "," + channelIdList.get(i);
+				}
+			}
+			
+			// 直接管换成字符串，就变成由“,”分隔的了，但是要去除前后的“[]”
+//			String channelNames = channelNameList.toString();
+//			channelNames = channelNames.substring(1, channelNames.length()-1);
+//			String channelIds = channelIdList.toString();
+//			channelIds = channelIds.substring(1, channelIds.length()-1);
+			
+			ZTWorldDto dto = new ZTWorldDto();
+			dto.setWorldId(worldId);
+			dto.setChannelName(channelNames);
+			dto.setChannelId(channelIds);
+			
+			ztWorldMapper.updateWorld(dto);
+		}
+	}
+
 }

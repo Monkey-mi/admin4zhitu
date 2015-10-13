@@ -45,6 +45,7 @@ import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.SysMsgMapper;
 import com.imzhitu.admin.op.service.ChannelService;
 import com.imzhitu.admin.op.service.OpMsgService;
+import com.imzhitu.admin.ztworld.service.ZTWorldService;
 
 //@Service
 public class ChannelServiceImpl extends BaseServiceImpl implements ChannelService {
@@ -128,7 +129,10 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	
 	@Autowired
 	private ChannelAutoRejectIdCacheDao rejectChannelCacheDao;
-
+	
+	@Autowired
+	private ZTWorldService	worldService;
+	
 	private Integer channelCoverLimit = 5;
 
 	public Logger logger = Logger.getLogger(ChannelServiceImpl.class);
@@ -405,6 +409,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		}
 		// updateChannelWorldCache(world.getChannelId(), 0);
 		webChannelService.updateWorldAndChildCount(world.getChannelId());
+		
+		// 刷新world的channelName与channelId字段
+		worldService.refreshChannelNamesAndChannelIds(world.getWorldId());
 	}
 
 	@Override

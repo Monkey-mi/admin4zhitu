@@ -13,10 +13,6 @@ var maxId = 0,
 	},
 	today = new Date(),
 	todayStr = baseTools.simpleFormatDate(today),
-	searchChannelMaxId = 0,
-	searchChannelQueryParams = {
-		'maxId':searchChannelMaxId
-	},
 	showWorldAndInteractPage="page_htworld_htworldShow";
 	
 	timeCompare = function(date) {
@@ -147,6 +143,7 @@ function loadData(pageNumber, pageSize) {
 }
 
 function drawWorldOpt($worldOpt, worlds, index) {
+	debugger;
 	var world = worlds[index],
 		worldId = world['id'],
 		ver = world['ver'],
@@ -269,7 +266,7 @@ function drawOptArea($worldOpt, worlds, index) {
 	
 	// 添加第二行操作title对应的按钮
 	var $opt2LineBtn = $('<div class="world-channel">' 
-			+ getChannelName(world['channelName'], world, index) 
+			+ getChannelName(world['channelName'], world, index)
 			+ '</div>');
 	
 	// 添加二三行分隔线
@@ -386,24 +383,13 @@ function getTypeInteract(value, row, index) {
 }
 
 function getChannelName(value, row, index) {
+	debugger;
 	if(value == "NO_EXIST" || value=="") {
 		img = "./common/images/edit_add.png";
-		return "<img title='添加到频道' class='htm_column_img pointer'  src='" + img + "' onclick='saveToChannelWorld(\""+row.worldId+"\",\""+index +"\")'/>";
+		return "<img title='添加到频道' class='htm_column_img pointer'  src='" + img + "' onclick='showWorldAddToChannelPage(" + row.worldId + ")'/>";
+	} else {
+		 return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
 	}
-	return value;
-}
-
-function getWorldType(value, row, index) {
-	labelIsExist = row.worldLabel ? 1:0;
-	if(row.valid == 0 || row.shield == 1) {
-		return value;
-	} else if(row.squarerecd == 1) {
-		return "<a title='从精选列表移除' class='updateInfo pointer' onclick='javascript:removeTypeWorld(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")'>"+value+"</a>";
-	} else if(value == '' || value == null) {
-		img = "./common/images/edit_add.png";
-		return "<img title='添加到精选列表' class='htm_column_img pointer' onclick='javascript:initTypeUpdateWindow(\""+ row[worldKey] + "\",\""+ row.typeId + "\",\"" + index + "\",\"" + 'true' + "\",\"" + row.authorId+ "\",\""+labelIsExist+"\")' src='" + img + "'/>";
-	}
-	return "<a title='添加到精选推荐列表' class='updateInfo pointer' onclick='javascript:initTypeUpdateWindow(\""+ row[worldKey] + "\",\""+ row.typeId + "\",\"" + index + "\",\"" + 'false' + "\",\"" + row.authorId+"\",\""+labelIsExist+"\")'>"+value+"</a>";;
 }
 
 function getActiveOperated(value, row, index) {
@@ -538,91 +524,6 @@ function removeLatestValid(worldId, index) {
 		},"json");
 }
 
-function loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist) {
-	var addForm = $('#type_form');
-	formSubmitOnce = true; //每次打开窗口formSubmitOnce都重新设为true
-	$.formValidator.initConfig({
-		formid : addForm.attr("id"),			
-		onsuccess : function() {
-			if(formSubmitOnce==true){
-				//第一次提交表单前formSubmitOnnce设为false，避免重复提交表单
-				formSubmitOnce = false;
-				//验证成功后以异步方式提交表单
-				$('#htm_i .opt_btn').hide();
-				$('#htm_interact .loading').show();
-				//验证成功后以异步方式提交表单
-				var $typeId = $("#typeId_type"),
-					worldId = $("#worldId_type").val(),
-					userId = $("#userId_type").val(),
-					worldType = $typeId.combobox('getText'),
-					typeId = $typeId.combobox('getValue');
-					channelId = $("#channelId").combobox('getValue');
-				
-				$("#htm_type .opt_btn").hide();
-				$("#htm_type .loading").show();
-	//			if(typeId){
-					$.post("./admin_interact/typeOptionWorld_addTypeOptionWorld",{
-						'worldId':worldId,
-						'userId':userId
-						},function(result){
-							formSubmitOnce = true;
-							$("#htm_type .opt_btn").show();
-							$("#htm_type .loading").hide();
-							if(result['result'] == 0) {
-								updateValues(index,['squarerecd','worldType'],['1','旅行']);
-								
-							} else {
-								$.messager.alert('失败提示',result['msg']);  //提示失败信息
-	//							return false;
-							}
-						},"json");
-					//若标签为空，则更新标签
-					if(labelIsExist == 0)
-					 $.post("./admin_ztworld/label_updateWorldLable",{
-						 'worldId':worldId,
-						 'userId':userId,
-						 'labelId':typeId,
-						 'labelName':worldType
-					 },function(result){
-						 if(result['result'] == 0){
-							 updateValues(index,['worldLabel'],[worldType]);
-						 }else{
-							 $.messager.alert('失败提示',result['msg']);  //提示失败信息
-						 }
-					 },"json");
-					$('#htm_type').window('close');  //关闭添加窗口
-	//				return false;
-	//			}
-				
-				if(channelId){
-					//该织图进入频道
-					$.post("./admin_op/channel_saveChannelWorld",{
-						'world.channelId':channelId,
-						'world.worldId'  :worldId,
-						'world.valid'	 :1,
-						'world.notified' :0
-					},function(result){
-						if(result['result'] == 0){
-						//	updateValue(index,'channelName',channelName);
-						}else{
-							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-						}
-						$('#htm_type').window('close');  //关闭添加窗口
-	//					return false;
-					},"json");
-				}
-				
-				return false;
-				
-			}
-		}
-	});
-	
-	$("#typeId_type")
-	.formValidator({empty:false,onshow:"请选择分类",onfocus:"设置分类",oncorrect:"设置成功"});;
-	
-}
-
 var htmTableTitle = "分享列表维护", //表格标题
 	htmTablePageList = [10,20,50,100],
 	worldKey = 'id',
@@ -667,67 +568,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 	onAfterInit = function() {
 		
 		initWorldBoxWidth();
-		
-		$('#ss-channel').combogrid({
-			panelWidth : 440,
-		    panelHeight : 330,
-		    loadMsg : '加载中，请稍后...',
-			pageList : [4,10,20],
-			pageSize : 4,
-			toolbar:"#search-channel-tb",
-		    multiple : false,
-		    required : false,
-		   	idField : 'id',
-		    textField : 'channelName',
-		    url : './admin_op/channel_searchChannel',
-		    pagination : true,
-		    columns:[[
-				{field : 'id',title : 'id',align : 'center',width : 80},
-				{field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
-					formatter:function(value,row,index) {
-						return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
-					}
-				},
-				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
-		    ]],
-		    queryParams:searchChannelQueryParams,
-		    onLoadSuccess:function(data) {
-		    	if(data.result == 0) {
-					if(data.maxId > searchChannelMaxId) {
-						searchChannelMaxId = data.maxId;
-						searchChannelQueryParams.maxId = searchChannelMaxId;
-					}
-				}
-		    },
-		});
-		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
-		p.pagination({
-			onBeforeRefresh : function(pageNumber, pageSize) {
-				if(pageNumber <= 1) {
-					searchChannelMaxId = 0;
-					searchChannelQueryParams.maxId = searchChannelMaxId;
-				}
-			}
-		});
-		
-		$("#htm_channel").window({
-			title : '频道织图添加',
-			modal : true,
-			width : 420,
-			height : 150,
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-add',
-			resizable : false,
-			onClose : function(){
-				$("#channelId").combobox('clear');
-				$("#worldId_channel").val('');
-				$("#rowIndex").val('');
-			}
-		});
 		
 		$("#labelId_interact").combotree({
 			url:'./admin_interact/comment_queryLabelTree?hasTotal=true',
@@ -1521,48 +1361,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 		updateValue(index, "interacted", 1);
 	}
 	
-	function saveToChannelWorld(worldId,index){
-		$("#rowIndex").val(index);
-		$("#worldId_channel").val(worldId);
-		$('#htm_channel .opt_btn').hide();
-		$('#htm_channel .loading').show();
-		$("#htm_channel").window('open');
-		$('#htm_channel .opt_btn').show();
-		$('#htm_channel .loading').hide();
-		
-	}
-	function saveChannelWorldSubmit(){
-		var index = $("#rowIndex").val();
-//		var channelName = $("#channelId").combobox('getText');
-//		var channelId = $("#channelId").combobox('getValue');
-		var channelName = $("#ss-channel").combogrid('getText');
-		var channelId = $("#ss-channel").combogrid('getValue');
-		var worldId = $("#worldId_channel").val();
-		//成为频道用户
-		$.post("./admin_op/chuser_addChannelUserByWorldId",{
-			'worldId':worldId,
-			'channelId':channelId
-		},function(result){
-			return false;
-		},"json");
-		//该织图进入频道
-		$.post("./admin_op/channel_saveChannelWorld",{
-			'world.channelId':channelId,
-			'world.worldId'  :worldId,
-			'world.valid'	 :0,
-			'world.notified' :0
-		},function(result){
-			if(result['result'] == 0){
-				updateValue(index,'channelName',channelName);
-			}else{
-				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-			}
-			$("#htm_channel").window('close');
-			return false;
-		},"json");
-		
-	}
-	
 	function updateValue(index, key, value) {
 		dataList[index][key] = value;
 		var $worldOpt = $(".world-opt-wrap:eq("+index+")");
@@ -1648,14 +1446,21 @@ var htmTableTitle = "分享列表维护", //表格标题
 	}
 	
 	/**
-	 * 搜索频道名称
+	 * 打开织图添加到频道页面
+	 * @author zhangbo 2015-10-10
 	 */
-	function searchChannel() {
-		searchChannelMaxId = 0;
-		maxId = 0;
-		var query = $('#channel-searchbox').searchbox('getValue');
-		searchChannelQueryParams.maxId = searchChannelMaxId;
-		searchChannelQueryParams.query = query;
-		$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
+	function showWorldAddToChannelPage(worldId){
+		var url = "./page_htworld_htworldAddToChannel";
+		url += "?worldId=" + worldId
+		$.fancybox({
+			'margin'			: 20,
+			'width'				: '60%',
+			'height'			: '75%',
+			'autoScale'			: true,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+			'href'				: url
+		});
 	}
 	

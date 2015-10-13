@@ -317,33 +317,6 @@ function initTypeUpdateWindow(worldId, typeId, index, isAdd,userId,labelIsExist)
 		$("#userId_type").val(userId);
 	}
 	$("#htm_type").window('open');
-//	if(typeId == 0) {
-//		typeId = 1;
-//		$("#typeId_type").combobox('setValue', typeId);
-//	} else {
-//		$("#typeId_type").combobox('select', typeId);
-//	}
-	
-	/*
-	if(isAdd == 'false') {
-		$.post("./admin_ztworld/type_queryLabelIdByWorldId",{
-			'worldId':worldId,
-			},function(result){
-				if(result['result'] == 0) {
-					$("#labelIds_type").combogrid('setValues', result['labelInfo']);
-					loadTypeUpdateFormValid(index, 'true');
-					$("#type_loading").hide();
-					$("#type_form").show();
-				} else {
-					$.messager.alert('失败提示',result['msg']);  //提示失败信息
-				}
-			},"json");
-	} else {
-		loadTypeUpdateFormValid(index, isAdd);
-		$("#type_loading").hide();
-		$("#type_form").show();
-	}
-	*/
 	loadTypeUpdateFormValid(index, isAdd,userId,labelIsExist);
 	$("#type_loading").hide();
 	$("#type_form").show();

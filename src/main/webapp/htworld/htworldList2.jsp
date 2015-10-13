@@ -380,63 +380,6 @@
 					</table>
 				</div>
 
-				<!-- 添加到频道 -->
-				<div id="htm_channel">
-					<span id="channel_loading" style="margin:60px 0 0 220px; position:absolute; display:none">加载中...</span>
-					<form id="channel_form" action="./admin_op/channel_saveChannelWorld" method="post">
-						<table class="htm_edit_table" width="400">
-							<tbody>
-								<tr>
-									<td class="leftTd">频道名称：</td>
-									<!-- 
-						<td ><input id="channelId" name="world.channelId" class="easyui-combobox" 
-							data-options="valueField:'id',textField:'channelName',multiple:'true',url:'./admin_op/channel_queryAllChannel'"/></td> -->
-									<td>
-										<input id="ss-channel" name="world.channelId" style="width:171px;" />
-									</td>
-								</tr>
-								<tr>
-									<td class="leftTd">织图ID：</td>
-									<td>
-										<input id="worldId_channel" name="world.worldId" type="text" readonly="readonly" style="width:171px;" />
-									</td>
-								</tr>
-								<tr class="none">
-									<td colspan="2">
-										<input type="text" name="world.valid" id="valid_add" value="1" />
-									</td>
-								</tr>
-								<tr class="none">
-									<td colspan="2">
-										<input type="text" name="world.notified" id="notified_add" value="0" />
-									</td>
-								</tr>
-								<tr class="none">
-									<td colspan="2">
-										<input id="rowIndex" />
-									</td>
-								</tr>
-								<tr>
-									<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
-										<a class="easyui-linkbutton" iconCls="icon-ok" onclick="saveChannelWorldSubmit();">确定</a>
-										<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_channel').window('close');">取消</a>
-									</td>
-								</tr>
-								<tr class="loading none">
-									<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
-										<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-										<span style="vertical-align:middle;">保存中...</span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</form>
-				</div>
-
-				<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
-					<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;" />
-				</div>
-
 			</div>
 		</body>
 

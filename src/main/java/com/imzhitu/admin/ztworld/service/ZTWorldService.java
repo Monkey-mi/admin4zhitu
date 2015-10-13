@@ -131,4 +131,13 @@ public interface ZTWorldService extends BaseService {
 	 * @throws Exception
 	 */
 	public void updateLatestInvalid(Integer authorId) throws Exception;
+	
+	/**
+	 * 根据织图id刷新频道名称与频道id字段，以频道织图关联关系表数据为准
+	 * 
+	 * @param worldId	织图Id
+	 * @throws Exception
+	 * @author zhangbo	2015年10月13日
+	 */
+	void refreshChannelNamesAndChannelIds(Integer worldId) throws Exception;
 }

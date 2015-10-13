@@ -154,6 +154,16 @@ public interface ChannelWorldMapper {
 	 */
 	@DataSource("slave")
 	public List<String> queryChannelNameByWorldId(Integer worldId);
+	
+	/**
+	 * 根据织图id，查询该织图所在频道ID集合
+	 * 
+	 * @param worldId	织图id
+	 * @return
+	 * @author zhangbo	2015年10月13日
+	 */
+	@DataSource("slave")
+	List<Integer> queryChannelIdsByWorldId(Integer worldId);
 
 	/**
 	 * 根据WID查询其所在的频道名称列表
