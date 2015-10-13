@@ -143,7 +143,6 @@ function loadData(pageNumber, pageSize) {
 }
 
 function drawWorldOpt($worldOpt, worlds, index) {
-	debugger;
 	var world = worlds[index],
 		worldId = world['id'],
 		ver = world['ver'],
@@ -383,7 +382,6 @@ function getTypeInteract(value, row, index) {
 }
 
 function getChannelName(value, row, index) {
-	debugger;
 	if(value == "NO_EXIST" || value=="") {
 		img = "./common/images/edit_add.png";
 		return "<img title='添加到频道' class='htm_column_img pointer'  src='" + img + "' onclick='showWorldAddToChannelPage(" + row.worldId + ")'/>";
