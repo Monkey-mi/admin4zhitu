@@ -24,6 +24,17 @@
 	 */
 	$(function() {
 		
+	    $("#htm_channel").window({
+	    	title: "织图添加到频道",
+	    	iconCls:'icon-add',
+	        width: $(window).width(),
+	        height: $(window).height(),
+	        collapsible: false,
+	        minimizable: false,
+	        maximizable: false,
+	        closable: false
+	    });
+		
 		$('#ss-channel').combogrid({
 			panelWidth : 440,
 		    panelHeight : 330,
@@ -87,13 +98,46 @@
 			if(result['result'] == 0){
 				var channelNameArray = result.htworld.channelNames;
 				for (var i=0; i<channelNameArray.length; i++) {
-					$("#current_channel").append($("<span>" + channelNameArray[i].name + "</span>"));
+					var currentChannelBtn = $("<a href='javascript:void(0);' class='easyui-linkbutton l-btn' channelId='" 
+							+ channelNameArray[i].id + "'>" + channelNameArray[i].name + "</a>")
+							.click(function(){
+								// 要把当前<a>标签赋值，不然提示confirm中调不到
+								var currentBtn = $(this);
+								$.messager.confirm("温馨提示","确定要删除当前所在频道？",function(r){
+									if (r) {
+										// 调用删除频道织图关联关系方法
+										deleteChannelWorld(currentBtn.attr("channelId"));
+										
+										// 先移除<a>标签后面的<br>标签，然后再移除<a>标签本身 
+										currentBtn.next().remove();
+										currentBtn.remove();
+									}
+								});
+							});
+					$("#current_channel").append(currentChannelBtn);
 					$("#current_channel").append($("<br>"));
 				}
 			}else{
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 			}
 		},"json");
+	}
+	
+	/**
+	 * 删除织图与频道的关联关系
+	 */
+	function deleteChannelWorld(channelId) {
+		// 删除频道织图
+		$.post("./admin_op/channel_deleteChannelWorldByChannelIdAndWorldId",{
+			channelId: channelId,
+			worldId: worldId
+		},function(result){
+			if(result['result'] == 0){
+				$.messager.alert("温馨提示",result.msg);
+			} else {
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+		});
 	}
 	
 	/**
@@ -106,32 +150,20 @@
 			channelIds.push($(this).attr("channelId"));
 		});
 		
-		for (var i=0; i < channelIds.length; i++) {
-			//成为频道用户
-			$.post("./admin_op/chuser_addChannelUserByWorldId",{
-				'worldId':worldId,
-				'channelId':channelIds[i]
-			},function(result){
-				if(result['result'] == 0){
-					isSuccess = true;
-				} else {
-					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-				}
-			});
-			//该织图进入频道
-			$.post("./admin_op/channel_saveChannelWorld",{
-				'world.channelId':channelIds[i],
-				'world.worldId'  :worldId,
-				'world.valid'	 :0,
-				'world.notified' :0
-			},function(result){
-				if(result['result'] == 0){
-					isSuccess = true;
-				} else {
-					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-				}
-			});
-		}
+		//该织图进入频道
+		$.post("./admin_op/channel_saveWorldIntoChannels",{
+			ids: channelIds.toString(),
+			worldId: worldId
+		},function(result){
+			if(result['result'] == 0){
+				$.messager.alert("温馨提示",result.msg,"info",function(){
+					parent.$.fancybox.close();
+				});
+			} else {
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+		});
+		
 	};
 	
 	/**
@@ -149,7 +181,7 @@
 <body>
 	<!-- 添加到频道 -->
 	<div id="htm_channel">
-		<table class="htm_edit_table" width="650">
+		<table class="htm_edit_table" width="700">
 			<tbody>
 				<tr>
 					<td class="leftTd">所在频道：</td>

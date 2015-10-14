@@ -9,7 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.common.pojo.OpChannel;
@@ -19,6 +21,7 @@ import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.op.service.ChannelService;
+import com.imzhitu.admin.op.service.OpChannelUserService;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -32,6 +35,9 @@ public class ChannelAction extends BaseCRUDAction{
 	
 	@Autowired
 	private ChannelService channelService;
+	
+	@Autowired
+	private OpChannelUserService channelUserService;
 	
 	private OpChannel channel = new OpChannel();
 	private OpChannelWorld world = new OpChannelWorld();
@@ -277,6 +283,22 @@ public class ChannelAction extends BaseCRUDAction{
 	public String deleteChannelWorld() {
 		try {
 			channelService.deleteChannelWorlds(ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch(Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 根据频道id与织图id删除频道织图的关联关系
+	 * 
+	 * @return
+	 * @author zhangbo	2015年10月14日
+	 */
+	public String deleteChannelWorldByChannelIdAndWorldId() {
+		try {
+			channelService.deleteChannelWorldByChannelIdAndWorldId(channelId, worldId);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 		} catch(Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -540,6 +562,37 @@ public class ChannelAction extends BaseCRUDAction{
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return null;
+	}
+	
+	/**
+	 * 保存织图到多个频道
+	 * 
+	 * @return
+	 * @author zhangbo	2015年10月14日
+	 */
+	public String saveWorldIntoChannels() {
+		try {
+			Integer[] channelIds = StringUtil.convertStringToIds(ids);
+			for (Integer channelId : channelIds) {
+				
+				// 先将织图作者加入频道的订阅人中
+				AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				channelUserService.addChannelUserByWorldId(worldId, channelId, Tag.TRUE, user.getId());
+				
+				// 再将织图加入频道中，但不生效，由小编审核后生效
+				OpChannelWorld channelWorld = new OpChannelWorld();
+				channelWorld.setChannelId(channelId);
+				channelWorld.setWorldId(worldId);
+				channelWorld.setValid(Tag.FALSE);
+				channelWorld.setNotified(Tag.FALSE);
+				
+				channelService.saveChannelWorld(channelWorld);
+			}
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
 	}
 	
 	public ChannelService getChannelService() {

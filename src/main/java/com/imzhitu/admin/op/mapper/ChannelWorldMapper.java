@@ -77,7 +77,17 @@ public interface ChannelWorldMapper {
 	 */
 	@DataSource("master")
 	public void deleteByIds(Integer[] ids);
-
+	
+	/**
+	 * 根据频道id与织图id删除记录
+	 * 
+	 * @param channelId	频道id
+	 * @param worldId	织图id
+	 * @author zhangbo	2015年10月14日
+	 */
+	@DataSource("master")
+	void deleteByChannelIdAndWorldId(@Param("channelId") Integer channelId, @Param("worldId") Integer worldId);
+	
 	/**
 	 * 根据ids更新有效性
 	 * 

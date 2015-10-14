@@ -441,4 +441,13 @@ public interface ChannelService extends BaseService {
 	 */
 	public void updateChannelWorldSuperbSerial(Integer channelId, Integer worldId) throws Exception;
 
+	/**
+	 * 根据频道id与织图id删除频道织图的关联关系
+	 * 
+	 * @param channelId	频道id
+	 * @param worldId	织图id
+	 * @author zhangbo	2015年10月14日
+	 */
+	public void deleteChannelWorldByChannelIdAndWorldId(Integer channelId, Integer worldId) throws Exception;
+
 }

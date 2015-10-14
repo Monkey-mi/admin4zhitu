@@ -215,6 +215,15 @@
 	 	</foreach>
 	</delete>
 	
+	<!-- 根据频道id与织图id删除记录 -->
+	<delete id="deleteByChannelIdAndWorldId">
+		delete from 
+			hts.operations_channel_world 
+		where 
+			channel_id = #{channelId}
+			and world_id = #{worldId}
+	</delete>
+	
 	<select id="queryChannelWorldById" resultMap="OpChannelWorldMap">
 		select * from hts.operations_channel_world where id=#{id}
 	</select>

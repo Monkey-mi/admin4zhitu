@@ -544,6 +544,15 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setChannelId(channelIds);
 			
 			ztWorldMapper.updateWorld(dto);
+		} 
+		// 若织图不在任何频道中，则把织图中相关频道名称与频道id字段刷成空串
+		else {
+			ZTWorldDto dto = new ZTWorldDto();
+			dto.setWorldId(worldId);
+			dto.setChannelName("");
+			dto.setChannelId("");
+			
+			ztWorldMapper.updateWorld(dto);
 		}
 	}
 

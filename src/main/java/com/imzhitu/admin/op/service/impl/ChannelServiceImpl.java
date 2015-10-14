@@ -958,5 +958,13 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		channelWorldMapper.updateSuperbSerial(world);
 		
 	}
+
+	@Override
+	public void deleteChannelWorldByChannelIdAndWorldId(Integer channelId, Integer worldId) throws Exception {
+		channelWorldMapper.deleteByChannelIdAndWorldId(channelId, worldId);
+		
+		// 刷新world的channelName与channelId字段
+		worldService.refreshChannelNamesAndChannelIds(worldId);
+	}
 	
 }
