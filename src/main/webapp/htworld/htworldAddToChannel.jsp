@@ -13,6 +13,7 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery-easyui-1.3.5/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery-easyui-1.3.2/plugins/jquery.combogrid.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery-easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+<script language="javascript" src="${webRootPath }/base/js/baseTools.js" type="text/javascript"></script>
 <title>织图添加到频道</title>
 <script type="text/javascript">
 	var worldId = <%= worldId %>;
@@ -35,7 +36,7 @@
 	        closable: false
 	    });
 		
-		$('#ss-channel').combogrid({
+		$("#ss-channel").combogrid({
 			panelWidth : 440,
 		    panelHeight : 330,
 		    loadMsg : '加载中，请稍后...',
@@ -68,6 +69,9 @@
 						});
 				$("#add_into_channel").append(channelNameBtn);
 				$("#add_into_channel").append($("<br>"));
+				
+				$("#ss-channel").combogrid("grid").datagrid("clearSelections");
+				$("#ss-channel").combogrid("showPanel");
 			},
 		    onLoadSuccess:function(data) {
 		    	if(data.result == 0) {
@@ -85,6 +89,15 @@
 			}
 		});
 		
+		// 页面打开后打开选择频道gridpanel
+		$("#ss-channel").combogrid("showPanel");
+		
+		// 然后焦点聚焦在频道gridpanel搜索框上
+		$("#channel-searchbox").searchbox("textbox").focus();
+		
+		$("#channel-searchbox").searchbox("textbox").val(baseTools.getCookie("CHANNEL_SEARCHBOX_VALUE"));
+		
+		// 加载织图当前所在频道
 		loadCurrentChannel();
 	});
 	
@@ -174,6 +187,9 @@
 		searchChannelQueryParams.maxId = 0;
 		searchChannelQueryParams.query = query;
 		$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
+		
+		// 搜索结果保存到cookie中，便于下次查询，设置过期时间为7天
+		baseTools.setCookie("CHANNEL_SEARCHBOX_VALUE",query,7*24*60*60*1000);
 	};
 	
 </script>
@@ -214,6 +230,6 @@
 	<div id="search-channel-tb" style="padding:5px;height:auto" class="none">
 		<input id="channel-searchbox" searcher="searchChannel" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;" />
 	</div>
-
+		
 </body>
 </html>

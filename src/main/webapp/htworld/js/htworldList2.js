@@ -1452,8 +1452,8 @@ var htmTableTitle = "分享列表维护", //表格标题
 		url += "?worldId=" + worldId
 		$.fancybox({
 			'margin'			: 20,
-			'width'				: '60%',
-			'height'			: '75%',
+			'width'				: '45%',
+			'height'			: '60%',
 			'autoScale'			: true,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',

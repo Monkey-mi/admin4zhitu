@@ -515,7 +515,7 @@
             <ref bean="sortChannelStarSchedulaJobDetail" />
         </property>
         <property name="cronExpression">
-            <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
+            <value>0 00 10 * * ?</value><!-- 每天上午10点钟执行 -->
         </property>
     </bean>
     
