@@ -37,6 +37,7 @@ public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable
 	private String content; // 内容
 	private Date commentDate; // 评论时间
 	private Integer worldId; // 世界ID
+	private Integer worldAuthorId; // 织图作者id
 	private Integer reId; // 被回复评论id
 	private Integer reAuthorId; // 被回复作者id
 	private Integer ck; // 被评论织图作者是否查看过标记
@@ -49,8 +50,8 @@ public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable
 
 	public ZTWorldCommentDto(Integer id, Integer authorId, String authorName,
 			String authorAvatar, String content, Date commentDate,
-			Integer worldId, Integer reId, Integer reAuthorId, Integer ck,
-			Integer valid, Integer shield) {
+			Integer worldId, Integer worldAuthorId, Integer reId, Integer reAuthorId,
+			Integer ck, Integer valid, Integer shield) {
 		super();
 		this.id = id;
 		this.authorId = authorId;
@@ -59,6 +60,7 @@ public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable
 		this.content = content;
 		this.commentDate = commentDate;
 		this.worldId = worldId;
+		this.worldAuthorId = worldAuthorId;
 		this.reId = reId;
 		this.reAuthorId = reAuthorId;
 		this.ck = ck;
@@ -200,4 +202,12 @@ public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable
 		return star;
 	}
 
+	public Integer getWorldAuthorId() {
+		return worldAuthorId;
+	}
+
+	public void setWorldAuthorId(Integer worldAuthorId) {
+		this.worldAuthorId = worldAuthorId;
+	}
+	
 }

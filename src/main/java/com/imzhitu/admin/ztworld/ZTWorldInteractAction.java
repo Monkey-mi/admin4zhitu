@@ -34,9 +34,13 @@ public class ZTWorldInteractAction extends BaseCRUDAction {
 	private String content;
 	private Integer authorId;
 	private Integer reId;
+	private Integer reAuthorId;
+	private Integer worldAuthorId;
 	
 	private String ids;
 	private Integer count = 0;
+	private String atIds;
+	private String atNames;
 	
 	@Autowired
 	private com.hts.web.ztworld.service.ZTWorldInteractService webWorldInteractService;
@@ -122,12 +126,14 @@ public class ZTWorldInteractAction extends BaseCRUDAction {
 	 */
 	public String saveComment() {
 		try {
-			if(reId == null || reId == 0) {
-				webWorldInteractService.saveComment(false, worldId, null, authorId, " : " + content,
+			if(reAuthorId == null || reAuthorId == 0) {
+				webWorldInteractService.saveComment(false, worldId, null, authorId, content,
 						null,null,jsonMap);
 			} else {
-				webWorldInteractService.saveReply(false, worldId, null, authorId,
-						content, reId, null, null, null, jsonMap);
+//				webWorldInteractService.saveReply(false, worldId, null, authorId,
+//						content, reId, null, jsonMap);
+				webWorldInteractService.saveReplyWithAt(false, worldId, worldAuthorId, authorId, 
+						content, reId, reAuthorId,atIds, atNames, jsonMap);
 			}
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
@@ -345,4 +351,36 @@ public class ZTWorldInteractAction extends BaseCRUDAction {
 		this.count = count;
 	}
 
+	public Integer getReAuthorId() {
+		return reAuthorId;
+	}
+
+	public void setReAuthorId(Integer reAuthorId) {
+		this.reAuthorId = reAuthorId;
+	}
+
+	public Integer getWorldAuthorId() {
+		return worldAuthorId;
+	}
+
+	public void setWorldAuthorId(Integer worldAuthorId) {
+		this.worldAuthorId = worldAuthorId;
+	}
+
+	public String getAtIds() {
+		return atIds;
+	}
+
+	public void setAtIds(String atIds) {
+		this.atIds = atIds;
+	}
+
+	public String getAtNames() {
+		return atNames;
+	}
+
+	public void setAtNames(String atNames) {
+		this.atNames = atNames;
+	}
+	
 }

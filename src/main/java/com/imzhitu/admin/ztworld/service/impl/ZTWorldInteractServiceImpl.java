@@ -274,7 +274,7 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 				if(content.charAt(1) == ':') {
 					content = content.replaceFirst(" : ", "");
 				} else if(content.charAt(1) == '@') {
-					content = content.replaceFirst(" @", "回复");
+					content = content.replaceFirst(" :", "");
 				}
 				commentMapper.updateContent(i, content.trim());
 				if(i > finishFlag || i == maxId) {
@@ -284,6 +284,18 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 			}
 		}
 	}
-	
+
+//	@Override
+//	public void saveCommentOrReply(Integer worldId, Integer worldAuthorId, Integer authorId, 
+//			Integer reId, Integer reAuthorId, String content, 
+//			String atIds, String atNames, Map<String, Object> jsonMap) throws Exception {
+//		if(reAuthorId == null || reAuthorId == 0) {
+//			webWorldInteractService.saveComment(false, worldId, worldAuthorId, authorId, content,
+//					atIds, atNames, jsonMap);
+//		} else {
+//			webWorldInteractService.saveReplyWithAt(false, worldId, worldAuthorId, authorId,
+//					content, reId, reAuthorId, atIds, atNames, jsonMap);
+//		}
+//	}
 
 }

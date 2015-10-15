@@ -302,6 +302,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 			userName = userInfoMapper.queryUserName(i);
 			if(userName != null) {
 				userName = StringUtil.trimName(userName);
+				if("织图用户".equals(userName)) { // 过滤掉之前设定默认用户名
+					userName = StringUtil.getRandomUserName();
+				}
 				webUserInfoDao.updateUserName(i, userName);
 			}
 			if(i > finishFlag || i == maxId) {

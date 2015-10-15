@@ -144,4 +144,5 @@ public interface ZTWorldInteractService extends BaseService {
 	 * @throws Exception
 	 */
 	public void trimComment() throws Exception;
+	
 }

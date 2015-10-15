@@ -190,8 +190,10 @@ function addReply(reId, reAuthorId, authorName) {
 	initAddWindow();
 	if(reAuthorId != 0) 
 		$("#authorId_add").combogrid('setValue', reAuthorId);
+	else
+		$("#authorId_add").combogrid('setValue', "");
 	$("#reId_add").val(reId);
-	$("#rl_exp_input").val(' @'+authorName+" : ");
+	$("#rl_exp_input").val('@'+authorName+" ");
 	// 打开添加窗口
 	$("#htm_add").window('open');
 }

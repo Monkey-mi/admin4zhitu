@@ -145,12 +145,19 @@ body {
 						} else if(baseTools.isNULL(value)) {
 							authorName = "织图用户";
 						}
-						return authorName + value;
+						return authorName + ":" + value;
 					}
 				},
 				{field : 'reply', title : '回复',align : 'center',width : 40,
 					formatter: function(value,row,index){
-						return "<a title='点击回复评论' class='updateInfo' href='javascript:addReply(\""+ row.id + "\",\""+ row.reAuthorId + "\",\""+ row.authorName + "\")'>" + '回复'+ "</a>";
+						var reId = row.id;
+						if(row.reId != 0) {
+							reId = row.reId;
+						}
+						return "<a title='点击回复评论' class='updateInfo' href='javascript:addReply(\"" 
+								+ row.worldId + "\",\""+ row.worldAuthorId + "\",\""
+								+ row.reAuthorId + "\",\"" + reId + "\",\""+ row.authorId + "\",\""
+								+ row.authorName + "\")'>" + '回复'+ "</a>";
 					}
 				},
 				{field : 'commentDate', title:'评论日期', align : 'center',width : 75, formatter:function(value,row,index){
@@ -239,12 +246,18 @@ body {
 	/**
 	 * 添加回复
 	 */
-	function addReply(reId, reAuthorId, authorName) {
+	function addReply(worldId, worldAuthorId, authorId, reId, reAuthorId, authorName) {
 		initWorldAddWindow();
-		if(reAuthorId != 0) 
-			$("#authorId_add").combogrid('setValue', reAuthorId);
+		if(authorId != 0) 
+			$("#authorId_add").combogrid('setValue', authorId);
+		else
+			$("#authorId_add").combogrid('setValue', "");
 		$("#reId_add").val(reId);
+		$("#worldAuthorId_add").val(worldAuthorId);
+		$("#reAuthorId_add").val(reAuthorId);
+		$("#worldId_add").val(worldId);
 		$("#rl_exp_input").val(' @'+authorName+" : ");
+		//$("#rl_exp_input").val('@'+authorName+" ");
 		// 打开添加窗口
 		$("#htm_add").window('open');
 	}
@@ -312,8 +325,12 @@ body {
 	function initWorldAddWindow() {
 		$("#rl_exp_input").val('');
 		$("#worldId_add").val(worldId);
+		$("#authorId_add").combogrid('setValue', "");
+		$("#worldAuthorId_add").val('');
+		$("#reAuthorId_add").val('');
+		$("#reId_add").val('');
 	}
-
+		
 	/**
 	 * 添加评论
 	 */
@@ -678,7 +695,7 @@ body {
 //		$("#user_info_form_sex").val(sex);
 		
 		$("#user_info_win").window("open");
-	};
+	}
 	
 	/**
 	 * 修改用户信息
@@ -704,7 +721,7 @@ body {
 			    }
 			});
 		}
-	};
+	}
 	
 </script>
 
@@ -731,7 +748,6 @@ body {
 					<a id="saveBtn" class="easyui-linkbutton" iconCls="icon-ok" onclick="submitComment();" title="保存评论">确定</a>
 					<span class="loading none">
 					<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-					<span style="vertical-align:middle;">请稍后...</span>
 					</span>
 					<a class="easyui-linkbutton" iconCls="icon-cancel" title="关闭窗口" onclick="$('#htm_add').window('close');">取消</a>
 				</div>
@@ -739,6 +755,8 @@ body {
 			</div>
 			
 			<input class="none" type="text" name="reId" id="reId_add" onchange="validateSubmitOnce=true;" value="0"/>
+			<input class="none" type="text" name="reAuthorId" id="reAuthorId_add" onchange="validateSubmitOnce=true;" value="0"/>
+			<input class="none" type="text" name="worldAuthorId" id="worldAuthorId_add" onchange="validateSubmitOnce=true;" value="0"/>
 			<input class="none" type="text" name="worldId" id="worldId_add" onchange="validateSubmitOnce=true;" value="0"/>
 		</form>
 	</div>

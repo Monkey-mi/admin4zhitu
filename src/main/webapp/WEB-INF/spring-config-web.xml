@@ -25,9 +25,9 @@
 	 -->
 	
 	<bean id="pushExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="5" />
-		<property name="maxPoolSize" value="100" />
-		<property name="queueCapacity" value="100" />
+		<property name="corePoolSize" value="50" />
+		<property name="maxPoolSize" value="1000" />
+		<property name="queueCapacity" value="500" />
 	</bean>
 
 	<bean id="pushService" class="com.hts.web.push.service.impl.PushServiceImpl"  init-method="init" 

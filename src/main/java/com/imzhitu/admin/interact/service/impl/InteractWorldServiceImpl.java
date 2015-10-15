@@ -1220,7 +1220,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			try {
 				successId.add(comment.getId());
 				webWorldInteractService.saveComment(false, comment.getWorldId(), null,
-						comment.getUserId(), " : " + comment.getContent(), null, null, new HashMap<String, Object>());
+						comment.getUserId(), comment.getContent(), null, null, new HashMap<String, Object>());
 				successfullyFinishCount++;
 			} catch (Exception e3) {
 				logger.info("commitComment:webWorldInteractService.saveComment\n"+e3.getMessage());
