@@ -145,4 +145,11 @@ public interface ZTWorldInteractService extends BaseService {
 	 */
 	public void trimComment() throws Exception;
 	
+	/**
+	 * 全局过滤回复
+	 * 
+	 * @throws Exception
+	 */
+	public void trimReply() throws Exception;
+	
 }

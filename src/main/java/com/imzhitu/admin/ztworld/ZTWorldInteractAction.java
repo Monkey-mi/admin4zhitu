@@ -269,6 +269,21 @@ public class ZTWorldInteractAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 过滤回复
+	 * 
+	 * @return
+	 */
+	public String trimReply() {
+		try{
+			worldInteractService.trimReply();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public com.hts.web.ztworld.service.ZTWorldInteractService getWebWorldInteractService() {
 		return webWorldInteractService;
 	}

@@ -273,10 +273,9 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 			if(content != null && content.length() > 1) {
 				if(content.charAt(1) == ':') {
 					content = content.replaceFirst(" : ", "");
-				} else if(content.charAt(1) == '@') {
-					content = content.replaceFirst(" :", "");
+					commentMapper.updateContent(i, content.trim());
 				}
-				commentMapper.updateContent(i, content.trim());
+				
 				if(i > finishFlag || i == maxId) {
 					finishFlag += finishStep;
 					log.info("i=" + i + ",trim comment finished " + Float.valueOf(i)/maxId*100 + "%");
@@ -285,17 +284,30 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 		}
 	}
 
-//	@Override
-//	public void saveCommentOrReply(Integer worldId, Integer worldAuthorId, Integer authorId, 
-//			Integer reId, Integer reAuthorId, String content, 
-//			String atIds, String atNames, Map<String, Object> jsonMap) throws Exception {
-//		if(reAuthorId == null || reAuthorId == 0) {
-//			webWorldInteractService.saveComment(false, worldId, worldAuthorId, authorId, content,
-//					atIds, atNames, jsonMap);
-//		} else {
-//			webWorldInteractService.saveReplyWithAt(false, worldId, worldAuthorId, authorId,
-//					content, reId, reAuthorId, atIds, atNames, jsonMap);
-//		}
-//	}
+	@Override
+	public void trimReply() throws Exception {
+		Integer maxId;
+		String content;
+		int finishFlag;
+		int finishStep = 10000;
+		
+		finishFlag = finishStep;
+		maxId = commentMapper.queryMaxId();
+		
+		for(int i = 1; i <= maxId; i++) {
+			content = commentMapper.queryContent(i);
+			if(content != null && content.length() > 1) {
+				if(content.charAt(1) == '@') {
+					content = content.replaceFirst(" :", "");
+					commentMapper.updateContent(i, content.trim());
+				}
+				
+				if(i > finishFlag || i == maxId) {
+					finishFlag += finishStep;
+					log.info("i=" + i + ",trim reply finished " + Float.valueOf(i)/maxId*100 + "%");
+				}
+			}
+		}
+	}
 
 }
