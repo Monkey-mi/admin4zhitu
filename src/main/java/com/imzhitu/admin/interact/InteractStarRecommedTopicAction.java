@@ -24,6 +24,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 
 	private Integer id;
 	private String  backgroundColor; 
+	private String topicType;
 	private String  bannerPic;
 	private String title;
 	private String introduceHead;
@@ -35,7 +36,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String add(){
 		try {
-			interactStarRecommendTopicService.addTopic(backgroundColor,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
+			interactStarRecommendTopicService.addTopic(backgroundColor,topicType,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -69,7 +70,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String update(){
 		try {
-			interactStarRecommendTopicService.updateTopic(id,backgroundColor,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
+			interactStarRecommendTopicService.updateTopic(id,topicType,backgroundColor,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -103,6 +104,14 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 
 	public void setBackgroundColor(String backgroundColor) {
 		this.backgroundColor = backgroundColor;
+	}
+	
+	public String getTopicType() {
+		return topicType;
+	}
+
+	public void setTopicType(String topicType) {
+		this.topicType = topicType;
 	}
 
 	public String getBannerPic() {

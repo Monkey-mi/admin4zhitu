@@ -38,6 +38,17 @@
             	</tr>
             	<tr>
             		<td>
+            		<label>文章类型:</label>
+            		</td>
+            		<td>
+            		<select id="topicType" name="topicType" class="easyui-combobox"   panelHeight=50>
+            			<option value=1>达人推荐</option>
+            			<option value=2>文章阅读</option>
+            		</select>
+            		</td>
+            	</tr>
+            	<tr>
+            		<td>
             		<label>主题名:</label>
             		</td>
             		<td>
@@ -116,7 +127,6 @@
             if (row){
                 $('#dlg').dialog('open').dialog('center').dialog('setTitle','Edit User');
                 $('#fm').form('load',row);
-                alert(row.bannerPic);
                 $("#channelBannerImg_edit").attr('src', row.bannerPic);
                 $('#fm').show();
                 url = './admin_interact/starRecommendTopic_update?id='+row.id;
@@ -173,6 +183,17 @@
             columns:[[
 				{field:'id',title:'ID',width:100,align:"center"},
                 {field:'title',title:'主题',width:100,align:"center"},
+                {field:'topicType',title:'文章类型',width:100,align:"center",
+            		formatter:function(value,row,index) {
+            			if( value == 1){
+            				return "达人推荐";
+            			}else if(value == 2){
+            				return "文章阅读";
+            			}else{
+            				return;
+            			}
+        			}		
+                },
                 {field:'bannerPic',title:'banner图',width:100,align:"center",
         			formatter:function(value,row,index) {
         				return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";	

@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imzhitu.admin.interact.mapper.InteractStarRocommendTopicMapper">
 	<resultMap type="com.imzhitu.admin.common.pojo.StarRecommendTopic" id="StarRecommendTopic">
-	<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="topicType" column="topic_type" jdbcType="INTEGER"/>
 		<result property="bannerPic" column="banner_pic" jdbcType="VARCHAR"/>
 		<result property="title" column="title" jdbcType="VARCHAR"/>
 		<result property="introduceHead" column="introduce_head" jdbcType="VARCHAR"/>
@@ -17,9 +18,9 @@
 	<insert id="addStarRecommendTopic">
 		insert into 
 			hts.operations_channel_topic
-				(banner_pic,title,introduce_head,introduce_foot,sticker_button,share_button,foot) 
+				(topic_type,banner_pic,title,introduce_head,introduce_foot,sticker_button,share_button,foot) 
 			values 
-				(#{bannerPic},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton},#{foot})
+				(#{topicType},#{bannerPic},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton},#{foot})
 	</insert>
 	
 	<select id="getStarRecommendTopic"  resultMap="StarRecommendTopic">
@@ -30,6 +31,9 @@
 	<update id="updateStarRecommendTopic">
 	update hts.operations_channel_topic
 	<set>
+	<if test=" topicType !=0">
+	topic_type=#{topicType},
+	</if>
 	<if test="bannerPic!=null">
 	banner_pic=#{bannerPic},
 	</if>

@@ -23,6 +23,7 @@ public class StarRecommendTopic extends AbstractNumberDto{
 
 	private Integer  id;
 	private String  backgroundColor;
+	private String topicType;
 	private String  bannerPic;
 	private String title;
 	private String introduceHead;
@@ -39,6 +40,12 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	}
 	public String getBackgroundColor() {
 		return backgroundColor;
+	}
+	public String getTopicType() {
+		return topicType;
+	}
+	public void setTopicType(String topicType) {
+		this.topicType = topicType;
 	}
 	public void setBackgroundColor(String backgroundColor) {
 		this.backgroundColor = backgroundColor;

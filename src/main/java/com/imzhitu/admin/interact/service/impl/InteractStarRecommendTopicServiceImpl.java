@@ -36,9 +36,10 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 		*	mishengliang
 	 */
 	@Override
-	public void addTopic(String backgroundColor,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception{
+	public void addTopic(String backgroundColor,String topicType,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception{
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setBackgroundColor(backgroundColor);
+		dto.setTopicType(topicType);
 		dto.setBannerPic(bannerPic);
 		dto.setTitle(title);
 		dto.setIntroduceHead(introduceHead);
@@ -61,10 +62,11 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 	}
 	
 	@Override
-	public void updateTopic(Integer id,String backgroundColor,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception{
+	public void updateTopic(Integer id,String topicType,String backgroundColor,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception{
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setId(id);
 		dto.setBackgroundColor(backgroundColor);
+		dto.setTopicType(topicType);
 		dto.setBannerPic(bannerPic);
 		dto.setTitle(title);
 		dto.setIntroduceHead(introduceHead);
