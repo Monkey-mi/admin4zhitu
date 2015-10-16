@@ -169,9 +169,7 @@
 			worldId: worldId
 		},function(result){
 			if(result['result'] == 0){
-				$.messager.alert("温馨提示",result.msg,"info",function(){
-					parent.$.fancybox.close();
-				});
+				parent.$.fancybox.close();
 			} else {
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 			}

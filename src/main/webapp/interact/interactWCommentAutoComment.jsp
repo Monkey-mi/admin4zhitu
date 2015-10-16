@@ -435,10 +435,15 @@ body {
 					{field : 'userAvatar',title : '头像',align : 'center', 
 						formatter: function(value, row, index) {
 							imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg');
-							return "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "' onclick='openModifyUserInfoWin(" + row.userId + ",\"" + row.userName + "\"," + row.sex + ")'/>";
+							return "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "'/>";
 						}
 					},
-					{field : 'userName',title : '用户名称',align : 'center'},
+					{field : 'userName',title : '用户名称',align : 'center', 
+						formatter: function(value, row, index) {
+							imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg');
+							return "<a href='javascript:openModifyUserInfoWin(" + row.userId + ",\"" + row.userName + "\"," + row.sex + ");'>" + value + "</a>";
+						}
+					},
 					{field : 'sex',title : '用户性别',align : 'center',width : 80, 
 						formatter: function(value, row, index) {
 							if(value==1) {
