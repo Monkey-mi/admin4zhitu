@@ -610,87 +610,23 @@ function clearAuthorAvatarTimer(){
 }
 
 /**
- * 点击预览小头像时，弹出入选频道
+ * 打开织图添加到频道页面
+ * @author zhangbo 2015-10-17
  */
-function tobeChannelWorld(worldId){
-	if($("#channel_world_div").length>0){
-		
-	}else{
-		var divStr = "<div id='channel_world_div' style='dispaly:none'>" +
-					 "<table class='htm_edit_table' width='280px'>" +
-					 "<tbody>" +
-					 "<tr>" +
-					 "<td class='leftTd'>频道:</td>" +
-					 "<td><input id='htm_channel_id'/></td>" +
-					 "</tr>" +
-					 "<tr>" +
-					 "<td class='leftTd'>织图id:</td>" +
-					 "<td><input id='htm_world_id' type='text' readonly='true' style='width:170px;'/></td>" +
-					 "</tr>" +
-					 "<tr>" +
-					 "<td class='opt_btn' colspan='2' style='text-align:center; padding-top:10px;'>" +
-					 "<a id='htm_channel_submit'  onclick='submitChannelWorld()'>确定</a>" +
-					 "<a id='htm_channel_close'  onclick=\"$('#channel_world_div').window('close');\">取消</a>" +
-					 "</td>" +
-					 "</tr>" +
-					 "</tbody>" +
-					 "</table>" +
-					 "</div>";
-		$("body").append(divStr);
-		$("#htm_channel_submit").linkbutton({
-			iconCls:'icon-ok'
-		});
-		$("#htm_channel_close").linkbutton({
-			iconCls:'icon-cancel'
-		});
-		$("#htm_channel_id").combobox({
-			valueField:'id',
-			textField:'channelName',
-			selectOnNavigation:false,
-			url:'./admin_op/channel_queryAllChannel',
-		});
-		$("#channel_world_div").window({
-			title:'添加频道织图',
-			modal : true,
-			width : 280,
-			height : 155,
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-edit',
-			resizable : false,
-			onClose : function() {
-				$("#htm_channel_id").combobox('clear');
-			}
-		});
-	}
-	$("#htm_world_id").val(worldId);
-	$("#channel_world_div").window('open');
-	$("#htm_channel_id").combobox('showPanel');
+function showWorldAddToChannelPage(worldId){
+	var url = "./page_htworld_htworldAddToChannel";
+	url += "?worldId=" + worldId
+	$.fancybox({
+		'margin'			: 20,
+		'width'				: '45%',
+		'height'			: '60%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe',
+		'href'				: url
+	});
 }
-
-function submitChannelWorld(){
-	var channelId = $('#htm_channel_id').combobox('getValue');
-	var worldId = $('#htm_world_id').val();
-	//该织图进入频道
-	$.post("./admin_op/channel_saveChannelWorld",{
-		'world.channelId':channelId,
-		'world.worldId'  :worldId,
-		'world.valid'	 :0,
-		'world.notified' :0
-	},function(result){
-		if(result['result'] == 0){
-			
-		}else{
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-		}
-		$("#channel_world_div").window('close');
-		return false;
-	},"json");
-}
-
 
 var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 		formatter: function(value,row,index){
@@ -838,7 +774,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 	titleThumbPathColumn = {field : 'titleThumbPath',title : '预览',align : 'center',
 		formatter: function(value,row,index){
 			var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png');
-			return "<a style='cursor: hand;cursor: pointer;' onclick='javascript:tobeChannelWorld(\""+row.worldId+"\")'> <img width='60px' height='60px' class='htm_column_img' src='" + imgSrc + "' /></a>";
+			return "<a style='cursor: hand;cursor: pointer;' onclick='javascript:showWorldAddToChannelPage(\""+row.worldId+"\")'> <img width='60px' height='60px' class='htm_column_img' src='" + imgSrc + "' /></a>";
 		}
 	},
 	dateAddedFormatter = function(value,row,index){
@@ -877,6 +813,4 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				return '';
 			}
 		}
-	}
-	;
-		
+	};
