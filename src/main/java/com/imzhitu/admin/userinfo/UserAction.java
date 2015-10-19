@@ -91,8 +91,8 @@ public class UserAction extends BaseCRUDAction {
 	 */
 	public String checkUserNameExists() {
 		try {
-			boolean isExists = webUserInfoService.checkUserNameExists(userName);
-			if(isExists) {
+			Integer isExists = webUserInfoService.checkUserNameExists(userName);
+			if(isExists.equals(Tag.TRUE)) {
 				JSONUtil.optResult(Tag.EXIST, UserInfoServiceImpl.TIP_USER_NAME_EXIST, jsonMap);
 			} else {
 				JSONUtil.optResult(Tag.NOT_EXIST, UserInfoServiceImpl.TIP_USER_NAME_NOT_EXIST, jsonMap);
