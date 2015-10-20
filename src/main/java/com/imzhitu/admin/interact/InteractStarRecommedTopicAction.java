@@ -24,19 +24,19 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 
 	private Integer id;
 	private String  backgroundColor; 
-	private String topicType;
+	private Integer topicType;
+	private String shareBanner;
 	private String  bannerPic;
 	private String title;
 	private String introduceHead;
 	private String introduceFoot;
 	private String stickerButton;
 	private String shareButton;
-	private String foot;
 	private String link;
 	
 	public String add(){
 		try {
-			interactStarRecommendTopicService.addTopic(backgroundColor,topicType,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
+			interactStarRecommendTopicService.addTopic(backgroundColor,topicType,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -70,7 +70,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String update(){
 		try {
-			interactStarRecommendTopicService.updateTopic(id,topicType,backgroundColor,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton,foot);
+			interactStarRecommendTopicService.updateTopic(id,topicType,backgroundColor,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -106,12 +106,20 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 		this.backgroundColor = backgroundColor;
 	}
 	
-	public String getTopicType() {
+	public Integer getTopicType() {
 		return topicType;
 	}
 
-	public void setTopicType(String topicType) {
+	public void setTopicType(Integer topicType) {
 		this.topicType = topicType;
+	}
+	
+	public String getShareBanner() {
+		return shareBanner;
+	}
+
+	public void setShareBanner(String shareBanner) {
+		this.shareBanner = shareBanner;
 	}
 
 	public String getBannerPic() {
@@ -160,14 +168,6 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 
 	public void setShareButton(String shareButton) {
 		this.shareButton = shareButton;
-	}
-
-	public String getFoot() {
-		return foot;
-	}
-
-	public void setFoot(String foot) {
-		this.foot = foot;
 	}
 
 	public String getLink() {

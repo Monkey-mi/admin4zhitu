@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.management.loading.PrivateClassLoader;
 
+import org.apache.log4j.lf5.viewer.TrackingAdjustmentListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,23 +37,35 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 		*	mishengliang
 	 */
 	@Override
-	public void addTopic(String backgroundColor,String topicType,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception{
+	public void addTopic(String backgroundColor,Integer topicType,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
+		introduceHead = introduceHead.replaceAll("   ", "</br>");
+		introduceFoot = introduceFoot.replaceAll("   ", "</br>");
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setBackgroundColor(backgroundColor);
 		dto.setTopicType(topicType);
+		dto.setShareBanner(shareBanner);
 		dto.setBannerPic(bannerPic);
 		dto.setTitle(title);
 		dto.setIntroduceHead(introduceHead);
 		dto.setIntroduceFoot(introduceFoot);
 		dto.setStickerButton(stickerButton);
 		dto.setShareButton(shareButton);
-		dto.setFoot(foot);
 		mapper.addStarRecommendTopic(dto);
 	}
 
 	@Override
 	public List<StarRecommendTopic> getTopic() throws Exception {
 		List<StarRecommendTopic> list  =  mapper.getStarRecommendTopic();
+		String link = "";
+		String http = "http://imzhitu.com/operations/";
+		for(int i = 0 ;i < list.size() ; i++){
+			if (list.get(i).getTopicType() == 1) {
+				link = "star/";
+			} else if(list.get(i).getTopicType() == 2){
+				link = "read/";
+			}
+			list.get(i).setLink(http + link + list.get(i).getId());
+		}
 		return list;
 	}
 
@@ -62,18 +75,20 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 	}
 	
 	@Override
-	public void updateTopic(Integer id,String topicType,String backgroundColor,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception{
+	public void updateTopic(Integer id,Integer topicType,String backgroundColor,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
+		introduceHead = introduceHead.replaceAll("   ", "</br>");
+		introduceFoot = introduceFoot.replaceAll("   ", "</br>");
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setId(id);
 		dto.setBackgroundColor(backgroundColor);
 		dto.setTopicType(topicType);
+		dto.setShareBanner(shareBanner);
 		dto.setBannerPic(bannerPic);
 		dto.setTitle(title);
 		dto.setIntroduceHead(introduceHead);
 		dto.setIntroduceFoot(introduceFoot);
 		dto.setStickerButton(stickerButton);
 		dto.setShareButton(shareButton);
-		dto.setFoot(foot);
 		mapper.updateStarRecommendTopic(dto);
 	}
 	

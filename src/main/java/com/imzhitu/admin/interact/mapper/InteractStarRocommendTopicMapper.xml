@@ -4,28 +4,26 @@
 	<resultMap type="com.imzhitu.admin.common.pojo.StarRecommendTopic" id="StarRecommendTopic">
 		<result property="id" column="id" jdbcType="INTEGER"/>
 		<result property="topicType" column="topic_type" jdbcType="INTEGER"/>
+		<result property="shareBanner" column="share_banner" jdbcType="VARCHAR"/>
 		<result property="bannerPic" column="banner_pic" jdbcType="VARCHAR"/>
 		<result property="title" column="title" jdbcType="VARCHAR"/>
 		<result property="introduceHead" column="introduce_head" jdbcType="VARCHAR"/>
 		<result property="introduceFoot" column="introduce_foot" jdbcType="VARCHAR"/>
 		<result property="stickerButton" column="sticker_button" jdbcType="VARCHAR"/>
 		<result property="shareButton" column="share_button" jdbcType="VARCHAR"/>
-		<result property="foot" column="foot" jdbcType="VARCHAR"/>
-		<result property="link" column="link" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<!-- 增加模块信息 -->
 	<insert id="addStarRecommendTopic">
 		insert into 
 			hts.operations_channel_topic
-				(topic_type,banner_pic,title,introduce_head,introduce_foot,sticker_button,share_button,foot) 
+				(topic_type,share_banner,banner_pic,title,introduce_head,introduce_foot,sticker_button,share_button) 
 			values 
-				(#{topicType},#{bannerPic},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton},#{foot})
+				(#{topicType},#{shareBanner},#{bannerPic},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton})
 	</insert>
 	
 	<select id="getStarRecommendTopic"  resultMap="StarRecommendTopic">
-	select *,concat("http://imzhitu.com/operations/starModule.html?topicId=", id) link
-	 from hts.operations_channel_topic
+	select *  from hts.operations_channel_topic
 	</select>
 	
 	<update id="updateStarRecommendTopic">
@@ -33,6 +31,9 @@
 	<set>
 	<if test=" topicType !=0">
 	topic_type=#{topicType},
+	</if>
+	<if test="shareBanner!=null">
+	share_banner=#{shareBanner},
 	</if>
 	<if test="bannerPic!=null">
 	banner_pic=#{bannerPic},
@@ -51,9 +52,6 @@
 	</if>
 	<if test="shareButton!=null">
 	share_button=#{shareButton},
-	</if>
-	<if test="foot!=null">
-	foot=#{foot}
 	</if>
 	</set>
 	where 

@@ -19,7 +19,7 @@ public interface InteractStarRecommendTopicService {
 		*	2015年9月22日
 		*	mishengliang
 	 */
-	public void addTopic(String backgroundColor,String topicType,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton, String foot)  throws Exception;
+	public void addTopic(String backgroundColor,Integer topicType,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception;
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public interface InteractStarRecommendTopicService {
 		*	2015年9月22日
 		*	mishengliang
 	 */
-	public void updateTopic(Integer id,String topicType,String backgroundColor,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton,String foot)  throws Exception;
+	public void updateTopic(Integer id,Integer topicType,String backgroundColor,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception;
 	
 	/**
 	 * 

@@ -17,23 +17,32 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="destroyUser()">删除</a>
     </div>
     
-    <div id="dlg" class="easyui-dialog" style="width:500px;height:500px;padding:10px 20px"
+    <div id="dlg" class="easyui-dialog" style="width:620px;height:540px;padding:3px 15px"
             closed="true" buttons="#dlg-buttons">
         <form id="fm" method="post" style="display:none">
 <!--             <div class="fitem">
                 <label>背景色:</label>
                 <input name="backgroundColor" class="easyui-textbox"  data-options="width:20px">
             </div> -->
-            <table>
+            <table border=0>
             	<tr>
             		<td>
             		 <label>banner图:</label>
             		</td>
             		<td>
             					<input class="none" type="text" name="bannerPic" id="channelBanner_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-								<a id="channelBanner_edit_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+								<a id="channelBanner_edit_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">长Banner</a> 
 								<img id="channelBannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="205px" height="90px">
 								<div id="channelBanner_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span></div>
+            		</td>
+            		<td>
+            		 <label>分享图:</label>
+            		</td>
+            		<td>
+            					<input class="none" type="text" name="shareBanner" id="channelBanner_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+								<a id="channelBanner_edit_upload_btn01" style="position: absolute; margin:30px 0 0 6px" class="easyui-linkbutton" iconCls="icon-add">方Banner</a> 
+								<img id="channelBannerImg_edit01"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
+								<div id="channelBanner_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span></div>
             		</td>
             	</tr>
             	<tr>
@@ -60,7 +69,7 @@
             		<label>前介绍:</label>
             		</td>
             		<td>
-            		<textarea rows="2" cols="20" name="introduceHead" id="introduceHead"></textarea>
+            		<textarea rows="4" cols="20" name="introduceHead" id="introduceHead"></textarea>
             		</td>
             	</tr>
             	  <tr>
@@ -68,7 +77,7 @@
             		<label>后介绍:</label>
             		</td>
             		<td>
-            		<textarea rows="2" cols="20" name="introduceFoot" id="introduceFoot"></textarea>
+            		<textarea rows="4" cols="20" name="introduceFoot" id="introduceFoot"></textarea>
             		</td>
             	</tr>
             	<tr>
@@ -87,14 +96,14 @@
             		<textarea rows="2" cols="20" name="shareButton" id="shareButton"></textarea>
             		</td>
             	</tr>
-            	<tr>
+<!--             	<tr>
             		<td>
             		<label>来自织图:</label>
             		</td>
             		<td>
             		<textarea rows="2" cols="20" name="foot" id="foot"></textarea>
             		</td>
-            	</tr>            	
+            	</tr>             -->	
             </table>
         </form>
     </div>
@@ -194,16 +203,21 @@
             			}
         			}		
                 },
-                {field:'bannerPic',title:'banner图',width:100,align:"center",
+                {field:'shareBanner',title:'方banner图',width:100,align:"center",
         			formatter:function(value,row,index) {
         				return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";	
+        			}	
+                },
+                {field:'bannerPic',title:'长banner图',width:100,align:"center",
+        			formatter:function(value,row,index) {
+        				return "<img width='100px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";	
         			}	
                 },
                 {field:'introduceHead',title:'前介绍',width:100,align:"center"},
                 {field:'introduceFoot',title:'后介绍',width:300,align:"center"},
                 {field:'stickerButton',title:'发图按钮',width:100,align:"center"},
                 {field:'shareButton',title:'分享按钮',width:100,align:"center"},
-                {field:'foot',title:'来自织图',width:100,align:"center"},
+   /*         {field:'foot',title:'来自织图',width:100,align:"center"}, */
                 {field:'link',title:'访问链接',width:300,align:"center",formatter:function(value,row,index){
                 	return "<a style='text-decoration:none;'  href="+value+">" + value + "</a>";
                 }}
@@ -260,6 +274,59 @@
         			var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
         			$("#channelBannerImg_edit").attr('src', url);
         			$("#channelBanner_edit").val(url);
+        		},
+        		'Error': function(up, err, errTip) {
+        			$.messager.alert('上传失败',errTip);
+        		},
+        		'Key': function(up, file) {
+        			var timestamp = Date.parse(new Date());
+        			var suffix = /\.[^\.]+/.exec(file.name);
+        			var key = "op/sticker/test/" + timestamp+suffix;
+        			return key;
+        		}
+    		}
+    	});
+        
+        // 此为频道banner上传组件 
+        Qiniu.uploader({
+        	runtimes: 'html5,flash,html4',
+        	browse_button: 'channelBanner_edit_upload_btn01',
+        	max_file_size: '100mb',
+        	flash_swf_url: 'js/plupload/Moxie.swf',
+        	chunk_size: '4mb',
+        	uptoken_url: './admin_qiniu/uptoken',
+        	domain: 'http://static.imzhitu.com/',
+        	unique_names: false,
+        	save_key: false,
+        	auto_start: true,
+        	init: {
+        		'FilesAdded': function(up, files) {
+        			$("#channelBanner_edit_upload_btn01").hide();
+        			$("#channelBannerImg_edit01").hide();
+        			var $status = $("#channelBanner_edit_upload_status01");
+        			// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，banner获取第三个
+        			$status.find('.upload_progress:eq(2)').text(0);
+        			$status.show();
+        			
+        		},
+        		'BeforeUpload': function(up, file) {
+        		},
+        		
+        		'UploadProgress': function(up, file) {
+        			var $status = $("#channelBanner_edit_upload_status01");
+        			// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，banner获取第三个
+        			$status.find('.upload_progress:eq(2)').text(file.percent);
+        			
+        		},
+        		'UploadComplete': function() {
+        			$("#channelBanner_edit_upload_btn01").show();
+        			$("#channelBannerImg_edit01").show();
+        			$("#channelBanner_edit_upload_status01").hide();
+        		},
+        		'FileUploaded': function(up, file, info) {
+        			var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+        			$("#channelBannerImg_edit01").attr('src', url);
+        			$("#channelBanner_edit01").val(url);
         		},
         		'Error': function(up, err, errTip) {
         			$.messager.alert('上传失败',errTip);
