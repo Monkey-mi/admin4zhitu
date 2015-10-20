@@ -9,10 +9,12 @@
 <title>织图评论管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <script type="text/javascript" src="${webRootPath }/base/js/baseTools.js"></script>
-<link rel="stylesheet" href="${webRootPath }/base/js/jquery/emotion/rl_exp.css" />
+<link rel="stylesheet" href="${webRootPath }/base/js/jquery/emotion/rl_exp.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/emotion/rl_exp.js"></script>
 <script type="text/javascript" src="${webRootPath }/common/js/user2014022101.js?ver=${webVer}"></script>
-<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer }" />
+<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer }"></link>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <style type="text/css">
 body {
 		font-size: 14px;
@@ -435,7 +437,7 @@ body {
 					{field : 'userAvatar',title : '头像',align : 'center', 
 						formatter: function(value, row, index) {
 							imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg');
-							return "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "'/>";
+							return "<img width='30px' height='30px' class='htm_column_img' onclick='showUserWorldPage(" + row.userId + ")' src='" + imgSrc + "'/>";
 						}
 					},
 					{field : 'userName',title : '用户名称',align : 'center', 
@@ -726,7 +728,26 @@ body {
 			    }
 			});
 		}
-	}
+	};
+	
+	/**
+	 * 打开用户所有织图页面
+	 * @author zhangbo 2015-10-20
+	 */
+	function showUserWorldPage(userId){
+		var url = "./page_user_userWorldInfo2";
+		url += "?userId=" + userId;
+		$.fancybox({
+			'margin'			: 20,
+			'width'				: '100%',
+			'height'			: '100%',
+			'autoScale'			: true,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+			'href'				: url
+		});
+	};
 	
 </script>
 
