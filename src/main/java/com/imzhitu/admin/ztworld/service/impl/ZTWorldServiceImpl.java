@@ -216,8 +216,14 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		List<ZTWorldDto> dtoList = null;
 		long totalCount = 0l;
 		dto.setMaxId(maxId);
-		dtoList = ztWorldMapper.queryHTWorldByAttrMapByMaxId(dto);
-		totalCount = ztWorldMapper.queryHTWorldCountByMaxId(dto);
+		if(dto.getUser_level_id() != null || dto.getAuthorName() != null){
+			dtoList = ztWorldMapper.queryHTWorld(dto);
+			totalCount = ztWorldMapper.queryHTWorldTotalCount(dto);
+		}else{
+			dtoList = ztWorldMapper.queryHTWorldByAttrMap(dto);
+			totalCount = ztWorldMapper.queryHTWorldCountByAttrMap(dto);
+		}
+		
 		
 		// TODO 这个地方的逻辑是暂时的，等这个方法重构的时候，可以把这块逻辑重新整理，不用这样再去获取total了
 		if ( worldLocation != null ) {
