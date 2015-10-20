@@ -121,12 +121,13 @@
             
     		//用$('#fm').form('clear'); 会影响图片的上传，用这种笨拙的办法代替
     		$('#channelBannerImg_edit').attr('src','${webRootPath }/base/images/bg_empty.png');
+    		$('#channelBannerImg_edit01').attr('src','${webRootPath }/base/images/bg_empty.png');
             $('#title').val('');
             $('#introduceHead').val('');
             $('#introduceFoot').val('');
             $('#stickerButton').val('我也来一发');
             $('#shareButton').val('分享出去');
-            $('#foot').val('');
+/*        $('#foot').val(''); */
             
             $('#fm').show();
             url = './admin_interact/starRecommendTopic_add';
@@ -137,6 +138,7 @@
                 $('#dlg').dialog('open').dialog('center').dialog('setTitle','Edit User');
                 $('#fm').form('load',row);
                 $("#channelBannerImg_edit").attr('src', row.bannerPic);
+                $("#channelBannerImg_edit01").attr('src', row.shareBanner);
                 $('#fm').show();
                 url = './admin_interact/starRecommendTopic_update?id='+row.id;
             }
