@@ -25,6 +25,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	private Integer id;
 	private String  backgroundColor; 
 	private Integer topicType;
+	private Integer isWorld;
 	private String shareBanner;
 	private String  bannerPic;
 	private String title;
@@ -36,7 +37,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String add(){
 		try {
-			interactStarRecommendTopicService.addTopic(backgroundColor,topicType,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
+			interactStarRecommendTopicService.addTopic(backgroundColor,topicType,isWorld,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -49,7 +50,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 		PrintWriter out  = null;
 		try {
 			out = response.getWriter();
-			List<StarRecommendTopic> list  = interactStarRecommendTopicService.getTopic();
+			List<StarRecommendTopic> list  = interactStarRecommendTopicService.getTopic(isWorld);
 			JSONArray  jsonArray = JSONArray.fromObject(list);
 			out.print(jsonArray.toString());
 			out.flush();
@@ -70,7 +71,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String update(){
 		try {
-			interactStarRecommendTopicService.updateTopic(id,topicType,backgroundColor,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
+			interactStarRecommendTopicService.updateTopic(id,topicType,isWorld,backgroundColor,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -176,6 +177,14 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 
 	public void setLink(String link) {
 		this.link = link;
+	}
+
+	public Integer getIsWorld() {
+		return isWorld;
+	}
+
+	public void setIsWorld(Integer isWorld) {
+		this.isWorld = isWorld;
 	}
 	
 }

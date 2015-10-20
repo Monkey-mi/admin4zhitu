@@ -7,6 +7,7 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.interact.service.InteractStarModuleService;
+import com.imzhitu.admin.interact.service.InteractStarWorldModuleService;
 
 public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
@@ -14,6 +15,9 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
 	@Autowired
 	private InteractStarModuleService interactStarModuleService;
+	
+	@Autowired
+	private InteractStarWorldModuleService interactStarWorldModuleService;
 
 	private Integer id;
 	private String  title;
@@ -26,6 +30,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	private String intro;
 	private Integer topicId;
 	
+	private Integer worldId;
 	
 	public String add(){
 		try {
@@ -81,6 +86,50 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	public String destroy(){
 		try {
 			interactStarModuleService.destory(id);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optSuccess(e.getMessage(),jsonMap);
+			e.printStackTrace();
+		}
+		return StrutsKey.JSON;
+	}
+	
+	
+	public String addWorldModule(){
+		try {
+			interactStarWorldModuleService.addWorldModule(title,subtitle,userId,worldId,intro,topicId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optSuccess(e.getMessage(),jsonMap);
+			e.printStackTrace();
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String getWorldModule(){
+		try {
+			interactStarWorldModuleService.getWorldModule(page,rows,maxId,topicId,jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String updateWorldModule(){
+		try {
+			interactStarWorldModuleService.updateWorldModule(id,title,subtitle,userId,worldId,intro);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optSuccess(e.getMessage(),jsonMap);
+			e.printStackTrace();
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String destroyWorldModule(){
+		try {
+			interactStarWorldModuleService.destroyWorldModule(id);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -163,6 +212,14 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 
 	public void setTopicId(Integer topicId) {
 		this.topicId = topicId;
+	}
+
+	public Integer getWorldId() {
+		return worldId;
+	}
+
+	public void setWorldId(Integer worldId) {
+		this.worldId = worldId;
 	}
 
 }

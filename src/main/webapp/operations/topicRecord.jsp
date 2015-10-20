@@ -24,12 +24,12 @@
                 <label>背景色:</label>
                 <input name="backgroundColor" class="easyui-textbox"  data-options="width:20px">
             </div> -->
-            <table border=0>
+            <table border=0	>
             	<tr>
             		<td>
             		 <label>banner图:</label>
             		</td>
-            		<td>
+            		<td colspan="3">
             					<input class="none" type="text" name="bannerPic" id="channelBanner_edit"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
 								<a id="channelBanner_edit_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">长Banner</a> 
 								<img id="channelBannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="205px" height="90px">
@@ -55,12 +55,21 @@
             			<option value=2>文章阅读</option>
             		</select>
             		</td>
-            	</tr>
-            	<tr>
             		<td>
-            		<label>主题名:</label>
+            		<label>是否织图:</label>
             		</td>
             		<td>
+            		<select id="isWorld" name="isWorld" class="easyui-combobox"   panelHeight=50>
+            			<option value=0>图片类型</option>
+            			<option value=1>织图类型</option>
+            		</select>
+            		</td>
+            	</tr>
+            	<tr>
+            		<td >
+            		<label>主题名:</label>
+            		</td>
+            		<td colspan="3">
             		<textarea rows="2" cols="20" name="title" id="title"></textarea>
             		</td>
             	</tr>
@@ -68,7 +77,7 @@
             		<td>
             		<label>前介绍:</label>
             		</td>
-            		<td>
+            		<td colspan="3">
             		<textarea rows="4" cols="20" name="introduceHead" id="introduceHead"></textarea>
             		</td>
             	</tr>
@@ -76,7 +85,7 @@
             		<td>
             		<label>后介绍:</label>
             		</td>
-            		<td>
+            		<td colspan="3">
             		<textarea rows="4" cols="20" name="introduceFoot" id="introduceFoot"></textarea>
             		</td>
             	</tr>
@@ -84,7 +93,7 @@
             		<td>
             		<label>发图按钮:</label>
             		</td>
-            		<td>
+            		<td colspan="3">
             		<textarea rows="2" cols="20" name="stickerButton" id="stickerButton" ></textarea>
             		</td>
             	</tr>
@@ -92,7 +101,7 @@
             		<td>
             		<label>分享按钮:</label>
             		</td>
-            		<td>
+            		<td colspan="3">
             		<textarea rows="2" cols="20" name="shareButton" id="shareButton"></textarea>
             		</td>
             	</tr>
@@ -200,6 +209,17 @@
             				return "达人推荐";
             			}else if(value == 2){
             				return "文章阅读";
+            			}else{
+            				return;
+            			}
+        			}		
+                },
+                {field:'isWorld',title:'是否织图',width:100,align:"center",
+            		formatter:function(value,row,index) {
+            			if( value == 0){
+            				return "图片类型";
+            			}else if(value == 1){
+            				return "织图类型";
             			}else{
             				return;
             			}

@@ -4,6 +4,7 @@
 	<resultMap type="com.imzhitu.admin.common.pojo.StarRecommendTopic" id="StarRecommendTopic">
 		<result property="id" column="id" jdbcType="INTEGER"/>
 		<result property="topicType" column="topic_type" jdbcType="INTEGER"/>
+		<result property="isWorld" column="is_world" jdbcType="INTEGER"/>
 		<result property="shareBanner" column="share_banner" jdbcType="VARCHAR"/>
 		<result property="bannerPic" column="banner_pic" jdbcType="VARCHAR"/>
 		<result property="title" column="title" jdbcType="VARCHAR"/>
@@ -17,13 +18,18 @@
 	<insert id="addStarRecommendTopic">
 		insert into 
 			hts.operations_channel_topic
-				(topic_type,share_banner,banner_pic,title,introduce_head,introduce_foot,sticker_button,share_button) 
+				(topic_type,is_world,share_banner,banner_pic,title,introduce_head,introduce_foot,sticker_button,share_button) 
 			values 
-				(#{topicType},#{shareBanner},#{bannerPic},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton})
+				(#{topicType},#{isWorld},#{shareBanner},#{bannerPic},#{title},#{introduceHead},#{introduceFoot},#{stickerButton},#{shareButton})
 	</insert>
 	
 	<select id="getStarRecommendTopic"  resultMap="StarRecommendTopic">
 	select *  from hts.operations_channel_topic
+	<where>
+	<if test="isWorld!=null ">
+	 is_world = #{isWorld}
+	 </if>
+	 </where>
 	</select>
 	
 	<update id="updateStarRecommendTopic">
@@ -31,6 +37,9 @@
 	<set>
 	<if test=" topicType !=0">
 	topic_type=#{topicType},
+	</if>
+	<if test=" isWorld !=null">
+	is_world=#{isWorld},
 	</if>
 	<if test="shareBanner!=null">
 	share_banner=#{shareBanner},

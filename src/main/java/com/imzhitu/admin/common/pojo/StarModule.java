@@ -32,6 +32,8 @@ public class StarModule extends AbstractNumberDto{
 	private String intro;
 	private Integer topicId;
 	
+	private Integer worldId;
+	
 	
 	public Integer getTopicId() {
 		return topicId;
@@ -94,11 +96,11 @@ public class StarModule extends AbstractNumberDto{
 	public void setIntro(String intro) {
 		this.intro = intro;
 	}
-	@Override
-	public String toString() {
-		return "StarModule [id=" + id + ", title=" + title + ", subtitle=" + subtitle + ", userId=" + userId + ", pics="
-				+ pics + ", intro=" + intro + ", topicId=" + topicId + "]";
+	public Integer getWorldId() {
+		return worldId;
 	}
-	
+	public void setWorldId(Integer worldId) {
+		this.worldId = worldId;
+	}
 	
 }

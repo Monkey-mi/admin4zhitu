@@ -2,6 +2,8 @@ package com.imzhitu.admin.interact.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.StarRecommendTopic;
 
@@ -11,7 +13,7 @@ public interface InteractStarRocommendTopicMapper {
 	public void addStarRecommendTopic(StarRecommendTopic dto);
 	
 	@DataSource("slave")
-	public List<StarRecommendTopic>  getStarRecommendTopic();
+	public List<StarRecommendTopic>  getStarRecommendTopic(@Param("isWorld") Integer isWorld);
 	
 	@DataSource("slave")
 	public List<Integer>  getStarRecommendTopicId();

@@ -37,12 +37,13 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 		*	mishengliang
 	 */
 	@Override
-	public void addTopic(String backgroundColor,Integer topicType,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
+	public void addTopic(String backgroundColor,Integer topicType,Integer isWorld,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
 		introduceHead = introduceHead.replaceAll("   ", "</br>");
 		introduceFoot = introduceFoot.replaceAll("   ", "</br>");
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setBackgroundColor(backgroundColor);
 		dto.setTopicType(topicType);
+		dto.setIsWorld(isWorld);
 		dto.setShareBanner(shareBanner);
 		dto.setBannerPic(bannerPic);
 		dto.setTitle(title);
@@ -54,8 +55,8 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 	}
 
 	@Override
-	public List<StarRecommendTopic> getTopic() throws Exception {
-		List<StarRecommendTopic> list  =  mapper.getStarRecommendTopic();
+	public List<StarRecommendTopic> getTopic(Integer isWorld) throws Exception {
+		List<StarRecommendTopic> list  =  mapper.getStarRecommendTopic(isWorld);
 		String link = "";
 		String http = "http://imzhitu.com/operations/";
 		for(int i = 0 ;i < list.size() ; i++){
@@ -75,13 +76,14 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 	}
 	
 	@Override
-	public void updateTopic(Integer id,Integer topicType,String backgroundColor,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
+	public void updateTopic(Integer id,Integer topicType,Integer isWorld,String backgroundColor,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
 		introduceHead = introduceHead.replaceAll("   ", "</br>");
 		introduceFoot = introduceFoot.replaceAll("   ", "</br>");
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setId(id);
 		dto.setBackgroundColor(backgroundColor);
 		dto.setTopicType(topicType);
+		dto.setIsWorld(isWorld);
 		dto.setShareBanner(shareBanner);
 		dto.setBannerPic(bannerPic);
 		dto.setTitle(title);

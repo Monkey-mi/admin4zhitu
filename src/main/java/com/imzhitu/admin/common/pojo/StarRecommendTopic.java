@@ -24,6 +24,7 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	private Integer  id;
 	private String  backgroundColor;
 	private Integer topicType;
+	private Integer isWorld;
 	private String shareBanner;
 	private String  bannerPic;
 	private String title;
@@ -46,6 +47,12 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	}
 	public void setTopicType(Integer topicType) {
 		this.topicType = topicType;
+	}
+	public Integer getIsWorld() {
+		return isWorld;
+	}
+	public void setIsWorld(Integer isWorld) {
+		this.isWorld = isWorld;
 	}
 	public String getShareBanner() {
 		return shareBanner;
