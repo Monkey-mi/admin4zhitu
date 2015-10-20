@@ -106,13 +106,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		userInfo.setUserName(userName);
 		userInfo.setPlatformVerify(platformVerify);
 		
-		// 通过id或需要第三方认证信息时使用数据库搜索
-		if(userId != null || platformVerify != null) {
-			total = userInfoMapper.queryUserInfoTotalCount(userInfo);
-			if( total > 0 ){
-				list = userInfoMapper.queryUserInfoDto(userInfo);
-			}
-		} else {
+		// 用用户名搜索的时候使用opensearch
+		if(userName != null && userId == null && platformVerify == null) {
 			final Map<Integer, Integer> idx = new HashMap<Integer, Integer>();
 			JSONObject jsObj = osUserInfoDao.searchId(userName, userInfo.getFirstRow(),
 					userInfo.getLimit());
@@ -141,6 +136,12 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 					}
 					
 				});
+			}
+			
+		} else {
+			total = userInfoMapper.queryUserInfoTotalCount(userInfo);
+			if( total > 0 ){
+				list = userInfoMapper.queryUserInfoDto(userInfo);
 			}
 		}
 		
