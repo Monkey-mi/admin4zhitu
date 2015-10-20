@@ -60,9 +60,7 @@ var htmTableTitle = "马甲用户维护", //表格标题
 		followCountColumn,
 		{field : 'worldCount',title:'织图',align : 'center', width : 60,
 			formatter: function(value,row,index){
-				var uri = "page_user_userWorldInfo?userId="+row.id;
-				return "<a title='显示织图' class='updateInfo' href='javascript:showUserWorld(\""+uri
-					+"\")'>"+value+"</a>"; 
+				return "<a title='显示织图' class='updateInfo' href='javascript:showUserWorld(" + row.id + ")'>" + value + "</a>"; 
 			}
 		},
 		likedCountColumn,
@@ -420,7 +418,8 @@ function worldTimeSearch(){
 }
 
 //显示用户织图
-function showUserWorld(uri){
+function showUserWorld(userId){
+	var uri = "page_user_userWorldInfo?userId=" + userId;
 	$.fancybox({
 		'margin'			: 20,
 		'width'				: '100%',
