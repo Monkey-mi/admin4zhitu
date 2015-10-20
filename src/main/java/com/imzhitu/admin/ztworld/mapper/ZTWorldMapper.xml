@@ -192,7 +192,7 @@
 	</select>
 	
 	<!-- 分页查询 -->
-	<select id="queryHTWorldByAttrMapByMaxId" resultMap="ztWorldDto">
+	<select id="queryHTWorldByAttrMap" resultMap="ztWorldDto">
 		select h.*, IF(itow.world_id != 'NULL',1,0) as squarerecd
 		from
 		(	select h2.*,u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
@@ -217,7 +217,7 @@
 			 		and h2.short_link = #{shortLink}
 			 	</if>
 			 	<if test="authorId != null">
-			 		and u0.id = #{authorId}
+			 		and h2.author_id = #{authorId}
 			 	</if>
 			 	<if test="authorName != null">
 			 		and u0.user_name = #{authorName}
@@ -258,8 +258,116 @@
 		 order by h.id desc
 	</select>
 	
+	<!-- 分页查询 没有织图等级-->
+	<select id="queryHTWorld" resultMap="ztWorldDto">
+		select h.*,u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
+			u0.signature,u0.address,u0.province as u_province,u0.city as u_city,u0.register_date,u0.user_label,u0.star,u0.trust,
+			u0.phone_code as u_phone_code,u0.online,u0.ver app_ver,u0.phone_sys,u0.phone_ver ,iull.user_level_id,iul.level_description
+			, IF(itow.world_id != NULL ,1,0) as squarerecd
+		from
+		 	(
+			 	select h2.* from
+			 		hts.htworld_htworld as h2 		 		
+			 	<where> 
+			 		<if test="dateAdded != null">
+			 			<![CDATA[and h2.date_modified>=#{dateAdded}]]>
+			 		</if>
+			 		<if test="dateModified != null">
+			 			<![CDATA[and h2.date_modified<=#{dateModified}]]>
+			 		</if> 
+				 	<if test="worldId != null">
+				 		and h2.id= #{worldId}
+				 	</if>
+				 	<if test="shortLink != null">
+				 		and h2.short_link = #{shortLink}
+				 	</if>
+				 	<if test="authorId != null">
+				 		and h2.author_id = #{authorId}
+				 	</if>
+				 	<if test="worldLabel != null">
+				 		and h2.world_label = #{worldLabel}
+				 	</if>
+				 	<if test="phoneCode != null">
+				 		and h2.phone_code = #{phoneCode}
+				 	</if>
+				 	<if test="valid != null">
+				 		and h2.valid = #{valid}
+				 	</if>
+				 	<if test="shield != null">
+				 		and h2.shield = #{shield}
+				 	</if>
+				 	<if test="worldDesc != null">
+				 		and h2.world_desc like #{worldDesc}
+				 	</if>
+				 	<if test="world_Ids != null">
+				 		and h2.id in
+				 		<foreach collection="world_Ids" item="item" index="index" open="(" close=")" separator=",">
+							#{item}
+						</foreach>
+				 	</if>
+				 	<if test="maxId != null and maxId != 0">
+				 		<![CDATA[ AND h2.id<=#{maxId}]]>
+				 	</if>
+			 	</where>
+			 	order by h2.id desc
+			 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		 ) as h 
+		 left join hts.user_info as u0 on h.author_id=u0.id 
+		 left join hts_admin.interact_user_level_list iull on h.author_id=iull.user_id
+		 left join hts_admin.interact_user_level iul on iull.user_level_id=iul.id		 
+		 left join hts_admin.interact_type_option_world itow on h.id = itow.world_id
+		 order by h.id desc
+	</select>
+	
 	<!-- 分页查询总数 -->
-	<select id="queryHTWorldCountByMaxId" resultType="long">
+	<select id="queryHTWorldTotalCount">
+		select count(*) from
+	 		hts.htworld_htworld as h2 		 		
+	 	<where> 
+	 		<if test="dateAdded != null">
+	 			<![CDATA[and h2.date_modified>=#{dateAdded}]]>
+	 		</if>
+	 		<if test="dateModified != null">
+	 			<![CDATA[and h2.date_modified<=#{dateModified}]]>
+	 		</if> 
+		 	<if test="worldId != null">
+		 		and h2.id= #{worldId}
+		 	</if>
+		 	<if test="shortLink != null">
+		 		and h2.short_link = #{shortLink}
+		 	</if>
+		 	<if test="authorId != null">
+		 		and h2.author_id = #{authorId}
+		 	</if>
+		 	<if test="worldLabel != null">
+		 		and h2.world_label = #{worldLabel}
+		 	</if>
+		 	<if test="phoneCode != null">
+		 		and h2.phone_code = #{phoneCode}
+		 	</if>
+		 	<if test="valid != null">
+		 		and h2.valid = #{valid}
+		 	</if>
+		 	<if test="shield != null">
+		 		and h2.shield = #{shield}
+		 	</if>
+		 	<if test="worldDesc != null">
+		 		and h2.world_desc like #{worldDesc}
+		 	</if>
+		 	<if test="world_Ids != null">
+		 		and h2.id in
+		 		<foreach collection="world_Ids" item="item" index="index" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+		 	</if>
+		 	<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ AND h2.id<=#{maxId}]]>
+		 	</if>
+	 	</where>
+	</select>
+	
+	<!-- 分页查询总数 -->
+	<select id="queryHTWorldCountByAttrMap" resultType="long">
 		select count(*)
 		 	from
 		 		hts_admin.interact_user_level_list iull
@@ -280,7 +388,7 @@
 			 		and short_link = #{shortLink}
 			 	</if>
 			 	<if test="authorId != null">
-			 		and u0.id = #{authorId}
+			 		and h2.author_id = #{authorId}
 			 	</if>
 			 	<if test="authorName != null">
 			 		and u0.user_name = #{authorName}

@@ -124,7 +124,7 @@ public interface ZTWorldMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<ZTWorldDto> queryHTWorldByAttrMapByMaxId(ZTWorldDto dto);
+	public List<ZTWorldDto> queryHTWorldByAttrMap(ZTWorldDto dto);
 	
 	/**
 	 * 根据最大id查询织图总数
@@ -137,7 +137,36 @@ public interface ZTWorldMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public long queryHTWorldCountByMaxId(ZTWorldDto dto);
+	public long queryHTWorldCountByAttrMap(ZTWorldDto dto);
+	
+	/**
+	 * 根据最大id查询织图
+	 * 
+	 * @param maxId 最大id
+	 * @param startDateStr 起始时间
+	 * @param endDateStr 结束时间
+	 * @param attrMap 织图条件
+	 * @param userAttrMap 用户条件
+	 * @param orderKey
+	 * @param orderBy
+	 * @param rowSelection
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<ZTWorldDto> queryHTWorld(ZTWorldDto dto);
+	
+	/**
+	 * 根据最大id查询织图总数
+	 * 
+	 * @param maxId
+	 * @param startDateStr
+	 * @param endDateStr
+	 * @param attrMap
+	 * @param userAttrMap
+	 * @return
+	 */
+	@DataSource("slave")
+	public long queryHTWorldTotalCount(ZTWorldDto dto);
 	
 	/**
 	 * 查询最大id

@@ -108,7 +108,7 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
     <script type="text/javascript">
         var url;
-        var myQueryParams = {};
+        var myQueryParams = {isWorld:0};
         var maxId = 0;
         
         function newUser(){
@@ -168,7 +168,7 @@
         function destroyUser(){
             var row = $('#dg').datagrid('getSelected');
             if (row){
-                $.messager.confirm('Confirm','Are you sure you want to destroy this user?',function(r){
+                $.messager.confirm('Confirm','确定要删除吗?',function(r){
                     if (r){
                         $.post('./admin_interact/addModule_destroy',{id:row.id},function(result){
                             if (result.result == 0){
@@ -262,7 +262,7 @@
         }); 
 
         $("#i-topicId").combobox({
-        	url:"./admin_interact/starRecommendTopic_get",
+        	url:"./admin_interact/starRecommendTopic_get?isWorld=0",
         	valueField:'id',
         	textField:'title',
         	onSelect:function(rec){
