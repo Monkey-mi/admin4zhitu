@@ -563,14 +563,28 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		 */
 		Integer fzListTotalCount = 0;
 		Integer unFzListTotalCount = 0;
+		
+		//查出库中的粉丝马季和非粉丝马甲
 		fzListTotalCount = zombieMapper.queryNotInteractNRandomFollowZombieCount(userId, worldId,0);
 		unFzListTotalCount = zombieMapper.queryNotInteractNRandomNotFollowZombieCount(userId, degreeId,worldId,0);
 		int total = likedCount > commentCount ? likedCount : commentCount;
+		/**
+		 * if 库中粉丝马甲+库中非粉丝马甲 > 需要马甲总数{
+		 * 		if（需要粉丝马甲< 库中粉丝马甲 && 需要非粉丝马甲> 库中非粉丝马甲）{
+		 * 			需要粉丝马甲 = 总马甲 - 库中非粉丝马甲； 
+		 * 		}else if（需要粉丝马甲> 库中粉丝马甲 && 需要非粉丝马甲< 库中非粉丝马甲）{
+		 * 			需要非粉丝马甲 = 总马甲 -  库中粉丝马甲;
+		 * 		}else{
+		 * 
+		 * 		}
+		 * }
+		 * 
+		 */
 		if(fzListTotalCount + unFzListTotalCount > total){
 			if (followZombiesTotal < fzListTotalCount&&unFollowZombiesTotal >= unFzListTotalCount) {
 				followZombiesTotal = total - unFzListTotalCount;
 			} else if(followZombiesTotal >= fzListTotalCount&&unFollowZombiesTotal < unFzListTotalCount){
-				unFollowZombiesTotal = total - followZombiesTotal;
+				unFollowZombiesTotal = total - fzListTotalCount;
 			}else if((followZombiesTotal < fzListTotalCount&&unFollowZombiesTotal < unFzListTotalCount)){
 				
 			}
