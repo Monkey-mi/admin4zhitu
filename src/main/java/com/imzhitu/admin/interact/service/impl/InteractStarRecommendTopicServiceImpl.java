@@ -60,10 +60,14 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 		String link = "";
 		String http = "http://imzhitu.com/operations/";
 		for(int i = 0 ;i < list.size() ; i++){
-			if (list.get(i).getTopicType() == 1) {
+			if (list.get(i).getTopicType() == 1 && list.get(i).getIsWorld() == 0) {
 				link = "star/";
-			} else if(list.get(i).getTopicType() == 2){
+			} else if(list.get(i).getTopicType() == 2 && list.get(i).getIsWorld() == 0){
 				link = "read/";
+			}else if(list.get(i).getTopicType() == 1 && list.get(i).getIsWorld() == 1){
+				link = "starWorld/";
+			}else if(list.get(i).getTopicType() == 2 && list.get(i).getIsWorld() == 1){
+				link = "readWorld/";
 			}
 			list.get(i).setLink(http + link + list.get(i).getId());
 		}
