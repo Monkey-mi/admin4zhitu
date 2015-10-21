@@ -262,7 +262,6 @@
 		    total:total,
 		    pageNumber:pageNumber,
 		    pageSize:pageSize
-		    
 		});
 	};
 
