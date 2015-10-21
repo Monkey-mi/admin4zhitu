@@ -320,7 +320,7 @@
 	</select>
 	
 	<!-- 分页查询总数 -->
-	<select id="queryHTWorldTotalCount">
+	<select id="queryHTWorldTotalCount" resultType="long">
 		select count(*) from
 	 		hts.htworld_htworld as h2 		 		
 	 	<where> 
@@ -367,7 +367,7 @@
 	</select>
 	
 	<!-- 分页查询总数 -->
-	<select id="queryHTWorldCountByAttrMap" resultType="long">
+	<select id="queryHTWorldCountByAttrMap" resultType="long" >
 		select count(*)
 		 	from
 		 		hts_admin.interact_user_level_list iull

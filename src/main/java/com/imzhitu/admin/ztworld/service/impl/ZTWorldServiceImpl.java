@@ -217,11 +217,11 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		long totalCount = 0l;
 		dto.setMaxId(maxId);
 		if(dto.getUser_level_id() != null || dto.getAuthorName() != null){
-			dtoList = ztWorldMapper.queryHTWorld(dto);
-			totalCount = ztWorldMapper.queryHTWorldTotalCount(dto);
-		}else{
 			dtoList = ztWorldMapper.queryHTWorldByAttrMap(dto);
 			totalCount = ztWorldMapper.queryHTWorldCountByAttrMap(dto);
+		}else{
+			dtoList = ztWorldMapper.queryHTWorld(dto);
+			totalCount = ztWorldMapper.queryHTWorldTotalCount(dto);
 		}
 		
 		
