@@ -735,7 +735,7 @@ body {
 	 * @author zhangbo 2015-10-20
 	 */
 	function showUserWorldPage(userId){
-		var url = "./page_user_userWorldInfo2";
+		var url = "./page_user_userWorldInfo";
 		url += "?userId=" + userId;
 		$.fancybox({
 			'margin'			: 20,
