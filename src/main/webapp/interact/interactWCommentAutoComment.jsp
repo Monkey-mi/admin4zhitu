@@ -258,8 +258,8 @@ body {
 		$("#worldAuthorId_add").val(worldAuthorId);
 		$("#reAuthorId_add").val(reAuthorId);
 		$("#worldId_add").val(worldId);
-		$("#rl_exp_input").val(' @'+authorName+" : ");
-		//$("#rl_exp_input").val('@'+authorName+" ");
+		//$("#rl_exp_input").val(' @'+authorName+" : ");
+		$("#rl_exp_input").val('回复@'+authorName+": ");
 		// 打开添加窗口
 		$("#htm_add").window('open');
 	}

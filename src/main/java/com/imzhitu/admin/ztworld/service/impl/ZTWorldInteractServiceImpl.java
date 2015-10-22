@@ -298,8 +298,8 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 			content = commentMapper.queryContent(i);
 			if(content != null && content.length() > 1) {
 				if(content.charAt(1) == '@') {
-					content = content.replaceFirst(" :", "");
-					commentMapper.updateContent(i, content.trim());
+					content = content.replaceFirst(" ", "回复").replaceFirst(" :", ":");
+					commentMapper.updateContent(i, content);
 				}
 				
 				if(i > finishFlag || i == maxId) {
@@ -309,5 +309,5 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 			}
 		}
 	}
-
+	
 }
