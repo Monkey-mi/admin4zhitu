@@ -82,7 +82,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String destroy(){
 		try {
-			interactStarRecommendTopicService.destoryTopic(id);
+			interactStarRecommendTopicService.destoryTopic(id,isWorld);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);

@@ -53,5 +53,5 @@ public interface InteractStarRecommendTopicService {
 		*	2015年9月22日
 		*	mishengliang
 	 */
-	public void destoryTopic(Integer id)  throws Exception;
+	public void destoryTopic(Integer id,Integer isWorld)  throws Exception;
 }

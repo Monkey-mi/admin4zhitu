@@ -14,6 +14,7 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.common.pojo.StarRecommendTopic;
 import com.imzhitu.admin.interact.mapper.InteractStarModuleMapper;
 import com.imzhitu.admin.interact.mapper.InteractStarRocommendTopicMapper;
+import com.imzhitu.admin.interact.mapper.InteractStarWorldModuleMapper;
 import com.imzhitu.admin.interact.service.InteractStarRecommendTopicService;
 
 @Service
@@ -21,6 +22,9 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 
 	@Autowired
 	private InteractStarRocommendTopicMapper mapper;
+	
+	@Autowired
+	private InteractStarWorldModuleMapper worldModuleMapper;
 	
 	@Autowired
 	private InteractStarModuleMapper moduleMapper;
@@ -99,8 +103,12 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 	}
 	
 	@Override
-	public void destoryTopic(Integer id)  throws Exception{
+	public void destoryTopic(Integer id,Integer isWorld)  throws Exception{
 		mapper.destoryStarRecommendTopic(id);
-		moduleMapper.destoryByTopicId(id);
+		if (isWorld ==  0) {
+			moduleMapper.destoryByTopicId(id);
+		} else {
+			worldModuleMapper.destoryByTopicId(id);
+		}
 	}
 }
