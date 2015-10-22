@@ -89,7 +89,7 @@
         function newUser(){
         	var topicId = $('#i-topicId').combobox('getValue');
         	if(topicId == ""){
-        		alert("请先选择主题号");
+        		$.messager.alert("温馨提示","请先选择主题");
         		return;
         	}
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','新建模块信息');

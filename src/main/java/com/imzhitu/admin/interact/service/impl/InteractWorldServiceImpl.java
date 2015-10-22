@@ -801,6 +801,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, likedCount);
 			List<Integer> zombieIdList = new ArrayList<Integer>();
 			int likeSize = Math.round(likedCount * likeFromFollowRate/100.00f);
+/*			int unfollowlikeSize = likedCount - likeSize;
+			likeSize =  unFzList.size() >= unfollowlikeSize ? likeSize : unfollowlikeSize - unFzList.size() + likeSize;*/
 			int i,j;
 			for(i = 0; i < likeSize && i < fzListLength; i++) {
 				zombieIdList.add(fzList.get(i));
