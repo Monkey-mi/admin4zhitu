@@ -49,6 +49,8 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	@Autowired
 	private com.hts.web.ztworld.dao. HTWorldCommentDao webWorldCommentDao;
 	
+	
+	
 	@Autowired
 	private InteractAutoResponseSchedulaService interactAutoResponseSchedulaService;
 	
@@ -146,7 +148,7 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 					answerStr = interactRobotService.getAnswer(qStr);
 				}
 				if(null == answerStr)answerStr = "哦";//若从机器人那里得到空值，则复制为哦
-				String  asStr= " @" + dto.getAuthorName() + " : " + answerStr;//加上名字
+				String  asStr= dto.getReAuthorName()+"@" + dto.getAuthorName() + ": " + answerStr;//加上名字
 				Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
 				//存储回复内容到htworld_comment中
 				webWorldCommentDao.saveWorldComment(new HTWorldComment(id,
