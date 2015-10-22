@@ -178,7 +178,7 @@
             if (row){
                 $.messager.confirm('Confirm','同学，你真的要删除这期吗?',function(r){
                     if (r){
-                        $.post('./admin_interact/starRecommendTopic_destroy',{id:row.id},function(result){
+                        $.post('./admin_interact/starRecommendTopic_destroy',{id:row.id,isWorld:isWorld},function(result){
                             if (result.result == 0){
                                 $('#dg').datagrid('reload');    // reload the user data
                             } else {
