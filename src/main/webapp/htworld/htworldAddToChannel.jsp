@@ -67,7 +67,6 @@
 		
 		// 加载织图当前所在频道
 		loadCurrentChannel();
-		$("#ss-channel").combobox("select", 1);
 	});
 	
 	/**
@@ -175,18 +174,21 @@
 			channelIds.push($(this).attr("channelId"));
 		});
 		
-		//该织图进入频道
-		$.post("./admin_op/channel_saveWorldIntoChannels",{
-			ids: channelIds.toString(),
-			worldId: worldId
-		},function(result){
-			if(result['result'] == 0){
-				parent.$.fancybox.close();
-			} else {
-				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-			}
-		});
-		
+		if ( channelIds.length == 0 ) {
+			$.messager.alert("温馨提示","请选择要添加进入的频道！若无，请关闭窗口。");
+		} else {
+			//该织图进入频道
+			$.post("./admin_op/channel_saveWorldIntoChannels",{
+				ids: channelIds.toString(),
+				worldId: worldId
+			},function(result){
+				if(result.result == 0){
+					parent.$.fancybox.close();
+				} else {
+					$.messager.alert("错误提示",result.msg);  //提示添加信息失败
+				}
+			});
+		}
 	};
 	
 </script>
