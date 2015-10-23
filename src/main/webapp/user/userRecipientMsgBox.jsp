@@ -427,6 +427,7 @@ function searchBySenderId(){
 						        <option value="4">普通文本</option>
 						        <option value="9">链接</option>
 						        <option value="8">频道</option>
+						        <option value="2">织图推荐</option>
 						        <option value="10">明星推荐</option>
 					   		</select>
 						</td>
