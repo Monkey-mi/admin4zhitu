@@ -658,6 +658,10 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		//加粉
 		if(likedCount > 0){
 			int followSize = Math.round(likedCount * likeToFollowRate / 100.0f);
+			//如果非粉丝数量为0，则加粉的数量为0
+			if (unFzList.size() <= Math.round(likedCount * likeToFollowRate / 100.0f)) {
+				followSize = unFzList.size();
+			}
 			InteractUser userInteract = interactUserDao.queryUserInteractByUID(userId);
 			if(userInteract != null) {
 				interactId = userInteract.getId();
@@ -801,7 +805,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, likedCount);
 			List<Integer> zombieIdList = new ArrayList<Integer>();
 			int likeSize = Math.round(likedCount * likeFromFollowRate/100.00f);
-/*			int unfollowlikeSize = likedCount - likeSize;
+/*		int unfollowlikeSize = likedCount - likeSize;
 			likeSize =  unFzList.size() >= unfollowlikeSize ? likeSize : unfollowlikeSize - unFzList.size() + likeSize;*/
 			int i,j;
 			for(i = 0; i < likeSize && i < fzListLength; i++) {
