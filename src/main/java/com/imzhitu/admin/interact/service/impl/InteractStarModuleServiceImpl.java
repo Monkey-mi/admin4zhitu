@@ -62,6 +62,7 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 	
 	@Override
 	public void update(Integer id,String title,String subtitle,Integer userId,String pics,String pic02,String pic03,String pic04,String intro)  throws Exception{
+		intro = intro.replaceAll("   ", "</br>");
 		StarModule dto  = new StarModule();
 		dto.setId(id);
 		dto.setTitle(title);

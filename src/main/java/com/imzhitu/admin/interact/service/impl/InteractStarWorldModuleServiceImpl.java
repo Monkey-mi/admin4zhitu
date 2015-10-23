@@ -52,6 +52,7 @@ public class  InteractStarWorldModuleServiceImpl extends BaseServiceImpl impleme
 	
 	@Override
 	public void updateWorldModule(Integer id,String title,String subtitle,Integer userId,Integer worldId,String intro)  throws Exception{
+		intro = intro.replaceAll("   ", "</br>");
 		StarModule dto  = new StarModule();
 		dto.setId(id);
 		dto.setTitle(title);
