@@ -62,8 +62,21 @@ var maxId = 0,
   		likeCountColumn,
   		commentCountColumn,
   		worldURLColumn,
-  		{field : 'id',title : '织图ID',align : 'center', sortable: true, width : 60},
-  		titleThumbPathColumn,
+  		{
+  			field: "id",
+  			title: "织图ID",
+  			align: "center",
+  			sortable: true,
+  			width : 60
+  		},
+  		{
+  			field: "titleThumbPath",
+  			title: "预览",
+  			align: "center",
+  			formatter: function(value,row,index){
+  				return "<img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' />";
+  			}
+  		},
   		worldLabelColumn,
   		{field : 'valid',title : '状态',align : 'center',width : 45,
   			formatter: function(value,row,index){

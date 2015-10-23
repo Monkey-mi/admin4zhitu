@@ -143,16 +143,22 @@ var maxSerial = 0,
 				}
 			}
 		},
-  		titleThumbPathColumn,
+		{
+  			field: "titleThumbPath",
+  			title: "预览",
+  			align: "center",
+  			formatter: function(value,row,index){
+  				return "<img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' />";
+  			}
+  		},
   		worldLabelColumn,
-  		{field : 'channelName',title :'频道',align : 'center',width:100,
+  		{field : 'channelName',title :'频道',align : 'center',
   			formatter: function(value,row,index) {
   				if(value == "NO_EXIST" || value=="") {
-  					img = "./common/images/edit_add.png";
-  					return "<img title='已添加' class='htm_column_img'  src='" + img + "' onclick='saveToChannelWorld(\""+row.worldId+"\",\""+index +"\")'/>";
+  					return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='showWorldAddToChannelPage(" + row.worldId + ")'/>";
+  				} else {
+  					return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
   				}
-  				
-  				return value;
   			}
 		},
   		{field : 'worldType',title : '分类',align : 'center',width : 60,
@@ -838,7 +844,28 @@ function showWorldAndInteractForType(uri){
 		'type'				: 'iframe',
 		'href'				: uri
 	});
-}
+};
+
+/**
+ * 打开织图添加到频道页面
+ * 
+ * @param	worldId	织图id
+ * @author zhangbo 2015-10-23
+ */
+function showWorldAddToChannelPage(worldId){
+	var url = "./page_htworld_htworldAddToChannel";
+	url += "?worldId=" + worldId
+	$.fancybox({
+		'margin'			: 20,
+		'width'				: '45%',
+		'height'			: '60%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe',
+		'href'				: url
+	});
+};
 
 </script>
 </head>

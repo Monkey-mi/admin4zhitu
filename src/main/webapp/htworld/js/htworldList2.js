@@ -383,10 +383,9 @@ function getTypeInteract(value, row, index) {
 
 function getChannelName(value, row, index) {
 	if(value == "NO_EXIST" || value=="") {
-		img = "./common/images/edit_add.png";
-		return "<img title='添加到频道' class='htm_column_img pointer'  src='" + img + "' onclick='showWorldAddToChannelPage(" + row.worldId + ")'/>";
+		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='showWorldAddToChannelPage(" + row.worldId + ")'/>";
 	} else {
-		 return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
+		return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
 	}
 }
 
@@ -1445,6 +1444,8 @@ var htmTableTitle = "分享列表维护", //表格标题
 	
 	/**
 	 * 打开织图添加到频道页面
+	 * 
+	 * @param	worldId	织图id
 	 * @author zhangbo 2015-10-10
 	 */
 	function showWorldAddToChannelPage(worldId){
