@@ -331,7 +331,8 @@ function showWorld(uri) {
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',
 		'type'				: 'iframe',
-		'href'				: uri + "?adminKey=" + adminKey
+		'href'				: uri 
+	/*	'href'				: uri + "?adminKey=" + adminKey*/
 	});
 }
 	
