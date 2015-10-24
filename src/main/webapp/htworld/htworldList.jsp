@@ -10,6 +10,7 @@
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript" src="${webRootPath }/common/js/worldmaintainfunction20151023.js?ver=${webVer}"></script>
 <script type="text/javascript" src="${webRootPath }/common/js/worldmaintain2014021801.js?ver=${webVer}"></script>
 <script type="text/javascript">
 var maxId = 0,
@@ -340,7 +341,22 @@ var htmTableTitle = "分享列表维护", //表格标题
 		clickCountColumn,
 		likeCountColumn,
 		commentCountColumn,
-		worldURLColumn,
+/* 		worldURLColumn = {field : 'worldURL',title : '链接',align : 'center',
+				styler: function(value,row,index){ return 'cursor:pointer;';},
+				formatter : function(value, row, rowIndex ) {
+					var url = value;
+					if(value == '' || value == undefined) {
+						var slink;
+						if(row['shortLink'] == '')
+							slink = row[worldKey];
+						else 
+							slink = row['shortLink'];
+						url = worldURLPrefix + slink;
+					}
+					return "<a title='播放织图' class='updateInfo' href='javascript:showWorld(\""
+					+ url + "\")'>"+url+"</a>";
+				}
+			}, */
 		worldIdAndShowWorldColumn,
 		worldDescColumn,
 		{
@@ -348,8 +364,21 @@ var htmTableTitle = "分享列表维护", //表格标题
   			title: "预览",
   			align: "center",
   			formatter: function(value,row,index){
-  				return "<img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' />";
-  			}
+  				
+				var url = row.worldURL;
+				if(row.worldURL == '' || row.worldURL == undefined) {
+					var slink;
+					if(row['shortLink'] == '')
+						slink = row[worldKey];
+					else 
+						slink = row['shortLink'];
+					url = worldURLPrefix + slink;
+				}
+  				
+/*   				return "<a title='播放织图' class='updateInfo' href='javascript:showWorld(\"" + url + "\")'><img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' /></a>";
+ */  			
+  				return "<a title='播放织图' class='updateInfo' href='javascript:showWorldWithURI(\"" + url + "\")'><img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' /></a>";
+ 				}
   		},
 		worldLabelColumn,
 		{field : 'typeInteract',title : '分类互动',align : 'center', sortable: true, 
