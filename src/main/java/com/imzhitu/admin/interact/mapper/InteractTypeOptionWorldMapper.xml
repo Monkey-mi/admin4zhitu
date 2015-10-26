@@ -99,6 +99,12 @@
 		<where>
 			hh.valid = 1
 			and hh.shield = 0
+			<if test="worldId != null">
+				and itow.world_id = #{worldId}
+			</if>
+			<if test="userId != null">
+			    and itow.user_id = #{userId}
+			</if>
 			<if test="maxId !=null and maxId != 0">
 				<![CDATA[and itow.id<= maxId]]>
 			</if>
@@ -119,6 +125,12 @@
 	<select id="queryTypeOptionWorldCount" resultType="long">
 		select count(*) from hts_admin.interact_type_option_world itow
 		<where>
+			<if test="worldId != null">
+				and itow.world_id = #{worldId}
+			</if>
+			<if test="userId != null">
+			    and itow.user_id = #{userId}
+			</if>
 			<if test="maxId !=null and maxId != 0">
 				<![CDATA[and itow.id<= maxId]]>
 			</if>

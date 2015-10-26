@@ -550,6 +550,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		List<Integer> fzList = null;
 		List<Integer> unFzList = null;
 		int fzListLength=0;
+		int unFzListLength = 0;
 		
 		//计算粉丝马甲数
 		int followZombiesTotal = likedCount * likeFromFollowRate + likedCount * ( 100 -  likeFromFollowRate)* likeToFollowRate
@@ -617,6 +618,8 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 				if( null == unFzList){
 					logger.warn("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
 					throw new Exception("saveInteractV3:zombieMapper.queryNotInteractNRandomFollowZombie is null. userId="+userId+".degreeId="+degreeId+",need:"+unFollowZombieNeedTotal+".\nnow set fzList is null.");
+				}else{
+					unFzListLength = unFzList.size();
 				}
 			}
 			
@@ -628,13 +631,13 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, likedCount);
 			List<Integer> zombieIdList = new ArrayList<Integer>();
 			int likeSize = Math.round(likedCount * likeFromFollowRate/100.00f);
-/*			int unfollowlikeSize = likedCount - likeSize;
-			likeSize =  unFzList.size() >= unfollowlikeSize ? likeSize : unfollowlikeSize - unFzList.size() + likeSize;*/
+			int unfollowlikeSize = likedCount - likeSize;
+			likeSize =  (unFzListLength >= unfollowlikeSize ? likeSize : unfollowlikeSize - unFzListLength + likeSize);
 			int i,j;
 			for(i = 0; i < likeSize && i < fzListLength; i++) {
 				zombieIdList.add(fzList.get(i));
 			}
-			for(j = 0; j < likedCount - i && j < unFzList.size(); j++){
+			for(j = 0; j < likedCount - i && j < unFzListLength; j++){
 				zombieIdList.add(unFzList.get(j));
 			}
 			batchSaveLiked(interactId, worldId, zombieIdList, dateAdded, scheduleDateList);
@@ -651,7 +654,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			for( i = 0; i < followCommentSize && i < fzListLength ; i++) {
 				zombieIdList.add(fzList.get(i));
 			}
-			for(j = 0; j < commentCount - i && j < unFzList.size(); j++){
+			for(j = 0; j < commentCount - i && j < unFzListLength; j++){
 				zombieIdList.add(unFzList.get(j));
 			}
 			batchSaveComment(interactId, worldId, zombieIdList, cids, dateAdded, scheduleDateList);
@@ -662,7 +665,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		if(likedCount > 0){
 			int followSize = Math.round(likedCount * likeToFollowRate / 100.0f);
 			//如果非粉丝数量为0，则加粉的数量为0
-			if (unFzList.size() <= Math.round(likedCount * likeToFollowRate / 100.0f)) {
+			if (unFzListLength > 0 && unFzListLength <= Math.round(likedCount * likeToFollowRate / 100.0f)) {
 				followSize = unFzList.size();
 			}
 			InteractUser userInteract = interactUserDao.queryUserInteractByUID(userId);
@@ -681,7 +684,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			// 保存粉丝互动
 			List<Date> scheduleDateList = getScheduleV3(dateAdded, minuteDuration, followSize);
 			List<InteractUserFollow> list = new ArrayList<InteractUserFollow>();
-			for(int i = 0; i < followSize && i < unFzList.size(); i++) {
+			for(int i = 0; i < followSize && i < unFzListLength; i++) {
 				list.add(new InteractUserFollow(interactId, userId, unFzList.get(i),
 						dateAdded, scheduleDateList.get(i), Tag.TRUE, Tag.FALSE));
 			}
