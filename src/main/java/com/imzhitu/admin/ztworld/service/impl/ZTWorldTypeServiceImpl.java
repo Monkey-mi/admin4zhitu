@@ -43,6 +43,7 @@ import com.imzhitu.admin.interact.service.InteractWorldlevelService;
 import com.imzhitu.admin.op.dao.OpWorldTypeCacheDao;
 import com.imzhitu.admin.op.dao.OpWorldTypeDto2CacheDao;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
+import com.imzhitu.admin.op.service.OpMsgService;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
@@ -132,6 +133,9 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private KeyGenService keyGenService;
+	
+	@Autowired
+	private OpMsgService opMsgService;
 	
 	public Integer getSuperbLimit() {
 		return superbLimit;
@@ -491,26 +495,22 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 	public void autoCommitUpdateTypeWorldValid(ZTWorldTypeWorldDto dto) throws Exception {
 		String notifyTip = UPDATE_TYPE_WORLD_NOTIFY_TIP;
-		Integer msgId = null;
 		Integer userId = dto.getAuthorId();
 		Integer worldId = dto.getWorldId();
 		String userName = dto.getUserInfo().getUserName();
 		String tip = userName + "," + notifyTip;
-		msgId = webUserMsgService.getValidMessageId(Admin.ZHITU_UID, userId, Tag.USER_MSG_SQUARE_NOTIFY, worldId);
-		if(msgId == null) {
-			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(userId);
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, userId, tip, 
-					Tag.USER_MSG_SQUARE_NOTIFY, worldId, dto.getWorldType(), String.valueOf(dto.getTypeId()),
-					dto.getTitleThumbPath(), 0);
-			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo,
-					Tag.USER_MSG_SQUARE_NOTIFY,
-					new PushFailedCallback() {
-	
-				@Override
-				public void onPushFailed(Exception e) {}
-				
-			});
-		}
+		UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(userId);
+		opMsgService.saveSysMsg(userId, tip, Tag.USER_MSG_SQUARE_NOTIFY, 
+				worldId, dto.getWorldType(), String.valueOf(dto.getTypeId()),
+						dto.getTitleThumbPath());
+		pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo,
+				Tag.USER_MSG_SQUARE_NOTIFY,
+				new PushFailedCallback() {
+
+			@Override
+			public void onPushFailed(Exception e) {}
+			
+		});
 	}
 
 	@Override

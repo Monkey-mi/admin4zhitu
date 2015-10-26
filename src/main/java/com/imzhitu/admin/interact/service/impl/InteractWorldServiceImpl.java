@@ -55,6 +55,7 @@ import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.mapper.OpZombieChannelMapper;
 import com.imzhitu.admin.op.mapper.OpZombieMapper;
+import com.imzhitu.admin.op.service.OpMsgService;
 import com.imzhitu.admin.op.service.OpZombieChannelService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
 
@@ -165,9 +166,6 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	private com.hts.web.userinfo.service.UserInteractService webUserInteractService;
 	
 	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
-	
-	@Autowired
 	private com.hts.web.userinfo.dao.UserInfoDao webUserInfoDao;
 	
 	@Autowired
@@ -205,6 +203,9 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private OpZombieChannelMapper zombieChannelMapper;
+
+	@Autowired
+	private OpMsgService opMsgService;
 	
 	private Logger log = Logger.getLogger(InteractWorldServiceImpl.class);
 	
@@ -1428,8 +1429,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 			break;
 		}
 		try {
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, adminId, content,
-					Tag.USER_MSG_SYS, 0, null, null, null, 0);
+			opMsgService.saveSysMsg(adminId, content, Tag.USER_MSG_SYS, 0, null, null, null);
 			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(adminId);
 			pushService.pushSysMessage(content, Admin.ZHITU_UID, content, 
 					userPushInfo, Tag.USER_MSG_SYS, new PushFailedCallback() {

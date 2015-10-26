@@ -25,6 +25,7 @@ import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.UserMsgDanmu;
+import com.imzhitu.admin.op.service.OpMsgService;
 import com.imzhitu.admin.userinfo.dao.UserMsgDao;
 import com.imzhitu.admin.userinfo.service.UserMsgService;
 
@@ -61,6 +62,9 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private UserMsgDao userMsgDao;
+	
+	@Autowired
+	private OpMsgService opMsgService;
 
 	
 	@Value("${push.customerServiceId}")
@@ -83,7 +87,8 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 			String fullContent = MSG_TITLE + userName + "，" + content;
 			userName = PushUtil.getShortName(userName);
 			String title = MSG_TITLE + userName + "，" + content;
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, info.getId(), fullContent, Tag.USER_MSG_SYS, null, null, null, null, 0);
+			opMsgService.saveSysMsg(info.getId(), fullContent, Tag.USER_MSG_SYS,
+					null, null, null, null);
 			pushService.pushSysMessage(title, Admin.ZHITU_UID, title,
 					info, Tag.USER_MSG_SYS, new PushFailedCallback() {
 

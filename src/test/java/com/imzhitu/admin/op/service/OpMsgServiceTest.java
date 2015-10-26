@@ -29,10 +29,10 @@ public class OpMsgServiceTest extends BaseTest {
 	
 	@Test
 	public void testPushAppMsg() throws Exception {
-//		OpSysMsg msg = new OpSysMsg();
-//		msg.setObjType(Tag.USER_MSG_STAR_RECOMMEND);
-//		msg.setContent("江映蓉入驻织图啦！】当年那个快女冠军如今已蜕变成国际范儿，她来织图和大家见面了，Are you ready！ ");
-//		service.pushAppMsg(msg, false, true, 0);
+		OpSysMsg msg = new OpSysMsg();
+		msg.setObjType(Tag.USER_MSG_STAR_RECOMMEND);
+		msg.setContent("江映蓉入驻织图啦！】当年那个快女冠军如今已蜕变成国际范儿，她来织图和大家见面了，Are you ready！ ");
+		service.pushAppMsg(msg, true, false, null);
 	}
 
 //	@Test

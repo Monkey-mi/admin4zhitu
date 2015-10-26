@@ -18,25 +18,24 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.pojo.OpSquare;
-import com.hts.web.common.pojo.OpSysMsg;
 import com.hts.web.common.pojo.OpUserRecommend;
 import com.hts.web.common.pojo.OpUserZombie;
 import com.hts.web.common.pojo.UserInfo;
 import com.hts.web.common.pojo.UserPushInfo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
-import com.hts.web.common.util.Log;
 import com.hts.web.common.util.MD5Encrypt;
 import com.hts.web.common.util.NumberUtil;
-import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.service.impl.UserOperationsServiceImpl;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.common.database.Admin;
+import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.common.pojo.OpUserRecommendDto;
 import com.imzhitu.admin.op.dao.UserRecommendDao;
 import com.imzhitu.admin.op.dao.UserZombieDao;
+import com.imzhitu.admin.op.service.OpMsgService;
 import com.imzhitu.admin.op.service.OpUserService;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
@@ -89,6 +88,9 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	
 	@Autowired
 	private com.hts.web.aliyun.service.OsUserInfoService webOsUserInfoService;
+	
+	@Autowired
+	private OpMsgService opMsgService;
 	
 	/**
 	 * 达人邀请缩略图链接
@@ -242,7 +244,8 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	}
 
 	@Override
-	public void deleteRecommendUserByIds(String idsStr, Boolean deleteStar,Boolean insertMessage) {
+	public void deleteRecommendUserByIds(String idsStr, 
+			Boolean deleteStar,Boolean insertMessage) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		List<Integer> userIds = userRecommendDao.queryUserIdByIds(ids);
 		for(Integer userId : userIds) {
@@ -258,21 +261,13 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	 * @throws Exception
 	 */
 	@Override
-	public void insertDelMessage(Integer userId,Boolean insertMessage){
+	public void insertDelMessage(Integer userId,Boolean insertMessage) throws Exception{
 		if(insertMessage){
 			long r = userRecommendDao.queryUserAccpetAndSysAcceptResult(userId);
 			if(r==0) return ;
-			OpSysMsg msg = new OpSysMsg();
-//			Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
-//			msg.setId(id);
-			msg.setSenderId(2063);
-			msg.setRecipientId(userId);
-			msg.setMsgDate(new Date());
-			msg.setWeight(0);
-			msg.setContent("由于您已经一个月没有登录织图，达人已被取消，有任何意见，可联系织图小秘书");
-			msg.setObjType(4);
-			msg.setObjId(userId);
-			webSysMsgDao.saveMsg(msg);
+			opMsgService.saveSysMsg(userId,
+					"由于您已经一个月没有登录织图，达人已被取消，有任何意见，可联系织图小秘书",
+					4, userId, null, null, null);
 		}
 	}
 	
@@ -358,9 +353,8 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 			} else if(userAccept.equals(UserOperationsServiceImpl.USER_RECOMMEND_ACCEPT)) {
 				objMeta = UserOperationsServiceImpl.USER_RECOMMEND_ACCEPT + 1;
 			}
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, 
-					fullMsg, Tag.USER_MSG_USER_RECOMMEND, recipientId, String.valueOf(objMeta), recommendType,
-					SYS_INVITE_THUMB, 0);
+			opMsgService.saveSysMsg(recipientId, fullMsg, Tag.USER_MSG_USER_RECOMMEND, recipientId,
+					String.valueOf(objMeta), recommendType, SYS_INVITE_THUMB);
 		}
 		userRecommendDao.updateNotified(id, ++notified);
 		
@@ -542,7 +536,8 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 		Date date = new Date();
 		webUserRecommendDao.updateUserAcceptByUID(userId, 1, date);
 		webUserInfoDao.updateStartById(userId, verifyId);
-		webSysMsgDao.updateRecipientValid(userId, 3, Tag.FALSE);
+//		webSysMsgDao.updateRecipientValid(userId, 3, Tag.FALSE);
+		webSysMsgDao.deleteByObjType(userId, 3);
 	}
 
 	@Override

@@ -537,7 +537,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 			String shortTip = PushUtil.getShortName(recipientName) + PushUtil.getShortTip(tipHead);
 
 			// 保存消息
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, tip, msgCode, recipientId, null, null, null, 0);
+			msgService.saveSysMsg(recipientId, tip, msgCode, recipientId, null, null, null);
 
 			// 更新推送标记
 			topOne.setNotified(Tag.TRUE);

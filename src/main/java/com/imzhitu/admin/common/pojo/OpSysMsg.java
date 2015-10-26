@@ -7,12 +7,13 @@ import java.util.Date;
  * ORM对象，用于记录发送的系统通知
  * 
  * @author zhangbo	2015年9月7日
+ * @author lynch 2015-10-26
  *
  */
 public class OpSysMsg {
 
 	private Integer id;
-	private Integer senderId;
+//	private Integer senderId;
 	private Integer recipientId;
 	private Date msgDate;
 	private String content;
@@ -21,11 +22,6 @@ public class OpSysMsg {
 	private String objMeta;
 	private String objMeta2;
 	private String thumbPath;
-	private Integer ck;
-	private Integer valid;
-	private Integer recipientValid;
-	private Integer pushed;
-	private Integer weight;
 
 	public Integer getId() {
 		return id;
@@ -35,13 +31,6 @@ public class OpSysMsg {
 		this.id = id;
 	}
 
-	public Integer getSenderId() {
-		return senderId;
-	}
-
-	public void setSenderId(Integer senderId) {
-		this.senderId = senderId;
-	}
 
 	public Integer getRecipientId() {
 		return recipientId;
@@ -107,44 +96,5 @@ public class OpSysMsg {
 		this.thumbPath = thumbPath;
 	}
 
-	public Integer getCk() {
-		return ck;
-	}
-
-	public void setCk(Integer ck) {
-		this.ck = ck;
-	}
-
-	public Integer getValid() {
-		return valid;
-	}
-
-	public void setValid(Integer valid) {
-		this.valid = valid;
-	}
-
-	public Integer getRecipientValid() {
-		return recipientValid;
-	}
-
-	public void setRecipientValid(Integer recipientValid) {
-		this.recipientValid = recipientValid;
-	}
-
-	public Integer getPushed() {
-		return pushed;
-	}
-
-	public void setPushed(Integer pushed) {
-		this.pushed = pushed;
-	}
-
-	public Integer getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Integer weight) {
-		this.weight = weight;
-	}
 
 }

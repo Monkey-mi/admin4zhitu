@@ -44,6 +44,7 @@ import com.imzhitu.admin.op.dao.ActivityStarCacheDao;
 import com.imzhitu.admin.op.dao.ActivityWinnerDao;
 import com.imzhitu.admin.op.dao.ActivityWorldDao;
 import com.imzhitu.admin.op.dao.OpWorldTypeCacheDao;
+import com.imzhitu.admin.op.service.OpMsgService;
 import com.imzhitu.admin.op.service.OpService;
 import com.imzhitu.admin.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelDao;
@@ -52,7 +53,6 @@ import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 @Service
 public class OpServiceImpl extends BaseServiceImpl
 		implements OpService {
-
 	
 	public static final String ACTIVITY_TIP_HEAD = "您的织图通过活动审核#";
 	
@@ -124,6 +124,9 @@ public class OpServiceImpl extends BaseServiceImpl
 	
 	@Autowired
 	private ActivityStarCacheDao activityStarCacheDao;
+	
+	@Autowired
+	private OpMsgService opMsgService;
 	
 	@Value("${admin.op.activityStarLimit}")
 	private Integer activityStarLimit = 15;
@@ -370,23 +373,19 @@ public class OpServiceImpl extends BaseServiceImpl
 	@Override
 	public void addActivityWorldCheckMsg(Integer activityId, Integer worldId, 
 			Integer recipientId, String recipientName, String msg) throws Exception {
-		Integer msgId = webUserMsgService.getValidMessageId(Admin.ZHITU_UID, recipientId, 
-				Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY, worldId, String.valueOf(activityId));
-		if(msgId == null) {
-			String tip = recipientName + "," + msg;
-			String shortTip = PushUtil.getShortName(recipientName) + "," + PushUtil.getShortTip(msg);
-			HTWorld world = webWorldDao.queryWorldById(worldId);
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, recipientId, tip, 
-					Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY, worldId, null,
-					String.valueOf(activityId), world.getTitleThumbPath(), 0);
-			UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
-			pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY,
-					new PushFailedCallback() {
+		String tip = recipientName + "," + msg;
+		String shortTip = PushUtil.getShortName(recipientName) + "," + PushUtil.getShortTip(msg);
+		HTWorld world = webWorldDao.queryWorldById(worldId);
+		opMsgService.saveSysMsg(recipientId, tip, 
+				Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY, worldId, null,
+				String.valueOf(activityId), world.getTitleThumbPath());
+		UserPushInfo userPushInfo = webUserInfoDao.queryUserPushInfoById(recipientId);
+		pushService.pushSysMessage(shortTip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_SQUARE_ACTIVITY_NOTIFY,
+				new PushFailedCallback() {
 
-				@Override
-				public void onPushFailed(Exception e) {}
-			});
-		}
+			@Override
+			public void onPushFailed(Exception e) {}
+		});
 	}
 
 	@Override

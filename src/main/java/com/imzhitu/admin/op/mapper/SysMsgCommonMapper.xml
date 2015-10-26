@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.SysMsgCommonMapper">
+	
+	<resultMap id="OpSysMsgMap" type="com.imzhitu.admin.common.pojo.OpSysMsg">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="msg_date" property="msgDate" jdbcType="TIMESTAMP" />
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+		<result column="obj_type" property="objType" jdbcType="INTEGER"/>
+		<result column="obj_id" property="objId" jdbcType="INTEGER"/>
+		<result column="obj_meta" property="objMeta" jdbcType="VARCHAR"/>
+		<result column="obj_meta2" property="objMeta2" jdbcType="VARCHAR"/>
+		<result column="thumb_path" property="thumbPath" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="OpSysMsgDtoMap" type="com.hts.web.common.pojo.OpSysMsgDto">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="msg_date" property="msgDate" jdbcType="TIMESTAMP" />
+		<result column="content" property="content" jdbcType="VARCHAR"/>
+		<result column="obj_type" property="objType" jdbcType="INTEGER"/>
+		<result column="obj_id" property="objId" jdbcType="INTEGER"/>
+		<result column="obj_meta" property="objMeta" jdbcType="VARCHAR"/>
+		<result column="obj_meta2" property="objMeta2" jdbcType="VARCHAR"/>
+		<result column="thumb_path" property="thumbPath" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="saveCommonMsg">
+		insert into hts.operations_sys_msg_common (id,content,obj_type,obj_meta,
+			obj_meta2, obj_id, thumb_path) 
+			values (#{id},#{content},#{objType}, #{objMeta},#{objMeta2},
+			#{objId},#{thumbPath})
+	</insert>
+	
+ 	<select id="queryCacheMsg" resultMap="OpSysMsgDtoMap">
+		select * 
+		from 
+			hts.operations_sys_msg_common 
+		order by id desc
+		limit 0,#{limit};
+	</select> 
+</mapper>

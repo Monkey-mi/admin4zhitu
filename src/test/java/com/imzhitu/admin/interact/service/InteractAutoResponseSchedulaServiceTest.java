@@ -47,9 +47,9 @@ public class InteractAutoResponseSchedulaServiceTest extends BaseTest{
 	
 	@Test
 	public void queryAutoResponseSchedulaForTableTest()throws Exception{
-		Map<String,Object>jsonMap = new HashMap<String,Object>();
-		service.queryAutoResponseSchedulaForTable(null, null, null, null, null,null, 1, 10, jsonMap);
-		log.info(jsonMap);
+//		Map<String,Object>jsonMap = new HashMap<String,Object>();
+//		service.queryAutoResponseSchedulaForTable(null, null, null, null, null,null, 1, 10, jsonMap);
+//		log.info(jsonMap);
 	}
 
 }
