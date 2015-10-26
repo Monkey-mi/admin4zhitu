@@ -49,6 +49,9 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	@Autowired
 	private com.hts.web.ztworld.dao. HTWorldCommentDao webWorldCommentDao;
 	
+	@Autowired
+	private com.hts.web.ztworld.service.ZTWorldInteractService ztWorldInteractService;
+	
 	
 	
 	@Autowired
@@ -88,14 +91,13 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	 * 页面上更新自动回复的完成状态，其实是将自动回复转成计划，按计划实施
 	 */
 	@Override
-	public void updateResponseCompleteByIds(String idsStr,String responseIdsStr,Integer operatorId)throws Exception{
-		if(idsStr == null || idsStr.equals(""))return;
+	public void updateResponseCompleteByIds(String idsStr,Integer operatorId)throws Exception{
+		if(idsStr == null || idsStr.equals(""))
+			return;
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		if(ids.length <= 0)return;
-//		if(responseIdsStr == null || responseIdsStr.equals(""))return;
-//		Integer[] responseIds = StringUtil.convertStringToIds(responseIdsStr);
-//		if(responseIds.length <= 0)return;
-//		webWorldCommentDao.updateValidByIds(responseIds);
+		if(ids.length <= 0)
+			return;
+
 		for(int i=0; i<ids.length; i++){
 			interactAutoResponseSchedulaService.addAutoResponseSchedula(ids[i], Tag.TRUE, Tag.FALSE, null, operatorId);
 		}
@@ -110,16 +112,29 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	public void updateResponseCompleteById(Integer id){
 		InteractAutoResponseDto dto = autoResponseMapper.queryRespnse(id);
 		if(dto != null){
-			HTWorldComment comment = webWorldCommentDao.queryCommentById(dto.getResponseId());
-			if(comment == null){
-				return;
-			}
+			/*
+			HTWorldComment comment = new HTWorldComment();
 				
 			Integer commentId = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
 			comment.setId(commentId);
 			comment.setCk(Tag.FALSE);
 			comment.setValid(Tag.TRUE);
-			webWorldCommentDao.saveWorldComment(comment);
+			comment.setShield(Tag.FALSE);
+			comment.setContent(dto.getContext());
+			comment.setCommentDate(new Date());
+		    comment.setAuthorId(dto.getAuthor());
+		    comment.setReAuthorId(dto.getReAuthor());
+		    comment.setReId(dto.getCommentId());
+		    comment.setWorldId(dto.getWorldId());
+		    comment.setWorldAuthorId(dto.getWorldAuthorId());
+		    webWorldCommentDao.saveWorldComment(comment);
+		    */
+		    try{
+		    	ztWorldInteractService.saveReply4Admin(dto.getAuthor(), dto.getContext(), dto.getWorldId(), dto.getCommentId());
+		    }catch(Exception e){
+		    	logger.warn(e.getMessage());
+		    }
+
 		}
 		
 	}
@@ -148,32 +163,16 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 					answerStr = interactRobotService.getAnswer(qStr);
 				}
 				if(null == answerStr)answerStr = "哦";//若从机器人那里得到空值，则复制为哦
-				String  asStr= dto.getReAuthorName()+"@" + dto.getAuthorName() + ": " + answerStr;//加上名字
-				Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
-				//存储回复内容到htworld_comment中
-				webWorldCommentDao.saveWorldComment(new HTWorldComment(id,
-						dto.getReAuthor(),
-						asStr,
-						new Date(),
-						dto.getWorldId(),
-						dto.getWorldAuthorId(),
-						dto.getResponseId(),
-						dto.getAuthor(),
-						Tag.FALSE,
-						Tag.FALSE,
-						Tag.FALSE
-						));
+				String  asStr= "回复@" + dto.getAuthorName() + ": " + answerStr;//加上名字
 				//更新htworld_comment 中的ck位
-				webWorldCommentDao.updateCkById(Tag.TRUE, dto.getResponseId());;
+				webWorldCommentDao.updateCkById(Tag.TRUE, dto.getCommentId());;
 				//保存自动回复记录到interact_auto_response
-//				interactAutoResponseDao.addResponse(id,dto.getResponseId(),Tag.FALSE,dto.getWorldId(),dto.getReAuthor(),dto.getAuthor());
-//				dto.setId(id);
 				Integer reAuthorId = dto.getAuthor();
 				dto.setAuthor(dto.getReAuthor());
 				dto.setReAuthor(reAuthorId);
 				dto.setComplete(Tag.FALSE);
-				dto.setCommentId(dto.getResponseId());
-				dto.setResponseId(id);
+				dto.setCommentId(dto.getCommentId());
+				dto.setContext(asStr);
 				autoResponseMapper.addResponse(dto);
 			}catch(Exception e){
 				e.printStackTrace();
@@ -187,8 +186,11 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	@Override
 	public void queryResponseGroupById(Integer id,Map<String,Object>jsonMap)throws Exception{
 		try{
-//			List<InteractAutoResponseDto> list = interactAutoResponseDao.queryResponseById(id);
 			List<InteractAutoResponseDto> list = autoResponseMapper.queryResponseById(id);
+			if(list != null && list.size() > 0){
+				List<InteractAutoResponseDto> tmpList = autoResponseMapper.queryResponseGroupById(list.get(0));
+				list.addAll(tmpList);
+			}
 			if(list == null)throw new Exception("数据为空");
 			jsonMap.put(OptResult.TOTAL, list.size());
 			jsonMap.put(OptResult.ROWS, list);
@@ -203,7 +205,6 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 		if(idsStr==null || idsStr.equals(""))return;
 		try{
 			Integer[] ids = StringUtil.convertStringToIds(idsStr);
-//			interactAutoResponseDao.delAutoResponseByIds(ids);
 			autoResponseMapper.delAutoResponseByIds(ids);
 		}catch(Exception e){
 			throw e;
@@ -216,8 +217,11 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 		for(int i=0;i<jsArray.size();i++){
 			JSONObject jsObj = jsArray.getJSONObject(i);
 			String context = jsObj.optString("context");
-			Integer responseId = jsObj.optInt("responseId");
-			webWorldCommentDao.updateContentById(responseId, context);
+			Integer id = jsObj.optInt("id");
+			InteractAutoResponseDto dto = new InteractAutoResponseDto();
+			dto.setContext(context);
+			dto.setId(id);
+			autoResponseMapper.updateResponseContext(dto);
 		}
 	}
 	

@@ -30,7 +30,7 @@ public interface InteractAutoResponseService extends BaseService{
 	 * @param ids
 	 * @throws Exception
 	 */
-	public void updateResponseCompleteByIds(String idsStr,String responseIdsStr,Integer operatorId)throws Exception;
+	public void updateResponseCompleteByIds(String idsStr,Integer operatorId)throws Exception;
 	
 	/**
 	 * 更新回复完成状态

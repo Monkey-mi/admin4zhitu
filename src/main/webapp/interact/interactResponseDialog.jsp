@@ -55,11 +55,14 @@ var maxId = 0,
 			onClickCell: onClickCell,
 			columns: [[
 				{field : 'authorName',title: '评论者',align : 'center',width : 110},
-				{field : 'responseId',title:'id',width:60},
+				{field : 'commentId',title:'id',width:60},
 				{field : 'context', title:'回复内容', width : 660,editor:'text'},
 				{field : 'commentDate', title:'评论时间',align : 'center' ,width : 130,
 					formatter:function(value,row,index){
-						return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+						if(value)
+							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+						else
+							return "";
 					}
 				}
 				//{field : 'responseId',hidden:true}

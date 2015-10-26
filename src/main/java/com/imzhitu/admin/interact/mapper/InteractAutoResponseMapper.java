@@ -24,6 +24,13 @@ public interface InteractAutoResponseMapper {
 	public void addResponse(InteractAutoResponseDto dto);
 	
 	/**
+	 * 修改回复内容
+	 * @param dto
+	 */
+	@DataSource("master")
+	public void updateResponseContext(InteractAutoResponseDto dto);
+	
+	/**
 	 * 查询为完成的回复
 	 * @param dto
 	 * @return
@@ -39,6 +46,14 @@ public interface InteractAutoResponseMapper {
 	@DataSource("slave")
 	public List<InteractAutoResponseDto> queryResponseById(Integer id);
 //	InteractAutoResponseDto queryUncompleteResponseByCommentId(Integer commentId);
+	
+	/**
+	 * 根据id来查询回复组
+	 * @param id
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<InteractAutoResponseDto> queryResponseGroupById(InteractAutoResponseDto dto);
 	
 	/**
 	 * 查询未查看的回复
