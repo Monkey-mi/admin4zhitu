@@ -80,7 +80,7 @@ public interface OpUserService extends BaseService {
 	 * @param insertMessage
 	 * @throws Exception
 	 */
-	public void insertDelMessage(Integer id,Boolean insertMessage) ;
+	public void insertDelMessage(Integer id,Boolean insertMessage) throws Exception;
 	
 	/**
 	 * 根据JSON更新推荐用户

@@ -19,6 +19,7 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.hts.web.userinfo.dao.MsgUnreadDao.UnreadType;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.NoticeMsgTemplate;
 import com.imzhitu.admin.common.pojo.OpChannel;
@@ -28,9 +29,11 @@ import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.constant.LoggerKeies;
 import com.imzhitu.admin.op.dao.NoticeCacheDao;
 import com.imzhitu.admin.op.dao.OpBatchPushLockCacheDao;
+import com.imzhitu.admin.op.dao.SysMsgCommonCacheDao;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
 import com.imzhitu.admin.op.mapper.NoticeMsgTemplateMapper;
 import com.imzhitu.admin.op.mapper.OpChannelNoticeMapper;
+import com.imzhitu.admin.op.mapper.SysMsgCommonMapper;
 import com.imzhitu.admin.op.mapper.SysMsgMapper;
 import com.imzhitu.admin.op.service.OpChannelMemberService;
 import com.imzhitu.admin.op.service.OpMsgService;
@@ -66,9 +69,6 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	private com.hts.web.userinfo.dao.UserInfoDao webUserInfoDao;
 	
 	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
-	
-	@Autowired
 	private NoticeMsgTemplateMapper noticeTmplMapper;
 	
 	@Autowired
@@ -79,7 +79,15 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	
 	@Autowired
 	private OpBatchPushLockCacheDao batchPushLockDao;
+
+	@Autowired
+	private SysMsgCommonMapper sysMsgCommonMapper;
 	
+	@Autowired
+	private SysMsgCommonCacheDao sysMsgCommonCacheDao;
+	
+	@Autowired
+	private com.hts.web.userinfo.dao.MsgUnreadDao webMsgUnreadDao;
 
 	/**
 	 * 系统推送通知发送人ID，即官方账号ID
@@ -149,7 +157,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			Integer objId = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
 			msg.setObjId(objId);
 		}
-		msg.setSenderId(appMsgSenderId);
+//		msg.setSenderId(appMsgSenderId);
 		msg.setMsgDate(new Date());
 
 		if (msg.getObjType().equals(Tag.USER_MSG_STAR_RECOMMEND)) {
@@ -160,8 +168,11 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		if (uidsStr != null && !"".equals(uidsStr.trim()) ) {
 			Integer[] uids = StringUtil.convertStringToIds(uidsStr);
 			List<Integer> ulist = new ArrayList<Integer>();
+			Integer id;
 			for(Integer uid : uids){
+				id = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
 				msg.setRecipientId(uid);
+				msg.setId(id);
 				sysMsgMapper.saveMsg(msg);
 				ulist.add(uid);
 			}
@@ -173,7 +184,10 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 
 		// 向数据库插入消息
 		if (inApp) {
-			sysMsgMapper.saveMsgByProcedure(msg);
+			Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
+			msg.setId(id);
+			sysMsgCommonMapper.saveCommonMsg(msg);
+			sysMsgCommonCacheDao.updateCache();
 		}
 
 		// 向所有人推送消息
@@ -343,8 +357,9 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_WORLD, worldId,
-					channel.getChannelName(), String.valueOf(channelId), worldDto.getTitleThumbPath(), 0);
+			saveSysMsg(receiverId, tip, Tag.USER_MSG_CHANNEL_WORLD, worldId, 
+					channel.getChannelName(),  String.valueOf(channelId), 
+					worldDto.getTitleThumbPath());
 			
 			// 推送消息
 			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_WORLD, new PushFailedCallback() {
@@ -385,8 +400,9 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
 			
 			// 保存消息
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_SUPERB, worldId,
-					channel.getChannelName(), String.valueOf(channelId), worldDto.getTitleThumbPath(), 0);
+			saveSysMsg(receiverId, tip, Tag.USER_MSG_CHANNEL_SUPERB,
+					worldId, channel.getChannelName(), String.valueOf(channelId),
+					worldDto.getTitleThumbPath());
 			
 			// 推送消息
 			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_SUPERB, new PushFailedCallback() {
@@ -424,7 +440,9 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			String tip = replaceMsgFlag(contentTpml, userPushInfo.getUserName(), channel.getChannelName());
 			
 			// 保存消息，保存的内容为频道红人的通知，故objId与thumbPath可以传递为null
-			webUserMsgService.saveSysMsg(Admin.ZHITU_UID, receiverId, tip, Tag.USER_MSG_CHANNEL_STAR, null, channel.getChannelName(), String.valueOf(channelId), null, 0);
+			saveSysMsg(receiverId, tip, Tag.USER_MSG_CHANNEL_STAR, null,
+					channel.getChannelName(),
+					String.valueOf(channelId), null);
 			
 			// 推送消息
 			pushService.pushSysMessage(tip, Admin.ZHITU_UID, tip, userPushInfo, Tag.USER_MSG_CHANNEL_STAR, new PushFailedCallback() {
@@ -457,6 +475,24 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			throw new HTSException("发送的通知信息模板不正确，请检查！ 相关信息：username：" + userName + " 频道名称： " + channelName);
 		}
 		return msg;
+	}
+
+	@Override
+	public void saveSysMsg(Integer recipientId, String content,
+			Integer objType, Integer objId, String objMeta,String objMeta2,
+			String thumbPath) throws Exception {
+		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
+		OpSysMsg msg = new OpSysMsg();
+		msg.setId(id);
+		msg.setRecipientId(recipientId);
+		msg.setContent(content);
+		msg.setObjType(objType);
+		msg.setObjId(objId);
+		msg.setObjMeta(objMeta);
+		msg.setObjMeta2(objMeta2);
+		msg.setThumbPath(thumbPath);
+		sysMsgMapper.saveMsg(msg);
+		webMsgUnreadDao.addCount(recipientId, UnreadType.SYSMSG);
 	}
 
 }

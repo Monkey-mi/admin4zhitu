@@ -63,6 +63,10 @@ public interface OpMsgService extends BaseService {
 	 * 向所有用户发送消息
 	 * 
 	 * @param msg
+	 * @param inApp 是否插入数据库
+	 * @param noticed 是否发送通知
+	 * @param uidsStr
+	 * @throws Exception
 	 */
 	public void pushAppMsg(OpSysMsg msg, Boolean inApp, Boolean noticed, String uidsStr) throws Exception;
 
@@ -110,4 +114,20 @@ public interface OpMsgService extends BaseService {
 	 */
 	void sendChannelSystemNotice(Integer receiverId, String sendType, Integer channelId, Integer worldId) throws Exception;
 
+
+	/**
+	 * 保存系统消息
+	 * 
+	 * @param recipientId
+	 * @param content
+	 * @param objType
+	 * @param objId
+	 * @param objMeta
+	 * @param objMeta2
+	 * @param thumbPath
+	 * @throws Exception
+	 */
+	public void saveSysMsg(Integer recipientId, 
+			String content, Integer objType, Integer objId, 
+			String objMeta, String objMeta2, String thumbPath) throws Exception;
 }
