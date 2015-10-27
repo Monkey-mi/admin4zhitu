@@ -35,7 +35,7 @@
 	<!-- 修改回复内容 -->
 	<update id="updateResponseContext">
 		update hts_admin.interact_auto_response
-		set response_context = #{context} 
+		set context = #{context} 
 		where id = #{id}
 	</update>
 	
