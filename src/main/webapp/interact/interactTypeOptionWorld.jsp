@@ -759,6 +759,18 @@ function searchTypeOptionWorld() {
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
+/*  
+ * mishengliang
+ 根据织图ID条件查询
+ */
+function search() {
+	var worldId = $('#ss_shortLink').searchbox('getValue');
+	myQueryParams = {
+		'worldId' : worldId
+	};
+	$("#htm_table").datagrid("load",myQueryParams);
+}
+
 
 </script>
 </head>
@@ -787,6 +799,8 @@ function searchTypeOptionWorld() {
 	   			<option value="1">已排序</option>
 	   		</select>
 	   		<a href="javascript:void(0);" onclick="javascript:searchTypeOptionWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
+	   		<!--  mishengliang -->
+	   		<input id="ss_shortLink" class="easyui-searchbox" prompt="请输入织图ID"  searcher="search" name="worldId" style="width:100px;"></input>
    		</div>
 	</div> 
 
