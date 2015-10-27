@@ -484,11 +484,12 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
 		OpSysMsg msg = new OpSysMsg();
 		msg.setId(id);
+		msg.setRecipientId(recipientId);
 		msg.setContent(content);
 		msg.setObjType(objType);
 		msg.setObjId(objId);
-		msg.setObjMeta(objMeta2);
-		msg.setObjMeta(objMeta2);
+		msg.setObjMeta(objMeta);
+		msg.setObjMeta2(objMeta2);
 		msg.setThumbPath(thumbPath);
 		sysMsgMapper.saveMsg(msg);
 		webMsgUnreadDao.addCount(recipientId, UnreadType.SYSMSG);

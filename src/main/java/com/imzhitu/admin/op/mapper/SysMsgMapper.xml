@@ -17,8 +17,8 @@
 
 	<insert id="saveMsg">
 		insert into hts.operations_sys_msg (id, recipient_id,content,obj_type,obj_meta,
-			obj_meta2, obj_id, thumb_path) 
-			values (#{recipientId},#{content},#{objType}, #{objMeta},#{objMeta2},#{objId},#{thumbPath})
+			obj_meta2, obj_id, thumb_path) values (#{id},#{recipientId},#{content},#{objType},
+			 #{objMeta},#{objMeta2},#{objId},#{thumbPath})
 	</insert>
 	
 	<!-- 查询发送的信息 -->
