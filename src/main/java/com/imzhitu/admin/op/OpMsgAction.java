@@ -131,11 +131,24 @@ public class OpMsgAction extends BaseCRUDAction {
 			opMsgService.pushAppMsg(sysMsg, inApp, notify, uidsStr);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch(Exception e) {
-			e.printStackTrace();
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
-		
+	}
+	
+	/**
+	 * 更新公用系统消息缓存
+	 * 
+	 * @return
+	 */
+	public String updateCommonSysMsgCache() {
+		try {
+			opMsgService.updateCommonSysMsgCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
 	}
 
 	public OpMsgService getOpMsgService() {

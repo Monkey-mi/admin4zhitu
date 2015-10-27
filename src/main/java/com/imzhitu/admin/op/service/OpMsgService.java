@@ -130,4 +130,11 @@ public interface OpMsgService extends BaseService {
 	public void saveSysMsg(Integer recipientId, 
 			String content, Integer objType, Integer objId, 
 			String objMeta, String objMeta2, String thumbPath) throws Exception;
+	
+	/**
+	 * 更新批量系统消息缓存
+	 * 
+	 * @throws Exception
+	 */
+	public void updateCommonSysMsgCache() throws Exception;
 }

@@ -495,4 +495,9 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		webMsgUnreadDao.addCount(recipientId, UnreadType.SYSMSG);
 	}
 
+	@Override
+	public void updateCommonSysMsgCache() throws Exception {
+		sysMsgCommonCacheDao.updateCache();
+	}
+
 }

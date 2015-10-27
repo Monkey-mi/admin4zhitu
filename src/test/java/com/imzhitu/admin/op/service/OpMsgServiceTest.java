@@ -29,10 +29,10 @@ public class OpMsgServiceTest extends BaseTest {
 	
 	@Test
 	public void testPushAppMsg() throws Exception {
-		OpSysMsg msg = new OpSysMsg();
-		msg.setObjType(Tag.USER_MSG_SYS);
-		msg.setContent("哈哈哈哈哈222！ ");
-		service.pushAppMsg(msg, true, false, null);
+//		OpSysMsg msg = new OpSysMsg();
+//		msg.setObjType(Tag.USER_MSG_SYS);
+//		msg.setContent("哈哈哈哈哈222！ ");
+//		service.pushAppMsg(msg, true, false, null);
 	}
 
 //	@Test
