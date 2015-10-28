@@ -9,7 +9,7 @@ function showWorldWithURI(uri) {
 		'type'				: 'iframe',
 		'href'				: uri ,
 		'title' : uri,
-		'titlePosition' : 'inside',
+		'titlePosition' : 'over',
 		'titleShow'   : true
 	/*	'href'				: uri + "?adminKey=" + adminKey*/
 	});

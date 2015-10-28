@@ -29,7 +29,6 @@
 </style>
 <script type="text/javascript">
 	var worldId = <%= worldId %>;
-	
 	/**
 	 * jquery初始化
 	 */
@@ -46,6 +45,8 @@
 	        closable: false
 	    });
 		
+
+	    
 	    $("#ss-channel").combobox({
 	        url: "./admin_op/channel_queryAllChannel",
 	        valueField: "id",
@@ -169,6 +170,16 @@
 	function saveChannelWorldSubmit(){
 		var channelIds = [];
 		
+		//mishengliang
+	    var channelData = 	$("#ss-channel").combobox("getData");
+		var channelNameInText = $("#ss-channel").combobox("textbox").val().trim(); 
+	    for(var i = 0; i < channelData.length; i++){
+	    	if(channelNameInText ==  channelData[i].channelName.trim()){
+	    		channelIds.push(channelData[i].id);
+	    		break;
+	    	}
+	    }
+	  
 		// 遍历频道区域中，将要添加进频道的button
 		$("#channel_area .add-into-btn").each(function(){
 			channelIds.push($(this).attr("channelId"));
