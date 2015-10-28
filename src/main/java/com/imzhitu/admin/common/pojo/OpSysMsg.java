@@ -13,7 +13,6 @@ import java.util.Date;
 public class OpSysMsg {
 
 	private Integer id;
-//	private Integer senderId;
 	private Integer recipientId;
 	private Date msgDate;
 	private String content;
