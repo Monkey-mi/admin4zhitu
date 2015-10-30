@@ -34,6 +34,7 @@ public class UserMsgAction extends BaseCRUDAction {
 	private Integer phoneCode;
 	private String activityName;
 	private Integer senderId;
+	private String keep;
 	
 	private UserMsgConversationDto conver = new UserMsgConversationDto();
 	
@@ -51,6 +52,21 @@ public class UserMsgAction extends BaseCRUDAction {
 		try {
 			userMsgService.buildConversation(conver, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 删除对话
+	 * 
+	 * @return
+	 */
+	public String delConver() {
+		try {
+			userMsgService.delConver(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -79,13 +95,18 @@ public class UserMsgAction extends BaseCRUDAction {
 	 */
 	public String sendMsg() {
 		try {
-			userMsgService.sendMsg(otherId, content);
+			boolean flag = false;
+			if(keep != null && keep.equals("on")) {
+				flag = true;
+			}
+			userMsgService.sendMsg(otherId, content, flag);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
+	
 	
 	/**
 	 * 发送多条私信
@@ -197,5 +218,14 @@ public class UserMsgAction extends BaseCRUDAction {
 	public void setConver(UserMsgConversationDto conver) {
 		this.conver = conver;
 	}
+
+	public String getKeep() {
+		return keep;
+	}
+
+	public void setKeep(String keep) {
+		this.keep = keep;
+	}
+
 	
 }

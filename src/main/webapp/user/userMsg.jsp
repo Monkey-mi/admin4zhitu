@@ -47,6 +47,11 @@ body {
 	top: 8px;
 	right: 10px;
 }
+
+#keep-conver {
+	vertical-align: middle;
+}
+
 </style>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/emotion/rl_exp.js"></script>
 <script type="text/javascript">
@@ -226,6 +231,7 @@ function submitMsg() {
 					<li><a href="javascript:void(0);" class="selected">emoji</a></li>
 				</ul>
 				<div class="opt_layout">
+					<input id="keep-conver" type="checkbox" name="keep"　style="margin-top:2px;" />保留对话
 					<a id="saveBtn" class="easyui-linkbutton" iconCls="icon-ok" onclick="submitMsg();" title="保存评论">确定</a>
 					<span class="loading none">
 					<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">

@@ -13,7 +13,6 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowCallback;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
-import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.pojo.UserMsgDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.NumberUtil;
@@ -74,14 +73,29 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 
 			@Override
 			public List<? extends Serializable> queryList(UserMsgConversationDto dto) {
+				if(dto.getOtherId() != null) {
+					return conversationMapper.queryConverByOtherId(customerServiceId, dto.getOtherId());
+				}
 				return conversationMapper.queryConver(dto);
 			}
 
 			@Override
 			public long queryTotal(UserMsgConversationDto dto) {
+				if(dto.getOtherId() != null) {
+					return 1l;
+				}
 				return conversationMapper.queryConverCount(dto);
 			}
 		});
+	}
+	
+
+	@Override
+	public void delConver(String idsStr) throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		for(Integer id : ids) {
+			webUserMsgConversationDao.sendMsg(customerServiceId, id, 0);
+		}
 	}
 
 	@Override
@@ -116,10 +130,11 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 	}
 	
 	@Override
-	public void sendMsg(Integer userId, String content) throws Exception {
+	public void sendMsg(Integer userId, String content, Boolean keep) throws Exception {
 		webUserMsgService.saveUserMsg(customerServiceId, userId, content);
-		// 删除会话
-		webUserMsgConversationDao.sendMsg(customerServiceId, userId, 0);
+		if(!keep) {
+			webUserMsgConversationDao.sendMsg(customerServiceId, userId, 0);
+		}
 	}
 	
 	@Override
@@ -128,6 +143,7 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 		if(ids != null && ids.length > 0) {
 			for(Integer id : ids) {
 				webUserMsgService.saveUserMsg(customerServiceId, id, content);
+				webUserMsgConversationDao.sendMsg(customerServiceId, id, 0);
 			}
 		}
 	}
@@ -138,6 +154,7 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 		for(String str : idStrs) {
 			id = Integer.parseInt(str);
 			webUserMsgService.saveUserMsg(customerServiceId, id, content);
+			webUserMsgConversationDao.sendMsg(customerServiceId, id, 0);
 		}
 	}
 
@@ -229,5 +246,6 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 //		}
 		dm.setPosition(pos);
 	}
+
 
 }

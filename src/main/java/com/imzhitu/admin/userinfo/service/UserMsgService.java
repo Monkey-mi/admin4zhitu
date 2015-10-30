@@ -27,6 +27,14 @@ public interface UserMsgService extends BaseService {
 			Integer start, Integer limit, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
+	 * 删除对话
+	 * 
+	 * @param idsStr
+	 * @throws Exception
+	 */
+	public void delConver(String idsStr) throws Exception;
+	
+	/**
 	 * 构建私信列表
 	 * 
 	 * @param userId
@@ -47,7 +55,7 @@ public interface UserMsgService extends BaseService {
 	 * @param content
 	 * @throws Exception
 	 */
-	public void sendMsg(Integer userId, String content) throws Exception;
+	public void sendMsg(Integer userId, String content, Boolean keep) throws Exception;
 	
 	/**
 	 * 发送批量私信
@@ -78,4 +86,5 @@ public interface UserMsgService extends BaseService {
 	 */
 	public void buildUserMsgDanmu(int maxId, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception; 
+	
 }

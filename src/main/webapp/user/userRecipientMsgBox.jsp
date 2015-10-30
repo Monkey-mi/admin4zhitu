@@ -64,8 +64,9 @@ body {
 <script type="text/javascript">
 var userId = <%=userId%>,
 	maxId = 0,
-	recordIdKey = "contentId",
-	hideIdColumn = true,
+	recordIdKey = "otherId",
+	myIdField = "otherId",
+	hideIdColumn = false,
 	init = function() {
 		toolbarComponent = '#tb';
 		myQueryParams = {
@@ -75,6 +76,7 @@ var userId = <%=userId%>,
 	},
 	htmTableTitle = "收件箱信息列表", //表格标题
 	loadDataURL = "./admin_user/msg_queryConversation",
+	deleteURI = "./admin_user/msg_delConver?ids=", //删除请求地址
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
 			maxId = 0;
@@ -90,6 +92,7 @@ var userId = <%=userId%>,
 		}
 	},
 	columnsFields = [
+		{field : 'ck',checkbox : true},
 		{field : "contentId", title : 'ID'},
 		{field : 'phoneCode',title : '客户端',align : 'center',width : 50,
 			formatter: function(value,row,index){
@@ -139,7 +142,7 @@ var userId = <%=userId%>,
 		}
 		],
 		
-	addWidth = 690; //添加信息宽度
+	addWidth = 710; //添加信息宽度
 	addHeight = 360; //添加信息高度
 	addTitle = "群发小秘书通知", //添加信息标题
 	
@@ -320,7 +323,11 @@ function searchConver(){
  * 重新加载表格
  */
 function reload() {
-	$("#htm_table").datagrid('reload');
+	maxId = 0;
+	var myQueryParams = {
+		'conver.maxId':maxId,
+	};
+	$("#htm_table").datagrid('load',myQueryParams);
 }
 
 /**
@@ -386,8 +393,9 @@ function submitMultiMsg() {
 	<table id="htm_table"></table>
 	<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
+			<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" plain="true" title="删除对话" iconCls="icon-cut">删除</a>
 			<a href="javascript:void(0);" onclick="javascript:multiMsg();" class="easyui-linkbutton" plain="true" title="群发通知" iconCls="icon-add">群发通知</a>
-	   		<span class="search_label">用户ID</span>
+	   		<span class="search_label">用户ID:</span>
 			<input id="ss_userId" style="width:150px;" />
 			<a href="javascript:void(0);" onclick="javascript:searchConver();" class="easyui-linkbutton" title="查询" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
    		</div>
@@ -397,7 +405,7 @@ function submitMultiMsg() {
 	<div id="htm_add">
 		<form id="add_form" action="./admin_user/msg_sendMultiMsg" method="post">
 			<div id="multi-user-wrap">
-				用户IDs<input id="multi-user" name="ids" class="easyui-combogrid" data-options="required:true" 
+				用户IDs:<input id="multi-user" name="ids" class="easyui-combogrid" data-options="required:true" 
 			</div>
 			<div id="comment" class="comment-main">
 				<textarea name="content" id="rl_exp_input" rows="5" class="easyui-validatebox" data-options="required:true"></textarea>

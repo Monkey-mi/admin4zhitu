@@ -25,18 +25,23 @@
 		from hts.user_msg_conversation c, hts.user_info u, hts.user_msg m
 		<where>
 			c.other_id=u.id and c.content_id=m.id and c.user_id=#{userId} and c.content_id != 0
-			<if test="otherId != null"> and c.other_id=#{otherId}</if>
 	      	<if test="maxId != null and maxId != 0"><![CDATA[ and c.content_id<=#{maxId}]]></if>
 		</where>
 		order by c.content_id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+
+	<select id="queryConverByOtherId" resultMap="ConversationMap">
+		select c.content_id,c.user_id,c.other_id,c.unread_count,c.msg_date,
+		u.user_name,u.user_avatar,u.user_avatar_l,u.star,u.ver,u.phone_code,u.phone_ver,u.phone_sys
+		from hts.user_msg_conversation c, hts.user_info u
+		where c.other_id=u.id and c.user_id=#{userId} and c.other_id=#{otherId}
 	</select>
 	
 	<select id="queryConverCount" resultType="long">
 		select count(*) from hts.user_msg_conversation c
 		<where>
 			c.user_id=#{userId} and c.content_id != 0
-			<if test="otherId != null"> and c.other_id=#{otherId}</if>
 	      	<if test="maxId != null and maxId != 0"><![CDATA[ and c.content_id<=#{maxId}]]></if>
 		</where>
 	</select>

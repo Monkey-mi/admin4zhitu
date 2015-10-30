@@ -300,12 +300,13 @@ function htmWindowUpdate(updateURI) {
  * 数据记录
  */
 function htmDelete(idKey) {
-	var rows = $('#htm_table').datagrid('getSelections');	
+	var rows = $('#htm_table').datagrid('getSelections');
+	console.log(rows);
 	if(isSelected(rows)){
 		$.messager.confirm('删除记录', '您确定要删除已选中的记录?', function(r){ 	
 			if(r){				
 				var ids = [];
-				for(var i=0;i<rows.length;i+=1){		
+				for(var i=0;i<rows.length;i+=1){
 					ids.push(rows[i][idKey]);	
 					rowIndex = $('#htm_table').datagrid('getRowIndex',rows[i]);				
 				}	
