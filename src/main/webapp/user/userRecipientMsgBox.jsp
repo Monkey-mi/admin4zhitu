@@ -177,7 +177,7 @@ var userId = <%=userId%>,
 		    columns:[[
 				userAvatarColumn,
 				{field : 'id',title : 'ID',align : 'center', width : 60},
-				userNameColumn,
+				{field : 'userName',title : '用户名',align : 'center', width : 120},
 				sexColumn
 		    ]],
 		    queryParams:userQueryParams,
@@ -215,7 +215,7 @@ var userId = <%=userId%>,
 		    columns:[[
 				userAvatarColumn,
 				{field : 'id',title : 'ID',align : 'center', width : 60},
-				userNameColumn,
+				{field : 'userName',title : '用户名',align : 'center', width : 120},
 				sexColumn
 		    ]],
 		    queryParams:multiUserQueryParams,
@@ -327,6 +327,7 @@ function reload() {
  * 给多个用户发私信
  */
 function multiMsg() {
+	$("#multi-user").combogrid('clear');
 	// 打开添加窗口
 	$("#htm_add").window('open');
 }
@@ -396,7 +397,7 @@ function submitMultiMsg() {
 	<div id="htm_add">
 		<form id="add_form" action="./admin_user/msg_sendMultiMsg" method="post">
 			<div id="multi-user-wrap">
-				用户IDs:<input id="multi-user" name="ids" class="easyui-combogrid" data-options="required:true" />
+				用户IDs<input id="multi-user" name="ids" class="easyui-combogrid" data-options="required:true" 
 			</div>
 			<div id="comment" class="comment-main">
 				<textarea name="content" id="rl_exp_input" rows="5" class="easyui-validatebox" data-options="required:true"></textarea>
