@@ -116,7 +116,13 @@ var userId = <%=userId%>,
 		{field : 'otherId', title:'用户ID',align:'center', width:60},
 		{field : 'userName', title:'昵称',align:'center', width:120},
 		{field : 'content', title:'内容',align:'left', width:480},
-		{field : 'unreadCount',title : '未读数',align : 'center', width: 45},
+		{field : 'unreadCount',title : '未读数',align : 'center', width: 45,
+			styler: function(value,row,index){
+				if (value > 0){
+					return 'color:red;font-weight:900;';
+				}
+			}
+		},
 		{field : 'opt', title: '操作', align:'center', width:45,
 			formatter: function(value, row, index) {
 				uri = 'page_user_userMsg?userId='+userId + '&otherId='+row['otherId'] + '&index=' + index;
@@ -256,7 +262,19 @@ function showUserInfo(uri){
  * 显示消息列表
  */
 function showMsg(uri, index) {
-	showURI(uri);
+	$.fancybox({
+		'margin'			: 20,
+		'width'				: '100%',
+		'height'			: '100%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe',
+		'href'				: uri,
+		onClosed			: function() {
+			updateValue(index, 'unreadCount', 0);
+		}
+	});
 }
 
 /**
@@ -368,7 +386,7 @@ function submitMultiMsg() {
 	<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
 			<a href="javascript:void(0);" onclick="javascript:multiMsg();" class="easyui-linkbutton" plain="true" title="群发通知" iconCls="icon-add">群发通知</a>
-	   		<span class="search_label">用户ID：</span>
+	   		<span class="search_label">用户ID</span>
 			<input id="ss_userId" style="width:150px;" />
 			<a href="javascript:void(0);" onclick="javascript:searchConver();" class="easyui-linkbutton" title="查询" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
    		</div>

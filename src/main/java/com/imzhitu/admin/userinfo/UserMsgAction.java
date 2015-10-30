@@ -49,7 +49,7 @@ public class UserMsgAction extends BaseCRUDAction {
 	 */
 	public String queryConversation() {
 		try {
-			userMsgService.buildConversation(conver, start, limit, jsonMap);
+			userMsgService.buildConversation(conver, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
