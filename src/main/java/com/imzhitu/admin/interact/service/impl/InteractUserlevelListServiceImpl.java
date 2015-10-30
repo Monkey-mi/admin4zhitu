@@ -251,7 +251,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 //							}
 							
 							try {
-								userMsgService.pushSysMsg(zhituAdminToUserIdsStr, "明显用户"+o.getUser_id()+":"+userInfo.getUserName()+"发了织图"+o.getWorldId());
+								userMsgService.sendMsgs(zhituAdminToUserIdsStr, "明星用户"+o.getUser_id()+":"+userInfo.getUserName()+"发了织图"+o.getWorldId());
 							} catch (Exception e) {
 								logger.info("note operations failed!\n"+e);
 							}

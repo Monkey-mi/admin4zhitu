@@ -7,41 +7,40 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.imzhitu.admin.base.BaseTest;
+import com.imzhitu.admin.common.pojo.UserMsgConversationDto;
 
 public class UserMsgServiceTest extends BaseTest {
 
+	
 	@Autowired
 	private UserMsgService service;
 	
 	@Test
-	public void testPushSysMsg() throws Exception {
-		service.pushSysMsg("485", "您已经有几天没来织图了，粉丝们都很想念您");
-	}
-	
-	@Test
-	public void testPushListMsg() throws Exception {
-//		String idsStr = "527";
-//		service.pushListMsg("多用户群推送测试", 12046, null, idsStr);
-	}
-	
-	@Test
-	public void testBuildSenderMsgIndex() throws Exception {
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildRecipientMsgBox(0,null, 485, null, 1, 10, jsonMap);
-		logObj(jsonMap);
+	public void buildConversationTest() throws Exception {
+		logNumberList(logger, new TestNumberListAdapter() {
+			
+			@Override
+			public void buildTestNumberList(Map<String, Object> jsonMap) throws Exception {
+				UserMsgConversationDto conver = new UserMsgConversationDto();
+				conver.setUserId(13);
+				conver.setFirstRow(0);
+				conver.setLimit(10);
+				service.buildConversation(conver, 1, 10, jsonMap);
+			}
+		});
 	}
 	
 	@Test
 	public void testBuildUserMsg() throws Exception {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildUserMsg(485, 400, 0, 1, 10, jsonMap);
+		service.buildUserMsg(400, 0, 1, 10, jsonMap);
 		logObj(jsonMap);
 	}
 	
-	@Test
-	public void buildDanmu() throws Exception {
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.buildUserMsgDanmu(0, 1, 10, jsonMap);
-		logObj(jsonMap);
-	}
+//	@Test
+//	public void buildDanmu() throws Exception {
+//		Map<String, Object> jsonMap = new HashMap<String, Object>();
+//		service.buildUserMsgDanmu(0, 1, 10, jsonMap);
+//		logObj(jsonMap);
+//	}
 }

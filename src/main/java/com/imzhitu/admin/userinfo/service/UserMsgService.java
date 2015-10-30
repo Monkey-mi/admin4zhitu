@@ -3,60 +3,28 @@ package com.imzhitu.admin.userinfo.service;
 import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
+import com.imzhitu.admin.common.pojo.UserMsgConversationDto;
 
 /**
  * <p>
  * 用户消息业务逻辑访问接口
  * </p>
  * 
- * 创建时间：2014-4-29
- * @author tianjie
+ * @author tianjie 2014-4-29 2015-10-29
  *
  */
 public interface UserMsgService extends BaseService {
 
 	/**
-	 * 批量推送系统消息
+	 * 构建对话列表
 	 * 
-	 * @param idsStr
-	 */
-	public void pushSysMsg(String idsStr, String content) throws Exception;
-	
-	/**
-	 * 推送App消息
-	 * 
-	 * @param content
-	 * @param worldId
-	 * @param activityName
-	 * @param phoneTypes
-	 */
-	public void pushAppMsg(String content, Integer worldId, String activityName, 
-			String[] phoneTypes) throws Exception;
-	
-	/**
-	 * 向多用户推送消息
-	 * 
-	 * @param content
-	 * @param worldId
-	 * @param idsStr
-	 */
-	public void pushListMsg(String content, Integer worldId, String activityName, 
-			String idsStr)throws Exception;
-	
-	
-	/**
-	 * 构建收件箱消息列表索引
-	 * 
-	 * @param maxId
-	 * @param recipientId
-	 * @param phoneCode
+	 * @param conver
 	 * @param start
 	 * @param limit
 	 * @param jsonMap
-	 * @throws Exception
 	 */
-	public void buildRecipientMsgBox(Integer maxId, Integer senderId,Integer recipientId, Integer phoneCode, int start, int limit,
-			Map<String, Object> jsonMap) throws Exception;
+	public void buildConversation(UserMsgConversationDto conver, 
+			Integer start, Integer limit, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 构建私信列表
@@ -69,16 +37,35 @@ public interface UserMsgService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void buildUserMsg(Integer userId, Integer otherId, int maxId, int start,
+	public void buildUserMsg(Integer otherId, int maxId, int start,
 			int limit, Map<String, Object> jsonMap) throws Exception;
+
+	/**
+	 * 发送私信
+	 * 
+	 * @param userId
+	 * @param content
+	 * @throws Exception
+	 */
+	public void sendMsg(Integer userId, String content) throws Exception;
 	
 	/**
-	 * 设置和指定用户的收件无效
+	 * 发送批量私信
 	 * 
-	 * @param senderIdsStr
-	 * @param recipientId
+	 * @param idStrs
+	 * @param content
+	 * @throws Exception
 	 */
-	public void updateRecipientMsgBoxUnValid(String senderIdsStr, Integer recipientId);
+	public void sendMsgs(String idsStr, String content) throws Exception;
+	
+	/**
+	 * 发送批量私信
+	 * 
+	 * @param idStrs
+	 * @param content
+	 * @throws Exception
+	 */
+	public void sendMsgs(String[] idStrs, String content) throws Exception;
 	
 	/**
 	 * 构建弹幕消息
