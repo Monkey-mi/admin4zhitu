@@ -323,11 +323,7 @@ function searchConver(){
  * 重新加载表格
  */
 function reload() {
-	maxId = 0;
-	var myQueryParams = {
-		'conver.maxId':maxId,
-	};
-	$("#htm_table").datagrid('load',myQueryParams);
+	$("#htm_table").datagrid('reload');
 }
 
 /**
