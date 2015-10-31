@@ -45,5 +45,10 @@ public class OpMsgServiceTest extends BaseTest {
 //				3,"自拍情结",
 //				beginDate , endDate, 10);
 //	}
+
+	@Test
+	public void updateCommonSysMsgCacheTest() throws Exception {
+		service.updateCommonSysMsgCache();
+	}
 	
 }
