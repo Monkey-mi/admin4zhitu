@@ -37,10 +37,8 @@
 	    $("#htm_channel").window({
 	    	title: "织图添加到频道",
 	    	iconCls:'icon-add',
-/* 	        width: $(window).width(),
-	        height: $(window).height(), */
-	        width: 400,
-	        height: 260,
+ 	        width: $(window).width(),
+	        height: $(window).height(), 
 	        collapsible: false,
 	        minimizable: false,
 	        maximizable: false,
@@ -53,7 +51,6 @@
 	        url: "./admin_op/channel_queryAllChannel",
 	        valueField: "id",
 	        textField: "channelName",
-	        panelHeight:100,
 	        selectOnNavigation:false,
 //	        multiple: true,
 	        onSelect: channelComboboxOnSelect,
@@ -64,7 +61,7 @@
 	    });
 		
 		// 页面打开后打开选择频道gridpanel
-		/* $("#ss-channel").combobox('showPanel'); */
+		 $("#ss-channel").combobox('showPanel'); 
 		
 		// 然后焦点聚焦在频道输入框上
 		$("#ss-channel").combobox("textbox").focus();
@@ -210,7 +207,7 @@
 <body>
 	<!-- 添加到频道 -->
 	<div id="htm_channel">
-		<table class="htm_edit_table" width="380" border="0">
+		<table class="htm_edit_table" align="center" border="0">
 			<tbody>
 				<tr>
 					<td class="leftTd">频道：</td>
