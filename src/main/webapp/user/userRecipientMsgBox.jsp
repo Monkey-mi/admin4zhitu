@@ -93,7 +93,6 @@ var userId = <%=userId%>,
 	},
 	columnsFields = [
 		{field : 'ck',checkbox : true},
-		{field : "contentId", title : 'ID'},
 		{field : 'phoneCode',title : '客户端',align : 'center',width : 50,
 			formatter: function(value,row,index){
 				var phone = "IOS";
