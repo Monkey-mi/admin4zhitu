@@ -75,7 +75,6 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	private UserZombieDao userZombieDao;
 	
 	@Autowired
-//	private HTWorldTypeWorldDao typeWorldDao;
 	private ZTWorldTypeWorldMapper typeWorldMapper;
 	
 	@Value("${push.customerServiceId}")
