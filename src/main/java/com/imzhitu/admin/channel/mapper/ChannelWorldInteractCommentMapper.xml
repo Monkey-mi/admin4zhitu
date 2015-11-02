@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.channel.mapper.ChannelWorldInteractCommentMapper">
+
+	<resultMap id="ChannelWorldInteractCommentMap" type="com.imzhitu.admin.common.pojo.ChannelWorldInteractComment">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
+		<result column="world_id" property="worldId" jdbcType="INTEGER"/>
+		<result column="comment_id" property="commentId" jdbcType="INTEGER"/>
+		<result column="complete" property="complete" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- 保存频道织图互动的评论关系 -->
+	<insert id="insert">
+		insert into 
+			hts_admin.interact_channel_world_level_comment (channel_id, world_id, comment_id)
+	 	values (#{channelId}, #{worldId}, #{commentId})
+	</insert>
+	
+	<!-- 更新频道织图互动的评论关系变为完成 -->
+	<update id="complete">
+		update 
+			hts_admin.interact_channel_world_level_comment 
+		set 
+			complete=1
+		where 
+			channel_id=#{channelId} 
+			and world_id=#{worldId} 
+			and comment_id=#{commentId}
+	</update>
+	
+	<!-- 根据频道id与织图id，查询未完成的频道织图互动的评论关系 -->
+	<select id="queryNotCompletedCommentByChannelIdAndWorldId" resultMap="ChannelWorldInteractCommentMap">
+		select * 
+		from 
+			hts_admin.interact_channel_world_level_comment 
+		where 
+			channel_id=#{channelId} 
+			and world_id=#{worldId} 
+			and complete=0
+	</select>
+	
+</mapper>
