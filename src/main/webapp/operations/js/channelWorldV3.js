@@ -82,6 +82,8 @@ function drawWorld($worldOpt, worlds, index) {
 	
 	// 根据标记位动态设置背景颜色
 	$worldOpt.attr("style", myRowStyler(index, world));
+	//mishengliang 被删除的织图在此页中不会显示
+	$worldOpt.attr("style", myRowStylerHiden(index, world));
 	
 	// 生成织图信息
 	var $authorInfo = $('<div class="world-author">'
