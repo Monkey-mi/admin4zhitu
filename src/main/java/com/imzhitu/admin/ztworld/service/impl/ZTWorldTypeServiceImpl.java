@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +18,9 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.pojo.HTWorldLabel;
-import com.hts.web.common.pojo.HTWorldTypeWorld;
 import com.hts.web.common.pojo.UserPushInfo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
-import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
@@ -59,23 +56,16 @@ import com.imzhitu.admin.ztworld.service.ZTWorldTypeWorldSchedulaService;
 //@Service
 public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		ZTWorldTypeService {
-
 	
-//	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP_HEAD = "恭喜！您的织图被推荐上#";
-//	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP_FOOT = "#分类啦";
 	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP = "恭喜！您的织图被推荐上精选啦！";
 	private static final long SPAN_TIME = 10*60*1000;//扫描更新排序计划时间间隔
 	private static Logger logger = Logger.getLogger(ZTWorldTypeServiceImpl.class);		
-	
 	
 	@Value("${admin.op.superbLimit}")
 	private Integer superbLimit = 36; // 精品数量
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
-	
-	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
 	
 	@Autowired
 	private com.hts.web.userinfo.dao.UserInfoDao webUserInfoDao;

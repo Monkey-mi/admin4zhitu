@@ -22,7 +22,7 @@ import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.InteractCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractLikeFollowCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractWorldCommentLabel;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 import com.imzhitu.admin.interact.service.InteractLikeFollowCommentLabelService;
 import com.imzhitu.admin.interact.service.InteractWorldCommentLabelService;
 import com.imzhitu.admin.interact.service.InteractWorldLabelService;
@@ -67,7 +67,7 @@ public class InteractWorldLabelServiceImpl implements InteractWorldLabelService 
 	private com.hts.web.ztworld.service.ZTWorldService webWorldService;
 
 	@Autowired
-	private InteractCommentService commentLabelService;
+	private CommentService commentLabelService;
 
 	@Override
 	public void queryWorldLabels(Integer worldId, Map<String, Object> jsonMap) throws Exception {

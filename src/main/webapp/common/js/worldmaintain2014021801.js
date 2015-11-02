@@ -6,6 +6,7 @@ var adminKey = 'zhangjiaxin',
 	inValidWorld = 'background-color:#ffe3e3',
 	interactedWorld = 'background-color:#e3fbff',
 	interactedInvalidWorld = 'background-color:#feeeae',
+	inValidWorldHiden  = 'display:none',
 	authorAvatarTimer,
 	interacts = {},
 	phoneType = 
@@ -43,6 +44,13 @@ var adminKey = 'zhangjiaxin',
 			else 
 				return inValidWorld;
 		}
+		return null;
+	},
+	myRowStylerHiden = function(index,row){
+		if(!row.valid) {
+			if(!row.interacted)
+				return inValidWorldHiden;
+		} 
 		return null;
 	},
 	pageButtons = [{

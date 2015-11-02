@@ -11,7 +11,7 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.ZTWorldLevelDto;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelService;
 
 import net.sf.json.JSONArray;
@@ -50,7 +50,7 @@ public class InteractWorldlevelAction extends BaseCRUDAction{
 	private InteractWorldlevelService interactWorldlevelService;
 	
 	@Autowired
-	private InteractCommentService interactCommentService;
+	private CommentService interactCommentService;
 	
 	
 	public Integer getWeight() {
