@@ -13,6 +13,7 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.channel.service.ChannelWorldInteractSchedulerService;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
@@ -47,6 +48,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	@Autowired
 	private ChannelWorldMapper channelWorldMapper;
 	
+	@Autowired
+	private ChannelWorldInteractSchedulerService channelWorldInteractScheduler;
+	
 	@Value("${urlPrefix}")
 	private String urlPrefix;
 	public String getUrlPrefix() {
@@ -58,6 +62,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	}
 	
 	Logger logger = Logger.getLogger(OpChannelWorldSchedulaServiceImpl.class);
+
 
 	/**
 	 * 分页查询频道织图计划
@@ -267,6 +272,9 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    
 		    // 更新织图和图片总数,删除时候调用
 		    webCannelService.updateWorldAndChildCount(schedulaDto.getChannelId());
+		    
+		    // 频道织图生效时，将其加入规划的频道织图互动表中，等待此表计划执行时，正式产生织图互动计划
+		    channelWorldInteractScheduler.addChannelWorldInteractScheduler(schedulaDto.getChannelId(), schedulaDto.getWorldId());
 		}
 	}
 	

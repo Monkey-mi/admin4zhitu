@@ -9,7 +9,7 @@ import com.imzhitu.admin.common.pojo.InteractComment;
 import com.imzhitu.admin.common.pojo.InteractCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractCommentLabelTree;
 
-public interface InteractCommentService extends BaseService {
+public interface CommentService extends BaseService {
 
 	/**
 	 * 批量保存评论

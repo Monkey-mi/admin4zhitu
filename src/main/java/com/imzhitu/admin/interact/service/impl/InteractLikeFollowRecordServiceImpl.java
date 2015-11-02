@@ -21,7 +21,7 @@ import com.imzhitu.admin.common.pojo.InteractWorldCommentDto;
 import com.imzhitu.admin.common.pojo.InteractWorldLiked;
 import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.interact.mapper.InteractLikeFollowRecordMapper;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 import com.imzhitu.admin.interact.service.InteractLikeFollowCommentLabelService;
 import com.imzhitu.admin.interact.service.InteractLikeFollowRecordService;
 import com.imzhitu.admin.interact.service.InteractLikeFollowZombieService;
@@ -43,7 +43,7 @@ public class InteractLikeFollowRecordServiceImpl extends BaseServiceImpl impleme
 	private InteractLikeFollowCommentLabelService likeFollowCommentLabelService;
 	
 	@Autowired
-	private InteractCommentService commentService;
+	private CommentService commentService;
 	
 	@Autowired
 	private KeyGenService keyGenService;

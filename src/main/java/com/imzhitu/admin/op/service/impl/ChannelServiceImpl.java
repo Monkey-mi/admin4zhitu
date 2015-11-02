@@ -25,6 +25,7 @@ import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
+import com.imzhitu.admin.channel.service.ChannelWorldInteractSchedulerService;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannel;
 import com.imzhitu.admin.common.pojo.OpChannelNameDto;
@@ -104,9 +105,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
 
 	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
-
-	@Autowired
 	private com.hts.web.push.service.PushService pushService;
 
 	@Autowired
@@ -132,6 +130,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	
 	@Autowired
 	private ZTWorldService	worldService;
+	
+	@Autowired
+	private ChannelWorldInteractSchedulerService channelWorldInteractScheduler;
 	
 	private Integer channelCoverLimit = 5;
 
@@ -929,7 +930,11 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 			OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId, channelId);
 			
 			addChannelWorldNoticeMsg(world.getId());
+			
+			// 频道织图生效时，将其加入规划的频道织图互动表中，等待此表计划执行时，正式产生织图互动计划
+			channelWorldInteractScheduler.addChannelWorldInteractScheduler(channelId, worldId);
 		}
+		
 	}
 
 	@Override

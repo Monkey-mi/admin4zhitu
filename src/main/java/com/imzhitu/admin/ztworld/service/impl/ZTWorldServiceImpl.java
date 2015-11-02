@@ -51,17 +51,6 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 
 	private Integer cacheLatestSize = 10; // 最新织图缓存队列大小
 	
-//	@Value("${urlPrefix}")
-//	private String prefix;
-//	
-//	public String getPrefix() {
-//		return prefix;
-//	}
-//
-//	public void setPrefix(String prefix) {
-//		this.prefix = prefix;
-//	}
-
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
@@ -538,12 +527,6 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 				}
 			}
 			
-			// 直接管换成字符串，就变成由“,”分隔的了，但是要去除前后的“[]”
-//			String channelNames = channelNameList.toString();
-//			channelNames = channelNames.substring(1, channelNames.length()-1);
-//			String channelIds = channelIdList.toString();
-//			channelIds = channelIds.substring(1, channelIds.length()-1);
-			
 			ZTWorldDto dto = new ZTWorldDto();
 			dto.setWorldId(worldId);
 			dto.setChannelName(channelNames);
@@ -560,6 +543,11 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			
 			ztWorldMapper.updateWorld(dto);
 		}
+	}
+	
+	@Override
+	public ZTWorldDto getZTWorldByWorldId(Integer worldId) {
+		return ztWorldMapper.getZTWorldByWorldId(worldId);
 	}
 
 }
