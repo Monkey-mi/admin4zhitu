@@ -18,7 +18,7 @@ function initWorldBoxWidth() {
  * @return
  */
 function refreshPagination(total, pageSize, pageNumber)	{
-	$("#pagination").pagination('refresh', {
+	$("#pagination").pagination("refresh", {
 	    total:total,
 	    pageSize:pageSize,
 	    pageNumber:pageNumber
@@ -50,11 +50,7 @@ function loadData(pageNumber, pageSize) {
 				var worlds = result['rows'];
 				var $worldBox = $('#world-box');
 				for(var i = 0; i < worlds.length; i++) {
-					var world = worlds[i],
-						worldId = world['id'],
-						ver = world['ver'],
-						worldDesc = world['worldDesc'],
-						titlePath = world['titlePath'];
+					var world = worlds[i];
 					dataList.push(world);
 					var $worldOpt = $('<div class="world-opt-wrap"></div>');
 					drawWorld($worldOpt, worlds, i);
@@ -74,14 +70,27 @@ function loadData(pageNumber, pageSize) {
  * @return
  */
 function drawWorld($worldOpt, worlds, index) {
-	var world = worlds[index],
-		worldId = world['id'],
-		ver = world['ver'],
-		worldDesc = world['worldDesc'],
-		titlePath = world['titlePath'];
+	var world = worlds[index];
+	var worldId = world['id'];
 	
 	// 根据标记位动态设置背景颜色
 	$worldOpt.attr("style", myRowStyler(index, world));
+	//mishengliang 被删除的织图在此页中不会显示
+	$worldOpt.attr("style", myRowStylerHiden(index, world));
+	
+	// 织图ID点击需要的织图短链
+	var wurl;
+	if(world.worldURL == "" || world.worldURL == undefined){
+		var slink;
+		if(world.shortLink == "") {
+			slink = world.worldKey;
+		} else {
+			slink = world.shortLink;
+		} 
+		wurl = "http://www.imzhitu.com/DT" + slink;
+	} else {
+		wurl = world.worldURL;
+	}
 	
 	// 生成织图信息
 	var $authorInfo = $('<div class="world-author">'
@@ -89,7 +98,8 @@ function drawWorld($worldOpt, worlds, index) {
 			+'<span class="world-author-name">'+getAuthorName(world['authorName'],world,index) +'</span>'
 			+'<span>'+phoneCodeColumn.formatter(world['phoneCode'],world,index) +'</span>'
 			+'<hr class="divider"></hr>'
-			+'<div>织图ID:' + worldIdAndShowWorldColumn.formatter(world['worldId'],world,index)
+			+'<div>织图ID:' 
+			+ "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+world.worldId+",\""+wurl+"\")'>"+world.worldId+"</a>"
 			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span>'
 			+'</div>'
 			+'<div>用户ID:'+world['authorId']
@@ -117,15 +127,15 @@ function drawWorld($worldOpt, worlds, index) {
 	$worldOpt.append($worldInfo);
 	drawOptArea($worldOpt, worlds, index);
 	$world.appendtour({
-		'width':250,
-		'worldId':worldId,
-		'ver':ver,
-		'worldDesc':worldDesc,
-		'titlePath':titlePath,
+		'width': 250,
+		'worldId': worldId,
+		'ver': world.ver,
+		'worldDesc': world.worldDesc,
+		'titlePath': world.titlePath,
 		'url':'./admin_ztworld/ztworld_queryTitleChildWorldPage',
 		'loadMoreURL':'./admin_ztworld/ztworld_queryChildWorldPage'
 	});
-}
+};
 
 /**
  * 绘制操作区域
@@ -488,6 +498,31 @@ function getCommentInteractOpt(worldId, row, index) {
  */
 function openCommentsInteractPage(worldId) {
 	var uri = "page_operations_htworldCommentInteract?worldId=" + worldId;
+	$.fancybox({
+		'href'				: uri,
+		'margin'			: 20,
+		'width'				: '100%',
+		'height'			: '100%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe'
+	});
+};
+
+/**
+ * 打开织图互动展示（频道织图使用）页面
+ * 
+ * @param worldId	织图id
+ * @param worldURL	织图在网页中展示的短链，即一个http链接
+ * 
+ * @author zhangbo 2015-10-27
+ */
+function openHtworldShowForChannelWorldPage(worldId, worldURL) {
+	var uri = "page_htworld_htworldShowForChannelWorld";
+	
+	uri += "?worldId=" + worldId;
+	uri += "&worldURL=" + worldURL;
 	$.fancybox({
 		'href'				: uri,
 		'margin'			: 20,
