@@ -93,7 +93,6 @@ var userId = <%=userId%>,
 	},
 	columnsFields = [
 		{field : 'ck',checkbox : true},
-		{field : "contentId", title : 'ID'},
 		{field : 'phoneCode',title : '客户端',align : 'center',width : 50,
 			formatter: function(value,row,index){
 				var phone = "IOS";
@@ -401,7 +400,7 @@ function submitMultiMsg() {
 	<div id="htm_add">
 		<form id="add_form" action="./admin_user/msg_sendMultiMsg" method="post">
 			<div id="multi-user-wrap">
-				用户IDs:<input id="multi-user" name="ids" class="easyui-combogrid" data-options="required:true" 
+				用户IDs:<input id="multi-user" name="ids" class="easyui-combogrid" data-options="required:true" />
 			</div>
 			<div id="comment" class="comment-main">
 				<textarea name="content" id="rl_exp_input" rows="5" class="easyui-validatebox" data-options="required:true"></textarea>
