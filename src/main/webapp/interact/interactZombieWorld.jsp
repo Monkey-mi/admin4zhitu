@@ -14,7 +14,8 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery.form.min.js"></script>
 <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=ce70d50e8ce9f0cc3ce59b9c1f30794e"></script>
 <script type="text/javascript">
-	var deleteItemId = [];
+	var loadItemId = [];
+	var pageAllItemId = [];
 	var maxId = 0;
 	var worldURLPrefix = 'http://www.imzhitu.com/DT';
 	hideIdColumn = false;
@@ -42,21 +43,6 @@
 				myQueryParams.maxId = maxId;
 			}
 		}
-		//mishengliang
-/* 		var rowIndexData = $('#htm_table').datagrid('getData');
- 		for(var i = 0; i < rowIndexData.rows.length; i++){
-			var onloadPic = 0;
-			$("#img-" +  rowIndexData.rows[i].id).load(function(){
-				onloadPic = 1;
-			});
-			
-			setTimeout(function(){	alert(123);},200);
-
-			if( onloadPic == 0){
-				alert(456);
-				deleteItemId.push(rowIndexData.rows[i].id);
-			} 
-		}  */
 	};
 	toolbarComponent = '#tb';
 	//分页组件,可以重载
@@ -400,7 +386,22 @@
 	//mishengliang
 	//将缩略图中加载不成功的记录删掉
 	function deleteUnavailWorld(){
- 		alert(deleteItemId);
+		var flag = 0;
+		var deleteItemId = [];
+		for(var i = 0; i < pageAllItemId.length; i++){
+			for(var j=0; j < loadItemId.length; j++){
+				if(pageAllItemId[i] == loadItemId[j]){
+					flag = 1;
+				}
+			}
+			//对比两个数组中的值，load中有的而All中没有的即为没有加载完全的。
+			if(flag == 0){
+				deleteItemId.push(pageAllItemId[i]);
+			}
+		}
+		alert(pageAllItemId);
+		alert(loadItemId);
+		alert(deleteItemId);
 /*   		if(deleteItemId != ''){
   		$.post("./admin_interact/interactZombieWorld_batchDeleteZombieWorld?ids="+deleteItemId,function(result){
 			if(result['result'] == 0) {
@@ -408,7 +409,9 @@
 			} 
 		});	 
  		}   */
-  	deleteItemId = []; 
+ 		pageAllItemId = [];
+ 		loadItemId = [];
+  		deleteItemId = []; 
 	}
 	
 	function initBatchUpdateLabel(){
@@ -634,7 +637,7 @@
    		<span>频道ID</span>
    		<input id="channelId">
    		<a href="javascript:void(0);" onclick="javascript:searchZombieWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
-   		<a class="easyui-linkbutton"  onclick="javascript:deleteUnavailWorld();"  iconCls="icon-cut"  >删除无效织图</a>
+   		<!-- <a class="easyui-linkbutton"  onclick="javascript:deleteUnavailWorld();"  iconCls="icon-cut"  >删除无效织图</a> -->
 	</div>  
 	
 	<div id="batch-save">

@@ -289,7 +289,7 @@ function drawOptArea($worldOpt, worlds, index) {
 	
 	// 向第四行按钮中添加元素
 	var $opt4LineBtn = $('<div class="world-channel">' 
-			+ getCity(world['city'], world, index)
+			+ getCity(world['province']+world['city'], world, index)
 			+ '</div>');
 	
 	$opt.append($opt1LineTitle);
@@ -406,7 +406,12 @@ function getChannelName(value, row, index) {
 }
 
 function getCity(value, row, index) {
+	if(value == "NO_EXIST" || value=="") {
+		return "<a>无</a>";
+	} else {
 		return "<a>" + value + "</a>";
+	}
+		
 }
 
 function getActiveOperated(value, row, index) {

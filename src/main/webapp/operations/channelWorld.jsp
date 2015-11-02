@@ -613,10 +613,10 @@ function batchChannelWorldToSuperbSubmit() {
 	
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<div>
-				<a href="./page_operations_channelWorldV3" title="瀑布流模式">
+<!-- 				<a href="./page_operations_channelWorldV3" title="瀑布流模式">
 				<img class="switch-icon" src="./htworld/images/grid-icon.png" style="width:15px;vertical-align:middle;"  /></a>
 				<a href="./page_operations_channelWorld" title="列表模式">
-					<img class="switch-icon" src="./htworld/images/list-icon.png" style="width:15px;vertical-align:middle;"  /></a>
+				<img class="switch-icon" src="./htworld/images/list-icon.png" style="width:15px;vertical-align:middle;"  /></a> -->
 				<span class="search_label">请选择频道：</span>
 				<input id="ss-channel" style="width:100px;" />
 				<span id="htm_opt_btn" class="none">
