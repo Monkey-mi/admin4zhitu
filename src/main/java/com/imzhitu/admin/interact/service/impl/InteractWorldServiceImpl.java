@@ -50,7 +50,7 @@ import com.imzhitu.admin.interact.mapper.InteractUserFollowMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldClickMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldCommentMapper;
 import com.imzhitu.admin.interact.mapper.InteractWorldLikedMapper;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.mapper.OpZombieChannelMapper;
@@ -148,7 +148,7 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	private InteractWorldDao interactWorldDao;
 	
 	@Autowired
-	private InteractCommentService interactCommentService;
+	private CommentService interactCommentService;
 	
 	@Autowired
 	private InteractUserDao interactUserDao;

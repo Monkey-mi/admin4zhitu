@@ -15,7 +15,7 @@ import com.imzhitu.admin.common.pojo.InteractCommentLabel;
 public class InteractCommentServiceTest extends BaseTest {
 
 	@Autowired
-	private InteractCommentService service;
+	private CommentService service;
 	
 	@Test
 	public void testBatchSaveComment() throws Exception {

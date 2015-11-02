@@ -18,7 +18,7 @@ import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.InteractComment;
 import com.imzhitu.admin.common.pojo.InteractCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractCommentLabelTree;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 
 public class InteractCommentAction extends BaseCRUDAction {
 
@@ -43,7 +43,7 @@ public class InteractCommentAction extends BaseCRUDAction {
 	
 
 	@Autowired
-	private InteractCommentService interactCommentService;
+	private CommentService interactCommentService;
 	
 	/**
 	 * 根据标签获取评论列表
@@ -409,12 +409,12 @@ public class InteractCommentAction extends BaseCRUDAction {
 	}
 	
 	
-	public InteractCommentService getInteractCommentService() {
+	public CommentService getInteractCommentService() {
 		return interactCommentService;
 	}
 
 	public void setInteractCommentService(
-			InteractCommentService interactCommentService) {
+			CommentService interactCommentService) {
 		this.interactCommentService = interactCommentService;
 	}
 

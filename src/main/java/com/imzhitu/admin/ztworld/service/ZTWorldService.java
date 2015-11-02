@@ -6,6 +6,7 @@ import java.util.Map;
 import com.hts.web.common.pojo.HTWorldFilterLogo;
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.WorldWithInteract;
+import com.imzhitu.admin.common.pojo.ZTWorldDto;
 
 /**
  * <p>
@@ -37,7 +38,7 @@ public interface ZTWorldService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void buildWorld(int maxId, int start, int limit, String startDateStr, String endDateStr, 
+	void buildWorld(int maxId, int start, int limit, String startDateStr, String endDateStr, 
 			String shortLink, Integer phoneCode, String label, String authorName, Integer valid,
 			Integer shield, String worldDesc, String worldLocation, Integer user_level_id,String orderKey,  
 			String orderBy, Map<String, Object> jsonMap) throws Exception;
@@ -47,13 +48,13 @@ public interface ZTWorldService extends BaseService {
 	 * 
 	 * @param worldId
 	 */
-	public void shieldWorld(Integer worldId) throws Exception;
+	void shieldWorld(Integer worldId) throws Exception;
 	
 	/**
 	 * 解除屏蔽
 	 * @param worldId
 	 */
-	public void unShieldWorld(Integer worldId) throws Exception;
+	void unShieldWorld(Integer worldId) throws Exception;
 	
 	/**
 	 * 根据JSON字符串更新批量更新织图
@@ -62,7 +63,7 @@ public interface ZTWorldService extends BaseService {
 	 * @param worldJSON
 	 * @throws Exception
 	 */
-	public void updateWorldByJSON(String idKey, String worldJSON) throws Exception;
+	void updateWorldByJSON(String idKey, String worldJSON) throws Exception;
 	
 	/**
 	 * 删除织图
@@ -70,7 +71,7 @@ public interface ZTWorldService extends BaseService {
 	 * @param idsStr
 	 * @throws Exception
 	 */
-	public void deleteWorld(String idsStr) throws Exception;
+	void deleteWorld(String idsStr) throws Exception;
 	
 	/**
 	 * 更新最新有效性
@@ -79,14 +80,14 @@ public interface ZTWorldService extends BaseService {
 	 * @param valid
 	 * @throws Exception
 	 */
-	public void updateLatestValid(Integer id, Integer valid) throws Exception;
+	void updateLatestValid(Integer id, Integer valid) throws Exception;
 	
 	/**
 	 * 删除最新织图多余缓存
 	 * 
 	 * @throws Exception
 	 */
-	public void deleteOverFlowLatestCache() throws Exception;
+	void deleteOverFlowLatestCache() throws Exception;
 	
 	/**
 	 * 获取织图互动标志信息
@@ -94,7 +95,7 @@ public interface ZTWorldService extends BaseService {
 	 * @param worldList
 	 * @throws Exception
 	 */
-	public void extractInteractInfo(final List<? extends WorldWithInteract> worldList);
+	void extractInteractInfo(final List<? extends WorldWithInteract> worldList);
 	
 	
 	/**
@@ -103,7 +104,7 @@ public interface ZTWorldService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void buildFilterLogo(Map<String, Object> jsonMap) throws Exception;
+	void buildFilterLogo(Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 获取滤镜logo
@@ -111,7 +112,7 @@ public interface ZTWorldService extends BaseService {
 	 * @return
 	 * @throws Exception
 	 */
-	public HTWorldFilterLogo getFilterLogo() throws Exception;
+	HTWorldFilterLogo getFilterLogo() throws Exception;
 	
 	/**
 	 * 更新滤镜logo缓存
@@ -121,7 +122,7 @@ public interface ZTWorldService extends BaseService {
 	 * @param logoDesc
 	 * @param valid
 	 */
-	public void updateFilterLogo(Float ver, String logoPath, 
+	void updateFilterLogo(Float ver, String logoPath, 
 			String logoDesc, Integer valid) throws Exception;
 	
 	/**
@@ -130,7 +131,7 @@ public interface ZTWorldService extends BaseService {
 	 * @param authorId
 	 * @throws Exception
 	 */
-	public void updateLatestInvalid(Integer authorId) throws Exception;
+	void updateLatestInvalid(Integer authorId) throws Exception;
 	
 	/**
 	 * 根据织图id刷新频道名称与频道id字段，以频道织图关联关系表数据为准
@@ -140,4 +141,13 @@ public interface ZTWorldService extends BaseService {
 	 * @author zhangbo	2015年10月13日
 	 */
 	void refreshChannelNamesAndChannelIds(Integer worldId) throws Exception;
+
+	/**
+	 * 根据织图id，获取织图信息（不区分织图状态）
+	 * 
+	 * @param worldId	织图id
+	 * @return
+	 * @author zhangbo	2015年11月2日
+	 */
+	ZTWorldDto getZTWorldByWorldId(Integer worldId);
 }

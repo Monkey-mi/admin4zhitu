@@ -289,7 +289,7 @@
 			<ref bean="updateChannelWorldSchedulaJob"/>
 		</property>
 		<property name="cronExpression">
-  			<value>0 0/5 * * * ?</value><!-- 每半个钟执行 -->
+  			<value>0 0/5 * * * ?</value><!-- 每五钟执行 -->
   		</property>
 	</bean>
 	
@@ -539,10 +539,30 @@
             <value>0 0/20 * * * ?</value><!-- 每隔20分钟 -->
         </property>
     </bean>
+    
+    <!-- 频道织图规划互动计划Job配置 -->
+    <bean id="channelWorldInteractSchedulerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="com.imzhitu.admin.channel.service.impl.ChannelWorldInteractSchedulerServiceImpl"/>
+        </property>
+        <property name="targetMethod">
+            <value>doChannelWorldInteractSchedule</value>
+        </property>
+    </bean>
+    
+	<!-- 频道织图规划互动计划Trigger配置 -->
+    <bean id="channelWorldInteractSchedulerJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="channelWorldInteractSchedulerJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/1 * * * ?</value><!-- 每隔20分钟 -->
+        </property>
+    </bean>
 
 <!--production tag-->
 
-	<!--
+<!--
     <bean name="startQuertz" lazy-init="false"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -569,6 +589,7 @@
                 <ref bean="likeFollowJobTrigger" />
                 <ref bean="sortChannelStarSchedulaJobTrigger" />
                 <ref bean="randomChannelWorldSuperbTopTrigger" />
+                <ref bean="channelWorldInteractSchedulerJobTrigger" />
             </list>
         </property>
     </bean>

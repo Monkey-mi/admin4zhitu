@@ -13,7 +13,7 @@ import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.common.pojo.InteractWorldLevelListDto;
@@ -43,7 +43,7 @@ public class InteractWorldlevelListAction extends BaseCRUDAction{
 	private InteractWorldlevelListService interactWorldlevelListService;
 	
 	@Autowired
-	private InteractCommentService interactCommentService;
+	private CommentService interactCommentService;
 	
 	public void setTimeType(Integer timeType){
 		this.timeType = timeType;

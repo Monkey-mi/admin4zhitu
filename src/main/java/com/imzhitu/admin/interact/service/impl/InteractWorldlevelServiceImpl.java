@@ -12,12 +12,10 @@ import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.ZTWorldLevelDto;
+import com.imzhitu.admin.common.util.AdminUtil;
 import com.imzhitu.admin.interact.dao.InteractWorldlevelDao;
-import com.imzhitu.admin.interact.service.InteractCommentService;
-import com.imzhitu.admin.interact.service.InteractUserlevelListService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelService;
-import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -31,17 +29,6 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 	@Autowired
 	private InteractWorldService interactWorldService;
 	
-	@Autowired
-	private InteractCommentService interactCommentService;
-	
-	@Autowired
-	private InteractUserlevelListService userLevelListService;
-	
-	@Autowired
-	private OpZombieDegreeUserLevelService zombieDegreeUserLevelService;
-	
-
-
 	@Override
 	public void QueryWorldlevelList(int maxId, int start, int limit,
 			Map<String, Object> jsonMap) throws Exception {
@@ -148,13 +135,13 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 			if(worldLevel != null){
 				try{
 					interactWorldService.saveUserInteract(uid,
-							GetLongRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),worldLevel.getTime());
+							AdminUtil.GetRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),worldLevel.getTime());
 					if(comments != null && !comments.equals("")){//若评论不为空，则只评论，且平时时长为10小时
-						interactWorldService.saveInteractV3(world_id,GetLongRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
-								GetLongRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),comments.split(","),worldLevel.getTime());				
+						interactWorldService.saveInteractV3(world_id,AdminUtil.GetRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
+								AdminUtil.GetRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),comments.split(","),worldLevel.getTime());				
 					}else{
-						interactWorldService.saveInteractV3(world_id,GetLongRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
-								GetLongRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),null,worldLevel.getTime());
+						interactWorldService.saveInteractV3(world_id,AdminUtil.GetRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
+								AdminUtil.GetRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),null,worldLevel.getTime());
 					}
 				}catch(Exception e){
 					throw e;
@@ -188,24 +175,9 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 //			}
 			
 			Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);
-			interactWorldService.saveUserInteract(uid, GetLongRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),worldLevel.getTime());			
+			interactWorldService.saveUserInteract(uid, AdminUtil.GetRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),worldLevel.getTime());			
 		}
 		
 	}
 	
-	/**
-	 * 随机函数生成介于min，max之间的数,最大是10000000
-	 */
-	private Integer GetLongRandamNum(Integer min,Integer max){
-		int ma = max.intValue();
-		int mi = min.intValue();
-		if(mi>ma||mi<0)return 1;
-		if(mi==ma)return max;
-		int l=0;
-		l = (int)(Math.random()*100007)%(ma-mi+1);
-		l = mi+l;
-		return new Integer(l);
-		
-	}
-
 }

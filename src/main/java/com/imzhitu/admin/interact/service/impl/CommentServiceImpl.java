@@ -25,7 +25,7 @@ import com.imzhitu.admin.interact.dao.InteractCommentDao;
 import com.imzhitu.admin.interact.dao.InteractCommentLabelDao;
 import com.imzhitu.admin.interact.dao.InteractWorldCommentDao;
 import com.imzhitu.admin.interact.mapper.InteractCommentLabelMapper;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 
 import info.monitorenter.cpdetector.io.ASCIIDetector;
 import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
@@ -36,9 +36,9 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Service
-public class InteractCommentServiceImpl extends BaseServiceImpl implements InteractCommentService {
+public class CommentServiceImpl extends BaseServiceImpl implements CommentService {
 
-	private Logger logger = Logger.getLogger(InteractCommentServiceImpl.class);
+	private Logger logger = Logger.getLogger(CommentServiceImpl.class);
 
 	@Autowired
 	private KeyGenService keyGenService;
@@ -162,7 +162,6 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements Inter
 	// modify by mishengliang
 	@Override
 	public List<InteractCommentLabel> getAllLabels() throws Exception {
-//		 return interactCommentLabelDao.queryLabel();
 		return commentLableMapper.queryLabel(null,null,null);
 	}
 
@@ -174,7 +173,6 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements Inter
 			@Override
 			public List<InteractCommentLabel> getSerializables(RowSelection rowSelection) throws Exception {
 				return interactCommentLabelDao.queryLabel(groupId, rowSelection);
-//				return commentLableMapper.queryLabel(groupId,rowSelection.getFirstRow(),limit);
 			}
 
 			@Override
@@ -184,7 +182,6 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements Inter
 
 			@Override
 			public long getTotalByMaxId(int maxId) throws Exception {
-//				return interactCommentLabelDao.queryLabelCount(maxId, groupId);
 				return commentLableMapper.queryLabelCount(maxId, groupId);
 			}
 
@@ -212,9 +209,7 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements Inter
 
 			@Override
 			public long getTotalByMaxId(int maxId) throws Exception {
-//				return interactCommentLabelDao.queryLabelGroupCount(maxId);
 				return commentLableMapper.queryLabelGroupCount(maxId);
-//				return 0;
 			}
 
 		}, OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID);
@@ -228,7 +223,6 @@ public class InteractCommentServiceImpl extends BaseServiceImpl implements Inter
 			int id = jsObj.optInt("id");
 			String labelName = jsObj.getString("labelName");
 			int groupId = jsObj.getInt("groupId");
-//			interactCommentLabelDao.updateLabel(id, labelName, groupId);
 			commentLableMapper.updateLabel(id, labelName, groupId);
 		}
 	}
