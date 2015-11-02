@@ -631,7 +631,7 @@
 		        <option value="1">已计划</option>
 	   	</select>
 	   	<span>起始时间：</span>
-   		<input id="beginDate"  class="easyui-datetimebox"/>id
+   		<input id="beginDate"  class="easyui-datetimebox"/>
    		<span>结束时间：</span>
    		<input id="endDate"  class="easyui-datetimebox"/>
    		<span>频道ID</span>
