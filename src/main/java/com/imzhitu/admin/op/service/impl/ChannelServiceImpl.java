@@ -377,34 +377,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		total = (int) channelWorldMapper.queryChannelWorldCount(world);
 		list = channelWorldMapper.queryChannelWorlds(world);
 
-//		buildNumberDtos(world, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelWorld>() {
-//
-//			@Override
-//			public long queryTotal(OpChannelWorld world) {
-//				return channelWorldMapper.queryChannelWorldCount(world);
-//			}
-//
-//			@Override
-//			public List<? extends AbstractNumberDto> queryList(OpChannelWorld world) {
-//				final List<OpChannelWorldDto> worldList = channelWorldMapper.queryChannelWorlds(world);
-//				if (worldList.size() > 0) {
-//					for (OpChannelWorldDto opChannelWorldDto : worldList) {
-//						ZTWorldDto ztWorld = worldService.getZTWorldByWorldId(opChannelWorldDto.getWorldId());
-//						opChannelWorldDto.setMultiple(ztWorld.getChannelName());
-//					}
-//				}
-//				webUserInfoService.extractVerify(worldList);
-//				return worldList;
-//			}
-//		}, new NumberDtoListMaxIdAdapter() {
-//
-//			@Override
-//			public Serializable getMaxId(List<? extends Serializable> list) throws Exception {
-//				return channelWorldMapper.queryChannelWorldMaxId();
-//			}
-//		});
-		
-		
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, channelWorldMapper.queryChannelWorldMaxId());
 	
 		jsonMap.put(OptResult.JSON_KEY_ROWS, list);

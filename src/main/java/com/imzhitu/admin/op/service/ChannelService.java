@@ -220,13 +220,20 @@ public interface ChannelService extends BaseService {
 	public void deleteTopTypes(String idsStr) throws Exception;
 
 	/**
-	 * 构建top type列表
+	 * 构建频道织图查询结果集
 	 * 
-	 * @param world
-	 * @param page
-	 * @param rows
-	 * @param jsonMap
+	 * @param world		频道织图对象
+	 * @param flag		频道织图查询类型标记位
+	 * 					全部查询：空
+	 * 					频道织图生效并过滤织图被用户删除：1
+	 * 					频道织图未生效并过滤织图被用户删除：2
+	 * 					频道织图被小编删除：3
+	 * 					织图被用户删除：4
+	 * @param page		分页查询的从第几页开始
+	 * @param rows		分页查询的每页多少行
+	 * @param jsonMap	返回前台的结果集
 	 * @throws Exception
+	 * @author zhangbo	2015年11月3日
 	 */
 	public void buildChannelWorld(OpChannelWorld world, Integer flag, int page, int rows, Map<String, Object> jsonMap) throws Exception;
 
