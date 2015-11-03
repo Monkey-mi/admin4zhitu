@@ -47,13 +47,15 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	}
 	
 	public String get(){
-		PrintWriter out  = null;
+/*		PrintWriter out  = null;
 		try {
 			out = response.getWriter();
-			List<StarRecommendTopic> list  = interactStarRecommendTopicService.getTopic(isWorld);
+			List<StarRecommendTopic> list  = interactStarRecommendTopicService.getTopic(page,rows,maxId,isWorld);
 			JSONArray  jsonArray = JSONArray.fromObject(list);
 			out.print(jsonArray.toString());
 			out.flush();
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+			interactStarRecommendTopicService.getTopic(page,rows,maxId,isWorld,jsonMap);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			jsonMap.clear();
@@ -64,6 +66,12 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 		}
 		finally {
 			out.close();
+		}*/
+		try {
+			interactStarRecommendTopicService.getTopic(page,rows,maxId,isWorld,jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}

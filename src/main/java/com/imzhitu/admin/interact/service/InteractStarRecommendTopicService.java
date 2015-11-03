@@ -29,7 +29,7 @@ public interface InteractStarRecommendTopicService {
 		*	2015年9月22日
 		*	mishengliang
 	 */
-	public List<StarRecommendTopic> getTopic(Integer isWorld)  throws Exception;
+	public void getTopic(Integer page,Integer rows,Integer maxId,Integer isWorld,Map<String, Object> jsonMap)  throws Exception;
 	
 	public List<Integer> getTopicId()  throws Exception;
 	/**
