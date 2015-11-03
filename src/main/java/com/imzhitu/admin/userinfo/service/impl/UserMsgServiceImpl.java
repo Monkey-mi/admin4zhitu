@@ -13,11 +13,13 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowCallback;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
+import com.hts.web.common.pojo.UserMsgConver;
 import com.hts.web.common.pojo.UserMsgDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.NumberUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.userinfo.dao.MsgUnreadDao.UnreadType;
+import com.hts.web.userinfo.dao.UserMsgConversationDao;
 import com.imzhitu.admin.common.pojo.UserMsgConversationDto;
 import com.imzhitu.admin.common.pojo.UserMsgDanmu;
 import com.imzhitu.admin.userinfo.dao.UserMsgDao;
@@ -74,7 +76,16 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 			@Override
 			public List<? extends Serializable> queryList(UserMsgConversationDto dto) {
 				if(dto.getOtherId() != null) {
-					return conversationMapper.queryConverByOtherId(customerServiceId, dto.getOtherId());
+					List<UserMsgConversationDto> list = conversationMapper.queryConverByOtherId(
+							customerServiceId, dto.getOtherId());
+					if(list.isEmpty()) {
+						webUserMsgConversationDao.saveConver(
+								new UserMsgConver(customerServiceId, dto.getOtherId(), 
+										0, 0, UserMsgConversationDao.MSG_TYPE_SEND));
+						list = conversationMapper.queryConverByOtherId(customerServiceId, dto.getOtherId());
+					}
+					return list;
+					
 				}
 				return conversationMapper.queryConver(dto);
 			}

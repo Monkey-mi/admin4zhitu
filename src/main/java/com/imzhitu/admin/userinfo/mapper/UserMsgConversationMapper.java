@@ -30,7 +30,7 @@ public interface UserMsgConversationMapper {
 	 * @param userId
 	 * @return
 	 */
-	@DataSource("slave")
+	@DataSource("master")
 	public List<UserMsgConversationDto> queryConverByOtherId(@Param("userId")Integer userId,
 			@Param("otherId")Integer otherId);
 

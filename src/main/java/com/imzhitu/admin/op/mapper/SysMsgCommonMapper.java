@@ -32,7 +32,7 @@ public interface SysMsgCommonMapper {
 	 * @param limit
 	 * @return
 	 */
-	@DataSource("slave")
+	@DataSource("master")
 	public List<OpSysMsgDto> queryCacheMsg(@Param("limit")Integer limit);
 	
 }
