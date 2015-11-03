@@ -137,6 +137,12 @@
 		where user_id=#{userId} and privilege_id=#{privilegeId}
 	</update>
 	
+	<delete id="deleteUserPrivileges">
+	delete from 
+	hts_admin.admin_user_privileges
+	 where privilege_id = #{privilegeId}
+	</delete>
+	
 	<!-- 插入时间管理模块数据 -->
 	<insert id="insertAdminTimeManage">
 	INSERT INTO 
