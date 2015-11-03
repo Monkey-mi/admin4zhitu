@@ -114,6 +114,10 @@ var maxId = 0,
 				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
 		    ]],
 		    queryParams:searchChannelQueryParams,
+		    onSelect: function(index,row) {
+		    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID", row.id, 10*24*60*60*1000);
+		    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME", row.channelName, 10*24*60*60*1000);
+		    },
 		    onLoadSuccess:function(data) {
 		    	if(data.result == 0) {
 					if(data.maxId > searchChannelMaxId) {
@@ -121,6 +125,9 @@ var maxId = 0,
 						searchChannelQueryParams.maxId = searchChannelMaxId;
 					}
 				}
+		    	
+		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
+		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
 		    },
 		});
 		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
@@ -133,7 +140,9 @@ var maxId = 0,
 			}
 		});
 		
-		getChannelIdFromCookie();
+//		getChannelIdFromCookie();
+		
+		queryWorld();
 		
 		removePageLoading();
 		$("#main").show();
@@ -146,23 +155,29 @@ var maxId = 0,
 function queryWorld() {
 	maxId = 0;
 	
-	var channelId = $('#ss-channel').combogrid('getValue');
-	var channelName = $('#ss-channel').combogrid('getText')
-	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID",channelId,10*24*60*60*1000);
-	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME",channelName,10*24*60*60*1000);
-	
-	myQueryParams['world.maxId'] = maxId;
-	myQueryParams['world.channelId'] = channelId;
-	myQueryParams['world.superb'] = $('#ss-superb').combobox('getValue');
-	// 频道织图瀑布流模式中，若选择“生效”，即代表，要查询频道织图生效，并且过滤掉织图被用户删除掉，所以flag指定为1
-	if ( $('#ss-valid').combobox('getValue') == 1 ) {
-		myQueryParams['flag'] = 1;
+	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
+	var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
+	if(channelId){
+		myQueryParams['world.maxId'] = maxId;
+		myQueryParams['world.channelId'] = channelId;
+		myQueryParams['world.superb'] = $('#ss-superb').combobox('getValue');
+		// 频道织图瀑布流模式中，若选择“生效”，即代表，要查询频道织图生效，并且过滤掉织图被用户删除掉，所以flag指定为1
+		if ( $('#ss-valid').combobox('getValue') == 1 ) {
+			myQueryParams['flag'] = 1;
+		}
+		// 若选择“未生效”，即代表，要查询频道织图未生效，并且过滤掉织图被用户删除掉，所以flag指定为2
+		else if ( $('#ss-valid').combobox('getValue') == 0 ) {
+			myQueryParams['flag'] = 2;
+		}
+		
+		// 若行数定义了，则使用定义的行数，若未定义，则默认查询30个
+		if (myQueryParams.rows) {
+			loadData(1, myQueryParams.rows);
+		} else {
+			loadData(1, 30);
+		}
+		
 	}
-	// 若选择“未生效”，即代表，要查询频道织图未生效，并且过滤掉织图被用户删除掉，所以flag指定为2
-	else if ( $('#ss-valid').combobox('getValue') == 0 ) {
-		myQueryParams['flag'] = 2;
-	}
-	loadData(1, myQueryParams.rows);
 }
 
 /**
@@ -273,7 +288,6 @@ function showWorldAndInteract(uri){
 	  		<input id="ss-channel" style="width:150px;" />
 	  		<span class="search_label">有效状态: </span>
 	  		<select id="ss-valid" class="easyui-combobox" name="phoneCode" style="width:100px;">
-				<option value="">所有状态</option>
 		        <option value="1">生效</option>
 		        <option value="0">未生效</option>
 	  		</select>
