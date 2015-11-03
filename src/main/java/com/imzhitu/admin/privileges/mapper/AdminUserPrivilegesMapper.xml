@@ -57,7 +57,7 @@
 		from hts_admin.admin_user_privileges aup 
 			left join hts_admin.admin_privileges ap on aup.privilege_id=ap.id 
 			left join hts_admin.admin_user_info aui on aup.operator_id=aui.id
-		where aup.user_id=#{userId} and aup.valid=1 order by ap.serial desc
+		where aup.user_id=#{userId} and aup.valid=1 order by ap.serial asc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
