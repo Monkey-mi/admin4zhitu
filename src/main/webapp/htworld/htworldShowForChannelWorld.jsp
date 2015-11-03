@@ -375,11 +375,11 @@
 </head>
 <body>
 	<div id="main">
-		<div style="height:450px;width:40%;float:left">
+		<div style="height:450px;width:55%;float:left">
 			<iframe src="<%=worldURL %>?adminKey=zhangjiaxin" style="float:right;height:100%;width:70%;"></iframe>
 		</div>
 		<!-- 添加互动 -->
-		<div style="height:450px;width:60%;float:right">
+		<div style="height:450px;width:45%;float:right">
 			<div id="htm_interact" style="font-size:12px;margin-left:10px;height:100%;width:100%">
 				<form id="interact_form" method="post" class="none">
 					<table class="htm_edit_table"  width="600px;" class="none">
@@ -422,7 +422,7 @@
 								</td>
 							</tr>
 							<tr style="display:none;">
-								<td colspan="3"><input name="commentStrs" id="commentStrs_interact"></input></td>
+								<td colspan="3"><textarea name="commentStrs" id="commentStrs_interact" rows="13"></textarea></td>
 							</tr>
 							<tr style="display:none;">
 								<td colspan="3"><input name="channelId" id="channelId_interact"></input></td>
@@ -444,12 +444,12 @@
 		<!-- 添加评论 -->
 		<div id="div-add-comment">
 			<!-- 添加评论 -->
-			<div id="comment" class="comment-main" style="width:40%;">
+			<div id="comment" class="comment-main" style="width:55%;">
 					<textarea id="rl_exp_input" rows="13"></textarea>
 			</div>
 			
 			<!-- emoji表情 -->
-			<div style="width:60%;height:230px;float:right;margin-top:15px;">
+			<div style="width:45%;height:230px;float:right;margin-top:15px;">
 				<div  class="rl_exp" id="rl_bq" style="position: static;">
 					<ul class="rl_exp_main"></ul>
 				</div>
