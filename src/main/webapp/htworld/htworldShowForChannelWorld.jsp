@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <% String worldId = request.getParameter("worldId"); %>
 <% String worldURL = request.getParameter("worldURL"); %>
+<% String valid = request.getParameter("valid"); %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -48,6 +49,7 @@
 <script type="text/javascript">
 	var commentMaxId=0;
 	var worldId = <%= worldId %>;
+	var valid = <%= valid %>;
 	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") ? baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID") : "";
 	var commentQueryParams = {};
 	
@@ -281,6 +283,14 @@
 	*/
 	function interactSubmit(){
 		var interactForm = $('#interact_form');
+		var url = "";
+		// 若织图是未生效的，则进行频道织图
+		if ( valid == 0 ) {
+			url = "./admin_interact/channelWorldInteract_addChannelWorldInvalidInteract";
+		} else {
+			url = "./admin_interact/channelWorldInteract_addChannelWorldValidInteract";
+		}
+		
 		$(".opt_btn").hide();
 		$(".loading").show();
 		// 为form表单中的评论字符串与频道id设值
@@ -305,7 +315,7 @@
 				$(".loading").hide();
                 alert( "error !\n Status = " + textStatus + "\nerrorThrown = " + errorThrown);  
             },  
-			url:interactForm.attr("action"),
+			url: url,
 			type:'post',
 			dateType:'json'
 		});
@@ -371,7 +381,7 @@
 		<!-- 添加互动 -->
 		<div style="height:450px;width:60%;float:right">
 			<div id="htm_interact" style="font-size:12px;margin-left:10px;height:100%;width:100%">
-				<form id="interact_form" action="./admin_interact/channelWorldInteract_addChannelWorldLevelList" method="post" class="none">
+				<form id="interact_form" method="post" class="none">
 					<table class="htm_edit_table"  width="600px;" class="none">
 						<tbody>
 							<tr style="display:none;">

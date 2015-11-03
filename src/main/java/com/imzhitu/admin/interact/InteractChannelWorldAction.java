@@ -86,12 +86,12 @@ public class InteractChannelWorldAction extends BaseCRUDAction {
 	private CommentService commentService;
 	
 	/**
-	 * 添加频道织图互动
+	 * 添加频道织图互动（频道织图未生效）
 	 * 
 	 * @return
 	 * @author zhangbo	2015年10月31日
 	 */
-	public String addChannelWorldLevelList(){
+	public String addChannelWorldInvalidInteract(){
 		try{
 			Integer[] commentId = StringUtil.convertStringToIds(commentIds);
 			
@@ -112,10 +112,52 @@ public class InteractChannelWorldAction extends BaseCRUDAction {
 						commentIdList.add(commentId1);
 					}
 				}
-				commentIdArray = commentIdList.toArray(commentIdArray);  
+				commentIdArray = commentIdList.toArray(commentIdArray);
 				// 保存频道织图互动评论
 				interactChannelWorldService.saveChannelWorldInteractComment(channelId, worldId, commentIdArray);
 			}
+			
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 添加频道织图互动（频道织图已经生效）
+	 * 
+	 * @return
+	 * @author zhangbo	2015年10月31日
+	 */
+	public String addChannelWorldValidInteract(){
+		try{
+			Integer[] commentId = StringUtil.convertStringToIds(commentIds);
+			
+			// 保存频道织图互动评论
+			interactChannelWorldService.saveChannelWorldInteractComment(channelId, worldId, commentId);
+			
+			if(commentStrs != null && !"".equals(commentStrs.trim())){
+				String[] comments = commentStrs.split("\n");
+				
+				Integer[] commentIdArray = new  Integer[1];
+				List<Integer> commentIdList = new ArrayList<Integer>();
+
+				
+				for(String str:comments){
+					if(!"".equals(str.trim())) {
+						// 保存评论到“其他”分类下，labelId=5，目前先写死
+						Integer commentId1 = commentService.saveComment(str, 5);
+						commentIdList.add(commentId1);
+					}
+				}
+				commentIdArray = commentIdList.toArray(commentIdArray);
+				// 保存频道织图互动评论
+				interactChannelWorldService.saveChannelWorldInteractComment(channelId, worldId, commentIdArray);
+			}
+			
+			// 若频道织图已经是生效状态的（当前action方法即此分支），在上述保存完频道织图评论后，直接进行频道织图互动的保存，然后执行Job就ok
+			interactChannelWorldService.saveChannelWorldInteract(channelId, worldId);
 			
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		}catch(Exception e){

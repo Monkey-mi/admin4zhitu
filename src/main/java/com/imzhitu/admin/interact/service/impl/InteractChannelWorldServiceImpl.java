@@ -50,7 +50,9 @@ public class InteractChannelWorldServiceImpl implements InteractChannelWorldServ
 	@Override
 	public void saveChannelWorldInteractComment(Integer channelId, Integer worldId, Integer[] commentIds) throws Exception {
 		for (Integer commentId : commentIds) {
-			channelWorldInteractCommentMapper.insert(channelId, worldId, commentId);
+			if ( commentId != null ) {
+				channelWorldInteractCommentMapper.insert(channelId, worldId, commentId);
+			}
 		}
 	}
 	
