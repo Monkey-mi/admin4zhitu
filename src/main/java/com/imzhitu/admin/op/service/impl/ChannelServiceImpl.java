@@ -376,6 +376,8 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		
 		total = (int) channelWorldMapper.queryChannelWorldCount(world);
 		list = channelWorldMapper.queryChannelWorlds(world);
+		
+		webUserInfoService.extractVerify(list);
 
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, channelWorldMapper.queryChannelWorldMaxId());
 	

@@ -323,13 +323,6 @@
 	}
 	
 	/**
-	* 取消按钮
-	*/
-	function btnCancel(){
-		parent.$.fancybox.close();
-	}
-	
-	/**
 	* 标签生成
 	*/
 	function buildWorldLabel(){
@@ -416,9 +409,8 @@
 								</td>
 							</tr>
 							<tr class="opt_btn">
-								<td style="text-align: center;padding-top: 15px;" colspan="3">
-									<a class="easyui-linkbutton" iconCls="icon-ok" onclick="interactSubmit();">添加</a> 
-									<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="btnCancel();">取消</a>
+								<td style="text-align:left;padding-top:15px;" colspan="3">
+									<a class="easyui-linkbutton" iconCls="icon-ok" style="width:70px" onclick="interactSubmit();">添加</a>
 								</td>
 							</tr>
 							<tr style="display:none;">
