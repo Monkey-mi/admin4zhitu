@@ -1,10 +1,8 @@
 package com.imzhitu.admin.op.service.impl;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +26,6 @@ import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.channel.service.ChannelWorldInteractSchedulerService;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannel;
-import com.imzhitu.admin.common.pojo.OpChannelNameDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOneDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
@@ -340,50 +337,78 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	}
 
 	@Override
-	public void buildChannelWorld(OpChannelWorld world, int page, int rows, Map<String, Object> jsonMap) throws Exception {
+	public void buildChannelWorld(OpChannelWorld world, Integer flag, int page, int rows, Map<String, Object> jsonMap) throws Exception {
 
 		if (world.getChannelId() == null && world.getWorldId() == null) {
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, 0);
 			jsonMap.put(OptResult.JSON_KEY_ROWS, new ArrayList<OpChannelWorld>());
 			return;
 		}
-
-		buildNumberDtos(world, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelWorld>() {
-
-			@Override
-			public long queryTotal(OpChannelWorld world) {
-				return channelWorldMapper.queryChannelWorldCount(world);
+		
+		// 定义返回list与总数
+		List<OpChannelWorldDto> list = new ArrayList<OpChannelWorldDto>();
+		Integer total = 0;
+		
+		world.setFirstRow((page - 1) * rows);
+		world.setLimit(rows);
+		
+		// 若标记位存在，则根据标记位设置相应的查询条件
+		if ( flag != null) {
+			// 频道织图生效并过滤织图被屏蔽
+			if ( flag == 1 ) {
+				world.setValid(1);
+				world.setShield(0); // 设置织图未屏蔽的过滤
 			}
-
-			@Override
-			public List<? extends AbstractNumberDto> queryList(OpChannelWorld world) {
-				final List<OpChannelWorldDto> worldList = channelWorldMapper.queryChannelWorlds(world);
-				if (worldList.size() > 0) {
-					Map<Integer, Integer> idxMap = new HashMap<Integer, Integer>();
-					Integer[] wids = new Integer[worldList.size()];
-					for (int i = 0; i < worldList.size(); i++) {
-						Integer wid = worldList.get(i).getWorldId();
-						wids[i] = wid;
-						idxMap.put(wid, i);
-					}
-					List<OpChannelNameDto> nameList = channelWorldMapper.queryChannelNameByWIDs(wids);
-					for (int i = 0; i < nameList.size(); i++) {
-						Integer wid = nameList.get(i).getWorldId();
-						String name = nameList.get(i).getChannelName();
-						Integer idx = idxMap.get(wid);
-						worldList.get(idx).getMultiple().add(name);
-					}
-				}
-				webUserInfoService.extractVerify(worldList);
-				return worldList;
+			// 频道织图未生效并过滤织图被屏蔽
+			else if ( flag == 2 ) {
+				world.setValid(0);
+				world.setShield(0);	// 设置织图未屏蔽的过滤
+			} 
+			// 频道织图被小编删除
+			else if ( flag == 3 ) {
+				world.setValid(2);
+			} 
+			// 织图被用户删掉
+			else if ( flag == 4 ) {
+				world.setShield(1);
 			}
-		}, new NumberDtoListMaxIdAdapter() {
+		}
+		
+		total = (int) channelWorldMapper.queryChannelWorldCount(world);
+		list = channelWorldMapper.queryChannelWorlds(world);
 
-			@Override
-			public Serializable getMaxId(List<? extends Serializable> list) throws Exception {
-				return channelWorldMapper.queryChannelWorldMaxId();
-			}
-		});
+//		buildNumberDtos(world, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelWorld>() {
+//
+//			@Override
+//			public long queryTotal(OpChannelWorld world) {
+//				return channelWorldMapper.queryChannelWorldCount(world);
+//			}
+//
+//			@Override
+//			public List<? extends AbstractNumberDto> queryList(OpChannelWorld world) {
+//				final List<OpChannelWorldDto> worldList = channelWorldMapper.queryChannelWorlds(world);
+//				if (worldList.size() > 0) {
+//					for (OpChannelWorldDto opChannelWorldDto : worldList) {
+//						ZTWorldDto ztWorld = worldService.getZTWorldByWorldId(opChannelWorldDto.getWorldId());
+//						opChannelWorldDto.setMultiple(ztWorld.getChannelName());
+//					}
+//				}
+//				webUserInfoService.extractVerify(worldList);
+//				return worldList;
+//			}
+//		}, new NumberDtoListMaxIdAdapter() {
+//
+//			@Override
+//			public Serializable getMaxId(List<? extends Serializable> list) throws Exception {
+//				return channelWorldMapper.queryChannelWorldMaxId();
+//			}
+//		});
+		
+		
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, channelWorldMapper.queryChannelWorldMaxId());
+	
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 	}
 
 	@Override

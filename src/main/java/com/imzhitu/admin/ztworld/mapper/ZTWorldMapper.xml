@@ -41,6 +41,8 @@
 		<result property="worldId" column="id" jdbcType="NUMERIC"/>
 		<result property="user_level_id" column="user_level_id" jdbcType="INTEGER"/>
 		<result property="level_description" column="level_description" jdbcType="VARCHAR"/>
+		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+		<result property="channelId" column="channel_id" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<select id="getZTWorldByWorldId" resultMap="ztWorldDto">

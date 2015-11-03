@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
-import com.imzhitu.admin.common.pojo.OpChannelNameDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 
@@ -174,15 +173,6 @@ public interface ChannelWorldMapper {
 	 */
 	@DataSource("slave")
 	List<Integer> queryChannelIdsByWorldId(Integer worldId);
-
-	/**
-	 * 根据WID查询其所在的频道名称列表
-	 * 
-	 * @param wids
-	 * @return
-	 */
-	@DataSource("slave")
-	public List<OpChannelNameDto> queryChannelNameByWIDs(Integer[] wids);
 
 	/**
 	 * 更新有效标记

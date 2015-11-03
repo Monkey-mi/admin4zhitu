@@ -1,12 +1,8 @@
 package com.imzhitu.admin.common.pojo;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
-
-import com.hts.web.base.constant.Tag;
 
 public class OpChannelWorldDto extends ZTWorldBase {
 
@@ -25,11 +21,6 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	private Integer weight;	// 权重，即置顶，0为不置顶，1为置顶
 	private Integer superb;	// 加精，0为不加精，1为加精
 	
-	private String channelName;
-	private String channelTitle;
-	private String channelIcon;
-	private Integer isCover = Tag.FALSE;
-	
 	/**
 	 * 有效性计划完成情况
 	 * 1、null：未做有效性计划，2、0：做了有效性计划，计划未完成，3：1：做了有效性计划，计划已经完成
@@ -44,8 +35,11 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	 */
 	private Integer superbSchedula;
 
-	// 存在于多个频道
-	private List<String> multiple = new ArrayList<String>();
+	/**
+	 * 织图存在于多个频道
+	 * @author zhangbo	2015年11月2日
+	 */
+	private String multiple;
 	
 	public Integer getChannelWorldId() {
 		return channelWorldId;
@@ -132,38 +126,6 @@ public class OpChannelWorldDto extends ZTWorldBase {
 		this.channelWorldDateAdded = channelWorldDateAdded;
 	}
 
-	public String getChannelName() {
-		return channelName;
-	}
-
-	public void setChannelName(String channelName) {
-		this.channelName = channelName;
-	}
-
-	public String getChannelTitle() {
-		return channelTitle;
-	}
-
-	public void setChannelTitle(String channelTitle) {
-		this.channelTitle = channelTitle;
-	}
-
-	public String getChannelIcon() {
-		return channelIcon;
-	}
-
-	public void setChannelIcon(String channelIcon) {
-		this.channelIcon = channelIcon;
-	}
-
-	public Integer getIsCover() {
-		return isCover;
-	}
-
-	public void setIsCover(Integer isCover) {
-		this.isCover = isCover;
-	}
-
 	public Integer getValidSchedula() {
 		return validSchedula;
 	}
@@ -180,11 +142,11 @@ public class OpChannelWorldDto extends ZTWorldBase {
 		this.superbSchedula = superbSchedula;
 	}
 
-	public List<String> getMultiple() {
+	public String getMultiple() {
 		return multiple;
 	}
 
-	public void setMultiple(List<String> multiple) {
+	public void setMultiple(String multiple) {
 		this.multiple = multiple;
 	}
 

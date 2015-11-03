@@ -228,7 +228,7 @@ public interface ChannelService extends BaseService {
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void buildChannelWorld(OpChannelWorld world, int page, int rows, Map<String, Object> jsonMap) throws Exception;
+	public void buildChannelWorld(OpChannelWorld world, Integer flag, int page, int rows, Map<String, Object> jsonMap) throws Exception;
 
 	/**
 	 * 保存频道织图

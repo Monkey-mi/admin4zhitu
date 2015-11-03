@@ -26,6 +26,12 @@ public class OpChannelWorld extends AbstractNumberDto {
 	private Integer serial;
 	private Integer superbSerial;
 	
+	/**
+	 * 织图是否被屏蔽
+	 * @author zhangbo	2015年11月2日
+	 */
+	private Integer shield;
+	
 	public Integer getSuperb() {
 		return superb;
 	}
@@ -121,6 +127,14 @@ public class OpChannelWorld extends AbstractNumberDto {
 
 	public void setSuperbSerial(Integer superbSerial) {
 		this.superbSerial = superbSerial;
+	}
+
+	public Integer getShield() {
+		return shield;
+	}
+
+	public void setShield(Integer shield) {
+		this.shield = shield;
 	}
 	
 }

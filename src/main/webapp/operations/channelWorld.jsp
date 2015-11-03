@@ -14,12 +14,12 @@
 <script type="text/javascript">
 	var maxId = 0;
 	var uidKey = "userId";
-	myRowStyler = function(index, row) {
-		if(!row.valid) {
-			return inValidWorld;
-		}
-		return null;
-	};
+//	myRowStyler = function(index, row) {
+//		if(!row.valid) {
+//			return inValidWorld;
+//		}
+//		return null;
+//	};
 	hideIdColumn = true,
 	htmTableTitle = "频道织图列表", //表格标题
 	toolbarComponent = '#tb',
@@ -60,11 +60,6 @@
   		worldURLColumn,
   		titleThumbPathColumn,
   		worldLabelColumn,
-		{field : 'channelIcon',title : '频道icon',align : 'center', width : 60,
-			formatter: function(value,row,index) {
-				return "<img title='" + row.channelName +  "' width=30 height=30 class='htm_column_img' src='" + value + "'/>";
-  			}
-		},
 		{field : 'notified',title : '通知状态',align : 'center', width : 60,
 			formatter: function(value,row,index) {
   				if(value >= 1) {
@@ -419,7 +414,22 @@ function searchWorld() {
 	myQueryParams['world.worldId'] = "";
 	myQueryParams['world.channelId'] = $('#ss-channel').combogrid('getValue');
 	myQueryParams['world.notified'] = $('#ss-notified').combobox('getValue');
-	myQueryParams['world.valid'] = $('#ss-valid').combobox('getValue');
+	// 频道织图瀑布流模式中，若选择“生效”，即代表，要查询频道织图生效，并且过滤掉织图被用户删除掉，所以flag指定为1
+	if ( $('#ss-valid').combobox('getValue') == 1 ) {
+		myQueryParams['flag'] = 1;
+	}
+	// 若选择“未生效”，即代表，要查询频道织图未生效，并且过滤掉织图被用户删除掉，所以flag指定为2
+	else if ( $('#ss-valid').combobox('getValue') == 0 ) {
+		myQueryParams['flag'] = 2;
+	}
+	// 若选择“小编删除”，即代表，要查询频道织图被小编删除，所以flag指定为3
+	else if ( $('#ss-valid').combobox('getValue') == 2 ) {
+		myQueryParams['flag'] = 3;
+	}
+	// 若选择“用户删除织图”，即代表，要查询织图被用户删除，所以flag指定为4
+	else if ( $('#ss-valid').combobox('getValue') == 3 ) {
+		myQueryParams['flag'] = 4;
+	}
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
@@ -632,9 +642,11 @@ function batchChannelWorldToSuperbSubmit() {
 			        <option value="1">已通知</option>
 		   		</select>
 		   		<select id="ss-valid" class="easyui-combobox" style="width:100px;">
-			        <option value="">所有生效状态</option>
-			        <option value="0">未生效</option>
+			        <option value="">所有状态</option>
 			        <option value="1">生效</option>
+			        <option value="0">未生效</option>
+			        <option value="2">小编删除</option>
+			        <option value="3">用户删除织图</option>
 		   		</select>
 		   		<a href="javascript:void(0);" onclick="javascript:searchWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 		   		

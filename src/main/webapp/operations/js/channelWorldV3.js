@@ -73,9 +73,6 @@ function drawWorld($worldOpt, worlds, index) {
 	var world = worlds[index];
 	var worldId = world['id'];
 	
-	// 根据标记位动态设置背景颜色
-	$worldOpt.attr("style", myRowStyler(index, world));
-	
 	// 织图ID点击需要的织图短链
 	var wurl;
 	if(world.worldURL == "" || world.worldURL == undefined){
@@ -97,7 +94,7 @@ function drawWorld($worldOpt, worlds, index) {
 			+'<span>'+phoneCodeColumn.formatter(world['phoneCode'],world,index) +'</span>'
 			+'<hr class="divider"></hr>'
 			+'<div>织图ID:' 
-			+ "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+world.worldId+",\""+wurl+"\")'>"+world.worldId+"</a>"
+			+ "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+world.worldId+",\""+wurl+"\","+world.valid+")'>"+world.worldId+"</a>"
 			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span>'
 			+'</div>'
 			+'<div>用户ID:'+world['authorId']
@@ -516,11 +513,12 @@ function openCommentsInteractPage(worldId) {
  * 
  * @author zhangbo 2015-10-27
  */
-function openHtworldShowForChannelWorldPage(worldId, worldURL) {
+function openHtworldShowForChannelWorldPage(worldId, worldURL, valid) {
 	var uri = "page_htworld_htworldShowForChannelWorld";
 	
 	uri += "?worldId=" + worldId;
 	uri += "&worldURL=" + worldURL;
+	uri += "&valid=" + valid;
 	$.fancybox({
 		'href'				: uri,
 		'margin'			: 20,

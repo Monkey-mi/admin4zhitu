@@ -20,11 +20,6 @@ var maxId = 0,
 	channelId = 0,
 	init = function() {
 	},
-	myRowStyler = function(index, row) {
-		if(!row.valid)
-			return inValidWorld;
-		return null;
-	},
 	hideIdColumn = true,
 	myIdField = "channelWorldId",
 	recordIdKey = "channelWorldId",
@@ -150,14 +145,23 @@ var maxId = 0,
  */
 function queryWorld() {
 	maxId = 0;
+	
 	var channelId = $('#ss-channel').combogrid('getValue');
 	var channelName = $('#ss-channel').combogrid('getText')
-	myQueryParams['world.maxId'] = maxId;
-	myQueryParams['world.channelId'] = channelId;
-	myQueryParams['world.valid'] = $('#ss-valid').combobox('getValue');
-	myQueryParams['world.superb'] = $('#ss-superb').combobox('getValue');
 	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID",channelId,10*24*60*60*1000);
 	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME",channelName,10*24*60*60*1000);
+	
+	myQueryParams['world.maxId'] = maxId;
+	myQueryParams['world.channelId'] = channelId;
+	myQueryParams['world.superb'] = $('#ss-superb').combobox('getValue');
+	// 频道织图瀑布流模式中，若选择“生效”，即代表，要查询频道织图生效，并且过滤掉织图被用户删除掉，所以flag指定为1
+	if ( $('#ss-valid').combobox('getValue') == 1 ) {
+		myQueryParams['flag'] = 1;
+	}
+	// 若选择“未生效”，即代表，要查询频道织图未生效，并且过滤掉织图被用户删除掉，所以flag指定为2
+	else if ( $('#ss-valid').combobox('getValue') == 0 ) {
+		myQueryParams['flag'] = 2;
+	}
 	loadData(1, myQueryParams.rows);
 }
 
@@ -272,7 +276,6 @@ function showWorldAndInteract(uri){
 				<option value="">所有状态</option>
 		        <option value="1">生效</option>
 		        <option value="0">未生效</option>
-		        <option value="2">已经删除</option>
 	  		</select>
 	  		<span class="search_label">加精状态: </span>
 	  		<select id="ss-superb" class="easyui-combobox" name="phoneCode" style="width:100px;">
