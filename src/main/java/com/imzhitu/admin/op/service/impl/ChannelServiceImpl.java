@@ -357,12 +357,12 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 			// 频道织图生效并过滤织图被屏蔽
 			if ( flag == 1 ) {
 				world.setValid(1);
-				world.setShield(0); // 设置织图未屏蔽的过滤
+				world.setWorldValid(1); // 设置织图生效的过滤
 			}
 			// 频道织图未生效并过滤织图被屏蔽
 			else if ( flag == 2 ) {
 				world.setValid(0);
-				world.setShield(0);	// 设置织图未屏蔽的过滤
+				world.setWorldValid(1);	// 设置织图生效的过滤
 			} 
 			// 频道织图被小编删除
 			else if ( flag == 3 ) {
@@ -370,7 +370,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 			} 
 			// 织图被用户删掉
 			else if ( flag == 4 ) {
-				world.setShield(1);
+				world.setWorldValid(0);
 			}
 		}
 		

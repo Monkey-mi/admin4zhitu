@@ -27,10 +27,10 @@ public class OpChannelWorld extends AbstractNumberDto {
 	private Integer superbSerial;
 	
 	/**
-	 * 织图是否被屏蔽
+	 * 织图是否生效
 	 * @author zhangbo	2015年11月2日
 	 */
-	private Integer shield;
+	private Integer worldValid;
 	
 	public Integer getSuperb() {
 		return superb;
@@ -129,12 +129,12 @@ public class OpChannelWorld extends AbstractNumberDto {
 		this.superbSerial = superbSerial;
 	}
 
-	public Integer getShield() {
-		return shield;
+	public Integer getWorldValid() {
+		return worldValid;
 	}
 
-	public void setShield(Integer shield) {
-		this.shield = shield;
+	public void setWorldValid(Integer worldValid) {
+		this.worldValid = worldValid;
 	}
 	
 }

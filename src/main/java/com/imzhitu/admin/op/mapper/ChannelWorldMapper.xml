@@ -116,7 +116,7 @@
 		 where 
 		 	cw.world_id=h.id 
 		 	and cw.author_id=u.id 
-		 	<if test="shield != null"> and h.shield=#{shield}</if>
+		 	<if test="worldValid != null"> and h.valid=#{worldValid}</if>
 		 order by 
 		 	cw.serial desc
 	</select>
