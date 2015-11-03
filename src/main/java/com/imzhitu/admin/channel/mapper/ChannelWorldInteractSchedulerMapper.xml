@@ -28,6 +28,17 @@
 			and world_id=#{worldId}
 	</update>
 	
+	<!-- 根据频道id与织图id，查询频道织图生效规划互动表未完成的数据 -->
+	<select id="queryChannelWorldInteractSchedulerNotCompleteList" resultMap="ChannelWorldInteractSchedulerMap">
+		select * 
+		from 
+			hts_admin.interact_channel_world_scheduler 
+		where 
+			channel_id=#{channelId} 
+			and world_id=#{worldId}
+			and complete=0
+	</select>
+	
 	<!-- 根据时间段查询频道织图生效规划互动表数据 -->
 	<select id="queryChannelWorldInteractSchedulerListByTime" resultMap="ChannelWorldInteractSchedulerMap">
 		select * 

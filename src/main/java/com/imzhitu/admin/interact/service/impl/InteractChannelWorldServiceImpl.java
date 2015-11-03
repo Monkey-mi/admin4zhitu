@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.imzhitu.admin.channel.mapper.ChannelWorldInteractCommentMapper;
+import com.imzhitu.admin.channel.service.ChannelWorldInteractSchedulerService;
 import com.imzhitu.admin.common.pojo.ChannelWorldInteractComment;
+import com.imzhitu.admin.common.pojo.ChannelWorldInteractScheduler;
 import com.imzhitu.admin.common.pojo.InteractChannelLevel;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
@@ -41,6 +43,9 @@ public class InteractChannelWorldServiceImpl implements InteractChannelWorldServ
 	
 	@Autowired
 	private ZTWorldService worldService;
+	
+	@Autowired
+	private ChannelWorldInteractSchedulerService channelWorldInteractSchedulerService;
 
 	@Override
 	public void saveChannelWorldInteractComment(Integer channelId, Integer worldId, Integer[] commentIds) throws Exception {
@@ -115,34 +120,38 @@ public class InteractChannelWorldServiceImpl implements InteractChannelWorldServ
 		int likedCount = 0;
 		int commentCount = 0;
 		
-		// 评论数量应与已经规划好的，但是未执行的互动评论数量一致
-		List<ChannelWorldInteractComment> channelWorldCommentList = channelWorldInteractCommentMapper.queryNotCompletedCommentByChannelIdAndWorldId(channelId, worldId);
-		if ( channelWorldCommentList != null ) {
-			commentCount = channelWorldCommentList.size();
-		}
-		
-		// 定义频道等级对象
-		InteractChannelLevel interactChannelLevel = new InteractChannelLevel();
-		// 根据频道id，获取频道等级
-		List<InteractChannelLevel> channelLevelList = channelLevelService.queryChannelLevel(channelId, null);
-		
-		// 因为频道id是唯一的，所以查询得出的结论应该若不为空，则直接去第一个元素
-		if ( channelLevelList != null && channelLevelList.size() !=0 ) {
-			interactChannelLevel = channelLevelList.get(0);
-		}
-		
-		// 若频道存在等级，则获取相应的数据
-		if(interactChannelLevel != null){
-			// 获取频道织图对象
-			OpChannelWorld channelWorld = channelWolrdMapper.queryChannelWorldByWorldId(worldId, channelId);
+		// 先查询频道织图是否已经做了规划互动，若有，则进行点赞数、播放数、评论数的展示，若没有直接展示默认值0
+		List<ChannelWorldInteractScheduler> schedulerList = channelWorldInteractSchedulerService.queryChannelWorldInteractSchedulerNotCompleteList(channelId, worldId);
+		if ( schedulerList != null && schedulerList.size() != 0 ) {
+			// 评论数量应与已经规划好的，但是未执行的互动评论数量一致
+			List<ChannelWorldInteractComment> channelWorldCommentList = channelWorldInteractCommentMapper.queryNotCompletedCommentByChannelIdAndWorldId(channelId, worldId);
+			if ( channelWorldCommentList != null ) {
+				commentCount = channelWorldCommentList.size();
+			}
 			
-			// 频道织图精选与否，决定了点赞数，点播量，评论数不同的获取方法，但是目前都取频道等级中，最少量返回前台，主要是给操作者一个数量印象
-			if ( channelWorld.getSuperb() == 1 ) {
-				clickCount = interactChannelLevel.getSuperMinClickCount();
-				likedCount = interactChannelLevel.getSuperMinLikeCount();
-			} else {
-				clickCount = interactChannelLevel.getUnSuperMinClickCount();
-				likedCount = interactChannelLevel.getUnSuperMinLikeCount();
+			// 定义频道等级对象
+			InteractChannelLevel interactChannelLevel = new InteractChannelLevel();
+			// 根据频道id，获取频道等级
+			List<InteractChannelLevel> channelLevelList = channelLevelService.queryChannelLevel(channelId, null);
+			
+			// 因为频道id是唯一的，所以查询得出的结论应该若不为空，则直接去第一个元素
+			if ( channelLevelList != null && channelLevelList.size() !=0 ) {
+				interactChannelLevel = channelLevelList.get(0);
+			}
+			
+			// 若频道存在等级，则获取相应的数据
+			if(interactChannelLevel != null){
+				// 获取频道织图对象
+				OpChannelWorld channelWorld = channelWolrdMapper.queryChannelWorldByWorldId(worldId, channelId);
+				
+				// 频道织图精选与否，决定了点赞数，点播量，评论数不同的获取方法，但是目前都取频道等级中，最少量返回前台，主要是给操作者一个数量印象
+				if ( channelWorld.getSuperb() == 1 ) {
+					clickCount = interactChannelLevel.getSuperMinClickCount();
+					likedCount = interactChannelLevel.getSuperMinLikeCount();
+				} else {
+					clickCount = interactChannelLevel.getUnSuperMinClickCount();
+					likedCount = interactChannelLevel.getUnSuperMinLikeCount();
+				}
 			}
 		}
 		

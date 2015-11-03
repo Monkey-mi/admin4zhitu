@@ -44,6 +44,12 @@ public class ChannelWorldInteractSchedulerServiceImpl implements ChannelWorldInt
 		mapper.insert(channelId, worldId, AdminLoginUtil.getCurrentLoginId());
 	}
 	
+	@Override
+	public List<ChannelWorldInteractScheduler> queryChannelWorldInteractSchedulerNotCompleteList(Integer channelId, Integer worldId) throws Exception {
+		// 保存频道织图规划互动
+		return mapper.queryChannelWorldInteractSchedulerNotCompleteList(channelId, worldId);
+	}
+	
 	/**
 	 * 执行频道织图规划互动
 	 * 

@@ -40,11 +40,22 @@ public interface ChannelWorldInteractSchedulerMapper {
 	void update(@Param("channelId")Integer channelId, @Param("worldId")Integer worldId, @Param("complete")Integer complete);
 	
 	/**
+	 * 根据频道id与织图id，查询频道织图生效规划互动表未完成的数据
+	 * 
+	 * @param channelId	频道id
+	 * @param worldId	织图id
+	 * @return	频道织图规划的互动集合
+	 * @author zhangbo	2015年11月3日
+	 */
+	@DataSource("slave")
+	List<ChannelWorldInteractScheduler> queryChannelWorldInteractSchedulerNotCompleteList(@Param("channelId")Integer channelId, @Param("worldId")Integer worldId);
+	
+	/**
 	 * 根据时间段查询频道织图生效规划互动表未完成的数据
 	 * 
 	 * @param beginTime	开始时间
 	 * @param endTime	结束时间
-	 * @return
+	 * @return	频道织图规划的互动集合
 	 * @author zhangbo	2015年10月29日
 	 */
 	@DataSource("slave")
