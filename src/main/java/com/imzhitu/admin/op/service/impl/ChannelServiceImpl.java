@@ -32,6 +32,7 @@ import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
+import com.imzhitu.admin.common.pojo.OpChannelWorldSchedulaDto;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.op.dao.ChannelAutoRejectIdCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneCacheDao;
@@ -42,6 +43,7 @@ import com.imzhitu.admin.op.mapper.ChannelTopTypeMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.SysMsgMapper;
 import com.imzhitu.admin.op.service.ChannelService;
+import com.imzhitu.admin.op.service.OpChannelWorldSchedulaService;
 import com.imzhitu.admin.op.service.OpMsgService;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
 
@@ -130,6 +132,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	
 	@Autowired
 	private ChannelWorldInteractSchedulerService channelWorldInteractScheduler;
+	
+	@Autowired
+	private OpChannelWorldSchedulaService channelWorldSchedulaService;
 	
 	private Integer channelCoverLimit = 5;
 
@@ -483,8 +488,12 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	@Override
 	public void updateChannelWorldValid(String idsStr, Integer valid) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		
+		// 更新有效性
 		channelWorldMapper.updateValidByIds(ids, valid);
 		if (ids != null && ids.length > 0) {
+			
+			// 优先执行通知与生效排序
 			if (valid != null && valid.equals(Tag.TRUE)) {
 				// 生效时同时重新排序
 				addChannelWorldId(ids);
@@ -493,10 +502,30 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 				// 下面的方法复用了 手动添加通知 的方法，此方法在手动通知中也要调用，为是方便维护，故复用
 				addChannelWorldNoticeMsgs(idsStr);
 			}
-			OpChannelWorld world = channelWorldMapper.queryChannelWorldById(ids[0]);
-			if (world != null) {
-				// updateChannelWorldCache(world.getChannelId(), 0);
-				webChannelService.updateWorldAndChildCount(world.getChannelId());
+			
+			// 其次执行频道织图相关操作，如刷新图片数，取消计划生效
+			for (Integer integer : ids) {
+				OpChannelWorld world = channelWorldMapper.queryChannelWorldById(integer);
+				if (world != null) {
+					// 更新频道的织图与图片数
+					webChannelService.updateWorldAndChildCount(world.getChannelId());
+					
+					// 若为生效，则查询是否存在有效性计划，存在则进行删除
+					if (valid != null && valid.equals(Tag.TRUE)) {
+						List<OpChannelWorldSchedulaDto> schedulerList = channelWorldSchedulaService.queryChannelWorldValidSchedulaForList(world.getChannelId(), world.getWorldId());
+						
+						// 定义批量删除有效性计划的主键id集合字符串，以逗号“,”分隔
+						String idString = "";
+						for (int i = 0; i < schedulerList.size(); i++) {
+							if ( i == 0 ) {
+								idString += schedulerList.get(i).getId();
+							} else {
+								idString += "," + schedulerList.get(i).getId();
+							}
+						}
+						channelWorldSchedulaService.delChannelWorldValidSchedula(idString);
+					}
+				}
 			}
 		}
 	}
@@ -921,19 +950,35 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 
 	@Override
 	public void updateChannelWorldValid(Integer channelId, Integer worldId, Integer valid) throws Exception {
+		// TODO 这块 
 		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
 		channelWorldMapper.updateValidAndSerialByWID(channelId, worldId, valid, serial);
 		webChannelService.updateWorldAndChildCount(channelId);
 		// TODO 这块也要一起整改，统一频道更新接口 zhangbo 2015-09-09
-		if ( valid == 1) {
+		if (valid != null && valid.equals(Tag.TRUE)) {
 			OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId, channelId);
 			
 			addChannelWorldNoticeMsg(world.getId());
 			
 			// 频道织图生效时，将其加入规划的频道织图互动表中，等待此表计划执行时，正式产生织图互动计划
 			channelWorldInteractScheduler.addChannelWorldInteractScheduler(channelId, worldId);
+			
+			List<OpChannelWorldSchedulaDto> schedulerList = channelWorldSchedulaService.queryChannelWorldValidSchedulaForList(channelId, worldId);
+			
+			// 定义批量删除有效性计划的主键id集合字符串，以逗号“,”分隔
+			String idString = "";
+			for (int i = 0; i < schedulerList.size(); i++) {
+				if ( i == 0 ) {
+					idString += schedulerList.get(i).getId();
+				} else {
+					idString += "," + schedulerList.get(i).getId();
+				}
+			}
+			channelWorldSchedulaService.delChannelWorldValidSchedula(idString);
 		}
 		
+		// 更新频道的织图与图片数
+		webChannelService.updateWorldAndChildCount(channelId);
 	}
 
 	@Override

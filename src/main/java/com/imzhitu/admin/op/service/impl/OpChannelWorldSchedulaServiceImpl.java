@@ -133,6 +133,11 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		});
 	}
 	
+	@Override
+	public List<OpChannelWorldSchedulaDto> queryChannelWorldValidSchedulaForList(Integer channelId, Integer worldId) throws Exception {
+		return channelWorldValidSchedulaMapper.queryChannelWorldValidSchedulaListByChannelIdAndWorldId(channelId, worldId);
+	}
+	
 	/**
 	 * 批量删除频道有效计划
 	 * @param idsStr

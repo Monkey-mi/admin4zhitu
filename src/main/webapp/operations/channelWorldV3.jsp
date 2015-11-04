@@ -25,7 +25,7 @@ var maxId = 0,
 	recordIdKey = "channelWorldId",
 	uidKey = "userId",
 	loadDataURL = "./admin_op/channel_queryChannelWorld", //数据装载请求地址
-	updateValidURL = "./admin_op/channel_updateWorldValidByWID",
+	updateValidURL = "./admin_op/channel_updateWorldValidByCIDAndWID",
 	updateSuperbURL = "./admin_op/channel_updateWorldSuperbByWID",
 	searchChannelMaxId = 0,
 	searchChannelQueryParams = {
@@ -125,7 +125,6 @@ var maxId = 0,
 						searchChannelQueryParams.maxId = searchChannelMaxId;
 					}
 				}
-		    	alert(baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"))
 		    	
 		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
 		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");

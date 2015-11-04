@@ -339,8 +339,7 @@ function updateValid(valid) {
 				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 				$('#htm_table').datagrid('loading');
 				$.post(updateValidURL + ids,{
-					"valid" : valid,
-					"channlMsgType":"_add"
+					"valid" : valid
 				},function(result){
 					$('#htm_table').datagrid('loaded');
 					if(result['result'] == 0) {

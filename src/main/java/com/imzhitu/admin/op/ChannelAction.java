@@ -337,7 +337,7 @@ public class ChannelAction extends BaseCRUDAction{
 	 * 
 	 * @return
 	 */
-	public String updateWorldValidByWID() {
+	public String updateWorldValidByCIDAndWID() {
 		try {
 			channelService.updateChannelWorldValid(channelId, worldId, valid);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);

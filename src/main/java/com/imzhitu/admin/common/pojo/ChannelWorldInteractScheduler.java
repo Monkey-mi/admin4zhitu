@@ -16,6 +16,12 @@ public class ChannelWorldInteractScheduler implements Serializable {
 	 * @author zhangbo	2015年10月30日
 	 */
 	private static final long serialVersionUID = -2109822430198408178L;
+	
+	/**
+	 * 主键id
+	 * @author zhangbo	2015年11月4日
+	 */
+	private Integer id;
 
 	/**
 	 * 频道id
@@ -46,6 +52,20 @@ public class ChannelWorldInteractScheduler implements Serializable {
 	 * @author zhangbo	2015年10月29日
 	 */
 	private Integer complete;
+
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the channelId
