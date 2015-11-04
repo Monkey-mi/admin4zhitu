@@ -20,7 +20,31 @@
 	<bean id="dailyDataStatisticsService" class="com.imzhitu.admin.statistics.service.impl.DailyDataStatisticsServiceImpl"/>
 	<bean id="opUserRecommendCacheService" class="com.imzhitu.admin.op.service.impl.OpUserRecommendCacheServiceImpl"/>
 	<bean id="interactLikeFollowRecordService" class="com.imzhitu.admin.interact.service.impl.InteractLikeFollowRecordServiceImpl"/>
+	<bean id="commentBroadcastScheduler" class="com.imzhitu.admin.scheduler.CommentBroadcastScheduler" />
 
+	<!-- 广播评论队列 -->
+    <bean id="broadcastCommentQueueJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="commentBroadcastScheduler"/>
+        </property>
+        <property name="targetMethod">
+            <value>broadcastCommentQueue</value>
+        </property>
+        <property name="concurrent"> 
+			<value>false</value>
+		</property> 
+    </bean>
+
+	<!-- 广播评论队列 -->
+    <bean id="broadcastCommentQueueJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="broadcastCommentQueueJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/1 * * * ?</value><!-- 每隔1分钟 -->
+        </property>
+    </bean>
 		
 	<!-- 互动播放定时任务 -->
     <bean id="interactClickJobDetail"
@@ -579,7 +603,6 @@
                 <ref bean="updateChannelWorldSchedulaTrigger"/>
                 <ref bean="autoAddStarWorldTrigger"/>
                 <ref bean="autoResponseSchedulaTrigger"/>
-                <ref bean="osPushJobTrigger" />
                 <ref bean="platConcernJobTrigger" />
                 <ref bean="starRecommendSchedulaTrigger" />
                 <ref bean="starRecommendCacheTrigger" />
