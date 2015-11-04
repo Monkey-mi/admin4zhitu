@@ -127,6 +127,7 @@
 	pageButtons = [],
     onBeforeInit = function() {
 		showPageLoading();
+		myQueryParams['world.channelId'] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
 	},
 
 	searchChannelMaxId = 0,
@@ -206,17 +207,6 @@
 				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
 		    ]],
 		    queryParams:searchChannelQueryParams,
-		    onLoadSuccess:function(data) {
-		    	if(data.result == 0) {
-					if(data.maxId > searchChannelMaxId) {
-						searchChannelMaxId = data.maxId;
-						searchChannelQueryParams.maxId = searchChannelMaxId;
-					}
-				}
-		    	
-		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
-		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
-		    },
 		    onSelect:function(index, row) {
 				$("#htm_opt_btn").show();
 				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值
@@ -231,7 +221,19 @@
 				myQueryParams['world.worldId'] = "";
 				myQueryParams['world.notified'] = "";
 				loadPageData(initPage);
-			}
+			},
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > searchChannelMaxId) {
+						searchChannelMaxId = data.maxId;
+						searchChannelQueryParams.maxId = searchChannelMaxId;
+					}
+				}
+		    	
+		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
+		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
+		    }
+		    
 		});
 		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
 		p.pagination({
@@ -440,7 +442,7 @@ function searchByWID() {
 	maxId = 0;
 	myQueryParams['world.maxId'] = maxId;
 	myQueryParams['world.worldId'] = $("#ss-worldId").searchbox('getValue');
-	myQueryParams['world.channelId'] = $('#ss-channel').combogrid('getValue');
+	myQueryParams['world.channelId'] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");	// 频道id都从缓存获取
 	myQueryParams['world.notified'] = "";
 	myQueryParams['world.valid'] = "";
 	$("#htm_table").datagrid("load",myQueryParams);
@@ -623,10 +625,6 @@ function batchChannelWorldToSuperbSubmit() {
 	
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<div>
-<!-- 				<a href="./page_operations_channelWorldV3" title="瀑布流模式">
-				<img class="switch-icon" src="./htworld/images/grid-icon.png" style="width:15px;vertical-align:middle;"  /></a>
-				<a href="./page_operations_channelWorld" title="列表模式">
-				<img class="switch-icon" src="./htworld/images/list-icon.png" style="width:15px;vertical-align:middle;"  /></a> -->
 				<span class="search_label">请选择频道：</span>
 				<input id="ss-channel" style="width:100px;" />
 				<span id="htm_opt_btn" class="none">

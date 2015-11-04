@@ -140,8 +140,7 @@ var maxId = 0,
 			}
 		});
 		
-//		getChannelIdFromCookie();
-		
+		// 执行查询频道织图
 		queryWorld();
 		
 		removePageLoading();
@@ -177,20 +176,6 @@ function queryWorld() {
 			loadData(1, 30);
 		}
 		
-	}
-}
-
-/**
- * 从Cookie获取频道id
- */
-function getChannelIdFromCookie(){
-	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
-	var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
-	if(channelId){
-		myQueryParams['world.channelId'] = channelId;
-		$("#ss-channel").combogrid('setValue', channelId);
-		$("#ss-channel").combogrid('setText', channelName);
-		loadData(1,30);
 	}
 }
 
@@ -280,10 +265,6 @@ function showWorldAndInteract(uri){
 	<img id="page-loading" alt="" src="${webRootPath }/common/images/girl-loading.gif" />
 	<nav id="top" class="navbar navbar-default navbar-fixed-top">
 	  	<div class="container">
-<!-- 	  		<a href="./page_operations_channelWorldV3" title="瀑布流模式">
-			<img class="switch-icon" src="./htworld/images/grid-icon.png" /></a>
-			<a href="./page_operations_channelWorld" title="列表模式">
-				<img class="switch-icon" src="./htworld/images/list-icon.png" /></a> -->
 	  		<span class="search_label">频道: </span>
 	  		<input id="ss-channel" style="width:150px;" />
 	  		<span class="search_label">有效状态: </span>
