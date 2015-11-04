@@ -1,6 +1,7 @@
 package com.imzhitu.admin.common.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -39,7 +40,7 @@ public class OpChannelWorldDto extends ZTWorldBase {
 	 * 织图存在于多个频道
 	 * @author zhangbo	2015年11月2日
 	 */
-	private String multiple;
+	private List<String> multiple;
 	
 	public Integer getChannelWorldId() {
 		return channelWorldId;
@@ -142,11 +143,11 @@ public class OpChannelWorldDto extends ZTWorldBase {
 		this.superbSchedula = superbSchedula;
 	}
 
-	public String getMultiple() {
+	public List<String> getMultiple() {
 		return multiple;
 	}
 
-	public void setMultiple(String multiple) {
+	public void setMultiple(List<String> multiple) {
 		this.multiple = multiple;
 	}
 

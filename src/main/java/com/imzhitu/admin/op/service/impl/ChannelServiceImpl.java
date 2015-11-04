@@ -382,6 +382,11 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		total = (int) channelWorldMapper.queryChannelWorldCount(world);
 		list = channelWorldMapper.queryChannelWorlds(world);
 		
+		// 设置织图在多个频道的值
+		for (OpChannelWorldDto opChannelWorldDto : list) {
+			opChannelWorldDto.setMultiple(channelWorldMapper.queryChannelNameByWorldId(opChannelWorldDto.getWorldId()));
+		}
+		
 		webUserInfoService.extractVerify(list);
 
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, channelWorldMapper.queryChannelWorldMaxId());
