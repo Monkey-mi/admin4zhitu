@@ -14,12 +14,6 @@
 <script type="text/javascript">
 	var maxId = 0;
 	var uidKey = "userId";
-//	myRowStyler = function(index, row) {
-//		if(!row.valid) {
-//			return inValidWorld;
-//		}
-//		return null;
-//	};
 	hideIdColumn = true,
 	htmTableTitle = "频道织图列表", //表格标题
 	toolbarComponent = '#tb',
@@ -219,16 +213,23 @@
 						searchChannelQueryParams.maxId = searchChannelMaxId;
 					}
 				}
+		    	
+		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
+		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
 		    },
 		    onSelect:function(index, row) {
 				$("#htm_opt_btn").show();
-				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
+				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值
+				
+				// 设置缓存
+				baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID", row.id, 10*24*60*60*1000);
+		    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME", row.channelName, 10*24*60*60*1000);
+		    	
 				maxId = 0;
 				myQueryParams['world.maxId'] = maxId;
 				myQueryParams['world.channelId'] = row.id;
 				myQueryParams['world.worldId'] = "";
 				myQueryParams['world.notified'] = "";
-				myQueryParams['world.valid'] = "";
 				loadPageData(initPage);
 			}
 		});

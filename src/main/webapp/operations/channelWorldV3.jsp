@@ -125,6 +125,7 @@ var maxId = 0,
 						searchChannelQueryParams.maxId = searchChannelMaxId;
 					}
 				}
+		    	alert(baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"))
 		    	
 		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
 		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
