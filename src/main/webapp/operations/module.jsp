@@ -265,6 +265,9 @@
         	url:"./admin_interact/starRecommendTopic_get?isWorld=0",
         	valueField:'id',
         	textField:'title',
+        	loadFilter:function(data){
+        		return data.rows;
+        	},
         	onSelect:function(rec){
         		$("#dg").datagrid('load',{topicId:rec.id});
         	}
