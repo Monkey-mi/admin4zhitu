@@ -326,8 +326,7 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		 */
 		if(flag == 1){
 			long now  = new Date().getTime();
-			/*long endTime = now + timeUpdate * 60 * 60 * 1000;*/
-			long endTime = now;
+			long endTime = now + timeUpdate * 60 * 60 * 1000;
 			ZTWorldTypeWorldWeightUpdateDto weightUpdateDto = new ZTWorldTypeWorldWeightUpdateDto();
 			weightUpdateDto.setTypeWorldId(id);
 			weightUpdateDto.setEndTime(endTime);
