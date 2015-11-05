@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.constant.Tag;
 import com.imzhitu.admin.base.BaseTest;
+import com.imzhitu.admin.ztworld.service.impl.ZTWorldTypeServiceImpl;
 
 /**
  * <p>
@@ -22,6 +23,10 @@ public class ZTWorldTypeServiceTest extends BaseTest {
 
 	@Autowired
 	private ZTWorldTypeService service;
+	
+	@Autowired
+	private ZTWorldTypeServiceImpl serviceImpl;
+	
 	
 	@Test
 	public void testBuildTypeWorld() throws Exception {
@@ -53,6 +58,11 @@ public class ZTWorldTypeServiceTest extends BaseTest {
 	@Test
 	public void updateTypeWorldCacheTest() throws Exception {
 		service.updateTypeWorldCache();
+	}
+	
+	@Test
+	public void doTypeWorldWeightUpdateScheduleTest() throws Exception {
+		serviceImpl.doTypeWorldWeightUpdateSchedule();
 	}
 	
 }

@@ -583,6 +583,27 @@
             <value>0 0/1 * * * ?</value><!-- 每隔20分钟 -->
         </property>
     </bean>
+    
+ 	    <!-- mishengliang -->
+        <!-- 广场分类中置顶计划配置 -->
+    <bean id="typeWorldWeightUpdateSchedulerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="worldTypeService"/>
+        </property>
+        <property name="targetMethod">
+            <value>doTypeWorldWeightUpdateSchedule</value>
+        </property>
+    </bean>
+    
+	<!-- 广场分类中置顶计划配置 -->
+    <bean id="typeWorldWeightUpdateSchedulerJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="typeWorldWeightUpdateSchedulerJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/10 * * * ?</value><!-- 每隔10分钟 -->
+        </property>
+    </bean>
 
 <!--production tag-->
 
@@ -613,6 +634,7 @@
                 <ref bean="sortChannelStarSchedulaJobTrigger" />
                 <ref bean="randomChannelWorldSuperbTopTrigger" />
                 <ref bean="channelWorldInteractSchedulerJobTrigger" />
+                <ref bean="typeWorldWeightUpdateSchedulerJobTrigger" />
             </list>
         </property>
     </bean>
