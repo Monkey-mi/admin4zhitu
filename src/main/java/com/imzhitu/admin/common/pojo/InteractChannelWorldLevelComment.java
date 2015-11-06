@@ -1,7 +1,6 @@
 package com.imzhitu.admin.common.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 表interact_channel_world_level_comment的映射类，频道织图互动记录评论的相关表

@@ -209,12 +209,6 @@ public class ChannelServiceTest extends BaseTest {
 		service.addChannelWorldId(1, new Integer[]{12});
 	}
 	
-	
-//	@Test
-	public void testUpdateChannelWorldValid() throws Exception {
-		service.updateChannelWorldValid("12", Tag.TRUE);
-	}
-	
 	@Test
 	public void testAddTopOneRecommendMsg() throws Exception {
 		service.addTopOneRecommendMsg(11);

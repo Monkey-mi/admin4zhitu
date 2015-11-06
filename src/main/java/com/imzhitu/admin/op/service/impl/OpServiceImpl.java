@@ -69,9 +69,6 @@ public class OpServiceImpl extends BaseServiceImpl
 	private PushService pushService;
 	
 	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
-	
-	@Autowired
 	private com.hts.web.ztworld.dao.HTWorldDao webWorldDao;
 	
 	@Autowired

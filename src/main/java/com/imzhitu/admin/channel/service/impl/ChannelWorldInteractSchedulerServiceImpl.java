@@ -46,8 +46,19 @@ public class ChannelWorldInteractSchedulerServiceImpl implements ChannelWorldInt
 	
 	@Override
 	public List<ChannelWorldInteractScheduler> queryChannelWorldInteractSchedulerNotCompleteList(Integer channelId, Integer worldId) throws Exception {
-		// 保存频道织图规划互动
 		return mapper.queryChannelWorldInteractSchedulerNotCompleteList(channelId, worldId);
+	}
+	
+	@Override
+	public List<ChannelWorldInteractScheduler> queryChannelWorldInteractSchedulerInvalidList(Integer channelId, Integer worldId) throws Exception {
+		return mapper.queryChannelWorldInteractSchedulerInvalidList(channelId, worldId);
+	}
+	
+	@Override
+	public void setValidByIds(Integer[] ids) throws Exception {
+		for (Integer id : ids) {
+			mapper.setValidAndScheduleDateById(id, new Date());
+		}
 	}
 	
 	/**

@@ -90,13 +90,6 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	private com.hts.web.userinfo.dao.MsgUnreadDao webMsgUnreadDao;
 
 	/**
-	 * 系统推送通知发送人ID，即官方账号ID
-	 * 
-	 * @author zhangbo 2015年9月2日
-	 */
-	private Integer appMsgSenderId = Admin.ZHITU_UID;
-
-	/**
 	 * 一次推送限定条数
 	 */
 	private Integer oncePushLimit = 300;
@@ -157,7 +150,6 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			Integer objId = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
 			msg.setObjId(objId);
 		}
-//		msg.setSenderId(appMsgSenderId);
 		msg.setMsgDate(new Date());
 
 		if (msg.getObjType().equals(Tag.USER_MSG_STAR_RECOMMEND)) {

@@ -22,8 +22,6 @@
 	recordIdKey = "channelWorldId",
 	loadDataURL = "./admin_op/channel_queryChannelWorld"; //数据装载请求地址
 	deleteURI = "./admin_op/channel_deleteChannelWorld?ids=", //删除请求地址
-	updateValidURL = "./admin_op/channel_updateChannelWorldValid?ids=",
-	addRecommendMsgURL = "./admin_op/channel_addChannelWorldRecommendMsgs?ids=",
 	queryChannelURL = "./admin_op/channel_queryChannelById",
 	queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName",// 根据id或民称查询频道
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
@@ -324,6 +322,7 @@ function searchChannel() {
 
 /**
  * 更新有效性
+ * @author zhangbo 2015-11-06
  */
 function updateValid(valid) {
 	var rows = $('#htm_table').datagrid('getSelections');	
@@ -332,32 +331,29 @@ function updateValid(valid) {
 		if(valid == 0) {
 			tip = "您确定要使已选中的织图失效吗？";
 		}
-		$.messager.confirm('更新记录', tip, function(r){ 	
-			if(r){				
-				var ids = [];
-				for(var i=0;i<rows.length;i+=1){		
-					ids.push(rows[i][recordIdKey]);
+		$.messager.confirm("温馨提示", tip, function(r){
+			if(r){
+				for(var i=0;i<rows.length;i+=1){
+					var params = {};
+					params.channelId = row[i].channelId;
+					params.worldId = row[i].worldId;
+					params.valid = valid;
+					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
+						if(result['result'] == 0) {
+							$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
+							if(valid) {
+								loadPageData(1);
+							} else {
+								$("#htm_table").datagrid("reload");
+							}
+						}
+					});
 				}	
-				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
-				$('#htm_table').datagrid('loading');
-				$.post(updateValidURL + ids,{
-					"valid" : valid
-				},function(result){
-					$('#htm_table').datagrid('loaded');
-					if(result['result'] == 0) {
-						$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
-						if(valid) 
-							loadPageData(1);
-						else
-							$("#htm_table").datagrid("reload");
-					} else {
-						$.messager.alert('提示',result['msg']);
-					}
-				});				
+				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值
 			}	
 		});	
 	}else{
-		$.messager.alert('更新失败','请先选择记录，再执行更新操作!','error');
+		$.messager.alert("温馨提示","请先选择记录，再执行更新操作!");
 	}
 }
 
@@ -461,33 +457,6 @@ function showUserWorld(uri){
 		'type'				: 'iframe',
 		'href'				: uri
 	});
-}
-
-function batchNotify() {
-	var rows = $('#htm_table').datagrid('getSelections');	
-	if(rows.length > 0){
-		$.messager.confirm('添加通知', '你确定要批量添加通知', function(r){ 	
-			if(r){				
-				var ids = [];
-				for(var i=0;i<rows.length;i+=1){		
-					ids.push(rows[i][recordIdKey]);
-				}	
-				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
-				$('#htm_table').datagrid('loading');
-				$.post(addRecommendMsgURL + ids,function(result){
-					$('#htm_table').datagrid('loaded');
-					if(result['result'] == 0) {
-						$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
-						$("#htm_table").datagrid("reload");
-					} else {
-						$.messager.alert('提示',result['msg']);
-					}
-				});				
-			}	
-		});	
-	}else{
-		$.messager.alert('通知失败','请先选择记录，再执行更新操作!','error');
-	}
 }
 
 /**
@@ -631,7 +600,6 @@ function batchChannelWorldToSuperbSubmit() {
 				<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>
 				<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
 				<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
-				<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
 				<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照勾选顺序重新排序，并且生效" plain="true" iconCls="icon-converter" id="reIndexedBtn">计划重新排序并生效</a>
 				<a href="javascript:void(0);" onclick="javascript:openScheduleSuperbWindow();" class="easyui-linkbutton" title="按照计划的时间，使频道织图加精" plain="true" iconCls="icon-converter">计划加精</a>
 				<select id="ss-notified" class="easyui-combobox" style="width:100px;">

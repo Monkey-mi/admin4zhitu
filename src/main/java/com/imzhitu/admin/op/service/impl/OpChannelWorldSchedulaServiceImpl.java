@@ -13,7 +13,7 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
-import com.imzhitu.admin.channel.service.ChannelWorldInteractSchedulerService;
+import com.imzhitu.admin.channel.service.ChannelWorldService;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
@@ -49,7 +49,7 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 	private ChannelWorldMapper channelWorldMapper;
 	
 	@Autowired
-	private ChannelWorldInteractSchedulerService channelWorldInteractScheduler;
+	private ChannelWorldService channelWorldService;
 	
 	@Value("${urlPrefix}")
 	private String urlPrefix;
@@ -270,16 +270,8 @@ public class OpChannelWorldSchedulaServiceImpl extends BaseServiceImpl implement
 		    updateSchedulaDto.setFinish(Tag.TRUE);
 		    channelWorldValidSchedulaMapper.updateChannelWorldValidSchedula(updateSchedulaDto);
 		    
-		    channelService.updateChannelWorldValid(schedulaDto.getChannelId(), schedulaDto.getWorldId(), Tag.TRUE);
-		    
-		    // 刷新频道织图的serial，让10:50的织图排在最新，即serial最大
-		    channelService.addChannelWorldId(schedulaDto.getChannelId(), schedulaDto.getWorldId());
-		    
-		    // 更新织图和图片总数,删除时候调用
-		    webCannelService.updateWorldAndChildCount(schedulaDto.getChannelId());
-		    
-		    // 频道织图生效时，将其加入规划的频道织图互动表中，等待此表计划执行时，正式产生织图互动计划
-		    channelWorldInteractScheduler.addChannelWorldInteractScheduler(schedulaDto.getChannelId(), schedulaDto.getWorldId());
+		    // 执行频道织图生效
+		    channelWorldService.setChannelWorldValidByScheduler(schedulaDto.getChannelId(), schedulaDto.getWorldId());
 		}
 	}
 	

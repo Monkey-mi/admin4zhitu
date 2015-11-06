@@ -3,11 +3,13 @@
 <mapper namespace="com.imzhitu.admin.channel.mapper.ChannelWorldInteractSchedulerMapper">
 
 	<resultMap id="ChannelWorldInteractSchedulerMap" type="com.imzhitu.admin.common.pojo.ChannelWorldInteractScheduler">
+		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="channel_id" property="channelId" jdbcType="INTEGER"/>
 		<result column="world_id" property="worldId" jdbcType="INTEGER"/>
 		<result column="schedule_date" property="scheduleDate" jdbcType="TIMESTAMP" />
 		<result column="operator" property="operator" jdbcType="INTEGER"/>
 		<result column="complete" property="complete" jdbcType="INTEGER"/>
+		<result column="valid" property="valid" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<!-- 插入数据到频道织图生效规划互动表中 -->
@@ -26,6 +28,17 @@
 		where 
 			channel_id=#{channelId} 
 			and world_id=#{worldId}
+	</update>
+
+	<!-- 根据id设置频道织图规划对象生效 -->
+	<update id="setValidAndScheduleDateById">
+		update 
+			hts_admin.interact_channel_world_scheduler 
+		set 
+			valid = 1, 
+			schedule_date = #{scheduleDate}
+		where 
+			id = #{id} 
 	</update>
 	
 	<!-- 根据频道id与织图id，查询频道织图生效规划互动表未完成的数据 -->
@@ -46,7 +59,8 @@
 			hts_admin.interact_channel_world_scheduler 
 		where 
 			schedule_date between #{beginTime} and #{endTime}
-			and complete=0
+			and complete = 0
+			and valid = 1
 	</select>
 	
 </mapper>

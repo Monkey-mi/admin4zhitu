@@ -318,36 +318,6 @@ public class ChannelAction extends BaseCRUDAction{
 	}
 	
 	/**
-	 * 更新频道织图有效性,同时做发通知操作
-	 * 
-	 * @return
-	 */
-	public String updateChannelWorldValid() {
-		try {
-			channelService.updateChannelWorldValid(ids, valid);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch(Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 根据织图id更新有效性
-	 * 
-	 * @return
-	 */
-	public String updateWorldValidByCIDAndWID() {
-		try {
-			channelService.updateChannelWorldValid(channelId, worldId, valid);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch(Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
 	 * 
 	 * 更新精选标记和通知用户入选精选
 	 * @author mishengliang
@@ -373,21 +343,6 @@ public class ChannelAction extends BaseCRUDAction{
 		try {
 			channelService.addChannelWorldId(channelId, ids);
 			JSONUtil.optSuccess(jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 添加频道织图推荐消息
-	 * 
-	 * @return
-	 */
-	public String addChannelWorldRecommendMsgs() {
-		try {
-			channelService.addChannelWorldNoticeMsgs(ids);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
