@@ -333,15 +333,15 @@ function updateValid(valid) {
 		}
 		$.messager.confirm("温馨提示", tip, function(r){
 			if(r){
-				for(var i=0;i<rows.length;i+=1){
-					var params = {};
-					params.channelId = row[i].channelId;
-					params.worldId = row[i].worldId;
-					params.valid = valid;
+				for(var i=0;i<rows.length;i++){
+					var params = {
+						channelId: rows[i].channelId,
+						worldId: rows[i].id,
+						valid: valid
+					};
 					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
 						if(result['result'] == 0) {
-							$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
-							if(valid) {
+							if (valid) {
 								loadPageData(1);
 							} else {
 								$("#htm_table").datagrid("reload");
@@ -349,7 +349,7 @@ function updateValid(valid) {
 						}
 					});
 				}	
-				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值
+				$('#htm_table').datagrid("clearSelections"); //清除所有已选择的记录，避免重复提交id值
 			}	
 		});	
 	}else{

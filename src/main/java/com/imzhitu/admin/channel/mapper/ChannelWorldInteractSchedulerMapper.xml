@@ -63,4 +63,15 @@
 			and valid = 1
 	</select>
 	
+	<!-- 根据频道id与织图id，查询频道织图规划互动表未生效的数据 -->
+	<select id="queryChannelWorldInteractSchedulerInvalidList" resultMap="ChannelWorldInteractSchedulerMap">
+		select * 
+		from 
+			hts_admin.interact_channel_world_scheduler 
+		where 
+			channel_id=#{channelId} 
+			and world_id=#{worldId}
+			and valid = 0
+	</select>
+	
 </mapper>

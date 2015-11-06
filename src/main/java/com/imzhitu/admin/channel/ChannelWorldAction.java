@@ -38,6 +38,18 @@ public class ChannelWorldAction extends BaseCRUDAction {
 	 */
 	private Integer valid;
 	
+	public void setChannelId(Integer channelId) {
+		this.channelId = channelId;
+	}
+
+	public void setWorldId(Integer worldId) {
+		this.worldId = worldId;
+	}
+
+	public void setValid(Integer valid) {
+		this.valid = valid;
+	}
+
 	@Autowired
 	private ChannelWorldService service;
 

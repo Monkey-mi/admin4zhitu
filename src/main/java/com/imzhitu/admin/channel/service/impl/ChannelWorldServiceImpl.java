@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hts.web.base.HTSException;
 import com.hts.web.base.constant.Tag;
@@ -27,6 +28,7 @@ import com.imzhitu.admin.op.service.OpMsgService;
  * @author zhangbo	2015年11月5日
  *
  */
+@Service
 public class ChannelWorldServiceImpl implements ChannelWorldService {
 	
 	/**
