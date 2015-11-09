@@ -175,7 +175,7 @@ public interface ChannelWorldMapper {
 	List<Integer> queryChannelIdsByWorldId(Integer worldId);
 
 	/**
-	 * 更新频道织图生效，并且更新排序字段为最新
+	 * 更新频道织图生效（即设置为1），并且更新排序字段为最新
 	 * 
 	 * @param channelId	频道id
 	 * @param worldId	织图id

@@ -25,7 +25,6 @@ var maxId = 0,
 	recordIdKey = "channelWorldId",
 	uidKey = "userId",
 	loadDataURL = "./admin_op/channel_queryChannelWorld", //数据装载请求地址
-	updateValidURL = "./admin_op/channelWorld_updateChannelWorldValid",
 	updateSuperbURL = "./admin_op/channel_updateWorldSuperbByWID",
 	searchChannelMaxId = 0,
 	searchChannelQueryParams = {
@@ -192,23 +191,6 @@ function searchChannel() {
 }
 
 /**
- * 更新有效性
- */
-function updateValid(channelId, worldId, valid, index) {
-	$.post(updateValidURL,{
-		"channelId":channelId,
-		"worldId":worldId,
-		"valid":valid
-	}, function(result){
-		if(result['result'] == 0) {
-			updateValue(index, 'channelWorldValid', valid);
-		} else {
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-		}
-	},"json");
-}
-
-/**
  * 更新精选标记
  */
 function updateSuperb(channelId, worldId, superb, index) {
@@ -225,21 +207,6 @@ function updateSuperb(channelId, worldId, superb, index) {
 	},"json");
 	
 	
-}
-
-/**
- * 更新删除状态
- */
-function updateDeleteStatus(channelId, worldId, valid, index) {
-	var tip = "确定要删除吗?";
-	if(valid != 2) {
-		tip = "确定要恢复吗?";
-	}
-	$.messager.confirm('提示', tip, function(r){
-	if (r){
-		updateValid(channelId, worldId, valid, index);
-	}
-});
 }
 
 /**

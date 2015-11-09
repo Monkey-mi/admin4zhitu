@@ -167,7 +167,7 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ getSuperb(world['superb'], world, index)
 			+ '</span>'+ '<span>|</span>'
 			+ '<span class="world-opt-btn">'
-			+ getDeleteStatusOpt(world['channelWorldValid'], world, index)
+			+ getDeleteOpt(world)
 			+ '</span>'+ '<span>|</span>'
 			+ '<span class="world-opt-btn">'
 			+ getBeSchedulaOpt(world['beSchedula'], world, index)
@@ -352,32 +352,39 @@ function updateValues(index, keys, values) {
 };
 
 /**
- * 获取织图有效操作
+ * 获取织图有效操作，生效状态只是查看，而未生效状态是可以点击
  * 
- * @param value
- * @param row
- * @param index
+ * @param value	频道织图的生效状态，生效：1，未生效：0
+ * @param row	每个频道织图的信息
+ * @param index	此频道织图在集合中的脚标
  * @return
+ * @author zhangbo 2015-11-09
  */
 function getChannelWorldValid(value, row, index) {
-	if(row.valid == 0 || row.shield == 1 || value == 2) {
-		return '';
+	// 若频道织图为生效，则展示对号，没有点击操作
+	if ( value == 1) {
+		return "<img title='已经生效' class='htm_column_img pointer' src='./common/images/ok.png'/>";
+	} else if ( value == 0) { // 若频道织图未生效，则设置操作生效
+		return "<img title='点击生效' class='htm_column_img pointer' " 
+			+ "onclick='javascript:setValid("+ row.channelId + "," + row.worldId + "," + index + ")' src='./common/images/tip.png'/>";
 	}
-	switch(value) {
-		case 1:
-			tip = "已经生效,点击取消";
-			img = "./common/images/ok.png";
-			valid = 0;
-			break;
-		default:
-			tip = "点击生效";
-			img = "./common/images/tip.png";
-			valid = 1;
-			break;
-	}
-	return "<img title='"+ tip + "' class='htm_column_img pointer' " 
-		+ "onclick='javascript:updateValid(\""+ row.channelId + "\",\"" + row.worldId + "\","+ valid + "," + index + ")' " 
-		+ "src='" + img + "'/>";
+};
+
+/**
+ * 设置生效 
+ * @param channelId	频道id
+ * @param worldId	织图id
+ * @author zhangbo 2015-11-09
+ */
+function setValid(channelId, worldId, index) {
+	var params = {
+			channelId: channelId,
+			worldId: worldId,
+			valid: 1	// 生效设置valid为1
+		};
+	$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
+		updateValue(index, 'channelWorldValid', 1);
+	});
 };
 
 /**
@@ -410,28 +417,32 @@ function getSuperb(value, row, index) {
 };
 
 /**
- * 获取删除操作
- * 
- * @param value
- * @param row
- * @param index
+ * 获取删除操作，点击则删除频道织图，即小编删除
+ * @param row	每个频道织图的信息
  * @return
  */
-function getDeleteStatusOpt(value, row, index) {
-	if(value != 2) {
-		tip = "从频道删除织图";
-		opt = "删除";
-		valid = 2;
-	} else {
-		tip = "恢复至未生效状态";
-		opt = "恢复";
-		valid = 0;
-	}
-	
-	return "<a href=javascript:void(0); title='"+tip+"' class='updateInfo pointer' " 
-		+ "onclick='javascript:updateDeleteStatus(\""+ row.channelId + "\",\"" + row.worldId + "\","+ valid + "," + index + ")'>"
-		+ opt+"</a>";
+function getDeleteOpt(row) {
+	return "<img title='点击删除' class='htm_column_img pointer' " 
+		+ "onclick='javascript:setInvalid("+ row.channelId + "," + row.worldId + ")' src='./common/images/delete.png'/>";
 }
+
+/**
+ * 设置失效（即小编删除）
+ * @param channelId	频道id
+ * @param worldId	织图id
+ * @author zhangbo 2015-11-09
+ */
+function setInvalid(channelId, worldId) {
+	var params = {
+			channelId: channelId,
+			worldId: worldId,
+			valid: 2	// 删除设置valid为2，因为是小编删除
+		};
+	$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
+		// 更新成功后，刷新当前页面
+		loadData(myQueryParams['page'], myQueryParams['rows']);
+	});
+};
 
 /**
  * 获取被计划状态

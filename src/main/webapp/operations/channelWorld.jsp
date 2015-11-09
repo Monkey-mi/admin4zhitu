@@ -321,39 +321,58 @@ function searchChannel() {
 }
 
 /**
- * 更新有效性
- * @author zhangbo 2015-11-06
+ * 批量生效
+ * @author zhangbo 2015-11-09
  */
-function updateValid(valid) {
+function batchValid() {
 	var rows = $('#htm_table').datagrid('getSelections');	
 	if(rows.length > 0){
-		var tip = "您确定要使已选中的织图生效吗？";
-		if(valid == 0) {
-			tip = "您确定要使已选中的织图失效吗？";
-		}
-		$.messager.confirm("温馨提示", tip, function(r){
+		$.messager.confirm("温馨提示", "您确定要使已选中的织图生效吗？", function(r){
 			if(r){
 				for(var i=0;i<rows.length;i++){
 					var params = {
 						channelId: rows[i].channelId,
 						worldId: rows[i].id,
-						valid: valid
+						valid: 1	// 批量生效设置valid为1
 					};
-					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
-						if(result['result'] == 0) {
-							if (valid) {
-								loadPageData(1);
-							} else {
-								$("#htm_table").datagrid("reload");
-							}
-						}
-					});
-				}	
-				$('#htm_table').datagrid("clearSelections"); //清除所有已选择的记录，避免重复提交id值
+					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){});
+				}
+				// 清除所有已选择的记录，避免重复提交id值
+				$('#htm_table').datagrid("clearSelections");
+				// 批量生效重新第一页
+				loadPageData(1);
 			}	
 		});	
 	}else{
-		$.messager.alert("温馨提示","请先选择记录，再执行更新操作!");
+		$.messager.alert("温馨提示","请先选择记录，再执行批量生效操作!");
+	}
+}
+
+/**
+ * 批量删除（小编删除）
+ * @author zhangbo 2015-11-09
+ */
+function batchInvalid() {
+	var rows = $('#htm_table').datagrid('getSelections');	
+	if(rows.length > 0){
+		$.messager.confirm("温馨提示", "您确定要删除已选中的织图吗？", function(r){
+			if(r){
+				for(var i=0;i<rows.length;i++){
+					var params = {
+						channelId: rows[i].channelId,
+						worldId: rows[i].id,
+						valid: 2	// 批量删除设置valid为2，因为是小编删除
+					};
+					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){});
+				}
+				// 清除所有已选择的记录，避免重复提交id值
+				$('#htm_table').datagrid("clearSelections");
+				// 批量删除刷新当前页
+				$("#htm_table").datagrid("reload");
+			}	
+		});	
+	}else{
+		$.messager.alert("温馨提示","请先选择记录，再执行批量删除操作!");
 	}
 }
 
@@ -597,9 +616,9 @@ function batchChannelWorldToSuperbSubmit() {
 				<span class="search_label">请选择频道：</span>
 				<input id="ss-channel" style="width:100px;" />
 				<span id="htm_opt_btn" class="none">
-				<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>
-				<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
-				<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
+			<!--	<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>-->
+				<a href="javascript:void(0);" onclick="javascript:batchValid();" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
+				<a href="javascript:void(0);" onclick="javascript:batchInvalid();" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量删除</a>
 				<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照勾选顺序重新排序，并且生效" plain="true" iconCls="icon-converter" id="reIndexedBtn">计划重新排序并生效</a>
 				<a href="javascript:void(0);" onclick="javascript:openScheduleSuperbWindow();" class="easyui-linkbutton" title="按照计划的时间，使频道织图加精" plain="true" iconCls="icon-converter">计划加精</a>
 				<select id="ss-notified" class="easyui-combobox" style="width:100px;">

@@ -33,7 +33,8 @@ public class ChannelWorldAction extends BaseCRUDAction {
 	private Integer worldId;
 	
 	/**
-	 * 生效标志，生效：1，失效（未生效）：0
+	 * 生效标志，生效：1，小编删除：2
+	 * 注：只有用户发图到审核频道后，valid才为0，admin后台没有把频道织图valid设置为0的操作 
 	 * @author zhangbo	2015年11月5日
 	 */
 	private Integer valid;
@@ -63,7 +64,7 @@ public class ChannelWorldAction extends BaseCRUDAction {
 		try {
 			if ( valid == 1 ) {
 				service.setChannelWorldValidByOperator(channelId, worldId);
-			} else if ( valid == 0 ) {
+			} else if ( valid == 2 ) {
 				service.setChannelWorldInvalidByOperator(channelId, worldId);
 			}
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
