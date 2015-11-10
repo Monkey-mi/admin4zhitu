@@ -61,6 +61,14 @@ public interface ZTWorldTypeWorldMapper {
 	public void updateTypeWorldValidByWorldIds(@Param("worldIds")Integer[] worldIds,@Param("valid")Integer valid);
 	
 	/**
+	 * 根据worldIds批量更新有效性
+	 * @param typeWorldId
+	 * @param weight
+	 */
+	@DataSource("master")
+	public void updateTypeWorldWeightByTypeWorldId(@Param("typeWorldId")Integer typeWorldId,@Param("weight")Integer weight);
+	
+	/**
 	 * 根据worldIds查询分类
 	 * @param dto
 	 * @return

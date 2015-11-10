@@ -31,7 +31,6 @@ import com.hts.web.operations.service.impl.UserOperationsServiceImpl;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.common.database.Admin;
-import com.imzhitu.admin.common.pojo.OpSysMsg;
 import com.imzhitu.admin.common.pojo.OpUserRecommendDto;
 import com.imzhitu.admin.op.dao.UserRecommendDao;
 import com.imzhitu.admin.op.dao.UserZombieDao;
@@ -49,9 +48,6 @@ public class OpUserServiceImpl extends BaseServiceImpl implements OpUserService 
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
-	
-	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
 	
 	@Autowired
 	private PushService pushService;

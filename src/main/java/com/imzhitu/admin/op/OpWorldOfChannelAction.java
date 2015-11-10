@@ -7,12 +7,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
-import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.ChannelWorldRecyclerDto;
-import com.imzhitu.admin.common.pojo.OpWorldOfCannelDto;
 import com.imzhitu.admin.op.service.ChannelService;
 import com.imzhitu.admin.op.service.OpWorldOfCannelService;
 
@@ -229,7 +227,6 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
     private static final String EMPTY_SUCCESS = "永久删除成功";
     private static final String EMPTY_FAILED = "永久删除失败";
     private static final String SYNC_SUCCESS = "同步成功";
-    private static final String RECOVER_SUCCESS = "恢复成功";
     
     @Autowired
     private OpWorldOfCannelService opWorldOfCannelService;
@@ -283,37 +280,7 @@ public class OpWorldOfChannelAction extends BaseCRUDAction {
      * @author zhangbo 2015年5月19日
      */
     public String setValidOperation() {
-	try {
-	    // 若为有效，即在回收站中恢复
-	    if( isValid() ) {
-		// 在回收站中恢复，为批量，且valid设置为1
-		cannelService.updateChannelWorldValid(getIds(),1);
-		
-		// 由于是恢复，那么要把中间表中对应数据删除掉
-		Integer[] ids = StringUtil.convertStringToIds(getIds());
-		opWorldOfCannelService.deleteByIdsFromCache(ids);
-		
-		JSONUtil.optSuccess(RECOVER_SUCCESS, jsonMap);
-	    } 
-	    // 若为无效，即在页面点击删除
-	    else {
-		// 在主表中更新被删除的valid字段为0
-		cannelService.updateChannelWorldValid(getId().toString(),0);
-		
-		OpWorldOfCannelDto dto = new OpWorldOfCannelDto();
-		dto.setId(getId());
-		dto.setChannelId(getChannelId());
-		dto.setWorldId(getWorldId());
-		dto.setValid(0);
-		dto.setDeleteReason(getDeleteReason());
-		// 当前被删除的信息记录到中间表
-		opWorldOfCannelService.setDataToCache(dto);
-		
-		JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
-	    }
-	    // 更新织图和图片总数,删除时候调用
-	    webCannelService.updateWorldAndChildCount(getChannelId());
-	} catch (Exception e) {
+	try {} catch (Exception e) {
 	    log.info(e.getStackTrace().toString());
 	    JSONUtil.optFailed(e.getMessage(), jsonMap);
 	}

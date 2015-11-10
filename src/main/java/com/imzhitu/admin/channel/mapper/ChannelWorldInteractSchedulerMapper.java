@@ -15,7 +15,7 @@ import com.imzhitu.admin.common.pojo.ChannelWorldInteractScheduler;
 public interface ChannelWorldInteractSchedulerMapper {
 	
 	/**
-	 * 插入数据到频道织图生效规划互动表中
+	 * 插入数据到频道织图规划互动表中
 	 * 
 	 * @param channelId		频道id
 	 * @param worldId		织图id
@@ -26,6 +26,15 @@ public interface ChannelWorldInteractSchedulerMapper {
 	 */
 	@DataSource("master")
 	void insert(@Param("channelId")Integer channelId, @Param("worldId")Integer worldId, @Param("operator")Integer operator);
+	
+	/**
+	 * 根据id设置频道织图规划对象生效
+	 * 
+	 * @param id	频道织图规划对象主键id
+	 * @author zhangbo	2015年11月5日
+	 */
+	@DataSource("master")
+	void setValidAndScheduleDateById(@Param("id")Integer id, @Param("scheduleDate")Date scheduleDate);
 	
 	/**
 	 * 更新频道织图生效规划互动表中数据
@@ -40,7 +49,7 @@ public interface ChannelWorldInteractSchedulerMapper {
 	void update(@Param("channelId")Integer channelId, @Param("worldId")Integer worldId, @Param("complete")Integer complete);
 	
 	/**
-	 * 根据频道id与织图id，查询频道织图生效规划互动表未完成的数据
+	 * 根据频道id与织图id，查询频道织图规划互动表未完成的数据
 	 * 
 	 * @param channelId	频道id
 	 * @param worldId	织图id
@@ -51,7 +60,7 @@ public interface ChannelWorldInteractSchedulerMapper {
 	List<ChannelWorldInteractScheduler> queryChannelWorldInteractSchedulerNotCompleteList(@Param("channelId")Integer channelId, @Param("worldId")Integer worldId);
 	
 	/**
-	 * 根据时间段查询频道织图生效规划互动表未完成的数据
+	 * 根据时间段查询频道织图规划互动表已经生效且未完成的数据
 	 * 
 	 * @param beginTime	开始时间
 	 * @param endTime	结束时间
@@ -60,5 +69,16 @@ public interface ChannelWorldInteractSchedulerMapper {
 	 */
 	@DataSource("slave")
 	List<ChannelWorldInteractScheduler> queryChannelWorldInteractSchedulerListByTime(@Param("beginTime")Date beginTime, @Param("endTime")Date endTime);
+	
+	/**
+	 * 根据频道id与织图id，查询频道织图规划互动表未生效的数据
+	 * 
+	 * @param channelId	频道id
+	 * @param worldId	织图id
+	 * @return	频道织图规划的互动集合
+	 * @author zhangbo	2015年11月3日
+	 */
+	@DataSource("slave")
+	List<ChannelWorldInteractScheduler> queryChannelWorldInteractSchedulerInvalidList(@Param("channelId")Integer channelId, @Param("worldId")Integer worldId);
 	
 }

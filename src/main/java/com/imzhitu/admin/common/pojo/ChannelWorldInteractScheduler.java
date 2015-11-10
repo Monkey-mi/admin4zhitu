@@ -52,6 +52,12 @@ public class ChannelWorldInteractScheduler implements Serializable {
 	 * @author zhangbo	2015年10月29日
 	 */
 	private Integer complete;
+	
+	/**
+	 * 生效标志，生效：1，未生效：0
+	 * @author zhangbo	2015年11月5日
+	 */
+	private Integer valid;
 
 	/**
 	 * @return the id
@@ -135,6 +141,20 @@ public class ChannelWorldInteractScheduler implements Serializable {
 	 */
 	public void setComplete(Integer complete) {
 		this.complete = complete;
+	}
+
+	/**
+	 * @return the valid
+	 */
+	public Integer getValid() {
+		return valid;
+	}
+
+	/**
+	 * @param valid the valid to set
+	 */
+	public void setValid(Integer valid) {
+		this.valid = valid;
 	}
 	
 }

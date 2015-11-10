@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldWeightUpdateMapper">
+
+<resultMap type="com.imzhitu.admin.common.pojo.ZTWorldTypeWorldWeightUpdateDto" id="ZTWorldTypeWorldWeightUpdateDtoMap">
+	<result property="id" column="id" jdbcType="INTEGER"/>
+	<result property="typeWorldId" column="type_world_id" jdbcType="INTEGER"/>
+	<result property="endTime" column="end_time" jdbcType="BIGINT"/>
+</resultMap>
+
+<insert id="saveTypeWorldWeight">
+	insert into 
+	hts.htworld_type_world_weight(type_world_id,end_time) 
+	values(#{typeWorldId},#{endTime})
+</insert>
+
+<delete id="deleteTypeWorldWeightBytypeWorldId">
+	delete from  hts.htworld_type_world_weight 
+		where 
+		<if test="typeWorldId != 0">
+		type_world_id = #{typeWorldId}
+		</if>
+</delete>
+
+<select id="selectTypeWorldWeightByEndTime" resultMap="ZTWorldTypeWorldWeightUpdateDtoMap">
+	select * from hts.htworld_type_world_weight
+	where
+	<if test="endTime != 0">
+	<![CDATA[end_time <= #{endTime}]]>
+	</if>
+</select>
+</mapper>

@@ -216,7 +216,7 @@
 		where h.id=cw.world_id and cw.channel_id=#{channelId}
 	</select>
 	
-	<select id="queryWorldByChannelId" resultMap="OpChannelWorldMap">
+	<select id="queryChannelWorldByChannelIdAndWorldId" resultMap="OpChannelWorldMap">
 		select * from hts.operations_channel_world where channel_id=#{channelId} and world_id=#{worldId}
 	</select>
 	
@@ -247,9 +247,27 @@
 		update hts.operations_channel_world set serial=#{serial} where id=#{id}
 	</update>
 	
-	<update id="updateValidAndSerialByWID">
-		update hts.operations_channel_world set valid=#{valid}, serial=#{serial}
-		where channel_id=#{channelId} and world_id=#{worldId};
+	<!-- 更新频道织图生效，并且更新排序字段为最新 -->
+	<update id="updateValidAndSerial">
+		update 
+			hts.operations_channel_world 
+		set 
+			valid = 1, 
+			serial = #{serial}
+		where 
+			channel_id = #{channelId} 
+			and world_id = #{worldId};
+	</update>
+	
+	<!-- 更新频道织图失效，小编操作失效，valid设置为2 -->
+	<update id="updateInvalid">
+		update 
+			hts.operations_channel_world 
+		set 
+			valid = 2 
+		where 
+			channel_id = #{channelId} 
+			and world_id = #{worldId};
 	</update>
 	
 	<update id="updateSuperbByWID">

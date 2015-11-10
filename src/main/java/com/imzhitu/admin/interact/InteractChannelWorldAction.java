@@ -10,6 +10,7 @@ import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.channel.service.ChannelWorldInteractSchedulerService;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.interact.service.CommentService;
 import com.imzhitu.admin.interact.service.InteractChannelWorldService;
@@ -85,6 +86,9 @@ public class InteractChannelWorldAction extends BaseCRUDAction {
 	@Autowired
 	private CommentService commentService;
 	
+	@Autowired
+	private ChannelWorldInteractSchedulerService channelWorldInteractScheduler;
+	
 	/**
 	 * 添加频道织图互动（频道织图未生效）
 	 * 
@@ -117,6 +121,9 @@ public class InteractChannelWorldAction extends BaseCRUDAction {
 				interactChannelWorldService.saveChannelWorldInteractComment(channelId, worldId, commentIdArray);
 			}
 			
+			// 加入规划的频道织图互动表中，等待此表计划执行时，正式产生织图互动计划
+		    channelWorldInteractScheduler.addChannelWorldInteractScheduler(channelId, worldId);
+		    
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

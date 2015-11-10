@@ -305,30 +305,11 @@ public interface ChannelService extends BaseService {
 	public void addChannelWorldId(Integer id) throws Exception;
 
 	/**
-	 * 批量更新频道织图有效标记
-	 * 
-	 * @param idsStr
-	 * @param valid
-	 * @throws Exception
-	 */
-	public void updateChannelWorldValid(String idsStr, Integer valid) throws Exception;
-
-	/**
 	 * 根据wid更新有效性
 	 * @param wids
 	 * @param valid
 	 */
 	public void updateChannelWorldValid(Integer[] wids, Integer channelId, Integer valid) throws Exception;
-
-	/**
-	 * 根据频道id和织图id更新有效性
-	 * 
-	 * @param channelId
-	 * @param worldId
-	 * @param valid
-	 * @throws Exception
-	 */
-	public void updateChannelWorldValid(Integer channelId, Integer worldId, Integer valid) throws Exception;
 
 	/**
 	 * 更新织图精选标记
@@ -338,15 +319,6 @@ public interface ChannelService extends BaseService {
 	 */
 	public void updateChannelWorldSuperb(Integer channelId, Integer worldId, Integer superb) throws Exception;
 	
-	/**
-	 * 批量添加频道织图通知消息
-	 * TODO 这个功能要从接口方法中拿下来，保留一个月，到十一放假以后撤掉，变为实现类中的private方法
-	 * 
-	 * @param idsStr
-	 * @throws Exception
-	 */
-	public void addChannelWorldNoticeMsgs(String idsStr) throws Exception;
-
 	/**
 	 * 精品最多
 	 * @param dto
