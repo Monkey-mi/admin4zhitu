@@ -143,7 +143,7 @@ public class ChannelWorldServiceImpl implements ChannelWorldService {
 	private void addChannelWorldNoticeMsg(Integer channelId, Integer worldId) throws Exception {
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldByChannelIdAndWorldId(channelId, worldId);
 		if (world == null) {
-			throw new HTSException("记录已经被删除");
+			throw new Exception("记录已经被删除");
 		}
 		
 		// 查询出最后一次给此用户推送的通知，取出时间，与此时比较，大于一周的再发送通知，不超过一周的不发送通知	mishengliang
