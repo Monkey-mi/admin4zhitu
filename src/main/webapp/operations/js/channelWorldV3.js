@@ -94,7 +94,7 @@ function drawWorld($worldOpt, worlds, index) {
 			+'<span>'+phoneCodeColumn.formatter(world['phoneCode'],world,index) +'</span>'
 			+'<hr class="divider"></hr>'
 			+'<div>织图ID:' 
-			+ "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+world.worldId+",\""+wurl+"\","+world.valid+")'>"+world.worldId+"</a>"
+			+ "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+world.worldId+",\""+wurl+"\","+world.channelWorldValid+")'>"+world.worldId+"</a>"
 			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span>'
 			+'</div>'
 			+'<div>用户ID:'+world['authorId']
@@ -439,8 +439,6 @@ function setInvalid(channelId, worldId) {
 			valid: 2	// 删除设置valid为2，因为是小编删除
 		};
 	$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
-		// 更新成功后，刷新当前页面
-		loadData(myQueryParams['page'], myQueryParams['rows']);
 	});
 };
 
@@ -521,15 +519,16 @@ function openCommentsInteractPage(worldId) {
  * 
  * @param worldId	织图id
  * @param worldURL	织图在网页中展示的短链，即一个http链接
+ * @param channelWorldValid	频道织图是否生效
  * 
- * @author zhangbo 2015-10-27
+ * @author zhangbo 2015-11-10
  */
-function openHtworldShowForChannelWorldPage(worldId, worldURL, valid) {
+function openHtworldShowForChannelWorldPage(worldId, worldURL, channelWorldValid) {
 	var uri = "page_htworld_htworldShowForChannelWorld";
 	
 	uri += "?worldId=" + worldId;
 	uri += "&worldURL=" + worldURL;
-	uri += "&valid=" + valid;
+	uri += "&valid=" + channelWorldValid;
 	$.fancybox({
 		'href'				: uri,
 		'margin'			: 0,
