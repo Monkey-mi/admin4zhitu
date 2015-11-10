@@ -119,7 +119,7 @@ public class OpMsgAction extends BaseCRUDAction {
 		try {
 			String[] notice = request.getParameterValues("notice");
 			if(notice == null) {
-				throw new HTSException("必须选择通知位置");
+				throw new Exception("必须选择通知位置");
 			}
 			for(String n : notice) {
 				if(n.equals("inApp")) {

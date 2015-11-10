@@ -74,9 +74,9 @@ public class UserAction extends BaseCRUDAction {
 		try {
 			Integer isExists = webUserInfoService.checkLoginCodeExists(loginCode, PlatFormCode.ZHITU);
 			if(isExists == Tag.TRUE) {
-				JSONUtil.optResult(Tag.EXIST, UserInfoServiceImpl.TIP_LOGIN_CODE_EXIST, jsonMap);
+				JSONUtil.optResult(Tag.EXIST, "账号已存在", jsonMap);
 			} else {
-				JSONUtil.optResult(Tag.NOT_EXIST, UserInfoServiceImpl.TIP_LOGIN_CODE_NOT_EXIST, jsonMap);
+				JSONUtil.optResult(Tag.NOT_EXIST, "账号不存在", jsonMap);
 			}
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -93,9 +93,9 @@ public class UserAction extends BaseCRUDAction {
 		try {
 			Integer isExists = webUserInfoService.checkUserNameExists(userName);
 			if(isExists.equals(Tag.TRUE)) {
-				JSONUtil.optResult(Tag.EXIST, UserInfoServiceImpl.TIP_USER_NAME_EXIST, jsonMap);
+				JSONUtil.optResult(Tag.EXIST, "用户名已存在", jsonMap);
 			} else {
-				JSONUtil.optResult(Tag.NOT_EXIST, UserInfoServiceImpl.TIP_USER_NAME_NOT_EXIST, jsonMap);
+				JSONUtil.optResult(Tag.NOT_EXIST, "用户名不存在", jsonMap);
 			}
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

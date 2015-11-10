@@ -164,8 +164,8 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 				}
 				if(null == answerStr)answerStr = "哦";//若从机器人那里得到空值，则复制为哦
 				String  asStr= "回复@" + dto.getAuthorName() + ": " + answerStr;//加上名字
-				//更新htworld_comment 中的ck位
-				webWorldCommentDao.updateCkById(Tag.TRUE, dto.getCommentId());;
+//				//更新htworld_comment 中的ck位
+//				webWorldCommentDao.updateCkById(Tag.TRUE, dto.getCommentId());;D
 				//保存自动回复记录到interact_auto_response
 				Integer reAuthorId = dto.getAuthor();
 				dto.setAuthor(dto.getReAuthor());

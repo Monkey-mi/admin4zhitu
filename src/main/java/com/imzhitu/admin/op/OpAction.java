@@ -135,7 +135,7 @@ public class OpAction extends BaseCRUDAction {
 	public String saveSquarePushActivity() {
 		try {
 			if(worldId == null && StringUtil.checkIsNULL(titlePath)) {
-				throw new HTSException("封面链接和织图ID不能同时为空");
+				throw new Exception("封面链接和织图ID不能同时为空");
 			}
 			opService.saveActivity(labelId, titlePath, titleThumbPath, channelPath, activityName, 
 					activityTitle, activityDesc, activityLink, activityLogo, activityDate, deadline,

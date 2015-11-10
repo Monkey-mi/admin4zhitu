@@ -273,7 +273,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	@Override
 	public void saveChannelNoticeTemplate(Integer channelId, String contentTmpl, String channelNoticeType) throws Exception {
 		if ( !(contentTmpl.contains(notice_userName_flag) && contentTmpl.contains(notice_channelName_flag)) ) {
-			throw new HTSException("保存的通知信息模板不正确，请检查！");
+			throw new Exception("保存的通知信息模板不正确，请检查！");
 		}
 		// 定义通知信息模板对象
 		NoticeMsgTemplate nmt = new NoticeMsgTemplate();
@@ -472,7 +472,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			msg = msg.replace(notice_userName_flag, userName);
 			msg = msg.replace(notice_channelName_flag, channelName);
 		} else {
-			throw new HTSException("发送的通知信息模板不正确，请检查！ 相关信息：username：" + userName + " 频道名称： " + channelName);
+			throw new Exception("发送的通知信息模板不正确，请检查！ 相关信息：username：" + userName + " 频道名称： " + channelName);
 		}
 		return msg;
 	}

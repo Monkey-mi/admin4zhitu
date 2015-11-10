@@ -68,11 +68,7 @@ public class AdminServiceImpl extends BaseServiceImpl implements AdminService{
 		String password = userInfo.getPassword();
 		byte[] enPass = null;
 		if(password != null && !password.equals("")) {
-			try {
-				enPass = MD5Encrypt.encryptByMD5(password);
-			} catch (NoSuchAlgorithmException e) {
-				throw new HTSException(e);
-			}
+			enPass = MD5Encrypt.encryptByMD5(password);
 			userInfo.setPasswordEncrypt(enPass);
 		}
 		adminUserInfoMapper.updateUser(userInfo);
