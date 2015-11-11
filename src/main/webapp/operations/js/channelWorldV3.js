@@ -439,6 +439,9 @@ function setInvalid(channelId, worldId) {
 			valid: 2	// 删除设置valid为2，因为是小编删除
 		};
 	$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
+		if ( result.result == 0 ) {
+			$.messager.alert("温馨提示","删除成功！");
+		}
 	});
 };
 
