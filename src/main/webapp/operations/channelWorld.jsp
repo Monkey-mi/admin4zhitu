@@ -38,10 +38,31 @@
 			}
 		}
 	};
+	//mishengliang
 	columnsFields = [
 		{field : 'ck',checkbox : true },
 		{field : recordIdKey,title : '序号',align : 'center',width : 60},
-		worldIdColumn,
+		worldIdColumn = {field : 'worldId',title : '织图ID',align : 'center', sortable: true, 
+				formatter : function(value, row, index) {
+					
+					var url = row.worldURL;
+					if(row.worldURL == '' || row.worldURL == undefined) {
+						var slink;
+						if(row['shortLink'] == '')
+							slink = row[worldKey];
+						else 
+							slink = row['shortLink'];
+						url = worldURLPrefix + slink;
+					}
+					
+					return "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+row.worldId+",\""+url+"\","+row.channelWorldValid+")'>"+row.worldId+"</a>";
+				},
+				styler:function(value,row,index){
+					if(row.typeInteracted == 1){
+						return 'background-color:#fdf9bb;';
+					}
+				}
+			},
   		phoneCodeColumn,
   		authorAvatarColumn,
   		authorIdColumn,
@@ -605,6 +626,33 @@ function batchChannelWorldToSuperbSubmit() {
 	}
 }
 
+/**
+ * 打开织图互动展示（频道织图使用）页面
+ * 
+ * @param worldId	织图id
+ * @param worldURL	织图在网页中展示的短链，即一个http链接
+ * @param channelWorldValid	频道织图是否生效
+ * 
+ * @author zhangbo 2015-11-10
+ */
+function openHtworldShowForChannelWorldPage(worldId, worldURL, channelWorldValid) {
+	var uri = "page_htworld_htworldShowForChannelWorld";
+	
+	uri += "?worldId=" + worldId;
+	uri += "&worldURL=" + worldURL;
+	uri += "&valid=" + channelWorldValid;
+	$.fancybox({
+		'href'				: uri,
+		'margin'			: 0,
+		'width'				: '98%',
+		'height'			: '98%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe'
+	});
+}
+
 </script>
 </head>
 <body>
@@ -618,7 +666,7 @@ function batchChannelWorldToSuperbSubmit() {
 				<span id="htm_opt_btn" class="none">
 			<!--	<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>-->
 				<a href="javascript:void(0);" onclick="javascript:batchValid();" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
-				<a href="javascript:void(0);" onclick="javascript:batchInvalid();" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量删除</a>
+				<a href="javascript:void(0);" onclick="javascript:batchInvalid();" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-cut">批量删除</a>
 				<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照勾选顺序重新排序，并且生效" plain="true" iconCls="icon-converter" id="reIndexedBtn">计划重新排序并生效</a>
 				<a href="javascript:void(0);" onclick="javascript:openScheduleSuperbWindow();" class="easyui-linkbutton" title="按照计划的时间，使频道织图加精" plain="true" iconCls="icon-converter">计划加精</a>
 				<select id="ss-notified" class="easyui-combobox" style="width:100px;">
