@@ -783,8 +783,10 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 									if(data.result == 0){
 										var result = data['obj'];
 										arr = 	value.match(regDemo);
-										for(var i = 0; i < arr.length; i++){
-											value = value.replace(arr[i],"<a onmouseover='setAuthorAvatarTimer(" + result[i].atId + ",event);' onmouseout='javascript:clearAuthorAvatarTimer();'  class='updateInfo' href='javascript:showUserInfo(\""+uri+result[i].atId+"\")'>" + arr[i] + "</a>");
+										if(result.length != 0){ //防止从微博中复制过来但又检测到有@格式,且数据库中没有此被@人的数据。
+											for(var i = 0; i < arr.length; i++){
+												value = value.replace(arr[i],"<a onmouseover='setAuthorAvatarTimer(" + result[i].atId + ",event);' onmouseout='javascript:clearAuthorAvatarTimer();'  class='updateInfo' href='javascript:showUserInfo(\""+uri+result[i].atId+"\")'>" + arr[i] + "</a>");
+											}											
 										}
 									}else{
 										$.massager.alert("数据返回错误");
