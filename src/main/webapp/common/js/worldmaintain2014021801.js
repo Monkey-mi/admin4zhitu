@@ -763,7 +763,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				}
 			}
 		},
-		//mishengliang
+		//修改完后分享列表中的织图描述中的@可以点击查看被@人的信息
 	worldDescColumn = {field : 'worldDesc',title : '织图描述',align : 'center', width : 100,
 			formatter: function(value,row,index){
 				var uri = 'page_user_userInfo?userId=';
@@ -786,7 +786,6 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 										for(var i = 0; i < arr.length; i++){
 											value = value.replace(arr[i],"<a onmouseover='setAuthorAvatarTimer(" + result[i].atId + ",event);' onmouseout='javascript:clearAuthorAvatarTimer();'  class='updateInfo' href='javascript:showUserInfo(\""+uri+result[i].atId+"\")'>" + arr[i] + "</a>");
 										}
-										alert(value);
 									}else{
 										$.massager.alert("数据返回错误");
 									}

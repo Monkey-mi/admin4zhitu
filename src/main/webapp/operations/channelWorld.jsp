@@ -386,6 +386,7 @@ function batchInvalid() {
 					};
 					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){});
 				}
+				$.messager.alert("温馨提示","删除" + rows.length + "条记录");
 				// 清除所有已选择的记录，避免重复提交id值
 				$('#htm_table').datagrid("clearSelections");
 				// 批量删除刷新当前页
