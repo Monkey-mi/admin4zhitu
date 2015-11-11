@@ -146,34 +146,6 @@
         </property>
     </bean>
     
-    
-    <!-- 互动跟踪定时任务 -->
-    <!-- 
-    <bean id="trackInteractJobDetail"
-        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject">
-            <ref bean="interactWorldService" />
-        </property>
-        <property name="targetMethod">
-            <value>trackInteract</value>
-        </property>
-        <property name="concurrent"> 
-			<value>true</value>
-		</property> 
-    </bean> -->
-
-	<!-- 互动跟踪定时任务周期 -->
-	<!--
-    <bean id="trackInteractJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail">
-            <ref bean="trackInteractJobDetail" />
-        </property>
-        <property name="cronExpression">
-            <value>0 0/20 * * * ?</value>
-        </property>
-    </bean> 
-    -->
-    
     <!-- 更新未完成互动定时任务 -->
     <!-- 
     <bean id="updateInteractScheduleJobDetail"

@@ -97,11 +97,6 @@ public class InteractWorldServiceTest extends BaseTest {
 	}
 	
 	@Test
-	public void testTrackInteract() throws Exception {
-		service.trackInteract();
-	}
-	
-	@Test
 	public void testCommitComment() throws Exception {
 		service.commitComment();
 	}

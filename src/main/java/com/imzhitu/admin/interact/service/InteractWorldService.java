@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gxp.org.apache.xerces.impl.xs.identity.Field;
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.InteractUser;
 import com.imzhitu.admin.common.pojo.InteractUserFollow;
@@ -270,11 +269,6 @@ public interface InteractWorldService extends BaseService {
 	 * 构建跟踪列表
 	 */
 	public void buildTracker(Map<String, Object> jsonMap);
-	
-	/**
-	 * 跟踪互动
-	 */
-	public void trackInteract();
 	
 	/**
 	 * 根据worldID列表来更新worldID对应的有效状态(织图互动表)
