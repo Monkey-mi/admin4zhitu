@@ -171,7 +171,9 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 				String[] commentIds = commentStr.split(",");
 				Integer likeCount = worldLevel.getMax_liked_count() + worldLevel.getMin_liked_count() / 2;
 				Integer playCount = worldLevel.getMax_play_times() + worldLevel.getMin_play_times() / 2;
-				interactWorldService.saveInteractV3(worldId, playCount, likeCount, commentIds, worldLevel.getTime());
+//				interactWorldService.saveInteractV3(worldId, playCount, likeCount, commentIds, worldLevel.getTime());
+				// TODO 目前广场互动的逻辑与老版本的saveInteractV3一致，这块以后肯定要整体整改
+				interactWorldService.saveTypeInteract(worldId, playCount, likeCount, commentIds, worldLevel.getTime());
 //			}
 			
 			Integer uid = interactWorldlevelDao.QueryUIDByWID(worldId);

@@ -432,6 +432,19 @@ public interface InteractWorldService extends BaseService {
 	public void saveInteractV3(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
 	
 	/**
+	 * 广场添加互动
+	 * 
+	 * @param worldId
+	 * @param clickCount
+	 * @param likeCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 * @author zhangbo	2015年11月11日
+	 */
+	public void saveTypeInteract(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
+	
+	/**
 	 * 根据织图id、织图标签，进行用户等级的互动，
 	 * @param worldId
 	 * @param labelIdsStr
