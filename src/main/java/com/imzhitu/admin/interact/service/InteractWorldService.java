@@ -339,13 +339,6 @@ public interface InteractWorldService extends BaseService {
 	public InteractWorld queryInteractByWorldId(Integer worldId) throws Exception;
 	
 	/**
-	 * 更新互动播放喜欢评论计划
-	 * @param wids
-	 * @throws Exception
-	 */
-	public void updateInteractCommentLikedClickByWorldId(Integer[] wids)throws Exception;
-	
-	/**
 	 * 根据织图id查询互动id
 	 */
 	public Integer queryIntegerIdByWorldId(Integer wId)throws Exception;

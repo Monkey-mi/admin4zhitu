@@ -62,7 +62,6 @@ import info.monitorenter.cpdetector.io.JChardetFacade;
 import info.monitorenter.cpdetector.io.ParsingDetector;
 import info.monitorenter.cpdetector.io.UnicodeDetector;
 
-//@Service
 public class InteractWorldServiceImpl extends BaseServiceImpl implements
 		InteractWorldService{
 	
@@ -1554,29 +1553,6 @@ public class InteractWorldServiceImpl extends BaseServiceImpl implements
 	public InteractWorld queryInteractByWorldId(Integer worldId) throws Exception{
 		return interactWorldDao.queryInteractByWorldId(worldId);
 	}
-	
-	/**
-	 * 更新互动播放喜欢评论计划
-	 * @param worldId
-	 * @throws Exception
-	 */
-	@Override
-	public void updateInteractCommentLikedClickByWorldId(Integer[] wids)throws Exception{
-		List<InteractWorld> interactWorldList = interactWorldDao.queryInteractByWIDs(wids);	
-		if(interactWorldList !=null && !interactWorldList.isEmpty()){
-			try{
-				updateInteractValidByWIDs(wids, Tag.TRUE);
-				for(InteractWorld o:interactWorldList){
-					updateClickValidAndSCHTimeByInteractId(o.getId(), o.getDateAdded());
-					updateCommentValidAndSCHTimeByInteractId(o.getId(), o.getDateAdded());
-					updateLikedValidAndSCHTimeByInteractId(o.getId(), o.getDateAdded());
-				}
-			}catch(Exception e){
-				throw e;
-			}
-		}	
-	}
-	
 	
 	/**
 	 * 根据织图id查询互动id

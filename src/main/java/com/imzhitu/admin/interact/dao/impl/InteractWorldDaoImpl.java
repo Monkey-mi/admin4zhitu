@@ -34,10 +34,6 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 	 */
 	private static final String UPDATE_VALID_TRUE_BY_WORLDID = "update "+table +" set valid=" + Tag.TRUE+" where world_id in ";
 	private static final String UPDATE_VALID_FALSE_BY_WORLDID = "update "+table +" set valid=" + Tag.FALSE+" where world_id in ";
-	/**
-	 * 根据worldId列表来查询
-	 */
-	private static  final String QUERY_INTERACT_BY_WIDs = "select * from " + table + " where world_id in "; 
 	
 	/**
 	 * 保存互动
@@ -268,22 +264,6 @@ public class InteractWorldDaoImpl extends BaseDaoImpl implements
 		}
 		String sql = head + SQLUtil.buildInSelection(wids);
 		getMasterJdbcTemplate().update(sql,(Object[])wids);
-	}
-	
-	/**
-	 * 根据worldIds列表来查询
-	 * @param ids
-	 * @return
-	 */
-	@Override
-	public List<InteractWorld> queryInteractByWIDs(Integer[] wids){
-		String sql = QUERY_INTERACT_BY_WIDs + SQLUtil.buildInSelection(wids);
-		return getJdbcTemplate().query(sql, wids, new RowMapper<InteractWorld>(){
-			@Override 
-			public InteractWorld mapRow(ResultSet rs,int rowNum)throws SQLException{
-				return buildInteract(rs);
-			}
-		});
 	}
 	
 	/**
