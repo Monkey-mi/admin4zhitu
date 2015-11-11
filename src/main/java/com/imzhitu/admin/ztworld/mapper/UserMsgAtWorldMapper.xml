@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.ztworld.mapper.UserMsgAtWorldMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.UserMsgAtWorldDto" id="userMsgAtWorldDto">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
+		<result property="atId" column="at_id" jdbcType="INTEGER"/>
+		<result property="atName" column="at_name" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="queryAtWorldByWorldId" resultMap="userMsgAtWorldDto">
+		select 
+			* 
+		from 
+			hts.user_msg_at_world
+		where 
+		<if test="worldId != null ">
+			world_id = #{worldId}
+		</if>
+	</select>
+	
+</mapper>

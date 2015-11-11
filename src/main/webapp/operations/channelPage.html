@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="送你一片天空">
+<title></title>
+<style type="text/css">
+body {
+	margin: 0 auto 0 auto;
+	padding: 0;
+	text-align: center;
+	font-size:0;
+	font-family:"微软雅黑",Arial, Helvetica, sans-serif;
+	background:#E6E6E3;
+}
+
+img {
+	width: 100%;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+#main {
+	display:inline-block;
+	width: 100%;
+	max-width:640px;
+ 	margin-bottom:60px; 
+	background-color:#ffffff;
+	/* display:none; */
+}
+
+.officeButton{
+	position:fixed;
+	width:108px;
+	height:108px;
+	margin-left: 500px;
+	bottom: 132px;
+}
+
+#div-propaganda{
+	margin: auto;
+	padding-top: 6px;
+	padding-bottom:8px;
+	background-color: #EDEFF1;
+	display:none;
+}
+
+.slide{
+	width:612px;
+	height:284px;
+	margin:0 auto;
+	overflow:hidden;
+	position:relative;
+}
+
+.slide a{
+	text-decoration:none;
+	color:#ffffff;
+}
+
+.slide .div-slide-img{position:absolute;
+	top:0;
+	left:0;
+	width:3060px;
+}
+
+.slide .div-slide-img img{float:left;}
+
+.slide img{width:612px;}
+
+.div-slide-btn{width:612px;
+height:20px;
+line-height:20px;
+position:absolute;
+bottom:10px;z-index:11;
+text-align:center;
+font-size:20px;
+}
+
+.div-slide-btn a.hover{color:rgba(255,255,255,0.6);}
+
+.concernDataShow{
+	background-color:rgba(0,0,0,0.6);
+	width:160px;height:50px;
+	position: absolute; 
+	margin: 200px 0px 0px 470px;
+	border-radius: 25px;
+	font-size:20px;color:#ffffff;
+	line-height:50px
+}
+
+.channelIntro{
+	margin:20px;
+	font-size:24px;
+	text-align:justify;
+	line-height:35px;
+	color:#62707d;
+}
+
+.dataShow{
+	font-size:28px;
+	border-top:1px solid rgba(167,167,167,0.5);
+	border-bottom:1px solid rgba(167,167,167,0.5);
+	padding:18px 0 16px 0;
+	color:#373e46;
+}  
+
+.superbDataShow{
+	width:320px;
+	position: absolute;
+} 
+
+.stickerDataShow{
+	width:320px;
+	margin-left:320px; 
+	border-left: 1px solid rgba(167,167,167,0.5);
+}  
+
+.preShowPicForWtworld{
+	background-color:#edeff1;
+	padding:20px 14px 20px 8px;
+} 
+
+.preShowPicForWtworld img{
+	width:200px;
+	height:200px;
+	margin-left:6px;
+	margin-bottom:6px;
+	border-radius: 5px;
+	box-shadow:0 0 1px  #85848a;
+} 
+
+#download-wrap {
+	width:100%;
+	text-align:center;
+	position:fixed;
+	bottom:0;
+	height:60px;
+	display:none;
+	text-align:center;
+	z-index:99999;
+}
+
+#download-btn {
+	height:100%;
+	width:100%;
+	display:inline-block;
+	color:#ffffff;
+}
+
+#download-bg {
+	width:100%;
+	height:100%;
+	position:absolute;
+	left:0px;
+}
+
+#download-logo {
+	width:auto;
+	height:44px;
+	position:absolute;
+	left:0px;
+	margin-top:8px;
+	margin-left:12px;
+	
+}
+
+#download-close {
+	width:15px;
+	height:15px;
+	position:absolute;
+	right:0;
+	display:inline;
+	cursor:pointer;
+}
+
+#download-tip {
+	background:#3a97d0;
+	width: 100px;
+	height:36px;
+	right:0;
+	color:#ffffff;
+	-moz-border-radius: 4px;   
+	-webkit-border-radius: 4px;
+    border-radius: 4px;
+    margin:12px 18px 0 0;
+    line-height:36px;
+    text-align:center;
+    position:absolute;
+    font-size:14px;
+}
+
+</style>
+</head>
+<body>
+<div id='wx_pic' style="display:none;">
+	<img src='http://static.imzhitu.com/op/channel/1442834798000.jpg' />
+</div>
+
+<div id="main">
+
+	<!-- 动态加载模块 -->
+	<div id="activityLoading"></div>
+	
+<!-- 	
+	静态加载下的固定数据源
+	//进入官网按钮
+	<div id="officeButton" class="officeButton" style="width:108px;height:108px;position:fixed;margin-left: 500px;margin-top: 300px;">
+		<img alt="" src="http://imzhitu.qiniudn.com/op/office/OfficeButton.png" />
+	</div>
+	
+	//关注数据
+	<div id="concernDataShow"  class="concernDataShow" >1230人已关注</div> 
+	
+	//频道图片
+ 	<div id="header">
+		<img alt="" src="http://static.imzhitu.com/op/channel/1442834798000.jpg" /> 
+	</div>
+	
+	//频道介绍
+ 	<div id="channelIntro"  class="channelIntro" >
+		看过很多天空的颜色，蓝色是静谧，红色是热情，黑压压是低沉……我们都是爱天空的孩子，送一片最美给你。
+	</div> 
+	
+	//参与数据展示
+ 	<div id="dataShow"  class="dataShow">
+		<div id="superbDataShow" class="superbDataShow" >
+				<span>精选<br>123</span>		
+		</div>
+		<div id="stickerDataShow"  class="stickerDataShow" >
+				<span>参与<br>1230</span>		
+		</div>
+	</div> 
+	
+	//九宫格展示图
+ 	<div id="preShowPicForWtworld"  class="preShowPicForWtworld" >
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/00/00/1446883200.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/02/40/00/1446662400.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/05/00/1446883500.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/02/45/00/1446662700.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/10/00/1446883800.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/4a6cfbd07b1fe59e0d8e9cff9ba45b14_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/dba84d6ccbb2b050f7f350d5d9efd740_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/19/9e8c608a9348724bbfa8d56928b50129_30002@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/71e6d5e6bbf27df556a8180d2ce4f8cc_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/00/00/1446883200.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/02/40/00/1446662400.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/05/00/1446883500.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/02/45/00/1446662700.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/10/00/1446883800.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/4a6cfbd07b1fe59e0d8e9cff9ba45b14_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/dba84d6ccbb2b050f7f350d5d9efd740_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/19/9e8c608a9348724bbfa8d56928b50129_30002@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/71e6d5e6bbf27df556a8180d2ce4f8cc_30006@2x.jpg">
+				<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/00/00/1446883200.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/02/40/00/1446662400.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/05/00/1446883500.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/02/45/00/1446662700.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/10/00/1446883800.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/4a6cfbd07b1fe59e0d8e9cff9ba45b14_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/dba84d6ccbb2b050f7f350d5d9efd740_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/19/9e8c608a9348724bbfa8d56928b50129_30002@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/71e6d5e6bbf27df556a8180d2ce4f8cc_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/00/00/1446883200.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/02/40/00/1446662400.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/05/00/1446883500.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/02/45/00/1446662700.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/07/16/10/00/1446883800.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/4a6cfbd07b1fe59e0d8e9cff9ba45b14_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/dba84d6ccbb2b050f7f350d5d9efd740_30006@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/19/9e8c608a9348724bbfa8d56928b50129_30002@2x.jpg">
+		<img  alt="" src="http://static.imzhitu.com/ios/image/2015/11/05/52/71e6d5e6bbf27df556a8180d2ce4f8cc_30006@2x.jpg">
+	</div> -->
+	
+		<!-- 轮播图片 -->
+		<div id="div-propaganda">
+			<div class="slide" id="div-slide">
+				<div class="div-slide-img">
+					<img src="http://ww4.sinaimg.cn/large/a0a4bc09gw1er8n9yh6poj20fk078ab8.jpg" title="图片1"/>
+					<img src="http://ww1.sinaimg.cn/large/a0a4bc09gw1er8rwlndlkj20fk078aaz.jpg" title="图片2"/>
+					<img src="http://ww4.sinaimg.cn/large/a0a4bc09gw1er8rwo4pn3j20fk078757.jpg" title="图片3"/>
+					<img src="http://ww1.sinaimg.cn/large/a0a4bc09gw1er8rwxb6fyj20fk078gmi.jpg" title="图片4">
+					<img src="http://ww2.sinaimg.cn/large/a0a4bc09gw1er8rwzl6tej20fk078q3w.jpg" title="图片5">
+				</div>
+				<div class="div-slide-btn">
+					<a href="#" class="hover">●</a>
+					<a href="#">●</a>
+					<a href="#">●</a>
+					<a href="#">●</a>
+					<a href="#">●</a>
+				</div>
+			</div> 
+		</div>
+		
+	<div id="download-wrap">
+		<img id="download-logo" alt="" src="/individual/images/logo.png">
+		<div id="slogan">
+			<span id="zhitu-name">织图</span>
+			<span id="zhitu-slogan">年轻人的生活方式</span>
+		</div>				
+		<span id="download-close" onclick="javascript:hideDownloadBtn();"><img title="隐藏"  alt="" src="/individual/images/x@2x.png"></span>
+		<span id="download-tip" onclick="download()">点击下载</span>
+	</div>
+	
+</div>
+
+<script type="text/javascript" src="/staticres/base/js/callapp2.js"></script> 
+<script type="text/javascript" src="/staticres/base/js/jquery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/individual/js/rorate.js"></script>
+<script type="text/javascript">
+
+ $(document).ready(function() {
+	 //获取channelId
+	 	var url = window.location.href;
+	 	var channelId1 = url.substring(url.lastIndexOf("?")+1,url.length);
+	 	var end = channelId1.length;
+	 	if(channelId1.indexOf("&") != -1){
+	 		end = channelId1.indexOf("&");
+	 	}
+	 	var channelId = channelId1.substring(channelId1.indexOf("=")+1,end);
+	 	
+	 	$.post("/operations/channel_getChannelSharePageInfo",{
+	 		channelId:channelId
+	 	},function(data){
+	 		if(data.result == 0){
+	 		var result = data['obj'];
+	 		var channelName = result.opChannelDetail.channelName; 
+	 		var channelDesc = result.opChannelDetail.channelDesc;
+	 		var worldCount = result.opChannelDetail.worldCount;
+	 		var superbCount = result.opChannelDetail.superbCount;
+	 		var memberCount = result.opChannelDetail.memberCount;
+	 		var banner = result.opChannelDetail.banner;
+	 		var imgs;
+	 		
+	 		//循环加入图片
+	 		if(result.opChannelWorldDto.length > 0){
+	 		for(var i = 0; i < result.opChannelWorldDto.length; i++ ){
+	 			imgs  += '<a id="img'+ result.opChannelWorldDto[i].id +' " href="http://imzhitu.com/DT' +result.opChannelWorldDto[i].shortLink + '"><img  alt="" src=" ' + (result.opChannelWorldDto[i].titleThumbPath).replace(".middleImage","") + ' "></a>' 
+	 		}
+	 		}else{
+	 			alert('还没有产生精选奥。');
+	 		}
+	 		
+			//修改文件描述
+			 var oMeta = document.getElementsByTagName('meta')[3];
+			 oMeta.content = channelName;
+			 
+			 //设置标题
+	 		$("title").text(channelName);
+			 
+	 		 $("#activityLoading").append('<div id="officeButton" class="officeButton" style="width:108px;height:108px;position:fixed;margin-left: 500px;margin-top: 300px;">' + 
+														'<a href="http://imzhitu.com"><img alt="" src="http://imzhitu.qiniudn.com/op/office/officeButton01.png" /></a></div>');
+				$("#activityLoading").append('<div id="concernDataShow"  class="concernDataShow" ><span style="color:#ffab08">' + changeNumber(memberCount) + '</span>人已关注</div>');
+				$("#activityLoading").append('<div id="header"><img alt="" src=" ' + banner + ' " /> </div>');
+				$("#activityLoading").append('<div id="channelIntro"  class="channelIntro" >' + channelDesc + '</div>');
+				$("#activityLoading").append('<div id="dataShow"  class="dataShow"><div id="superbDataShow" class="superbDataShow" ><span>' + changeNumber(superbCount) + '<br>精选</span></div>' + 
+														'<div id="stickerDataShow"  class="stickerDataShow" ><span>' + changeNumber(worldCount) + '<br>参与</span></div></div>');
+				$("#activityLoading").append('<div id="preShowPicForWtworld"  class="preShowPicForWtworld" >' + imgs+ '</div>');
+				initLayout(); 
+	 		}else{
+	 			alert("数据返回错误");
+	 		}
+	 	},"json");
+	 
+
+	$("#download-wrap").show();
+ 	
+});
+ 
+ function changeNumber(number){
+	 if (number > 10000){
+		 number = (number / 1000).toFixed(1) ;
+		 number = number + 'k';
+	 }
+	 return number;
+ }
+
+function initLayout() {
+	var maxW = 640;
+	var winWidth = $(window).width();
+	
+	winWidth = winWidth > maxW ? maxW : winWidth;
+
+	var scale = 1,
+		
+//设置主面板margin-bottom值
+	mainMarginBottom = 104,
+	
+	officeButtonWidth = 108,
+	officeButtonHeight = 108,
+	officeButtonMarginLeft = 500, 
+	officeButtonBottom =  132,
+
+	//设置轮播面板的初始值
+	divPropagandaPaddingTop = 6,
+	divPropagandaPaddingBottoom = 8,
+	
+	slideWidth = 612,
+	slideHeight = 284,
+	slidRadius = 15,
+
+	slideDivSlideImgWidth = 3060,
+
+	slideImgWidth = 612,
+
+	divSlideBtnWidth = 612,
+	divSlideBtnHeight = 20,
+	divSlideBtnLineHeight = 20,
+	divSlideBtnBottom = 10,
+	divSlideBtnFontSize = 20,
+	
+	//频道关注数量展示
+	concernDataShowWidth = 160,
+	concernDataShowHeight = 50,
+	concernDataShowMarginTop = 145,
+	concernDataShowLeft = 470,
+	concernDataShowBorderRadius = 25,
+	concernDataShowFontSize = 20,
+	concernDataShowLineHeight = 50,
+	
+	//频道介绍
+	channelIntroMargin = 20,
+	channelIntroFontSize = 24,
+	channelIntroLineHeight = 35,
+
+	dataShowFontSize = 28,
+	dataShowPaddingTop = 18,
+	dataShowPaddingBottom = 16,
+
+	superbDataShowWidth = 320,
+
+	stickerDataShowWidth = 319,
+	stickerDataShowMarginLeft = 320,
+
+	preShowPicForWtworldPaddingTop = 14,
+	preShowPicForWtworldPaddingLeft = 2,
+	preShowPicForWtworldPaddingBottom = 2,
+	preShowPicForWtworldPaddingRight = 8,
+	
+	preShowPicForWtworldImgWidth = 200,
+	preShowPicForWtworldImgHeight = 200,
+	preShowPicForWtworldImgMarginLeft = 6,
+	preShowPicForWtworldImgBorderRadius = 5,
+
+	scale = winWidth / maxW;
+	
+	//设置主面板margin-bottom值
+	mainMarginBottom = mainMarginBottom * scale;
+	
+	officeButtonWidth = officeButtonWidth * scale;
+	officeButtonHeight = officeButtonHeight * scale;
+	officeButtonMarginLeft = officeButtonMarginLeft * scale; 
+	officeButtonBottom =  officeButtonBottom * scale;
+	
+	//设置轮播面板的初始值
+	divPropagandaPaddingTop = divPropagandaPaddingTop * scale;
+	divPropagandaPaddingBottoom = divPropagandaPaddingBottoom * scale;
+	
+	slideWidth = slideWidth * scale;
+	slideHeight = slideHeight * scale;
+	slidRadius = slidRadius * scale;
+	
+	slideDivSlideImgWidth = slideDivSlideImgWidth * scale;
+	
+	slideImgWidth = slideImgWidth * scale;
+
+	divSlideBtnWidth = divSlideBtnWidth * scale;
+	divSlideBtnHeight = divSlideBtnHeight * scale;
+	divSlideBtnLineHeight = divSlideBtnLineHeight * scale;
+	divSlideBtnBottom = divSlideBtnBottom * scale;
+	divSlideBtnFontSize = divSlideBtnFontSize * scale;
+	
+	//频道关注数
+	concernDataShowWidth = concernDataShowWidth * scale;
+	concernDataShowHeight = concernDataShowHeight * scale;
+	concernDataShowMarginTop = concernDataShowMarginTop * scale;
+	concernDataShowLeft = concernDataShowLeft * scale;
+	concernDataShowBorderRadius = concernDataShowBorderRadius * scale;
+	concernDataShowFontSize = concernDataShowFontSize * scale;
+	concernDataShowLineHeight = concernDataShowLineHeight * scale;
+	
+	//频道介绍
+	channelIntroMargin = channelIntroMargin * scale;
+	channelIntroFontSize = channelIntroFontSize * scale;
+	channelIntroLineHeight = channelIntroLineHeight * scale;
+	
+	dataShowFontSize = dataShowFontSize * scale;
+	dataShowPaddingTop = dataShowPaddingTop * scale;
+	dataShowPaddingBottom = dataShowPaddingBottom * scale;
+	
+	superbDataShowWidth = superbDataShowWidth * scale;
+	
+	stickerDataShowWidth = stickerDataShowWidth * scale;
+	stickerDataShowMarginLeft = stickerDataShowMarginLeft * scale;
+	
+	preShowPicForWtworldPaddingTop = preShowPicForWtworldPaddingTop * scale;
+	preShowPicForWtworldPaddingLeft = preShowPicForWtworldPaddingLeft * scale;
+	preShowPicForWtworldPaddingBottom = preShowPicForWtworldPaddingBottom * scale;
+	preShowPicForWtworldPaddingRight = preShowPicForWtworldPaddingRight * scale;
+	
+	preShowPicForWtworldImgWidth = preShowPicForWtworldImgWidth * scale;
+	preShowPicForWtworldImgHeight = preShowPicForWtworldImgHeight * scale;
+	preShowPicForWtworldImgMarginLeft = preShowPicForWtworldImgMarginLeft * scale;
+	preShowPicForWtworldImgBorderRadius = preShowPicForWtworldImgBorderRadius * scale;
+	
+	zBase.init(divSlideBtnWidth,1000,3000,'div-slide','div-slide-img','div-slide-btn');
+	
+	$("#main").css({
+		"margin-bottom":mainMarginBottom + "px"
+	});
+	
+	
+	$(".officeButton").css({
+		"width":officeButtonWidth + "px",
+		"height":officeButtonHeight + "px",
+		"margin-left":officeButtonMarginLeft + "px",
+		"bottom":officeButtonBottom + "px"
+	}).show();
+	
+	$("#div-propaganda").css({
+		"padding-top":divPropagandaPaddingTop + "px",
+		"padding-bottom":divPropagandaPaddingBottoom + "px"
+	}).show();
+	
+	$(".slide").css({
+		"width":slideWidth + "px",
+		"height":slideHeight + "px",
+		"border"	: "1px solid #ffffff",
+		"-moz-border-radius"	: slidRadius + "px",
+		"-webkit-border-radius"	: slidRadius + "px",
+		"border-radius"	: slidRadius + "px"
+	});
+	
+	$(".slide1").css({
+		"width":slideWidth + "px",
+		"height":slideHeight + "px",
+		"border"	: "1px solid #ffffff",
+		"-moz-border-radius"	: slidRadius + "px",
+		"-webkit-border-radius"	: slidRadius + "px",
+		"border-radius"	: slidRadius + "px"
+	});
+	
+	$(".slide .div-slide-img").css({
+		"width":slideDivSlideImgWidth + "px"
+	});
+	
+	$(".slide img").css({
+		"width":slideImgWidth + "px"
+	});
+	
+	$(".div-slide-btn").css({
+		"width":divSlideBtnWidth + "px",
+		"height":divSlideBtnHeight + "px",
+		"line-height":divSlideBtnLineHeight + "px",
+		"bottom":divSlideBtnBottom + "px",
+		"font-size":divSlideBtnFontSize + "px"
+	});
+	
+	 $(".concernDataShow").css({
+		"width":concernDataShowWidth + "px",
+		"height":concernDataShowHeight + "px",
+		"margin-top":concernDataShowMarginTop + "px",
+		"margin-left":concernDataShowLeft + "px",
+		"border-radius":concernDataShowBorderRadius + "px",
+		"font-size":concernDataShowFontSize + "px",
+		"line-height":concernDataShowLineHeight + "px",
+	}); 
+	
+	$(".channelIntro").css({
+		"margin":channelIntroMargin + "px",
+		"font-size":channelIntroFontSize + "px",
+		"line-height":channelIntroLineHeight + "px",
+	}).show();
+	
+	$(".dataShow").css({
+		"font-size":dataShowFontSize + "px",
+		"padding-top":dataShowPaddingTop + "px",
+		"padding-bottom":dataShowPaddingBottom + "px"
+	}).show();
+	
+	$(".superbDataShow").css({
+		"width":superbDataShowWidth + "px"
+	}).show();
+	
+	$(".stickerDataShow").css({
+		"width":stickerDataShowWidth + "px",
+		"margin-left":stickerDataShowMarginLeft + "px"
+	}).show();
+	
+	$(".preShowPicForWtworld").css({
+		"padding-top":preShowPicForWtworldPaddingTop + "px",
+		"padding-left":preShowPicForWtworldPaddingLeft + "px",
+		"padding-bottom":preShowPicForWtworldPaddingBottom + "px",
+		"padding-right":preShowPicForWtworldPaddingRight + "px"
+	}).show();
+	
+	$(".preShowPicForWtworld img").css({
+		"width":preShowPicForWtworldImgWidth + "px",
+		"height":preShowPicForWtworldImgHeight + "px",
+		"margin-left":preShowPicForWtworldImgMarginLeft + "px",
+		"border-radius":preShowPicForWtworldImgBorderRadius + "px"
+	});
+	
+	$("#download-wrap").css({
+		"width"				: 640 * scale + "px",
+		"height"			: 104 * scale + "px",
+		"margin"			: "0 auto",
+		"bottom"			: "0",
+		"text-align"		: "center",
+		"overflow"			: "hidden",	
+		"font-family"		: "微软雅黑",
+		"background-color"  : "rgba(255,255,255,0.9)",
+		/* "padding-bottom"	: 10 * scale + "px", */
+		"position"			: "fixed",
+		"z-index"			: "99999" 
+	});
+	
+	$("#download-logo").css({
+		"width"			: "auto",
+		"height"		: 80  * scale + "px",
+		"margin-top"	: 12 * scale + "px",
+		"margin-left"	: 14 * scale + "px",
+		"display"		: "inline",
+		"position"		: "absolute",
+		"left"			: "0"
+	});
+	
+	$("#download-close").css({
+		"width"			: 16 * scale + "px",
+		"height"		: 16 * scale + "px",
+		"display"		: "inline-block",
+		"cursor"		: "pointer",
+		"vertical-align": "center",
+		"margin"		: 44 * scale + "px " + ( 30 * scale ) + "px 0 0",
+		"position"		: "absolute",
+		"right"			: "0"
+	});
+	
+	$("#download-tip").css({
+		"background"			: "#3a97d0",
+		"width"					: 200 * scale + "px",
+		"height"				: 60 * scale + "px",
+		"color"					: "#ffffff",
+		"-moz-border-radius"	: 4 * scale + "px",
+		"-webkit-border-radius"	: 4 * scale + "px",
+		"border-radius"			: 4 * scale + "px",
+		"text-align"			: "center",
+		"font-size"				: 24 * scale + "px",
+		"display"				: "inline-block",
+		"vertical-align"		: "top",
+		"cursor"				: "pointer",
+		"line-height"			: 60 * scale + "px",
+		"float"					: "right",
+		"margin"				: 22 * scale + "px " + (22 * scale) + "px 0 0",
+		"position"				: "absolute",
+		"right"					: 58 * scale + "px"
+	});
+	
+	$("#slogan").css({
+		"display"		: "inline-block",
+		"vertical-align": "top",
+		"position"		: "absolute",
+		"left"			: 120 * scale +"px"
+	});
+	
+	$("#zhitu-name").css({
+		"display"	: "block",
+		"font-size"	: 30 * scale + "px",
+		"color"		: "#373e46",
+		"margin-top": 14 * scale + "px",
+		"text-align": "left"
+	});
+	
+	$("#zhitu-slogan").css({
+		"display"	: "block",
+		"font-size"	: 24 * scale + "px",
+		"color"		: "#959da5",
+		"margin-top": 6 * scale + "px"
+	});
+}
+
+function bindConcern(uid, status) {
+	var $btn = $("#concern-" + uid);
+	switch(status) {
+	case 0:
+		$btn.hide().siblings(".concerned:eq(0)").show();
+		break;
+	case 1:
+		$btn.hide().siblings(".concerned:eq(0)").text("相互关注").show();
+		break;
+	default:
+		$btn.click(function() {
+			$this = $(this);
+			$this.hide().siblings(".concerned:eq(0)").show();
+		});
+		break;
+	}
+}
+
+function fetchConcernStatus(uid) {
+	$.post("./user_queryConcernStatus",{
+		"userId":uid,
+		"concernIds":"96367,855014,698956,406192,2505290,1331367,905211",
+	},function(data){
+		if(data['result'] == 0) {
+			var status = data['concerns'];
+			for(var i = 0; i < status.length; i++) {
+				bindConcern(status[i]['userId'], status[i]['isMututal']);
+			}
+		} else {
+			bindAllBtnClick2Callapp();
+		}
+	}, "json");
+}
+
+function bindAllBtnClick2Callapp() {
+	var $callapp = document.getElementsByName("imzhitu-callapp");
+   	if($callapp.length) {
+   		for(var i = 0; i < $callapp.length; i++) {
+   			$callapp[i].addEventListener('click',openclient,false);
+   		}
+   	}
+} 
+
+function hideDownloadBtn() {
+	$("#download-wrap").hide();
+	$("#main").css({"margin-bottom":"0px"});
+}
+</script>
+<div style="display:none;">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255868073'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1255868073' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+</body>
+</html>
