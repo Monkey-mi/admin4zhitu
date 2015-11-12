@@ -44,12 +44,14 @@ public interface ChannelWorldInteractCommentMapper {
 
 	/**
 	 * 根据频道id与织图id，查询未完成的频道织图互动的评论关系
+	 * 注：由于有频道织图生效状态进行互动的情况，这种情况是直接插入此表后，紧接着又查询，由于是数据库服务是主从结构，数据同步有延时
+	 * 		为了解决延时问题，则查询直接从主库查询
 	 * 
 	 * @param channelId	频道id
 	 * @param worldId	织图id
 	 * @author zhangbo	2015年10月31日
 	 */
-	@DataSource("slave")
+	@DataSource("master")
 	List<ChannelWorldInteractComment> queryNotCompletedCommentByChannelIdAndWorldId(@Param("channelId")Integer channelId, @Param("worldId")Integer worldId);
 	
 }
