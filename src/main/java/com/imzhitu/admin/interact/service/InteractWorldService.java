@@ -445,6 +445,22 @@ public interface InteractWorldService extends BaseService {
 	public void saveTypeInteract(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
 	
 	/**
+	 * 扫描新发图时，自动添加互动
+	 * 
+	 * @param userId
+	 * @param degreeId
+	 * @param worldId
+	 * @param clickCount
+	 * @param likedCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 * @author zhangbo	2015年11月12日
+	 */
+	public void saveAutoInteract(Integer userId,Integer degreeId,Integer worldId,Integer clickCount,
+			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception;
+	
+	/**
 	 * 根据织图id、织图标签，进行用户等级的互动，
 	 * @param worldId
 	 * @param labelIdsStr

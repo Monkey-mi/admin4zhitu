@@ -1,7 +1,6 @@
 package com.imzhitu.admin.interact.service.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +15,7 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.service.impl.BaseServiceImpl;
-import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
-import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.InteractPlanComment;
 import com.imzhitu.admin.common.pojo.InteractPlanCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractWorldLabelDto;
@@ -28,18 +25,14 @@ import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserLevelListDto;
 import com.imzhitu.admin.interact.dao.InteractUserlevelDao;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
-import com.imzhitu.admin.interact.dao.InteractWorldLabelCommentLabelDao;
 import com.imzhitu.admin.interact.service.InteractLikeFollowRecordService;
 import com.imzhitu.admin.interact.service.InteractPlanCommentLabelService;
 import com.imzhitu.admin.interact.service.InteractPlanCommentService;
-import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
-import com.imzhitu.admin.interact.service.CommentService;
+import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
-import com.imzhitu.admin.userinfo.mapper.AdminAndUserRelationshipMapper;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.service.UserMsgService;
-import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldMapper;
 
 //@Service
@@ -71,19 +64,10 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	private InteractUserlevelListDao interactUserlevelListDao;
 	
 	@Autowired
-	private HTWorldLabelWorldDao worldLabelWorldDao;
-	
-	@Autowired
 	private InteractWorldService interactWorldService;
 	
 	@Autowired
 	private InteractUserlevelDao  interactUserlevelDao;
-	
-	@Autowired
-	private InteractWorldLabelCommentLabelDao interactWorldLabelCommentLabelDao;
-	
-	@Autowired
-	private CommentService interactCommentService;
 	
 	@Autowired
 	private InteractPlanCommentLabelService interactPlanCommentLabelService;
@@ -102,9 +86,6 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private InteractLikeFollowRecordService likeFollowRecordService;
-	
-	@Autowired
-	private AdminAndUserRelationshipMapper relationshipMapper;
 	
 	@Autowired
 	private UserMsgService userMsgService;
@@ -341,7 +322,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 							commentsArray = strb.toString().split(",");
 						}
 						
-						interactWorldService.saveInteractV3(o.getUser_id(),needZombieDegreeId,o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
+						interactWorldService.saveAutoInteract(o.getUser_id(),needZombieDegreeId,o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
 								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), commentsArray, userlevel.getTime());//添加互动
 					}catch(Exception e){
 						logger.info(e.getMessage()+"\n"+e.getCause());
