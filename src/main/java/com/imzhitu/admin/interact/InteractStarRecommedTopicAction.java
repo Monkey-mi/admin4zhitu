@@ -23,6 +23,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	private InteractStarRecommendTopicService interactStarRecommendTopicService;
 
 	private Integer id;
+	private Integer orderIndex;
 	private String  backgroundColor; 
 	private Integer topicType;
 	private Integer isWorld;
@@ -37,7 +38,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String add(){
 		try {
-			interactStarRecommendTopicService.addTopic(backgroundColor,topicType,isWorld,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
+			interactStarRecommendTopicService.addTopic(backgroundColor,orderIndex,topicType,isWorld,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -79,7 +80,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	
 	public String update(){
 		try {
-			interactStarRecommendTopicService.updateTopic(id,topicType,isWorld,backgroundColor,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
+			interactStarRecommendTopicService.updateTopic(id,orderIndex,topicType,isWorld,backgroundColor,shareBanner,bannerPic,title,introduceHead,introduceFoot,stickerButton,shareButton);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -105,6 +106,14 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getOrderIndex() {
+		return orderIndex;
+	}
+
+	public void setOrderIndex(Integer orderIndex) {
+		this.orderIndex = orderIndex;
 	}
 
 	public String getBackgroundColor() {

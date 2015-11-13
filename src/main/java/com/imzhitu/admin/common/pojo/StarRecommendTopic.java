@@ -22,6 +22,7 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	private static final long serialVersionUID = -8989404256705818104L;
 
 	private Integer  id;
+	private Integer orderIndex;
 	private String  backgroundColor;
 	private Integer topicType;
 	private Integer isWorld;
@@ -38,6 +39,12 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	public Integer getOrderIndex() {
+		return orderIndex;
+	}
+	public void setOrderIndex(Integer orderIndex) {
+		this.orderIndex = orderIndex;
 	}
 	public String getBackgroundColor() {
 		return backgroundColor;

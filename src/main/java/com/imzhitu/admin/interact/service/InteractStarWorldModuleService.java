@@ -53,4 +53,15 @@ public interface InteractStarWorldModuleService {
 		*	mishengliang
 	 */
 	public void destroyWorldModule(Integer id)  throws Exception;
+	
+	
+	/**
+	 * 利用传输过来id顺序进行排序
+	 * @param ids
+	 * @throws Exception 
+		*	2015年11月13日
+		*	mishengliang
+	 */
+	public void reOrderIndex(String[] ids)  throws Exception;
+	
 }
