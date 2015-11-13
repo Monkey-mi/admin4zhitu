@@ -14,6 +14,7 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新建</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="destroyUser()">删除</a>
+        <a href="javascript:void(0);" onclick="javascript:reSuperb();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
         <input id="i-topicId" >
     </div>
     
@@ -97,11 +98,61 @@
 </tr>
 </table> 
 </form>
-    </div>
+</div>
     <div id="dlg-buttons" style="display:none;text-align:center" >
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px" >Save</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
     </div>
+  
+  	<!-- 重排模块 -->
+	<div id="htm_superb">
+		<form id="superb_form" action="./admin_interact/addModule_reOrderIndexforPic" method="post">
+			<table class="htm_edit_table" width="580">
+				<tbody>
+					<tr>
+						<td class="leftTd">织图ID：</td>
+						<td>
+							<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<br />
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+						</td>
+					</tr>
+<!-- 					<tr>
+						<td class="leftTd">计划更新时间：</td>
+						<td><input id="schedula" name="schedula" class="easyui-datetimebox"></td>
+					</tr> -->
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReSuperbForm();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_superb').window('close');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">排序中...</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
   
  <script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
@@ -110,6 +161,54 @@
         var url;
         var myQueryParams = {isWorld:0};
         var maxId = 0;
+        
+        /**
+         * 重新排序
+         */
+        function reSuperb() {
+        	$("#superb_form").find('input[name="reIndexId"]').val('');
+        	$("#schedula").datetimebox('clear');
+        	$('#htm_superb .opt_btn').show();
+        	$('#htm_superb .loading').hide();
+        	
+        	var rows = $("#dg").datagrid('getSelections');
+        	$('#superb_form .reindex_column').each(function(i){
+        		if(i<rows.length)
+        			$(this).val(rows[i]['id']);
+        	});
+        	
+        	// 打开添加窗口
+        	$("#htm_superb").window('open');
+        	
+        }
+        
+        function submitReSuperbForm() {
+        	var $form = $('#superb_form');
+        	if($form.form('validate')) {
+        		$('#htm_superb .opt_btn').hide();
+        		$('#htm_superb .loading').show();
+        		$('#superb_form').form('submit', {
+        			url: $form.attr('action'),
+        			success: function(data){
+        				var result = $.parseJSON(data);
+        				$('#htm_superb .opt_btn').show();
+        				$('#htm_superb .loading').hide();
+        				if(result['result'] == 0) { 
+        					$('#htm_superb').window('close');  //关闭添加窗口
+        					mySortName = "serial";
+        					mySortOrder = "desc";
+        					$('#dg').datagrid('unselectAll');
+        					$('#dg').datagrid('load');
+        				} else {
+        					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+        				}
+        				
+        			}
+        		});
+        	}
+        	
+        }
+        
         
         function newUser(){
         	var topicId = $('#i-topicId').combobox('getValue');
@@ -200,6 +299,20 @@
    				myQueryParams.maxId = maxId;
    			}
    		}
+   		
+		$('#htm_superb').window({
+			title : '重新排序',
+			modal : true,
+			width : 600,
+			height : 145,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-tip',
+			resizable : false
+		});
    	}; 
         
         
@@ -211,11 +324,13 @@
 /*        singleSelect:true, */
             rownumbers:true,
             fitColumns:true,  
+            idField:'id',
             queryParams:myQueryParams,
             onLoadSuccess:myOnLoadSuccess, 
             width: $(document.body).width(),
             columns:[[
-				{field:'id',title:'ID',width:100,align:"center"},
+				 {field:'id',title:'ID',width:100,align:"center",sortable: true,hidden:true},
+				{field : 'ck',checkbox : true },
                 {field:'title',title:'小标题',width:100,align:"center"},
                 {field:'subtitle',title:'小副标题',width:100,align:"center"},
                 {field:'userId',title:'用户ID',width:100,align:"center"},

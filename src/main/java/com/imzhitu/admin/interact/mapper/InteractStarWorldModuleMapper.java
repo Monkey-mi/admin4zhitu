@@ -39,4 +39,7 @@ public interface InteractStarWorldModuleMapper {
 	
 	@DataSource("master")
 	public void destoryByTopicId(Integer topicId);
+	
+	@DataSource("master")
+	public void reOrderIndex(@Param("id")Integer id,@Param("orderIndex")Integer orderIndex);
 }

@@ -81,4 +81,21 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 	public void destory(Integer id)  throws Exception{
 		mapper.destory(id);
 	}
+	
+	/**
+	 * 利用传输过来id顺序进行排序
+	 * @param ids
+	 * @throws Exception 
+		*	2015年11月13日
+		*	mishengliang
+	 */
+	@Override
+	public void reOrderIndex(String[] ids){
+		for(int i = 0; i < ids.length; i++){
+			if(ids[i] !=null && ids[i] != ""){
+				int id = Integer.parseInt(ids[i]);
+				mapper.reOrderIndex(id,i+1);
+			}
+		}
+	}
 }

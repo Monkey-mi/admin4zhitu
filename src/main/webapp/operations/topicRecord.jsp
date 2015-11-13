@@ -105,6 +105,14 @@
             		<textarea rows="2" cols="20" name="shareButton" id="shareButton"></textarea>
             		</td>
             	</tr>
+<!--             	 <tr>
+            		<td>
+            		<label>顺序值:</label>
+            		</td>
+            		<td colspan="3">
+            		<textarea rows="1" cols="20" name="orderIndex" id="orderIndex"></textarea>
+            		</td>
+            	</tr>   -->          	
 <!--             	<tr>
             		<td>
             		<label>来自织图:</label>
@@ -120,6 +128,7 @@
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">Save</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
     </div>
+
     <script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
@@ -147,7 +156,7 @@
         function editUser(){
             var row = $('#dg').datagrid('getSelected');
             if (row){
-                $('#dlg').dialog('open').dialog('center').dialog('setTitle','Edit User');
+                $('#dlg').dialog('open').dialog('center').dialog('setTitle','编辑主题');
                 $('#fm').form('load',row);
                 $("#channelBannerImg_edit").attr('src', row.bannerPic);
                 $("#channelBannerImg_edit01").attr('src', row.shareBanner);
@@ -214,15 +223,18 @@
         
         $('#dg').datagrid({
             url:"./admin_interact/starRecommendTopic_get",
+            idField:"id",
             toolbar:"#toolbar",
             pagination:true,
-            singleSelect:true,
+            singleSelect:false,
+            checkOnSelect:false,
             rownumbers:true,
             //fitColumns:true,
              queryParams:myQueryParams,
             columns:[[
 				/* {field:'id',title:'ID',width:100,align:"center"}, */
 				{field : 'ck',checkbox : true },
+			/* 	{field : 'orderIndex',title:'顺序值',align : 'center', sortable: true, editor:'text'}, */
                 {field:'title',title:'主题',width:100,align:"center"},
                 {field:'topicType',title:'文章类型',width:100,align:"center",
             		formatter:function(value,row,index) {
@@ -336,7 +348,7 @@
         Qiniu.uploader({
         	runtimes: 'html5,flash,html4',
         	browse_button: 'channelBanner_edit_upload_btn01',
-        	max_file_size: '100mb',
+        	max_file_size: '200kb',
         	flash_swf_url: 'js/plupload/Moxie.swf',
         	chunk_size: '4mb',
         	uptoken_url: './admin_qiniu/uptoken',
@@ -369,9 +381,9 @@
         			$("#channelBanner_edit_upload_status01").hide();
         		},
         		'FileUploaded': function(up, file, info) {
-        			var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+          			var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
         			$("#channelBannerImg_edit01").attr('src', url);
-        			$("#channelBanner_edit01").val(url);
+        			$("#channelBanner_edit01").val(url);   
         		},
         		'Error': function(up, err, errTip) {
         			$.messager.alert('上传失败',errTip);
