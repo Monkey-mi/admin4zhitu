@@ -1,78 +1,115 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>频道织图管理-列表模式</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
-<jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
-<link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<link type="text/css" rel="stylesheet" href="${webRootPath}/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}" />
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
-<script type="text/javascript" src="${webRootPath }/common/js/worldmaintain2014021801.js"></script>
 <script type="text/javascript">
+	// 定义主表格查询最大id
 	var maxId = 0;
-	var uidKey = "userId";
-	hideIdColumn = true,
-	htmTableTitle = "频道织图列表", //表格标题
-	toolbarComponent = '#tb',
-	htmTablePageList = [10,30,50,100];
-	myIdField = "channelWorldId",
-	recordIdKey = "channelWorldId",
-	loadDataURL = "./admin_op/channel_queryChannelWorld"; //数据装载请求地址
-	deleteURI = "./admin_op/channel_deleteChannelWorld?ids=", //删除请求地址
-	queryChannelURL = "./admin_op/channel_queryChannelById",
-	queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName",// 根据id或民称查询频道
-	myOnBeforeRefresh = function(pageNumber, pageSize) {
-		if(pageNumber <= 1) {
-			maxId = 0;
-			myQueryParams['world.maxId'] = maxId;
-		}
-	};
-	myOnLoadSuccess = function(data) {
-		if(data.result == 0) {
-			if(data.maxId > maxId) {
-				maxId = data.maxId;
-				myQueryParams['world.maxId'] = maxId;
-			}
-		}
-	};
+	// 定义主表格加载数据参数集合 
+	var myQueryParams = {};
+	myQueryParams["world.channelId"] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");	// 默认为缓存中
+	
+	// 频道搜索表格查询最大id
+	var searchChannelQueryParams = {};
+	
 	//mishengliang
-	columnsFields = [
+	var columnsFields = [
 		{field : 'ck',checkbox : true },
-		{field : recordIdKey,title : '序号',align : 'center',width : 60},
-		worldIdColumn = {field : 'worldId',title : '织图ID',align : 'center', sortable: true, 
-				formatter : function(value, row, index) {
-					
-					var url = row.worldURL;
-					if(row.worldURL == '' || row.worldURL == undefined) {
-						var slink;
-						if(row['shortLink'] == '')
-							slink = row[worldKey];
-						else 
-							slink = row['shortLink'];
-						url = worldURLPrefix + slink;
-					}
-					
-					return "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+row.worldId+",\""+url+"\","+row.channelWorldValid+")'>"+row.worldId+"</a>";
-				},
-				styler:function(value,row,index){
-					if(row.typeInteracted == 1){
-						return 'background-color:#fdf9bb;';
-					}
+		{field : "channelWorldId",title : '序号',align : 'center',width : 60},
+		{field : 'worldId',title : '织图ID',align : 'center', sortable: true, 
+			formatter : function(value, row, index) {
+				
+				var url = row.worldURL;
+				if(row.worldURL == '' || row.worldURL == undefined) {
+					var slink;
+					if(row['shortLink'] == '')
+						slink = row[worldKey];
+					else 
+						slink = row['shortLink'];
+					url = worldURLPrefix + slink;
 				}
+				
+				return "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+row.worldId+",\""+url+"\","+row.channelWorldValid+")'>"+row.worldId+"</a>";
 			},
-  		phoneCodeColumn,
-  		authorAvatarColumn,
-  		authorIdColumn,
-  		authorNameColumn,
-  		clickCountColumn,
-  		likeCountColumn,
-  		commentCountColumn,
-  		worldURLColumn,
-  		titleThumbPathColumn,
-  		worldLabelColumn,
+			styler:function(value,row,index){
+				if(row.typeInteracted == 1){
+					return 'background-color:#fdf9bb;';
+				}
+			}
+		},
+		{field : 'phoneCode',title : '客户端',align : 'center',
+			formatter: function(value,row,index){
+				var phone = "IOS";
+				if(value == 1) {
+					phone = '安卓';
+				}
+				return "<span class='updateInfo' title='版本号:"+row.appVer+" || 系统:"+row.phoneSys+" v"+row.phoneVer+"'>" 
+							+ phone + "</span>";
+			}
+		},
+		{field : 'authorAvatar',title : '头像',align : 'left', 
+			formatter: function(value, row, index) {
+				userId = row['authorId'];
+				var uri = 'page_user_userInfo?userId='+ userId;
+				imgSrc = baseTools.imgPathFilter(value,'../base/images/no_avatar_ssmall.jpg'),
+					content = "<img width='30px' height='30px' class='htm_column_img' src='" + imgSrc + "'/>";
+				if(row.star >= 1) {
+					content = content + "<img title='" + row['verifyName'] + "' class='avatar_tag' src='" + row['verifyIcon'] + "'/>";
+				}
+				return "<a onmouseover='setAuthorAvatarTimer(" + userId + ",event);' onmouseout='javascript:clearAuthorAvatarTimer();'  class='updateInfo' href='javascript:showUserInfo(\""+uri+"\")'>"+"<span>" + content + "</span>"+"</a>";	
+			}
+		},
+		{field:'authorId', title:'作者id',align:'center',
+			formatter:function(value,row,index){
+				return "<a title='添加等级用户' class='updateInfo' href='javascript:initUserLevelAddWindow(\""+ value + "\",\"" + index + "\")'>"+value+"</a>";
+			}
+		},
+		{field : 'authorName',title : '作者',align : 'center'},
+		{field : 'clickCount',title:'播放数',align : 'center', sortable: true, editor:'text'},
+		{field : 'likeCount',title:'喜欢数',align : 'center', sortable: true,
+			formatter : function(value, row, rowIndex) {
+				var uri = 'page_htworld_htworldLiked?worldId='+ row[worldKey]; //喜欢管理地址			
+				return "<a title='显示喜欢用户' class='updateInfo' href='javascript:showURI(\"" + uri + "\")'>"+value+"</a>";
+			}
+		},
+		{field : 'commentCount',title : '评论数',align : 'center',sortable: true,
+			formatter : function(value, row, rowIndex ) {
+				var uri = 'page_interact_interactWCommentAutoComment?worldId='+row[worldKey];
+				return "<a title='显示评论' class='updateInfo' href='javascript:showComment(\""
+						+ uri + "\",\""+row[worldKey]+"\")'>"+value+"</a>";
+			}
+		},
+		{field : 'worldURL',title : '链接',align : 'center',
+			styler: function(value,row,index){ return 'cursor:pointer;';},
+			formatter : function(value, row, rowIndex ) {
+				var url = value;
+				if(value == '' || value == undefined) {
+					var slink;
+					if(row['shortLink'] == '')
+						slink = row[worldKey];
+					else 
+						slink = row['shortLink'];
+					url = worldURLPrefix + slink;
+				}
+				return "<a title='播放织图' class='updateInfo' href='javascript:showWorld(\""
+				+ url + "\")'>"+url+"</a>";
+
+			}
+		},
+		{field : 'titleThumbPath',title : '预览',align : 'center',
+			formatter: function(value,row,index){
+				var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png');
+				return "<a style='cursor: hand;cursor: pointer;' onclick='javascript:showWorldAddToChannelPage(\""+row.worldId+"\")'> <img width='60px' height='60px' class='htm_column_img' src='" + imgSrc + "' /></a>";
+			}
+		},
+		{field : 'worldLabel',title : '标签',align : 'center', width : 100},
 		{field : 'notified',title : '通知状态',align : 'center', width : 60,
 			formatter: function(value,row,index) {
   				if(value >= 1) {
@@ -137,24 +174,61 @@
   			}  			
   		},
   		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160},
-  		dateModified,
-		],
-	addWidth = 520, //添加信息宽度
-	addHeight = 190, //添加信息高度
-	addTitle = "添加频道织图", //添加信息标题
-	
-	pageButtons = [],
-    onBeforeInit = function() {
-		showPageLoading();
-		myQueryParams['world.channelId'] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
-	},
-
-	searchChannelMaxId = 0,
-	searchChannelQueryParams = {
-		'maxId':searchChannelMaxId
-	},
+  		{field : 'dateModified', title:'分享日期', align : 'center', 
+  			formatter: function(value,row,index){
+  				return baseTools.parseDate(value).format("yy/MM/dd hh:mm");
+  			}
+  		},
+	];
 		
-	onAfterInit = function() {
+		
+	$(
+		// loading动画展示
+		$("#page-loading").show();
+		
+		// 主表格
+		$('#htm_table').datagrid({
+			title: "频道织图列表",
+			width: $(document.body).width(),
+			fitColumns: true,
+			autoRowHeight: true,
+			url:"./admin_op/channel_queryChannelWorld",
+			rowStyler:myRowStyler,
+			pageList: [10,30,50,100],
+			sortName: "id",
+			queryParams:myQueryParams,
+			idField: "channelWorldId",
+			rownumbers: true,
+			columns:[columnsFields],
+			loadMsg: "处理中,请等待...",
+			toolbar: "#tb",
+			pagination: true,
+			pageNumber: 1, //指定当前页面为1
+			pageSize: 10,
+			onLoadSuccess : function(data) {
+				if(data.result == 0) {
+					if(data.maxId > maxId) {
+						maxId = data.maxId;
+						myQueryParams['world.maxId'] = maxId;
+					}
+				}
+				// 数据加载成功，loading动画隐藏
+				$("#page-loading").hide();
+			}
+		});
+		// 主表格分页对象
+		var channelWorldTable_p = $('#htm_table').datagrid('getPager');
+		channelWorldTable_p.pagination({
+			beforePageText : "页码",
+			afterPageText : "共 {pages} 页",
+			displayMsg: "第 {from} 到 {to} 共 {total} 条记录",
+			onBeforeRefresh: function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					maxId = 0;
+					myQueryParams['world.maxId'] = maxId;
+				}
+			}
+		});
 		
 		$('#htm_indexed').window({
 			title : '按照时间计划重新排序，并生效',
@@ -187,21 +261,6 @@
 				$('#batch_to_superb_form').form('reset');
 			}
 		});
-		
-		$('#htm_notify').window({
-			title : '通知用户',
-			modal : true,
-			width : 360,
-			height : 225,
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-edit',
-			resizable : false
-		});
-		
 		
 		$('#ss-channel').combogrid({
 			panelWidth : 440,
@@ -242,27 +301,13 @@
 				loadPageData(initPage);
 			},
 		    onLoadSuccess:function(data) {
-		    	if(data.result == 0) {
-					if(data.maxId > searchChannelMaxId) {
-						searchChannelMaxId = data.maxId;
-						searchChannelQueryParams.maxId = searchChannelMaxId;
-					}
-				}
-		    	
 		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
 		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
 		    }
 		    
 		});
-		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
-		p.pagination({
-			onBeforeRefresh : function(pageNumber, pageSize) {
-				if(pageNumber <= 1) {
-					searchChannelMaxId = 0;
-					searchChannelQueryParams.maxId = searchChannelMaxId;
-				}
-			}
-		});
+		var ss-channel_p = $('#ss-channel').combogrid('grid').datagrid('getPager');
+		ss-channel_p.pagination({});
 		
 		$("#htm_batch_channel").window({
 			title : '批量频道织图添加',
@@ -303,40 +348,21 @@
 			          },
 			          {field : 'channelName',title : '频道名称',align : 'center',width : 280}
 			          ]],
-			          queryParams:searchChannelQueryParams,
-			          onLoadSuccess:function(data) {
-			        	  if(data.result == 0) {
-			        		  if(data.maxId > searchChannelMaxId) {
-			        			  searchChannelMaxId = data.maxId;
-			        			  searchChannelQueryParams.maxId = searchChannelMaxId;
-			        		  }
-			        	  }
-			          },
+			queryParams:searchChannelQueryParams
 		});
 		
-		var pp = $('#ss_batch_channel').combogrid('grid').datagrid('getPager');
-		pp.pagination({
-			onBeforeRefresh : function(pageNumber, pageSize) {
-				if(pageNumber <= 1) {
-					searchChannelMaxId = 0;
-					searchChannelQueryParams.maxId = searchChannelMaxId;
-				}
-			}
-		});
+		var ss_batch_channel_p = $('#ss_batch_channel').combogrid('grid').datagrid('getPager');
+		ss_batch_channel_p.pagination({});
 		
-		removePageLoading();
 		$("#main").show();
-		
-	};
+	);
 	
 /**
  * 搜索频道名称
  */
 function searchChannel() {
-	searchChannelMaxId = 0;
 	maxId = 0;
 	var query = $('#channel-searchbox').searchbox('getValue');
-	searchChannelQueryParams.maxId = searchChannelMaxId;
 	searchChannelQueryParams.query = query;
 	$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
 }
@@ -516,8 +542,8 @@ function queryChannelByIdOrName(){
 			$("#htm_table").datagrid("load",myQueryParams);
 			return;
 		}
-	
-		$.post(queryChannelByIdOrNameURL,params, function(result){
+		// 根据id或名称查询频道
+		$.post("./admin_op/v2channel_queryOpChannelByIdOrName", params, function(result){
 			if(result['result'] == 0) {
 				var obj = result['obj'];
 				
@@ -529,7 +555,6 @@ function queryChannelByIdOrName(){
 			} else {
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 			}
-			
 		},"json");
 	}
 };
@@ -539,7 +564,7 @@ function queryChannelByIdOrName(){
  * @author zhangbo 2015-09-10
  */
 function batchToChannel(){
-	$("#htm_batch_channel").window('open');
+	$("#htm_batch_channel").window("open");
 };
 
 /**
@@ -657,6 +682,7 @@ function openHtworldShowForChannelWorldPage(worldId, worldURL, channelWorldValid
 </script>
 </head>
 <body>
+	<img id="page-loading" alt="" src="${webRootPath}/common/images/girl-loading.gif"/>
 	<div id="main" style="display: none;">
 		<table id="htm_table"></table>
 	
@@ -665,7 +691,6 @@ function openHtworldShowForChannelWorldPage(worldId, worldURL, channelWorldValid
 				<span class="search_label">请选择频道：</span>
 				<input id="ss-channel" style="width:100px;" />
 				<span id="htm_opt_btn" class="none">
-			<!--	<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>-->
 				<a href="javascript:void(0);" onclick="javascript:batchValid();" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
 				<a href="javascript:void(0);" onclick="javascript:batchInvalid();" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-cut">批量删除</a>
 				<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照勾选顺序重新排序，并且生效" plain="true" iconCls="icon-converter" id="reIndexedBtn">计划重新排序并生效</a>
