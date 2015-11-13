@@ -60,6 +60,17 @@ public class ChannelAction extends BaseCRUDAction{
 	private Integer superb;
 	
 	/**
+	 * 频道织图查询类型标记位
+	 * 全部查询：空
+	 * 频道织图生效并过滤织图被用户删除：1
+	 * 频道织图未生效并过滤织图被用户删除：2
+	 * 频道织图被小编删除：3
+	 * 织图被用户删除：4
+	 * @author zhangbo	2015年11月2日
+	 */
+	private Integer flag;
+	
+	/**
 	 * 更新频道top one title缓存
 	 * 
 	 * @return
@@ -237,7 +248,7 @@ public class ChannelAction extends BaseCRUDAction{
 	 */
 	public String queryChannelWorld() {
 		try {
-			channelService.buildChannelWorld(world, page, rows, jsonMap);
+			channelService.buildChannelWorld(world, flag, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -307,36 +318,6 @@ public class ChannelAction extends BaseCRUDAction{
 	}
 	
 	/**
-	 * 更新频道织图有效性,同时做发通知操作
-	 * 
-	 * @return
-	 */
-	public String updateChannelWorldValid() {
-		try {
-			channelService.updateChannelWorldValid(ids, valid);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch(Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 根据织图id更新有效性
-	 * 
-	 * @return
-	 */
-	public String updateWorldValidByWID() {
-		try {
-			channelService.updateChannelWorldValid(channelId, worldId, valid);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch(Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
 	 * 
 	 * 更新精选标记和通知用户入选精选
 	 * @author mishengliang
@@ -362,21 +343,6 @@ public class ChannelAction extends BaseCRUDAction{
 		try {
 			channelService.addChannelWorldId(channelId, ids);
 			JSONUtil.optSuccess(jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 添加频道织图推荐消息
-	 * 
-	 * @return
-	 */
-	public String addChannelWorldRecommendMsgs() {
-		try {
-			channelService.addChannelWorldNoticeMsgs(ids);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -745,6 +711,10 @@ public class ChannelAction extends BaseCRUDAction{
 
 	public void setSuperb(Integer superb) {
 		this.superb = superb;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
 	}
 
 }

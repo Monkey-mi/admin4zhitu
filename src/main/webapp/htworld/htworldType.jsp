@@ -237,14 +237,14 @@ var maxSerial = 0,
   			}
   		},
   		*/
-  		{field : 'weight',title : '置顶',align : 'center',width : 45,
+  		{field : 'weight',title : '置顶',align : 'center',width : 80,
   			formatter: function(value,row,index){
   				if(value > 0) {
   					img = "./common/images/undo.png";
-  					return "<img title='从置顶列表选除' class='htm_column_img pointer' onclick='javascript:removeWeight(\""+ row.id + "\",\"" + index + "\")'  src='" + img + "'/>" + value;
+  					return "<img  title='从置顶列表选除' class='htm_column_img pointer' onclick='javascript:removeWeight(\""+ row.id + "\",\"" + index + "\")'  src='" + img + "'/>" + value;
   				}
   				img = "./common/images/edit_add.png";
-  				return "<img title='添加到置顶列表' class='htm_column_img pointer' onclick='javascript:addWeight(\""+ row.id + "\",\"" + index + "\")' src='" + img + "'/>";
+  				return "<div ><img  id='img" +row.id+"'  title='添加到置顶列表' class='htm_column_img pointer'  onclick='javascript:addWeight(\""+ row.id + "\",\"" + index + "\")' src='" + img + "'/></div><div id='selectTimeCombobox"+ row.id +"'></div>";
   			}
   		},
   		dateModified,
@@ -569,22 +569,60 @@ function removeSuperb(id,index) {
 		},"json");
 }
 
+var timeData = [{
+	timeValue:'1',
+	timeShow:'1小时'
+},{
+	timeValue:'2',
+	timeShow:'2小时'
+},{
+	timeValue:'3',
+	timeShow:'3小时'
+},{
+	timeValue:'4',
+	timeShow:'4小时'
+},{
+	timeValue:'5',
+	timeShow:'5小时'
+},{
+	timeValue:'6',
+	timeShow:'6小时'
+},{
+	timeValue:'7',
+	timeShow:'7小时'
+},{
+	timeValue:'8',
+	timeShow:'8小时'
+}];
+
 /**
  * 添加权重
  */
 function addWeight(id,index) {
-	$("#htm_table").datagrid('loading');
-	$.post("./admin_ztworld/type_updateTypeWorldWeight",{
-		'id':id,
-		'weight' : 1
-		},function(result){
-			if(result['result'] == 0) {
-				updateValue(index,'weight',1);
-			} else {
-				$.messager.alert('失败提示',result['msg']);  //提示失败信息
-			}
-			$("#htm_table").datagrid('loaded');
-		},"json");
+	$("#img"+id).hide();
+ 	$("#selectTimeCombobox"+id).combobox({
+		width:60,
+		valueField:'timeValue',
+		textField:'timeShow',
+		data:timeData,
+ 		onSelect:function(data){
+			$("#htm_table").datagrid('loading');
+			$.post("./admin_ztworld/type_updateTypeWorldWeight",{
+				'id':id,
+				'weight' : 1,
+				'timeUpdate':data.timeValue
+				},function(result){
+					if(result['result'] == 0) {
+						updateValue(index,'weight',1);
+					} else {
+						$.messager.alert('失败提示',result['msg']);  //提示失败信息
+					}
+					$("#htm_table").datagrid('loaded');
+				},"json");
+		} 
+	}); 
+ 	
+ 	$("#selectTimeCombobox"+id).combobox("showPanel");
 }
 
 /**
@@ -893,6 +931,18 @@ function showWorldAddToChannelPage(worldId){
 	});
 };
 
+/*  
+ * mishengliang
+ 根据织图ID条件查询
+ */
+function search() {
+	var worldId = $('#ss_shortLink').searchbox('getValue');
+	myQueryParams = {
+		'worldId' : worldId
+	};
+	$("#htm_table").datagrid("load",myQueryParams);
+}
+
 </script>
 </head>
 <body>
@@ -941,6 +991,8 @@ function showWorldAddToChannelPage(worldId){
 	   		<span>结束时间：</span>
 	   		<input id="endDate" name="endDate" class="easyui-datetimebox" style="width:100px"/>
 	   		<a href="javascript:void(0);" onclick="javascript:searchType();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
+	   		<!--  mishengliang -->
+	   		<input id="ss_shortLink" class="easyui-searchbox" prompt="请输入织图ID"  searcher="search" name="worldId" style="width:100px;"></input>
    		</div>
 	</div> 
 

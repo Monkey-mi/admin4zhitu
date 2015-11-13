@@ -27,9 +27,6 @@
 		from 
 			hts.operations_sys_msg 
 		<where>
-			<if test="senderId != null">
-				sender_id = #{senderId}
-			</if>
 			<if test="recipientId != null">
 				and recipient_id = #{recipientId}
 			</if>

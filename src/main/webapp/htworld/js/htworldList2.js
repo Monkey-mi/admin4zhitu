@@ -279,6 +279,19 @@ function drawOptArea($worldOpt, worlds, index) {
 	$opt3LineBtn = $('<div class="world-channel"></div>');
 	drawWorldCommentLabelBtn($opt3LineBtn, worlds, index);
 	
+	// 添加三四行分隔线
+	var $optDivider3To4 = $('<hr class="divider"></hr>');
+	
+	// 添加第三行操作title
+	var $opt4LineTitle = $('<div class="world-opt-head-wrap">'
+			+ '<span class="world-opt-head">位置</span>'
+			+ '</div>');
+	
+	// 向第四行按钮中添加元素
+	var $opt4LineBtn = $('<div class="world-channel">' 
+			+ getCity(world['province']+world['city'], world, index)
+			+ '</div>');
+	
 	$opt.append($opt1LineTitle);
 	$opt.append($opt1LineBtn);
 	$opt.append($optDivider1To2);
@@ -287,6 +300,9 @@ function drawOptArea($worldOpt, worlds, index) {
 	$opt.append($optDivider2To3);
 	$opt.append($opt3LineTitle);
 	$opt.append($opt3LineBtn);
+	$opt.append($optDivider3To4);
+	$opt.append($opt4LineTitle);
+	$opt.append($opt4LineBtn);
 	
 	$worldOpt.append($opt);
 }
@@ -387,6 +403,15 @@ function getChannelName(value, row, index) {
 	} else {
 		return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
 	}
+}
+
+function getCity(value, row, index) {
+	if(value == "NO_EXIST" || value=="") {
+		return "<a>无</a>";
+	} else {
+		return "<a>" + value + "</a>";
+	}
+		
 }
 
 function getActiveOperated(value, row, index) {
@@ -1453,7 +1478,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 		url += "?worldId=" + worldId
 		$.fancybox({
 			'margin'			: 20,
-			'width'				: '45%',
+			'width'				: '40%',
 			'height'			: '60%',
 			'autoScale'			: true,
 			'transitionIn'		: 'none',

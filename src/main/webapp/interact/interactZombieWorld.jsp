@@ -14,6 +14,8 @@
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/jquery.form.min.js"></script>
 <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=ce70d50e8ce9f0cc3ce59b9c1f30794e"></script>
 <script type="text/javascript">
+	var loadItemId = [];
+	var pageAllItemId = [];
 	var maxId = 0;
 	var worldURLPrefix = 'http://www.imzhitu.com/DT';
 	hideIdColumn = false;
@@ -25,9 +27,8 @@
 	init = function() {
 		myQueryParams = {
 			'maxId' : maxId,
-		},
-		loadPageData(initPage);
-		
+		} ,
+	 	loadPageData(initPage); 
 	};
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
@@ -51,8 +52,8 @@
 		{field : 'authorId',title : '马甲ID',align : 'center',editor:'text'},
 		{field : 'thumbTitlePath',title : '缩略图',align : 'center',
 			formatter: function(value,row,index){
-				var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png');
-				return "<img width='100px' height='100px' class='htm_column_img' src='" + imgSrc + "' />";
+ 				var imgSrc = baseTools.imgPathFilter(value,'../base/images/bg_empty.png'); 
+				return "<img id='img-"+ row.id + "'  width='100px' height='100px' class='htm_column_img' src='" + imgSrc + "' />"; 
 			}
 		},
 		{field : 'worldDesc', title:'织图描述', align : 'center',width:280,editor:'text'},
@@ -382,6 +383,37 @@
 		$("#htm_table").datagrid('load',myQueryParams);
 	}
 	
+	//mishengliang
+	//将缩略图中加载不成功的记录删掉
+	function deleteUnavailWorld(){
+		var flag = 0;
+		var deleteItemId = [];
+		for(var i = 0; i < pageAllItemId.length; i++){
+			for(var j=0; j < loadItemId.length; j++){
+				if(pageAllItemId[i] == loadItemId[j]){
+					flag = 1;
+				}
+			}
+			//对比两个数组中的值，load中有的而All中没有的即为没有加载完全的。
+			if(flag == 0){
+				deleteItemId.push(pageAllItemId[i]);
+			}
+		}
+		alert(pageAllItemId);
+		alert(loadItemId);
+		alert(deleteItemId);
+/*   		if(deleteItemId != ''){
+  		$.post("./admin_interact/interactZombieWorld_batchDeleteZombieWorld?ids="+deleteItemId,function(result){
+			if(result['result'] == 0) {
+				$("#htm_table").datagrid("reload");
+			} 
+		});	 
+ 		}   */
+ 		pageAllItemId = [];
+ 		loadItemId = [];
+  		deleteItemId = []; 
+	}
+	
 	function initBatchUpdateLabel(){
 		$('#batch-update-label').window('open');
 		var rows = $('#htm_table').datagrid('getSelections');	
@@ -599,12 +631,13 @@
 		        <option value="1">已计划</option>
 	   	</select>
 	   	<span>起始时间：</span>
-   		<input id="beginDate"  class="easyui-datetimebox"/>id
+   		<input id="beginDate"  class="easyui-datetimebox"/>
    		<span>结束时间：</span>
    		<input id="endDate"  class="easyui-datetimebox"/>
    		<span>频道ID</span>
    		<input id="channelId">
    		<a href="javascript:void(0);" onclick="javascript:searchZombieWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
+   		<!-- <a class="easyui-linkbutton"  onclick="javascript:deleteUnavailWorld();"  iconCls="icon-cut"  >删除无效织图</a> -->
 	</div>  
 	
 	<div id="batch-save">

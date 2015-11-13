@@ -69,9 +69,6 @@ public class OpServiceImpl extends BaseServiceImpl
 	private PushService pushService;
 	
 	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
-	
-	@Autowired
 	private com.hts.web.ztworld.dao.HTWorldDao webWorldDao;
 	
 	@Autowired
@@ -336,7 +333,7 @@ public class OpServiceImpl extends BaseServiceImpl
 			worldLabelWorldDao.updateLabelWorldSerial(activityWorldId, serial);
 		}
 		if(StringUtil.checkIsNULL(notifyTip)) {
-			throw new HTSException("提示不能为空");
+			throw new Exception("提示不能为空");
 		}
 		activityStarCacheDao.updateStar(activityId, activityStarLimit);
 //		addActivityWorldCheckMsg(activityId, worldId, authorId, authorName, notifyTip);

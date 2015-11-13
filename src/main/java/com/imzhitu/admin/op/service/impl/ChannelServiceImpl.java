@@ -1,10 +1,8 @@
 package com.imzhitu.admin.op.service.impl;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,22 +25,18 @@ import com.hts.web.common.util.UserInfoUtil;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpChannel;
-import com.imzhitu.admin.common.pojo.OpChannelNameDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOne;
 import com.imzhitu.admin.common.pojo.OpChannelTopOneDto;
 import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
-import com.imzhitu.admin.common.pojo.OpSysMsg;
-import com.imzhitu.admin.op.dao.ChannelAutoRejectIdCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneCacheDao;
 import com.imzhitu.admin.op.dao.ChannelTopOneTitleCacheDao;
 import com.imzhitu.admin.op.mapper.ChannelMapper;
 import com.imzhitu.admin.op.mapper.ChannelTopOneMapper;
 import com.imzhitu.admin.op.mapper.ChannelTopTypeMapper;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
-import com.imzhitu.admin.op.mapper.SysMsgMapper;
 import com.imzhitu.admin.op.service.ChannelService;
 import com.imzhitu.admin.op.service.OpMsgService;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
@@ -60,24 +54,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	 * 更新top one 的时间间隔，单位ms
 	 */
 	private static final long CHANNEL_TOP_ONE_UPDATE_TIME_SPAN_MS = 3 * 24 * 60 * 60 * 1000;
-
-	/**
-	 * 织图被选入普通频道（往频道中发图直接生效的为普通频道）通知发送时间间隔，单位ms
-	 * 间隔：一周
-	 * 含义：一周内用户的织图被选入频道只提示一次
-	 * 
-	 * @author zhangbo	2015年9月7日
-	 */
-	private static final long NORMAL_CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS = 7 * 24 * 60 * 60 * 1000;
-	
-	/**
-	 * 织图被选入拒绝频道（往频道中发图需要小编审核后生效的为拒绝频道）通知发送时间间隔，单位ms
-	 * 间隔：二周
-	 * 含义：二周内用户的织图被选入频道只提示一次
-	 * 
-	 * @author zhangbo	2015年9月17日
-	 */
-	private static final long REJECT_CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS = 2 * 7 * 24 * 60 * 60 * 1000;
 
 	@Value("${admin.op.channelStarLimit}")
 	private Integer channelStarLimit;
@@ -104,9 +80,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
 
 	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
-
-	@Autowired
 	private com.hts.web.push.service.PushService pushService;
 
 	@Autowired
@@ -122,13 +95,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	private com.hts.web.operations.service.ChannelService webChannelService;
 
 	@Autowired
-	private SysMsgMapper sysMsgMapper;
-
-	@Autowired
 	private OpMsgService msgService;
-	
-	@Autowired
-	private ChannelAutoRejectIdCacheDao rejectChannelCacheDao;
 	
 	@Autowired
 	private ZTWorldService	worldService;
@@ -339,55 +306,62 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	}
 
 	@Override
-	public void buildChannelWorld(OpChannelWorld world, int page, int rows, Map<String, Object> jsonMap) throws Exception {
+	public void buildChannelWorld(OpChannelWorld world, Integer flag, int page, int rows, Map<String, Object> jsonMap) throws Exception {
 
 		if (world.getChannelId() == null && world.getWorldId() == null) {
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, 0);
 			jsonMap.put(OptResult.JSON_KEY_ROWS, new ArrayList<OpChannelWorld>());
 			return;
 		}
-
-		buildNumberDtos(world, page, rows, jsonMap, new NumberDtoListAdapter<OpChannelWorld>() {
-
-			@Override
-			public long queryTotal(OpChannelWorld world) {
-				return channelWorldMapper.queryChannelWorldCount(world);
+		
+		// 定义返回list与总数
+		List<OpChannelWorldDto> list = new ArrayList<OpChannelWorldDto>();
+		Integer total = 0;
+		
+		world.setFirstRow((page - 1) * rows);
+		world.setLimit(rows);
+		
+		// 若标记位存在，则根据标记位设置相应的查询条件
+		if ( flag != null) {
+			// 频道织图生效并过滤织图被屏蔽
+			if ( flag == 1 ) {
+				world.setValid(1);
+				world.setWorldValid(1); // 设置织图生效的过滤
 			}
-
-			@Override
-			public List<? extends AbstractNumberDto> queryList(OpChannelWorld world) {
-				final List<OpChannelWorldDto> worldList = channelWorldMapper.queryChannelWorlds(world);
-				if (worldList.size() > 0) {
-					Map<Integer, Integer> idxMap = new HashMap<Integer, Integer>();
-					Integer[] wids = new Integer[worldList.size()];
-					for (int i = 0; i < worldList.size(); i++) {
-						Integer wid = worldList.get(i).getWorldId();
-						wids[i] = wid;
-						idxMap.put(wid, i);
-					}
-					List<OpChannelNameDto> nameList = channelWorldMapper.queryChannelNameByWIDs(wids);
-					for (int i = 0; i < nameList.size(); i++) {
-						Integer wid = nameList.get(i).getWorldId();
-						String name = nameList.get(i).getChannelName();
-						Integer idx = idxMap.get(wid);
-						worldList.get(idx).getMultiple().add(name);
-					}
-				}
-				webUserInfoService.extractVerify(worldList);
-				return worldList;
+			// 频道织图未生效并过滤织图被屏蔽
+			else if ( flag == 2 ) {
+				world.setValid(0);
+				world.setWorldValid(1);	// 设置织图生效的过滤
+			} 
+			// 频道织图被小编删除
+			else if ( flag == 3 ) {
+				world.setValid(2);
+			} 
+			// 织图被用户删掉
+			else if ( flag == 4 ) {
+				world.setWorldValid(0);
 			}
-		}, new NumberDtoListMaxIdAdapter() {
+		}
+		
+		total = (int) channelWorldMapper.queryChannelWorldCount(world);
+		list = channelWorldMapper.queryChannelWorlds(world);
+		
+		// 设置织图在多个频道的值
+		for (OpChannelWorldDto opChannelWorldDto : list) {
+			opChannelWorldDto.setMultiple(channelWorldMapper.queryChannelNameByWorldId(opChannelWorldDto.getWorldId()));
+		}
+		
+		webUserInfoService.extractVerify(list);
 
-			@Override
-			public Serializable getMaxId(List<? extends Serializable> list) throws Exception {
-				return channelWorldMapper.queryChannelWorldMaxId();
-			}
-		});
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, channelWorldMapper.queryChannelWorldMaxId());
+	
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 	}
 
 	@Override
 	public void saveChannelWorld(OpChannelWorld world) throws Exception {
-		OpChannelWorld worldExists = channelWorldMapper.queryWorldByChannelId(world);
+		OpChannelWorld worldExists = channelWorldMapper.queryChannelWorldByChannelIdAndWorldId(world.getChannelId(), world.getWorldId());
 		if (worldExists != null) {
 			addChannelWorldId(world.getChannelId(), world.getWorldId());
 
@@ -480,27 +454,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		channelWorldMapper.updateSerialById(id, serial);
 	}
 
-	@Override
-	public void updateChannelWorldValid(String idsStr, Integer valid) throws Exception {
-		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		channelWorldMapper.updateValidByIds(ids, valid);
-		if (ids != null && ids.length > 0) {
-			if (valid != null && valid.equals(Tag.TRUE)) {
-				// 生效时同时重新排序
-				addChannelWorldId(ids);
-
-				// 生效同时发送通知 mishengliang
-				// 下面的方法复用了 手动添加通知 的方法，此方法在手动通知中也要调用，为是方便维护，故复用
-				addChannelWorldNoticeMsgs(idsStr);
-			}
-			OpChannelWorld world = channelWorldMapper.queryChannelWorldById(ids[0]);
-			if (world != null) {
-				// updateChannelWorldCache(world.getChannelId(), 0);
-				webChannelService.updateWorldAndChildCount(world.getChannelId());
-			}
-		}
-	}
-
 	/**
 	 * 根据wid更新有效性
 	 * 
@@ -521,7 +474,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	public void addTopOneRecommendMsg(Integer id) throws Exception {
 		OpChannelTopOne topOne = channelTopOneMapper.queryTopOneById(id);
 		if (topOne == null)
-			throw new HTSException("记录已经被删除");
+			throw new Exception("记录已经被删除");
 
 		Integer notified = topOne.getNotified();
 		if (notified != null && notified.equals(Tag.FALSE)) {
@@ -805,65 +758,6 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 		logger.info("更新频道红人Top One 排行榜计划实行完毕，结束时间为：" + end + ". 花费时间：" + (end.getTime() - now.getTime()) + "ms");
 	}
 
-	@Override
-	public void addChannelWorldNoticeMsgs(String idsStr) throws Exception {
-		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		for (Integer id : ids) {
-			addChannelWorldNoticeMsg(id);
-		}
-	}
-	
-	/**
-	 * 添加织图被选入频道通知信息
-	 * 
-	 * @param channelWorldId	频道织图表主键id
-	 * @throws Exception
-	 * @author zhangbo	2015年9月7日
-	 */
-	private void addChannelWorldNoticeMsg(Integer channelWorldId) throws Exception {
-		OpChannelWorld world = channelWorldMapper.queryChannelWorldById(channelWorldId);
-		if (world == null) {
-			throw new HTSException("记录已经被删除");
-		}
-		/*
-		 *  更新推送标记
-		 *  TODO 一个月以后，即十一以后，如下的更新通知标记位可以废弃掉，以后都是只要是生效就通知，数据库中的通知标记位也可以不用了
-		 *  然后要一起整改就可以 
-		 */
-		
-//		world.setNotified(Tag.TRUE);
-//		channelWorldMapper.update(world);
-		
-		// 查询出最后一次给此用户推送的通知，取出时间，与此时比较，大于一周的再发送通知，不超过一周的不发送通知	mishengliang
-		OpSysMsg sysMsg = new OpSysMsg();
-		sysMsg.setRecipientId(world.getAuthorId()); // 织图作者作为接收人
-		sysMsg.setObjType(Tag.USER_MSG_CHANNEL_WORLD);	// 通知消息类型为织图被选入频道
-		sysMsg.setObjMeta2(String.valueOf(world.getChannelId()));	// 要查询的消息中，附加消息objMeta2存储的为频道id
-		
-		OpSysMsg msgObject = sysMsgMapper.getLastMsg(sysMsg);
-		
-		// 查询结果为空，可以发送消息
-		if ( msgObject == null ) {
-			msgService.sendChannelSystemNotice(world.getAuthorId(), Admin.NOTICE_WORLD_INTO_CHANNEL, world.getChannelId(), world.getWorldId());
-		} else {
-			long now = new Date().getTime();
-			long last = msgObject.getMsgDate().getTime();
-			
-			// 若织图所在频道为拒绝频道（往频道中发图需要小编审核后生效的为拒绝频道），则要判断发送通知的时间间隔是否大于两周，其他频道则判断是否大于一周
-			if ( rejectChannelCacheDao.getAutoRejectChannelCache().contains(world.getChannelId()) ) {
-				// 相隔时间大于二周的，可以发送消息
-				if (last - now >= REJECT_CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS) {
-					msgService.sendChannelSystemNotice(world.getAuthorId(), Admin.NOTICE_WORLD_INTO_CHANNEL, world.getChannelId(), world.getWorldId());
-				}
-			} else {
-				// 相隔时间大于一周的，可以发送消息
-				if (last - now >= NORMAL_CHANNEL_WORLD_SENDNOTICE_TIME_SPAN_MS) {
-					msgService.sendChannelSystemNotice(world.getAuthorId(), Admin.NOTICE_WORLD_INTO_CHANNEL, world.getChannelId(), world.getWorldId());
-				}
-			}
-		}
-	}
-	
 	/**
 	 * 构建插入top one榜所需的dto
 	 * @param userId
@@ -920,25 +814,12 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	}
 
 	@Override
-	public void updateChannelWorldValid(Integer channelId, Integer worldId, Integer valid) throws Exception {
-		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_CHANNEL_WORLD_ID);
-		channelWorldMapper.updateValidAndSerialByWID(channelId, worldId, valid, serial);
-		webChannelService.updateWorldAndChildCount(channelId);
-		// TODO 这块也要一起整改，统一频道更新接口 zhangbo 2015-09-09
-		if ( valid == 1) {
-			OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId, channelId);
-			
-			addChannelWorldNoticeMsg(world.getId());
-		}
-	}
-
-	@Override
 	public void updateChannelWorldSuperb(Integer channelId, Integer worldId, Integer superb) throws Exception {
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId, channelId);
 		if (world == null) {
-			throw new HTSException("记录已经被删除");
+			throw new Exception("记录已经被删除");
 		} else if ( world.getValid().equals(0) ) {
-			throw new HTSException("此频道织图是未生效的，不能进行加精操作！");
+			throw new Exception("此频道织图是未生效的，不能进行加精操作！");
 		}
 		channelWorldMapper.updateSuperbByWID(channelId, worldId, superb);
 		webChannelService.updateSuperbCount(channelId);

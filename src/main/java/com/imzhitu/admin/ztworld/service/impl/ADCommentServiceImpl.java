@@ -57,9 +57,6 @@ public class ADCommentServiceImpl extends BaseServiceImpl implements ADCommentSe
 	@Override
 	public void updateADComment(Integer adCommentId, Integer valid) throws Exception {
 		
-		// 更新广告评论表屏蔽状态
-		mapper.updateADComment(adCommentId, valid);
-		
 		// 根据广告评论主键id，查询此条广告评论
 		ZTWorldCommentDto adComment = mapper.queryADCommentById(adCommentId);
 
@@ -74,15 +71,23 @@ public class ADCommentServiceImpl extends BaseServiceImpl implements ADCommentSe
 		
 		List<ZTWorldCommentDto> worldCommentList = htWorldCommentDao.queryComment(attrMap , userAttrMap, new RowSelection(1, 1));
 		
-		// 更新织图评论的有效性，理论上只能获取出唯一条评论，故取第一个
-	    htWorldCommentDao.updateCommentValid(worldCommentList.get(0).getId(), valid);
-	    
-	    // 若为生效，则屏蔽状态设置为0，若为失效，屏蔽状态设置为1
-	    if (valid == Tag.TRUE) {
-	    	htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.FALSE);
-	    } else {
-	    	htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.TRUE);
-	    }
+		if ( worldCommentList != null && worldCommentList.size() != 0) {
+			// 更新织图评论的有效性，理论上只能获取出唯一条评论，故取第一个
+			htWorldCommentDao.updateCommentValid(worldCommentList.get(0).getId(), valid);
+			
+			// 若为生效，则屏蔽状态设置为0，若为失效，屏蔽状态设置为1
+			if (valid == Tag.TRUE) {
+				htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.FALSE);
+			} else {
+				htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.TRUE);
+			}
+			
+			// 更新广告评论表屏蔽状态
+			mapper.updateADComment(adCommentId, valid);
+		} else {
+			throw new Exception("这条评论已经被删除，可不必操作，请知。");
+		}
+		
 	}
 
 	@Override

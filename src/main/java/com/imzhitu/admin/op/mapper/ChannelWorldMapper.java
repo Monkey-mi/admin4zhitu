@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
-import com.imzhitu.admin.common.pojo.OpChannelNameDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpChannelWorldDto;
 
@@ -149,7 +148,7 @@ public interface ChannelWorldMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public OpChannelWorld queryWorldByChannelId(OpChannelWorld world);
+	public OpChannelWorld queryChannelWorldByChannelIdAndWorldId(@Param("channelId") Integer channelId, @Param("worldId") Integer worldId);
 
 	/**
 	 * 根据织图id来查询频道织图信息(不完整的信息,若需要完整信息，需要修改xml文件里的Map)
@@ -176,23 +175,25 @@ public interface ChannelWorldMapper {
 	List<Integer> queryChannelIdsByWorldId(Integer worldId);
 
 	/**
-	 * 根据WID查询其所在的频道名称列表
+	 * 更新频道织图生效（即设置为1），并且更新排序字段为最新
 	 * 
-	 * @param wids
-	 * @return
-	 */
-	@DataSource("slave")
-	public List<OpChannelNameDto> queryChannelNameByWIDs(Integer[] wids);
-
-	/**
-	 * 更新有效标记
-	 * 
-	 * @param channelId
-	 * @param worldId
-	 * @param valid
+	 * @param channelId	频道id
+	 * @param worldId	织图id
+	 * @param serial	排序字段serial
+	 * @author zhangbo	2015年11月5日
 	 */
 	@DataSource("master")
-	public void updateValidAndSerialByWID(@Param("channelId") Integer channelId, @Param("worldId") Integer worldId, @Param("valid") Integer valid, @Param("serial") Integer serial);
+	public void updateValidAndSerial(@Param("channelId") Integer channelId, @Param("worldId") Integer worldId, @Param("serial") Integer serial);
+	
+	/**
+	 * 更新频道织图失效，小编操作失效，valid设置为2
+	 * 
+	 * @param channelId	频道id
+	 * @param worldId	织图id
+	 * @author zhangbo	2015年11月5日
+	 */
+	@DataSource("master")
+	public void updateInvalid(@Param("channelId") Integer channelId, @Param("worldId") Integer worldId);
 
 	/**
 	 * 更新精选标记

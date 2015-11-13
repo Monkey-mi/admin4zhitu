@@ -16,10 +16,10 @@
 	
 	<!-- 分页查询 -->
 	<select id="queryAutoResponseSchedula" resultMap="autoResponseSchedula">
-		select iars.*,aui.user_name as operatorName,iar.world_id,hc.content from hts_admin.interact_auto_response_schedula iars 
-		left join hts_admin.admin_user_info aui on iars.operator_id=aui.id
-		left join hts_admin.interact_auto_response iar on iars.auto_response_id = iar.id
-		left join hts.htworld_comment hc on hc.id=iar.response_id
+		select iars.*,aui.user_name as operatorName,iar.world_id,iar.context as content 
+			from hts_admin.interact_auto_response_schedula iars 
+			left join hts_admin.admin_user_info aui on iars.operator_id=aui.id
+			left join hts_admin.interact_auto_response iar on iars.auto_response_id = iar.id
 		<where>
 			<if test="id != null and id != 0">
 				iars.id = #{id}
@@ -43,7 +43,7 @@
 				<![CDATA[ and iars.id <= #{maxId}]]>
 			</if>
 		</where>
-		ORDER BY  id desc
+		ORDER BY  iars.id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	

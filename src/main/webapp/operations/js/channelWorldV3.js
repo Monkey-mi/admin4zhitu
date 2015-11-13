@@ -18,7 +18,7 @@ function initWorldBoxWidth() {
  * @return
  */
 function refreshPagination(total, pageSize, pageNumber)	{
-	$("#pagination").pagination('refresh', {
+	$("#pagination").pagination("refresh", {
 	    total:total,
 	    pageSize:pageSize,
 	    pageNumber:pageNumber
@@ -50,11 +50,7 @@ function loadData(pageNumber, pageSize) {
 				var worlds = result['rows'];
 				var $worldBox = $('#world-box');
 				for(var i = 0; i < worlds.length; i++) {
-					var world = worlds[i],
-						worldId = world['id'],
-						ver = world['ver'],
-						worldDesc = world['worldDesc'],
-						titlePath = world['titlePath'];
+					var world = worlds[i];
 					dataList.push(world);
 					var $worldOpt = $('<div class="world-opt-wrap"></div>');
 					drawWorld($worldOpt, worlds, i);
@@ -74,14 +70,22 @@ function loadData(pageNumber, pageSize) {
  * @return
  */
 function drawWorld($worldOpt, worlds, index) {
-	var world = worlds[index],
-		worldId = world['id'],
-		ver = world['ver'],
-		worldDesc = world['worldDesc'],
-		titlePath = world['titlePath'];
+	var world = worlds[index];
+	var worldId = world['id'];
 	
-	// 根据标记位动态设置背景颜色
-	$worldOpt.attr("style", myRowStyler(index, world));
+	// 织图ID点击需要的织图短链
+	var wurl;
+	if(world.worldURL == "" || world.worldURL == undefined){
+		var slink;
+		if(world.shortLink == "") {
+			slink = world.worldKey;
+		} else {
+			slink = world.shortLink;
+		} 
+		wurl = "http://www.imzhitu.com/DT" + slink;
+	} else {
+		wurl = world.worldURL;
+	}
 	
 	// 生成织图信息
 	var $authorInfo = $('<div class="world-author">'
@@ -89,7 +93,8 @@ function drawWorld($worldOpt, worlds, index) {
 			+'<span class="world-author-name">'+getAuthorName(world['authorName'],world,index) +'</span>'
 			+'<span>'+phoneCodeColumn.formatter(world['phoneCode'],world,index) +'</span>'
 			+'<hr class="divider"></hr>'
-			+'<div>织图ID:' + worldIdAndShowWorldColumn.formatter(world['worldId'],world,index)
+			+'<div>织图ID:' 
+			+ "<a title='打开互动页面' class='updateInfo' href='javascript:openHtworldShowForChannelWorldPage("+world.worldId+",\""+wurl+"\","+world.valid+")'>"+world.worldId+"</a>"
 			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span>'
 			+'</div>'
 			+'<div>用户ID:'+world['authorId']
@@ -117,15 +122,15 @@ function drawWorld($worldOpt, worlds, index) {
 	$worldOpt.append($worldInfo);
 	drawOptArea($worldOpt, worlds, index);
 	$world.appendtour({
-		'width':250,
-		'worldId':worldId,
-		'ver':ver,
-		'worldDesc':worldDesc,
-		'titlePath':titlePath,
+		'width': 250,
+		'worldId': worldId,
+		'ver': world.ver,
+		'worldDesc': world.worldDesc,
+		'titlePath': world.titlePath,
 		'url':'./admin_ztworld/ztworld_queryTitleChildWorldPage',
 		'loadMoreURL':'./admin_ztworld/ztworld_queryChildWorldPage'
 	});
-}
+};
 
 /**
  * 绘制操作区域
@@ -162,7 +167,7 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ getSuperb(world['superb'], world, index)
 			+ '</span>'+ '<span>|</span>'
 			+ '<span class="world-opt-btn">'
-			+ getDeleteStatusOpt(world['channelWorldValid'], world, index)
+			+ getDeleteOpt(world)
 			+ '</span>'+ '<span>|</span>'
 			+ '<span class="world-opt-btn">'
 			+ getBeSchedulaOpt(world['beSchedula'], world, index)
@@ -347,32 +352,39 @@ function updateValues(index, keys, values) {
 };
 
 /**
- * 获取织图有效操作
+ * 获取织图有效操作，生效状态只是查看，而未生效状态是可以点击
  * 
- * @param value
- * @param row
- * @param index
+ * @param value	频道织图的生效状态，生效：1，未生效：0
+ * @param row	每个频道织图的信息
+ * @param index	此频道织图在集合中的脚标
  * @return
+ * @author zhangbo 2015-11-09
  */
 function getChannelWorldValid(value, row, index) {
-	if(row.valid == 0 || row.shield == 1 || value == 2) {
-		return '';
+	// 若频道织图为生效，则展示对号，没有点击操作
+	if ( value == 1) {
+		return "<img title='已经生效' class='htm_column_img pointer' src='./common/images/ok.png'/>";
+	} else if ( value == 0) { // 若频道织图未生效，则设置操作生效
+		return "<img title='点击生效' class='htm_column_img pointer' " 
+			+ "onclick='javascript:setValid("+ row.channelId + "," + row.worldId + "," + index + ")' src='./common/images/tip.png'/>";
 	}
-	switch(value) {
-		case 1:
-			tip = "已经生效,点击取消";
-			img = "./common/images/ok.png";
-			valid = 0;
-			break;
-		default:
-			tip = "点击生效";
-			img = "./common/images/tip.png";
-			valid = 1;
-			break;
-	}
-	return "<img title='"+ tip + "' class='htm_column_img pointer' " 
-		+ "onclick='javascript:updateValid(\""+ row.channelId + "\",\"" + row.worldId + "\","+ valid + "," + index + ")' " 
-		+ "src='" + img + "'/>";
+};
+
+/**
+ * 设置生效 
+ * @param channelId	频道id
+ * @param worldId	织图id
+ * @author zhangbo 2015-11-09
+ */
+function setValid(channelId, worldId, index) {
+	var params = {
+			channelId: channelId,
+			worldId: worldId,
+			valid: 1	// 生效设置valid为1
+		};
+	$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
+		updateValue(index, 'channelWorldValid', 1);
+	});
 };
 
 /**
@@ -405,28 +417,32 @@ function getSuperb(value, row, index) {
 };
 
 /**
- * 获取删除操作
- * 
- * @param value
- * @param row
- * @param index
+ * 获取删除操作，点击则删除频道织图，即小编删除
+ * @param row	每个频道织图的信息
  * @return
  */
-function getDeleteStatusOpt(value, row, index) {
-	if(value != 2) {
-		tip = "从频道删除织图";
-		opt = "删除";
-		valid = 2;
-	} else {
-		tip = "恢复至未生效状态";
-		opt = "恢复";
-		valid = 0;
-	}
-	
-	return "<a href=javascript:void(0); title='"+tip+"' class='updateInfo pointer' " 
-		+ "onclick='javascript:updateDeleteStatus(\""+ row.channelId + "\",\"" + row.worldId + "\","+ valid + "," + index + ")'>"
-		+ opt+"</a>";
+function getDeleteOpt(row) {
+	return "<img title='点击删除' class='htm_column_img pointer' " 
+		+ "onclick='javascript:setInvalid("+ row.channelId + "," + row.worldId + ")' src='./common/images/delete.png'/>";
 }
+
+/**
+ * 设置失效（即小编删除）
+ * @param channelId	频道id
+ * @param worldId	织图id
+ * @author zhangbo 2015-11-09
+ */
+function setInvalid(channelId, worldId) {
+	var params = {
+			channelId: channelId,
+			worldId: worldId,
+			valid: 2	// 删除设置valid为2，因为是小编删除
+		};
+	$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){
+		// 更新成功后，刷新当前页面
+		loadData(myQueryParams['page'], myQueryParams['rows']);
+	});
+};
 
 /**
  * 获取被计划状态
@@ -491,6 +507,32 @@ function openCommentsInteractPage(worldId) {
 	$.fancybox({
 		'href'				: uri,
 		'margin'			: 20,
+		'width'				: '100%',
+		'height'			: '100%',
+		'autoScale'			: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe'
+	});
+};
+
+/**
+ * 打开织图互动展示（频道织图使用）页面
+ * 
+ * @param worldId	织图id
+ * @param worldURL	织图在网页中展示的短链，即一个http链接
+ * 
+ * @author zhangbo 2015-10-27
+ */
+function openHtworldShowForChannelWorldPage(worldId, worldURL, valid) {
+	var uri = "page_htworld_htworldShowForChannelWorld";
+	
+	uri += "?worldId=" + worldId;
+	uri += "&worldURL=" + worldURL;
+	uri += "&valid=" + valid;
+	$.fancybox({
+		'href'				: uri,
+		'margin'			: 0,
 		'width'				: '100%',
 		'height'			: '100%',
 		'autoScale'			: true,

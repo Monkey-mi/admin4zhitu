@@ -26,6 +26,12 @@ public class OpChannelWorld extends AbstractNumberDto {
 	private Integer serial;
 	private Integer superbSerial;
 	
+	/**
+	 * 织图是否生效
+	 * @author zhangbo	2015年11月2日
+	 */
+	private Integer worldValid;
+	
 	public Integer getSuperb() {
 		return superb;
 	}
@@ -121,6 +127,14 @@ public class OpChannelWorld extends AbstractNumberDto {
 
 	public void setSuperbSerial(Integer superbSerial) {
 		this.superbSerial = superbSerial;
+	}
+
+	public Integer getWorldValid() {
+		return worldValid;
+	}
+
+	public void setWorldValid(Integer worldValid) {
+		this.worldValid = worldValid;
 	}
 	
 }

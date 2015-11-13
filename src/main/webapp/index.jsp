@@ -66,9 +66,6 @@
 			});
 			$('#danmu').danmu('danmu_start'); //如果你传递了合法的danmuss对象进去（不是必须的），刷新页面后就可以在div中看到弹幕运行的效果啦。
 			fetchDanmu();
-			setInterval(function(){
-				fetchDanmu();
-			}, 60*1000);
         });
         
         var formSubmitOnce = true;

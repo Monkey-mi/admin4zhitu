@@ -168,9 +168,9 @@ public class ChannelServiceTest extends BaseTest {
 				OpChannelWorld world = new OpChannelWorld();
 				world.setChannelId(1);
 				world.setMaxId(10);
-				service.buildChannelWorld(world, 1, 10, jsonMap);
+				service.buildChannelWorld(world, null, 1, 10, jsonMap);
 				world.setMaxId(null);
-				service.buildChannelWorld(world, 1, 10, jsonMap);
+				service.buildChannelWorld(world, null, 1, 10, jsonMap);
 			}
 		});
 	}
@@ -207,12 +207,6 @@ public class ChannelServiceTest extends BaseTest {
 	public void testAddChannelWorldId() throws Exception {
 		service.addChannelWorldId(1, new String[]{"12"});
 		service.addChannelWorldId(1, new Integer[]{12});
-	}
-	
-	
-//	@Test
-	public void testUpdateChannelWorldValid() throws Exception {
-		service.updateChannelWorldValid("12", Tag.TRUE);
 	}
 	
 	@Test

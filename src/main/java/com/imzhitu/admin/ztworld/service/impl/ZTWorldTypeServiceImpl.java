@@ -6,24 +6,22 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.pojo.HTWorldLabel;
-import com.hts.web.common.pojo.HTWorldTypeWorld;
 import com.hts.web.common.pojo.UserPushInfo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
-import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.push.service.PushService;
 import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
@@ -36,6 +34,7 @@ import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldType;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeWorldDto;
+import com.imzhitu.admin.common.pojo.ZTWorldTypeWorldWeightUpdateDto;
 import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
@@ -51,31 +50,23 @@ import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldTypeDao;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper;
+import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldWeightUpdateMapper;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeService;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeWorldSchedulaService;
 
-
-//@Service
 public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		ZTWorldTypeService {
-
 	
-//	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP_HEAD = "恭喜！您的织图被推荐上#";
-//	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP_FOOT = "#分类啦";
 	public static final String UPDATE_TYPE_WORLD_NOTIFY_TIP = "恭喜！您的织图被推荐上精选啦！";
 	private static final long SPAN_TIME = 10*60*1000;//扫描更新排序计划时间间隔
 	private static Logger logger = Logger.getLogger(ZTWorldTypeServiceImpl.class);		
-	
 	
 	@Value("${admin.op.superbLimit}")
 	private Integer superbLimit = 36; // 精品数量
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
-	
-	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
 	
 	@Autowired
 	private com.hts.web.userinfo.dao.UserInfoDao webUserInfoDao;
@@ -91,6 +82,9 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private ZTWorldTypeWorldMapper typeWorldMapper;
+	
+	@Autowired
+	private ZTWorldTypeWorldWeightUpdateMapper typeWorldWeightUpdateMapper;
 	
 	@Autowired
 	private HTWorldLabelWorldDao worldLabelWorldDao;
@@ -314,8 +308,9 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 	}
 	
 	@Override
-	public void updateTypeWorldWeight(Integer id, Integer weight)
+	public void updateTypeWorldWeight(Integer id, Integer weight,Integer timeUpdate)
 			throws Exception {
+		int flag = weight;
 		if(weight > 0) {
 			weight = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_TYPE_WORLD_ID);
 		}
@@ -324,6 +319,19 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		dto.setWeight(weight);
 		typeWorldMapper.updateTypeWorld(dto);
 	//	opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
+		
+		/**
+		 * mishengliang
+		 * 将weight=1的记录到定时表中
+		 */
+		if(flag == 1){
+			long now  = new Date().getTime();
+			long endTime = now + timeUpdate * 60 * 60 * 1000;
+			ZTWorldTypeWorldWeightUpdateDto weightUpdateDto = new ZTWorldTypeWorldWeightUpdateDto();
+			weightUpdateDto.setTypeWorldId(id);
+			weightUpdateDto.setEndTime(endTime);
+			typeWorldWeightUpdateMapper.saveTypeWorldWeight(weightUpdateDto);
+		}
 	}
 
 	
@@ -619,4 +627,22 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		return list;
 	}
 
+	/**
+	 * 每10分钟扫描一次时间表，截止时间 小于 当前时间的将其删除，且将广场分类表中的weight改为0
+	 *  
+		*	2015年11月4日
+		*	mishengliang
+	 */
+	public void doTypeWorldWeightUpdateSchedule(){
+		long now = new Date().getTime();
+		List<ZTWorldTypeWorldWeightUpdateDto> lists  = typeWorldWeightUpdateMapper.selectTypeWorldWeightByEndTime(now);
+		if(lists.size() > 0){
+			for(ZTWorldTypeWorldWeightUpdateDto list : lists){
+				int typeWorldId = list.getTypeWorldId();
+				typeWorldMapper.updateTypeWorldWeightByTypeWorldId(typeWorldId, 0);
+				typeWorldWeightUpdateMapper.deleteTypeWorldWeightBytypeWorldId(typeWorldId);
+			}
+		}
+	}
+	
 }

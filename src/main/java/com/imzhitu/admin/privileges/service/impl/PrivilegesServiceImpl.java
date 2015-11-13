@@ -247,9 +247,17 @@ public class PrivilegesServiceImpl extends BaseServiceImpl implements Privileges
 		privilegesGroupDao.updateById(attrMap, id, Admin.ADMIN_PRIVILEGES);
 	}
 	
+	
+	//mishengliang
 	@Override
 	public void deletePrivilegesById(String idsStr) throws Exception {
 		privilegesDao.deleteByIds(Admin.ADMIN_PRIVILEGES, idsStr);
+		
+		//当在删除某一权限时,在用户权限表中对应的将拥有此权限的记录删除掉
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		for(int i = 0; i < ids.length; i++){
+			adminUserPrivilegesMapper.deleteUserPrivileges(ids[i]);
+		}
 	}
 	
 	@Override
@@ -528,6 +536,7 @@ public class PrivilegesServiceImpl extends BaseServiceImpl implements Privileges
 	
 	/**
 	 * 删除权限
+	 * mishengliang 参考 未修改
 	 * @param uid
 	 * @param privilegeIdsStr
 	 * @param operatorId

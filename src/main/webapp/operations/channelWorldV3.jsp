@@ -20,17 +20,11 @@ var maxId = 0,
 	channelId = 0,
 	init = function() {
 	},
-	myRowStyler = function(index, row) {
-		if(!row.valid)
-			return inValidWorld;
-		return null;
-	},
 	hideIdColumn = true,
 	myIdField = "channelWorldId",
 	recordIdKey = "channelWorldId",
 	uidKey = "userId",
 	loadDataURL = "./admin_op/channel_queryChannelWorld", //数据装载请求地址
-	updateValidURL = "./admin_op/channel_updateWorldValidByWID",
 	updateSuperbURL = "./admin_op/channel_updateWorldSuperbByWID",
 	searchChannelMaxId = 0,
 	searchChannelQueryParams = {
@@ -119,6 +113,10 @@ var maxId = 0,
 				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
 		    ]],
 		    queryParams:searchChannelQueryParams,
+		    onSelect: function(index,row) {
+		    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID", row.id, 10*24*60*60*1000);
+		    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME", row.channelName, 10*24*60*60*1000);
+		    },
 		    onLoadSuccess:function(data) {
 		    	if(data.result == 0) {
 					if(data.maxId > searchChannelMaxId) {
@@ -126,6 +124,9 @@ var maxId = 0,
 						searchChannelQueryParams.maxId = searchChannelMaxId;
 					}
 				}
+		    	
+		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
+		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
 		    },
 		});
 		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
@@ -138,7 +139,8 @@ var maxId = 0,
 			}
 		});
 		
-		getChannelIdFromCookie();
+		// 执行查询频道织图
+		queryWorld();
 		
 		removePageLoading();
 		$("#main").show();
@@ -150,28 +152,29 @@ var maxId = 0,
  */
 function queryWorld() {
 	maxId = 0;
-	var channelId = $('#ss-channel').combogrid('getValue');
-	var channelName = $('#ss-channel').combogrid('getText')
-	myQueryParams['world.maxId'] = maxId;
-	myQueryParams['world.channelId'] = channelId;
-	myQueryParams['world.valid'] = $('#ss-valid').combobox('getValue');
-	myQueryParams['world.superb'] = $('#ss-superb').combobox('getValue');
-	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID",channelId,10*24*60*60*1000);
-	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME",channelName,10*24*60*60*1000);
-	loadData(1, myQueryParams.rows);
-}
-
-/**
- * 从Cookie获取频道id
- */
-function getChannelIdFromCookie(){
+	
 	var channelId = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
 	var channelName = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_NAME");
 	if(channelId){
+		myQueryParams['world.maxId'] = maxId;
 		myQueryParams['world.channelId'] = channelId;
-		$("#ss-channel").combogrid('setValue', channelId);
-		$("#ss-channel").combogrid('setText', channelName);
-		loadData(1,30);
+		myQueryParams['world.superb'] = $('#ss-superb').combobox('getValue');
+		// 频道织图瀑布流模式中，若选择“生效”，即代表，要查询频道织图生效，并且过滤掉织图被用户删除掉，所以flag指定为1
+		if ( $('#ss-valid').combobox('getValue') == 1 ) {
+			myQueryParams['flag'] = 1;
+		}
+		// 若选择“未生效”，即代表，要查询频道织图未生效，并且过滤掉织图被用户删除掉，所以flag指定为2
+		else if ( $('#ss-valid').combobox('getValue') == 0 ) {
+			myQueryParams['flag'] = 2;
+		}
+		
+		// 若行数定义了，则使用定义的行数，若未定义，则默认查询30个
+		if (myQueryParams.rows) {
+			loadData(1, myQueryParams.rows);
+		} else {
+			loadData(1, 30);
+		}
+		
 	}
 }
 
@@ -185,23 +188,6 @@ function searchChannel() {
 	searchChannelQueryParams.maxId = searchChannelMaxId;
 	searchChannelQueryParams.query = query;
 	$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams);
-}
-
-/**
- * 更新有效性
- */
-function updateValid(channelId, worldId, valid, index) {
-	$.post(updateValidURL,{
-		"channelId":channelId,
-		"worldId":worldId,
-		"valid":valid
-	}, function(result){
-		if(result['result'] == 0) {
-			updateValue(index, 'channelWorldValid', valid);
-		} else {
-			$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-		}
-	},"json");
 }
 
 /**
@@ -221,21 +207,6 @@ function updateSuperb(channelId, worldId, superb, index) {
 	},"json");
 	
 	
-}
-
-/**
- * 更新删除状态
- */
-function updateDeleteStatus(channelId, worldId, valid, index) {
-	var tip = "确定要删除吗?";
-	if(valid != 2) {
-		tip = "确定要恢复吗?";
-	}
-	$.messager.confirm('提示', tip, function(r){
-	if (r){
-		updateValid(channelId, worldId, valid, index);
-	}
-});
 }
 
 /**
@@ -261,18 +232,12 @@ function showWorldAndInteract(uri){
 	<img id="page-loading" alt="" src="${webRootPath }/common/images/girl-loading.gif" />
 	<nav id="top" class="navbar navbar-default navbar-fixed-top">
 	  	<div class="container">
-	  		<a href="./page_operations_channelWorldV3" title="瀑布流模式">
-			<img class="switch-icon" src="./htworld/images/grid-icon.png" /></a>
-			<a href="./page_operations_channelWorld" title="列表模式">
-				<img class="switch-icon" src="./htworld/images/list-icon.png" /></a>
 	  		<span class="search_label">频道: </span>
 	  		<input id="ss-channel" style="width:150px;" />
 	  		<span class="search_label">有效状态: </span>
 	  		<select id="ss-valid" class="easyui-combobox" name="phoneCode" style="width:100px;">
-				<option value="">所有状态</option>
 		        <option value="1">生效</option>
 		        <option value="0">未生效</option>
-		        <option value="2">已经删除</option>
 	  		</select>
 	  		<span class="search_label">加精状态: </span>
 	  		<select id="ss-superb" class="easyui-combobox" name="phoneCode" style="width:100px;">

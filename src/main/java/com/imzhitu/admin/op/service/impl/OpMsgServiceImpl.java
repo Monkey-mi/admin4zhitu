@@ -90,13 +90,6 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	private com.hts.web.userinfo.dao.MsgUnreadDao webMsgUnreadDao;
 
 	/**
-	 * 系统推送通知发送人ID，即官方账号ID
-	 * 
-	 * @author zhangbo 2015年9月2日
-	 */
-	private Integer appMsgSenderId = Admin.ZHITU_UID;
-
-	/**
 	 * 一次推送限定条数
 	 */
 	private Integer oncePushLimit = 300;
@@ -157,7 +150,6 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			Integer objId = webKeyGenService.generateId(KeyGenServiceImpl.OP_SYS_MSG_ID);
 			msg.setObjId(objId);
 		}
-//		msg.setSenderId(appMsgSenderId);
 		msg.setMsgDate(new Date());
 
 		if (msg.getObjType().equals(Tag.USER_MSG_STAR_RECOMMEND)) {
@@ -273,7 +265,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 	@Override
 	public void saveChannelNoticeTemplate(Integer channelId, String contentTmpl, String channelNoticeType) throws Exception {
 		if ( !(contentTmpl.contains(notice_userName_flag) && contentTmpl.contains(notice_channelName_flag)) ) {
-			throw new HTSException("保存的通知信息模板不正确，请检查！");
+			throw new Exception("保存的通知信息模板不正确，请检查！");
 		}
 		// 定义通知信息模板对象
 		NoticeMsgTemplate nmt = new NoticeMsgTemplate();
@@ -472,7 +464,7 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 			msg = msg.replace(notice_userName_flag, userName);
 			msg = msg.replace(notice_channelName_flag, channelName);
 		} else {
-			throw new HTSException("发送的通知信息模板不正确，请检查！ 相关信息：username：" + userName + " 频道名称： " + channelName);
+			throw new Exception("发送的通知信息模板不正确，请检查！ 相关信息：username：" + userName + " 频道名称： " + channelName);
 		}
 		return msg;
 	}
@@ -493,6 +485,11 @@ public class OpMsgServiceImpl extends BaseServiceImpl implements OpMsgService {
 		msg.setThumbPath(thumbPath);
 		sysMsgMapper.saveMsg(msg);
 		webMsgUnreadDao.addCount(recipientId, UnreadType.SYSMSG);
+	}
+
+	@Override
+	public void updateCommonSysMsgCache() throws Exception {
+		sysMsgCommonCacheDao.updateCache();
 	}
 
 }

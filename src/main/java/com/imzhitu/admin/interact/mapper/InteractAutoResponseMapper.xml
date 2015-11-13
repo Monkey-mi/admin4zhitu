@@ -4,7 +4,6 @@
 	<resultMap type="com.imzhitu.admin.common.pojo.InteractAutoResponseDto" id="AutoResponseMapper">
 		<result property="id" column="id" jdbcType="INTEGER"/>
 		<result property="worldId" column="world_id" jdbcType="INTEGER"/>
-		<result property="responseId" column="response_id" jdbcType="INTEGER"/>
 		<result property="commentId" column="comment_id" jdbcType="INTEGER"/>
 		<result property="complete" column="complete" jdbcType="INTEGER"/>
 		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
@@ -12,7 +11,7 @@
 		<result property="authorName" column="authorName" jdbcType="VARCHAR"/>
 		<result property="reAuthor" column="re_author" jdbcType="INTEGER"/>
 		<result property="reAuthorName" column="reAuthorName" jdbcType="VARCHAR"/>
-		<result property="context" column="content" jdbcType="VARCHAR"/>
+		<result property="context" column="context" jdbcType="VARCHAR"/>
 		<result property="reContext" column="reContext" jdbcType="VARCHAR"/>
 		<result property="commentDate" column="commentDate" jdbcType="TIMESTAMP"/>
 		<result property="preReId" column="re_id" jdbcType="INTEGER"/>
@@ -28,10 +27,17 @@
 	<insert id="addResponse">
 		insert into 
 			hts_admin.interact_auto_response 
-				(response_id,comment_id,complete,world_id,author,re_author) 
+				(comment_id,complete,world_id,world_author_id,author,re_author,context) 
 			values 
-				(#{responseId},#{commentId},#{complete},#{worldId},#{author},#{reAuthor})
+				(#{commentId},#{complete},#{worldId},#{worldAuthorId},#{author},#{reAuthor},#{context})
 	</insert>
+	
+	<!-- 修改回复内容 -->
+	<update id="updateResponseContext">
+		update hts_admin.interact_auto_response
+		set context = #{context} 
+		where id = #{id}
+	</update>
 	
 	<!-- 查询上上次回复内容 -->
 	<select id="queryPreComment" resultType="string">
@@ -45,7 +51,6 @@
 	<!-- 分页查询未回复的回复 -->
 	<select id="queryUncompleteResponse" resultMap="AutoResponseMapper">
 		SELECT ar.*, hh.short_link,
-			  hc2.content as content,
 			  hc1.content as reContext,
 			  ui.user_name as reAuthorName,
 			  uz.user_name as authorName,
@@ -55,13 +60,11 @@
 		      hts.user_info as uz,
 			  hts.user_info as ui,
 		      hts.htworld_comment as hc1,
-		      hts.htworld_comment as hc2,
 			  hts.htworld_htworld as hh
 			  <if test="channelId != null">
 			  	,hts.operations_channel_world ocw
 	    	  </if>
 		where hc1.id = ar.comment_id
-		  and hc2.id = ar.response_id
 		  and uz.id = ar.author
 		  and ui.id = ar.re_author
 		  and ar.complete = 0
@@ -107,19 +110,29 @@
 		where hh.valid=1
 	</select>
 	
-	<!-- 根据id查询回复组 -->
+	<!-- 根据id查询-->
 	<select id="queryResponseById" resultMap="AutoResponseMapper">
-		SELECT ar.id,hc.id as response_id,ui.user_name as authorName,hc.content as content,hc.comment_date as commentDate 
-			 FROM hts_admin.interact_auto_response ar,hts.htworld_comment as hc , hts.user_info as ui 
+		SELECT ar.*,ui.user_name as authorName
+			 FROM hts_admin.interact_auto_response ar, hts.user_info as ui 
 			 WHERE ar.id = #{id}
-			 AND hc.world_id=ar.world_id and hc.author_id=ui.id 
+			 and ar.author=ui.id 
+	</select>
+	
+	<!-- 根据id查询回复组 
+		 这个可以写成union all的形式
+	-->
+	<select id="queryResponseGroupById" resultMap="AutoResponseMapper">
+		SELECT hc.id as commentId,ui.user_name as authorName,hc.content as context,hc.comment_date as commentDate 
+			 FROM hts.htworld_comment as hc , hts.user_info as ui 
+		where	 
+			 hc.world_id=#{worldId} and hc.author_id=ui.id 
 			 AND 
-			 	(((hc.author_id=ar.author or hc.author_id=ar.re_author) 
+			 	(((hc.author_id=#{author} or hc.author_id=#{reAuthor}) 
 			 AND 
-			 	(hc.re_author_id =ar.author or hc.re_author_id=ar.re_author)) 
+			 	(hc.re_author_id =#{author} or hc.re_author_id=#{reAuthor})) 
 			 OR
-			 	(hc.author_id=ar.author AND hc.re_author_id=0))
-			 order by hc.comment_date desc
+			 	(hc.author_id=#{author} AND hc.re_author_id=0))
+			 order by hc.id desc
 	</select>
 	
 	<!-- 根据id查询数据 -->
@@ -140,8 +153,8 @@
 	<!-- 查询马甲的未回复的被用户回复 -->
 	<select id="queryUnCkResponse" resultMap="AutoResponseMapper">
 		SELECT 
-			hc.id as response_id,hc.author_id as author,hc.content,hc.world_id,hc.world_author_id as world_author_id,
-			hc.re_author_id as re_author , ui.user_name as authorName,hc.id as comment_id
+			hc.id as comment_id,hc.author_id as author,hc.content as context,hc.world_id,hc.world_author_id as world_author_id,
+			hc.re_author_id as re_author , ui.user_name as authorName
 		FROM
 			(
 				SELECT

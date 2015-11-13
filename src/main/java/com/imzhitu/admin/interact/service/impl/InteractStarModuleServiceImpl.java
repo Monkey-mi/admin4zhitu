@@ -57,6 +57,7 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
 		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
+		
 	}
 
 	

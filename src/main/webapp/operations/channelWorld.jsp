@@ -14,12 +14,6 @@
 <script type="text/javascript">
 	var maxId = 0;
 	var uidKey = "userId";
-	myRowStyler = function(index, row) {
-		if(!row.valid) {
-			return inValidWorld;
-		}
-		return null;
-	};
 	hideIdColumn = true,
 	htmTableTitle = "频道织图列表", //表格标题
 	toolbarComponent = '#tb',
@@ -28,8 +22,6 @@
 	recordIdKey = "channelWorldId",
 	loadDataURL = "./admin_op/channel_queryChannelWorld"; //数据装载请求地址
 	deleteURI = "./admin_op/channel_deleteChannelWorld?ids=", //删除请求地址
-	updateValidURL = "./admin_op/channel_updateChannelWorldValid?ids=",
-	addRecommendMsgURL = "./admin_op/channel_addChannelWorldRecommendMsgs?ids=",
 	queryChannelURL = "./admin_op/channel_queryChannelById",
 	queryChannelByIdOrNameURL = "./admin_op/v2channel_queryOpChannelByIdOrName",// 根据id或民称查询频道
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
@@ -60,11 +52,6 @@
   		worldURLColumn,
   		titleThumbPathColumn,
   		worldLabelColumn,
-		{field : 'channelIcon',title : '频道icon',align : 'center', width : 60,
-			formatter: function(value,row,index) {
-				return "<img title='" + row.channelName +  "' width=30 height=30 class='htm_column_img' src='" + value + "'/>";
-  			}
-		},
 		{field : 'notified',title : '通知状态',align : 'center', width : 60,
 			formatter: function(value,row,index) {
   				if(value >= 1) {
@@ -138,6 +125,7 @@
 	pageButtons = [],
     onBeforeInit = function() {
 		showPageLoading();
+		myQueryParams['world.channelId'] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");
 	},
 
 	searchChannelMaxId = 0,
@@ -217,6 +205,21 @@
 				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
 		    ]],
 		    queryParams:searchChannelQueryParams,
+		    onSelect:function(index, row) {
+				$("#htm_opt_btn").show();
+				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值
+				
+				// 设置缓存
+				baseTools.setCookie("CHANNEL_WORLD_CHANNEL_ID", row.id, 10*24*60*60*1000);
+		    	baseTools.setCookie("CHANNEL_WORLD_CHANNEL_NAME", row.channelName, 10*24*60*60*1000);
+		    	
+				maxId = 0;
+				myQueryParams['world.maxId'] = maxId;
+				myQueryParams['world.channelId'] = row.id;
+				myQueryParams['world.worldId'] = "";
+				myQueryParams['world.notified'] = "";
+				loadPageData(initPage);
+			},
 		    onLoadSuccess:function(data) {
 		    	if(data.result == 0) {
 					if(data.maxId > searchChannelMaxId) {
@@ -224,18 +227,11 @@
 						searchChannelQueryParams.maxId = searchChannelMaxId;
 					}
 				}
-		    },
-		    onSelect:function(index, row) {
-				$("#htm_opt_btn").show();
-				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
-				maxId = 0;
-				myQueryParams['world.maxId'] = maxId;
-				myQueryParams['world.channelId'] = row.id;
-				myQueryParams['world.worldId'] = "";
-				myQueryParams['world.notified'] = "";
-				myQueryParams['world.valid'] = "";
-				loadPageData(initPage);
-			}
+		    	
+		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
+		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
+		    }
+		    
 		});
 		var p = $('#ss-channel').combogrid('grid').datagrid('getPager');
 		p.pagination({
@@ -325,42 +321,58 @@ function searchChannel() {
 }
 
 /**
- * 更新有效性
+ * 批量生效
+ * @author zhangbo 2015-11-09
  */
-function updateValid(valid) {
+function batchValid() {
 	var rows = $('#htm_table').datagrid('getSelections');	
 	if(rows.length > 0){
-		var tip = "您确定要使已选中的织图生效吗？";
-		if(valid == 0) {
-			tip = "您确定要使已选中的织图失效吗？";
-		}
-		$.messager.confirm('更新记录', tip, function(r){ 	
-			if(r){				
-				var ids = [];
-				for(var i=0;i<rows.length;i+=1){		
-					ids.push(rows[i][recordIdKey]);
-				}	
-				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
-				$('#htm_table').datagrid('loading');
-				$.post(updateValidURL + ids,{
-					"valid" : valid,
-					"channlMsgType":"_add"
-				},function(result){
-					$('#htm_table').datagrid('loaded');
-					if(result['result'] == 0) {
-						$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
-						if(valid) 
-							loadPageData(1);
-						else
-							$("#htm_table").datagrid("reload");
-					} else {
-						$.messager.alert('提示',result['msg']);
-					}
-				});				
+		$.messager.confirm("温馨提示", "您确定要使已选中的织图生效吗？", function(r){
+			if(r){
+				for(var i=0;i<rows.length;i++){
+					var params = {
+						channelId: rows[i].channelId,
+						worldId: rows[i].id,
+						valid: 1	// 批量生效设置valid为1
+					};
+					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){});
+				}
+				// 清除所有已选择的记录，避免重复提交id值
+				$('#htm_table').datagrid("clearSelections");
+				// 批量生效重新第一页
+				loadPageData(1);
 			}	
 		});	
 	}else{
-		$.messager.alert('更新失败','请先选择记录，再执行更新操作!','error');
+		$.messager.alert("温馨提示","请先选择记录，再执行批量生效操作!");
+	}
+}
+
+/**
+ * 批量删除（小编删除）
+ * @author zhangbo 2015-11-09
+ */
+function batchInvalid() {
+	var rows = $('#htm_table').datagrid('getSelections');	
+	if(rows.length > 0){
+		$.messager.confirm("温馨提示", "您确定要删除已选中的织图吗？", function(r){
+			if(r){
+				for(var i=0;i<rows.length;i++){
+					var params = {
+						channelId: rows[i].channelId,
+						worldId: rows[i].id,
+						valid: 2	// 批量删除设置valid为2，因为是小编删除
+					};
+					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){});
+				}
+				// 清除所有已选择的记录，避免重复提交id值
+				$('#htm_table').datagrid("clearSelections");
+				// 批量删除刷新当前页
+				$("#htm_table").datagrid("reload");
+			}	
+		});	
+	}else{
+		$.messager.alert("温馨提示","请先选择记录，再执行批量删除操作!");
 	}
 }
 
@@ -419,7 +431,22 @@ function searchWorld() {
 	myQueryParams['world.worldId'] = "";
 	myQueryParams['world.channelId'] = $('#ss-channel').combogrid('getValue');
 	myQueryParams['world.notified'] = $('#ss-notified').combobox('getValue');
-	myQueryParams['world.valid'] = $('#ss-valid').combobox('getValue');
+	// 频道织图瀑布流模式中，若选择“生效”，即代表，要查询频道织图生效，并且过滤掉织图被用户删除掉，所以flag指定为1
+	if ( $('#ss-valid').combobox('getValue') == 1 ) {
+		myQueryParams['flag'] = 1;
+	}
+	// 若选择“未生效”，即代表，要查询频道织图未生效，并且过滤掉织图被用户删除掉，所以flag指定为2
+	else if ( $('#ss-valid').combobox('getValue') == 0 ) {
+		myQueryParams['flag'] = 2;
+	}
+	// 若选择“小编删除”，即代表，要查询频道织图被小编删除，所以flag指定为3
+	else if ( $('#ss-valid').combobox('getValue') == 2 ) {
+		myQueryParams['flag'] = 3;
+	}
+	// 若选择“用户删除织图”，即代表，要查询织图被用户删除，所以flag指定为4
+	else if ( $('#ss-valid').combobox('getValue') == 3 ) {
+		myQueryParams['flag'] = 4;
+	}
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
@@ -430,7 +457,7 @@ function searchByWID() {
 	maxId = 0;
 	myQueryParams['world.maxId'] = maxId;
 	myQueryParams['world.worldId'] = $("#ss-worldId").searchbox('getValue');
-	myQueryParams['world.channelId'] = $('#ss-channel').combogrid('getValue');
+	myQueryParams['world.channelId'] = baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID");	// 频道id都从缓存获取
 	myQueryParams['world.notified'] = "";
 	myQueryParams['world.valid'] = "";
 	$("#htm_table").datagrid("load",myQueryParams);
@@ -449,33 +476,6 @@ function showUserWorld(uri){
 		'type'				: 'iframe',
 		'href'				: uri
 	});
-}
-
-function batchNotify() {
-	var rows = $('#htm_table').datagrid('getSelections');	
-	if(rows.length > 0){
-		$.messager.confirm('添加通知', '你确定要批量添加通知', function(r){ 	
-			if(r){				
-				var ids = [];
-				for(var i=0;i<rows.length;i+=1){		
-					ids.push(rows[i][recordIdKey]);
-				}	
-				$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
-				$('#htm_table').datagrid('loading');
-				$.post(addRecommendMsgURL + ids,function(result){
-					$('#htm_table').datagrid('loaded');
-					if(result['result'] == 0) {
-						$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
-						$("#htm_table").datagrid("reload");
-					} else {
-						$.messager.alert('提示',result['msg']);
-					}
-				});				
-			}	
-		});	
-	}else{
-		$.messager.alert('通知失败','请先选择记录，再执行更新操作!','error');
-	}
 }
 
 /**
@@ -613,17 +613,12 @@ function batchChannelWorldToSuperbSubmit() {
 	
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<div>
-				<a href="./page_operations_channelWorldV3" title="瀑布流模式">
-				<img class="switch-icon" src="./htworld/images/grid-icon.png" style="width:15px;vertical-align:middle;"  /></a>
-				<a href="./page_operations_channelWorld" title="列表模式">
-					<img class="switch-icon" src="./htworld/images/list-icon.png" style="width:15px;vertical-align:middle;"  /></a>
 				<span class="search_label">请选择频道：</span>
 				<input id="ss-channel" style="width:100px;" />
 				<span id="htm_opt_btn" class="none">
-				<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>
-				<a href="javascript:void(0);" onclick="javascript:updateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
-				<a href="javascript:void(0);" onclick="javascript:updateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量失效</a>
-				<a href="javascript:void(0);" onclick="javascript:batchNotify();" class="easyui-linkbutton" title="批量通知" plain="true" iconCls="icon-ok">批量通知</a>
+			<!--	<a href="javascript:void(0);" onclick="javascript:htmDelete(recordIdKey);" class="easyui-linkbutton" title="删除频道红人" plain="true" iconCls="icon-cut">删除</a>-->
+				<a href="javascript:void(0);" onclick="javascript:batchValid();" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok">批量生效</a>
+				<a href="javascript:void(0);" onclick="javascript:batchInvalid();" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip">批量删除</a>
 				<a href="javascript:void(0);" onclick="javascript:reIndexed();" class="easyui-linkbutton" title="按照勾选顺序重新排序，并且生效" plain="true" iconCls="icon-converter" id="reIndexedBtn">计划重新排序并生效</a>
 				<a href="javascript:void(0);" onclick="javascript:openScheduleSuperbWindow();" class="easyui-linkbutton" title="按照计划的时间，使频道织图加精" plain="true" iconCls="icon-converter">计划加精</a>
 				<select id="ss-notified" class="easyui-combobox" style="width:100px;">
@@ -632,9 +627,11 @@ function batchChannelWorldToSuperbSubmit() {
 			        <option value="1">已通知</option>
 		   		</select>
 		   		<select id="ss-valid" class="easyui-combobox" style="width:100px;">
-			        <option value="">所有生效状态</option>
-			        <option value="0">未生效</option>
+			        <option value="">所有状态</option>
 			        <option value="1">生效</option>
+			        <option value="0">未生效</option>
+			        <option value="2">小编删除</option>
+			        <option value="3">用户删除织图</option>
 		   		</select>
 		   		<a href="javascript:void(0);" onclick="javascript:searchWorld();" class="easyui-linkbutton" plain="true" iconCls="icon-search" id="searchBtn">查询</a>
 		   		

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.userinfo.mapper.UserMsgConversationMapper">
+
+	<resultMap id="ConversationMap" type="com.imzhitu.admin.common.pojo.UserMsgConversationDto">
+		<id column="content_id" property="contentId" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="other_id" property="otherId" jdbcType="INTEGER" />
+		<result column="unread_count" property="unreadCount" jdbcType="INTEGER"/>
+		<result column="msg_date" property="msgDate" jdbcType="TIMESTAMP" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
+		<result column="star" property="star" jdbcType="INTEGER" />
+		<result column="ver" property="ver" jdbcType="FLOAT" />
+		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
+		<result column="phone_ver" property="phoneVer" jdbcType="VARCHAR" />
+		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryConver" resultMap="ConversationMap">
+		select c.content_id,c.user_id,c.other_id,c.unread_count,c.msg_date,m.content,
+		u.user_name,u.user_avatar,u.user_avatar_l,u.star,u.ver,u.phone_code,u.phone_ver,u.phone_sys
+		from hts.user_msg_conversation c, hts.user_info u, hts.user_msg m
+		<where>
+			c.other_id=u.id and c.content_id=m.id and c.user_id=#{userId} and c.content_id != 0
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ and c.content_id<=#{maxId}]]></if>
+		</where>
+		order by c.content_id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+
+	<select id="queryConverByOtherId" resultMap="ConversationMap">
+		select c.content_id,c.user_id,c.other_id,c.unread_count,c.msg_date,
+		u.user_name,u.user_avatar,u.user_avatar_l,u.star,u.ver,u.phone_code,u.phone_ver,u.phone_sys
+		from hts.user_msg_conversation c, hts.user_info u
+		where c.other_id=u.id and c.user_id=#{userId} and c.other_id=#{otherId}
+	</select>
+	
+	<select id="queryConverCount" resultType="long">
+		select count(*) from hts.user_msg_conversation c
+		<where>
+			c.user_id=#{userId} and c.content_id != 0
+	      	<if test="maxId != null and maxId != 0"><![CDATA[ and c.content_id<=#{maxId}]]></if>
+		</where>
+	</select>
+	
+</mapper>

@@ -58,9 +58,15 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 		mapper.addStarRecommendTopic(dto);
 	}
 
+	/**
+	 * isWorld 区别是哪个模块要获取其中的信息  在topic展示中没有数值传入
+	 */
 	@Override
-	public List<StarRecommendTopic> getTopic(Integer isWorld) throws Exception {
-		List<StarRecommendTopic> list  =  mapper.getStarRecommendTopic(isWorld);
+	public void getTopic(Integer page,Integer rows,Integer maxId,Integer isWorld,Map<String, Object> jsonMap) throws Exception {
+		Integer start = (page - 1) * rows;
+		Integer limites = rows; 
+		Integer total  = mapper.getTopicModuleCount();
+		List<StarRecommendTopic> list  =  mapper.getStarRecommendTopic(start,limites,maxId,isWorld);
 		String link = "";
 		String http = "http://imzhitu.com/operations/";
 		for(int i = 0 ;i < list.size() ; i++){
@@ -75,7 +81,12 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 			}
 			list.get(i).setLink(http + link + list.get(i).getId());
 		}
-		return list;
+		if(page <= 1){
+			 maxId = list.get(0).getId();
+		}
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
 	}
 
 	public List<Integer> getTopicId()  throws Exception{

@@ -13,7 +13,7 @@ public interface InteractStarRocommendTopicMapper {
 	public void addStarRecommendTopic(StarRecommendTopic dto);
 	
 	@DataSource("slave")
-	public List<StarRecommendTopic>  getStarRecommendTopic(@Param("isWorld") Integer isWorld);
+	public List<StarRecommendTopic>  getStarRecommendTopic(@Param("start") Integer start,@Param("limites") Integer limites,@Param("maxId") Integer maxId,@Param("isWorld") Integer isWorld);
 	
 	@DataSource("slave")
 	public List<Integer>  getStarRecommendTopicId();
@@ -23,4 +23,7 @@ public interface InteractStarRocommendTopicMapper {
 	
 	@DataSource("master")
 	public void destoryStarRecommendTopic(Integer id);
+	
+	@DataSource("master")
+	public Integer getTopicModuleCount();
 }

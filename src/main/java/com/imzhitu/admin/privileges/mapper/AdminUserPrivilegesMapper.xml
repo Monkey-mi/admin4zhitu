@@ -57,7 +57,7 @@
 		from hts_admin.admin_user_privileges aup 
 			left join hts_admin.admin_privileges ap on aup.privilege_id=ap.id 
 			left join hts_admin.admin_user_info aui on aup.operator_id=aui.id
-		where aup.user_id=#{userId} and aup.valid=1
+		where aup.user_id=#{userId} and aup.valid=1 order by ap.serial asc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
@@ -136,6 +136,12 @@
 		set valid=#{valid},date_modify = #{modifyDate,jdbcType=TIMESTAMP},operator_id=#{operatorId}
 		where user_id=#{userId} and privilege_id=#{privilegeId}
 	</update>
+	
+	<delete id="deleteUserPrivileges">
+	delete from 
+	hts_admin.admin_user_privileges
+	 where privilege_id = #{privilegeId}
+	</delete>
 	
 	<!-- 插入时间管理模块数据 -->
 	<insert id="insertAdminTimeManage">

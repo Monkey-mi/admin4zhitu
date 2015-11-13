@@ -104,7 +104,7 @@ public class InteractAutoResponseAction extends BaseCRUDAction{
 	public String updateResponseCompleteByIds(){
 		try{
 			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			interactAutoResponseService.updateResponseCompleteByIds(idsStr,responseIdsStr,user.getId());
+			interactAutoResponseService.updateResponseCompleteByIds(idsStr,user.getId());
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

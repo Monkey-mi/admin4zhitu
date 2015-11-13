@@ -10,7 +10,7 @@
 </head>
 <body>
     
-    <table id="dg" title="主题信息" style="height:680px"></table>
+    <table id="dg" title="主题信息" style="height:716px"></table>
     <div id="toolbar" style="display:none">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新建</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
@@ -125,6 +125,9 @@
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
     <script type="text/javascript">
         var url;
+        var myQueryParams = {};
+        var maxId = 0;
+        
         function newUser(){
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','增加主题');
             
@@ -193,6 +196,22 @@
             }
         }
         
+   	 var myOnBeforeRefresh = function(pageNumber, pageSize) {
+    		if(pageNumber <= 1) {
+    			maxId = 0;
+    			myQueryParams.maxId = maxId;
+    		}
+    	}; 
+    	
+     	 var  myOnLoadSuccess = function(data) {
+    		if(data.result == 0) {
+    			if(data.maxId > maxId) {
+    				maxId = data.maxId;
+    				myQueryParams.maxId = maxId;
+    			}
+    		}
+    	}; 
+        
         $('#dg').datagrid({
             url:"./admin_interact/starRecommendTopic_get",
             toolbar:"#toolbar",
@@ -200,8 +219,10 @@
             singleSelect:true,
             rownumbers:true,
             //fitColumns:true,
+             queryParams:myQueryParams,
             columns:[[
-				{field:'id',title:'ID',width:100,align:"center"},
+				/* {field:'id',title:'ID',width:100,align:"center"}, */
+				{field : 'ck',checkbox : true },
                 {field:'title',title:'主题',width:100,align:"center"},
                 {field:'topicType',title:'文章类型',width:100,align:"center",
             		formatter:function(value,row,index) {
@@ -235,8 +256,8 @@
         				return "<img width='100px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";	
         			}	
                 },
-                {field:'introduceHead',title:'前介绍',width:100,align:"center"},
-                {field:'introduceFoot',title:'后介绍',width:300,align:"center"},
+                {field:'introduceHead',title:'前介绍',width:150,align:"center"},
+                {field:'introduceFoot',title:'后介绍',width:250,align:"center"},
                 {field:'stickerButton',title:'发图按钮',width:100,align:"center"},
                 {field:'shareButton',title:'分享按钮',width:100,align:"center"},
    /*         {field:'foot',title:'来自织图',width:100,align:"center"}, */
@@ -254,6 +275,8 @@
             beforePageText: '第',//页数文本框前显示的汉字 
             afterPageText: '页    共 {pages} 页', 
             displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+    		buttons:pageButtons,
+    		onBeforeRefresh:myOnBeforeRefresh,
         }); 
         
         // 此为频道banner上传组件 

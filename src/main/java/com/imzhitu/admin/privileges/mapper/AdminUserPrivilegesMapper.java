@@ -94,6 +94,14 @@ public interface AdminUserPrivilegesMapper {
 	public void updateValid(AdminUserPrivileges dto);
 	
 	/**
+	 * mishengliang 11-02-2015
+	 * 当在删除某一权限时,在用户权限表中对应的将拥有此权限的记录删除掉
+	 * @param dto
+	 */
+	@DataSource("master")
+	public void deleteUserPrivileges(Integer privilegeId);
+	
+	/**
 	 * 插入时间管理模块数据
 	 * @param dto 
 		*	2015年8月21日

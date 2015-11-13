@@ -29,7 +29,6 @@
 </style>
 <script type="text/javascript">
 	var worldId = <%= worldId %>;
-	
 	/**
 	 * jquery初始化
 	 */
@@ -38,14 +37,16 @@
 	    $("#htm_channel").window({
 	    	title: "织图添加到频道",
 	    	iconCls:'icon-add',
-	        width: $(window).width(),
-	        height: $(window).height(),
+ 	        width: $(window).width(),
+	        height: $(window).height(), 
 	        collapsible: false,
 	        minimizable: false,
 	        maximizable: false,
 	        closable: false
 	    });
 		
+
+	    
 	    $("#ss-channel").combobox({
 	        url: "./admin_op/channel_queryAllChannel",
 	        valueField: "id",
@@ -60,7 +61,7 @@
 	    });
 		
 		// 页面打开后打开选择频道gridpanel
-		$("#ss-channel").combobox('showPanel');
+		 $("#ss-channel").combobox('showPanel'); 
 		
 		// 然后焦点聚焦在频道输入框上
 		$("#ss-channel").combobox("textbox").focus();
@@ -169,6 +170,16 @@
 	function saveChannelWorldSubmit(){
 		var channelIds = [];
 		
+		//mishengliang
+	    var channelData = 	$("#ss-channel").combobox("getData");
+		var channelNameInText = $("#ss-channel").combobox("textbox").val().trim(); 
+	    for(var i = 0; i < channelData.length; i++){
+	    	if(channelNameInText ==  channelData[i].channelName.trim() && !isExistInCurrentChannel(channelData[i].id)){
+	    		channelIds.push(channelData[i].id);
+	    		break;
+	    	}
+	    }
+	  
 		// 遍历频道区域中，将要添加进频道的button
 		$("#channel_area .add-into-btn").each(function(){
 			channelIds.push($(this).attr("channelId"));
@@ -196,18 +207,18 @@
 <body>
 	<!-- 添加到频道 -->
 	<div id="htm_channel">
-		<table class="htm_edit_table" width="700">
+		<table class="htm_edit_table" align="center" border="0">
 			<tbody>
 				<tr>
 					<td class="leftTd">频道：</td>
 					<td>
-						<div id="channel_area" style="width:350px;height:100px;border:solid 1px #4796EF;"></div>
+						<div id="channel_area" style="width:300px;height:100px;border:solid 1px #4796EF;"></div>
 					</td>
 				</tr>
 				<tr>
 					<td class="leftTd">频道名称：</td>
 					<td>
-						<input id="ss-channel" style="width:200px;" />
+						<input id="ss-channel" style="width:300px;" />
 					</td>
 				</tr>
 				<tr>

@@ -1,7 +1,7 @@
 package com.imzhitu.admin.userinfo.service.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,23 +10,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
-import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowCallback;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
+import com.hts.web.common.pojo.UserMsgConver;
 import com.hts.web.common.pojo.UserMsgDto;
-import com.hts.web.common.pojo.UserMsgRecipientDto;
-import com.hts.web.common.pojo.UserPushInfo;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.NumberUtil;
-import com.hts.web.common.util.PushUtil;
 import com.hts.web.common.util.StringUtil;
-import com.hts.web.push.service.PushService;
-import com.hts.web.push.service.impl.PushServiceImpl.PushFailedCallback;
-import com.imzhitu.admin.common.database.Admin;
+import com.hts.web.userinfo.dao.MsgUnreadDao.UnreadType;
+import com.hts.web.userinfo.dao.UserMsgConversationDao;
+import com.imzhitu.admin.common.pojo.UserMsgConversationDto;
 import com.imzhitu.admin.common.pojo.UserMsgDanmu;
-import com.imzhitu.admin.op.service.OpMsgService;
 import com.imzhitu.admin.userinfo.dao.UserMsgDao;
+import com.imzhitu.admin.userinfo.mapper.UserMsgConversationMapper;
 import com.imzhitu.admin.userinfo.service.UserMsgService;
 
 /**
@@ -43,29 +40,20 @@ import com.imzhitu.admin.userinfo.service.UserMsgService;
 public class UserMsgServiceImpl extends BaseServiceImpl implements
 		UserMsgService {
 
-	public static final String MSG_TITLE = "亲爱的";
-	
-	@Autowired
-	private PushService pushService;
-	
-	@Autowired
-	private com.hts.web.userinfo.dao.UserInfoDao webUserInfoDao;
-	
 	@Autowired
 	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
 	
 	@Autowired
-	private com.hts.web.userinfo.dao.UserMsgDao webUserMsgDao;
+	private com.hts.web.userinfo.dao.UserMsgConversationDao webUserMsgConversationDao;
+
+	@Autowired
+	private com.hts.web.userinfo.dao.MsgUnreadDao webMsgUnreadDao;
 	
 	@Autowired
-	private com.hts.web.userinfo.dao.UserMsgRecipientBoxDao webUserMsgRecipientBoxDao;
+	private UserMsgConversationMapper conversationMapper;
 	
 	@Autowired
 	private UserMsgDao userMsgDao;
-	
-	@Autowired
-	private OpMsgService opMsgService;
-
 	
 	@Value("${push.customerServiceId}")
 	private Integer customerServiceId;
@@ -79,130 +67,109 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public void pushSysMsg(String idsStr, String content) throws Exception {
-		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		List<UserPushInfo> infos = webUserInfoDao.queryUserPushInfoByIds(ids);
-		for (UserPushInfo info : infos) {
-			String userName = webUserInfoDao.queryUserNameById(info.getId());
-			String fullContent = MSG_TITLE + userName + "，" + content;
-			userName = PushUtil.getShortName(userName);
-			String title = MSG_TITLE + userName + "，" + content;
-			opMsgService.saveSysMsg(info.getId(), fullContent, Tag.USER_MSG_SYS,
-					null, null, null, null);
-			pushService.pushSysMessage(title, Admin.ZHITU_UID, title,
-					info, Tag.USER_MSG_SYS, new PushFailedCallback() {
+	public void buildConversation(UserMsgConversationDto conver, Integer start, Integer limit,
+			Map<String, Object> jsonMap) throws Exception {
+		conver.setUserId(customerServiceId);
+		buildNumberDtos("getContentId", conver, start, limit, jsonMap, 
+				new NumberDtoListAdapter<UserMsgConversationDto>() {
 
-						@Override
-						public void onPushFailed(Exception e) {
-						}
-					});
-		}
-	}
-
-	@Override
-	public void pushAppMsg(String content, Integer worldId,
-			String activityName, String[] phoneTypes) throws Exception {
-		List<String> phoneTypeList = new ArrayList<String>();
-		for(String phoneType : phoneTypes) {
-			phoneTypeList.add(phoneType);
-		}
-		Integer pushAction = Tag.PUSH_ACTION_SYS;
-		String pushId = null;
-		if(worldId != null) {
-			pushAction = Tag.PUSH_ACTION_WORLD_MSG;
-			pushId = worldId.toString();
-		} else if(!StringUtil.checkIsNULL(activityName)) {
-			pushAction = Tag.PUSH_ACTION_ACTIVITY_MSG;
-			pushId = activityName;
-		}
-//		pushService.pushAppMessage(content, pushAction, pushId, phoneTypeList);
-	}
-
-	@Override
-	public void pushListMsg(String content, Integer worldId,
-			String activityName, String idsStr) throws Exception{
-		Integer[] ids = StringUtil.convertStringToIds(idsStr);
-		List<UserPushInfo> pushInfoList = webUserInfoDao.queryUserPushInfoByIds(ids);
-		
-		Integer pushAction = Tag.PUSH_ACTION_SYS;
-		String pushId = null;
-		if(worldId != null) {
-			pushAction = Tag.PUSH_ACTION_WORLD_MSG;
-			pushId = worldId.toString();
-		} else if(!StringUtil.checkIsNULL(activityName)) {
-			pushAction = Tag.PUSH_ACTION_ACTIVITY_MSG;
-			pushId = activityName;
-		}
-		pushService.pushListMessage(content, pushAction, pushId, pushInfoList, new PushFailedCallback() {
-			
 			@Override
-			public void onPushFailed(Exception e) {
+			public List<? extends Serializable> queryList(UserMsgConversationDto dto) {
+				if(dto.getOtherId() != null) {
+					List<UserMsgConversationDto> list = conversationMapper.queryConverByOtherId(
+							customerServiceId, dto.getOtherId());
+					if(list.isEmpty()) {
+						webUserMsgConversationDao.saveConver(
+								new UserMsgConver(customerServiceId, dto.getOtherId(), 
+										0, 0, UserMsgConversationDao.MSG_TYPE_SEND));
+						list = conversationMapper.queryConverByOtherId(customerServiceId, dto.getOtherId());
+					}
+					return list;
+					
+				}
+				return conversationMapper.queryConver(dto);
+			}
+
+			@Override
+			public long queryTotal(UserMsgConversationDto dto) {
+				if(dto.getOtherId() != null) {
+					return 1l;
+				}
+				return conversationMapper.queryConverCount(dto);
 			}
 		});
 	}
+	
 
 	@Override
-	public void buildRecipientMsgBox(Integer maxId,Integer senderId, final Integer recipientId, Integer phoneCode,
-			int start, int limit, Map<String, Object> jsonMap) throws Exception {
-		final LinkedHashMap<String, Object> attrMap = new LinkedHashMap<String, Object>();
-		if(senderId != null) {
-			attrMap.put("senderId", senderId);
+	public void delConver(String idsStr) throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		for(Integer id : ids) {
+			webUserMsgConversationDao.sendMsg(customerServiceId, id, 0);
 		}
-		if(phoneCode != null) {
-			attrMap.put("phone_code", phoneCode);
-		}
-		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<UserMsgRecipientDto>() {
-
-			@Override
-			public List<UserMsgRecipientDto> getSerializables(RowSelection rowSelection) {
-				return userMsgDao.queryRecipientMsgBox(recipientId, attrMap, rowSelection);
-			}
-
-			@Override
-			public List<UserMsgRecipientDto> getSerializableByMaxId(int maxId,
-					RowSelection rowSelection) {
-				return userMsgDao.queryRecipientMsgBox(maxId, recipientId, attrMap, rowSelection);
-			}
-
-			@Override
-			public long getTotalByMaxId(int maxId) {
-				return userMsgDao.queryRecipientMsgBoxCount(maxId, recipientId, attrMap);
-			}
-			
-		}, OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID);
 	}
 
 	@Override
-	public void buildUserMsg(final Integer userId, final Integer otherId, int maxId,
+	public void buildUserMsg(final Integer otherId, int maxId,
 			int start, int limit, Map<String, Object> jsonMap) throws Exception {
 		buildSerializables(maxId, start, limit, jsonMap, new SerializableListAdapter<UserMsgDto>() {
 
 			@Override
 			public List<UserMsgDto> getSerializables(RowSelection rowSelection) {
-				List<UserMsgDto> list = webUserMsgDao.queryUserMsg(userId, otherId, rowSelection);
+				List<UserMsgDto> list = webUserMsgService.queryUserMsg(customerServiceId, otherId, 0, rowSelection);
+				webUserMsgConversationDao.clearUnreadCount(customerServiceId, otherId);
+				if(!list.isEmpty()) {
+					webMsgUnreadDao.clearCount(customerServiceId, list.get(0).getId(), UnreadType.UMSG);
+				}
 				return list;
 			}
 
 			@Override
 			public List<UserMsgDto> getSerializableByMaxId(int maxId,
 					RowSelection rowSelection) {
-				return webUserMsgDao.queryUserMsg(maxId, userId, otherId, rowSelection);
+				List<UserMsgDto> list = webUserMsgService.queryUserMsg(customerServiceId, otherId,
+						maxId, rowSelection);
+				return list;
 			}
 
 			@Override
 			public long getTotalByMaxId(int maxId) {
-				return webUserMsgDao.queryUserMsgCount(maxId, userId, otherId);
+				return webUserMsgService.queryUserMsgCount(customerServiceId, otherId, maxId); // 获取消息总数
 			}
 			
 		}, OptResult.ROWS, OptResult.TOTAL, OptResult.JSON_KEY_MAX_ID);
 	}
-
+	
 	@Override
-	public void updateRecipientMsgBoxUnValid(String senderIdsStr,
-			Integer recipientId) {
-		Integer[] ids = StringUtil.convertStringToIds(senderIdsStr);
-		webUserMsgRecipientBoxDao.updateRecipientUnValid(ids, recipientId);
+	public void sendMsg(Integer userId, String content, Boolean keep) throws Exception {
+		webUserMsgService.saveUserMsg(customerServiceId, userId, content);
+		if(!keep) {
+			webUserMsgConversationDao.sendMsg(customerServiceId, userId, 0);
+		}
 	}
+	
+	@Override
+	public void sendMsgs(String idStrs, String content) throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idStrs);
+		if(ids != null && ids.length > 0) {
+			for(Integer id : ids) {
+				webUserMsgService.saveUserMsg(customerServiceId, id, content);
+				webUserMsgConversationDao.sendMsg(customerServiceId, id, 0);
+			}
+		}
+	}
+	
+	@Override
+	public void sendMsgs(String[] idStrs, String content) throws Exception {
+		Integer id;
+		for(String str : idStrs) {
+			id = Integer.parseInt(str);
+			webUserMsgService.saveUserMsg(customerServiceId, id, content);
+			webUserMsgConversationDao.sendMsg(customerServiceId, id, 0);
+		}
+	}
+
+
 
 	@Override
 	public void buildUserMsgDanmu(int maxId, int start, int limit,
@@ -290,5 +257,6 @@ public class UserMsgServiceImpl extends BaseServiceImpl implements
 //		}
 		dm.setPosition(pos);
 	}
-	
+
+
 }

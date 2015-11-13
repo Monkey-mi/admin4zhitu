@@ -129,5 +129,8 @@
 	
     <import resource="spring-config-web.xml" />
     <import resource="spring-config-interact.xml"/>
+    <!-- 
+    <import resource="spring-config-daemon.xml"/>
+     -->
     
 </beans>

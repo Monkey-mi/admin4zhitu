@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.hts.web.common.pojo.OpSysMsgDto;
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpSysMsg;
 
 /**
@@ -17,8 +18,21 @@ import com.imzhitu.admin.common.pojo.OpSysMsg;
  */
 public interface SysMsgCommonMapper {
 
+	/**
+	 * 添加公用系统消息
+	 * 
+	 * @param msg
+	 */
+	@DataSource("master")
 	public void saveCommonMsg(OpSysMsg msg);
 	
+	/**
+	 * 查询缓存消息列表
+	 * 
+	 * @param limit
+	 * @return
+	 */
+	@DataSource("master")
 	public List<OpSysMsgDto> queryCacheMsg(@Param("limit")Integer limit);
 	
 }

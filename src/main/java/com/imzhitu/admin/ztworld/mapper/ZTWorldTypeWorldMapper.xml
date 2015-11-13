@@ -252,6 +252,16 @@
 		</foreach>
 	</update>
 	
+	<update id="updateTypeWorldWeightByTypeWorldId">
+		update hts.htworld_type_world
+		set weight = #{weight}
+		where 
+		<if test="typeWorldId != 0">
+		id = #{typeWorldId}
+		</if>
+	</update>
+	
+	
 	<!-- 根据worldIds查询数据 -->
 	<select id="queryTypeWorldByWorldIds" resultMap="ZTWorldTypeWorldMap">
 		select hw.id,hw.world_id,hw.type_id,hw.superb,hw.valid as type_valid,hw.serial,hw.weight,hw.recommender_id,hw.date_add,hw.date_modify,hw.review ,h.*,

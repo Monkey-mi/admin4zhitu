@@ -23,6 +23,7 @@ import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.WorldWithInteract;
 import com.imzhitu.admin.common.pojo.OpActivityWorldValidDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
+import com.imzhitu.admin.common.pojo.UserMsgAtWorldDto;
 import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
 import com.imzhitu.admin.interact.dao.InteractWorldDao;
@@ -33,6 +34,7 @@ import com.imzhitu.admin.ztworld.dao.HTWorldCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldChildWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldFilterLogoCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
+import com.imzhitu.admin.ztworld.mapper.UserMsgAtWorldMapper;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldMapper;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
 
@@ -94,6 +96,9 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	
 	@Autowired
 	private OpenSearchService openSearchService;
+	
+	@Autowired
+	private UserMsgAtWorldMapper userMsgAtWorldMapper;
 	
 	public Integer getCacheLatestSize() {
 		return cacheLatestSize;
@@ -284,6 +289,20 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		jsonMap.put(OptResult.JSON_KEY_ROWS, dtoList);
 		jsonMap.put(OptResult.TOTAL, totalCount);
 
+	}
+	
+	/**
+	 * 查询织图描述中被@人的信息
+	 * @param worldId 
+	 * @param jsonMap
+	 * @throws Exception 
+		*	2015年11月10日
+		*	mishengliang
+	 */
+	@Override
+	public void  queryCommentAt(int worldId,Map<String, Object> jsonMap){
+		List<UserMsgAtWorldDto> list = userMsgAtWorldMapper.queryAtWorldByWorldId(worldId); 
+		jsonMap.put(OptResult.JSON_KEY_OBJ,list);
 	}
 	
 	/**
@@ -528,12 +547,6 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 					channelIds += "," + channelIdList.get(i);
 				}
 			}
-			
-			// 直接管换成字符串，就变成由“,”分隔的了，但是要去除前后的“[]”
-//			String channelNames = channelNameList.toString();
-//			channelNames = channelNames.substring(1, channelNames.length()-1);
-//			String channelIds = channelIdList.toString();
-//			channelIds = channelIds.substring(1, channelIds.length()-1);
 			
 			ZTWorldDto dto = new ZTWorldDto();
 			dto.setWorldId(worldId);

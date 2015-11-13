@@ -56,8 +56,7 @@ var maxId = 0,
 			formatter:function(value,row,index){
 				return "<a title='查看' href='javascript:viewDialog(" + row.id + ")'>查看记录</a>";
 			}
-		},
-		{field : 'responseId',hidden:true}
+		}
 	],
 	pageButtons = [{
 	        iconCls:'icon-save',
@@ -78,13 +77,11 @@ var maxId = 0,
 	        		},"json");
 	        	
 	        	var ids = [];
-				var responseIds = [];
 				for(var i=0;i<rows.length;i+=1){		
 					ids.push(rows[i]['id']);
-					responseIds.push(rows[i]['responseId'])
 //					rowIndex = $('#htm_table').datagrid('getRowIndex',rows[i]);				
 				}	
-				$.post(updateValidURL + ids + "&responseIdsStr=" + responseIds,function(result){
+				$.post(updateValidURL + ids,function(result){
 					$('#htm_table').datagrid('loaded');
 					if(result['result'] == 0) {
 //						$.messager.alert('提示',result['msg'] + ids.length + "条记录！");
@@ -187,15 +184,13 @@ var maxId = 0,
 			$.messager.confirm('更新记录', '您确定要更新已选中的记录有效性?', function(r){ 	
 				if(r){				
 					var ids = [];
-					var responseIds = [];
 					for(var i=0;i<rows.length;i+=1){		
 						ids.push(rows[i]['id']);
-						responseIds.push(rows[i]['responseId'])
 	//					rowIndex = $('#htm_table').datagrid('getRowIndex',rows[i]);				
 					}	
 					$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
 					$('#htm_table').datagrid('loading');
-					$.post(updateValidURL + ids + "&responseIdsStr=" + responseIds,function(result){
+					$.post(updateValidURL + ids,function(result){
 						$('#htm_table').datagrid('loaded');
 						if(result['result'] == 0) {
 							$.messager.alert('提示',result['msg'] + ids.length + "条记录！");

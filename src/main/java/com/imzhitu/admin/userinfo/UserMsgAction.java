@@ -2,13 +2,11 @@ package com.imzhitu.admin.userinfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hts.web.base.HTSException;
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
-import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
-import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
+import com.imzhitu.admin.common.pojo.UserMsgConversationDto;
 import com.imzhitu.admin.userinfo.service.UserMsgService;
 
 /**
@@ -36,23 +34,24 @@ public class UserMsgAction extends BaseCRUDAction {
 	private Integer phoneCode;
 	private String activityName;
 	private Integer senderId;
+	private String keep;
+	
+	private UserMsgConversationDto conver = new UserMsgConversationDto();
 	
 	
 
 	@Autowired
 	private UserMsgService userMsgService;
-	@Autowired
-	private com.hts.web.userinfo.service.UserMsgService webUserMsgService;
 
 	/**
-	 * 推送系统消息
+	 * 查询发送者私信列表索引
 	 * 
 	 * @return
 	 */
-	public String saveSysMsg() {
+	public String queryConversation() {
 		try {
-			userMsgService.pushSysMsg(ids, content);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+			userMsgService.buildConversation(conver, page, rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -60,35 +59,14 @@ public class UserMsgAction extends BaseCRUDAction {
 	}
 	
 	/**
-	 * 推送app消息，即向全体用户推送消息
-	 * @return
-	 */
-	public String saveAppMsg() {
-		try {
-			String[] phoneTypes = request.getParameterValues("phoneType");
-			if(phoneTypes == null && ids == null) {
-				throw new HTSException("必须选择平台或指定用户");
-			} else if(!StringUtil.checkIsNULL(ids)) {
-				userMsgService.pushListMsg(content, worldId, activityName, ids);
-			} else {
-				userMsgService.pushAppMsg(content, worldId, activityName, phoneTypes);
-			}
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
-		} catch(Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 查询发送者私信列表索引
+	 * 删除对话
 	 * 
 	 * @return
 	 */
-	public String queryRecipientMsgBox() {
+	public String delConver() {
 		try {
-			userMsgService.buildRecipientMsgBox(maxId,senderId, userId, phoneCode, page, rows, jsonMap);
-			JSONUtil.optSuccess(jsonMap);
+			userMsgService.delConver(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -102,25 +80,9 @@ public class UserMsgAction extends BaseCRUDAction {
 	 */
 	public String queryMsg() {
 		try {
-			userMsgService.buildUserMsg(userId, otherId, maxId, page, rows, jsonMap);
+			userMsgService.buildUserMsg(otherId, maxId, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 删除收件箱
-	 * 
-	 * @return
-	 */
-	public String deleteRecipientMsgBox() {
-		try {
-			userMsgService.updateRecipientMsgBoxUnValid(ids, userId);
-			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
-		} catch(Exception e) {
-			e.printStackTrace();
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
@@ -133,7 +95,28 @@ public class UserMsgAction extends BaseCRUDAction {
 	 */
 	public String sendMsg() {
 		try {
-			webUserMsgService.saveUserMsg(userId, otherId, content, Tag.USER_MSG_NORMAL);
+			boolean flag = false;
+			if(keep != null && keep.equals("on")) {
+				flag = true;
+			}
+			userMsgService.sendMsg(otherId, content, flag);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	
+	/**
+	 * 发送多条私信
+	 * 
+	 * @return
+	 */
+	public String sendMultiMsg() {
+		try {
+			String[] ids = request.getParameterValues("ids");
+			userMsgService.sendMsgs(ids, content);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -196,15 +179,6 @@ public class UserMsgAction extends BaseCRUDAction {
 		this.userId = userId;
 	}
 
-	public com.hts.web.userinfo.service.UserMsgService getWebUserMsgService() {
-		return webUserMsgService;
-	}
-
-	public void setWebUserMsgService(
-			com.hts.web.userinfo.service.UserMsgService webUserMsgService) {
-		this.webUserMsgService = webUserMsgService;
-	}
-
 	public Integer getOtherId() {
 		return otherId;
 	}
@@ -236,5 +210,22 @@ public class UserMsgAction extends BaseCRUDAction {
 	public void setSenderId(Integer senderId) {
 		this.senderId = senderId;
 	}
+
+	public UserMsgConversationDto getConver() {
+		return conver;
+	}
+
+	public void setConver(UserMsgConversationDto conver) {
+		this.conver = conver;
+	}
+
+	public String getKeep() {
+		return keep;
+	}
+
+	public void setKeep(String keep) {
+		this.keep = keep;
+	}
+
 	
 }

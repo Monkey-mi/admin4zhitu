@@ -6,9 +6,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
-import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
 
+/**
+ * 织图数据操作类
+ * 
+ * @author zhangbo	2015年11月2日
+ *
+ */
 public interface ZTWorldMapper {
 	/**
 	 * 添加播放次数
@@ -197,16 +202,6 @@ public interface ZTWorldMapper {
 	public void updateWorld(ZTWorldDto dto);
 	
 	/**
-	 * 根据结果集构建WorldMaintainDto
-	 * 
-	 * @param rs
-	 * @param urlPrefix
-	 * @return
-	 * @throws SQLException 
-	 */
-//	public ZTWorldDto buildZTWorldDto(ResultSet rs) throws SQLException;
-
-	/**
 	 * 根据id批量删除织图
 	 * 
 	 * @param ids
@@ -223,15 +218,6 @@ public interface ZTWorldMapper {
 	 */
 	@DataSource("master")
 	public void updateWorldTypeLabel(Integer worldId, Integer typeId, String worldType);
-	
-	/**
-	 * 根据织图id查询作者信息
-	 * 
-	 * @param worldId
-	 * @return
-	 */
-	@DataSource("slave")
-	public UserInfo queryAuthorInfoByWorldId(Integer worldId);
 	
 	/**
 	 * 更新最新有效性
@@ -258,6 +244,14 @@ public interface ZTWorldMapper {
 	 */
 	@DataSource("master")
 	public void updateLatestInvalid(@Param("authorId")Integer authorId);
+
+	/**
+	 * 根据织图id获取织图信息
+	 * 
+	 * @author zhangbo	2015年11月2日
+	 */
+	@DataSource("slave")
+	ZTWorldDto getZTWorldByWorldId(@Param("id")Integer worldId);
 	
 	/**
 	 * 将织图归档到周表

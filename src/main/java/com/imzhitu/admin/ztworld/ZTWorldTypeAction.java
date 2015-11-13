@@ -68,6 +68,8 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 	
 	private String review;//精选点评
 	
+	private Integer timeUpdate;//置顶的定时时间
+	
 	public String getReview() {
 		return review;
 	}
@@ -303,7 +305,7 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 	 */
 	public String updateTypeWorldWeight() {
 		try {
-			worldTypeService.updateTypeWorldWeight(id, weight);
+			worldTypeService.updateTypeWorldWeight(id, weight,timeUpdate);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -562,6 +564,14 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 
 	public void setTypeDesc(String typeDesc) {
 		this.typeDesc = typeDesc;
+	}
+	
+	public Integer getTimeUpdate() {
+		return timeUpdate;
+	}
+	
+	public void setTimeUpdate(Integer timeUpdate) {
+		this.timeUpdate = timeUpdate;
 	}
 	
 }

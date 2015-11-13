@@ -19,7 +19,7 @@ import com.imzhitu.admin.interact.mapper.InteractChannelWorldLabelMapper;
 import com.imzhitu.admin.interact.service.InteractChannelLevelService;
 import com.imzhitu.admin.interact.service.InteractChannelWorldLabelService;
 import com.imzhitu.admin.interact.service.InteractCommentLabelChannelService;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 
@@ -36,7 +36,7 @@ public class InteractChannelWorldLabelServiceImpl extends BaseServiceImpl implem
 	private InteractWorldService worldService;
 	
 	@Autowired
-	private InteractCommentService commentService;
+	private CommentService commentService;
 	
 	@Autowired
 	private InteractChannelLevelService channelLevelService;

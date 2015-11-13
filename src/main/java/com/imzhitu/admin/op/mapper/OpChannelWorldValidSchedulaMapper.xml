@@ -150,4 +150,14 @@
 		</where>
 	</select>
 	
+	<!-- 分页查询有效性总数 -->
+	<select id="queryChannelWorldValidSchedulaListByChannelIdAndWorldId" resultMap="ChannelWorldSchedulaMapper">
+		select *
+		from 
+			hts_admin.op_channel_world_valid_schedula ocwvs
+		where
+			ocwvs.world_id = #{worldId}
+			and ocwvs.channel_id = #{channelId}
+	</select>
+	
 </mapper>

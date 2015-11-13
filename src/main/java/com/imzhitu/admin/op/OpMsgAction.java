@@ -119,7 +119,7 @@ public class OpMsgAction extends BaseCRUDAction {
 		try {
 			String[] notice = request.getParameterValues("notice");
 			if(notice == null) {
-				throw new HTSException("必须选择通知位置");
+				throw new Exception("必须选择通知位置");
 			}
 			for(String n : notice) {
 				if(n.equals("inApp")) {
@@ -131,11 +131,24 @@ public class OpMsgAction extends BaseCRUDAction {
 			opMsgService.pushAppMsg(sysMsg, inApp, notify, uidsStr);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch(Exception e) {
-			e.printStackTrace();
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
-		
+	}
+	
+	/**
+	 * 更新公用系统消息缓存
+	 * 
+	 * @return
+	 */
+	public String updateCommonSysMsgCache() {
+		try {
+			opMsgService.updateCommonSysMsgCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
 	}
 
 	public OpMsgService getOpMsgService() {

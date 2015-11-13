@@ -1,6 +1,5 @@
 package com.imzhitu.admin.userinfo.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -76,7 +75,6 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	private UserZombieDao userZombieDao;
 	
 	@Autowired
-//	private HTWorldTypeWorldDao typeWorldDao;
 	private ZTWorldTypeWorldMapper typeWorldMapper;
 	
 	@Value("${push.customerServiceId}")
@@ -284,8 +282,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		userLoginPersistentMapper.deleteByUserId(toId);
 		
 		// 发送通知
-		webUserMsgService.saveUserMsg(customerServiceId, u1.getId(), "您的织图账号["+u1.getUserName()+"]和["+u2.getUserName()+"]的登录平台已经调换,请退出后重新登录", Tag.USER_MSG_NORMAL);
-		webUserMsgService.saveUserMsg(customerServiceId, u2.getId(), "您的织图账号["+u2.getUserName()+"]和["+u1.getUserName()+"]的登录平台已经调换,请退出后重新登录", Tag.USER_MSG_NORMAL);
+		webUserMsgService.saveUserMsg(customerServiceId, u1.getId(), "您的织图账号["+u1.getUserName()+"]和["+u2.getUserName()+"]的登录平台已经调换,请退出后重新登录");
+		webUserMsgService.saveUserMsg(customerServiceId, u2.getId(), "您的织图账号["+u2.getUserName()+"]和["+u1.getUserName()+"]的登录平台已经调换,请退出后重新登录");
 		
 	}
 	

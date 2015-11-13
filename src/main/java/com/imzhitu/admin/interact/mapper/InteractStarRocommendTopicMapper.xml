@@ -30,6 +30,10 @@
 	 is_world = #{isWorld}
 	 </if>
 	 </where>
+	 order by id desc
+	 <if test="limites != 0">
+	 <![CDATA[ limit #{start}, #{limites}]]>
+	 </if> 
 	</select>
 	
 	<update id="updateStarRecommendTopic">
@@ -72,4 +76,8 @@
 	where 
 		id=#{id}
 	</delete>
+	
+	<select id="getTopicModuleCount"  resultType="INTEGER">
+	select count(*) from hts.operations_channel_topic
+	</select>
 </mapper>

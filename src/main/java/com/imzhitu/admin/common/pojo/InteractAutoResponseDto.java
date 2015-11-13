@@ -13,7 +13,6 @@ public class InteractAutoResponseDto extends AbstractNumberDto implements Serial
 
 	private Integer id;//自动回复的id
 	private Integer worldId;//织图id
-	private Integer responseId;//回复评论id
 	private Integer commentId;//被评论的id
 	private Integer complete;//完成情况
 	private String worldURL;//短链
@@ -141,12 +140,7 @@ public class InteractAutoResponseDto extends AbstractNumberDto implements Serial
 		return this.id;
 	}
 	
-	public void setResponseId(Integer responseId){
-		this.responseId = responseId;
-	}
-	public Integer getResponseId(){
-		return this.responseId;
-	}
+
 	
 	public void setCommentId(Integer commentId){
 		this.commentId = commentId;
@@ -197,7 +191,6 @@ public class InteractAutoResponseDto extends AbstractNumberDto implements Serial
 		super();
 		this.id = id;
 		this.worldId = worldId;
-		this.responseId = responseId;
 		this.commentId = commentId;
 		this.complete = complete;
 		this.author = author;
@@ -218,7 +211,6 @@ public class InteractAutoResponseDto extends AbstractNumberDto implements Serial
 			Date commentDate){
 		super();
 		this.id = id;
-		this.responseId = responseId;
 		this.authorName = authorName;
 		this.context = context;
 		this.commentDate = commentDate;
@@ -234,7 +226,6 @@ public class InteractAutoResponseDto extends AbstractNumberDto implements Serial
 			String authorName
 			){
 		super();
-		this.responseId = responseId;
 		this.author = author_id;
 		this.worldId = world_id;
 		this.context = content;

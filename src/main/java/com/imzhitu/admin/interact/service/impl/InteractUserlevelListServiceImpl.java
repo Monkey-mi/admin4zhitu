@@ -34,7 +34,7 @@ import com.imzhitu.admin.interact.service.InteractPlanCommentLabelService;
 import com.imzhitu.admin.interact.service.InteractPlanCommentService;
 import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
-import com.imzhitu.admin.interact.service.InteractCommentService;
+import com.imzhitu.admin.interact.service.CommentService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
 import com.imzhitu.admin.userinfo.mapper.AdminAndUserRelationshipMapper;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
@@ -83,7 +83,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	private InteractWorldLabelCommentLabelDao interactWorldLabelCommentLabelDao;
 	
 	@Autowired
-	private InteractCommentService interactCommentService;
+	private CommentService interactCommentService;
 	
 	@Autowired
 	private InteractPlanCommentLabelService interactPlanCommentLabelService;
@@ -251,7 +251,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 //							}
 							
 							try {
-								userMsgService.pushSysMsg(zhituAdminToUserIdsStr, "明显用户"+o.getUser_id()+":"+userInfo.getUserName()+"发了织图"+o.getWorldId());
+								userMsgService.sendMsgs(zhituAdminToUserIdsStr, "明星用户"+o.getUser_id()+":"+userInfo.getUserName()+"发了织图"+o.getWorldId());
 							} catch (Exception e) {
 								logger.info("note operations failed!\n"+e);
 							}

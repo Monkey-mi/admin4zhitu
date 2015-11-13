@@ -24,12 +24,8 @@
 		<result column="notified" property="notified" jdbcType="INTEGER"/>
 		<result column="weight" property="weight" jdbcType="INTEGER"/>
 		<result column="superb" property="superb" jdbcType="INTEGER"/>
-		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
-		<result column="channel_title" property="channelTitle" jdbcType="VARCHAR" />
-		<result column="channel_icon" property="channelIcon" jdbcType="VARCHAR" />
 		<result column="beSchedula" property="beSchedula" jdbcType="INTEGER"/>
 		<result column="schedulaComplete" property="schedulaComplete" jdbcType="INTEGER"/>
-		<result column="is_cover" property="isCover" jdbcType="INTEGER" />
 		
 		<result property="id" column="id" jdbcType="NUMERIC"/>
 		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
@@ -69,12 +65,6 @@
 		
 	</resultMap>
 	
-	<!-- 频道名称 -->
-	<resultMap id="ChannelNameDtoMap" type="com.imzhitu.admin.common.pojo.OpChannelNameDto">
-		<id column="world_id" property="worldId" jdbcType="INTEGER"/>
-		<result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
-	</resultMap>
-	
 	<!-- 根据织图id来查询频道织图 -->
 	<select id="queryChannelWorldByWorldId" resultMap="OpChannelWorldMap">
 		select * 
@@ -94,17 +84,13 @@
 			cw.notified,
 			cw.weight,
 			cw.superb,
-			c.channel_name, 
-			c.channel_title,
-			c.channel_icon,
 			h.*,
 			u.user_name,
 			u.user_avatar,
 			u.star,
 			u.trust,
 			ocwvs.finish as validSchedula,
-			ocwss.finish as superbSchedula,
-			IFNULL(oct.id, 0) as is_cover
+			ocwss.finish as superbSchedula
 		from 
 			(select ocw.* from hts.operations_channel_world ocw
 				
@@ -124,16 +110,13 @@
 			left join hts_admin.op_channel_world_valid_schedula ocwvs 
 			on cw.world_id = ocwvs.world_id and cw.channel_id = ocwvs.channel_id 
 			left join hts_admin.op_channel_world_superb_schedula ocwss 
-			on cw.world_id = ocwss.world_id and cw.channel_id = ocwss.channel_id 
-			left join hts_admin.op_channel_thumbnail oct 
-			on cw.world_id = oct.world_id and cw.channel_id = oct.channel_id,
+			on cw.world_id = ocwss.world_id and cw.channel_id = ocwss.channel_id, 
 			hts.htworld_htworld as h,
-			hts.user_info as u,
-			hts.operations_channel as c
+			hts.user_info as u
 		 where 
 		 	cw.world_id=h.id 
 		 	and cw.author_id=u.id 
-		 	and cw.channel_id = c.id
+		 	<if test="worldValid != null"> and h.valid=#{worldValid}</if>
 		 order by 
 		 	cw.serial desc
 	</select>
@@ -233,7 +216,7 @@
 		where h.id=cw.world_id and cw.channel_id=#{channelId}
 	</select>
 	
-	<select id="queryWorldByChannelId" resultMap="OpChannelWorldMap">
+	<select id="queryChannelWorldByChannelIdAndWorldId" resultMap="OpChannelWorldMap">
 		select * from hts.operations_channel_world where channel_id=#{channelId} and world_id=#{worldId}
 	</select>
 	
@@ -264,18 +247,27 @@
 		update hts.operations_channel_world set serial=#{serial} where id=#{id}
 	</update>
 	
-	<select id="queryChannelNameByWIDs" resultMap="ChannelNameDtoMap">
-		select w.world_id, c.channel_name from hts.operations_channel c,
-		hts.operations_channel_world w where c.id=w.channel_id and w.world_id in
-		<foreach item="item" index="index" collection="array"
-	    	open="(" separator="," close=")">
-	       		#{item}
-	 	</foreach>
-	</select>
+	<!-- 更新频道织图生效，并且更新排序字段为最新 -->
+	<update id="updateValidAndSerial">
+		update 
+			hts.operations_channel_world 
+		set 
+			valid = 1, 
+			serial = #{serial}
+		where 
+			channel_id = #{channelId} 
+			and world_id = #{worldId};
+	</update>
 	
-	<update id="updateValidAndSerialByWID">
-		update hts.operations_channel_world set valid=#{valid}, serial=#{serial}
-		where channel_id=#{channelId} and world_id=#{worldId};
+	<!-- 更新频道织图失效，小编操作失效，valid设置为2 -->
+	<update id="updateInvalid">
+		update 
+			hts.operations_channel_world 
+		set 
+			valid = 2 
+		where 
+			channel_id = #{channelId} 
+			and world_id = #{worldId};
 	</update>
 	
 	<update id="updateSuperbByWID">

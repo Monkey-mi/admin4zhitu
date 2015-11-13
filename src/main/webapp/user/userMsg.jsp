@@ -18,41 +18,45 @@
 <link rel="stylesheet" href="${webRootPath }/base/js/jquery/emotion/rl_exp.css" />
 <style type="text/css">
 body {
-		font-size: 14px;
-	}
-	.xm-bq{margin:10px 0;font-size:14px;color:#333;}
-	.xm-bq a{color:#09c;margin:0 5px;}
-	.xm-bq a:hover{color:#E10602;}
-	.rl_exp {margin-left:10px; width:624px}
-	.rl_exp_main {height:130px; overflow-y: scroll;}
-	.comment-main{
-		text-align:left;
-	}
-	.comment-main textarea{width:100%;border:1px solid #dcdcdc;}
-	.comment-main textarea:focus{outline:none;border-color:#4bf;}
-	.comment-main a{font-size:12px;text-decoration:none;color:#09c;}
-	.comment-main a:hover{color:#E10602;}
-	
-	#rl_exp_input {
-		width: 650px;
-		margin-left:10px;
-		margin-top: 15px;
-	}
-	#rl_bq {
-		text-align: center;
-	}
-	.opt_layout {
-		position: absolute;
-		display: inline-block;
-		top: 8px;
-		right: 10px;
-	}
+	font-size: 14px;
+}
+.xm-bq{margin:10px 0;font-size:14px;color:#333;}
+.xm-bq a{color:#09c;margin:0 5px;}
+.xm-bq a:hover{color:#E10602;}
+.rl_exp {margin-left:10px; width:624px}
+.rl_exp_main {height:130px; overflow-y: scroll;}
+.comment-main{
+	text-align:left;
+}
+.comment-main textarea{width:100%;border:1px solid #dcdcdc;}
+.comment-main textarea:focus{outline:none;border-color:#4bf;}
+.comment-main a{font-size:12px;text-decoration:none;color:#09c;}
+.comment-main a:hover{color:#E10602;}
+
+#rl_exp_input {
+	width: 650px;
+	margin-left:10px;
+	margin-top: 15px;
+}
+#rl_bq {
+	text-align: center;
+}
+.opt_layout {
+	position: absolute;
+	display: inline-block;
+	top: 8px;
+	right: 10px;
+}
+
+#keep-conver {
+	vertical-align: middle;
+}
+
 </style>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/emotion/rl_exp.js"></script>
 <script type="text/javascript">
 var userId = <%=userId%>,
 	otherId = <%=otherId%>,
-	index = <%=index%>,
 	reply = false,
 	maxId = 0,
 	isNowrap=false,//自动换行
@@ -197,13 +201,8 @@ function submitMsg() {
 			var result = $.parseJSON(data);
 			if(result['result'] == 0) {
 				$('#htm_add').window('close');  //关闭添加窗口
-				$.messager.alert('提示',result['msg']);  //提示添加信息成功
-				myQueryParams.maxId = 0;
-				loadPageData(1); //重新装载第1页数据
-				if(!reply && index != "" && index != undefined) {
-					reply = true;
-					parent.updateMsgState(index);
-				}
+				parent.reload();
+				parent.$.fancybox.close();
 			} else {
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 			}
@@ -232,6 +231,7 @@ function submitMsg() {
 					<li><a href="javascript:void(0);" class="selected">emoji</a></li>
 				</ul>
 				<div class="opt_layout">
+					<input id="keep-conver" type="checkbox" name="keep"　style="margin-top:2px;" />保留对话
 					<a id="saveBtn" class="easyui-linkbutton" iconCls="icon-ok" onclick="submitMsg();" title="保存评论">确定</a>
 					<span class="loading none">
 					<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">

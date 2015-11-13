@@ -41,55 +41,17 @@
 		<result property="worldId" column="id" jdbcType="NUMERIC"/>
 		<result property="user_level_id" column="user_level_id" jdbcType="INTEGER"/>
 		<result property="level_description" column="level_description" jdbcType="VARCHAR"/>
+		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+		<result property="channelId" column="channel_id" jdbcType="VARCHAR"/>
 	</resultMap>
 	
-	
-	<resultMap id="UserInfoMap" type="com.imzhitu.admin.common.pojo.UserInfo">
-		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="platform_code" property="platformCode" jdbcType="INTEGER" />
-		<result column="platform_token" property="platformToken" jdbcType="VARCHAR" />
-		<result column="platform_token_expires" property="platformTokenExpires" jdbcType="BIGINT" />
-		<result column="platform_sign" property="platformSign" jdbcType="VARCHAR" />
-		<result column="platform_verify" property="platformVerify" jdbcType="INTEGER" />
-		<result column="login_code" property="loginCode" jdbcType="VARCHAR" />
-		<result column="user_name" property="userName" jdbcType="VARCHAR" />
-		<result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
-		<result column="user_avatar_l" property="userAvatarL" jdbcType="VARCHAR" />
-		<result column="sex" property="sex" jdbcType="INTEGER" />
-		<result column="email" property="email" jdbcType="VARCHAR" />
-		<result column="address" property="address" jdbcType="VARCHAR" />
-		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
-		<result column="signature" property="signature" jdbcType="VARCHAR" />
-		<result column="user_label" property="userLabel" jdbcType="VARCHAR" />
-		<result column="province" property="province" jdbcType="VARCHAR" />
-		<result column="city" property="city" jdbcType="VARCHAR" />
-		<result column="longitude" property="longitude" jdbcType="DOUBLE" />
-		<result column="latitude" property="latitude" jdbcType="DOUBLE" />
-		<result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
-		<result column="concern_count" property="concernCount" jdbcType="INTEGER" />
-		<result column="follow_count" property="followCount" jdbcType="INTEGER" />
-		<result column="world_count" property="worldCount" jdbcType="INTEGER" />
-		<result column="liked_count" property="likedCount" jdbcType="INTEGER" />
-		<result column="keep_count" property="keepCount" jdbcType="INTEGER" />
-		<result column="push_token" property="pushToken" jdbcType="VARCHAR" />
-		<result column="phone_code" property="phoneCode" jdbcType="INTEGER" />
-		<result column="phone_sys" property="phoneSys" jdbcType="VARCHAR" />
-		<result column="phone_ver" property="phoneVer" jdbcType="REAL" />
-		<result column="online" property="online" jdbcType="INTEGER" />
-		<result column="accept_sys_push" property="acceptSysPush" jdbcType="INTEGER" />
-		<result column="accept_comment_push" property="acceptCommentPush" jdbcType="INTEGER" />
-		<result column="accept_reply_push" property="acceptReplyPush" jdbcType="INTEGER" />
-		<result column="accept_liked_push" property="acceptLikedPush" jdbcType="INTEGER" />
-		<result column="accept_keep_push" property="acceptKeepPush" jdbcType="INTEGER" />
-		<result column="accept_concern_push" property="acceptConcernPush" jdbcType="INTEGER" />
-		<result column="accept_msg_push" property="acceptMsgPush" jdbcType="INTEGER" />
-		<result column="accept_umsg_push" property="acceptUmsgPush" jdbcType="INTEGER" />
-		<result column="ver" property="ver" jdbcType="REAL" />
-		<result column="star" property="star" jdbcType="INTEGER" />
-		<result column="trust" property="trust" jdbcType="INTEGER" />
-		<result column="shield" property="shield" jdbcType="INTEGER" />
-		<result column="activity" property="activity" jdbcType="INTEGER" />
-	</resultMap>
+	<select id="getZTWorldByWorldId" resultMap="ztWorldDto">
+		select 
+			* 
+		from 
+			hts.htworld_htworld 
+		where id = #{id} 
+	</select>
 	
 	<!-- 增加播放数 -->
 	<update id="addClickCount">
@@ -182,10 +144,6 @@
 			#{item}
 		</foreach>
 	</delete>
-	
-	<select id="queryAuthorInfoByWorldId" resultMap="UserInfoMap">
-		select u.* from hts.htworld_htworld as h,hts.user_info as u where h.author_id=u.id and h.id=#{worldId}
-	</select>
 	
 	<select id="queryMaxId" resultType="int">
 		select max(id) from hts.htworld_htworld where date_modified between #{dateAdded,jdbcType=TIMESTAMP} and #{dateModified,jdbcType=TIMESTAMP} 

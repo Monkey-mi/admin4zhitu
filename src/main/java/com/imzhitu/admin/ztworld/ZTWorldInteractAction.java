@@ -172,7 +172,7 @@ public class ZTWorldInteractAction extends BaseCRUDAction {
 			} else if(count != 0){
 				worldInteractService.saveLikedZombieUser(count, worldId);
 			} else {
-				throw new HTSException("未指定用户id或喜欢总数");
+				throw new Exception("未指定用户id或喜欢总数");
 			}
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
@@ -213,7 +213,7 @@ public class ZTWorldInteractAction extends BaseCRUDAction {
 			} else if(count != 0){
 				worldInteractService.saveKeepZombieUser(count, worldId);
 			} else {
-				throw new HTSException("未指定用户id或收藏总数");
+				throw new Exception("未指定用户id或收藏总数");
 			}
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
