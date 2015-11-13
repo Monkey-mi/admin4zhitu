@@ -1,5 +1,6 @@
 package com.imzhitu.admin.ztworld.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,29 +74,35 @@ public interface HTWorldCommentDao extends BaseDao {
 	 */
 	public long queryCommentCountByMinId(Integer minId, Map<String, Object> attrMap, Map<String, Object> userAttrMap);
 	
-	
 	/**
-	 * 更新评论屏蔽标志
-	 * 
-	 * @param id
-	 * @param shield
-	 */
-	public void updateCommentShield(Integer id, Integer shield);
-	
-	/**
-	 * 根据作者的id，来屏蔽作者所有的评论
+	 * 删掉原来的update valid and shield
 	 * @param authorId
-	 * @param shield
+	 * @author zxx
+	 * @time 2015年11月10日 19:42:24
 	 */
-	public void updateCommentShieldByUserId(Integer authorId,Integer shield);
-
+	public void deleteCommentByUserId(Integer authorId);
+	
 	/**
-	 * 更新评论有效性标志
-	 * 
-	 * @param id
-	 * @param valid
+	 * 删掉原来的update valid and shield
+	 * @param authorId
+	 * @author zxx
+	 * @time 2015年11月10日 19:42:24
 	 */
-	public void updateCommentValid(Integer id, Integer shield);
+	public void deleteCommentById(Integer id);
+	
+	/**
+	 * 从htworld_comment_delete表中删除一条数据，并将这条数据恢复到htworld_comment表中
+	 * @param id
+	 * @author zxx 2015年11月10日 20:55:11
+	 */
+	public void recoveryCommentById(Integer id);
+	
+	/**
+	 * 从htworld_comment_delete表中删除符合条件的数据，并将这数据恢复到htworld_comment表中
+	 * @author zxx 2015年11月10日 20:55:11
+	 * @param authorId
+	 */
+	public void recoverCommentByUserId(Integer authorId);
 	
 	/**
 	 * 根据id查询world_id
@@ -111,5 +118,36 @@ public interface HTWorldCommentDao extends BaseDao {
 	 * @return
 	 */
 	public List<Integer> queryWorldIds(Integer authorId);
+	
+	/**
+	 * 根据时间查询最小Id
+	 * @param date
+	 * @return
+	 * @author zxx 2015年11月12日 10:04:21
+	 */
+	public Integer queryCommentMinIdByDate(Date date);
+	
+	/**
+	 * 将评论归档到最新一周的评论表中。即：将htworld_comment表中的最新的数据同步到htworld_comment_week 中去
+	 * @param minId 最小Id，不包含这个id对应的数据
+	 * @author zxx 2015年11月11日 18:21:12
+	 */
+	public void fileCommentToWeek(Integer minId); 
+	
+	/**
+	 * @author zxx 2015年11月12日 10:04:21
+	 * 查询htworld_comment_week中最大的Id
+	 * @return
+	 */
+	public Integer queryCommentWeekMaxId();
+	
+	/**
+	 * 查询htworld_comment_week中最小的Id，目的是当redis宕机后，数据能确保正确
+	 * @param date
+	 * @return
+	 * @author zxx 2015年11月12日 10:04:21
+	 */
+	public Integer queryCommentWeekMinIdByDate(Date date);
+	
 	
 }

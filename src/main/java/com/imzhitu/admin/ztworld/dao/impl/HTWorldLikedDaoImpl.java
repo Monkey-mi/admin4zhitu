@@ -35,14 +35,14 @@ public class HTWorldLikedDaoImpl extends BaseDaoImpl implements HTWorldLikedDao{
 	
 	/** 查询喜欢用户 */
 	private static final String QUERY_LIKE_USER = "select hl.*,u.* from " 
-			+ table + " as hl," + HTS.USER_INFO + " as u where hl.user_id=u.id and hl.valid=? and hl.world_id=?";
+			+ table + " as hl," + HTS.USER_INFO + " as u where hl.user_id=u.id and hl.world_id=?";
 	
 	/** 根据最大id查询喜欢用户 */
 	private static final String QUERY_LIKED_USER_BY_MAX_ID = QUERY_LIKE_USER + " and hl.id<=?";
 	
 	/** 根据最大id查询喜欢用户总数 */
 	private static final String QUERY_LIKED_USER_COUNT_BY_MAX_ID = "select count(*) from " 
-			+ table + " as hl where hl.valid=? and hl.world_id=? and hl.id<=?"; 
+			+ table + " as hl where  hl.world_id=? and hl.id<=?"; 
 	
 	@Autowired
 	private UserInfoDao userInfoDao;
@@ -51,7 +51,7 @@ public class HTWorldLikedDaoImpl extends BaseDaoImpl implements HTWorldLikedDao{
 	@Override
 	public List<ZTWorldLikeDto> queryLikedUser(Integer worldId,
 			RowSelection rowSelection) {
-		return queryForPage(QUERY_LIKE_USER, new Object[]{Tag.TRUE, worldId}, new RowMapper<ZTWorldLikeDto>() {
+		return queryForPage(QUERY_LIKE_USER, new Object[]{ worldId}, new RowMapper<ZTWorldLikeDto>() {
 
 			@Override
 			public ZTWorldLikeDto mapRow(ResultSet rs, int rowNum)
@@ -65,7 +65,7 @@ public class HTWorldLikedDaoImpl extends BaseDaoImpl implements HTWorldLikedDao{
 	@Override
 	public List<ZTWorldLikeDto> queryLikedUser(Integer maxId,
 			Integer worldId, RowSelection rowSelection) {
-		return queryForPage(QUERY_LIKED_USER_BY_MAX_ID, new Object[]{Tag.TRUE, worldId, maxId}, new RowMapper<ZTWorldLikeDto>() {
+		return queryForPage(QUERY_LIKED_USER_BY_MAX_ID, new Object[]{worldId, maxId}, new RowMapper<ZTWorldLikeDto>() {
 
 			@Override
 			public ZTWorldLikeDto mapRow(ResultSet rs, int rowNum)
@@ -78,7 +78,7 @@ public class HTWorldLikedDaoImpl extends BaseDaoImpl implements HTWorldLikedDao{
 	@Override
 	public long queryLikedUserCount(Integer maxId, Integer worldId) {
 		return getJdbcTemplate().queryForLong(QUERY_LIKED_USER_COUNT_BY_MAX_ID, new Object[]{
-			Tag.TRUE,worldId,maxId
+			worldId,maxId
 		});
 	}
 	

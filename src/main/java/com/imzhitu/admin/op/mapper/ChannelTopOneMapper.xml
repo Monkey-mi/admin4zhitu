@@ -211,7 +211,7 @@
 		left join hts.operations_user_zombie zb
 		on hl.user_id=zb.user_id
 		where hl.liked_date between #{beginDate} and #{endDate}
-		and valid=1 and zb.user_id is null
+		and zb.user_id is null
 		group by hl.user_id 
 		order by count(hl.id) desc
 		limit 0,20
@@ -248,7 +248,7 @@
 		left join hts.operations_user_zombie zb
 		on hc.author_id=zb.user_id
 		where hc.comment_date between #{beginDate} and #{endDate}
-		and hc.valid=1 and hc.shield=0 and zb.user_id is null
+		and zb.user_id is null
 		group by hc.author_id
 		order by count(hc.id) desc
 		limit 0,20

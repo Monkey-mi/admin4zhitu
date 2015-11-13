@@ -25,6 +25,8 @@ import com.imzhitu.admin.interact.service.InteractAutoResponseSchedulaService;
 import com.imzhitu.admin.interact.service.InteractAutoResponseService;
 import com.imzhitu.admin.interact.service.InteractParseResponseService;
 import com.imzhitu.admin.interact.service.InteractRobotService;
+import com.imzhitu.admin.ztworld.dao.CommentCacheDao;
+import com.imzhitu.admin.ztworld.service.CommentService;
 
 //@Service
 public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements InteractAutoResponseService{
@@ -48,6 +50,12 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	
 	@Autowired
 	private com.hts.web.ztworld.dao. HTWorldCommentDao webWorldCommentDao;
+	
+	@Autowired
+	private CommentCacheDao commentCacheDao;
+	
+	@Autowired
+	private CommentService commentService;
 	
 	
 	
@@ -92,10 +100,6 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 		if(idsStr == null || idsStr.equals(""))return;
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		if(ids.length <= 0)return;
-//		if(responseIdsStr == null || responseIdsStr.equals(""))return;
-//		Integer[] responseIds = StringUtil.convertStringToIds(responseIdsStr);
-//		if(responseIds.length <= 0)return;
-//		webWorldCommentDao.updateValidByIds(responseIds);
 		for(int i=0; i<ids.length; i++){
 			interactAutoResponseSchedulaService.addAutoResponseSchedula(ids[i], Tag.TRUE, Tag.FALSE, null, operatorId);
 		}
@@ -127,61 +131,79 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	public void scanResponseAndGetAnswer(){
 		//查找马甲对应的被回复
 		String answerStr;
+		Integer commentWeekMaxId = 0;
 		Date now = new Date();
 		logger.info("InteractAutoResponseServiceImpl scanResponseAndGetAnswer begin============================>>>>>"+now);
 		Date beginDate = new Date(now.getTime() - SCAN_SPAN_MS);
-		InteractAutoResponseDto dto1 = new InteractAutoResponseDto();
-		dto1.setCommentDate(beginDate);
-		List<InteractAutoResponseDto> listDto = autoResponseMapper.queryUnCkResponse(dto1);
-		if(listDto == null)return ;
-		for(InteractAutoResponseDto dto:listDto){
-			try{
-				//分析被回复内容，过滤表情
-				String qStr = interactParseResponseService.parserQString(dto.getContext());
-				if(qStr == null)continue;
-				//若是表情
-				if(qStr.equals(Emoji.emojiTag)){
-					answerStr = dto.getContext().replaceAll("\n", "").replaceAll(" *@.*:", "").trim();
-					if(answerStr == null || answerStr.trim().equals(""))continue;
-				}else{//若非表情
-					//向机器人发送请求，获取回复
-					answerStr = interactRobotService.getAnswer(qStr);
-				}
-				if(null == answerStr)answerStr = "哦";//若从机器人那里得到空值，则复制为哦
-				String  asStr= dto.getReAuthorName()+"@" + dto.getAuthorName() + ": " + answerStr;//加上名字
-				Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
-				//存储回复内容到htworld_comment中
-				webWorldCommentDao.saveWorldComment(new HTWorldComment(id,
-						dto.getReAuthor(),
-						asStr,
-						new Date(),
-						dto.getWorldId(),
-						dto.getWorldAuthorId(),
-						dto.getResponseId(),
-						dto.getAuthor(),
-						Tag.FALSE,
-						Tag.FALSE,
-						Tag.FALSE
-						));
-				//更新htworld_comment 中的ck位
-				webWorldCommentDao.updateCkById(Tag.TRUE, dto.getResponseId());;
-				//保存自动回复记录到interact_auto_response
-//				interactAutoResponseDao.addResponse(id,dto.getResponseId(),Tag.FALSE,dto.getWorldId(),dto.getReAuthor(),dto.getAuthor());
-//				dto.setId(id);
-				Integer reAuthorId = dto.getAuthor();
-				dto.setAuthor(dto.getReAuthor());
-				dto.setReAuthor(reAuthorId);
-				dto.setComplete(Tag.FALSE);
-				dto.setCommentId(dto.getResponseId());
-				dto.setResponseId(id);
-				autoResponseMapper.addResponse(dto);
-			}catch(Exception e){
-				e.printStackTrace();
+		try{
+			InteractAutoResponseDto dto1 = new InteractAutoResponseDto();
+			Integer commentWeekPreMaxId = commentCacheDao.getCommentWeekMaxIdCache();
+			if(commentWeekPreMaxId == null){
+				commentWeekPreMaxId = commentService.queryCommentWeekMinId(beginDate);
+			}
+			if(commentWeekPreMaxId == null){
+				dto1.setCommentDate(beginDate);
+			}else{
+				dto1.setMaxId(commentWeekPreMaxId);
 			}
 			
+			List<InteractAutoResponseDto> listDto = autoResponseMapper.queryUnCkResponse(dto1);
+			
+			for(InteractAutoResponseDto dto:listDto){
+				
+				commentWeekMaxId = commentWeekMaxId.compareTo(dto.getCommentId() ) > 0 ? commentWeekMaxId : dto.getCommentId();
+				
+				try{
+					//分析被回复内容，过滤表情
+					String qStr = interactParseResponseService.parserQString(dto.getContext());
+					if(qStr == null)continue;
+					//若是表情
+					if(qStr.equals(Emoji.emojiTag)){
+						answerStr = dto.getContext().replaceAll("\n", "").replaceAll(" *@.*:", "").trim();
+						if(answerStr == null || answerStr.trim().equals(""))continue;
+					}else{//若非表情
+						//向机器人发送请求，获取回复
+						answerStr = interactRobotService.getAnswer(qStr);
+					}
+					if(null == answerStr)answerStr = "哦";//若从机器人那里得到空值，则复制为哦
+					String  asStr= dto.getReAuthorName()+"@" + dto.getAuthorName() + ": " + answerStr;//加上名字
+					Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
+					//存储回复内容到htworld_comment中
+					webWorldCommentDao.saveWorldComment(new HTWorldComment(id,
+							dto.getReAuthor(),
+							asStr,
+							new Date(),
+							dto.getWorldId(),
+							dto.getWorldAuthorId(),
+							dto.getResponseId(),
+							dto.getAuthor(),
+							Tag.FALSE,
+							Tag.FALSE,
+							Tag.FALSE
+							));
+					//更新htworld_comment 中的ck位
+					webWorldCommentDao.updateCkById(Tag.TRUE, dto.getResponseId());;
+					//保存自动回复记录到interact_auto_response
+					Integer reAuthorId = dto.getAuthor();
+					dto.setAuthor(dto.getReAuthor());
+					dto.setReAuthor(reAuthorId);
+					dto.setComplete(Tag.FALSE);
+					dto.setCommentId(dto.getResponseId());
+					dto.setResponseId(id);
+					autoResponseMapper.addResponse(dto);
+				}catch(Exception e){
+					logger.warn(e);
+				}
+				
+			}
+			Date end = new Date();
+			if(commentWeekMaxId.compareTo(0) != 0){
+				commentCacheDao.updateCommentWeekMaxIdCache(commentWeekMaxId);
+			}
+			logger.info("InteractAutoResponseServiceImpl scanResponseAndGetAnswer end============================>>>>>"+end);
+		}catch(Exception e){
+			logger.warn(e);
 		}
-		Date end = new Date();
-		logger.info("InteractAutoResponseServiceImpl scanResponseAndGetAnswer end============================>>>>>"+end);
 	}
 	
 	@Override

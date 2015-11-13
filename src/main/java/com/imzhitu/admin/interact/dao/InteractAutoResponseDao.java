@@ -7,6 +7,7 @@ import com.imzhitu.admin.common.pojo.InteractAutoResponseDto;
 import java.util.Date;
 import java.util.List;
 
+@Deprecated
 public interface InteractAutoResponseDao extends BaseDao{
 	boolean checkIsZoombie(Integer uid);
 	public void addResponse(Integer responseId,Integer commentId,Integer complete,Integer world_id,Integer author, Integer re_author);

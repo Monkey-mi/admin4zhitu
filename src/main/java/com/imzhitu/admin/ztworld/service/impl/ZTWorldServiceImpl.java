@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.constant.OptResult;
@@ -50,17 +51,7 @@ import net.sf.json.JSONObject;
 public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldService{
 
 	private Integer cacheLatestSize = 10; // 最新织图缓存队列大小
-	
-//	@Value("${urlPrefix}")
-//	private String prefix;
-//	
-//	public String getPrefix() {
-//		return prefix;
-//	}
-//
-//	public void setPrefix(String prefix) {
-//		this.prefix = prefix;
-//	}
+	Logger log = Logger.getLogger(ZTWorldServiceImpl.class);
 
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
@@ -559,6 +550,32 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setChannelId("");
 			
 			ztWorldMapper.updateWorld(dto);
+		}
+	}
+	
+	/**
+	 * 将htworld_htworld归档到周表htworld_htworld_week中
+	 * @author zxx 2015年11月12日 20:05:33
+	 */
+	public void doFileWorldToWeek(){
+		
+		Date now = new Date();
+		log.info("begin to doFileWorldToWeek. " + now );
+		try{
+			Integer worldWeekMaxId = null;
+			try{
+				worldWeekMaxId = ztWorldMapper.queryWorldWeekMaxId();
+			}catch(Exception e){
+				Date preDate = new Date(now.getTime() - 3L * 24 * 60 * 60 * 1000);
+				worldWeekMaxId = ztWorldMapper.queryWorldMinIdByDate(preDate);
+				log.warn(e);
+			}
+			
+			ztWorldMapper.fileWorldToWeek(worldWeekMaxId);
+			Date end = new Date();
+			log.info("end to doFileWorldToWeek. cost:" + (end.getTime() - now.getTime()) + "ms." );
+		}catch(Exception e){
+			log.warn(e);
 		}
 	}
 
