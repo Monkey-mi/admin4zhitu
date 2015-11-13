@@ -41,11 +41,12 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 		*	mishengliang
 	 */
 	@Override
-	public void addTopic(String backgroundColor,Integer topicType,Integer isWorld,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
+	public void addTopic(String backgroundColor,Integer orderIndex,Integer topicType,Integer isWorld,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
 		introduceHead = introduceHead.replaceAll("   ", "</br>");
 		introduceFoot = introduceFoot.replaceAll("   ", "</br>");
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setBackgroundColor(backgroundColor);
+		dto.setOrderIndex(orderIndex);
 		dto.setTopicType(topicType);
 		dto.setIsWorld(isWorld);
 		dto.setShareBanner(shareBanner);
@@ -95,12 +96,13 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 	}
 	
 	@Override
-	public void updateTopic(Integer id,Integer topicType,Integer isWorld,String backgroundColor,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
+	public void updateTopic(Integer id,Integer orderIndex,Integer topicType,Integer isWorld,String backgroundColor,String shareBanner,String bannerPic,String title,String introduceHead,String introduceFoot,String stickerButton,String shareButton)  throws Exception{
 		introduceHead = introduceHead.replaceAll("   ", "</br>");
 		introduceFoot = introduceFoot.replaceAll("   ", "</br>");
 		StarRecommendTopic dto  = new StarRecommendTopic();
 		dto.setId(id);
 		dto.setBackgroundColor(backgroundColor);
+		dto.setOrderIndex(orderIndex);
 		dto.setTopicType(topicType);
 		dto.setIsWorld(isWorld);
 		dto.setShareBanner(shareBanner);

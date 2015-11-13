@@ -145,6 +145,42 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 重新给图片模块排序
+	 * @return 
+		*	2015年11月13日
+		*	mishengliang
+	 */
+	public String reOrderIndexforPic(){
+		try {
+			String[]  ids = request.getParameterValues("reIndexId");
+			interactStarModuleService.reOrderIndex(ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optSuccess(e.getMessage(),jsonMap);
+			e.printStackTrace();
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 重新给模块排序
+	 * @return 
+		*	2015年11月13日
+		*	mishengliang
+	 */
+	public String reOrderIndexforWorld(){
+		try {
+			String[]  ids = request.getParameterValues("reIndexId");
+			interactStarWorldModuleService.reOrderIndex(ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optSuccess(e.getMessage(),jsonMap);
+			e.printStackTrace();
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public Integer getId() {
 		return id;
 	}
