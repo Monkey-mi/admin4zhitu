@@ -566,6 +566,11 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		}
 	}
 	
+	@Override
+	public ZTWorldDto getZTWorldByWorldId(Integer worldId) {
+		return ztWorldMapper.getZTWorldByWorldId(worldId);
+	}
+	
 	/**
 	 * 将htworld_htworld归档到周表htworld_htworld_week中
 	 * @author zxx 2015年11月12日 20:05:33
