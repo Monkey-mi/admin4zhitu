@@ -240,6 +240,8 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ '<span class="world-opt-head">最新</span>'
 			+ '<span>|</span>'
 			+ '<span class="world-opt-head">操作</span>'
+			+ "<span>|</span>"
+			+ "<span class='world-opt-head'>精备选</span>"
 			+'</div>');
 	
 	// 添加第一行操作title对应的按钮
@@ -253,6 +255,10 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ '<span class="world-opt-btn">'
 			+ shieldColumn.formatter(world['shield'], world, index)
 			+ '</span>'
+			+ "<span>|</span>"
+			+ "<span class='world-opt-btn'>"
+			+ getSuperbReserve(world, index)
+			+ "</span>"
 			+ '</div>');
 	
 	// 添加一二行分隔线
@@ -264,8 +270,10 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ '</div>');
 	
 	// 添加第二行操作title对应的按钮
-	var $opt2LineBtn = $('<div class="world-channel">' 
+	var $opt2LineBtn = $('<div class="world-channel">'
+			+ "<span class='world-opt-btn'>"
 			+ getChannelName(world['channelName'], world, index)
+			+ "</span>"
 			+ '</div>');
 	
 	// 添加二三行分隔线
@@ -395,15 +403,57 @@ function submitAddWorldCommentLabel(worldId, index){
 function getTypeInteract(value, row, index) {
 	img = "./common/images/edit_add.png";
 	return "<a title='添加分类互动' class='updateInfo' href='javascript:typeInteract(\"" + row[worldKey] + "\",\"" + index + "\")'>"+"<img src=\""+img+"\"/></a>";
-}
+};
 
+/**
+ * 得到频道名称
+ * @param value	织图所在频道名称值
+ * @param row	每个织图信息
+ * @param index	当前织图在集合中的脚标
+ * @author zhangbo	2015-11-16
+ */
 function getChannelName(value, row, index) {
 	if(value == "NO_EXIST" || value=="") {
 		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='showWorldAddToChannelPage(" + row.worldId + ")'/>";
 	} else {
 		return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
 	}
-}
+};
+
+/**
+ * 得到精选备选按钮
+ * @param row	每个织图信息
+ * @param index	当前织图在集合中的脚标
+ * @author zhangbo	2015-11-16
+ */
+function getSuperbReserve(row, index) {
+	// 若已经为精选备选，则直接返回无操作的图片
+	if ( row.squarerecd == 1 ) {
+		return "<img title='已经为精选备选' class='htm_column_img pointer' src='./common/images/ok.png'/>";
+	} else {
+		return "<img title='点击成为精选备选' class='htm_column_img pointer' src='./common/images/edit_add.png' onclick='toBeSuperbReserve("+row.worldId+","+row.authorId+")'/>";
+	}
+};
+
+/**
+ * 成为精选备选
+ * @param worldId	织图id
+ * @param userId	用户id
+ * @author zhangbo	2015-11-16
+ */
+function toBeSuperbReserve(worldId, userId){
+	$.post("./admin_interact/typeOptionWorld_addTypeOptionWorld",{
+		worldId: worldId,
+		userId: userId
+	},function(result){
+		if(result['result'] == 0) {
+			updateSuperb(index,1);
+		} else {
+			$.messager.alert("温馨提示",result.msg);  //提示添加信息失败
+		}
+	},'json');
+	
+};
 
 function getCity(value, row, index) {
 	if(value == "NO_EXIST" || value=="") {
@@ -412,7 +462,7 @@ function getCity(value, row, index) {
 		return "<a>" + value + "</a>";
 	}
 		
-}
+};
 
 function getActiveOperated(value, row, index) {
 	if(row.valid == 0 || row.shield == 1) {

@@ -5,7 +5,6 @@
 <% String worldId = request.getParameter("worldId"); %>
 <% String userId = request.getParameter("userId"); %>
 <% String shortLink = request.getParameter("shortLink"); %>
-<% String superbFlag = request.getParameter("superbFlag"); %>
 <% String trustFlag = request.getParameter("trustFlag"); %>
 <% String lastestFlag = request.getParameter("lastestFlag"); %>
 <% String index = request.getParameter("index"); %> 
@@ -25,7 +24,6 @@
 	worldId = <%= worldId %>,
 	index = <%= index %>,
 	userId = <%= userId %>,
-	superbFlag = <%= superbFlag %>,
 	lastestFlag = <%= lastestFlag %>,
 	trustFlag  = <%= trustFlag  %>,
 	worldLabel = "<%=new String(request.getParameter("worldLabel").getBytes("iso8859-1"),"utf-8")%>",
@@ -168,18 +166,6 @@
 					case 2:$("#addExpertBtn").css('display','');break;
 					case 3:$("#rejectExpertBtn").css('display','');break;
 					case 4:$("#waitExpertBtn").css('display','');break;
-				}
-				switch(superbFlag){
-					case 2:$("#addSuperbBtn").css('display','');break;
-					case 1:$("#okSuperbBtn").css('display','');break;
-				}
-				switch(trustFlag){
-					case 0:$("#addTrust").css('display','');break;
-					case 1:$("#cancelTrust").css('display','');break;
-				}
-				switch(lastestFlag){
-					case 0:$("#addLastest").css('display','');break;
-					case 1:$("#cancelLastest").css('display','');break;
 				}
 			}else{//失败
 				
@@ -403,13 +389,6 @@
 	}
 	
 	/**
-	* 取消按钮
-	*/
-	function btnCancel(){
-		parent.$.fancybox.close();
-	}
-	
-	/**
 	* 成为达人
 	*/
 	function toBeStar(){
@@ -431,32 +410,6 @@
 				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 			}
 		},'json');
-	}
-	
-	/**
-	* 成为精选
-	*/
-	function toBeSuperb(){
-		var wid = worldId;
-		var uid = userId;
-		$(".opt_btn").hide();
-		$(".loading").show();
-		$.post("./admin_interact/typeOptionWorld_addTypeOptionWorld",{
-			'worldId':wid,
-			'userId' :uid
-		},function(result){
-			$(".opt_btn").show();
-			$(".loading").hide();
-			if(result['result'] == 0) {
-				$(".superbBtn").css('display','none');
-				$("#okSuperbBtn").css('display','');
-				parent.updateSuperb(index,1);
-				$.messager.alert('提示',result['msg']);  //提示添加信息成功
-			} else {
-				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-			}
-		},'json');
-		
 	}
 	
 	/**
@@ -514,113 +467,6 @@
 		//加载表格
 		tableInit();
 	}
-	
-	/**
-	* 最新。flag=1是设置为最新，flag=0是撤销最新
-	*/
-	function updateLatestValid( flag) {
-		var wid = worldId;
-		$(".opt_btn").hide();
-		$(".loading").show();
-		$.post("./admin_ztworld/ztworld_updateLatestValid",{
-			'id':wid,
-			'valid':flag
-			},function(result){
-				$(".opt_btn").show();
-				$(".loading").hide();
-				if(result['result'] == 0) {
-					if(flag == 1){
-						$("#cancelLastest").css('display','');
-						$("#addLastest").css('display','none');
-					}else{
-						$("#cancelLastest").css('display','none');
-						$("#addLastest").css('display','');
-					}
-					parent.updateLast(index,flag);
-				} else {
-					$.messager.alert('失败提示',result['msg']);  //提示失败信息
-				}
-				$("#htm_table").datagrid('loaded');
-			},"json");
-	}
-	
-	
-	/**
-	 * 添加信任
-	 * 
-	 * @param userId
-	 * @param index
-	 */
-	function addTrust() {
-		$(".opt_btn").hide();
-		$(".loading").show();
-		$.post("./admin_user/user_updateTrust",{
-			'userId':userId,
-			'trust':1,
-			},function(result){
-				$(".opt_btn").show();
-				$(".loading").hide();
-				if(result['result'] == 0) {
-					$("#addTrust").css('display','none');
-					$("#cancelTrust").css('display','');
-					parent.updateTrust(index,1);
-				} else {
-					$.messager.alert('失败提示',result['msg']);  //提示失败信息
-				}
-			},"json");
-	}
-
-	/**
-	 * 移除信任
-	 * 
-	 * @param userId
-	 * @param index
-	 */
-	function removeTrust() {
-		$(".opt_btn").hide();
-		$(".loading").show();
-		$.post("./admin_user/user_updateTrust",{
-			'userId':userId,
-			'trust':0,
-			},function(result){
-				$(".opt_btn").show();
-				$(".loading").hide();
-				if(result['result'] == 0) {
-					$("#addTrust").css('display','');
-					$("#cancelTrust").css('display','none');
-					parent.updateTrust(index,0);
-				} else {
-					$.messager.alert('失败提示',result['msg']);  //提示失败信息
-				}
-			},"json");
-	}
-	
-	
-	/**
-	 * 保存评论
-	 */
-//	function saveComment() {
-//		var commentsStr = $("#rl_exp_input").val(),
-//			//labelId = $("#labelId_comment").combobox('getValue');
-//			labelId = 5;
-//		if(labelId == "") {
-//			labelId = 5;
-//		}
-//		if(commentsStr == "") {
-////			$.messager.alert('提示',"请输入评论内容");
-//			return;
-//		}
-//		$.post("./admin_interact/comment_batchSaveComment",{
-//			'labelId':labelId,
-//			'commentsStr':commentsStr
-//		}, function(result){
-//			if(result['result'] == 0) {
-//				$("#rl_exp_input").val('');
-//			} else {
-//				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-//			}
-//		},'json');
-//	}
 	
 </script>
 
@@ -688,7 +534,9 @@
 							</tr>
 							<tr>
 								<td class="leftTd" style="padding-top: 8px;">评论：</td>
-								<td style="padding-top: 8px;"><input  class="easyui-combobox" name="comments" id="comments_interact" style="width:120px;"/></td>
+								<td style="padding-top: 8px;">
+									<input  class="easyui-combobox" data-options="hasDownArrow:false" name="comments" id="comments_interact" style="width:120px;"/>
+								</td>
 								<td class="rightTd" style="padding-top: 8px;"><div id="comments_interactTip" class="tipDIV" style="width:350px;padding-left:10px;">已选：<span id="selected_comment_count">0</span></div></td>
 							</tr>
 							<tr class="opt_btn">
@@ -697,18 +545,9 @@
 									<a class="easyui-linkbutton hideBtn expertBtn" style="display:none;" id="waitExpertBtn" iconCls="icon-tip" >达人</a>
 									<a class="easyui-linkbutton hideBtn expertBtn" style="display:none;" id="rejectExpertBtn" iconCls="icon-no" >达人</a>
 									<a class="easyui-linkbutton hideBtn expertBtn" style="display:none;" id="okExpertBtn" iconCls="icon-ok" >达人</a>
-									<a class="easyui-linkbutton hideBtn superbBtn" style="display:none;" id="addSuperbBtn" iconCls="icon-add" onclick="toBeSuperb();">精选备选</a>
-									<a class="easyui-linkbutton hideBtn superbBtn" style="display:none;" id="okSuperbBtn" iconCls="icon-ok">精选备选</a>
 								</td>
 								<td style="text-align: center;padding-top: 15px;">
 									<a class="easyui-linkbutton" iconCls="icon-ok" onclick="interactSubmit();">添加</a> 
-									<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="btnCancel();">取消</a>
-								</td>
-								<td style="text-align: center;padding-top: 15px;">
-									<a class="easyui-linkbutton hideBtn" style="display:none;" id="addLastest" iconCls="icon-add" onclick="updateLatestValid(1);">最新</a>
-									<a class="easyui-linkbutton hideBtn" style="display:none;" id="cancelLastest" iconCls="icon-cancel" onclick="updateLatestValid(0);">取消最新</a>
-									<a class="easyui-linkbutton hideBtn" style="display:none;" id="addTrust" iconCls="icon-add" onclick="addTrust();">信任</a>
-									<a class="easyui-linkbutton hideBtn" style="display:none;" id="cancelTrust" iconCls="icon-cancel" onclick="removeTrust();">取消信任</a>
 								</td>
 							</tr>
 							<tr style="display:none;">
