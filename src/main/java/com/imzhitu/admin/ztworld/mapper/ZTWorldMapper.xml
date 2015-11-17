@@ -221,7 +221,7 @@
 		select h.*,u0.user_name, u0.user_avatar,u0.user_avatar_l,u0.sex,u0.email,u0.birthday,
 			u0.signature,u0.address,u0.province as u_province,u0.city as u_city,u0.register_date,u0.user_label,u0.star,u0.trust,
 			u0.phone_code as u_phone_code,u0.online,u0.ver app_ver,u0.phone_sys,u0.phone_ver ,iull.user_level_id,iul.level_description
-			, IF(itow.world_id != NULL ,1,0) as squarerecd
+			, IF(itow.world_id,1,0) as squarerecd
 		from
 		 	(
 			 	select h2.* from

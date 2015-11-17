@@ -145,7 +145,11 @@
   				}
   			}  			
   		},
-  		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160},
+  		{field : 'multiple',title : '属于多个频道',align : 'center', width : 160,
+  			formatter: function(value,row,index) {
+  				return "<a class='viewInfo' onclick='javascript:commonTools.openWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
+  			}
+  		},
   		{field : 'dateModified', title:'分享日期', align : 'center', 
   			formatter: function(value,row,index){
   				return baseTools.parseDate(value).format("yy/MM/dd hh:mm");
@@ -162,21 +166,22 @@
 		$("#htm_table").datagrid({
 			title: "频道织图列表",
 			width: $(document.body).width(),
-			fitColumns: true,
-			autoRowHeight: true,
 			url: "./admin_op/channel_queryChannelWorld",
-			pageList: [10,30,50,100],
-			sortName: "id",
 			queryParams: myQueryParams,
+			toolbar: "#tb",
+			sortName: "id",
 			idField: "channelWorldId",
 			sortName: "channelWorldId",
 			rownumbers: true,
 			columns: [columnsFields],
+			fitColumns: true,
+			autoRowHeight: true,
+			checkOnSelect: false,
 			loadMsg: "处理中,请等待...",
-			toolbar: "#tb",
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
 			pageSize: 10,
+			pageList: [10,30,50,100],
 			onLoadSuccess: function(data) {
 				if(data.result == 0) {
 					if(data.maxId > maxId) {
@@ -349,23 +354,26 @@ function searchChannel() {
  * @author zhangbo 2015-11-09
  */
 function batchValid() {
-	var rows = $("#htm_table").datagrid("getSelections");	
+	var rows = $("#htm_table").datagrid("getSelections");
 	if(rows.length > 0){
 		$.messager.confirm("温馨提示", "您确定要使已选中的织图生效吗？", function(r){
 			if(r){
+				var wids = [];
 				for(var i=0;i<rows.length;i++){
-					var params = {
-						channelId: rows[i].channelId,
-						worldId: rows[i].id,
+					wids[i] = rows[i].worldId;
+				}
+				var params = {
+						channelId: rows[0].channelId,	// 都处于一个频道，从第一个元素获取channelId，因为存在可能瀑布流中也会变幻频道id，故不能从缓存中获取，要在已经获取的数据中拿出channelId
+						wids: wids.toString(),
 						valid: 1	// 批量生效设置valid为1
 					};
-					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){});
-				}
-				// 清除所有已选择的记录，避免重复提交id值
-				$("#htm_table").datagrid("clearSelections");
-				// 批量生效重新第一页
-				$("#htm_table").datagrid("load",myQueryParams);
-			}	
+				$.post("./admin_op/channelWorld_batchUpdateChannelWorldValid", params, function(result){
+					// 清除所有已选择的记录，避免重复提交id值
+					$("#htm_table").datagrid("clearSelections");
+					// 批量生效重新第一页
+					$("#htm_table").datagrid("load",myQueryParams);
+				});
+			}
 		});	
 	}else{
 		$.messager.alert("温馨提示","请先选择记录，再执行批量生效操作!");
@@ -381,20 +389,23 @@ function batchInvalid() {
 	if(rows.length > 0){
 		$.messager.confirm("温馨提示", "您确定要删除已选中的织图吗？", function(r){
 			if(r){
+				var wids = [];
 				for(var i=0;i<rows.length;i++){
-					var params = {
-						channelId: rows[i].channelId,
-						worldId: rows[i].id,
+					wids[i] = rows[i].worldId;
+				}
+				var params = {
+						channelId: rows[0].channelId,	// 都处于一个频道，从第一个元素获取channelId，因为存在可能瀑布流中也会变幻频道id，故不能从缓存中获取，要在已经获取的数据中拿出channelId 
+						wids: wids.toString(),
 						valid: 2	// 批量删除设置valid为2，因为是小编删除
 					};
-					$.post("./admin_op/channelWorld_updateChannelWorldValid", params, function(result){});
-				}
-				$.messager.alert("温馨提示","删除" + rows.length + "条记录");
-				// 清除所有已选择的记录，避免重复提交id值
-				$("#htm_table").datagrid("clearSelections");
-				// 批量删除刷新当前页
-				$("#htm_table").datagrid("reload");
-			}	
+				$.post("./admin_op/channelWorld_batchUpdateChannelWorldValid", params, function(result){
+					$.messager.alert("温馨提示","删除" + rows.length + "条记录");
+					// 清除所有已选择的记录，避免重复提交id值
+					$("#htm_table").datagrid("clearSelections");
+					// 批量删除刷新当前页
+					$("#htm_table").datagrid("reload");
+				});
+			}
 		});	
 	}else{
 		$.messager.alert("温馨提示","请先选择记录，再执行批量删除操作!");

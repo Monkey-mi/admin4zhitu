@@ -271,9 +271,7 @@ function drawOptArea($worldOpt, worlds, index) {
 	
 	// 添加第二行操作title对应的按钮
 	var $opt2LineBtn = $('<div class="world-channel">'
-			+ "<span class='world-opt-btn'>"
 			+ getChannelName(world['channelName'], world, index)
-			+ "</span>"
 			+ '</div>');
 	
 	// 添加二三行分隔线
@@ -414,9 +412,9 @@ function getTypeInteract(value, row, index) {
  */
 function getChannelName(value, row, index) {
 	if(value == "NO_EXIST" || value=="") {
-		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='showWorldAddToChannelPage(" + row.worldId + ")'/>";
+		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='commonTools.openWorldAddToChannelPage(" + row.worldId + ")'/>";
 	} else {
-		return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
+		return "<a onclick='commonTools.openWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
 	}
 };
 
@@ -431,7 +429,9 @@ function getSuperbReserve(row, index) {
 	if ( row.squarerecd == 1 ) {
 		return "<img title='已经为精选备选' class='htm_column_img pointer' src='./common/images/ok.png'/>";
 	} else {
-		return "<img title='点击成为精选备选' class='htm_column_img pointer' src='./common/images/edit_add.png' onclick='toBeSuperbReserve("+row.worldId+","+row.authorId+")'/>";
+		var rtn = "<img title='点击成为精选备选' class='htm_column_img pointer' " +
+				"src='./common/images/edit_add.png' onclick='toBeSuperbReserve("+row.worldId+","+row.authorId+","+index+")'/>";
+		return rtn;
 	}
 };
 
@@ -439,9 +439,10 @@ function getSuperbReserve(row, index) {
  * 成为精选备选
  * @param worldId	织图id
  * @param userId	用户id
+ * @param index		当前织图在集合中的脚标
  * @author zhangbo	2015-11-16
  */
-function toBeSuperbReserve(worldId, userId){
+function toBeSuperbReserve(worldId, userId, index){
 	$.post("./admin_interact/typeOptionWorld_addTypeOptionWorld",{
 		worldId: worldId,
 		userId: userId
@@ -1515,26 +1516,5 @@ var htmTableTitle = "分享列表维护", //表格标题
 			'worldLocation' : worldLocation
 		};
 		loadData(1, rows);
-	}
-	
-	/**
-	 * 打开织图添加到频道页面
-	 * 
-	 * @param	worldId	织图id
-	 * @author zhangbo 2015-10-10
-	 */
-	function showWorldAddToChannelPage(worldId){
-		var url = "./page_htworld_htworldAddToChannel";
-		url += "?worldId=" + worldId
-		$.fancybox({
-			'margin'			: 20,
-			'width'				: '40%',
-			'height'			: '60%',
-			'autoScale'			: true,
-			'transitionIn'		: 'none',
-			'transitionOut'		: 'none',
-			'type'				: 'iframe',
-			'href'				: url
-		});
 	}
 	

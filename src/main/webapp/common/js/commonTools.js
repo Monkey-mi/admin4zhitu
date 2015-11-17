@@ -105,4 +105,26 @@ commonTools.showWorld = function(shortLink) {
 		transitionIn: "none",	// 打开无动画
 		transitionOut: "elastic"	// 关闭动画：伸缩
 	});
-}
+};
+
+/**
+ * 打开织图添加到频道页面
+ * @param	worldId	织图id
+ * @author zhangbo 2015-10-10
+ */
+commonTools.openWorldAddToChannelPage = function(worldId){
+	var url = "./page_htworld_htworldAddToChannel";
+	url += "?worldId=" + worldId;
+	$.fancybox({
+		href: url,
+		margin: 20,
+		width: "40%",
+		height: "60%",
+		autoScale: true,
+		type: "iframe",
+		transitionIn: "none",	// 打开无动画
+		transitionOut: "elastic"	// 关闭动画：伸缩
+	});
+};
+
+
