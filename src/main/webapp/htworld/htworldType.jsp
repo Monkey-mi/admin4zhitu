@@ -10,7 +10,7 @@
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
-<script type="text/javascript" src="${webRootPath }/common/js/worldmaintainfunction20151023.js"></script>
+<script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript" src="${webRootPath }/common/js/worldmaintain2014021801.js?ver=${webVer}"></script>
 <script type="text/javascript">
 var maxSerial = 0,
@@ -97,22 +97,6 @@ var maxSerial = 0,
   		clickCountColumn,
   		likeCountColumn,
   		commentCountColumn,
-/*   		worldURLColumn = {field : 'worldURL',title : '链接',align : 'center',
-  				styler: function(value,row,index){ return 'cursor:pointer;';},
-  				formatter : function(value, row, rowIndex ) {
-  					var url = value;
-  					if(value == '' || value == undefined) {
-  						var slink;
-  						if(row['shortLink'] == '')
-  							slink = row[worldKey];
-  						else 
-  							slink = row['shortLink'];
-  						url = worldURLPrefix + slink;
-  					}
-  					return "<a title='播放织图' class='updateInfo' href='javascript:showWorld(\""
-  					+ url + "\")'>"+url+"</a>";
-  				}
-  			}, */
   		{field : 'worldId',title : '织图ID',align : 'center', sortable: true, 
 			formatter : function(value, row, index) {
 				//精品按钮控制
@@ -164,26 +148,16 @@ var maxSerial = 0,
   			title: "预览",
   			align: "center",
   			formatter: function(value,row,index){
-				var url = row.worldURL;
-				if(row.worldURL == '' || row.worldURL == undefined) {
-					var slink;
-					if(row['shortLink'] == '')
-						slink = row[worldKey];
-					else 
-						slink = row['shortLink'];
-					url = worldURLPrefix + slink;
-				}
-  				
-  				return "<a title='播放织图' class='updateInfo' href='javascript:showWorldWithURI(\"" + url + "\")'><img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' /></a>";
+  				return "<a title='播放织图' class='updateInfo' href='javascript:commonTools.showWorld(\"" + row.shortLink + "\")'><img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' /></a>";
   			}
   		},
   		worldLabelColumn,
   		{field : 'channelName',title :'频道',align : 'center',
   			formatter: function(value,row,index) {
   				if(value == "NO_EXIST" || value=="") {
-  					return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='showWorldAddToChannelPage(" + row.worldId + ")'/>";
+  					return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='commonTools.openWorldAddToChannelPage(" + row.worldId + ")'/>";
   				} else {
-  					return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
+  					return "<a onclick='commonTools.openWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
   				}
   			}
 		},
@@ -907,27 +881,6 @@ function showWorldAndInteractForType(uri){
 		'transitionOut'		: 'none',
 		'type'				: 'iframe',
 		'href'				: uri
-	});
-};
-
-/**
- * 打开织图添加到频道页面
- * 
- * @param	worldId	织图id
- * @author zhangbo 2015-10-23
- */
-function showWorldAddToChannelPage(worldId){
-	var url = "./page_htworld_htworldAddToChannel";
-	url += "?worldId=" + worldId
-	$.fancybox({
-		'margin'			: 20,
-		'width'				: '45%',
-		'height'			: '60%',
-		'autoScale'			: true,
-		'transitionIn'		: 'none',
-		'transitionOut'		: 'none',
-		'type'				: 'iframe',
-		'href'				: url
 	});
 };
 
