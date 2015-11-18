@@ -208,9 +208,6 @@
 				}
 				// 数据加载成功，loading动画隐藏
 				$("#page-loading").hide();
-				// 加载成功则清除所有选择与勾选
-				$(this).datagrid("clearSelections");
-				$(this).datagrid("clearChecked");
 			}
 		});
 		// 主表格分页对象
@@ -406,30 +403,34 @@ function batchValid() {
  */
 function batchInvalid() {
 	var rows = $("#htm_table").datagrid("getSelections");
-	if(rows.length > 0){
-		$.messager.confirm("温馨提示", "您确定要删除已选中的织图吗？", function(r){
-			if(r){
-				var wids = [];
-				for(var i=0;i<rows.length;i++){
-					wids[i] = rows[i].worldId;
-				}
-				var params = {
-						channelId: rows[0].channelId,	// 都处于一个频道，从第一个元素获取channelId，因为存在可能瀑布流中也会变幻频道id，故不能从缓存中获取，要在已经获取的数据中拿出channelId 
-						wids: wids.toString(),
-						valid: 2	// 批量删除设置valid为2，因为是小编删除
-					};
-				$.post("./admin_op/channelWorld_batchUpdateChannelWorldValid", params, function(result){
-					$.messager.alert("温馨提示","删除" + rows.length + "条记录");
-					// 清除所有已选择的记录，避免重复提交id值
-					$("#htm_table").datagrid("clearSelections");
-					// 批量删除刷新当前页
-					$("#htm_table").datagrid("reload");
-				});
-			}
-		});	
-	}else{
-		$.messager.alert("温馨提示","请先选择记录，再执行批量删除操作!");
+//	alert(rows.length)
+	for(var i=0;i<rows.length;i++){
+		alert(rows[i].worldId);
 	}
+//	if(rows.length > 0){
+//		$.messager.confirm("温馨提示", "您确定要删除已选中的织图吗？", function(r){
+//			if(r){
+//				var wids = [];
+//				for(var i=0;i<rows.length;i++){
+//					wids[i] = rows[i].worldId;
+//				}
+//				var params = {
+//						channelId: rows[0].channelId,	// 都处于一个频道，从第一个元素获取channelId，因为存在可能瀑布流中也会变幻频道id，故不能从缓存中获取，要在已经获取的数据中拿出channelId 
+//						wids: wids.toString(),
+//						valid: 2	// 批量删除设置valid为2，因为是小编删除
+//					};
+//				$.post("./admin_op/channelWorld_batchUpdateChannelWorldValid", params, function(result){
+//					$.messager.alert("温馨提示","删除" + rows.length + "条记录");
+//					// 清除所有已选择的记录，避免重复提交id值
+//					$("#htm_table").datagrid("clearSelections");
+//					// 批量删除刷新当前页
+//					$("#htm_table").datagrid("reload");
+//				});
+//			}
+//		});	
+//	}else{
+//		$.messager.alert("温馨提示","请先选择记录，再执行批量删除操作!");
+//	}
 };
 
 /**
