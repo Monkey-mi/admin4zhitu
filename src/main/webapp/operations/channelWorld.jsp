@@ -157,7 +157,8 @@
   		},
 	];
 		
-		
+	var IsCheckFlag = true; //标示是否是勾选复选框选中行的，true - 是 , false - 否
+	
 	$(function(){
 		// loading动画展示
 		$("#page-loading").show();
@@ -177,11 +178,27 @@
 			fitColumns: true,
 			autoRowHeight: true,
 			checkOnSelect: false,
+			selectOnCheck: true,
 			loadMsg: "处理中,请等待...",
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
 			pageSize: 10,
 			pageList: [10,30,50,100],
+			onClickCell: function(rowIndex, field, value) {
+				IsCheckFlag = false;
+			},
+			onSelect: function(rowIndex, rowData) {
+				if ( !IsCheckFlag ) {
+					IsCheckFlag = true;
+					$(this).datagrid("unselectRow", rowIndex);
+				}
+			},
+			onUnselect: function(rowIndex, rowData) {
+				if ( !IsCheckFlag ) {
+					IsCheckFlag = true;
+					$(this).datagrid("selectRow", rowIndex);
+				}
+			},
 			onLoadSuccess: function(data) {
 				if(data.result == 0) {
 					if(data.maxId > maxId) {
@@ -191,6 +208,9 @@
 				}
 				// 数据加载成功，loading动画隐藏
 				$("#page-loading").hide();
+				// 加载成功则清除所有选择与勾选
+				$(this).datagrid("clearSelections");
+				$(this).datagrid("clearChecked");
 			}
 		});
 		// 主表格分页对象
@@ -378,14 +398,14 @@ function batchValid() {
 	}else{
 		$.messager.alert("温馨提示","请先选择记录，再执行批量生效操作!");
 	}
-}
+};
 
 /**
  * 批量删除（小编删除）
  * @author zhangbo 2015-11-09
  */
 function batchInvalid() {
-	var rows = $("#htm_table").datagrid("getSelections");	
+	var rows = $("#htm_table").datagrid("getSelections");
 	if(rows.length > 0){
 		$.messager.confirm("温馨提示", "您确定要删除已选中的织图吗？", function(r){
 			if(r){
@@ -410,7 +430,7 @@ function batchInvalid() {
 	}else{
 		$.messager.alert("温馨提示","请先选择记录，再执行批量删除操作!");
 	}
-}
+};
 
 /**
  * 重排推荐
@@ -431,7 +451,7 @@ function reIndexed() {
 	
 	// 打开添加窗口
 	$("#htm_indexed").window("open");
-}
+};
 
 function submitReIndexForm() {
 	var $form = $("#indexed_form");
@@ -456,7 +476,7 @@ function submitReIndexForm() {
 			}
 		});
 	}
-}
+};
 
 /**
  * 搜索推荐用户
@@ -466,6 +486,7 @@ function searchWorld() {
 	myQueryParams["world.maxId"] = maxId;
 	myQueryParams["world.worldId"] = "";
 	myQueryParams["world.channelId"] = $("#ss_channel").combogrid("getValue");
+	myQueryParams["world.notified"] = $("#ss-notified").combogrid("getValue");
 	// 频道织图瀑布流模式中，若选择“生效”，即代表，要查询频道织图生效，并且过滤掉织图被用户删除掉，所以flag指定为1
 	if ( $("#ss-valid").combobox("getValue") == 1 ) {
 		myQueryParams["flag"] = 1;
