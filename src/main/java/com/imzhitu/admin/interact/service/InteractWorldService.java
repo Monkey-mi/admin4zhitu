@@ -442,6 +442,19 @@ public interface InteractWorldService extends BaseService {
 	 * @throws Exception
 	 * @author zhangbo	2015年11月11日
 	 */
+	public void saveWorldListInteract(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
+	
+	/**
+	 * 广场添加互动
+	 * 
+	 * @param worldId
+	 * @param clickCount
+	 * @param likeCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 * @author zhangbo	2015年11月11日
+	 */
 	public void saveTypeInteract(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
 	
 	/**

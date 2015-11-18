@@ -137,10 +137,10 @@ public class InteractWorldlevelServiceImpl extends BaseServiceImpl implements In
 					interactWorldService.saveUserInteract(uid,
 							AdminUtil.GetRandamNum(worldLevel.getMin_fans_count(),worldLevel.getMax_fans_count()),worldLevel.getTime());
 					if(comments != null && !comments.equals("")){//若评论不为空，则只评论，且平时时长为10小时
-						interactWorldService.saveInteractV3(world_id,AdminUtil.GetRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
+						interactWorldService.saveWorldListInteract(world_id,AdminUtil.GetRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
 								AdminUtil.GetRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),comments.split(","),worldLevel.getTime());				
 					}else{
-						interactWorldService.saveInteractV3(world_id,AdminUtil.GetRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
+						interactWorldService.saveWorldListInteract(world_id,AdminUtil.GetRandamNum(worldLevel.getMin_play_times(),worldLevel.getMax_play_times()),
 								AdminUtil.GetRandamNum(worldLevel.getMin_liked_count(),worldLevel.getMax_liked_count()),null,worldLevel.getTime());
 					}
 				}catch(Exception e){
