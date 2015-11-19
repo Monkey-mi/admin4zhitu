@@ -124,4 +124,18 @@ public class  InteractStarRecommendTopicServiceImpl extends BaseServiceImpl impl
 			worldModuleMapper.destoryByTopicId(id);
 		}
 	}
+	
+	/**
+	 * 改变主题有效性，控制往期查看主题
+	 * @param id
+	 * @param valid 有效性 1有效，0无效
+	 * @throws Exception 
+		*	2015年11月19日
+		*	mishengliang
+	 */
+	@Override
+	public void updateValidForTopic(Integer id,Integer valid)  throws Exception{
+		mapper.updateValidTopic(id,valid);
+	}
+	
 }

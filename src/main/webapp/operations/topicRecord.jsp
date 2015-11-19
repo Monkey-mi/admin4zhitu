@@ -205,6 +205,22 @@
             }
         }
         
+        //更改主题的有效性
+        function updateValidate(valid,rowId){
+        	var tip = "./common/images/tip.png";
+        	if($("#validImg"+rowId).attr("src") != tip){
+        		$("#validImg"+rowId).attr("src","./common/images/tip.png");
+        	}else{
+        		$("#validImg"+rowId).attr("src","./common/images/ok.png");
+        	}
+        	
+    		$.post("./admin_interact/starRecommendTopic_updateValidForTopic",{valid:valid,id:rowId},function(data){
+    			if(data.result == 0){
+    				$('#dg').datagrid('reload');
+    			}
+    		},"json");
+        }
+        
    	 var myOnBeforeRefresh = function(pageNumber, pageSize) {
     		if(pageNumber <= 1) {
     			maxId = 0;
@@ -232,9 +248,19 @@
             //fitColumns:true,
              queryParams:myQueryParams,
             columns:[[
-				/* {field:'id',title:'ID',width:100,align:"center"}, */
+				{field:'id',title:'ID',width:100,align:"center",hidden:true}, 
 				{field : 'ck',checkbox : true },
 			/* 	{field : 'orderIndex',title:'顺序值',align : 'center', sortable: true, editor:'text'}, */
+				{field : 'valid',title : '有效性',align : 'center', width: 45,
+			  			formatter: function(value,row,index) {
+			  				if(value == 1) {
+			  					img = "./common/images/ok.png";
+			  					return "<img id='validImg"+row.id+"' title='有效' class='htm_column_img' onclick='javascript:updateValidate(0,"+row.id+")'  src='" + img + "'/>";
+			  				}
+			  				img = "./common/images/tip.png";
+			  				return "<img id='validImg"+row.id+"' title='无效' onclick='javascript:updateValidate(1,"+row.id+")'  class='htm_column_img' src='" + img + "'/>";
+			  			}
+  				},
                 {field:'title',title:'主题',width:100,align:"center"},
                 {field:'topicType',title:'文章类型',width:100,align:"center",
             		formatter:function(value,row,index) {

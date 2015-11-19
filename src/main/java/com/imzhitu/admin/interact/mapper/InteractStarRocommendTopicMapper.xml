@@ -3,6 +3,7 @@
 <mapper namespace="com.imzhitu.admin.interact.mapper.InteractStarRocommendTopicMapper">
 	<resultMap type="com.imzhitu.admin.common.pojo.StarRecommendTopic" id="StarRecommendTopic">
 		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="valid" column="valid" jdbcType="INTEGER"/>
 		<result property="topicType" column="topic_type" jdbcType="INTEGER"/>
 		<result property="isWorld" column="is_world" jdbcType="INTEGER"/>
 		<result property="shareBanner" column="share_banner" jdbcType="VARCHAR"/>
@@ -80,4 +81,16 @@
 	<select id="getTopicModuleCount"  resultType="INTEGER">
 	select count(*) from hts.operations_channel_topic
 	</select>
+	
+	<update id="updateValidTopic">
+	update hts.operations_channel_topic 
+	<set>
+	<if test="valid != null">
+	valid = #{valid}
+	</if>
+	</set>
+	where 
+	id = #{id}
+	</update>
+	
 </mapper>

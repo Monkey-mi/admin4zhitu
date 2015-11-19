@@ -34,6 +34,7 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	private String stickerButton;
 	private String shareButton;
 	private String link;
+	private Integer valid;
 	public Integer getId() {
 		return id;
 	}
@@ -115,6 +116,11 @@ public class StarRecommendTopic extends AbstractNumberDto{
 	public void setLink(String link) {
 		this.link = link;
 	}
+	public Integer getValid() {
+		return valid;
+	}
+	public void setValid(Integer valid) {
+		this.valid = valid;
+	}
 
-	
 }
