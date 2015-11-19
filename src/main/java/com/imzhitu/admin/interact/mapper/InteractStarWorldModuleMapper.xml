@@ -43,7 +43,7 @@
 	and<![CDATA[id < #{maxId}]]>
 	 </if> -->
 	 </where>
-	 order by id desc
+	 order by topic_id desc,order_index asc
 	 <![CDATA[ limit #{start}, #{limites}]]>
 	</select>
 	
@@ -81,4 +81,27 @@
 	where 
 		topic_id=#{topicId}
 	</delete>
+	
+	<update id="reOrderIndex">
+	update hts.operations_channel_topic_world_module
+	<set>
+	<if test="orderIndex!=0">
+	order_index=#{orderIndex},
+	</if>
+	</set>
+	where 
+		id=#{id}
+	</update>
+	
+	
+<!-- <update id="reOrderIndex">
+	update hts.operations_channel_topic_world_module
+	<set>
+	<if test="orderIndex!=0">
+	order_index=#{orderIndex}
+	</if>
+	</set>
+	where 
+		id=#{id}
+	</update> -->
 </mapper>

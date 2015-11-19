@@ -44,6 +44,17 @@ public interface ZTWorldService extends BaseService {
 			String orderBy, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
+	 * 查询织图描述中被@人的信息
+	 * @param worldId 
+	 * @param jsonMap
+	 * @throws Exception 
+		*	2015年11月10日
+		*	mishengliang
+	 */
+	void queryCommentAt(int worldId,Map<String, Object> jsonMap) throws Exception;
+	
+	
+	/**
 	 * 屏蔽织图
 	 * 
 	 * @param worldId

@@ -48,4 +48,10 @@ public class ZTWorldServiceTest extends BaseTest {
 	public void updateLatestInvalidTest() throws Exception {
 		service.updateLatestInvalid(485);
 	}
+	
+	@Test
+	public void queryCommentAtTest() throws Exception {
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		service.queryCommentAt(28226, jsonMap);
+	}
 }

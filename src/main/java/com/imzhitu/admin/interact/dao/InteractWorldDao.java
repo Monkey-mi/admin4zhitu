@@ -117,13 +117,6 @@ public interface InteractWorldDao extends BaseDao {
 	public void upInteractValidByWIDs(Integer[] wids,Integer valid);
 	
 	/**
-	 * 根据worldIds列表来查询
-	 * @param ids
-	 * @return
-	 */
-	public List<InteractWorld> queryInteractByWIDs(Integer[] ids);
-	
-	/**
 	 * 根据织图id查询互动id
 	 */
 	public Integer queryIntegerIdByWorldId(Integer wId);

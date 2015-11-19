@@ -166,8 +166,8 @@
 	</update>
 	
 	<insert id="save">
-		insert into hts.operations_channel_world (id,channel_id,world_id,author_id,date_added,valid,notified,superb,weight,serial)
-	 		values (#{id}, #{channelId}, #{worldId}, #{authorId}, #{dateAdded}, #{valid}, #{notified},#{superb},#{weight},#{serial})
+		insert into hts.operations_channel_world (id,channel_id,world_id,author_id,date_added,valid,superb,weight,serial)
+	 		values (#{id}, #{channelId}, #{worldId}, #{authorId}, #{dateAdded}, #{valid}, #{superb},#{weight},#{serial})
 	</insert>
 	
 	<update id="updateId">

@@ -763,10 +763,40 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				}
 			}
 		},
+		//修改完后分享列表中的织图描述中的@可以点击查看被@人的信息
 	worldDescColumn = {field : 'worldDesc',title : '织图描述',align : 'center', width : 100,
 			formatter: function(value,row,index){
+				var uri = 'page_user_userInfo?userId=';
+				var preValue = value;
+				var arr = [];
+				var worldId = row['worldId'];
+				var regDemo = new RegExp("@.+? ","g");
+				
 				if(value != null && value != '') {
-					return "<a href='#' title=" + value + " class='viewInfo easyui-tooltip'>" + value + "</a>";
+					//如果评论中有被@的人，则需要去获取被@人的数据
+					if(regDemo.exec(value) != null){
+						$.ajax({ 
+							  type: 'POST', 
+							  url: "./admin_ztworld/ztworld_queryCommentAt", 
+							  data: {worldId:worldId}, 
+							  success: function(data){
+									if(data.result == 0){
+										var result = data['obj'];
+										arr = 	value.match(regDemo);
+										if(result.length != 0){ //防止从微博中复制过来但又检测到有@格式,且数据库中没有此被@人的数据。
+											for(var i = 0; i < arr.length; i++){
+												value = value.replace(arr[i],"<a onmouseover='setAuthorAvatarTimer(" + result[i].atId + ",event);' onmouseout='javascript:clearAuthorAvatarTimer();'  class='updateInfo' href='javascript:showUserInfo(\""+uri+result[i].atId+"\")'>" + arr[i] + "</a>");
+											}											
+										}
+									}else{
+										$.massager.alert("数据返回错误");
+									}
+								}, 
+							  dataType: "json", 
+							  async:false 
+							}); 
+					}
+					return "<div title=" + preValue + " class='viewInfo easyui-tooltip'>" + value + "</div>";
 				}
 				return '';
 			}

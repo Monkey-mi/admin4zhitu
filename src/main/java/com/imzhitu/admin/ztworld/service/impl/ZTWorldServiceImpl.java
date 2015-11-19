@@ -306,6 +306,20 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	}
 	
 	/**
+	 * 查询织图描述中被@人的信息
+	 * @param worldId 
+	 * @param jsonMap
+	 * @throws Exception 
+		*	2015年11月10日
+		*	mishengliang
+	 */
+	@Override
+	public void  queryCommentAt(int worldId,Map<String, Object> jsonMap){
+		List<UserMsgAtWorldDto> list = userMsgAtWorldMapper.queryAtWorldByWorldId(worldId); 
+		jsonMap.put(OptResult.JSON_KEY_OBJ,list);
+	}
+	
+	/**
 	 * 根据查询的地理位置信息，得到相关的织图主键id集合，使用OpenSearch进行查询 
 	 * 
 	 * @param worldLocation	地理位置信息

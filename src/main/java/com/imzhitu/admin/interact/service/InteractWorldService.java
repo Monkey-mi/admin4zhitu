@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gxp.org.apache.xerces.impl.xs.identity.Field;
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.InteractUser;
 import com.imzhitu.admin.common.pojo.InteractUserFollow;
@@ -272,11 +271,6 @@ public interface InteractWorldService extends BaseService {
 	public void buildTracker(Map<String, Object> jsonMap);
 	
 	/**
-	 * 跟踪互动
-	 */
-	public void trackInteract();
-	
-	/**
 	 * 根据worldID列表来更新worldID对应的有效状态(织图互动表)
 	 * @param wids
 	 * @param valid
@@ -343,13 +337,6 @@ public interface InteractWorldService extends BaseService {
 	 * @throws Exception
 	 */
 	public InteractWorld queryInteractByWorldId(Integer worldId) throws Exception;
-	
-	/**
-	 * 更新互动播放喜欢评论计划
-	 * @param wids
-	 * @throws Exception
-	 */
-	public void updateInteractCommentLikedClickByWorldId(Integer[] wids)throws Exception;
 	
 	/**
 	 * 根据织图id查询互动id
@@ -443,6 +430,48 @@ public interface InteractWorldService extends BaseService {
 	 * @throws Exception
 	 */
 	public void saveInteractV3(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
+	
+	/**
+	 * 广场添加互动
+	 * 
+	 * @param worldId
+	 * @param clickCount
+	 * @param likeCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 * @author zhangbo	2015年11月11日
+	 */
+	public void saveWorldListInteract(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
+	
+	/**
+	 * 广场添加互动
+	 * 
+	 * @param worldId
+	 * @param clickCount
+	 * @param likeCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 * @author zhangbo	2015年11月11日
+	 */
+	public void saveTypeInteract(Integer worldId,Integer clickCount,Integer likeCount,String[]commentIds,Integer minuteDuration)throws Exception;
+	
+	/**
+	 * 扫描新发图时，自动添加互动
+	 * 
+	 * @param userId
+	 * @param degreeId
+	 * @param worldId
+	 * @param clickCount
+	 * @param likedCount
+	 * @param commentIds
+	 * @param minuteDuration
+	 * @throws Exception
+	 * @author zhangbo	2015年11月12日
+	 */
+	public void saveAutoInteract(Integer userId,Integer degreeId,Integer worldId,Integer clickCount,
+			Integer likedCount,String[] commentIds,Integer minuteDuration)throws Exception;
 	
 	/**
 	 * 根据织图id、织图标签，进行用户等级的互动，

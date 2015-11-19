@@ -1,7 +1,6 @@
 package com.imzhitu.admin.interact.service.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +15,7 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.SerializableListAdapter;
 import com.hts.web.common.service.impl.BaseServiceImpl;
-import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
-import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.InteractPlanComment;
 import com.imzhitu.admin.common.pojo.InteractPlanCommentLabel;
 import com.imzhitu.admin.common.pojo.InteractWorldLabelDto;
@@ -26,20 +23,17 @@ import com.imzhitu.admin.common.pojo.OpZombieDegreeUserLevel;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserLevelListDto;
+import com.imzhitu.admin.common.util.AdminUtil;
 import com.imzhitu.admin.interact.dao.InteractUserlevelDao;
 import com.imzhitu.admin.interact.dao.InteractUserlevelListDao;
-import com.imzhitu.admin.interact.dao.InteractWorldLabelCommentLabelDao;
 import com.imzhitu.admin.interact.service.InteractLikeFollowRecordService;
 import com.imzhitu.admin.interact.service.InteractPlanCommentLabelService;
 import com.imzhitu.admin.interact.service.InteractPlanCommentService;
-import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.interact.service.InteractUserlevelListService;
-import com.imzhitu.admin.interact.service.CommentService;
+import com.imzhitu.admin.interact.service.InteractWorldService;
 import com.imzhitu.admin.op.service.OpZombieDegreeUserLevelService;
-import com.imzhitu.admin.userinfo.mapper.AdminAndUserRelationshipMapper;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.service.UserMsgService;
-import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldMapper;
 
 //@Service
@@ -71,19 +65,10 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	private InteractUserlevelListDao interactUserlevelListDao;
 	
 	@Autowired
-	private HTWorldLabelWorldDao worldLabelWorldDao;
-	
-	@Autowired
 	private InteractWorldService interactWorldService;
 	
 	@Autowired
 	private InteractUserlevelDao  interactUserlevelDao;
-	
-	@Autowired
-	private InteractWorldLabelCommentLabelDao interactWorldLabelCommentLabelDao;
-	
-	@Autowired
-	private CommentService interactCommentService;
 	
 	@Autowired
 	private InteractPlanCommentLabelService interactPlanCommentLabelService;
@@ -102,9 +87,6 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private InteractLikeFollowRecordService likeFollowRecordService;
-	
-	@Autowired
-	private AdminAndUserRelationshipMapper relationshipMapper;
 	
 	@Autowired
 	private UserMsgService userMsgService;
@@ -306,7 +288,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						}
 						
 						try{
-							interactWorldService.saveUserInteract(o.getUser_id(),needZombieDegreeId,GetLongRandamNum(userlevel.getMin_fans_count(),userlevel.getMax_fans_count()),userlevel.getTime());//添加粉丝
+							interactWorldService.saveUserInteract(o.getUser_id(),needZombieDegreeId,AdminUtil.GetRandamNum(userlevel.getMin_fans_count(),userlevel.getMax_fans_count()),userlevel.getTime());//添加粉丝
 						}catch(Exception e){
 							logger.warn("ScanNewWorldAndJoinIntoInteract:interactWorldService.saveUserInteract.\nuserId="+o.getUser_id()+"\nneedZombieDegreeId="+needZombieDegreeId+"\n.cause:"+e.getStackTrace());
 						}
@@ -315,7 +297,7 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 						StringBuilder strb = new StringBuilder();
 						List<InteractPlanCommentLabel> list = interactPlanCommentLabelService.queryInteractPlanCommentLabelByDateAndTime(df.parse(df.format(currentDate)), df2.parse(df2.format(currentDate)));//查询当前有效标签
 						if(list != null && list.size() > 0){
-							int commentsize = GetLongRandamNum(userlevel.getMin_comment_count(),userlevel.getMax_comment_count());
+							int commentsize = AdminUtil.GetRandamNum(userlevel.getMin_comment_count(),userlevel.getMax_comment_count());
 							int average = 0;
 							int length = list.size();
 							if(commentsize < list.size()){
@@ -341,8 +323,8 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 							commentsArray = strb.toString().split(",");
 						}
 						
-						interactWorldService.saveInteractV3(o.getUser_id(),needZombieDegreeId,o.getWorldId(), GetLongRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
-								GetLongRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), commentsArray, userlevel.getTime());//添加互动
+						interactWorldService.saveAutoInteract(o.getUser_id(),needZombieDegreeId,o.getWorldId(), AdminUtil.GetRandamNum(userlevel.getMin_play_times(),userlevel.getMax_play_times()), 
+								AdminUtil.GetRandamNum(userlevel.getMin_liked_count(),userlevel.getMax_liked_count()), commentsArray, userlevel.getTime());//添加互动
 					}catch(Exception e){
 						logger.info(e.getMessage()+"\n"+e.getCause());
 					}
@@ -407,22 +389,6 @@ public class InteractUserlevelListServiceImpl extends BaseServiceImpl implements
 		if(userLevelDto.getUser_level_id() == 27){
 			userInfoMapper.updateTrust(userLevelDto.getUser_id(), Tag.FALSE);
 		}
-		
-	}
-	
-	
-	/**
-	 * 随机函数生成介于min，max之间的数,最大是10000000
-	 */
-	private Integer GetLongRandamNum(Integer min,Integer max){
-		int ma = max.intValue();
-		int mi = min.intValue();
-		if(mi>ma||mi<0)return 1;
-		if(mi==ma)return max;
-		int l=0;
-		l = (int)(Math.random()*10000007)%(ma-mi+1);
-		l = mi+l;
-		return new Integer(l);
 		
 	}
 	

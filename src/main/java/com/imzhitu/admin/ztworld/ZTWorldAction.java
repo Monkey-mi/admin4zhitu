@@ -91,6 +91,22 @@ public class ZTWorldAction extends BaseCRUDAction {
 	}
 	
 	/**
+	 * 查询织图描述中被@人的信息
+	 * @return 
+		*	2015年11月10日
+		*	mishengliang
+	 */
+	public String  queryCommentAt(){
+		try {
+			worldService.queryCommentAt(worldId,jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
 	 * 查询封面子世界所在分页的子世界信息
 	 * 
 	 * @return
