@@ -170,7 +170,6 @@
 			url: "./admin_op/channel_queryChannelWorld",
 			queryParams: myQueryParams,
 			toolbar: "#tb",
-			sortName: "id",
 			idField: "channelWorldId",
 			sortName: "channelWorldId",
 			rownumbers: true,
