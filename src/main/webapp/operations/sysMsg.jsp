@@ -370,6 +370,7 @@ function reload() {
 						        <option value="8">频道</option>
 						        <option value="2">织图推荐</option>
 						        <option value="10">明星推荐</option>
+						        <option value="11">活动推荐</option>
 					   		</select>
 						</td>
 					</tr>
