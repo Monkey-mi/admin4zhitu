@@ -340,10 +340,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 				rs.getInt("world_id"), 
 				rs.getInt("world_author_id"),
 				rs.getInt("re_id"), 
-				rs.getInt("re_author_id"),
-				rs.getInt("ck"), 
-				rs.getInt("valid"), 
-				rs.getInt("shield"));
+				rs.getInt("re_author_id"));
 		if(dto.getAuthorId() != 0) {
 			dto.setAuthorName(rs.getString("user_name"));
 			dto.setAuthorAvatar(rs.getString("user_avatar"));
@@ -355,6 +352,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 
 	/**
 	 * 根据时间查询最小Id，目的就是初始化htworld_comment_week的时候，需要用到,用以同步数据
+	 * @author zxx 2015年11月12日 10:04:21
 	 */
 	@Override
 	public Integer queryCommentMinIdByDate(Date date) {
@@ -367,6 +365,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 
 	/**
 	 * 查询htworld_comment_week的最大Id，目的是当redis宕机时候，重启时候能保证数据准确
+	 * @author zxx 2015年11月12日 10:04:21
 	 */
 	@Override
 	public Integer queryCommentWeekMaxId() {

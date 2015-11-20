@@ -188,10 +188,10 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 					}
 					if(null == answerStr)answerStr = "哦";//若从机器人那里得到空值，则复制为哦
 					String  asStr= dto.getReAuthorName()+"@" + dto.getAuthorName() + ": " + answerStr;//加上名字
-					Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
+//					Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
 					
-					//更新htworld_comment 中的ck位
-					webWorldCommentDao.updateCkById(Tag.TRUE, dto.getCommentId());;
+					//更新htworld_comment 中的ck位,暂时注释掉，因为已经删除掉了ck位置
+					//webWorldCommentDao.updateCkById(Tag.TRUE, dto.getCommentId());;
 					//保存自动回复记录到interact_auto_response
 					Integer reAuthorId = dto.getAuthor();
 					dto.setAuthor(dto.getReAuthor());
