@@ -253,27 +253,4 @@ public interface ZTWorldMapper {
 	@DataSource("slave")
 	ZTWorldDto getZTWorldByWorldId(@Param("id")Integer worldId);
 	
-	/**
-	 * 将织图归档到周表
-	 * @param worldWeekMaxId htworld_htworld_week表中的最大Id，(查询结果中不包含该Id对应的值)
-	 * @author zxx 2015年11月12日 19:31:22
-	 */
-	@DataSource("master")
-	public void fileWorldToWeek(@Param("worldWeekMaxId")Integer worldWeekMaxId);
-	
-	/**
-	 * 将织图周表中最大ID
-	 * @author zxx 2015年11月12日 19:31:22
-	 */
-	@DataSource("master")
-	public Integer queryWorldWeekMaxId();
-	
-	/**
-	 * 查询指定时间内htworld_htworld表中的最小的id
-	 * @param date
-	 * @return
-	 * @author zxx 2015年11月12日 19:58:26
-	 */
-	public Integer queryWorldMinIdByDate(@Param("date")Date date);
-	
 }

@@ -571,30 +571,5 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		return ztWorldMapper.getZTWorldByWorldId(worldId);
 	}
 	
-	/**
-	 * 将htworld_htworld归档到周表htworld_htworld_week中
-	 * @author zxx 2015年11月12日 20:05:33
-	 */
-	public void doFileWorldToWeek(){
-		
-		Date now = new Date();
-		log.info("begin to doFileWorldToWeek. " + now );
-		try{
-			Integer worldWeekMaxId = null;
-			try{
-				worldWeekMaxId = ztWorldMapper.queryWorldWeekMaxId();
-			}catch(Exception e){
-				Date preDate = new Date(now.getTime() - 3L * 24 * 60 * 60 * 1000);
-				worldWeekMaxId = ztWorldMapper.queryWorldMinIdByDate(preDate);
-				log.warn(e);
-			}
-			
-			ztWorldMapper.fileWorldToWeek(worldWeekMaxId);
-			Date end = new Date();
-			log.info("end to doFileWorldToWeek. cost:" + (end.getTime() - now.getTime()) + "ms." );
-		}catch(Exception e){
-			log.warn(e);
-		}
-	}
 
 }

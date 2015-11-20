@@ -98,26 +98,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM htworld_comment_delete WHERE author_id=?";
 	private static final String DELETE_COMMENT_DELETE_BY_USER_ID = "DELETE FROM htworld_comment_delete where author_id=?";
 	
-	/**
-	 * 将htworld_comment表中的数据同步到htworld_comment_week
-	 */
-	private static final String FILE_COMMENT_TO_WEEK	= "INSERT INTO htworld_comment_week(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
-			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM htworld_comment WHERE id>?";
-	
-	/**
-	 * 查询htworld_comment_week最大Id
-	 */
-	private static final String QUERY_COMMENT_WEEK_MAX_ID = "SELECT MAX(id) FROM htworld_comment_week";
-	
-	/**
-	 * 查询htworld_comment_week最小Id
-	 */
-	private static final String QUERY_COMMENT_WEEK_MIN_ID_BY_DATE = "SELECT MIN(id) FROM htworld_comment_week WHERE comment_date >=?";
-	
-	/**
-	 * 查询htworld_comment最小id
-	 */
-	private static final String QUERY_COMMENT_MIN_ID  = "SELECT MIN(id) FROM htworld_comment WHERE comment_date >= ?";
+
 	
 	@Override
 	public List<ZTWorldCommentDto> queryComment(Map<String, Object> attrMap, Map<String, Object> userAttrMap, RowSelection rowSelection) {
@@ -313,16 +294,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		});
 	}
 	
-	/**
-	 * 将评论归档到最新一周的评论表中。即：将htworld_comment表中的最新的数据同步到htworld_comment_week 中去
-	 * @param minId 最小Id，不包含这个id对应的数据
-	 * @author zxx 2015年11月11日 18:21:12
-	 */
-	@Override
-	public void fileCommentToWeek(Integer minId){
-		getJdbcTemplate().update(FILE_COMMENT_TO_WEEK, minId);
-	}
-	
 	
 	/**
 	 * 根据结果集构建MaintainCommentDto
@@ -349,47 +320,5 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		}
 		return dto;
 	}
-
-	/**
-	 * 根据时间查询最小Id，目的就是初始化htworld_comment_week的时候，需要用到,用以同步数据
-	 * @author zxx 2015年11月12日 10:04:21
-	 */
-	@Override
-	public Integer queryCommentMinIdByDate(Date date) {
-		try{
-			return getJdbcTemplate().queryForInt(QUERY_COMMENT_MIN_ID, date);
-		}catch(EmptyResultDataAccessException e){
-			return null;
-		}
-	}
-
-	/**
-	 * 查询htworld_comment_week的最大Id，目的是当redis宕机时候，重启时候能保证数据准确
-	 * @author zxx 2015年11月12日 10:04:21
-	 */
-	@Override
-	public Integer queryCommentWeekMaxId() {
-		try{
-			return getMasterJdbcTemplate().queryForInt(QUERY_COMMENT_WEEK_MAX_ID);
-		}catch(EmptyResultDataAccessException e){
-			return null;
-		}
-	}
-
-	/**
-	 * 查询htworld_comment_week中最小的Id，目的是当redis宕机后，数据能确保正确
-	 * @param date
-	 * @return
-	 * @author zxx 2015年11月12日 10:04:21
-	 */
-	@Override
-	public Integer queryCommentWeekMinIdByDate(Date date) {
-		try{
-			return getJdbcTemplate().queryForInt(QUERY_COMMENT_WEEK_MIN_ID_BY_DATE, date);
-		}catch(EmptyResultDataAccessException e){
-			return null;
-		}
-	}
-
 
 }

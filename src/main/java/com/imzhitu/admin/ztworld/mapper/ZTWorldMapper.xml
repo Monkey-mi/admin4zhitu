@@ -386,27 +386,4 @@
 		where author_id=#{authorId} and latest_valid>0
 	</update>
 	
-	<!-- 将织图归档到周表中 -->
-	<insert id="insertWorldWeek">
-		insert into htworld_htworld_week(id,short_link,world_name,world_desc,world_label,world_type,
-			type_id,thumbs,channel_name,channel_id,date_added,date_modified,author_id,click_count,like_count,
-			comment_count,keep_count,cover_path,title_path,bg_path,title_thumb_path,longitude,latitude,location_desc,
-			location_addr,phone_code,province,city,size,child_count,ver,tp,text_style,valid,latest_valid,shield)
-		select  id,short_link,world_name,world_desc,world_label,world_type,
-			type_id,thumbs,channel_name,channel_id,date_added,date_modified,author_id,click_count,like_count,
-			comment_count,keep_count,cover_path,title_path,bg_path,title_thumb_path,longitude,latitude,location_desc,
-			location_addr,phone_code,province,city,size,child_count,ver,tp,text_style,valid,latest_valid,shield
-		from htworld_htworld
-		where <![CDATA[ id > #{worldWeekMaxId}]]>
-	</insert>
-	
-	<!-- 查询htworld_htworld_week表中的最大id -->
-	<select id="queryWorldWeekMaxId" resultType="Integer">
-		select max(id) from htworld_htworld_week
-	</select>
-	
-	<!-- 查询htworld_htworld表中给定时间内最小的id -->
-	<select id="queryWorldMinIdByDate" resultType="Integer" parameterType="Date">
-		select min(id) from htworld_htworld where <![CDATA[ date_added > #{date}]]>
-	</select>
 </mapper>

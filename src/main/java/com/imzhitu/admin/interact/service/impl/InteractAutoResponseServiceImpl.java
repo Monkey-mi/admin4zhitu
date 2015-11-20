@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
-import com.hts.web.common.pojo.HTWorldComment;
 import com.hts.web.common.service.impl.BaseServiceImpl;
-import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.InteractAutoResponseDto;
 import com.imzhitu.admin.constant.Emoji;
@@ -26,7 +24,6 @@ import com.imzhitu.admin.interact.service.InteractAutoResponseService;
 import com.imzhitu.admin.interact.service.InteractParseResponseService;
 import com.imzhitu.admin.interact.service.InteractRobotService;
 import com.imzhitu.admin.ztworld.dao.CommentCacheDao;
-import com.imzhitu.admin.ztworld.service.CommentService;
 
 //@Service
 public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements InteractAutoResponseService{
@@ -53,9 +50,6 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 	
 	@Autowired
 	private CommentCacheDao commentCacheDao;
-	
-	@Autowired
-	private CommentService commentService;
 	
 	@Autowired
 	private com.hts.web.ztworld.service.ZTWorldInteractService ztWorldInteractService;
@@ -159,9 +153,6 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 		try{
 			InteractAutoResponseDto dto1 = new InteractAutoResponseDto();
 			Integer commentWeekPreMaxId = commentCacheDao.getCommentWeekMaxIdCache();
-			if(commentWeekPreMaxId == null){
-				commentWeekPreMaxId = commentService.queryCommentWeekMinId(beginDate);
-			}
 			if(commentWeekPreMaxId == null){
 				dto1.setCommentDate(beginDate);
 			}else{

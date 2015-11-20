@@ -119,35 +119,5 @@ public interface HTWorldCommentDao extends BaseDao {
 	 */
 	public List<Integer> queryWorldIds(Integer authorId);
 	
-	/**
-	 * 根据时间查询最小Id
-	 * @param date
-	 * @return
-	 * @author zxx 2015年11月12日 10:04:21
-	 */
-	public Integer queryCommentMinIdByDate(Date date);
-	
-	/**
-	 * 将评论归档到最新一周的评论表中。即：将htworld_comment表中的最新的数据同步到htworld_comment_week 中去
-	 * @param minId 最小Id，不包含这个id对应的数据
-	 * @author zxx 2015年11月11日 18:21:12
-	 */
-	public void fileCommentToWeek(Integer minId); 
-	
-	/**
-	 * @author zxx 2015年11月12日 10:04:21
-	 * 查询htworld_comment_week中最大的Id
-	 * @return
-	 */
-	public Integer queryCommentWeekMaxId();
-	
-	/**
-	 * 查询htworld_comment_week中最小的Id，目的是当redis宕机后，数据能确保正确
-	 * @param date
-	 * @return
-	 * @author zxx 2015年11月12日 10:04:21
-	 */
-	public Integer queryCommentWeekMinIdByDate(Date date);
-	
 	
 }
