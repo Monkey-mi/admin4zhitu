@@ -59,13 +59,13 @@
 						<input class="easyui-combobox" name="user_level_id" id="search_userLevelId" onchange="validateSubmitOnce=true;" style="width:120px" data-options="valueField:'id',textField:'level_description',url:'./admin_interact/userlevel_QueryUserLevel'" />
 						
 						<!-- mishengliang -->
-<!-- 						<br>
+					<br>
 						<span class="search_label">是否马甲:</span>
 						<select id="isZombie" class="easyui-combobox" name="isZombie" style="width:75px">
 							<option value="" selected="selected">所有状态</option>
 							<option value="1">马甲</option>
 							<option value="0">用户</option>
-						</select> -->
+						</select> 
 						
 						<div style="display:inline-block; vertical-align:middle;">
 							<a href="#top" id="searchBtn">查询</a>

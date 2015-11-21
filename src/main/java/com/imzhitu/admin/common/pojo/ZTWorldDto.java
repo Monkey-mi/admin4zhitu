@@ -94,6 +94,7 @@ public class ZTWorldDto extends AbstractNumberDto implements Serializable, World
 	
 	private Integer[] world_Ids; // 织图主键id集合
 	
+	private Integer isZombie;//是否为马甲织图
 	
 	public Integer getUser_level_id() {
 		return user_level_id;
@@ -165,7 +166,14 @@ public class ZTWorldDto extends AbstractNumberDto implements Serializable, World
 	public Integer getTypeInteracted() {
 		return this.typeInteracted;
 	}
-/*
+	
+	public Integer getIsZombie() {
+		return isZombie;
+	}
+	public void setIsZombie(Integer isZombie) {
+		this.isZombie = isZombie;
+	}
+	/*
 	public void setUserlevel(UserLevelListDto userlevel) {
 		this.userlevel = userlevel;
 	}

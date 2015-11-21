@@ -71,6 +71,8 @@ var maxId = 0,
 		var	valid = $("#valid").combobox('getValue');
 		var	shield = $("#shield").combobox('getValue');
 		var	user_level_id = $("#search_userLevelId").combobox('getValue');
+		var isZombie = $("#isZombie").combobox('getValue');
+		
 		var	rows = myQueryParams.rows;
 		myQueryParams = {
 				'maxId' : maxId,
@@ -79,7 +81,8 @@ var maxId = 0,
 				'phoneCode':phoneCode,
 				'valid':valid,
 				'shield':shield,
-				'user_level_id':user_level_id
+				'user_level_id':user_level_id,
+				'isZombie':isZombie
 		};
 		loadData(1, rows);
 		

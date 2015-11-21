@@ -108,7 +108,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 
 	@Override
 	public void buildWorld(int maxId, int start, int limit, String startDateStr, String endDateStr, String shortLink, Integer phoneCode, String label, String authorName, Integer valid, Integer shield, String worldDesc, String worldLocation,
-			Integer user_level_id, String orderKey, String orderBy, Map<String, Object> jsonMap) throws Exception {
+			Integer user_level_id, String orderKey, String orderBy, Integer isZombie,Map<String, Object> jsonMap) throws Exception {
 		ZTWorldDto dto = new ZTWorldDto();
 		dto.setMaxId(maxId);
 		dto.setLimit(limit);
@@ -185,6 +185,12 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setWorldDesc("%" + worldDesc + "%");
 			dto.setDateAdded(null);
 			dto.setDateModified(null);
+		}
+		
+		//是否为马甲织图
+		//mishengliang
+		if (isZombie != null) {
+			dto.setIsZombie(isZombie);
 		}
 		
 		// 定义根据OpenSearch查询回来的Map
