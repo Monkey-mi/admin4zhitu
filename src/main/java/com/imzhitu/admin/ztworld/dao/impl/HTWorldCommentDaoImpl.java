@@ -78,25 +78,25 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	 * 用以替代评论或者删除操作
 	 * @author zxx 2015年11月10日 20:10:41
 	 */
-	private static final String INSERT_COMMENT_DELETE_BY_ID = "INSERT INTO htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
-			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM htworld_comment WHERE id=?";
+	private static final String INSERT_COMMENT_DELETE_BY_ID = "INSERT INTO hts.htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE id=?";
 	private static final String DELETE_COMMENT_BY_ID = "DELETE FROM htworld_comment where id=?";
 	
-	private static final String INSERT_COMMENT_DELETE_BY_USER_ID = "INSERT INTO htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
-			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM htworld_comment WHERE author_id=?";
-	private static final String DELETE_COMMENT_BY_USER_ID = "DELETE FROM htworld_comment where author_id=?";
+	private static final String INSERT_COMMENT_DELETE_BY_USER_ID = "INSERT INTO hts.htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE author_id=?";
+	private static final String DELETE_COMMENT_BY_USER_ID = "DELETE FROM hts.htworld_comment where author_id=?";
 	
 	/**
 	 * 因为从htworld_comment表删除了数据，所以想要恢复的话就得从htworld_comment_delete表中恢复
 	 * @author zxx 2015年11月10日 20:47:50
 	 */
-	private static final String RECOVERY_COMMENT_BY_ID = "INSERT INTO htworld_comment(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
-			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM htworld_comment_delete WHERE id=?";
-	private static final String DELETE_COMMENT_DELETE_BY_ID = "DELETE FROM htworld_comment_delete where id=?";
+	private static final String RECOVERY_COMMENT_BY_ID = "INSERT INTO hts.htworld_comment(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment_delete WHERE id=?";
+	private static final String DELETE_COMMENT_DELETE_BY_ID = "DELETE FROM hts.htworld_comment_delete where id=?";
 	
-	private static final String RECOVERY_COMMENT_BY_USER_ID = "INSERT INTO htworld_comment(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
-			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM htworld_comment_delete WHERE author_id=?";
-	private static final String DELETE_COMMENT_DELETE_BY_USER_ID = "DELETE FROM htworld_comment_delete where author_id=?";
+	private static final String RECOVERY_COMMENT_BY_USER_ID = "INSERT INTO hts.htworld_comment(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment_delete WHERE author_id=?";
+	private static final String DELETE_COMMENT_DELETE_BY_USER_ID = "DELETE FROM hts.htworld_comment_delete where author_id=?";
 	
 
 	
@@ -111,7 +111,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-//		argsList.add(Tag.TRUE);
 		return queryForPage(sql, argsList.toArray(), new RowMapper<ZTWorldCommentDto>() {
 
 			@Override
@@ -128,7 +127,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
 		argsList.add(maxId);
 		return queryForPage(sql, argsList.toArray(), new RowMapper<ZTWorldCommentDto>() {
 
@@ -147,7 +145,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
 		argsList.add(minId);
 		return queryForPage(sql, argsList.toArray(), new RowMapper<ZTWorldCommentDto>() {
 
@@ -166,7 +163,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
 		return getJdbcTemplate().queryForLong(sql, argsList.toArray());
 	}
 	
@@ -176,7 +172,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
 		argsList.add(maxId);
 		return getJdbcTemplate().queryForLong(sql, argsList.toArray());
 	}

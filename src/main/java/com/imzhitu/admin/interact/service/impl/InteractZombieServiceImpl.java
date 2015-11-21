@@ -37,6 +37,8 @@ import com.hts.web.ztworld.dao.HTWorldChildWorldDao;
 import com.hts.web.ztworld.dao.HTWorldDao;
 import com.hts.web.ztworld.dao.HTWorldLabelDao;
 import com.hts.web.ztworld.dao.HTWorldLabelWorldDao;
+import com.hts.web.ztworld.dao.HTWorldWeekDao;
+import com.hts.web.ztworld.service.ZTWorldService;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.InteractComment;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
@@ -86,6 +88,9 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	private HTWorldChildWorldDao worldChildWorldDao;
 	@Autowired
 	private HTWorldDao worldDao;
+	@Autowired
+	private HTWorldWeekDao worldWeekDao;
+	
 	@Autowired
 	private HTWorldLabelDao worldLabelDao;
 	@Autowired
@@ -280,7 +285,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 
 		// 保存织图
 		worldDao.saveWorld(htworld);
-
+		worldWeekDao.saveWorld(htworld);
 		// 更新织图总数
 		Long count = worldDao.queryWorldCountByAuthorId(zw.getAuthorId());
 		Integer childCount = worldDao.queryChildCount(zw.getAuthorId());
