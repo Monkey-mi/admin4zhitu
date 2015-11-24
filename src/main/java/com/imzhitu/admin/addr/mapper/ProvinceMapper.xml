@@ -15,4 +15,14 @@
 			hts.addr_province
 	</select>
 	
+	<select id="getProvinceId" resultType="INTEGER">
+	select
+		id
+	from
+		hts.addr_province
+	where
+		<if test="provinceName!=null">
+			name like CONCAT('%',#{provinceName},'%')
+		</if>
+	</select>
 </mapper>

@@ -2,6 +2,8 @@ package com.imzhitu.admin.addr.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.imzhitu.admin.addr.pojo.Province;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 
@@ -21,4 +23,7 @@ public interface ProvinceMapper {
 	 */
 	@DataSource("slave")
 	List<Province> queryAllProvince();
+	
+	@DataSource("slave")
+	Integer getProvinceId(@Param("provinceName")String provinceName);
 }

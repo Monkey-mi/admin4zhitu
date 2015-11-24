@@ -15,4 +15,15 @@
 			hts.addr_city
 	</select>
 	
+	<select id="getCityId" resultType="INTEGER">
+	select
+		id
+	from
+		hts.addr_city
+	where
+		<if test="cityName!=null">
+			name like CONCAT('%',#{cityName},'%')
+		</if>
+	</select>
+	
 </mapper>

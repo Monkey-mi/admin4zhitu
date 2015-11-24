@@ -2,6 +2,8 @@ package com.imzhitu.admin.addr.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.imzhitu.admin.addr.pojo.District;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 
@@ -20,4 +22,7 @@ public interface DistrictMapper {
 	 */
 	@DataSource("slave")
 	List<District> queryAllDistrict();
+	
+	@DataSource("slave")
+	Integer getDistrictId(@Param("districtName")String districtName);
 }

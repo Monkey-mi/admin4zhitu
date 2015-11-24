@@ -2,6 +2,8 @@ package com.imzhitu.admin.addr.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.imzhitu.admin.addr.pojo.City;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 
@@ -22,4 +24,6 @@ public interface CityMapper {
 	@DataSource("slave")
 	List<City> queryAllCity();
 
+	@DataSource("slave")
+	Integer getCityId(@Param("cityName")String cityName);
 }

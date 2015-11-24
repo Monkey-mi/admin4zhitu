@@ -30,4 +30,48 @@ public interface AddrService {
 	 */
 	List<Map<String,Serializable>> queryDistricts();
 
+	/**
+	 * 构造数据完后需删除
+	 * 
+	 * 通过区名获取区id
+	 * @param districtName
+	 * @return 
+		*	2015年11月24日
+		*	mishengliang
+	 */
+	public Integer getDistrictId(String districtName);
+	
+	/**
+	 * 构造数据完后需删除
+	 * 
+	 * 通过城市名模糊匹配出城市id
+	 * @param cityName
+	 * @return 
+		*	2015年11月24日
+		*	mishengliang
+	 */
+	public Integer getCityId(String cityName);
+	
+	/**
+	 * 构造数据完后需删除
+	 * 
+	 * 通过城市名模糊匹配出城市id
+	 * @param provinceName
+	 * @return 
+		*	2015年11月24日
+		*	mishengliang
+	 */
+	public Integer getProvinceId(String provinceName);
+	
+	/**
+	 *  构造数据完后需删除
+	 * 
+	 * @param countryName
+	 * @return 
+		*	2015年11月24日
+		*	mishengliang
+	 */
+	public Integer getCountryId(String countryName);
 }
+
+

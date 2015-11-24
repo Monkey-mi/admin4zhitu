@@ -15,4 +15,16 @@
 			hts.addr_district
 	</select>
 	
+	<select id="getDistrictId" resultType="INTEGER">
+		select 
+			id
+		from 
+			hts.addr_district
+		<where>
+		<if test="districtName!=null">
+			name like CONCAT('%',#{districtName},'%')
+		</if>
+		</where>		 
+	</select>
+	
 </mapper>
