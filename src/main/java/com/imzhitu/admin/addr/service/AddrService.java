@@ -35,11 +35,12 @@ public interface AddrService {
 	 * 
 	 * 通过区名获取区id
 	 * @param districtName
+	 * @param cityId 所属城市的id
 	 * @return 
 		*	2015年11月24日
 		*	mishengliang
 	 */
-	public Integer getDistrictId(String districtName);
+	public Integer getDistrictId(String districtName,Integer cityId);
 	
 	/**
 	 * 构造数据完后需删除

@@ -24,5 +24,5 @@ public interface DistrictMapper {
 	List<District> queryAllDistrict();
 	
 	@DataSource("slave")
-	Integer getDistrictId(@Param("districtName")String districtName);
+	Integer getDistrictId(@Param("districtName")String districtName,@Param("cityId")Integer cityId);
 }
