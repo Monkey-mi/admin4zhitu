@@ -24,6 +24,9 @@
 		<if test="districtName!=null">
 			name like CONCAT('%',#{districtName},'%')
 		</if>
+		<if test="cityId != null">
+		and city_id = #{cityId}
+		</if>
 		</where>		 
 	</select>
 	

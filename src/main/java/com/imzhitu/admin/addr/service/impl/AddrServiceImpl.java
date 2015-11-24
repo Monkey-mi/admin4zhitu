@@ -82,8 +82,8 @@ public class AddrServiceImpl implements AddrService {
 		*	2015年11月24日
 		*	mishengliang
 	 */
-	public Integer getDistrictId(String districtName){
-		return dMapper.getDistrictId(districtName);
+	public Integer getDistrictId(String districtName,Integer cityId){
+		return dMapper.getDistrictId(districtName,cityId);
 	}
 	
 	/**

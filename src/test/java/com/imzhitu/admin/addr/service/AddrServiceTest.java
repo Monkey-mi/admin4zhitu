@@ -11,8 +11,8 @@ public class AddrServiceTest extends BaseTest{
 	
 	@Test
 	public void getDistrictIdTest()throws Exception{
-		Integer id = service.getDistrictId("北京");
-		logger.info("----------------北京市id--------：---------"+id+"----------------------------------");
+		Integer id = service.getDistrictId("新华区",19960);
+		logger.info("----------------新华区id--------：---------"+id+"----------------------------------");
 	}
 	
 	
