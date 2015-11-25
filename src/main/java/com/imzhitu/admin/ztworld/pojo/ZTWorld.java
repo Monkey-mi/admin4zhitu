@@ -1,4 +1,4 @@
-package com.imzhitu.admin.ztworld.pojp;
+package com.imzhitu.admin.ztworld.pojo;
 
 import java.io.Serializable;
 
