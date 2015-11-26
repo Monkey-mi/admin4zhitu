@@ -427,4 +427,5 @@
 		update hts.htworld_htworld set latest_valid=0 
 		where author_id=#{authorId} and latest_valid>0
 	</update>
+
 </mapper>
