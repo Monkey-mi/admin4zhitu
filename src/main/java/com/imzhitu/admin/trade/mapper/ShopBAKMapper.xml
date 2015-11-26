@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.trade.mapper.ShopBAKMapper">
+
+	<resultMap id="ShopMap" type="com.imzhitu.admin.trade.ShopBAK">
+		<id column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="name" property="name" javaType="java.lang.String"/>
+		<result column="description" property="description" javaType="java.lang.String"/>
+		<result column="country_id" property="countryId" javaType="java.lang.String"/>
+		<result column="province_id" property="provinceId" javaType="java.lang.String"/>
+		<result column="city_id" property="cityId" javaType="java.lang.String"/>
+		<result column="district_id" property="districtId" javaType="java.lang.String"/>
+		<result column="address" property="address" javaType="java.lang.String"/>
+		<result column="email" property="email" javaType="java.lang.String"/>
+		<result column="zipcode" property="zipcode" javaType="java.lang.String"/>
+		<result column="website" property="website" javaType="java.lang.String"/>
+		<result column="phone_code" property="phoneCode" javaType="java.lang.Integer"/>
+		<result column="phone" property="phone" javaType="java.lang.Integer"/>
+		<result column="tel_code" property="telCode" javaType="java.lang.String"/>
+		<result column="tel" property="tel" javaType="java.lang.Integer"/>
+		<result column="qq" property="qq" javaType="java.lang.Integer"/>
+		<result column="ctime" property="createTime" javaType="java.util.Date"/>
+		<result column="type" property="type" javaType="java.lang.String"/>
+		<result column="label" property="label" javaType="java.lang.String"/>
+		<result column="star_avg" property="starAvg" javaType="java.lang.Long"/>
+		<result column="taste_avg" property="tasteAvg" javaType="java.lang.Long"/>
+		<result column="view_avg" property="viewAvg" javaType="java.lang.Long"/>
+		<result column="service_avg" property="serviceAvg" javaType="java.lang.Long"/>
+		<result column="comment" property="comment" javaType="java.lang.String"/>
+		<result column="poi" property="poi" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<!-- 获取商家总数 -->
+	<select id="queryShopBakListByLimit" resultMap="ShopMap">
+		select 
+			* 
+		from 
+			hts_trade.shop_bak
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+</mapper>
