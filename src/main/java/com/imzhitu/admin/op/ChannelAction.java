@@ -21,7 +21,6 @@ import com.imzhitu.admin.common.pojo.OpChannelTopOnePeriod;
 import com.imzhitu.admin.common.pojo.OpChannelTopType;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.op.service.ChannelService;
-import com.imzhitu.admin.op.service.OpChannelUserService;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -35,9 +34,6 @@ public class ChannelAction extends BaseCRUDAction{
 	
 	@Autowired
 	private ChannelService channelService;
-	
-	@Autowired
-	private OpChannelUserService channelUserService;
 	
 	private OpChannel channel = new OpChannel();
 	private OpChannelWorld world = new OpChannelWorld();
@@ -540,10 +536,6 @@ public class ChannelAction extends BaseCRUDAction{
 		try {
 			Integer[] channelIds = StringUtil.convertStringToIds(ids);
 			for (Integer channelId : channelIds) {
-				
-				// 先将织图作者加入频道的订阅人中
-				AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-				channelUserService.addChannelUserByWorldId(worldId, channelId, Tag.TRUE, user.getId());
 				
 				// 再将织图加入频道中，但不生效，由小编审核后生效
 				OpChannelWorld channelWorld = new OpChannelWorld();

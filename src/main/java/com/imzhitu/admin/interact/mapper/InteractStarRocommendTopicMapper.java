@@ -26,4 +26,7 @@ public interface InteractStarRocommendTopicMapper {
 	
 	@DataSource("master")
 	public Integer getTopicModuleCount();
+	
+	@DataSource("master")
+	public void updateValidTopic(@Param("id")Integer id,@Param("valid")Integer valid);
 }

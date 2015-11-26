@@ -54,4 +54,15 @@ public interface InteractStarRecommendTopicService {
 		*	mishengliang
 	 */
 	public void destoryTopic(Integer id,Integer isWorld)  throws Exception;
+	
+	
+	/**
+	 * 改变主题有效性，控制往期查看主题
+	 * @param id
+	 * @param valid
+	 * @throws Exception 
+		*	2015年11月19日
+		*	mishengliang
+	 */
+	public void updateValidForTopic(Integer id,Integer valid)  throws Exception;
 }

@@ -195,6 +195,12 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setIsZombie(isZombie);
 		}
 		
+		//是否为马甲织图
+		//mishengliang
+		if (isZombie != null) {
+			dto.setIsZombie(isZombie);
+		}
+		
 		// 定义根据OpenSearch查询回来的Map
 		Map<String, Object> openSearchMap = null;
 		// 当地理位置信息不为空时，则查询该地理位置对应的world_id集合

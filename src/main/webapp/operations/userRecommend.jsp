@@ -199,28 +199,6 @@ var maxId = 0,
         	$("#htm_table").datagrid('rejectChanges');
         	$("#htm_table").datagrid('loaded');
         }
-    },{
-    	/*
-    	 * TODO 这块入口不用了，要整改，要删除掉
-    	 */ 
-    	iconCls:'icon-add',
-    	text:'添加到用户池',
-    	handler:function(){
-    		var rows = $("#htm_table").datagrid('getSelections');
-    		if(isSelected(rows)){
-    			for(var i=0; i<rows.length;i++){
-    				var row = rows[i];
-    				$.post("./admin_op/chuser_addChannelUserByVerifyId",{
-    					'userId':row['userId'],
-    					'verifyId':row['verifyId']
-    				},function(result){
-    					
-    				},"json");
-    			}
-    			$("#htm_table").datagrid('clearSelections');
-    			$.messager.alert("添加完毕","添加完毕");
-    		}
-    	}
     }],
     onBeforeInit = function() {
 		showPageLoading();

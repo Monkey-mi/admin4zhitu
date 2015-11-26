@@ -68,6 +68,8 @@ public class ZTWorldAction extends BaseCRUDAction {
 	private Boolean  isNotAddClick = false; // 不添加播放次数标记位
 	
 	private String worldLocation;	// 织图所标记的地理位置信息 
+	
+	private Integer isZombie;
 
 	@Autowired
 	private ZTWorldService worldService;
@@ -82,7 +84,7 @@ public class ZTWorldAction extends BaseCRUDAction {
 	public String queryHTWorldList() {
 		try {
 			worldService.buildWorld(maxId, page, rows, startTime, endTime, shortLink, 
-					phoneCode, worldLabel, authorName, valid, shield,worldDesc, worldLocation,user_level_id, sort, order, jsonMap);
+					phoneCode, worldLabel, authorName, valid, shield,worldDesc, worldLocation,user_level_id, sort, order,isZombie, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -558,6 +560,14 @@ public class ZTWorldAction extends BaseCRUDAction {
 
 	public void setWorldLocation(String worldLocation) {
 		this.worldLocation = worldLocation;
+	}
+
+	public Integer getIsZombie() {
+		return isZombie;
+	}
+
+	public void setIsZombie(Integer isZombie) {
+		this.isZombie = isZombie;
 	}
 	
 	

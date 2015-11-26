@@ -71,6 +71,8 @@ var maxId = 0,
 		var	valid = $("#valid").combobox('getValue');
 		var	shield = $("#shield").combobox('getValue');
 		var	user_level_id = $("#search_userLevelId").combobox('getValue');
+		var isZombie = $("#isZombie").combobox('getValue');
+		
 		var	rows = myQueryParams.rows;
 		myQueryParams = {
 				'maxId' : maxId,
@@ -79,7 +81,8 @@ var maxId = 0,
 				'phoneCode':phoneCode,
 				'valid':valid,
 				'shield':shield,
-				'user_level_id':user_level_id
+				'user_level_id':user_level_id,
+				'isZombie':isZombie
 		};
 		loadData(1, rows);
 		
@@ -193,25 +196,29 @@ function drawWorldOpt($worldOpt, worlds, index) {
 	});
 }
 
+/**
+ * 
+ * @param value
+ * @param row
+ * @param index
+ * @returns {String}
+ */
 function getAuthorName(value, row, index) {
 	if(row.authorId != 0) {
 		value = value.substr(0, 15);
 		if(row.trust == 1) {
 			return "<a title='移出信任列表.\n推荐人:"
 				+row.trustOperatorName+"\n最后修改时间:"
-				+row.trustModifyDate+"' class='passInfo pointer' href='javascript:removeTrust(\"" 
-				+ row.authorId + "\",\"" + row.worldId + "\",\""+ row.latestValid + "\",\"" + index + "\")'>"
+				+row.trustModifyDate+"' class='passInfo pointer' >"
 				+value
 				+ "<sup><span style='border: solid 1px red;webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;-webkit-box-shadow: #666 0px 0px 10px;-moz-box-shadow: #666 0px 0px 10px;box-shadow: #666 0px 0px 10px;'>"
 				+row.trustOperatorId+"</span></sup></a>";
 		}else if(row.trustOperatorId == 0){
-			return "<a title='添加到信任列表' class='updateInfo pointer' href='javascript:addTrust(\"" + row.authorId + "\",\""+row.worldId
-				+ "\",\"" + row.worldId + "\",\"" + row.latestValid + "\",\"" + index + "\")'>"+value+"</a>";
+			return "<a title='添加到信任列表' class='updateInfo pointer' style='color:#1406F7'>"+value+"</a>";
 		}
 		return "<a title='移出信任列表.\n删除信任的人:"
 				+row.trustOperatorName+"\n最后修改时间:"
-				+row.trustModifyDate+"' class='updateInfo pointer' href='javascript:addTrust(\"" 
-				+ row.authorId + "\",\"" + row.worldId + "\",\"" + row.latestValid + "\",\"" + index + "\")'>"
+				+row.trustModifyDate+"' class='updateInfo pointer'>"
 				+value
 				+ "<sup><span style='border: solid 1px red;webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;-webkit-box-shadow: #666 0px 0px 10px;-moz-box-shadow: #666 0px 0px 10px;box-shadow: #666 0px 0px 10px;'>"
 				+row.trustOperatorId+"</span></sup></a>";
@@ -1194,60 +1201,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 		$("#main").show();
 	};
 	
-	/**
-	 * 添加信任
-	 * 
-	 * @param userId
-	 * @param index
-	 */
-	function addTrust(userId, worldId, latestValid, index) {
-		$("#htm_table").datagrid('loading');
-		$.post("./admin_user/user_updateTrust",{
-			'userId':userId,
-			'trust':1
-			},function(result){
-				if(result['result'] == 0) {
-					if(latestValid != 0) {
-						updateValue(index,'trust',1);
-					} else {
-						updateValues(index, ['trust','latestValid'], [1,1]);
-						addLatestValid(worldId,index);//添加为最新
-					}
-				} else {
-					$.messager.alert('失败提示',result['msg']);  //提示失败信息
-				}
-				//$("#htm_table").datagrid('reload');
-				//$("#htm_table").datagrid('loaded');
-			},"json");
-	}
 
-	/**
-	 * 移除信任
-	 * 
-	 * @param userId
-	 * @param index
-	 */
-	function removeTrust(userId, worldId, latestValid, index) {
-		$("#htm_table").datagrid('loading');
-		$.post("./admin_user/user_updateTrust",{
-			'userId':userId,
-			'trust':0
-			},function(result){
-				if(result['result'] == 0) {
-					if(latestValid > 0) {
-						updateValues(index,['trust','latestValid'],[0,0]);
-						removeLatestValid(worldId, index);
-					} else {
-						updateValue(index,'trust',0);
-					}
-				} else {
-					$.messager.alert('失败提示',result['msg']);  //提示失败信息
-				}
-				//$("#htm_table").datagrid('reload');
-				//$("#htm_table").datagrid('loaded');
-			},"json");
-	}
-	
 	/**
 	 * 显示评论
 	 * @param uri

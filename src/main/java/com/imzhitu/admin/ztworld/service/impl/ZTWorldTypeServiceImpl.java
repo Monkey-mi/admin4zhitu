@@ -318,7 +318,8 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		dto.setId(id);
 		dto.setWeight(weight);
 		typeWorldMapper.updateTypeWorld(dto);
-	//	opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
+		//更新缓存使置顶生效
+		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 		
 		/**
 		 * mishengliang

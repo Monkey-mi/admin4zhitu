@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.addr.mapper.DistrictMapper">
+
+	<resultMap id="DistrictMap" type="com.imzhitu.admin.addr.pojo.District">
+		<id column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="name" property="name" javaType="java.lang.String"/>
+	</resultMap>
+
+	<!-- 查询所有区域 -->
+	<select id="queryAllDistrict" resultMap="DistrictMap">
+		select 
+			id,name 
+		from 
+			hts.addr_district
+	</select>
+	
+	<select id="getDistrictId" resultType="INTEGER">
+		select 
+			id
+		from 
+			hts.addr_district
+		<where>
+		<if test="districtName!=null">
+			name like CONCAT('%',#{districtName},'%')
+		</if>
+		<if test="cityId != null">
+		and city_id = #{cityId}
+		</if>
+		</where>		 
+	</select>
+	
+</mapper>

@@ -35,6 +35,7 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	private String stickerButton;
 	private String shareButton;
 	private String link;
+	private Integer valid;
 	
 	public String add(){
 		try {
@@ -92,6 +93,17 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	public String destroy(){
 		try {
 			interactStarRecommendTopicService.destoryTopic(id,isWorld);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optSuccess(e.getMessage(),jsonMap);
+			e.printStackTrace();
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String updateValidForTopic(){
+		try {
+			interactStarRecommendTopicService.updateValidForTopic(id,valid);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -203,5 +215,14 @@ public class InteractStarRecommedTopicAction extends BaseCRUDAction{
 	public void setIsWorld(Integer isWorld) {
 		this.isWorld = isWorld;
 	}
+
+	public Integer getValid() {
+		return valid;
+	}
+
+	public void setValid(Integer valid) {
+		this.valid = valid;
+	}
+	
 	
 }

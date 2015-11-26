@@ -41,7 +41,7 @@ public interface ZTWorldService extends BaseService {
 	void buildWorld(int maxId, int start, int limit, String startDateStr, String endDateStr, 
 			String shortLink, Integer phoneCode, String label, String authorName, Integer valid,
 			Integer shield, String worldDesc, String worldLocation, Integer user_level_id,String orderKey,  
-			String orderBy, Map<String, Object> jsonMap) throws Exception;
+			String orderBy,Integer isZombie, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 查询织图描述中被@人的信息
