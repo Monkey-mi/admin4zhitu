@@ -1,11 +1,15 @@
 package com.imzhitu.admin.ztworld.mapper;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.crypto.Data;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
+import com.imzhitu.admin.ztworld.pojo.ZTWorld;
 
 /**
  * 织图数据操作类
@@ -172,6 +176,20 @@ public interface ZTWorldMapper {
 	 */
 	@DataSource("slave")
 	public long queryHTWorldTotalCount(ZTWorldDto dto);
+	
+	
+	/**
+	 * 查询马甲织图
+	 * @param firstRow
+	 * @param limite
+	 * @param maxId
+	 * @param dateAdded 添加时间
+	 * @param dateModified 截止时间，用于查询设定的截止时间
+	 * @return 
+		*	2015年11月26日
+		*	mishengliang
+	 */
+	public  List<ZTWorld> queryZombieWorld(@Param("firstRow")Integer firstRow,@Param("limite")Integer limite,@Param("maxId")Integer maxId,@Param("dateAdded")Date dateAdded,@Param("dateModified")Date dateModified);
 	
 	/**
 	 * 查询最大id
