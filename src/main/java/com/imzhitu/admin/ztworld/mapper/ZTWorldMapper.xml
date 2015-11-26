@@ -274,6 +274,18 @@
 		 left join hts_admin.interact_user_level_list iull on h.author_id=iull.user_id
 		 left join hts_admin.interact_user_level iul on iull.user_level_id=iul.id		 
 		 left join hts_admin.interact_type_option_world itow on h.id = itow.world_id
+		 <where>
+		 <if test="isZombie != null and isZombie == 1">
+			 h.id in (
+			select htworld_id from hts_admin.zombie_world where htworld_id != 0 
+			)
+		 </if>
+		  <if test="isZombie != null and isZombie == 0">
+			 h.id not in (
+			select htworld_id from hts_admin.zombie_world where htworld_id != 0 
+			)
+		 </if>
+		 </where>
 		 order by h.id desc
 	</select>
 	
