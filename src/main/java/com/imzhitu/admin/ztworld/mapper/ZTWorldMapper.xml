@@ -274,50 +274,8 @@
 		 left join hts_admin.interact_user_level_list iull on h.author_id=iull.user_id
 		 left join hts_admin.interact_user_level iul on iull.user_level_id=iul.id		 
 		 left join hts_admin.interact_type_option_world itow on h.id = itow.world_id
-		 <where>
-		 <if test="isZombie != null and isZombie == 1">
-			 h.id in (
-			select htworld_id from hts_admin.zombie_world where htworld_id != 0 
-			)
-		 </if>
-		  <if test="isZombie != null and isZombie == 0">
-			 h.id not in (
-			select htworld_id from hts_admin.zombie_world where htworld_id != 0 
-			)
-		 </if>
-		 </where>
 		 order by h.id desc
 	</select>
-	
-	
-	<select id="queryZombieWorld" resultMap="ztWorldPojo">
-		select zwss.schedula,zw.id,zw.world_desc,zw.world_label,zw.world_label_ids,zw.author_id,zw.cover_path,zw.title_path
-			,zw.title_thumb_path,zw.longitude,zw.latitude,zw.location_desc,zw.location_addr,zw.provice,zw.city,zw.size
-			,zw.complete,zw.htworld_id,zw.short_link,zw.channel_id
-		from
-		 	(
-			 	select zws.zombie_world_id,zws.schedula from
-			 		hts_admin.zombie_world_schedual as zws 		 		
-			 	<where> 
-			 		<if test="dateAdded != null">
-			 			<![CDATA[and zws.schedula>=#{dateAdded}]]>
-			 		</if>
-			 		<if test="dateModified != null">
-			 			<![CDATA[and zws.schedula<=#{dateModified}]]>
-			 		</if> 
-				 	<if test="maxId != null and maxId != 0">
-				 		<![CDATA[ AND zws.id<=#{maxId}]]>
-				 	</if>
-				 	and valid = 1
-				 	and finished = 1
-			 	</where>
-			 	order by zws.id desc
-			 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
-		 ) as zwss,hts_admin.zombie_world zw
-		 where zw.id = zwss.zombie_world_id
-		 order by zw.id desc
-	</select>
-	
 	
 	<!-- 分页查询总数 -->
 	<select id="queryHTWorldTotalCount" resultType="long">
