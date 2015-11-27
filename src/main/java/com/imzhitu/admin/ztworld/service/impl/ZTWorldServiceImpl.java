@@ -20,8 +20,10 @@ import com.hts.web.common.util.Log;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.WorldWithInteract;
+import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpActivityWorldValidDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
+import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.UserMsgAtWorldDto;
 import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
@@ -29,12 +31,14 @@ import com.imzhitu.admin.interact.dao.InteractWorldDao;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
+import com.imzhitu.admin.userinfo.service.UserInfoService;
 import com.imzhitu.admin.ztworld.dao.HTWorldCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldChildWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldFilterLogoCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldLabelWorldDao;
 import com.imzhitu.admin.ztworld.mapper.UserMsgAtWorldMapper;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldMapper;
+import com.imzhitu.admin.ztworld.pojo.ZTWorld;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
 
 import net.sf.json.JSONArray;
@@ -97,6 +101,9 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	
 	@Autowired
 	private UserMsgAtWorldMapper userMsgAtWorldMapper;
+	
+	@Autowired
+	private UserInfoService userInfoService;
 	
 	public Integer getCacheLatestSize() {
 		return cacheLatestSize;
@@ -216,6 +223,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		List<ZTWorldDto> dtoList = null;
 		long totalCount = 0l;
 		dto.setMaxId(maxId);
+		// 根据用户等级查询织图
 		if(dto.getUser_level_id() != null || dto.getAuthorName() != null){
 			dtoList = ztWorldMapper.queryHTWorldByAttrMap(dto);
 			totalCount = ztWorldMapper.queryHTWorldCountByAttrMap(dto);
@@ -245,7 +253,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			//链接构造
 //			o.setShortLink(prefix + o.getShortLink());
 			
-			//查询是谁添加信任的
+			//查询是谁添加信任的 TODO 查询信任列表可以去除，放入用户详细信息页面
 			UserTrust userTrust = userTrustDao.queryUserTrustByUid(o.getAuthorId());
 			if(userTrust != null){
 				o.setTrustModifyDate(userTrust.getModifyDate());
@@ -268,6 +276,8 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 				o.setChannelName("NO_EXIST");
 			else {
 				List<String>strList = channelWorldMapper.queryChannelNameByWorldId(o.getWorldId());
+				// TODO 频道名称也不用再去查询计算， 直接获取织图上面存的频道名称
+				
 				o.setChannelName(strList.toString());
 			}
 			
@@ -573,6 +583,102 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	@Override
 	public ZTWorldDto getZTWorldByWorldId(Integer worldId) {
 		return ztWorldMapper.getZTWorldByWorldId(worldId);
+	}
+
+	@Override
+	public void buildWorldMasonry(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer valid, Map<String, Object> jsonMap) {
+		// TODO Auto-generated method stub
+		List<ZTWorld> worldList = new ArrayList<ZTWorld>();
+		
+		// 数据来源就应该是从真实用户所发织图
+		// 设置查询条件
+		if ( valid == 1 ) {
+//			worldList = ztWorldMapper.getWorldListValid(maxId, startTime, endTime, phoneCode, page, rows);
+		} else {
+//			worldList = ztWorldMapper.getWorldListUnvalid(maxId, startTime, endTime, phoneCode, page, rows);
+		}
+		
+		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
+		
+		// 添加用户信息
+//		addUserInfo(rtnList);
+		
+//		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 ? ztWorldMapper.getWorldMaxId() : maxId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, worldList);
+//		jsonMap.put(OptResult.TOTAL, totalCount);
+		
+	}
+
+	/**
+	 * 将织图信息转化成展示在前台需要的字段信息
+	 * 
+	 * @param worldList
+	 * @return
+	 * @author zhangbo	2015年11月25日
+	 */
+	private List<ZTWorldDto> worldListToWorldDTOList(List<ZTWorld> worldList) {
+		List<ZTWorldDto> rtnList = new ArrayList<ZTWorldDto>();
+		
+		for (ZTWorld world : worldList) {
+			ZTWorldDto dto = new ZTWorldDto();
+			dto.setId(world.getId());
+			dto.setWorldDesc(world.getDescription());
+			dto.setChannelId(world.getChannelIds());
+			dto.setChannelName(world.getChannelNames());
+			dto.setAuthorId(world.getAuthorId());
+			dto.setWorldLabel(world.getWorldLabel());
+			dto.setDateAdded(world.getCreateTime());
+			dto.setClickCount(world.getClickCount());
+			dto.setLikeCount(world.getLikeCount());
+			dto.setCommentCount(world.getCommentCount());
+			dto.setKeepCount(world.getKeepCount());
+			dto.setLongitude(world.getLongitude());
+			dto.setLatitude(world.getLatitude());
+			dto.setLocationAddr(world.getAddress());
+			dto.setProvince(world.getProvince());
+			dto.setCity(world.getCity());
+			dto.setWorldURL(Admin.worldURLPrefix + world.getShortLink()); 
+			
+			
+			rtnList.add(dto);
+		}
+		return rtnList;
+	}
+	
+	/**
+	 * 丰富织图的用户信息
+	 * 
+	 * @param rtnList	织图集合
+	 * @throws Exception 
+	 * @author zhangbo	2015年11月25日
+	 */
+	private List<ZTWorldDto> addUserInfo(List<ZTWorldDto> rtnList) throws Exception {
+		// TODO Auto-generated method stub
+		for (ZTWorldDto world : rtnList) {
+			// 获取用户信息
+			UserInfo userInfo = userInfoService.getUserInfo(world.getAuthorId());
+			
+			world.setAuthorName(userInfo.getUserName());			// 用户名
+			world.setAuthorAvatar(userInfo.getUserAvatar());		// 用户头像
+			world.setTrust(userInfo.getTrust());					// 信任标记
+			world.setStar(userInfo.getStar());						// 是否明星
+			world.setPhoneCode(userInfo.getPhoneCode());			// 手机辨别代号
+			world.setPhoneSys(userInfo.getPhoneSys());				// 手机系统
+			world.setPhoneVer(String.valueOf(userInfo.getVer()));	// 手机版本
+		}
+		return rtnList;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.imzhitu.admin.ztworld.service.ZTWorldService#buildWorldMasonryByUserLevel(java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer, java.util.Map)
+	 */
+	@Override
+	public void buildWorldMasonryByUserLevel(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer user_level_id, Integer valid, Map<String, Object> jsonMap) {
+		// TODO Auto-generated method stub
+//		dtoList = ztWorldMapper.queryHTWorldByAttrMap(maxId, startTime, endTime, user_level_id, valid, phoneCode, page, rows);
+//		dtoList = ztWorldMapper.queryHTWorldByUserLevel(maxId, startTime, endTime, user_level_id, valid, phoneCode, page, rows);
+//		totalCount = ztWorldMapper.queryHTWorldCountByAttrMap(dto);
+		
 	}
 
 }
