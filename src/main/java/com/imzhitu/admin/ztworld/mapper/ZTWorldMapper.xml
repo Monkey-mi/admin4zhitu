@@ -45,6 +45,33 @@
 		<result property="channelId" column="channel_id" jdbcType="VARCHAR"/>
 	</resultMap>
 	
+	<resultMap type="com.imzhitu.admin.ztworld.pojo.ZTWorld" id="ztWorldDto">
+	
+<!-- 马甲表中有而ZTWorld类中没有的字段	select zw.world_label_ids,zw.cover_path,zw.title_path,zw.title_thumb_path,zw.location_desc,zw.size,zw.complete,zw.channel_id -->
+	
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="description" column="world_desc" jdbcType="VARCHAR"/>
+		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
+		<result property="worldLabel" column="world_label" jdbcType="VARCHAR"/>
+		<result property="createTime" column="schedula" jdbcType="TIMESTAMP"/>
+		<result property="authorId" column="author_id" jdbcType="INTEGER"/>
+		<result property="longitude" column="longitude" jdbcType="DOUBLE"/>
+		<result property="latitude" column="latitude" jdbcType="DOUBLE"/>
+		<result property="address" column="location_addr" jdbcType="VARCHAR"/>
+		<result property="province" column="provice" jdbcType="VARCHAR"/>
+		<result property="city" column="city" jdbcType="VARCHAR"/>
+<!-- 	ZTWorld 类有 而马甲表中没有 的字段	
+		<result property="typeId" column="" jdbcType=""/>
+		<result property="worldType" column="" jdbcType=""/>
+		<result property="channelIds" column="" jdbcType=""/>
+		<result property="channelNames" column="" jdbcType=""/>
+		<result property="clickCount" column="" jdbcType=""/>
+		<result property="likeCount" column="" jdbcType=""/>
+		<result property="commentCount" column="" jdbcType=""/>
+		<result property="keepCount" column="" jdbcType=""/>
+		<result property="phoneCode" column="" jdbcType=""/> -->
+	</resultMap>
+	
 	<select id="getZTWorldByWorldId" resultMap="ztWorldDto">
 		select 
 			* 
@@ -290,7 +317,7 @@
 	</select>
 	
 	
-<!-- 	<select id="queryZombieWorld" resultMap="ztWorldPojo">
+	<select id="queryZombieWorld" resultMap="ztWorldPojo">
 		select zwss.schedula,zw.id,zw.world_desc,zw.world_label,zw.world_label_ids,zw.author_id,zw.cover_path,zw.title_path
 			,zw.title_thumb_path,zw.longitude,zw.latitude,zw.location_desc,zw.location_addr,zw.provice,zw.city,zw.size
 			,zw.complete,zw.htworld_id,zw.short_link,zw.channel_id
@@ -316,7 +343,7 @@
 		 ) as zwss,hts_admin.zombie_world zw
 		 where zw.id = zwss.zombie_world_id
 		 order by zw.id desc
-	</select> -->
+	</select>
 	
 	<!-- 分页查询总数 -->
 	<select id="queryHTWorldTotalCount" resultType="long">
