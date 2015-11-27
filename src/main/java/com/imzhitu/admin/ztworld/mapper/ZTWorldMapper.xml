@@ -45,7 +45,7 @@
 		<result property="channelId" column="channel_id" jdbcType="VARCHAR"/>
 	</resultMap>
 	
-	<resultMap type="com.imzhitu.admin.ztworld.pojo.ZTWorld" id="ztWorldDto">
+	<resultMap type="com.imzhitu.admin.ztworld.pojo.ZTWorld" id="ztWorldPojo">
 	
 <!-- 马甲表中有而ZTWorld类中没有的字段	select zw.world_label_ids,zw.cover_path,zw.title_path,zw.title_thumb_path,zw.location_desc,zw.size,zw.complete,zw.channel_id -->
 	
