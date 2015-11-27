@@ -107,8 +107,8 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 	
 	@Override
 	public void shieldComment(Integer id) throws Exception {
-		worldCommentDao.updateCommentShield(id, Tag.TRUE);
 		Integer wid = worldCommentDao.queryWorldId(id);
+		worldCommentDao.deleteCommentById(id);
 		updateCommentCount(wid);
 	}
 	
@@ -120,15 +120,20 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 
 	@Override
 	public void unShieldComment(Integer id) throws Exception {
-		worldCommentDao.updateCommentShield(id, Tag.FALSE);
 		Integer wid = worldCommentDao.queryWorldId(id);
+		worldCommentDao.recoveryCommentById(id);
 		updateCommentCount(wid);
 	}
 	
 	@Override
 	public void updateCommentShieldByUserId(Integer userId,Integer shield)throws Exception{
-		worldCommentDao.updateCommentShieldByUserId(userId, shield);
 		List<Integer> wids = worldCommentDao.queryWorldIds(userId);
+		if(shield == Tag.TRUE){
+			worldCommentDao.deleteCommentByUserId(userId);
+		}else{
+			worldCommentDao.recoverCommentByUserId(userId);
+		}
+		
 		for(Integer wid : wids) {
 			updateCommentCount(wid);
 		}

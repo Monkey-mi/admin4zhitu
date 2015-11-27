@@ -137,7 +137,7 @@ public class OpChannelMemberServiceImpl extends BaseServiceImpl implements OpCha
 	public void addStarRecommendMsg(final Integer channelStarId) throws Exception {
 		OpChannelMemberDTO starDto = getChannelStarById(channelStarId);
 		if ( starDto == null ) {
-			throw new HTSException("记录已经被删除");
+			throw new Exception("记录已经被删除");
 		}
 
 		// 当通知状态不为空，且为未通知时，执行添加推送通知信息的操作，然后进行push给用户

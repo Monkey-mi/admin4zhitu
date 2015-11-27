@@ -64,7 +64,7 @@ public class UserInteractAction extends BaseCRUDAction {
 			} else if(count != null && count != 0) {
 				userInteractService.saveRandomFollows(count, userId);
 			} else {
-				throw new HTSException("未指定用户id或粉丝总数");
+				throw new Exception("未指定用户id或粉丝总数");
 			}
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch(Exception e) {

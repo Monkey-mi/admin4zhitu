@@ -85,14 +85,6 @@ public class InteractAutoResponseDaoImpl extends BaseDaoImpl implements Interact
 					+ "				) hc"
 					+ "			INNER JOIN hts.operations_user_zombie uz ON hc.re_author_id = uz.user_id"
 					+ "			LEFT JOIN hts.user_info ui ON hc.author_id = ui.id";
-//	private static final String QUERY_UNCK_RESPONSE = "SELECT "
-//			+ "			hc.*, ui.user_name"
-//			+ "			FROM"
-//			+ "					hts.htworld_comment hc left join hts.operations_user_zombie uz on hc.re_author_id = uz.user_id LEFT JOIN hts.user_info ui ON hc.author_id = ui.id"
-//			+ "					WHERE"
-//			+ "						hc.ck = 0 "
-//			+ "					AND hc.valid = 1"
-//			+ "			    AND hc.comment_date > ?";
 	private static final String DELETE_BY_IDS = " delete from " + table + " where id in ";
 	
 	/**

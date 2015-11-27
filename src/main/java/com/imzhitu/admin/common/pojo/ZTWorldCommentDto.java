@@ -40,9 +40,6 @@ public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable
 	private Integer worldAuthorId; // 织图作者id
 	private Integer reId; // 被回复评论id
 	private Integer reAuthorId; // 被回复作者id
-	private Integer ck; // 被评论织图作者是否查看过标记
-	private Integer valid; // 有效标记
-	private Integer shield; // 被屏蔽标识，0为屏蔽，1为屏蔽
 
 	public ZTWorldCommentDto() {
 		super();
@@ -50,8 +47,7 @@ public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable
 
 	public ZTWorldCommentDto(Integer id, Integer authorId, String authorName,
 			String authorAvatar, String content, Date commentDate,
-			Integer worldId, Integer worldAuthorId, Integer reId, Integer reAuthorId,
-			Integer ck, Integer valid, Integer shield) {
+			Integer worldId, Integer worldAuthorId, Integer reId, Integer reAuthorId) {
 		super();
 		this.id = id;
 		this.authorId = authorId;
@@ -63,9 +59,6 @@ public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable
 		this.worldAuthorId = worldAuthorId;
 		this.reId = reId;
 		this.reAuthorId = reAuthorId;
-		this.ck = ck;
-		this.valid = valid;
-		this.shield = shield;
 	}
 
 	public Integer getId() {
@@ -173,29 +166,6 @@ public class ZTWorldCommentDto extends AbstractNumberDto implements Serializable
 		this.reAuthorId = reAuthorId;
 	}
 
-	public Integer getCk() {
-		return ck;
-	}
-
-	public void setCk(Integer ck) {
-		this.ck = ck;
-	}
-
-	public Integer getValid() {
-		return valid;
-	}
-
-	public void setValid(Integer valid) {
-		this.valid = valid;
-	}
-
-	public Integer getShield() {
-		return shield;
-	}
-
-	public void setShield(Integer shield) {
-		this.shield = shield;
-	}
 
 	@Override
 	public Integer getVerifyId() {

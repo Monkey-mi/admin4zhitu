@@ -1,5 +1,6 @@
 package com.imzhitu.admin.ztworld.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,29 +74,35 @@ public interface HTWorldCommentDao extends BaseDao {
 	 */
 	public long queryCommentCountByMinId(Integer minId, Map<String, Object> attrMap, Map<String, Object> userAttrMap);
 	
-	
 	/**
-	 * 更新评论屏蔽标志
-	 * 
-	 * @param id
-	 * @param shield
-	 */
-	public void updateCommentShield(Integer id, Integer shield);
-	
-	/**
-	 * 根据作者的id，来屏蔽作者所有的评论
+	 * 删掉原来的update valid and shield
 	 * @param authorId
-	 * @param shield
+	 * @author zxx
+	 * @time 2015年11月10日 19:42:24
 	 */
-	public void updateCommentShieldByUserId(Integer authorId,Integer shield);
-
+	public void deleteCommentByUserId(Integer authorId);
+	
 	/**
-	 * 更新评论有效性标志
-	 * 
-	 * @param id
-	 * @param valid
+	 * 删掉原来的update valid and shield
+	 * @param authorId
+	 * @author zxx
+	 * @time 2015年11月10日 19:42:24
 	 */
-	public void updateCommentValid(Integer id, Integer shield);
+	public void deleteCommentById(Integer id);
+	
+	/**
+	 * 从htworld_comment_delete表中删除一条数据，并将这条数据恢复到htworld_comment表中
+	 * @param id
+	 * @author zxx 2015年11月10日 20:55:11
+	 */
+	public void recoveryCommentById(Integer id);
+	
+	/**
+	 * 从htworld_comment_delete表中删除符合条件的数据，并将这数据恢复到htworld_comment表中
+	 * @author zxx 2015年11月10日 20:55:11
+	 * @param authorId
+	 */
+	public void recoverCommentByUserId(Integer authorId);
 	
 	/**
 	 * 根据id查询world_id
@@ -111,5 +118,6 @@ public interface HTWorldCommentDao extends BaseDao {
 	 * @return
 	 */
 	public List<Integer> queryWorldIds(Integer authorId);
+	
 	
 }

@@ -71,15 +71,23 @@ public class ADCommentServiceImpl extends BaseServiceImpl implements ADCommentSe
 		
 		List<ZTWorldCommentDto> worldCommentList = htWorldCommentDao.queryComment(attrMap , userAttrMap, new RowSelection(1, 1));
 		
+		//TODO
+		/**
+		 * @modify zxx 2015年11月13日 18:21:21
+		 * 现在htworld_comment这张表没有valid和shield字段，
+		 * 以前valid=0或shield=1的评论一律从htworld_comment中删除、并插入htworld_comment_delete对应的接口htWorldCommentDao。deleteCommentById
+		 * 
+		 * 若是以前valid=1或shield=0的操作是：从htworld_comment_delete表中删除，并重新插入到htworld_comment表中，对应的接口htWorldCommentDao。recoveryCommentById
+		 */
 		if ( worldCommentList != null && worldCommentList.size() != 0) {
 			// 更新织图评论的有效性，理论上只能获取出唯一条评论，故取第一个
-			htWorldCommentDao.updateCommentValid(worldCommentList.get(0).getId(), valid);
+//			htWorldCommentDao.updateCommentValid(worldCommentList.get(0).getId(), valid);
 			
 			// 若为生效，则屏蔽状态设置为0，若为失效，屏蔽状态设置为1
 			if (valid == Tag.TRUE) {
-				htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.FALSE);
+//				htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.FALSE);
 			} else {
-				htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.TRUE);
+//				htWorldCommentDao.updateCommentShield(worldCommentList.get(0).getId(), Tag.TRUE);
 			}
 			
 			// 更新广告评论表屏蔽状态

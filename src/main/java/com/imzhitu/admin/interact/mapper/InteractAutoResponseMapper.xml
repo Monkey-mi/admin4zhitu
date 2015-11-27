@@ -160,11 +160,14 @@
 				SELECT
 					*
 				FROM
-					hts.htworld_comment
+					hts.htworld_comment_week
 				WHERE
-					ck = 0
-				AND valid = 1
-		    	<![CDATA[ AND comment_date > #{commentDate}]]>
+				<if test="commentDate != null">
+					<![CDATA[ AND comment_date > #{commentDate}]]>
+				</if>
+				<if test="maxId != null and maxId != 0">
+		    		<![CDATA[and  id > #{maxId}]]>
+		    	</if>
 			) hc
 				INNER JOIN hts.operations_user_zombie uz ON hc.re_author_id = uz.user_id
 				LEFT JOIN hts.user_info ui ON hc.author_id = ui.id

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.constant.OptResult;
@@ -56,7 +57,8 @@ import net.sf.json.JSONObject;
 public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldService{
 
 	private Integer cacheLatestSize = 10; // 最新织图缓存队列大小
-	
+	Logger log = Logger.getLogger(ZTWorldServiceImpl.class);
+
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
@@ -192,6 +194,12 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setWorldDesc("%" + worldDesc + "%");
 			dto.setDateAdded(null);
 			dto.setDateModified(null);
+		}
+		
+		//是否为马甲织图
+		//mishengliang
+		if (isZombie != null) {
+			dto.setIsZombie(isZombie);
 		}
 		
 		//是否为马甲织图
@@ -584,6 +592,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	public ZTWorldDto getZTWorldByWorldId(Integer worldId) {
 		return ztWorldMapper.getZTWorldByWorldId(worldId);
 	}
+	
 
 	@Override
 	public void buildWorldMasonry(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer valid, Map<String, Object> jsonMap) {

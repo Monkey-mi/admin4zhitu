@@ -474,7 +474,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	public void addTopOneRecommendMsg(Integer id) throws Exception {
 		OpChannelTopOne topOne = channelTopOneMapper.queryTopOneById(id);
 		if (topOne == null)
-			throw new HTSException("记录已经被删除");
+			throw new Exception("记录已经被删除");
 
 		Integer notified = topOne.getNotified();
 		if (notified != null && notified.equals(Tag.FALSE)) {
@@ -817,9 +817,9 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
 	public void updateChannelWorldSuperb(Integer channelId, Integer worldId, Integer superb) throws Exception {
 		OpChannelWorld world = channelWorldMapper.queryChannelWorldByWorldId(worldId, channelId);
 		if (world == null) {
-			throw new HTSException("记录已经被删除");
+			throw new Exception("记录已经被删除");
 		} else if ( world.getValid().equals(0) ) {
-			throw new HTSException("此频道织图是未生效的，不能进行加精操作！");
+			throw new Exception("此频道织图是未生效的，不能进行加精操作！");
 		}
 		channelWorldMapper.updateSuperbByWID(channelId, worldId, superb);
 		webChannelService.updateSuperbCount(channelId);

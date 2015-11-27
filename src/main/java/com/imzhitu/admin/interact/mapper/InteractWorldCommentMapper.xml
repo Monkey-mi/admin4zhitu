@@ -113,9 +113,9 @@
 		select 
 			wc.* ,ic.valid as comment_valid,ic.content,u.user_name,u.user_avatar,u.sex
 		from 
-			hts_admin.interact_world_comment wc,
-			hts_admin.interact_comment ic,
-			hts.user_info u
+			hts_admin.interact_world_comment wc left join
+			hts_admin.interact_comment ic on wc.comment_id=ic.id left join 
+			hts.user_info u on u.id=wc.user_id
 		<where>
 			<if test="id != null">
 				wc.id = #{id}
@@ -141,8 +141,6 @@
 			<if test="dateSchedule != null and dateAdded != null">
 				and wc.date_schedule between #{dateAdded} and #{dateSchedule}
 			</if>
-			and wc.comment_id=ic.id
-			and u.id=wc.user_id
 		</where>
 		order by id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -33,6 +34,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		HTWorldCommentDao {
 	
 	private static final String table = HTS.HTWORLD_COMMENT;
+	private static final String table_del = HTS.HTWORLD_COMMENT_DELETE;
 	
 	private static final String ORDER_BY_HC_ID_DESC = " order by hc.id desc";
 	
@@ -41,34 +43,23 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 			+ table + " as hc," + HTS.USER_INFO + " as u0"
 			+" where hc.author_id=u0.id";
 	
-	/** 查询评论SQL尾部 */
-	private static final String QUERY_COMMENT_FOOT = " and hc.valid=?";
 	
 	/** 根据最大id查询评论SQL尾部 */
-	private static final String QUERY_COMMENT_BY_MAX_ID_FOOT = " and hc.valid=? and hc.id<=?";
+	private static final String QUERY_COMMENT_BY_MAX_ID_FOOT = " and hc.id<=?";
 	
 	/** 根据最小id查询评论SQL尾部 */
-	private static final String QUERY_COMMENT_BY_MIN_ID_FOOT = " and hc.valid=? and hc.id>?";
+	private static final String QUERY_COMMENT_BY_MIN_ID_FOOT = " and hc.id>?";
 	
 	/** 查询评论总数SQL头部 */
 	private static final String QUERY_COMMENT_COUNT_HEADER = "select count(*) from " 
 			+ table + " as hc," + HTS.USER_INFO + " as u0"
 			+" where hc.author_id=u0.id";
 	
-	/** 查询评论总数SQL尾部 */
-	private static final String QUERY_COMMENT_COUNT_FOOT = " and hc.valid=?";
-	
 	/** 根据最大id查询评论总数SQL尾部 */
-	private static final String QUERY_COMMENT_COUNT_BY_MAX_ID_FOOT = " and hc.valid=? and hc.id<=?";
+	private static final String QUERY_COMMENT_COUNT_BY_MAX_ID_FOOT = " and hc.id<=?";
 	
 	/** 根据最小id查询评论总数SQL尾部 */
-	private static final String QUERY_COMMENT_COUNT_BY_MIN_ID_FOOT = " and hc.valid=? and hc.id>?";
-	
-	/** 更新评论屏蔽标记 */
-	private static final String UPDATE_COMMENT_SHIELD = "update " + table + " set shield=? where id=?";
-	
-	/** 更新评论有效性标记 */
-	private static final String UPDATE_COMMENT_VALID = "update " + table + " set valid=? where id=?";
+	private static final String QUERY_COMMENT_COUNT_BY_MIN_ID_FOOT = " and hc.id>?";
 	
 	/**
 	 * 更新用户的所有评论的屏蔽标记
@@ -82,6 +73,33 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	private static final String QUERY_WIDS_BY_AUTHOR_ID = "select world_id from " + table
 			+ " where author_id=?";
 	
+	/**
+	 * 从htworld_comment表中读取一条数据，插入htworld_comment_delete，然后在htworld_comment中删除该记录
+	 * 用以替代评论或者删除操作
+	 * @author zxx 2015年11月10日 20:10:41
+	 */
+	private static final String INSERT_COMMENT_DELETE_BY_ID = "INSERT INTO hts.htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE id=?";
+	private static final String DELETE_COMMENT_BY_ID = "DELETE FROM htworld_comment where id=?";
+	
+	private static final String INSERT_COMMENT_DELETE_BY_USER_ID = "INSERT INTO hts.htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE author_id=?";
+	private static final String DELETE_COMMENT_BY_USER_ID = "DELETE FROM hts.htworld_comment where author_id=?";
+	
+	/**
+	 * 因为从htworld_comment表删除了数据，所以想要恢复的话就得从htworld_comment_delete表中恢复
+	 * @author zxx 2015年11月10日 20:47:50
+	 */
+	private static final String RECOVERY_COMMENT_BY_ID = "INSERT INTO hts.htworld_comment(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment_delete WHERE id=?";
+	private static final String DELETE_COMMENT_DELETE_BY_ID = "DELETE FROM hts.htworld_comment_delete where id=?";
+	
+	private static final String RECOVERY_COMMENT_BY_USER_ID = "INSERT INTO hts.htworld_comment(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment_delete WHERE author_id=?";
+	private static final String DELETE_COMMENT_DELETE_BY_USER_ID = "DELETE FROM hts.htworld_comment_delete where author_id=?";
+	
+
+	
 	@Override
 	public List<ZTWorldCommentDto> queryComment(Map<String, Object> attrMap, Map<String, Object> userAttrMap, RowSelection rowSelection) {
 		/*
@@ -93,7 +111,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-//		argsList.add(Tag.TRUE);
 		return queryForPage(sql, argsList.toArray(), new RowMapper<ZTWorldCommentDto>() {
 
 			@Override
@@ -110,7 +127,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
 		argsList.add(maxId);
 		return queryForPage(sql, argsList.toArray(), new RowMapper<ZTWorldCommentDto>() {
 
@@ -129,7 +145,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
 		argsList.add(minId);
 		return queryForPage(sql, argsList.toArray(), new RowMapper<ZTWorldCommentDto>() {
 
@@ -144,11 +159,10 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	
 	@Override
 	public long queryCommentCount(Map<String, Object> attrMap, Map<String, Object> userAttrMap) {
-		String sql = buildSelectWorldSQL(QUERY_COMMENT_COUNT_HEADER, QUERY_COMMENT_COUNT_FOOT, attrMap, userAttrMap);
+		String sql = buildSelectWorldSQL(QUERY_COMMENT_COUNT_HEADER, "", attrMap, userAttrMap);
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
 		return getJdbcTemplate().queryForLong(sql, argsList.toArray());
 	}
 	
@@ -158,7 +172,6 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		List<Object> argsList = new ArrayList<Object>();
 		CollectionUtil.collectMapValues(argsList, attrMap);
 		CollectionUtil.collectMapValues(argsList, userAttrMap);
-		argsList.add(Tag.TRUE);
 		argsList.add(maxId);
 		return getJdbcTemplate().queryForLong(sql, argsList.toArray());
 	}
@@ -211,20 +224,50 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		return sql;
 	}
 	
-	
+	/**
+	 * 删掉原来的update valid and shield
+	 * @param authorId
+	 * @author zxx
+	 * @time 2015年11月10日 19:42:24
+	 */
 	@Override
-	public void updateCommentShield(Integer id, Integer shield) {
-		getMasterJdbcTemplate().update(UPDATE_COMMENT_SHIELD, new Object[]{shield, id});
+	public void deleteCommentByUserId(Integer authorId){
+		getMasterJdbcTemplate().update(INSERT_COMMENT_DELETE_BY_USER_ID,authorId);
+		getMasterJdbcTemplate().update(DELETE_COMMENT_BY_USER_ID,authorId);
 	}
 	
+	/**
+	 * 删掉原来的update valid and shield
+	 * @param authorId
+	 * @author zxx
+	 * @time 2015年11月10日 19:42:24
+	 */
 	@Override
-	public void updateCommentShieldByUserId(Integer authorId,Integer shield){
-		getMasterJdbcTemplate().update(UPDATE_COMMENT_SHIELD_BY_USER_ID, shield,authorId);
+	public void deleteCommentById(Integer id){
+		getMasterJdbcTemplate().update(INSERT_COMMENT_DELETE_BY_ID,id);
+		getMasterJdbcTemplate().update(DELETE_COMMENT_BY_ID,id);
 	}
 	
+	/**
+	 * 从htworld_comment_delete表中删除一条数据，并将这条数据恢复到htworld_comment表中
+	 * @param id
+	 * @author zxx 2015年11月10日 20:55:11
+	 */
 	@Override
-	public void updateCommentValid(Integer id, Integer valid) {
-	    getMasterJdbcTemplate().update(UPDATE_COMMENT_VALID, new Object[]{valid, id});
+	public void recoveryCommentById(Integer id){
+		getMasterJdbcTemplate().update(RECOVERY_COMMENT_BY_ID, id);
+		getMasterJdbcTemplate().update(DELETE_COMMENT_DELETE_BY_ID, id);
+	}
+	
+	/**
+	 * 从htworld_comment_delete表中删除符合条件的数据，并将这数据恢复到htworld_comment表中
+	 * @author zxx 2015年11月10日 20:55:11
+	 * @param authorId
+	 */
+	@Override
+	public void recoverCommentByUserId(Integer authorId){
+		getMasterJdbcTemplate().update(RECOVERY_COMMENT_BY_USER_ID, authorId);
+		getMasterJdbcTemplate().update(DELETE_COMMENT_DELETE_BY_USER_ID, authorId);
 	}
 	
 	@Override
@@ -263,10 +306,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 				rs.getInt("world_id"), 
 				rs.getInt("world_author_id"),
 				rs.getInt("re_id"), 
-				rs.getInt("re_author_id"),
-				rs.getInt("ck"), 
-				rs.getInt("valid"), 
-				rs.getInt("shield"));
+				rs.getInt("re_author_id"));
 		if(dto.getAuthorId() != 0) {
 			dto.setAuthorName(rs.getString("user_name"));
 			dto.setAuthorAvatar(rs.getString("user_avatar"));
@@ -275,6 +315,5 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		}
 		return dto;
 	}
-
 
 }
