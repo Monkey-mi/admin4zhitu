@@ -1,22 +1,12 @@
 package com.imzhitu.admin.ztworld;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.ztworld.service.ZHITUXiaoMiShuService;
-
-import java.io.PrintWriter;
-import java.util.List;
-
-
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import net.sf.json.JSONArray;
-
-import com.imzhitu.admin.common.pojo.ZTWorldDto;
 
 public class ZHITUXiaoMiShuAction extends BaseCRUDAction{
 	
@@ -82,15 +72,6 @@ public class ZHITUXiaoMiShuAction extends BaseCRUDAction{
 		return this.xiaoMiShuService;
 	}
 	
-	public String saveWorld(){
-		try{
-			xiaoMiShuService.saveZTWorld(worldId);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
-		}catch(Exception e){
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
 	public String delWorldByWId(){
 		try{
 			xiaoMiShuService.delZTWorldByIds(idsStr);
@@ -99,26 +80,6 @@ public class ZHITUXiaoMiShuAction extends BaseCRUDAction{
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
-	}
-	
-	public String queryZTWorldByUId(){
-		PrintWriter out =null;
-		try{
-			out = response.getWriter();
-			List<ZTWorldDto> list = xiaoMiShuService.queryZTWorldByUId(limitNum);
-			JSONArray ja = JSONArray.fromObject(list);
-			out.print(ja.toString());
-			out.flush();
-		}catch(Exception e){
-			jsonMap.clear();
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			JSONArray jae = JSONArray.fromObject(jsonMap);
-			out.print(jae);
-			out.flush();
-		}finally{
-			out.close();
-		}
-		return null;
 	}
 	
 	public String updateWorldDescByWid(){
@@ -138,18 +99,6 @@ public class ZHITUXiaoMiShuAction extends BaseCRUDAction{
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
-		return StrutsKey.JSON;
-	}
-	
-	public String queryWorld(){
-		try{
-			xiaoMiShuService.queryWorld(maxId, page, rows, worldId, jsonMap);
-			JSONUtil.optSuccess(jsonMap);
-		}catch(Exception e){
-			e.printStackTrace();
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		
 		return StrutsKey.JSON;
 	}
 	

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.UserWithInteract;
+import com.imzhitu.admin.common.pojo.UserInfo;
 
 /**
  * <p>
@@ -96,12 +97,15 @@ public interface UserInfoService extends BaseService {
 	public void queryUserInfoByUserId(Integer userId,Map<String,Object>jsonMap)throws Exception;
 
 	/**
-	 * 全局过滤用户名
+	 * 根据id获取用户信息
 	 * 
+	 * @param userId	用户id
+	 * @return
 	 * @throws Exception
+	 * @author zhangbo	2015年11月26日
 	 */
-	public void trimUserName() throws Exception;
-	
+	UserInfo getUserInfo(Integer userId) throws Exception;
+
 }
 
 

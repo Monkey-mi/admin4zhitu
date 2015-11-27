@@ -727,5 +727,15 @@
 	 	</foreach>
 	 	) as u left join hts.operations_user_recommend as ur on u.id=ur.user_id
 	</select>
+	
+	<!-- 根据id获取用户信息 -->
+	<select id="getUserInfo" resultMap="UserInfoMap">
+		select 
+			* 
+		from 
+			hts.user_info 
+		where 
+			id = #{id}
+	</select>
 	  
 </mapper>

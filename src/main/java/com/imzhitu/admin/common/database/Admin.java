@@ -267,4 +267,6 @@ public class Admin {
 	 */
 	public static final String NOTICE_CHANNELMEMBER_TO_STAR = "channelmember_to_star";
 	
+	public static final String worldURLPrefix = "http://www.imzhitu.com/DT";
+	
 }

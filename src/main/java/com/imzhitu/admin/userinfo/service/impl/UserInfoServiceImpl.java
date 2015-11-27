@@ -19,7 +19,6 @@ import com.hts.web.base.database.RowCallback;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.MD5Encrypt;
-import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.aliyun.dao.OsUserInfoDao;
 import com.imzhitu.admin.common.UserWithInteract;
 import com.imzhitu.admin.common.pojo.UserInfo;
@@ -286,32 +285,12 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		webUserMsgService.saveUserMsg(customerServiceId, u2.getId(), "您的织图账号["+u2.getUserName()+"]和["+u1.getUserName()+"]的登录平台已经调换,请退出后重新登录");
 		
 	}
-	
+
 	@Override
-	public void trimUserName() {
-		Integer maxId;
-		String userName;
-		int finishFlag;
-		int finishStep = 10000;
-		
-		finishFlag = finishStep;
-		
-		maxId = userInfoMapper.selectMaxId();
-		for(int i = 0; i <= maxId; i++) {
-			userName = userInfoMapper.queryUserName(i);
-			if(userName != null) {
-				userName = StringUtil.trimName(userName);
-				if("织图用户".equals(userName)) { // 过滤掉之前设定默认用户名
-					userName = StringUtil.getRandomUserName();
-				}
-				webUserInfoDao.updateUserName(i, userName);
-			}
-			if(i > finishFlag || i == maxId) {
-				finishFlag += finishStep;
-				log.info("i=" + i + ",trim user name finished " + Float.valueOf(i)/maxId*100 + "%");
-			}
-		}
-		
+	public UserInfo getUserInfo(Integer userId) throws Exception {
+		// TODO Auto-generated method stub
+		userInfoMapper.getUserInfo(userId);
+		return null;
 	}
 	
 }

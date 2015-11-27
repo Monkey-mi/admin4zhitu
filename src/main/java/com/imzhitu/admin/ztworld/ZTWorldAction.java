@@ -93,6 +93,40 @@ public class ZTWorldAction extends BaseCRUDAction {
 	}
 	
 	/**
+	 * 根据条件查询瀑布流织图
+	 * 
+	 * @return
+	 * @author zhangbo	2015年11月25日
+	 */
+	public String queryWorldMasonry() {
+		try {
+			
+			worldService.buildWorldMasonry(maxId, page, rows, startTime, endTime, phoneCode, valid, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 根据条件查询瀑布流织图
+	 * 
+	 * @return
+	 * @author zhangbo	2015年11月25日
+	 */
+	public String queryWorldMasonryByUserLevel() {
+		try {
+			
+			worldService.buildWorldMasonryByUserLevel(maxId, page, rows, startTime, endTime, phoneCode, user_level_id, valid, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
 	 * 查询织图描述中被@人的信息
 	 * @return 
 		*	2015年11月10日

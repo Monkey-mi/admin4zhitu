@@ -81,4 +81,13 @@ public interface UserInfoMapper {
 	@DataSource("slave")
 	public List<UserInfoDto> queryUserInfoDtoByIds(@Param("ids")Integer[] ids);
 
+	/**
+	 * 根据id获取用户信息
+	 * 
+	 * @param userId 用户id
+	 * @author zhangbo	2015年11月26日
+	 */
+	@DataSource("slave")
+	UserInfo getUserInfo(@Param("id")Integer userId);
+
 }
