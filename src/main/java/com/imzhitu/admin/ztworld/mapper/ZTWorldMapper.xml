@@ -290,7 +290,7 @@
 	</select>
 	
 	
-	<select id="queryZombieWorld" resultMap="ztWorldPojo">
+<!-- 	<select id="queryZombieWorld" resultMap="ztWorldPojo">
 		select zwss.schedula,zw.id,zw.world_desc,zw.world_label,zw.world_label_ids,zw.author_id,zw.cover_path,zw.title_path
 			,zw.title_thumb_path,zw.longitude,zw.latitude,zw.location_desc,zw.location_addr,zw.provice,zw.city,zw.size
 			,zw.complete,zw.htworld_id,zw.short_link,zw.channel_id
@@ -316,7 +316,7 @@
 		 ) as zwss,hts_admin.zombie_world zw
 		 where zw.id = zwss.zombie_world_id
 		 order by zw.id desc
-	</select>
+	</select> -->
 	
 	<!-- 分页查询总数 -->
 	<select id="queryHTWorldTotalCount" resultType="long">
