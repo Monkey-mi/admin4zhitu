@@ -59,7 +59,7 @@
 		from  hts_admin.interact_auto_response as ar left join hts_admin.interact_user_level_list iull on iull.user_id=ar.re_author,
 		      hts.user_info as uz,
 			  hts.user_info as ui,
-		      hts.htworld_comment as hc1,
+		      hts.htworld_comment_week as hc1,
 			  hts.htworld_htworld as hh
 			  <if test="channelId != null">
 			  	,hts.operations_channel_world ocw
