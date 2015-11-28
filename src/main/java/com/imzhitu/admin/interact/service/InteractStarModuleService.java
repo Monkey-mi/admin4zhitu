@@ -55,7 +55,7 @@ public interface InteractStarModuleService {
 		*	2015年9月21日
 		*	mishengliang
 	 */
-	public void destory(Integer id)  throws Exception;
+	public void destory(String ids)  throws Exception;
 	
 	/**
 	 * 利用传输过来id顺序进行排序

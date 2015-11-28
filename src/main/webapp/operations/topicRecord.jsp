@@ -185,21 +185,23 @@
             });
         }
         function destroyUser(){
-            var row = $('#dg').datagrid('getSelected');
-            $.messager.defaults = { ok: "当然", cancel: "手抖了" };
-            if (row){
+            var rows = $('#dg').datagrid('getSelections');
+            if (rows != "" && rows != null ){
+            	$.messager.defaults = { ok: "当然", cancel: "手抖了" };
                 $.messager.confirm('Confirm','同学，你真的要删除这期吗?',function(r){
                     if (r){
-                        $.post('./admin_interact/starRecommendTopic_destroy',{id:row.id,isWorld:row.isWorld},function(result){
-                            if (result.result == 0){
-                                $('#dg').datagrid('reload');    // reload the user data
-                            } else {
-                                $.messager.show({    // show error message
-                                    title: 'Error',
-                                    msg: result.errorMsg
-                                });
-                            }
-                        },'json');
+		            	for(var i = 0; i < rows.length; i++){
+	                        $.post('./admin_interact/starRecommendTopic_destroy',{id:rows[i].id,isWorld:rows[i].isWorld},function(result){
+	                            if (result.result == 0){
+	                                $('#dg').datagrid('reload');    // reload the user data
+	                            } else {
+	                                $.messager.show({    // show error message
+	                                    title: 'Error',
+	                                    msg: result.errorMsg
+	                                });
+	                            }
+	                        },'json');
+		            	}
                     }
                 });
             }

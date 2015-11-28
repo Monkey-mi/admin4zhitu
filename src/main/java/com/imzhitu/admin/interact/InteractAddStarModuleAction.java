@@ -1,20 +1,13 @@
 package com.imzhitu.admin.interact;
 
-import java.io.PrintWriter;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.common.pojo.StarModule;
 import com.imzhitu.admin.interact.service.InteractStarModuleService;
 import com.imzhitu.admin.interact.service.InteractStarWorldModuleService;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
@@ -27,6 +20,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	private InteractStarWorldModuleService interactStarWorldModuleService;
 
 	private Integer id;
+	private String idsArr;
 	private String  title;
 	private String  subtitle;
 	private Integer userId;
@@ -92,7 +86,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
 	public String destroy(){
 		try {
-			interactStarModuleService.destory(id);
+			interactStarModuleService.destory(idsArr);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -136,7 +130,7 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 	
 	public String destroyWorldModule(){
 		try {
-			interactStarWorldModuleService.destroyWorldModule(id);
+			interactStarWorldModuleService.destroyWorldModule(idsArr);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optSuccess(e.getMessage(),jsonMap);
@@ -189,8 +183,12 @@ public class InteractAddStarModuleAction extends BaseCRUDAction{
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getIdsArr() {
+		return idsArr;
+	}
+
+	public void setIdsArr(String idsArr) {
+		this.idsArr = idsArr;
 	}
 
 	public void setTitle(String title) {

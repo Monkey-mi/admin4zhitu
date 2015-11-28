@@ -265,11 +265,16 @@
             });
         }
         function destroyUser(){
-            var row = $('#dg').datagrid('getSelected');
-            if (row){
+            var rows = $('#dg').datagrid('getSelections');
+            var ids = [];
+            if (rows != "" && rows != null){
                 $.messager.confirm('Confirm','确定要删除吗?',function(r){
                     if (r){
-                        $.post('./admin_interact/addModule_destroy',{id:row.id},function(result){
+                    	for(var i = 0; i < rows.length; i++){
+                    		ids[i] = rows[i].id;
+                    	}
+                    	var idsArr = ids.join(",");
+                        $.post('./admin_interact/addModule_destroy',{idsArr:idsArr},function(result){
                             if (result.result == 0){
                                 $('#dg').datagrid('reload');    // reload the user data
                             } else {

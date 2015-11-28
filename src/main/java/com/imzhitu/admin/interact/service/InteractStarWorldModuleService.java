@@ -52,7 +52,7 @@ public interface InteractStarWorldModuleService {
 		*	2015年9月21日
 		*	mishengliang
 	 */
-	public void destroyWorldModule(Integer id)  throws Exception;
+	public void destroyWorldModule(String ids)  throws Exception;
 	
 	
 	/**

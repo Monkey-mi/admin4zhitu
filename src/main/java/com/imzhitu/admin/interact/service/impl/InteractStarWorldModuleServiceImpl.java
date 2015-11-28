@@ -64,8 +64,11 @@ public class  InteractStarWorldModuleServiceImpl extends BaseServiceImpl impleme
 	}
 	
 	@Override
-	public void destroyWorldModule(Integer id)  throws Exception{
-		mapper.destroyStarWorldModule(id);
+	public void destroyWorldModule(String ids)  throws Exception{
+		String[] idsArr = ids.split(",");
+		for(int i = 0; i < idsArr.length; i++){
+			mapper.destroyStarWorldModule(Integer.parseInt(idsArr[i]));
+		}
 	}
 	
 	/**

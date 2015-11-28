@@ -78,8 +78,11 @@ public class  InteractStarModuleServiceImpl extends BaseServiceImpl implements I
 	}
 	
 	@Override
-	public void destory(Integer id)  throws Exception{
-		mapper.destory(id);
+	public void destory(String ids)  throws Exception{
+		String[] idsArr = ids.split(",");
+		for(int i = 0;i < idsArr.length; i++){
+			mapper.destory(Integer.parseInt(idsArr[i]));
+		}
 	}
 	
 	/**
