@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.addr.mapper.CountryMapper">
+
+	<select id="getCountryId" resultType="INTEGER">
+	select
+		id
+	from
+		hts.addr_country
+	where
+		<if test="CountryName!=null">
+			name_cn like CONCAT('%',#{CountryName},'%')
+		</if>
+	</select>
+	
+</mapper>

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.imzhitu.admin.addr.mapper.CityMapper;
+import com.imzhitu.admin.addr.mapper.CountryMapper;
 import com.imzhitu.admin.addr.mapper.DistrictMapper;
 import com.imzhitu.admin.addr.mapper.ProvinceMapper;
 import com.imzhitu.admin.addr.pojo.City;
@@ -34,6 +35,9 @@ public class AddrServiceImpl implements AddrService {
 	
 	@Autowired
 	private DistrictMapper dMapper;
+	
+	@Autowired
+	private CountryMapper countryMapper;
 
 	@Override
 	public List<Map<String,Serializable>> queryProvinces() {
@@ -117,11 +121,11 @@ public class AddrServiceImpl implements AddrService {
 	 * 
 	 * @param countryName
 	 * @return 
-		*	2015年11月24日
-		*	mishengliang
+		*	2015年11月29日
+		*	zhangbo
 	 */
 	public Integer getCountryId(String countryName){
-		return null;
+		return countryMapper.getCountryId(countryName);
 	}
 	
 }
