@@ -80,7 +80,7 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	 */
 	private static final String INSERT_COMMENT_DELETE_BY_ID = "INSERT INTO hts.htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
 			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE id=?";
-	private static final String DELETE_COMMENT_BY_ID = "DELETE FROM htworld_comment where id=?";
+	private static final String DELETE_COMMENT_BY_ID = "DELETE FROM hts.htworld_comment where id=?";
 	
 	private static final String INSERT_COMMENT_DELETE_BY_USER_ID = "INSERT INTO hts.htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
 			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE author_id=?";
