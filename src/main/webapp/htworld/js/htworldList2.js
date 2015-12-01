@@ -92,11 +92,26 @@ var	search = function() {
 		
 	};
 
+/**
+ * 初始化整个织图集合所占区域宽度
+ * 
+ * @author zhutianjie
+ * @modify zhangbo	2015-12-01
+ */
 function initWorldBoxWidth() {
 	var length = parseInt($(window).width() / (250 + 10));
 	$("#world-box").css("width",length * (250 + 10) + 20 + 'px');
 }
 
+/**
+ * 刷新分页组件
+ * 
+ * @param total			总数
+ * @param pageSize		每页数量
+ * @param pageNumber	当前页数
+ * @author zhutianjie
+ * @modify zhangbo	2015-12-01
+ */
 function refreshPagination(total, pageSize, pageNumber)	{
 	$("#pagination").pagination('refresh', {
 	    total:total,
@@ -105,7 +120,14 @@ function refreshPagination(total, pageSize, pageNumber)	{
 	});
 }
 
-
+/**
+ * 查询织图数据
+ * 
+ * @param pageSize		每页数量
+ * @param pageNumber	当前页数
+ * @author zhutianjie
+ * @modify zhangbo	2015-12-01
+ */
 function loadData(pageNumber, pageSize) {
 	scroll(0,0);
 	$("#page-loading").show();
@@ -130,14 +152,10 @@ function loadData(pageNumber, pageSize) {
 			var worlds = result['rows'];
 			var $worldBox = $('#world-box');
 			for(var i = 0; i < worlds.length; i++) {
-				var world = worlds[i],
-					worldId = world['id'],
-					ver = world['ver'],
-					worldDesc = world['worldDesc'],
-					titlePath = world['titlePath'];
+				var world = worlds[i];
 				dataList.push(world);
 				var $worldOpt = $('<div class="world-opt-wrap"></div>');
-				drawWorldOpt($worldOpt, worlds, i);
+				drawWorldOpt($worldOpt, world, i);
 				$worldBox.append($worldOpt);
 			}
 			$("#page-loading").hide();
@@ -169,12 +187,20 @@ function setWorldStyle(index,world){
 	}
 };
 
-function drawWorldOpt($worldOpt, worlds, index) {
-	var world = worlds[index],
-		worldId = world['id'],
-		ver = world['ver'],
-		worldDesc = world['worldDesc'],
-		titlePath = world['titlePath'];
+/**
+ * 绘制织图区域
+ * 
+ * @param $worldOpt		每个织图最上层父对象，织图展现所有信息的最外层
+ * @param world			每个织图信息
+ * @param index			织图所在集合的脚标
+ * @author zhutianjie
+ * @modify zhangbo	2015-12-01
+ */
+function drawWorldOpt($worldOpt, world, index) {
+	var	worldId = world['id'];
+	var	ver = world['ver'];
+	var	worldDesc = world['worldDesc'];
+	var	titlePath = world['titlePath'];
 	$worldOpt.attr("style", setWorldStyle(index, world));
 	var $authorInfo = $("<div class='world-author'>"
 			+ "<span>" 
@@ -230,7 +256,7 @@ function drawWorldOpt($worldOpt, worlds, index) {
 	$worldOpt.append($authorInfo);
 	$worldOpt.append($world);
 	$worldOpt.append($worldInfo);
-	drawOptArea($worldOpt, worlds, index);
+	drawOptArea($worldOpt, world, index);
 	$world.appendtour({
 		'width':250,
 		'worldId':worldId,
@@ -245,13 +271,12 @@ function drawWorldOpt($worldOpt, worlds, index) {
 /**
  * 绘制操作区域
  * 
- * @param $worldOpt
- * @param worlds
- * @param index
- * @return
+ * @param $worldOpt		每个织图最上层父对象，织图展现所有信息的最外层
+ * @param world			每个织图信息
+ * @param index			织图所在集合的脚标
+ * @author zhangbo	2015-12-01
  */
-function drawOptArea($worldOpt, worlds, index) {
-	var world = worlds[index];
+function drawOptArea($worldOpt, world, index) {
 	// 声明操作区域对象 
 	var $opt = $('<div class="world-opt-area"></div>');
 	
@@ -305,7 +330,7 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ '</div>');
 	// 向第三行按钮中添加元素
 	$opt3LineBtn = $('<div class="world-channel"></div>');
-	drawWorldCommentLabelBtn($opt3LineBtn, worlds, index);
+	drawWorldCommentLabelBtn($opt3LineBtn, world, index);
 	
 	// 添加三四行分隔线
 	var $optDivider3To4 = $('<hr class="divider"></hr>');
@@ -316,9 +341,12 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ '</div>');
 	
 	// 向第四行按钮中添加元素
-	var $opt4LineBtn = $('<div class="world-channel">' 
-			+ getCity(world['province']+world['city'], world, index)
-			+ '</div>');
+	// 地理位置信息，省份+城市构成
+	var $opt4LineBtn = $("<div class='world-channel'>"
+			+ "<span>"
+			+ world.province + world.city
+			+ "</span>"
+			+ "</div>");
 	
 	$opt.append($opt1LineTitle);
 	$opt.append($opt1LineBtn);
@@ -336,7 +364,7 @@ function drawOptArea($worldOpt, worlds, index) {
 }
 
 /**
- * 获取用户名称返回格式
+ * 获取用户名称返回格式，为可点击链接
  * 
  * @param authorName	用户名称
  * @param world			每个织图信息
@@ -356,7 +384,7 @@ function getAuthorName(authorName, world, index) {
 }
 
 /**
- * 获取织图id所有操作
+ * 获取织图id返回格式，为可点击链接，点击触发打开织图互动页面
  * 
  * @param worldId	织图id
  * @param world		每个织图对象信息
@@ -371,6 +399,14 @@ function getWorldId(worldId,world,index) {
 	return "<a title='添加互动' class='updateInfo' href='javascript:commonTools.openWorldInteractPage("+worldId+","+world.authorId+",\""+world.worldURL+"\","+index+",\""+wLabel+"\")'>"+worldId+"</a>";
 };
 
+/**
+ * 获取织图描述返回格式
+ * 
+ * @param worldDesc	织图描述
+ * @param world		每个织图对象信息
+ * @param index		织图所在集合中的脚标
+ * @author zhangbo	2015-12-01
+ */
 function getWorldDesc(worldDesc,world,index) {
 	var preValue = worldDesc;
 	var arr = [];
@@ -408,13 +444,13 @@ function getWorldDesc(worldDesc,world,index) {
 
 /**
  * 查询织图互动过的评论标签，若是没有互动过，则查询根据织图描述或织图标签得到的评论标签
- * @param $WorldOptBtn	被添加内容的jQuery对象，一般为空的dom对象
- * @param worlds
- * @param index
- * @return
+ * 
+ * @param $worldOpt		被添加内容的jQuery对象，一般为空的dom对象
+ * @param world			每个织图信息
+ * @param index			织图所在集合的脚标
+ * @author zhangbo	2015-12-01
  */
-function drawWorldCommentLabelBtn($WorldOptBtn, worlds, index) {
-	var world = worlds[index];
+function drawWorldCommentLabelBtn($WorldOptBtn, world, index) {
 	if(world.valid == 0 || world.shield == 1) {
 		return "";
 	}
@@ -453,8 +489,11 @@ function drawWorldCommentLabelBtn($WorldOptBtn, worlds, index) {
 
 /**
  * 点击标签触发：将点击的标签ID放入指定的存储位置
- * @param worldId
- * @param labelId
+ * 
+ * @param worldId	织图id
+ * @param labelId	织图标签id
+ * @param index		织图所在集合的脚标
+ * @author zhangbo	2015-12-01
  */
 function putWorldCommentLabelId(worldId, labelId, index) {
 	var bgColor = $("#commentLabel-" + worldId + "-" + labelId).attr("class");
@@ -474,9 +513,10 @@ function putWorldCommentLabelId(worldId, labelId, index) {
 
 /**
  * 提交添加织图标签
- * @param worldId
- * @param labelIds
- * @return
+ * 
+ * @param worldId	织图id
+ * @param index		织图所在集合的脚标
+ * @author zhangbo	2015-12-01
  */
 function submitAddWorldCommentLabel(worldId, index){
 	$.post("./admin_interact/channelWorldLabel_insertWorldLabel",{
@@ -491,28 +531,25 @@ function submitAddWorldCommentLabel(worldId, index){
 	},"json");
 };
 
-function getTypeInteract(value, row, index) {
-	img = "./common/images/edit_add.png";
-	return "<a title='添加分类互动' class='updateInfo' href='javascript:typeInteract(\"" + row[worldKey] + "\",\"" + index + "\")'>"+"<img src=\""+img+"\"/></a>";
-};
-
 /**
- * 得到频道名称
- * @param value	织图所在频道名称值
- * @param world	每个织图信息
- * @param index	当前织图在集合中的脚标
+ * 得到频道名称返回值，若不存在则返回按钮，若存在返回可点击链接
+ * 
+ * @param channelName	织图所在频道名称值
+ * @param world			每个织图信息
+ * @param index			当前织图在集合中的脚标
  * @author zhangbo	2015-11-16
  */
-function getChannelName(value, world, index) {
-	if(value == "NO_EXIST" || value=="") {
+function getChannelName(channelName, world, index) {
+	if(channelName=="") {
 		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='commonTools.openWorldAddToChannelPage(" + world.id + ")'/>";
 	} else {
-		return "<a onclick='commonTools.openWorldAddToChannelPage(" + world.id + ")'>" + value + "</a>";
+		return "<a onclick='commonTools.openWorldAddToChannelPage(" + world.id + ")'>" + channelName + "</a>";
 	}
 };
 
 /**
  * 得到精选备选按钮
+ * 
  * @param world	每个织图信息
  * @param index	当前织图在集合中的脚标
  * @author zhangbo	2015-11-16
@@ -530,6 +567,7 @@ function getSuperbReserve(world, index) {
 
 /**
  * 成为精选备选
+ * 
  * @param worldId	织图id
  * @param userId	用户id
  * @param index		当前织图在集合中的脚标
@@ -549,15 +587,14 @@ function toBeSuperbReserve(worldId, userId, index){
 	
 };
 
-function getCity(value, row, index) {
-	if(value == "NO_EXIST" || value=="") {
-		return "<a>无</a>";
-	} else {
-		return "<a>" + value + "</a>";
-	}
-		
-};
-
+/**
+ * 获取活动按钮
+ * 
+ * @param worldId	织图id
+ * @param userId	用户id
+ * @param index		当前织图在集合中的脚标
+ * @author zhangbo	2015-12-01
+ */
 function getActiveOperated(value, row, index) {
 	switch(value) {
 		case 0:
@@ -1491,7 +1528,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 		dataList[index][key] = value;
 		var $worldOpt = $(".world-opt-wrap:eq("+index+")");
 		removeWorldOptArea($worldOpt);
-		drawOptArea($worldOpt, dataList, index);
+		drawOptArea($worldOpt, dataList[index], index);
 	}
 
 	function updateValues(index, keys, values) {
@@ -1500,7 +1537,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 			dataList[index][keys[i]] = values[i];
 		}
 		removeWorldOptArea($worldOpt);
-		drawOptArea($worldOpt, dataList, index);
+		drawOptArea($worldOpt, dataList[index], index);
 	}
 	
 	/**
@@ -1541,7 +1578,11 @@ var htmTableTitle = "分享列表维护", //表格标题
 		loadData(1, rows);
 	}
 	
+	/**
+	 * 根据描述查询织图集合
+	 */
 	function searchByWorldDesc() {
+		// TODO 临时方法，还要整改
 		maxId = 0;
 		var worldDesc = $('#ss_worldDesc').searchbox('getValue');
 		if(worldDesc == "") {
@@ -1552,13 +1593,48 @@ var htmTableTitle = "分享列表维护", //表格标题
 		myQueryParams = {
 			'worldDesc' : worldDesc
 		};
-		loadData(1, rows);
+		
+		scroll(0,0);
+		$("#page-loading").show();
+		myQueryParams['page'] = 1;
+		myQueryParams['rows'] = rows;
+		myQueryParams['valid'] = $("#valid").combobox('getValue');
+		
+		$.post("./admin_ztworld/ztworld_queryHTWorldList", myQueryParams, function(result){
+			if(result['result'] == 0) {
+				if(result.maxId > maxId) {
+					maxId = result.maxId;
+					myQueryParams.maxId = maxId;
+				}
+				if(result.activityId != 'undefined') {
+					activityId = result.activityId;
+				} else {
+					activityId = 0;
+				}
+				dataList = [];
+				$(".world-opt-wrap").remove();
+				refreshPagination(result['total'], pageSize, pageNumber);
+				var worlds = result['rows'];
+				var $worldBox = $('#world-box');
+				for(var i = 0; i < worlds.length; i++) {
+					var world = worlds[i];
+					dataList.push(world);
+					var $worldOpt = $('<div class="world-opt-wrap"></div>');
+					drawWorldOpt($worldOpt, world, i);
+					$worldBox.append($worldOpt);
+				}
+				$("#page-loading").hide();
+			} else {
+				$.messager.alert('失败提示',result['msg']);
+			}
+		}, "json");
 	}
 	
 	/**
 	 * 根据织图所标记的地理位置来查询织图
 	 */
 	function searchByWorldLocation() {
+		// TODO 临时方法，还要整改
 		maxId = 0;
 		var worldLocation = $('#ss_worldLocation').searchbox('getValue');
 		if(worldLocation == "") {
@@ -1568,6 +1644,40 @@ var htmTableTitle = "分享列表维护", //表格标题
 		myQueryParams = {
 			'worldLocation' : worldLocation
 		};
-		loadData(1, rows);
+		
+		scroll(0,0);
+		$("#page-loading").show();
+		myQueryParams['page'] = 1;
+		myQueryParams['rows'] = rows;
+		myQueryParams['valid'] = $("#valid").combobox('getValue');
+		
+		$.post("./admin_ztworld/ztworld_queryHTWorldList", myQueryParams, function(result){
+			if(result['result'] == 0) {
+				if(result.maxId > maxId) {
+					maxId = result.maxId;
+					myQueryParams.maxId = maxId;
+				}
+				if(result.activityId != 'undefined') {
+					activityId = result.activityId;
+				} else {
+					activityId = 0;
+				}
+				dataList = [];
+				$(".world-opt-wrap").remove();
+				refreshPagination(result['total'], pageSize, pageNumber);
+				var worlds = result['rows'];
+				var $worldBox = $('#world-box');
+				for(var i = 0; i < worlds.length; i++) {
+					var world = worlds[i];
+					dataList.push(world);
+					var $worldOpt = $('<div class="world-opt-wrap"></div>');
+					drawWorldOpt($worldOpt, world, i);
+					$worldBox.append($worldOpt);
+				}
+				$("#page-loading").hide();
+			} else {
+				$.messager.alert('失败提示',result['msg']);
+			}
+		}, "json");
 	}
 	
