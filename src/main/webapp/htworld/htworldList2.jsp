@@ -45,8 +45,7 @@
 						</select>
 						<span class="search_label">有效状态:</span>
 						<select id="valid" class="easyui-combobox" name="valid" style="width:75px;">
-							<option value="" selected="selected">所有状态</option>
-							<option value="1">有效</option>
+							<option value="1" selected="selected">有效</option>
 							<option value="0">无效</option>
 						</select>
 						<span class="search_label">屏蔽状态:</span>

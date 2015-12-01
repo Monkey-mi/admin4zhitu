@@ -70,7 +70,6 @@ var maxId = 0,
 		}
 		
 		var	phoneCode = $('#phoneCode').combobox('getValue');
-		var	valid = $("#valid").combobox('getValue');
 		var	shield = $("#shield").combobox('getValue');
 		var	user_level_id = $("#search_userLevelId").combobox('getValue');
 		var isZombie = $("#isZombie").combobox('getValue');
@@ -81,7 +80,6 @@ var maxId = 0,
 				'startTime':startTime,
 				'endTime':endTime,
 				'phoneCode':phoneCode,
-				'valid':valid,
 				'shield':shield,
 				'user_level_id':user_level_id,
 				'isZombie':isZombie
@@ -112,6 +110,7 @@ function loadData(pageNumber, pageSize) {
 	$("#page-loading").show();
 	myQueryParams['page'] = pageNumber;
 	myQueryParams['rows'] = pageSize;
+	myQueryParams['valid'] = $("#valid").combobox('getValue');
 	
 	$.post("./admin_ztworld/ztworld_queryWorldMasonry", myQueryParams, function(result){
 		if(result['result'] == 0) {
@@ -156,17 +155,17 @@ function loadData(pageNumber, pageSize) {
  */
 function setWorldStyle(index,world){
 	var	valid = $("#valid").combobox('getValue');
-	// 由于valid查询出来的结果为字符串型，所以判断要判断是否等于字符串0
-	if(valid === "0") {
-		if(world.interacted)
+	if(valid == 0) {
+		if(world.interacted) {
 			return interactedInvalidWorld;
-		else 
+		} else {
 			return inValidWorld;
+		} 
+	} else if(world.interacted) {
+		return interactedWorld;
 	} else {
-		if(world.interacted)
-			return interactedWorld;
+		return null;
 	}
-	return null;
 };
 
 function drawWorldOpt($worldOpt, worlds, index) {
