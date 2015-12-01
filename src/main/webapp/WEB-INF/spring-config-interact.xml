@@ -10,7 +10,6 @@
 	<bean id="worldTypeService" class="com.imzhitu.admin.ztworld.service.impl.ZTWorldTypeServiceImpl" />
 	<bean id="channelService" class="com.imzhitu.admin.op.service.impl.ChannelServiceImpl"/>
 	<bean id="channelWorldSchedulaService" class="com.imzhitu.admin.op.service.impl.OpChannelWorldSchedulaServiceImpl"/>
-	<bean id="interactTypeOptionWorldService" class="com.imzhitu.admin.interact.service.impl.InteractTypeOptionWorldServiceImpl"/>
 	<bean id="interactAutoResponseSchedulaService" class="com.imzhitu.admin.interact.service.impl.InteractAutoResponseSchedulaServiceImpl"/>
 	<bean id="osPushService" class="com.imzhitu.admin.aliyun.service.impl.OsPushServiceImpl" />
 	<bean id="platService" class="com.imzhitu.admin.plat.service.impl.PlatServiceImpl" />
@@ -310,7 +309,7 @@
 	<!-- 自动添加明星所发的织图到广场备选列表 -->
 	<bean id="autoAddStarWorldJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
-			<ref bean="interactTypeOptionWorldService"/>
+			<ref bean="com.imzhitu.admin.interact.service.impl.InteractTypeOptionWorldServiceImpl"/>
 		</property>
 		<property name="targetMethod">
 			<value>autoAddStarWorld</value>

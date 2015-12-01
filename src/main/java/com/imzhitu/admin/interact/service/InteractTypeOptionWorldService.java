@@ -42,5 +42,15 @@ public interface InteractTypeOptionWorldService extends BaseService{
 	 * @return
 	 */
 	public InteractTypeOptionWorldDto queryTypeOptionWorld(Integer worldId)throws Exception;
+	
+	/**
+	 * 根据织图id，查询是否已经存在于精选备选中
+	 * 
+	 * @param worldId	织图id	
+	 * @return
+	 * @throws Exception
+	 * @author zhangbo	2015年11月29日
+	 */
+	boolean isExist(Integer worldId) throws Exception;
 
 }

@@ -288,9 +288,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 
 	@Override
 	public UserInfo getUserInfo(Integer userId) throws Exception {
-		// TODO Auto-generated method stub
-		userInfoMapper.getUserInfo(userId);
-		return null;
+		return userInfoMapper.getUserInfo(userId);
 	}
 	
 }

@@ -173,23 +173,38 @@ public interface ZTWorldService extends BaseService {
 	 * @param phoneCode	客户端代号：0：IOS，1：安卓，null：所有客户端
 	 * @param valid		是否生效：1：生效，0：未生效（用户删除），null：所有状态
 	 * @param jsonMap	返回页面参数
+	 * @throws Exception 
 	 * @author zhangbo	2015年11月25日
 	 */
-	void buildWorldMasonry(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer valid, Map<String, Object> jsonMap);
+	void buildWorldMasonry(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer valid, Map<String, Object> jsonMap) throws Exception;
 
 	/**
 	 * 构建瀑布流织图信息，通过用户等级查询
 	 * 
-	 * @param maxId
-	 * @param page
-	 * @param rows
-	 * @param startTime
-	 * @param endTime
-	 * @param phoneCode
-	 * @param user_level_id
-	 * @param valid
-	 * @param jsonMap
+	 * @param maxId		最大织图id
+	 * @param page		分页查询：当前页面
+	 * @param rows		分页查询：每页数量
+	 * @param startTime	起始时间
+	 * @param endTime	结束时间
+	 * @param phoneCode	客户端代号：0：IOS，1：安卓，null：所有客户端
+	 * @param valid		是否生效：1：生效，0：未生效（用户删除），null：所有状态
+	 * @param jsonMap	返回页面参数
 	 * @author zhangbo	2015年11月26日
 	 */
-	void buildWorldMasonryByUserLevel(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer user_level_id, Integer valid, Map<String, Object> jsonMap);
+	void buildWorldMasonryByUserLevel(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer user_level_id, Integer valid, Map<String, Object> jsonMap) throws Exception;
+
+	/**
+	 * 构建瀑布流马甲织图信息
+	 * 
+	 * @param maxId		最大织图id
+	 * @param page		分页查询：当前页面
+	 * @param rows		分页查询：每页数量
+	 * @param startTime	起始时间
+	 * @param endTime	结束时间
+	 * @param phoneCode	客户端代号：0：IOS，1：安卓，null：所有客户端
+	 * @param valid		是否生效：1：生效，0：未生效（用户删除），null：所有状态
+	 * @param jsonMap	返回页面参数
+	 * @author zhangbo	2015年11月30日
+	 */
+	void buildWorldMasonryByZombie(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Map<String, Object> jsonMap) throws Exception;
 }

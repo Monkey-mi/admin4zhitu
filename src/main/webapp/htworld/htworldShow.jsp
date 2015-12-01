@@ -4,14 +4,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <% String worldId = request.getParameter("worldId"); %>
 <% String userId = request.getParameter("userId"); %>
-<% String shortLink = request.getParameter("shortLink"); %>
-<% String trustFlag = request.getParameter("trustFlag"); %>
-<% String lastestFlag = request.getParameter("lastestFlag"); %>
+<% String worldURL = request.getParameter("worldURL"); %>
 <% String index = request.getParameter("index"); %> 
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>织图显示功能</title>
+<title>织图互动功能</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -24,8 +22,6 @@
 	worldId = <%= worldId %>,
 	index = <%= index %>,
 	userId = <%= userId %>,
-	lastestFlag = <%= lastestFlag %>,
-	trustFlag  = <%= trustFlag  %>,
 	worldLabel = "<%=new String(request.getParameter("worldLabel").getBytes("iso8859-1"),"utf-8")%>",
 	expertBtnFlag=2,
 	loadDateUrl="./admin_interact/comment_queryCommentListByLabel",
@@ -35,82 +31,80 @@
 	};
 	
 	function tableLoadDate(pageNum){
-		$("#comments_interact_table").datagrid(
-				{
-					width  :600,
-					height :350,
-					pageList : [100,150,300],
-					loadMsg:"加载中....",
-					url	   :	loadDateUrl,
-					queryParams : commentQueryParams,
-					pagination: true,
-					pageNumber: pageNum,
-					toolbar:'#comment_tb',
-					columns:[[
-								{field : 'ck',checkbox : true },
-						        {field:'id',title:'ID',width:60},
-						        {field:'content',title:'内容',width:400},
-						        {field:'opt', title:'操作', align:'center', width:60,
-						        	formatter: function(value,row,index){
-						    			return "<a title='点击更新评论' class='updateInfo' href='javascript:addComment(\""+ row['id'] + "\",\"" + index + "\")'>" + '更新'+ "</a>";
-						    		}	
-						        }
-						    ]],
-				    onLoadSuccess:function(data) {
-				    	if(data.result == 0) {
-							if(data.maxId > commentMaxId) {
-								commentMaxId = data.maxId;
-								commentQueryParams.maxId = commentMaxId;
-							}
-						}
-				    },
-				    onSelect:function(index,row){
-				    	var  comments	= $('#comments_interact').combobox('getValues');
-				    	var flag = false;
-				    	var i;
-				    	for(i=0;i<comments.length;i++){
-				    		if(comments[i] == row['id']){
-				    			flag = true;
-				    			break;
-				    		}
-				    	}
-				    	if(flag == false){
-				    		var len;
-				    		if($('#comments_interact').combobox('getValue')){
-				    			comments.push(row['id']);
-					    		$('#comments_interact').combobox('setValues',comments);//设置值combo的值
-					    		len = comments.length;
-				    		}else{
-				    			$('#comments_interact').combobox('setValue',row['id']);
-				    			len = 1;
-				    		}
-				    		
-				   			var $selectCount = $("#selected_comment_count");
-				    		$selectCount.text(len);//设置显示已经添加了多少
-				    	}
-				    },
-				    onUnselect:function(index,row){
-				    	var  comments	= $('#comments_interact').combobox('getValues');
-				    	var flag = false;
-				    	var i;
-				    	for(i=0;i<comments.length;i++){
-				    		if(comments[i] == row['id']){
-				    			flag = true;
-				    			break;
-				    		}
-				    	}
-				    	if(flag == true){
-				    		comments.splice(i,1);
-				    		$('#comments_interact').combobox('clear');
-				    		$('#comments_interact').combobox('setValues',comments);//设置值combo的值
-				    		var len = comments.length,
-				   			$selectCount = $("#selected_comment_count");
-				    		$selectCount.text(len);//设置显示已经添加了多少
-				    	}
-				    }
-				
-				}	
-		);
+		$("#comments_interact_table").datagrid({
+			width  :600,
+			height :350,
+			pageList : [100,150,300],
+			loadMsg:"加载中....",
+			url	   :	loadDateUrl,
+			queryParams : commentQueryParams,
+			pagination: true,
+			pageNumber: pageNum,
+			toolbar:'#comment_tb',
+			columns:[[
+						{field : 'ck',checkbox : true },
+				        {field:'id',title:'ID',width:60},
+				        {field:'content',title:'内容',width:400},
+				        {field:'opt', title:'操作', align:'center', width:60,
+				        	formatter: function(value,row,index){
+				    			return "<a title='点击更新评论' class='updateInfo' href='javascript:addComment(\""+ row['id'] + "\",\"" + index + "\")'>" + '更新'+ "</a>";
+				    		}	
+				        }
+				    ]],
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > commentMaxId) {
+						commentMaxId = data.maxId;
+						commentQueryParams.maxId = commentMaxId;
+					}
+				}
+		    },
+		    onSelect:function(index,row){
+		    	var  comments	= $('#comments_interact').combobox('getValues');
+		    	var flag = false;
+		    	var i;
+		    	for(i=0;i<comments.length;i++){
+		    		if(comments[i] == row['id']){
+		    			flag = true;
+		    			break;
+		    		}
+		    	}
+		    	if(flag == false){
+		    		var len;
+		    		if($('#comments_interact').combobox('getValue')){
+		    			comments.push(row['id']);
+			    		$('#comments_interact').combobox('setValues',comments);//设置值combo的值
+			    		len = comments.length;
+		    		}else{
+		    			$('#comments_interact').combobox('setValue',row['id']);
+		    			len = 1;
+		    		}
+		    		
+		   			var $selectCount = $("#selected_comment_count");
+		    		$selectCount.text(len);//设置显示已经添加了多少
+		    	}
+		    },
+		    onUnselect:function(index,row){
+		    	var  comments	= $('#comments_interact').combobox('getValues');
+		    	var flag = false;
+		    	var i;
+		    	for(i=0;i<comments.length;i++){
+		    		if(comments[i] == row['id']){
+		    			flag = true;
+		    			break;
+		    		}
+		    	}
+		    	if(flag == true){
+		    		comments.splice(i,1);
+		    		$('#comments_interact').combobox('clear');
+		    		$('#comments_interact').combobox('setValues',comments);//设置值combo的值
+		    		var len = comments.length,
+		   			$selectCount = $("#selected_comment_count");
+		    		$selectCount.text(len);//设置显示已经添加了多少
+		    	}
+		    }
+			
+		});
 		var p = $('#comments_interact_table').datagrid('getPager');
 		p.pagination(
 				{
@@ -512,7 +506,7 @@
 <body>
 	<div id="main">
 		<div style="height:480px;width:50%;float:left">
-			<iframe src="<%=shortLink %>?adminKey=zhangjiaxin" style="float:right;height:100%;width:502px;" id="htworld"></iframe>
+			<iframe src="<%=worldURL %>?adminKey=zhangjiaxin" style="float:right;height:100%;width:502px;" id="htworld"></iframe>
 		</div>
 		<!-- 添加互动 -->
 		<div style="height:480px;width:50%;float:right">

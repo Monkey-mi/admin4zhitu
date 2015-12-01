@@ -1,10 +1,40 @@
 var commonTools = window.NameSpace || {};
 
 /**
+ * 打开织图互动展示页面
+ * 
+ * @param worldId		织图id
+ * @param userId		用户id
+ * @param worldURL		织图在网页中展示的连接，即一个http链接
+ * @param index			传递的织图在父页面织图集合中的脚标
+ * @param worldLabel	织图标签，以;;qqq;;隔开
+ * 
+ * @author zhangbo 2015-11-30
+ */
+commonTools.openWorldInteractPage = function(worldId, userId, worldURL, index, worldLabel) {
+	var url = "page_htworld_htworldShow";
+	url += "?worldId=" + worldId;
+	url += "?userId=" + userId;
+	url += "&worldURL=" + worldURL;
+	url += "&index=" + index;
+	url += "&worldLabel=" + worldLabel;
+	
+	$.fancybox({
+		href: url,
+		width: "98%",
+		height: "98%",
+		autoScale: true,
+		type: "iframe",
+		transitionIn: "none",	// 打开无动画
+		transitionOut: "elastic"	// 关闭动画：伸缩
+	});
+};
+
+/**
  * 打开织图互动展示（频道织图使用）页面
  * 
  * @param worldId	织图id
- * @param worldURL	织图在网页中展示的短链，即一个http链接
+ * @param worldURL	织图在网页中展示的连接，即一个http链接
  * @param channelWorldValid	频道织图是否生效
  * 
  * @author zhangbo 2015-11-06

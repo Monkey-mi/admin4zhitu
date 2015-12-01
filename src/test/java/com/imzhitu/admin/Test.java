@@ -12,11 +12,13 @@ import javax.script.ScriptException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.imzhitu.admin.addr.service.AddrService;
 import com.imzhitu.admin.base.BaseTest;
 import com.imzhitu.admin.trade.ShopBAK;
 import com.imzhitu.admin.trade.mapper.ShopBAKMapper;
 import com.imzhitu.admin.trade.mapper.ShopCommentMapper;
 import com.imzhitu.admin.trade.mapper.ShopMapper;
+import com.imzhitu.admin.trade.pojo.Shop;
 
 /**
  * @author zhangbo	2015年11月23日
@@ -49,53 +51,61 @@ public class Test extends BaseTest{
 	@Autowired
 	private ShopCommentMapper cMapper;	
 	
+	@Autowired
+	private AddrService addrService;
+	
 	@org.junit.Test
 	public void test() throws FileNotFoundException, ScriptException {
 		
-		List<ShopBAK> shopBakList = bakMapper.queryShopBakListByLimit(0, 1);
+		List<ShopBAK> shopBakList = bakMapper.queryShopBakListByLimit(2000, 7562);
 		
 		for (ShopBAK shopBAK : shopBakList) {
-//			Shop shop = new Shop();
-//			
-//			shop.setId(shopBAK.getId());
-//			
-//			shop.setName(shopBAK.getName());
-//			shop.setDescription(shopBAK.getDescription());
-//			
-//			
-//			shop.setAddress(shopBAK.getAddress());
+			Shop shop = new Shop();
+			
+			shop.setId(shopBAK.getId());
+			
+			shop.setName(shopBAK.getName());
+			shop.setDescription(shopBAK.getDescription());
+			
+			
+			shop.setAddress(shopBAK.getAddress());
 			
 			// TODO 等小米的接口
-//			shop.setCountryId(0);
-//			shop.setProvinceId(0);
-//			shop.setCityId(0);
-//			shop.setDistrictId(0);
-//			
-//			
-//			Map<String, Double> m = decode(shopBAK.getPoi());
-//			shop.setLatitude(m.get("lat"));
-//			shop.setLongitude(m.get("lng"));
-//			
-//			
-//			shop.setEmail(shop.getEmail());
-//			shop.setZipcode(shopBAK.getZipcode());
-//			shop.setWebsite(shopBAK.getWebsite());
-//			shop.setPhoneCode(shopBAK.getPhoneCode());
-//			shop.setPhone(shopBAK.getPhone());
-//			shop.setTelCode(shop.getTelCode());
-//			shop.setTel(shopBAK.getTel());
-//			shop.setQq(shopBAK.getQq());
-//			shop.setType(shopBAK.getType());
-//			shop.setStarAvg(shopBAK.getStarAvg());
-//			shop.setTasteAvg(shopBAK.getTasteAvg());
-//			shop.setViewAvg(shopBAK.getTasteAvg());
-//			shop.setServiceAvg(shopBAK.getServiceAvg());
+			shop.setCountryId(10238);
+			shop.setProvinceId(addrService.getProvinceId(shopBAK.getProvinceId()));
+			shop.setCityId(addrService.getCityId(shopBAK.getCityId()));
+			Integer districtId = addrService.getDistrictId(shopBAK.getDistrictId(), addrService.getCityId(shopBAK.getCityId()));
+			shop.setDistrictId(districtId == null ? 0: districtId);
+			
+			if (shopBAK.getPoi() != null && !shopBAK.getPoi().equals("")) {
+				Map<String, Double> m = decode(shopBAK.getPoi());
+				shop.setLatitude(m.get("lat"));
+				shop.setLongitude(m.get("lng"));
+			} else {
+				shop.setLatitude(0d);
+				shop.setLongitude(0d);
+			}
+			
+			
+			shop.setEmail(shop.getEmail());
+			shop.setZipcode(shopBAK.getZipcode());
+			shop.setWebsite(shopBAK.getWebsite());
+			shop.setPhoneCode(shopBAK.getPhoneCode());
+			shop.setPhone(shopBAK.getPhone());
+			shop.setTelCode(shop.getTelCode());
+			shop.setTel(shopBAK.getTel());
+			shop.setQq(shopBAK.getQq());
+			shop.setType(shopBAK.getType());
+			shop.setStarAvg(shopBAK.getStarAvg());
+			shop.setTasteAvg(shopBAK.getTasteAvg());
+			shop.setViewAvg(shopBAK.getTasteAvg());
+			shop.setServiceAvg(shopBAK.getServiceAvg());
 			
 			String comment = shopBAK.getComment();
 			saveComments(shopBAK.getId(),comment);
 			
 			// 连带插入id
-//			shopMapper.insertShopLinshi(shop);
+			shopMapper.insertShopLinshi(shop);
 			
 //			shopMapper.insertShop(shop);
 		}

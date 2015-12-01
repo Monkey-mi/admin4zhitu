@@ -100,25 +100,20 @@ public class ZTWorldAction extends BaseCRUDAction {
 	 */
 	public String queryWorldMasonry() {
 		try {
-			
-			worldService.buildWorldMasonry(maxId, page, rows, startTime, endTime, phoneCode, valid, jsonMap);
-			JSONUtil.optSuccess(jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 根据条件查询瀑布流织图
-	 * 
-	 * @return
-	 * @author zhangbo	2015年11月25日
-	 */
-	public String queryWorldMasonryByUserLevel() {
-		try {
-			
-			worldService.buildWorldMasonryByUserLevel(maxId, page, rows, startTime, endTime, phoneCode, user_level_id, valid, jsonMap);
+			// 若存在织图等级，则根据织图等级查询织图瀑布流数据
+			if ( user_level_id != null ) {
+				// TODO 根据用户查询现在还有待商榷，先用原来的老接口
+				worldService.buildWorld(maxId, page, rows, startTime, endTime, shortLink, 
+						phoneCode, worldLabel, authorName, valid, shield,worldDesc, worldLocation,user_level_id, sort, order,isZombie, jsonMap);
+			}
+			// 若马甲条件为1，则查询马甲织图
+			else if ( isZombie != null && isZombie == 1 ) {
+				worldService.buildWorldMasonryByZombie(maxId, page, rows, startTime, endTime, phoneCode, jsonMap);
+			}
+			// 默认查询瀑布流织图信息
+			else {
+				worldService.buildWorldMasonry(maxId, page, rows, startTime, endTime, phoneCode, valid, jsonMap);
+			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

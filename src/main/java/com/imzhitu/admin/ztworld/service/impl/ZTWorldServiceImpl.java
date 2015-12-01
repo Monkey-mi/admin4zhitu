@@ -1,5 +1,6 @@
 package com.imzhitu.admin.ztworld.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ import com.imzhitu.admin.common.pojo.UserMsgAtWorldDto;
 import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
 import com.imzhitu.admin.interact.dao.InteractWorldDao;
+import com.imzhitu.admin.interact.service.InteractTypeOptionWorldService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
@@ -106,6 +108,9 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	
 	@Autowired
 	private UserInfoService userInfoService;
+	
+	@Autowired
+	private InteractTypeOptionWorldService worldSuperReserveService;
 	
 	public Integer getCacheLatestSize() {
 		return cacheLatestSize;
@@ -595,41 +600,61 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	
 
 	@Override
-	public void buildWorldMasonry(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer valid, Map<String, Object> jsonMap) {
-		// TODO Auto-generated method stub
+	public void buildWorldMasonry(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer valid, Map<String, Object> jsonMap) throws Exception {
 		List<ZTWorld> worldList = new ArrayList<ZTWorld>();
+		
+		// 定义返回的条件查询织图总数
+		Integer totalCount = 0;
+		
+		// 分页起始行
+		Integer firstRow = (page - 1) * rows;
+		
+		// 定义日期格式
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		// 数据来源就应该是从真实用户所发织图
 		// 设置查询条件
-		if ( valid == 1 ) {
-//			worldList = ztWorldMapper.getWorldListValid(maxId, startTime, endTime, phoneCode, page, rows);
+		if ( valid == null || valid == 1 ) {
+			worldList = ztWorldMapper.getWorldListValid(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
+			totalCount = ztWorldMapper.getWorldListValidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
 		} else {
-//			worldList = ztWorldMapper.getWorldListUnvalid(maxId, startTime, endTime, phoneCode, page, rows);
+			worldList = ztWorldMapper.getWorldListInvalid(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
+			totalCount = ztWorldMapper.getWorldListInvalidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
 		}
 		
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		
-		// 添加用户信息
-//		addUserInfo(rtnList);
+		if ( maxId == 0 && worldList.size() != 0 ) {
+			maxId = worldList.get(0).getId();
+		}
 		
-//		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 ? ztWorldMapper.getWorldMaxId() : maxId);
-		jsonMap.put(OptResult.JSON_KEY_ROWS, worldList);
-//		jsonMap.put(OptResult.TOTAL, totalCount);
+		// 若传递的maxId为0，则取当前列表第一个织图的id作为maxId返回前台
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
+		jsonMap.put(OptResult.TOTAL, totalCount);
 		
 	}
-
+	
 	/**
 	 * 将织图信息转化成展示在前台需要的字段信息
 	 * 
 	 * @param worldList
 	 * @return
+	 * @throws Exception 
 	 * @author zhangbo	2015年11月25日
 	 */
-	private List<ZTWorldDto> worldListToWorldDTOList(List<ZTWorld> worldList) {
+	private List<ZTWorldDto> worldListToWorldDTOList(List<ZTWorld> worldList) throws Exception {
 		List<ZTWorldDto> rtnList = new ArrayList<ZTWorldDto>();
 		
+		if ( worldList ==null || worldList.size() == 0) {
+			return rtnList;
+		}
+		
 		for (ZTWorld world : worldList) {
+			// 定义织图DTO对象
 			ZTWorldDto dto = new ZTWorldDto();
+			
+			// 由织图对象转换成为展示用的织图DTO对象
 			dto.setId(world.getId());
 			dto.setWorldDesc(world.getDescription());
 			dto.setChannelId(world.getChannelIds());
@@ -646,47 +671,62 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setLocationAddr(world.getAddress());
 			dto.setProvince(world.getProvince());
 			dto.setCity(world.getCity());
-			dto.setWorldURL(Admin.worldURLPrefix + world.getShortLink()); 
+			dto.setWorldURL(Admin.worldURLPrefix + world.getShortLink());
+			dto.setDateAdded(world.getCreateTime());
 			
+			// 获取用户信息，丰富展示用织图DTO对象
+			UserInfo userInfo = userInfoService.getUserInfo(world.getAuthorId());
+			
+			dto.setAuthorName(userInfo.getUserName());			// 用户名
+			dto.setAuthorAvatar(userInfo.getUserAvatar());		// 用户头像
+			dto.setTrust(userInfo.getTrust());					// 信任标记
+			dto.setStar(userInfo.getStar());					// 是否明星
+			dto.setPhoneCode(userInfo.getPhoneCode());			// 手机辨别代号
+			dto.setPhoneSys(userInfo.getPhoneSys());			// 手机系统
+			dto.setPhoneVer(String.valueOf(userInfo.getVer()));	// 手机版本
+			
+			// 根据织图id，查询是否为精选备选，然后拼装织图DTO信息
+			boolean exist = worldSuperReserveService.isExist(world.getId());
+			dto.setSquarerecd(exist? 1 : 0);
 			
 			rtnList.add(dto);
 		}
 		return rtnList;
 	}
 	
-	/**
-	 * 丰富织图的用户信息
-	 * 
-	 * @param rtnList	织图集合
-	 * @throws Exception 
-	 * @author zhangbo	2015年11月25日
-	 */
-	private List<ZTWorldDto> addUserInfo(List<ZTWorldDto> rtnList) throws Exception {
-		// TODO Auto-generated method stub
-		for (ZTWorldDto world : rtnList) {
-			// 获取用户信息
-			UserInfo userInfo = userInfoService.getUserInfo(world.getAuthorId());
-			
-			world.setAuthorName(userInfo.getUserName());			// 用户名
-			world.setAuthorAvatar(userInfo.getUserAvatar());		// 用户头像
-			world.setTrust(userInfo.getTrust());					// 信任标记
-			world.setStar(userInfo.getStar());						// 是否明星
-			world.setPhoneCode(userInfo.getPhoneCode());			// 手机辨别代号
-			world.setPhoneSys(userInfo.getPhoneSys());				// 手机系统
-			world.setPhoneVer(String.valueOf(userInfo.getVer()));	// 手机版本
-		}
-		return rtnList;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.imzhitu.admin.ztworld.service.ZTWorldService#buildWorldMasonryByUserLevel(java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.Integer, java.util.Map)
-	 */
 	@Override
 	public void buildWorldMasonryByUserLevel(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer user_level_id, Integer valid, Map<String, Object> jsonMap) {
 		// TODO Auto-generated method stub
 //		dtoList = ztWorldMapper.queryHTWorldByAttrMap(maxId, startTime, endTime, user_level_id, valid, phoneCode, page, rows);
 //		dtoList = ztWorldMapper.queryHTWorldByUserLevel(maxId, startTime, endTime, user_level_id, valid, phoneCode, page, rows);
 //		totalCount = ztWorldMapper.queryHTWorldCountByAttrMap(dto);
+		
+	}
+
+	@Override
+	public void buildWorldMasonryByZombie(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Map<String, Object> jsonMap) throws Exception {
+		List<ZTWorld> worldList = new ArrayList<ZTWorld>();
+		
+		// 定义返回的条件查询织图总数
+		Integer totalCount = 0;
+		
+		// 分页起始行
+		Integer firstRow = (page - 1) * rows;
+		
+		// 定义日期格式
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		// 数据来源就应该是从真实用户所发织图
+		// 设置查询条件
+		worldList = ztWorldMapper.queryZombieWorld(firstRow, rows, maxId, date.parse(startTime),  date.parse(endTime));
+		totalCount = ztWorldMapper.queryZombieWorldTotal(firstRow, rows, maxId, date.parse(startTime),  date.parse(endTime));
+		
+		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
+		
+		// 若传递的maxId为0，则取当前列表第一个织图的id作为maxId返回前台
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 ? worldList.get(0).getId() : maxId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
+		jsonMap.put(OptResult.TOTAL, totalCount);
 		
 	}
 

@@ -13,7 +13,6 @@ var maxId = 0,
 	},
 	today = new Date(),
 	todayStr = baseTools.simpleFormatDate(today),
-	showWorldAndInteractPage="page_htworld_htworldShow";
 	
 	timeCompare = function(date) {
 		var startTimeStr = $("#startTime").datebox('getValue'),
@@ -110,39 +109,39 @@ function loadData(pageNumber, pageSize) {
 	$("#page-loading").show();
 	myQueryParams['page'] = pageNumber;
 	myQueryParams['rows'] = pageSize;
-	$.post("./admin_ztworld/ztworld_queryHTWorldList",myQueryParams,
-			function(result){
-			if(result['result'] == 0) {
-				if(result.maxId > maxId) {
-					maxId = result.maxId;
-					myQueryParams.maxId = maxId;
-				}
-				if(result.activityId != 'undefined') {
-					activityId = result.activityId;
-				} else {
-					activityId = 0;
-				}
-				dataList = [];
-				$(".world-opt-wrap").remove();
-				refreshPagination(result['total'], pageSize, pageNumber);
-				var worlds = result['rows'];
-				var $worldBox = $('#world-box');
-				for(var i = 0; i < worlds.length; i++) {
-					var world = worlds[i],
-						worldId = world['id'],
-						ver = world['ver'],
-						worldDesc = world['worldDesc'],
-						titlePath = world['titlePath'];
-					dataList.push(world);
-					var $worldOpt = $('<div class="world-opt-wrap"></div>');
-					drawWorldOpt($worldOpt, worlds, i);
-					$worldBox.append($worldOpt);
-				}
-				$("#page-loading").hide();
-			} else {
-				$.messager.alert('失败提示',result['msg']);
+	
+	$.post("./admin_ztworld/ztworld_queryWorldMasonry", myQueryParams, function(result){
+		if(result['result'] == 0) {
+			if(result.maxId > maxId) {
+				maxId = result.maxId;
+				myQueryParams.maxId = maxId;
 			}
-		}, "json");
+			if(result.activityId != 'undefined') {
+				activityId = result.activityId;
+			} else {
+				activityId = 0;
+			}
+			dataList = [];
+			$(".world-opt-wrap").remove();
+			refreshPagination(result['total'], pageSize, pageNumber);
+			var worlds = result['rows'];
+			var $worldBox = $('#world-box');
+			for(var i = 0; i < worlds.length; i++) {
+				var world = worlds[i],
+					worldId = world['id'],
+					ver = world['ver'],
+					worldDesc = world['worldDesc'],
+					titlePath = world['titlePath'];
+				dataList.push(world);
+				var $worldOpt = $('<div class="world-opt-wrap"></div>');
+				drawWorldOpt($worldOpt, worlds, i);
+				$worldBox.append($worldOpt);
+			}
+			$("#page-loading").hide();
+		} else {
+			$.messager.alert('失败提示',result['msg']);
+		}
+	}, "json");
 }
 
 function drawWorldOpt($worldOpt, worlds, index) {
@@ -157,7 +156,7 @@ function drawWorldOpt($worldOpt, worlds, index) {
 			+'<span class="world-author-name">'+getAuthorName(world['authorName'],world,index) +'</span>'
 			+'<span>'+phoneCodeColumn.formatter(world['phoneCode'],world,index) +'</span>'
 			+'<hr class="divider"></hr>'
-			+'<div>织图ID:'+worldIdAndShowWorldColumn.formatter(world['worldId'],world,index) 
+			+'<div>织图ID:'+getWorldId(world.id,world,index)
 			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span>'
 			+'</div>'
 			+'<div>用户ID:'+authorIdColumn.formatter(world['authorId'],world,index) 
@@ -225,6 +224,22 @@ function getAuthorName(value, row, index) {
 	} else if(baseTools.isNULL(value)) {
 		return "织图用户";
 	}
+}
+
+/**
+ * 获取织图id所有操作
+ * 
+ * @param worldId	织图id
+ * @param world		每个织图对象信息
+ * @param index		织图所在集合中的脚标
+ * @author zhangbo	2015-11-30
+ */
+function getWorldId(worldId,world,index) {
+	var wLabel = world['worldLabel'];
+	if (world['worldLabel'].indexOf("'") > 0 ) {
+		wLabel = wLabel.replace("'",";;qqq;;");
+	}
+	return "<a title='添加互动' class='updateInfo' href='javascript:commonTools.openWorldInteractPage("+worldId+","+world.authorId+",\""+world.worldURL+"\","+index+",\""+wLabel+"\")'>"+worldId+"</a>";
 }
 
 /**
@@ -609,6 +624,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 	worldKey = 'id',
 	loadDataURL = "./admin_ztworld/ztworld_queryHTWorldList", //数据装载请求地址
 	deleteURI = "./admin_ztworld/ztworld_deleteWorld?ids="; //删除请求地址
+
 	init = function() {
 		toolbarComponent = '#tb';
 		// 查询初始时间设置为当天的00点，到当天末23点59分59秒，时间都以拼接的方式，中间添加空格拼到日期的后面

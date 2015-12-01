@@ -769,7 +769,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 				var uri = 'page_user_userInfo?userId=';
 				var preValue = value;
 				var arr = [];
-				var worldId = row['worldId'];
+				var worldId = row['worldId']?row['worldId']:row['id'];
 				var regDemo = new RegExp("@.+? ","g");
 				
 				if(value != null && value != '') {
@@ -789,7 +789,7 @@ var phoneCodeColumn = {field : 'phoneCode',title : '客户端',align : 'center',
 											}											
 										}
 									}else{
-										$.massager.alert("数据返回错误");
+										$.messager.alert("数据返回错误");
 									}
 								}, 
 							  dataType: "json", 

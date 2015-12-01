@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.AbstractNumberDto;
@@ -28,7 +29,7 @@ import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeService;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeWorldSchedulaService;
 
-//@Service
+@Service("com.imzhitu.admin.interact.service.impl.InteractTypeOptionWorldServiceImpl")
 public class InteractTypeOptionWorldServiceImpl  extends BaseServiceImpl implements InteractTypeOptionWorldService{
 	@Autowired
 	InteractTypeOptionWorldMapper typeOptionWorldMapper;
@@ -67,14 +68,17 @@ public class InteractTypeOptionWorldServiceImpl  extends BaseServiceImpl impleme
 		InteractTypeOptionWorldDto dto = new InteractTypeOptionWorldDto();
 		dto.setWorldId(worldId);
 		dto.setUserId(userId);
-		long r = typeOptionWorldMapper.chechIsExist(dto);
-		if(r>0)return;
-		dto.setValid(valid);
-		dto.setSuperb(superb);
-		dto.setOperatorId(operatorId);
-		dto.setAddDate(now);
-		dto.setModifyDate(now);
-		typeOptionWorldMapper.insertTypeOptionWorld(dto);
+		boolean exist = isExist(worldId);
+		if (exist) {
+			return;
+		} else {
+			dto.setValid(valid);
+			dto.setSuperb(superb);
+			dto.setOperatorId(operatorId);
+			dto.setAddDate(now);
+			dto.setModifyDate(now);
+			typeOptionWorldMapper.insertTypeOptionWorld(dto);
+		}
 	}
 	
 	public void delTypeOptionWorldByIds(String idsStr)throws Exception{
@@ -179,6 +183,7 @@ public class InteractTypeOptionWorldServiceImpl  extends BaseServiceImpl impleme
 	
 	@Override
 	public void autoAddStarWorld()throws Exception{
+		// TODO 这个可以移到scheduler包中执行
 		Date now = new Date();
 		logger.info("自动添加明星用户发的图到广场备选列表中。开始时间为：" + now);
 		InteractTypeOptionWorldDto dto = new InteractTypeOptionWorldDto();
@@ -245,5 +250,17 @@ public class InteractTypeOptionWorldServiceImpl  extends BaseServiceImpl impleme
 		InteractTypeOptionWorldDto dto = new InteractTypeOptionWorldDto();
 		dto.setWorldId(worldId);
 		return typeOptionWorldMapper.queryTypeOptionWorld(dto);
+	}
+
+	@Override
+	public boolean isExist(Integer worldId) throws Exception {
+		InteractTypeOptionWorldDto dto = new InteractTypeOptionWorldDto();
+		dto.setWorldId(worldId);
+		long r = typeOptionWorldMapper.chechIsExist(dto);
+		if ( r > 0 ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
