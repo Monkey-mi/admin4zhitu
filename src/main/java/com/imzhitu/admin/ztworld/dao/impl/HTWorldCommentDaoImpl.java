@@ -79,8 +79,8 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 	 * @author zxx 2015年11月10日 20:10:41
 	 */
 	private static final String INSERT_COMMENT_DELETE_BY_ID = "INSERT INTO hts.htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
-			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE id=?";
-	private static final String DELETE_COMMENT_BY_ID = "DELETE FROM htworld_comment where id=?";
+			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE id=? and world_id=?";
+	private static final String DELETE_COMMENT_BY_ID = "DELETE FROM hts.htworld_comment where id=? and world_id=?";
 	
 	private static final String INSERT_COMMENT_DELETE_BY_USER_ID = "INSERT INTO hts.htworld_comment_delete(id,author_id,content,comment_date,world_id,world_author_id,re_author_id)"
 			+ "SELECT id,author_id,content,comment_date,world_id,world_author_id,re_author_id FROM hts.htworld_comment WHERE author_id=?";
@@ -236,16 +236,10 @@ public class HTWorldCommentDaoImpl extends BaseDaoImpl implements
 		getMasterJdbcTemplate().update(DELETE_COMMENT_BY_USER_ID,authorId);
 	}
 	
-	/**
-	 * 删掉原来的update valid and shield
-	 * @param authorId
-	 * @author zxx
-	 * @time 2015年11月10日 19:42:24
-	 */
 	@Override
-	public void deleteCommentById(Integer id){
-		getMasterJdbcTemplate().update(INSERT_COMMENT_DELETE_BY_ID,id);
-		getMasterJdbcTemplate().update(DELETE_COMMENT_BY_ID,id);
+	public void deleteCommentByIdAndWorldId(Integer id, Integer worldId){
+		getMasterJdbcTemplate().update(INSERT_COMMENT_DELETE_BY_ID,id,worldId);
+		getMasterJdbcTemplate().update(DELETE_COMMENT_BY_ID,id,worldId);
 	}
 	
 	/**
