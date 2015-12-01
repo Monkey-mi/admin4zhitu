@@ -1589,7 +1589,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 			search();
 			return
 		}
-		var rows = myQueryParams.rows;
 		myQueryParams = {
 			'worldDesc' : worldDesc
 		};
@@ -1597,7 +1596,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 		scroll(0,0);
 		$("#page-loading").show();
 		myQueryParams['page'] = 1;
-		myQueryParams['rows'] = rows;
+		myQueryParams['rows'] = 30;
 		myQueryParams['valid'] = $("#valid").combobox('getValue');
 		
 		$.post("./admin_ztworld/ztworld_queryHTWorldList", myQueryParams, function(result){
@@ -1613,7 +1612,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 				}
 				dataList = [];
 				$(".world-opt-wrap").remove();
-				refreshPagination(result['total'], pageSize, pageNumber);
+				refreshPagination(result['total'], 1, 100);
 				var worlds = result['rows'];
 				var $worldBox = $('#world-box');
 				for(var i = 0; i < worlds.length; i++) {
@@ -1640,7 +1639,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 		if(worldLocation == "") {
 			return
 		}
-		var rows = myQueryParams.rows;
 		myQueryParams = {
 			'worldLocation' : worldLocation
 		};
@@ -1648,7 +1646,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 		scroll(0,0);
 		$("#page-loading").show();
 		myQueryParams['page'] = 1;
-		myQueryParams['rows'] = rows;
+		myQueryParams['rows'] = 30;
 		myQueryParams['valid'] = $("#valid").combobox('getValue');
 		
 		$.post("./admin_ztworld/ztworld_queryHTWorldList", myQueryParams, function(result){
@@ -1664,7 +1662,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 				}
 				dataList = [];
 				$(".world-opt-wrap").remove();
-				refreshPagination(result['total'], pageSize, pageNumber);
+				refreshPagination(result['total'], 1, 30);
 				var worlds = result['rows'];
 				var $worldBox = $('#world-box');
 				for(var i = 0; i < worlds.length; i++) {
