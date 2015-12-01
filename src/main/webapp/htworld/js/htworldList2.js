@@ -151,35 +151,57 @@ function drawWorldOpt($worldOpt, worlds, index) {
 		worldDesc = world['worldDesc'],
 		titlePath = world['titlePath'];
 	$worldOpt.attr("style", myRowStyler(index, world));
-	var $authorInfo = $('<div class="world-author">'
-			+'<span>'+authorAvatarColumn.formatter(world['authorAvatar'],world,index)+'</span>'
-			+'<span class="world-author-name">'+getAuthorName(world['authorName'],world,index) +'</span>'
-			+'<span>'+phoneCodeColumn.formatter(world['phoneCode'],world,index) +'</span>'
-			+'<hr class="divider"></hr>'
-			+'<div>织图ID:'+getWorldId(world.id,world,index)
-			+'<span class="world-count world-date">'+dateAddedFormatter(world['dateModified'], world, index)+'</span>'
-			+'</div>'
-			+'<div>用户ID:'+authorIdColumn.formatter(world['authorId'],world,index) 
-			+'('+userLevelColumn.formatter(world['level_description'],world,index)+')'
-			+'</div>'
-			+'</div>');
-	var $worldInfo = $('<div class="world-info">'
-		+'<div class="world-label">#'
-		+ world['worldLabel'] +'</div>'
-		+'<div class="world-desc">'+worldDescColumn.formatter(world['worldDesc'],world,index)+'</div>'
-		+'<div class="world-count-wrap">'
-		+'<span class="glyphicon glyphicon-heart" aria-hidden="false">'
-		+'<span class="world-count">'+likeCountColumn.formatter(world['likeCount'],world,index)+'</span></span>'
-		+'<span class="glyphicon glyphicon-comment" aria-hidden="false">'
-		+'<span class="world-count">'+commentCountColumn.formatter(world['commentCount'],world,index)+'</span></span>'
-		+'<span class="glyphicon glyphicon-eye-open" aria-hidden="false">'
-		+'<span class="world-count">'+world['clickCount']+'</span></span>'
-		+'</div>'
-		+'<hr class="divider"></hr>'
-		+'</div>');
-	var $world = $('<div class="world" />');
+	var $authorInfo = $("<div class='world-author'>"
+			+ "<span>" 
+			+ authorAvatarColumn.formatter(world['authorAvatar'],world,index) 
+			+ "</span>"
+			+ "<span class='world-author-name'>" 
+			+ getAuthorName(world['authorName'],world,index) 
+			+ "</span>"
+			+ "<span>" 
+			+ phoneCodeColumn.formatter(world['phoneCode'],world,index) 
+			+ "</span>"
+			+ "<hr class='divider'></hr>"
+			+ "<div>织图ID:" 
+			+ getWorldId(world.id,world,index)
+			+ "<span class='world-count world-date'>" 
+			+ dateAddedFormatter(world['dateModified'], world, index) 
+			+ "</span>"
+			+ "</div>"
+			+ "<div>用户ID:" 
+			+ authorIdColumn.formatter(world['authorId'],world,index) 
+			+ "(" + userLevelColumn.formatter(world['level_description'],world,index) + ")"
+			+ "</div>"
+			+ "</div>");
+	var $worldInfo = $("<div class='world-info'>"
+		+ "<div class='world-label'>#"
+		+ world['worldLabel'] 
+		+ "</div>"
+		+ "<div class='world-desc'>" 
+		+ getWorldDesc(world['worldDesc'],world,index) 
+		+ "</div>"
+		+ "<div class='world-count-wrap'>"
+		+ "<span class='glyphicon glyphicon-heart' aria-hidden='false'>"
+		+ "<span class='world-count'>" 
+		+ likeCountColumn.formatter(world['likeCount'],world,index) 
+		+ "</span>" 
+		+ "</span>"
+		+ "<span class='glyphicon glyphicon-comment' aria-hidden='false'>"
+		+ "<span class='world-count'>"
+		+ commentCountColumn.formatter(world['commentCount'],world,index)
+		+ "</span>" 
+		+ "</span>"
+		+ "<span class='glyphicon glyphicon-eye-open' aria-hidden='false'>"
+		+ "<span class='world-count'>"
+		+ world['clickCount']
+		+ "</span>" 
+		+ "</span>"
+		+ "</div>"
+		+ "<hr class='divider'></hr>"
+		+ "</div>");
+	var $world = $("<div class='world' />");
 	
-	$worldOpt.addClass('world-margin');
+	$worldOpt.addClass("world-margin");
 	$worldOpt.append($authorInfo);
 	$worldOpt.append($world);
 	$worldOpt.append($worldInfo);
@@ -193,53 +215,6 @@ function drawWorldOpt($worldOpt, worlds, index) {
 		'url':'./admin_ztworld/ztworld_queryTitleChildWorldPage',
 		'loadMoreURL':'./admin_ztworld/ztworld_queryChildWorldPage'
 	});
-}
-
-/**
- * 
- * @param value
- * @param row
- * @param index
- * @returns {String}
- */
-function getAuthorName(value, row, index) {
-	if(row.authorId != 0) {
-		value = value.substr(0, 15);
-		if(row.trust == 1) {
-			return "<a title='移出信任列表.\n推荐人:"
-				+row.trustOperatorName+"\n最后修改时间:"
-				+row.trustModifyDate+"' class='passInfo pointer' >"
-				+value
-				+ "<sup><span style='border: solid 1px red;webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;-webkit-box-shadow: #666 0px 0px 10px;-moz-box-shadow: #666 0px 0px 10px;box-shadow: #666 0px 0px 10px;'>"
-				+row.trustOperatorId+"</span></sup></a>";
-		}else if(row.trustOperatorId == 0){
-			return "<a title='添加到信任列表' class='updateInfo pointer' style='color:#1406F7'>"+value+"</a>";
-		}
-		return "<a title='移出信任列表.\n删除信任的人:"
-				+row.trustOperatorName+"\n最后修改时间:"
-				+row.trustModifyDate+"' class='updateInfo pointer'>"
-				+value
-				+ "<sup><span style='border: solid 1px red;webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;-webkit-box-shadow: #666 0px 0px 10px;-moz-box-shadow: #666 0px 0px 10px;box-shadow: #666 0px 0px 10px;'>"
-				+row.trustOperatorId+"</span></sup></a>";
-	} else if(baseTools.isNULL(value)) {
-		return "织图用户";
-	}
-}
-
-/**
- * 获取织图id所有操作
- * 
- * @param worldId	织图id
- * @param world		每个织图对象信息
- * @param index		织图所在集合中的脚标
- * @author zhangbo	2015-11-30
- */
-function getWorldId(worldId,world,index) {
-	var wLabel = world['worldLabel'];
-	if (world['worldLabel'].indexOf("'") > 0 ) {
-		wLabel = wLabel.replace("'",";;qqq;;");
-	}
-	return "<a title='添加互动' class='updateInfo' href='javascript:commonTools.openWorldInteractPage("+worldId+","+world.authorId+",\""+world.worldURL+"\","+index+",\""+wLabel+"\")'>"+worldId+"</a>";
 }
 
 /**
@@ -334,6 +309,88 @@ function drawOptArea($worldOpt, worlds, index) {
 	
 	$worldOpt.append($opt);
 }
+
+/**
+ * 
+ * @param value
+ * @param row
+ * @param index
+ * @returns {String}
+ */
+function getAuthorName(value, row, index) {
+	if(row.authorId != 0) {
+		value = value.substr(0, 15);
+		if(row.trust == 1) {
+			return "<a title='移出信任列表.\n推荐人:"
+				+row.trustOperatorName+"\n最后修改时间:"
+				+row.trustModifyDate+"' class='passInfo pointer' >"
+				+value
+				+ "<sup><span style='border: solid 1px red;webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;-webkit-box-shadow: #666 0px 0px 10px;-moz-box-shadow: #666 0px 0px 10px;box-shadow: #666 0px 0px 10px;'>"
+				+row.trustOperatorId+"</span></sup></a>";
+		}else if(row.trustOperatorId == 0){
+			return "<a title='添加到信任列表' class='updateInfo pointer' style='color:#1406F7'>"+value+"</a>";
+		}
+		return "<a title='移出信任列表.\n删除信任的人:"
+				+row.trustOperatorName+"\n最后修改时间:"
+				+row.trustModifyDate+"' class='updateInfo pointer'>"
+				+value
+				+ "<sup><span style='border: solid 1px red;webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;-webkit-box-shadow: #666 0px 0px 10px;-moz-box-shadow: #666 0px 0px 10px;box-shadow: #666 0px 0px 10px;'>"
+				+row.trustOperatorId+"</span></sup></a>";
+	} else if(baseTools.isNULL(value)) {
+		return "织图用户";
+	}
+}
+
+/**
+ * 获取织图id所有操作
+ * 
+ * @param worldId	织图id
+ * @param world		每个织图对象信息
+ * @param index		织图所在集合中的脚标
+ * @author zhangbo	2015-11-30
+ */
+function getWorldId(worldId,world,index) {
+	var wLabel = world['worldLabel'];
+	if (world['worldLabel'].indexOf("'") > 0 ) {
+		wLabel = wLabel.replace("'",";;qqq;;");
+	}
+	return "<a title='添加互动' class='updateInfo' href='javascript:commonTools.openWorldInteractPage("+worldId+","+world.authorId+",\""+world.worldURL+"\","+index+",\""+wLabel+"\")'>"+worldId+"</a>";
+};
+
+function getWorldDesc(worldDesc,world,index) {
+	var preValue = worldDesc;
+	var arr = [];
+	var worldId = world.id;
+	var regDemo = new RegExp("@.+? ","g");
+	
+	if(worldDesc != null && worldDesc != '') {
+		//如果评论中有被@的人，则需要去获取被@人的数据
+		if(regDemo.exec(worldDesc) != null){
+			$.ajax({ 
+				  type: 'POST', 
+				  url: "./admin_ztworld/ztworld_queryCommentAt", 
+				  data: {worldId:worldId}, 
+				  success: function(data){
+						if(data.result == 0){
+							var result = data['obj'];
+							arr = 	worldDesc.match(regDemo);
+							if(result.length != 0){ //防止从微博中复制过来但又检测到有@格式,且数据库中没有此被@人的数据。
+								for(var i = 0; i < arr.length; i++){
+									worldDesc = worldDesc.replace(arr[i],"<a class='updateInfo' href='javascript:commonTools.openUserInfoPage(\""+result[i].atId+"\")'>" + arr[i] + "</a>");
+								}											
+							}
+						}else{
+							$.messager.alert("数据返回错误");
+						}
+					}, 
+				  dataType: "json", 
+				  async:false 
+				}); 
+		}
+		return "<div title=" + worldDesc + " class='viewInfo easyui-tooltip'>" + worldDesc + "</div>";
+	}
+	return '';
+};
 
 /**
  * 查询织图互动过的评论标签，若是没有互动过，则查询根据织图描述或织图标签得到的评论标签
