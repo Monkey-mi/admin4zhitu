@@ -163,7 +163,7 @@
 					hts.htworld_comment_week
 				WHERE
 				<if test="commentDate != null">
-					<![CDATA[ AND comment_date > #{commentDate}]]>
+					<![CDATA[ comment_date > #{commentDate}]]>
 				</if>
 				<if test="maxId != null and maxId != 0">
 		    		<![CDATA[and  id > #{maxId}]]>
