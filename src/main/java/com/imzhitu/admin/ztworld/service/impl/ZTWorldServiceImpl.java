@@ -1,6 +1,5 @@
 package com.imzhitu.admin.ztworld.service.impl;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -625,6 +624,8 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		
 		extractInteractInfo(rtnList);
+		extractActivityInfo(rtnList);
+		webUserInfoService.extractVerify(rtnList);
 		
 		if ( maxId == 0 && worldList.size() != 0 ) {
 			maxId = worldList.get(0).getId();

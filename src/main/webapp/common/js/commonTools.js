@@ -14,7 +14,7 @@ var commonTools = window.NameSpace || {};
 commonTools.openWorldInteractPage = function(worldId, userId, worldURL, index, worldLabel) {
 	var url = "page_htworld_htworldShow";
 	url += "?worldId=" + worldId;
-	url += "?userId=" + userId;
+	url += "&userId=" + userId;
 	url += "&worldURL=" + worldURL;
 	url += "&index=" + index;
 	url += "&worldLabel=" + worldLabel;

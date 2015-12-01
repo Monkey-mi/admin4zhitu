@@ -147,6 +147,28 @@ function loadData(pageNumber, pageSize) {
 	}, "json");
 }
 
+/**
+ * 设置织图背景色
+ * 
+ * @param index	织图所在集合的脚标
+ * @param world	每个织图信息
+ * @author zhangbo	2015-12-01
+ */
+function setWorldStyle(index,world){
+	var	valid = $("#valid").combobox('getValue');
+	// 由于valid查询出来的结果为字符串型，所以判断要判断是否等于字符串0
+	if(valid === "0") {
+		if(world.interacted)
+			return interactedInvalidWorld;
+		else 
+			return inValidWorld;
+	} else {
+		if(world.interacted)
+			return interactedWorld;
+	}
+	return null;
+};
+
 function drawWorldOpt($worldOpt, worlds, index) {
 	var world = worlds[index],
 		worldId = world['id'],
@@ -314,52 +336,21 @@ function drawOptArea($worldOpt, worlds, index) {
 }
 
 /**
- * 设置织图背景色
+ * 获取用户名称返回格式
  * 
- * @param index	织图所在集合的脚标
- * @param world	每个织图信息
+ * @param authorName	用户名称
+ * @param world			每个织图信息
+ * @param index			织图所在集合的脚标
+ * @author zhangbo	2015-12-01
  */
-function setWorldStyle(index,world){
-	var	valid = $("#valid").combobox('getValue');
-	if(valid != 0) {
-		if(world.interacted)
-			return interactedWorld;
-	} else {
-		if(row.interacted)
-			return interactedInvalidWorld;
-		else 
-			return inValidWorld;
-	}
-	return null;
-}
-
-/**
- * 
- * @param value
- * @param row
- * @param index
- * @returns {String}
- */
-function getAuthorName(value, row, index) {
-	if(row.authorId != 0) {
-		value = value.substr(0, 15);
-		if(row.trust == 1) {
-			return "<a title='移出信任列表.\n推荐人:"
-				+row.trustOperatorName+"\n最后修改时间:"
-				+row.trustModifyDate+"' class='passInfo pointer' >"
-				+value
+function getAuthorName(authorName, world, index) {
+	if(world.authorId != 0) {
+		authorName = authorName.substr(0, 15);
+		return "<a class='updateInfo pointer'>"
+				+authorName
 				+ "<sup><span style='border: solid 1px red;webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;-webkit-box-shadow: #666 0px 0px 10px;-moz-box-shadow: #666 0px 0px 10px;box-shadow: #666 0px 0px 10px;'>"
-				+row.trustOperatorId+"</span></sup></a>";
-		}else if(row.trustOperatorId == 0){
-			return "<a title='添加到信任列表' class='updateInfo pointer' style='color:#1406F7'>"+value+"</a>";
-		}
-		return "<a title='移出信任列表.\n删除信任的人:"
-				+row.trustOperatorName+"\n最后修改时间:"
-				+row.trustModifyDate+"' class='updateInfo pointer'>"
-				+value
-				+ "<sup><span style='border: solid 1px red;webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;-webkit-box-shadow: #666 0px 0px 10px;-moz-box-shadow: #666 0px 0px 10px;box-shadow: #666 0px 0px 10px;'>"
-				+row.trustOperatorId+"</span></sup></a>";
-	} else if(baseTools.isNULL(value)) {
+				+world.trustOperatorId+"</span></sup></a>";
+	} else if(baseTools.isNULL(authorName)) {
 		return "织图用户";
 	}
 }
