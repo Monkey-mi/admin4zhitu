@@ -624,6 +624,8 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		
+		extractInteractInfo(rtnList);
+		
 		if ( maxId == 0 && worldList.size() != 0 ) {
 			maxId = worldList.get(0).getId();
 		}

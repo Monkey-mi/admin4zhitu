@@ -3,6 +3,9 @@ var maxId = 0,
 	index = 0,
 	dataList = [],
 	currentIndex = 0,
+	inValidWorld = 'background-color:#ffe3e3',
+	interactedWorld = 'background-color:#e3fbff',
+	interactedInvalidWorld = 'background-color:#feeeae',
 	maxActivitySerial = 0,
 	mouthCount = 0,
 	firstMonthDate = new Date();
@@ -150,7 +153,7 @@ function drawWorldOpt($worldOpt, worlds, index) {
 		ver = world['ver'],
 		worldDesc = world['worldDesc'],
 		titlePath = world['titlePath'];
-	$worldOpt.attr("style", myRowStyler(index, world));
+	$worldOpt.attr("style", setWorldStyle(index, world));
 	var $authorInfo = $("<div class='world-author'>"
 			+ "<span>" 
 			+ authorAvatarColumn.formatter(world['authorAvatar'],world,index) 
@@ -308,6 +311,26 @@ function drawOptArea($worldOpt, worlds, index) {
 	$opt.append($opt4LineBtn);
 	
 	$worldOpt.append($opt);
+}
+
+/**
+ * 设置织图背景色
+ * 
+ * @param index	织图所在集合的脚标
+ * @param world	每个织图信息
+ */
+function setWorldStyle(index,world){
+	var	valid = $("#valid").combobox('getValue');
+	if(valid != 0) {
+		if(world.interacted)
+			return interactedWorld;
+	} else {
+		if(row.interacted)
+			return interactedInvalidWorld;
+		else 
+			return inValidWorld;
+	}
+	return null;
 }
 
 /**
