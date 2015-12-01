@@ -108,7 +108,7 @@ public class ZTWorldInteractServiceImpl extends BaseServiceImpl implements
 	@Override
 	public void shieldComment(Integer id) throws Exception {
 		Integer wid = worldCommentDao.queryWorldId(id);
-		worldCommentDao.deleteCommentById(id);
+		worldCommentDao.deleteCommentByIdAndWorldId(id,wid);
 		updateCommentCount(wid);
 	}
 	
