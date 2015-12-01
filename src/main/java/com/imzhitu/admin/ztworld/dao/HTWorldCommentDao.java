@@ -83,12 +83,14 @@ public interface HTWorldCommentDao extends BaseDao {
 	public void deleteCommentByUserId(Integer authorId);
 	
 	/**
-	 * 删掉原来的update valid and shield
-	 * @param authorId
-	 * @author zxx
-	 * @time 2015年11月10日 19:42:24
+	 * 通过评论id与织图id，删除评论
+	 * 
+	 * @param id		评论id
+	 * @param worldId	织图id
+	 * @author zxx	2015年11月10日 19:42:24
+	 * @modify zhangbo	2015年12月1日
 	 */
-	public void deleteCommentById(Integer id);
+	public void deleteCommentByIdAndWorldId(Integer id,Integer worldId);
 	
 	/**
 	 * 从htworld_comment_delete表中删除一条数据，并将这条数据恢复到htworld_comment表中
