@@ -160,7 +160,7 @@ function setWorldStyle(index,world){
 			return interactedInvalidWorld;
 		} else {
 			return inValidWorld;
-		} 
+		}
 	} else if(world.interacted) {
 		return interactedWorld;
 	} else {
@@ -274,7 +274,7 @@ function drawOptArea($worldOpt, worlds, index) {
 			+ getLatestValid(world['latestValid'], world, index)
 			+ '</span>'+ '<span>|</span>'
 			+ '<span class="world-opt-btn">'
-			+ shieldColumn.formatter(world['shield'], world, index)
+			+ getShield(world, index)
 			+ '</span>'
 			+ "<span>|</span>"
 			+ "<span class='world-opt-btn'>"
@@ -498,31 +498,31 @@ function getTypeInteract(value, row, index) {
 /**
  * 得到频道名称
  * @param value	织图所在频道名称值
- * @param row	每个织图信息
+ * @param world	每个织图信息
  * @param index	当前织图在集合中的脚标
  * @author zhangbo	2015-11-16
  */
-function getChannelName(value, row, index) {
+function getChannelName(value, world, index) {
 	if(value == "NO_EXIST" || value=="") {
-		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='commonTools.openWorldAddToChannelPage(" + row.worldId + ")'/>";
+		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='commonTools.openWorldAddToChannelPage(" + world.id + ")'/>";
 	} else {
-		return "<a onclick='commonTools.openWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
+		return "<a onclick='commonTools.openWorldAddToChannelPage(" + world.id + ")'>" + value + "</a>";
 	}
 };
 
 /**
  * 得到精选备选按钮
- * @param row	每个织图信息
+ * @param world	每个织图信息
  * @param index	当前织图在集合中的脚标
  * @author zhangbo	2015-11-16
  */
-function getSuperbReserve(row, index) {
+function getSuperbReserve(world, index) {
 	// 若已经为精选备选，则直接返回无操作的图片
-	if ( row.squarerecd == 1 ) {
+	if ( world.squarerecd == 1 ) {
 		return "<img title='已经为精选备选' class='htm_column_img pointer' src='./common/images/ok.png'/>";
 	} else {
 		var rtn = "<img title='点击成为精选备选' class='htm_column_img pointer' " +
-				"src='./common/images/edit_add.png' onclick='toBeSuperbReserve("+row.worldId+","+row.authorId+","+index+")'/>";
+				"src='./common/images/edit_add.png' onclick='toBeSuperbReserve("+world.id+","+world.authorId+","+index+")'/>";
 		return rtn;
 	}
 };
@@ -558,39 +558,72 @@ function getCity(value, row, index) {
 };
 
 function getActiveOperated(value, row, index) {
-	if(row.valid == 0 || row.shield == 1) {
-			return '';
-		}
-		switch(value) {
-			case 0:
-				tip = "等待审核";
-				img = "./common/images/tip.png";
-				break;
-			case 1:
-				tip = "审核通过，点击重新审核";
-				img = "./common/images/ok.png";
-				break;
-			case 2:
-				tip = "已经拒绝，点击重新审核";
-				img = "./common/images/cancel.png";
-				break;
-			default:
-				tip = "添加到活动";
-				img = "./common/images/edit_add.png";
-				break;
-		}
-		return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='javascript:initActivityAddWindow(\""+ row.id + "\",\"" + value + "\",\"" + index + "\")' src='" + img + "'/>";
+	switch(value) {
+		case 0:
+			tip = "等待审核";
+			img = "./common/images/tip.png";
+			break;
+		case 1:
+			tip = "审核通过，点击重新审核";
+			img = "./common/images/ok.png";
+			break;
+		case 2:
+			tip = "已经拒绝，点击重新审核";
+			img = "./common/images/cancel.png";
+			break;
+		default:
+			tip = "添加到活动";
+			img = "./common/images/edit_add.png";
+			break;
+	}
+	return "<img title='"+ tip + "' class='htm_column_img pointer' onclick='javascript:initActivityAddWindow(\""+ row.id + "\",\"" + value + "\",\"" + index + "\")' src='" + img + "'/>";
 }
 
+/**
+ * 得到最新织图按钮
+ * 
+ * @param value
+ * @param row
+ * @param index
+ * @author zhangbo 2015-12-01
+ */
 function getLatestValid(value, row, index) {
-	if(value >= 1) {
-		img = "./common/images/undo.png";
-		return "<img title='从最新移除' class='htm_column_img pointer' onclick='javascript:removeLatestValid(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")' src='" + img + "'/>";
-	} else if(row.valid == 0 || row.shield == 1) {
-		return '';
+	// TODO 这里要做整改，现在先都返回空
+	return "";
+//	if(value >= 1) {
+//		img = "./common/images/undo.png";
+//		return "<img title='从最新移除' class='htm_column_img pointer' onclick='javascript:removeLatestValid(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")' src='" + img + "'/>";
+//	}
+//	img = "./common/images/edit_add.png";
+//	return "<img title='添加到最新' class='htm_column_img pointer' onclick='javascript:addLatestValid(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")' src='" + img + "'/>";
+}
+
+/**
+ * 得到屏蔽按钮
+ * 
+ * @param world	每个织图信息
+ * @param index	当前织图在集合中的脚标
+ * @author zhangbo	2015-12-01
+ */
+function getShield(world, index) {
+	if(world.shield == 1) {
+		return "<img class='htm_column_img pointer' src='./common/images/undo.png'/>";
+	} else {
+		return "<a title='点击屏蔽织图' class='updateInfo' href='javascript:shieldWorld("+ world.id + "," + index + ")'>" + "屏蔽"+ "</a>";
 	}
-	img = "./common/images/edit_add.png";
-	return "<img title='添加到最新' class='htm_column_img pointer' onclick='javascript:addLatestValid(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")' src='" + img + "'/>";
+}
+
+/**
+ * 屏蔽织图
+ */
+function shieldWorld(worldId,index) {
+	$.post("./admin_ztworld/ztworld_shieldWorld",{'worldId':worldId},function(result){
+		if(result['result'] == 0) {
+			updateValue(index,'shield',1);
+		} else {
+			$.messager.alert('失败提示',result['msg']);  //提示失败信息
+		}
+	},"json");
 }
 	
 /**
