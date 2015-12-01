@@ -12,7 +12,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
@@ -280,12 +279,6 @@ public class ZTWorldTypeServiceImpl extends BaseServiceImpl implements
 		dto.setValid(Tag.FALSE);
 		dto.setRecommenderId(operatorId);
 		typeWorldMapper.updateTypeWorld(dto);
-	}
-	
-	@Override
-	public void deleteTypeWorldByWorldId(Integer worldId,Integer operatorId) throws Exception {
-		deleteTypeWorld(null,worldId,operatorId);
-		opWorldTypeDto2CacheDao.updateWorldTypeDto2(superbLimit);
 	}
 	
 	@Override

@@ -1,5 +1,13 @@
 package com.imzhitu.admin.ztworld;
 
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
@@ -8,17 +16,8 @@ import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.common.pojo.ZTWorldTypeLabelDto;
 import com.imzhitu.admin.ztworld.service.ZTWorldTypeService;
 
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * <p>
@@ -35,8 +34,6 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 	 * 
 	 */
 	private static final long serialVersionUID = -8783496535887835225L;
-	
-	private static Logger logger = Logger.getLogger(ZTWorldTypeAction.class);
 	
 	private Integer id;
 	private String ids;
@@ -251,22 +248,6 @@ public class ZTWorldTypeAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 
-	/**
-	 * 根据织图id删除分类织图
-	 * 
-	 * @return
-	 */
-	public String deleteTypeWorldByWorldId() {
-		try {
-			AdminUserDetails user = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			worldTypeService.deleteTypeWorldByWorldId(worldId,user.getId());
-			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
 	/**
 	 * 批量删除分类织图
 	 * 

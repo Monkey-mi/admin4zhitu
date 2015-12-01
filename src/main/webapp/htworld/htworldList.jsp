@@ -137,20 +137,6 @@ function submitActivityForm() {
 	}
 }
 
-function removeTypeWorld(worldId, index) {
-	$("#htm_table").datagrid('loading');
-	$.post("./admin_ztworld/type_deleteTypeWorldByWorldId",{
-		'worldId':worldId,
-		},function(result){
-			if(result['result'] == 0) {
-				updateValue(index,'squarerecd','0');	
-			} else {
-				$.messager.alert('失败提示',result['msg']);  //提示失败信息
-			}
-			$("#htm_table").datagrid('loaded');
-		},"json");
-}
-
 function addLatestValid(worldId, index) {
 	$("#htm_table").datagrid('loading');
 	$.post("./admin_ztworld/ztworld_updateLatestValid",{
@@ -371,25 +357,6 @@ var htmTableTitle = "分享列表维护", //表格标题
   					return "<a onclick='showWorldAddToChannelPage(" + row.worldId + ")'>" + value + "</a>";
   				}
   			}
-		},
-		{field : 'worldType',title : '精选',align : 'center',
-			formatter: function(value,row,index){
-				labelIsExist = row.worldLabel ? 1:0;
-				if(row.valid == 0 || row.shield == 1) {
-					return value;
-				} else if(row.squarerecd == 1) {
-					return "<a title='从精选列表移除' class='updateInfo pointer' onclick='javascript:removeTypeWorld(\""+ row[worldKey] + "\",\"" + index + "\",\"" + 'true' + "\")'>"+value+"</a>";
-				} else if(value == '' || value == null) {
-					img = "./common/images/edit_add.png";
-					return "<img title='添加到精选列表' class='htm_column_img pointer' onclick='javascript:initTypeUpdateWindow(\""+ row[worldKey] + "\",\""+ row.typeId + "\",\"" + index + "\",\"" + 'true' + "\",\"" + row.authorId+ "\",\""+labelIsExist+"\")' src='" + img + "'/>";
-				}
-				return "<a title='添加到精选推荐列表' class='updateInfo pointer' onclick='javascript:initTypeUpdateWindow(\""+ row[worldKey] + "\",\""+ row.typeId + "\",\"" + index + "\",\"" + 'false' + "\",\"" + row.authorId+"\",\""+labelIsExist+"\")'>"+value+"</a>";;
-			},
-			styler: function(value,row,index){
-				if (row.squarerecd == 1){
-					return 'background-color:#fdf9bb;';
-				}
-			}
 		},
 		{field : 'activeOperated',title : '活动',align : 'center',
 			formatter: function(value,row,index) {

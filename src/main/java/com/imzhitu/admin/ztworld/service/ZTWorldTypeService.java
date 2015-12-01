@@ -89,14 +89,6 @@ public interface ZTWorldTypeService extends BaseService {
 	public void updateTypeWorldWeight(Integer id, Integer weight,Integer timeUpdate) throws Exception;
 	
 	/**
-	 * 根据织图id删除分类织图
-	 * 
-	 * @param worldId
-	 * @throws EXception
-	 */
-	public void deleteTypeWorldByWorldId(Integer worldId,Integer operatorId) throws Exception;
-	
-	/**
 	 * 根据ids批量分类织图
 	 * 
 	 * @param idsStr

@@ -1,12 +1,15 @@
+// 定义查询织图标记位，由于织图更新快，在翻页查询时容易乱序，然后用maxId设定一个标记位，使翻页不乱序
 var maxId = 0,
-	count = 0,
-	index = 0,
-	dataList = [],
-	currentIndex = 0,
+	count = 0;
+
+// 定义织图集合
+var dataList = [];
+
+// 定义当前所操作织图，此为织图在集合中的脚标
+var	currentIndex = 0,
 	inValidWorld = 'background-color:#ffe3e3',
 	interactedWorld = 'background-color:#e3fbff',
 	interactedInvalidWorld = 'background-color:#feeeae',
-	maxActivitySerial = 0,
 	mouthCount = 0,
 	firstMonthDate = new Date();
 	clean = function(){
@@ -15,9 +18,10 @@ var maxId = 0,
 		firstMonthDate = new Date();
 	},
 	today = new Date(),
-	todayStr = baseTools.simpleFormatDate(today),
+	todayStr = baseTools.simpleFormatDate(today);
 	
-	timeCompare = function(date) {
+// 时间比较方法
+function timeCompare(date) {
 		var startTimeStr = $("#startTime").datebox('getValue'),
 		endTimeStr = $("#endTime").datebox('getValue'),
 		startTime = Date.parse(startTimeStr),
@@ -36,12 +40,12 @@ var maxId = 0,
 			$("#startTime").datebox('setValue', todayStr);
 			$("#endTime").datebox('setValue', todayStr);
 		}
-	},
+	};
 	
-	/**
-	 * 查询操作，查询整个区域的
-	 */
-	search = function() {
+/**
+ * 查询操作，查询整个区域的
+ */
+var	search = function() {
 		maxId = 0;
 		// 获取起始与结束日期
 		var startTime = $('#startTime').datetimebox('getValue');
@@ -86,9 +90,6 @@ var maxId = 0,
 		};
 		loadData(1, rows);
 		
-	},
-	activityQueryParams = {
-		'maxSerial':maxActivitySerial
 	};
 
 function initWorldBoxWidth() {
@@ -678,21 +679,8 @@ function submitActivityForm() {
 	}
 }
 
-function removeTypeWorld(worldId, index) {
-	$("#htm_table").datagrid('loading');
-	$.post("./admin_ztworld/type_deleteTypeWorldByWorldId",{
-		'worldId':worldId
-		},function(result){
-			if(result['result'] == 0) {
-				updateValue(index,'squarerecd','0');	
-			} else {
-				$.messager.alert('失败提示',result['msg']);  //提示失败信息
-			}
-			$("#htm_table").datagrid('loaded');
-		},"json");
-}
-
 function addLatestValid(worldId, index) {
+	// TODO 此方法可能不再需要，最新织图这个功能可能要做整改
 	$("#htm_table").datagrid('loading');
 	$.post("./admin_ztworld/ztworld_updateLatestValid",{
 		'id':worldId,
@@ -708,6 +696,7 @@ function addLatestValid(worldId, index) {
 }
 
 function removeLatestValid(worldId, index) {
+	// TODO 此方法可能不再需要，最新织图这个功能可能要做整改
 	$("#htm_table").datagrid('loading');
 	$.post("./admin_ztworld/ztworld_updateLatestValid",{
 		'id':worldId,
@@ -1269,7 +1258,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 		   	idField : 'id',
 		    textField : 'activityName',
 		    url : './admin_op/op_queryNormalValidSquarePushActivity',
-		    queryParams : activityQueryParams,
 		    pagination : true,
 		    columns:[[
 				{field : 'serial',title : '活动序号',align : 'center', width : 60, hidden:true},
@@ -1286,15 +1274,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 						return "<img width='80px' height='53px' alt='' title='点击编辑' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
 					}
 				}
-		    ]],
-		    onLoadSuccess:function(data) {
-		    	if(data.result == 0) {
-					if(data.maxSerial > maxActivitySerial) {
-						maxActivitySerial = data.maxSerial;
-						activityQueryParams.maxSerial = maxActivitySerial;
-					}
-				}
-		    }
+		    ]]
 		});
 		
 		$("#pagination").pagination({
