@@ -149,7 +149,7 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 		Date now = new Date();
 		logger.info("InteractAutoResponseServiceImpl scanResponseAndGetAnswer begin============================>>>>>"+now);
 		Date beginDate = new Date(now.getTime() - SCAN_SPAN_MS);
-
+	
 		try{
 			InteractAutoResponseDto dto1 = new InteractAutoResponseDto();
 			Integer commentWeekPreMaxId = commentCacheDao.getCommentWeekMaxIdCache();
@@ -178,7 +178,7 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 						answerStr = interactRobotService.getAnswer(qStr);
 					}
 					if(null == answerStr)answerStr = "哦";//若从机器人那里得到空值，则复制为哦
-					String  asStr= dto.getReAuthorName()+"@" + dto.getAuthorName() + ": " + answerStr;//加上名字
+					String  asStr= dto.getReAuthorName()+"回复@" + dto.getAuthorName() + ": " + answerStr;//加上名字
 //					Integer id = webKeyGenService.generateId(KeyGenServiceImpl.HTWORLD_COMMENT_ID);
 					
 					//更新htworld_comment 中的ck位,暂时注释掉，因为已经删除掉了ck位置

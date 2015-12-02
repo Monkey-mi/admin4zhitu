@@ -154,7 +154,7 @@
 	<select id="queryUnCkResponse" resultMap="AutoResponseMapper">
 		SELECT 
 			hc.id as comment_id,hc.author_id as author,hc.content as context,hc.world_id,hc.world_author_id as world_author_id,
-			hc.re_author_id as re_author , ui.user_name as authorName
+			hc.re_author_id as re_author,rui.user_name as reAuthorName, ui.user_name as authorName
 		FROM
 			(
 				SELECT
@@ -166,11 +166,12 @@
 					<![CDATA[ comment_date > #{commentDate}]]>
 				</if>
 				<if test="maxId != null and maxId != 0">
-		    		<![CDATA[and  id > #{maxId}]]>
+		    		<![CDATA[  id > #{maxId}]]>
 		    	</if>
 			) hc
 				INNER JOIN hts.operations_user_zombie uz ON hc.re_author_id = uz.user_id
 				LEFT JOIN hts.user_info ui ON hc.author_id = ui.id
+				LEFT JOIN hts.user_info rui ON hc.re_author_id = rui.id
 	</select>
 	
 	
