@@ -187,7 +187,7 @@ public interface ZTWorldMapper {
 		*	2015年11月26日
 		*	mishengliang
 	 */
-	List<ZTWorld> queryZombieWorld(@Param("firstRow")Integer firstRow,@Param("limite")Integer limite,@Param("maxId")Integer maxId,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
+	List<ZTWorld> queryZombieWorld(@Param("firstRow")Integer firstRow,@Param("limit")Integer limit,@Param("maxId")Integer maxId,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 	
 	/**
 	 * 查询马甲织图总数
@@ -200,7 +200,7 @@ public interface ZTWorldMapper {
 	 * @return
 	 * @author zhangbo	2015年11月30日
 	 */
-	Integer queryZombieWorldTotal(@Param("firstRow")Integer firstRow,@Param("limite")Integer limite,@Param("maxId")Integer maxId,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
+	Integer queryZombieWorldTotal(@Param("firstRow")Integer firstRow,@Param("limit")Integer limit,@Param("maxId")Integer maxId,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 	
 	/**
 	 * 查询最大id
