@@ -332,10 +332,10 @@
 			 	select zws.zombie_world_id,zws.schedula from
 			 		hts_admin.zombie_world_schedual as zws 		 		
 			 	<where> 
-			 		<if test="dateAdded != null">
+			 		<if test="startTime != null">
 			 			<![CDATA[and zws.schedula>=#{startTime}]]>
 			 		</if>
-			 		<if test="dateModified != null">
+			 		<if test="endTime != null">
 			 			<![CDATA[and zws.schedula<=#{endTime}]]>
 			 		</if> 
 				 	<if test="maxId != null and maxId != 0">
@@ -362,10 +362,10 @@
 			 	select zws.zombie_world_id,zws.schedula from
 			 		hts_admin.zombie_world_schedual as zws 		 		
 			 	<where> 
-			 		<if test="dateAdded != null">
+			 		<if test="startTime != null">
 			 			<![CDATA[and zws.schedula>=#{startTime}]]>
 			 		</if>
-			 		<if test="dateModified != null">
+			 		<if test="endTime != null">
 			 			<![CDATA[and zws.schedula<=#{endTime}]]>
 			 		</if> 
 				 	<if test="maxId != null and maxId != 0">

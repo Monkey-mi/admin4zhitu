@@ -216,7 +216,7 @@ function drawWorldOpt($worldOpt, world, index) {
 			+ "<div>织图ID:" 
 			+ getWorldId(world.id,world,index)
 			+ "<span class='world-count world-date'>" 
-			+ dateAddedFormatter(world['dateModified'], world, index) 
+			+ baseTools.parseDate(world.dateAdded).format("yy/MM/dd hh:mm")
 			+ "</span>"
 			+ "</div>"
 			+ "<div>用户ID:" 
