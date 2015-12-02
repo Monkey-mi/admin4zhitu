@@ -324,7 +324,7 @@
 			zw.longitude,
 			zw.latitude,
 			zw.location_addr,
-			zw.provice,
+			zw.province,
 			zw.city,
 			zw.short_link
 		from
