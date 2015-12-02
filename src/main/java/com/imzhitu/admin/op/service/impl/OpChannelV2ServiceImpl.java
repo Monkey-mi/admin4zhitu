@@ -581,7 +581,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    // 刷新频道redis缓存
 	    channelCacheDao.updateChannel(topTempList, superbTempList);
 	    // 刷新频道主题redis缓存
-	    webThemeCacheDao.updateTheme();
+//	    webThemeCacheDao.updateTheme();	FIXME 这个接口要换掉
 	    
 	}
 
