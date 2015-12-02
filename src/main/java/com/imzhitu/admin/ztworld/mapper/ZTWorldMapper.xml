@@ -330,7 +330,7 @@
 		from
 		 	(
 			 	select zws.zombie_world_id,zws.schedula from
-			 		hts_admin.zombie_world_schedual as zws 		 		
+			 		hts_admin.zombie_world_schedula as zws 		 		
 			 	<where> 
 			 		<if test="startTime != null">
 			 			<![CDATA[and zws.schedula>=#{startTime}]]>
@@ -360,7 +360,7 @@
 		from
 		 	(
 			 	select zws.zombie_world_id,zws.schedula from
-			 		hts_admin.zombie_world_schedual as zws 		 		
+			 		hts_admin.zombie_world_schedula as zws 		 		
 			 	<where> 
 			 		<if test="startTime != null">
 			 			<![CDATA[and zws.schedula>=#{startTime}]]>
