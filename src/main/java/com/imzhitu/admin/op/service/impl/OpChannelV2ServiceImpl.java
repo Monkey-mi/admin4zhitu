@@ -18,7 +18,6 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.pojo.OpChannel;
 import com.hts.web.common.pojo.OpChannelLink;
-import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
@@ -84,9 +83,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	@Autowired
 	private com.hts.web.operations.dao.ChannelThemeCacheDao webThemeCacheDao;
 
-	@Autowired
-	private com.hts.web.operations.dao.ChannelThemeDao webChannelThemeDao;
-	
 	@Autowired
 	private ChannelAutoRejectIdCacheDao channelAutoPassIdCacheDao;
 	
@@ -752,19 +748,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		*	2015年12月3日
 		*	mishengliang
 	 */
+	@Override
 	public void channelThemeRefreshCache(){
 		
 	}
 	
-	
-	/**
-	 * 刷新旧版本主题缓存
-	 * 
-	 * @throws Exception 
-		*	2015年12月3日
-		*	mishengliang
-	 */
-	public void channelThemeOldRefreshCache(){
-		
-	}
 }

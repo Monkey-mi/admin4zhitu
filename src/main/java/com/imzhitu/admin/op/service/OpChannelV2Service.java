@@ -17,7 +17,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * 新增频道
 	 * @param dto
 	 */
-	public void insertOpChannel(String channelDesc, String channelIcon, 
+	void insertOpChannel(String channelDesc, String channelIcon, 
 			String channelSubIcon, String channelBanner, String channelReview, String channelName,
 			Integer channelTypeId, Integer ownerId, Integer themeId)throws Exception;
 	
@@ -25,13 +25,13 @@ public interface OpChannelV2Service extends BaseService{
 	 * 删除
 	 * @param dto
 	 */
-	public void deleteOpChannel(Integer channelId,Integer ownerId)throws Exception;
+	void deleteOpChannel(Integer channelId,Integer ownerId)throws Exception;
 	
 	/**
 	 * 修改频道，根据channelId
 	 * @param dto
 	 */
-	public void updateOpChannel(Integer channelId, String channelDesc, String channelIcon, 
+	void updateOpChannel(Integer channelId, String channelDesc, String channelIcon, 
 			String channelSubIcon, String channelBanner, String channelReview, String channelName,
 			Integer channelTypeId, Integer ownerId, Integer themeId)throws Exception;
 	
@@ -43,7 +43,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 * @author zhangbo	2015年8月19日
 	 */
-	public void updateOpChannelSuperb(Integer channelId, Integer superb) throws Exception;
+	void updateOpChannelSuperb(Integer channelId, Integer superb) throws Exception;
 	
 	/**
 	 * 修改频道的有效性
@@ -53,7 +53,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 * @author zhangbo	2015年8月19日
 	 */
-	public void updateOpChannelValid(Integer channelId, Integer valid) throws Exception;
+	void updateOpChannelValid(Integer channelId, Integer valid) throws Exception;
 	
 	/**
 	 * 修改频道是否有弹幕
@@ -63,7 +63,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 * @author zhangbo	2015年8月19日
 	 */
-	public void updateOpChannelDanmu(Integer channelId, Integer danmu) throws Exception;
+	void updateOpChannelDanmu(Integer channelId, Integer danmu) throws Exception;
 	
 	/**
 	 * 修改频道的发心情标记
@@ -73,7 +73,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 * @author zhangbo	2015年8月19日
 	 */
-	public void updateOpChannelMoodFlag(Integer channelId, Integer moodFlag) throws Exception;
+	void updateOpChannelMoodFlag(Integer channelId, Integer moodFlag) throws Exception;
 	
 	/**
 	 * 修改频道是否可以发织图的标记
@@ -83,14 +83,14 @@ public interface OpChannelV2Service extends BaseService{
 	 * @throws Exception
 	 * @author zhangbo	2015年8月19日
 	 */
-	public void updateOpChannelWorldFlag(Integer channelId, Integer worldFlag) throws Exception;
+	void updateOpChannelWorldFlag(Integer channelId, Integer worldFlag) throws Exception;
 	
 	/**
 	 * 分页查询
 	 * @param dto
 	 * @return
 	 */
-	public void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,Integer top,
+	void queryOpChannel(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,Integer top,
 			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer themeId,int start,int rows,Integer maxId,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
@@ -98,7 +98,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param dto
 	 * @return
 	 */
-	public long queryOpChannelTotalCount(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,
+	long queryOpChannelTotalCount(Integer channelId,String channelName,Integer channelTypeId,Integer ownerId,Integer superb,Integer valid,
 			Integer serial,Integer danmu,Integer moodFlag,Integer worldFlag,Integer maxId,Integer themeId)throws Exception;
 	
 	/**
@@ -107,7 +107,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public JSONArray  queryOpChannelLabel(String label)throws Exception;
+	JSONArray  queryOpChannelLabel(String label)throws Exception;
 	
 	/**
 	 * 根据id查询频道
@@ -115,21 +115,21 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public OpChannelV2Dto queryOpChannelByIdOrName(Integer id,String channelName)throws Exception;
+	OpChannelV2Dto queryOpChannelByIdOrName(Integer id,String channelName)throws Exception;
 	
 	/**
 	 * 更新
 	 * @param channelId
 	 * @throws Exception
 	 */
-	public void updateValid(Integer  channelId,Integer valid)throws Exception;
+	void updateValid(Integer  channelId,Integer valid)throws Exception;
 	
 	/**
 	 * 批量update
 	 * @param channelIdsStr
 	 * @throws Exception
 	 */
-	public void batchUpdateValid(String channelIdsStr,Integer valid)throws Exception;
+	void batchUpdateValid(String channelIdsStr,Integer valid)throws Exception;
 	
 	/**
 	 * 根据管理员账号查询其对应的频道
@@ -138,7 +138,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param jsonMap
 	 * @throws Exception
 	 */
-	public void queryOpChannelByAdminUserId(Integer channelId,String channelName,Integer channelTypeId,Integer adminUserId,Map<String,Object>jsonMap)throws Exception;
+	void queryOpChannelByAdminUserId(Integer channelId,String channelName,Integer channelTypeId,Integer adminUserId,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
 	 * 批量插入织图到频道
@@ -146,17 +146,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param worldAndAuthorIds
 	 * @throws Exception
 	 */
-	public void batchInsertWorldToChannel(Integer channelId,String worldAndAuthorIds)throws Exception;
-	
-	/**
-	 * 查询昨天新增织图数，不包含马甲
-	 * @param yestoday
-	 * @param today
-	 * @param channelId
-	 * @return
-	 * @throws Exception
-	 */
-//	public long queryYestodayWorldIncreasement(Integer channelId)throws Exception;
+	void batchInsertWorldToChannel(Integer channelId,String worldAndAuthorIds)throws Exception;
 	
 	/**
 	 * 查询昨天新增成员数，不包含马甲
@@ -166,21 +156,21 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId)throws Exception;
+	long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId)throws Exception;
 
 	/**
 	 * 刷新频道缓存，同时刷新置顶与加精的频道
 	 * 
 	 * @author zhangbo 2015年6月10日
 	 */
-	public void updateChannelCache() throws Exception;
+	void updateChannelCache() throws Exception;
 
 	/**
 	 * 查询关联频道列表
 	 *
 	 * @author zhangbo 2015年6月10日
 	 */
-	public List<OpChannelLink> queryRelatedChannelList(Integer channelId) throws Exception;
+	List<OpChannelLink> queryRelatedChannelList(Integer channelId) throws Exception;
 
 	/**
 	 * 添加关联频道
@@ -188,7 +178,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId
 	 * @author zhangbo 2015年6月11日
 	 */
-	public void addRelatedChannel(Integer channelId, Integer linkChannelId) throws Exception;
+	void addRelatedChannel(Integer channelId, Integer linkChannelId) throws Exception;
 
 	/**
 	 * 批量删除关联频道
@@ -196,7 +186,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param deleteIds
 	 * @author zhangbo 2015年6月11日
 	 */
-	public void deleteRelatedChannels(Integer channelId, Integer[] deleteIds) throws Exception;
+	void deleteRelatedChannels(Integer channelId, Integer[] deleteIds) throws Exception;
 
 	/**
 	 * 重新排序关联频道
@@ -204,7 +194,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param ids
 	 * @author zhangbo 2015年6月13日
 	 */
-	public void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds) throws Exception;
+	void updateRelatedChannelSerial(Integer channelId,String[] linkChannelIds) throws Exception;
 	
 	/**
 	 * 保存频道置顶信息到存储表channel_top中，top字段为1
@@ -212,7 +202,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId	频道id
 	 * @author zhangbo 2015年6月12日
 	 */
-	public void saveChannelTop(Integer channelId) throws Exception;
+	void saveChannelTop(Integer channelId) throws Exception;
 
 	/**
 	 * 删除频道置顶信息
@@ -220,7 +210,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId	频道id
 	 * @author zhangbo 2015年6月12日
 	 */
-	public void deleteChannelTop(Integer channelId) throws Exception;
+	void deleteChannelTop(Integer channelId) throws Exception;
 
 	/**
 	 * 根据频道查询与该频道关联的所有标签
@@ -229,7 +219,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return List<Map<Integer, String>>	返回值中，为标签的id与名称键值对list集合，例“id”：“123”，“label_name”：“ChannelLabelName”
 	 * @author zhangbo 2015年6月17日
 	 */
-	public List<Map<String, Object>> queryOpChannelLabelList(Integer channelId) throws Exception;
+	List<Map<String, Object>> queryOpChannelLabelList(Integer channelId) throws Exception;
 
 	/**
 	 * 修改频道标签
@@ -239,7 +229,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelLabelNames	标签名称集合，由“,”号分隔
 	 * @author zhangbo 2015年6月17日
 	 */
-	public void updateOpChannelLabel(Integer channelId,
+	void updateOpChannelLabel(Integer channelId,
 		String channelLabelIds, String channelLabelNames) throws Exception;
 
 	/**
@@ -248,7 +238,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 * @author zhangbo 2015年6月17日
 	 */
-	public void queryChannelThemeList(Map<String,Object> jsonMap);
+	void queryChannelThemeList(Map<String,Object> jsonMap);
 	
 	/**
 	 * 插入新的专属主题
@@ -256,7 +246,7 @@ public interface OpChannelV2Service extends BaseService{
 		*	2015年12月2日
 		*	mishengliang
 	 */
-	public void insertChannelTheme(String themeName);
+	void insertChannelTheme(String themeName);
 	
 	/**
 	 * 修改专属主题
@@ -265,7 +255,7 @@ public interface OpChannelV2Service extends BaseService{
 		*	2015年12月2日
 		*	mishengliang
 	 */
-	public void updateChannelTheme(Integer themeId,String themeName);
+	void updateChannelTheme(Integer themeId,String themeName);
 	
 	/**
 	 * 删除专属主题，和ｖａｌｉｄ字段无关，这时属于硬删除
@@ -273,7 +263,7 @@ public interface OpChannelV2Service extends BaseService{
 		*	2015年12月2日
 		*	mishengliang
 	 */
-	public void deleteChannelTheme(Integer themeId);
+	void deleteChannelTheme(Integer themeId);
 	
 	/**
 	 * 添加频道自动通过id
@@ -281,7 +271,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId
 	 * @author lynch 2015-09-14
 	 */
-	public void addAutoRejectId(Integer channelId) throws Exception;
+	void addAutoRejectId(Integer channelId) throws Exception;
 	
 	/**
 	 * 删除频道自动通过id
@@ -289,7 +279,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @param channelId
 	 * @throws Exception
 	 */
-	public void deleteAutoRejectId(Integer channelId) throws Exception;
+	void deleteAutoRejectId(Integer channelId) throws Exception;
 	
 	/**
 	 * 刷新新版本主题缓存
@@ -298,15 +288,6 @@ public interface OpChannelV2Service extends BaseService{
 		*	2015年12月3日
 		*	mishengliang
 	 */
-	public void channelThemeRefreshCache() throws Exception;
+	void channelThemeRefreshCache() throws Exception;
 	
-	
-	/**
-	 * 刷新旧版本主题缓存
-	 * 
-	 * @throws Exception 
-		*	2015年12月3日
-		*	mishengliang
-	 */
-	public void channelThemeOldRefreshCache() throws Exception;
 }
