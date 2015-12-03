@@ -148,7 +148,8 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 		Integer commentWeekMaxId = 0;
 		Date now = new Date();
 		logger.info("InteractAutoResponseServiceImpl scanResponseAndGetAnswer begin============================>>>>>"+now);
-		Date beginDate = new Date(now.getTime() - SCAN_SPAN_MS);
+		Date beginDate = new Date(now.getTime() - 18*60*60*1000);
+		/*Date beginDate = new Date(now.getTime() - SCAN_SPAN_MS);*/
 	
 		try{
 			InteractAutoResponseDto dto1 = new InteractAutoResponseDto();
@@ -156,7 +157,9 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 			if(commentWeekPreMaxId == null){
 				dto1.setCommentDate(beginDate);
 			}else{
-				dto1.setMaxId(commentWeekPreMaxId);
+				int m = commentWeekPreMaxId - 20;
+				dto1.setMaxId(m);
+				/*dto1.setMaxId(commentWeekPreMaxId);*/
 			}
 				
 			List<InteractAutoResponseDto> listDto = autoResponseMapper.queryUnCkResponse(dto1);

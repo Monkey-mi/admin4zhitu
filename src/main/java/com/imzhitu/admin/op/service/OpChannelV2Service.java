@@ -6,6 +6,7 @@ import java.util.Map;
 import com.hts.web.common.pojo.OpChannelLink;
 import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.service.BaseService;
+import com.imzhitu.admin.common.pojo.ChannelTheme;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 
 import net.sf.json.JSONArray;
@@ -247,7 +248,32 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 * @author zhangbo 2015年6月17日
 	 */
-	public List<OpChannelTheme> queryChannelThemeList();
+	public void queryChannelThemeList(Map<String,Object> jsonMap);
+	
+	/**
+	 * 插入新的专属主题
+	 * @param themeName 
+		*	2015年12月2日
+		*	mishengliang
+	 */
+	public void insertChannelTheme(String themeName);
+	
+	/**
+	 * 修改专属主题
+	 * @param themeId
+	 * @param themeName 
+		*	2015年12月2日
+		*	mishengliang
+	 */
+	public void updateChannelTheme(Integer themeId,String themeName);
+	
+	/**
+	 * 删除专属主题，和ｖａｌｉｄ字段无关，这时属于硬删除
+	 * @param themeId 
+		*	2015年12月2日
+		*	mishengliang
+	 */
+	public void deleteChannelTheme(Integer themeId);
 	
 	/**
 	 * 添加频道自动通过id

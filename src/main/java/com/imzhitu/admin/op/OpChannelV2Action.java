@@ -14,6 +14,7 @@ import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
+import com.imzhitu.admin.common.pojo.ChannelTheme;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.constant.LoggerKeies;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
@@ -422,7 +423,8 @@ public class OpChannelV2Action extends BaseCRUDAction {
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 			log.error(e.getMessage(), e);
-		}
+		}	
+
 		return StrutsKey.JSON;
 	}
 
@@ -430,35 +432,65 @@ public class OpChannelV2Action extends BaseCRUDAction {
 	 * 查询频道专题
 	 *
 	 * @return
-	 * @author zhangbo 2015年6月12日
+	 * @author mishengliang 2015-12-02
 	 */
-	public void queryChannelThemeList() {
-		PrintWriter out = null;
+	public String queryChannelThemeList() {
 		try {
-			out = response.getWriter();
-
-			List<OpChannelTheme> list = opChannelV2Service.queryChannelThemeList();
-
-			JSONArray array = new JSONArray();
-
-			for (OpChannelTheme opChannelTheme : list) {
-				JSONObject obj = new JSONObject();
-				obj.put("themeId", opChannelTheme.getId());
-				obj.put("themeName", opChannelTheme.getThemeName());
-				array.add(obj);
-			}
-
-			out.print(array.toString());
-			out.flush();
+			 opChannelV2Service.queryChannelThemeList(jsonMap);
+			 JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
-			jsonMap.clear();
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			JSONObject json = JSONObject.fromObject(jsonMap);
-			out.print(json.toString());
-			out.flush();
 			log.error(e.getMessage(), e);
-		} finally {
-			out.close();
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 新增专属主题
+	 *  
+		*	2015年12月2日
+		*	mishengliang
+	 */
+	public void insertChannelTheme(){
+		try {
+			opChannelV2Service.insertChannelTheme(themeName);
+			 JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 更新专属主题
+	 *  
+		*	2015年12月2日
+		*	mishengliang
+	 */
+	public void updateChannelTheme(){
+		try {
+			opChannelV2Service.updateChannelTheme(themeId,themeName);
+			 JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e.getMessage(), e);
+		}
+	}
+	
+	
+	/**
+	 * 删除专属主题
+	 *  
+		*	2015年12月2日
+		*	mishengliang
+	 */
+	public void deleteChannelTheme(){
+		try {
+			opChannelV2Service.deleteChannelTheme(themeId);
+			 JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+			log.error(e.getMessage(), e);
 		}
 	}
 	
@@ -514,6 +546,7 @@ public class OpChannelV2Action extends BaseCRUDAction {
 	private String channelIdsStr; // channel id array string
 	private String worldAndAuthorIdsStr;// worldId and authorId，eg：123-114,124-114
 	private Integer themeId; // 主题ID
+	private String themeName;//主题名
 	private Integer linkChannelId; // 关联频道id
 	private String deleteIds; // 执行删除操作的id集合
 	private boolean topFlag; // 是否置顶 true置顶，false不置顶
@@ -608,6 +641,14 @@ public class OpChannelV2Action extends BaseCRUDAction {
 
 	public void setLinkChannelId(Integer linkChannelId) {
 		this.linkChannelId = linkChannelId;
+	}
+
+	public String getThemeName() {
+		return themeName;
+	}
+
+	public void setThemeName(String themeName) {
+		this.themeName = themeName;
 	}
 
 	public void setDeleteIds(String deleteIds) {
