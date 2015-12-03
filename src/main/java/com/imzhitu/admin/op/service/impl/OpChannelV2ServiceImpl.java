@@ -692,7 +692,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 
 	/**
 	 * mishengliang 2015-12-02
-	 * 将方法从ｗｅｂ工程中抽到ａｄｍｉｎ，新建ｍａｐｐｅｒ层
+	 * 将方法从web工程中抽到admin，新建mapper层
 	 */
 	@Override
 	public void queryChannelThemeList(Map<String,Object> jsonMap) {
@@ -745,4 +745,26 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		channelAutoPassIdCacheDao.deleteId(channelId);
 	}
 
+	/**
+	 * 刷新新版本主题缓存
+	 * 
+	 * @throws Exception 
+		*	2015年12月3日
+		*	mishengliang
+	 */
+	public void channelThemeRefreshCache(){
+		
+	}
+	
+	
+	/**
+	 * 刷新旧版本主题缓存
+	 * 
+	 * @throws Exception 
+		*	2015年12月3日
+		*	mishengliang
+	 */
+	public void channelThemeOldRefreshCache(){
+		
+	}
 }

@@ -291,4 +291,22 @@ public interface OpChannelV2Service extends BaseService{
 	 */
 	public void deleteAutoRejectId(Integer channelId) throws Exception;
 	
+	/**
+	 * 刷新新版本主题缓存
+	 * 
+	 * @throws Exception 
+		*	2015年12月3日
+		*	mishengliang
+	 */
+	public void channelThemeRefreshCache() throws Exception;
+	
+	
+	/**
+	 * 刷新旧版本主题缓存
+	 * 
+	 * @throws Exception 
+		*	2015年12月3日
+		*	mishengliang
+	 */
+	public void channelThemeOldRefreshCache() throws Exception;
 }
