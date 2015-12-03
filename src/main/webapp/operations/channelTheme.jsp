@@ -90,10 +90,10 @@ var maxId = 0;
 		});
 		
 		$('#htm_edit').window({
-			title: '添加频道',
+			title: '添加专题',
 			modal : true,
-			width : 1000,
-			height : 555,
+			width : 300,
+			height : 145,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -104,13 +104,8 @@ var maxId = 0;
 			onClose : function() {
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
-				$("#channelImg_edit").attr("src", "./base/images/bg_empty.png");
-				$("#channelSubImg_edit").attr("src", "./base/images/bg_empty.png");
-				$("#channelBannerImg_edit").attr("src", "./base/images/bg_empty.png");
 				
 				$('#edit_form').form('reset');
-				
-				$("#edit_form").hide();
 				$("#edit_loading").show();
 			}
 		});
@@ -162,8 +157,39 @@ function submitSerialForm() {
 	}
 }
 
+//打开增加专属主题窗口
+function openAddWindow(){
+	$('#htm_edit').window('open');
+}
+
+//增加专属主题
+function addTheme(){
+	var themeName = $('#themeName').val();
+	$.post(saveChannelThemeURL,{
+		'themeName':themeName
+	},function(){
+		$('#htm_edit').window('close');
+		$.messager.alert("温馨提示：","添加成功！");
+		$('#htm_table').datagrid("reload");
+	},"json");
+}
+
+//修改专属主题
 function modifyTheme(themeId){
 	$('#htm_edit').window('open');
+}
+
+
+//删除专属主题
+function deleteTheme(){
+	var themeId = $('#htm_table').datagrid('getSelected').id;
+	$.post(deleteChannelThemeURL,{
+		'themeId':themeId
+	},
+	function(result){
+		$.messager.alert("温馨提示：","删除成功！");
+		$('#htm_table').datagrid("reload");
+	},"json");
 }
 
 </script>
@@ -173,7 +199,7 @@ function modifyTheme(themeId){
 		<table id="htm_table"></table>
 		<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
-			<a href="javascript:void(0);" onclick="javascript:addTheme();" class="easyui-linkbutton" title="添加专属主题" plain="true" iconCls="icon-add" id="addBtn">添加</a>
+			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加专属主题" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:deleteTheme();" class="easyui-linkbutton" title="删除专属主题" plain="true" iconCls="icon-cut" id="addBtn">删除</a>
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排主题排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
@@ -181,11 +207,18 @@ function modifyTheme(themeId){
 		</div> 
 	
 		<!-- 添加记录 -->
-		<div id="htm_edit">
+		<div id="htm_edit" align="center">
 			<form id="edit_form" action="./admin_op/v2channel_insertOpChannel" method="post">
-				<table id="htm_edit_table" style="width:400">
+				<table id="htm_edit_table" style="width:250px;line-height:40px;">
 					<tbody>
 						<tr>
+							<td align="center">专题名:<input id="themeName" name="themeName" style="width:100px" /></td>
+						</tr>
+						<tr>
+							<td align="center">
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addTheme();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_edit').window('close');">取消</a>
+							</td>
 						</tr>
 					</tbody>
 				</table>
