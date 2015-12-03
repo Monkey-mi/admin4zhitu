@@ -4,12 +4,15 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context-3.0.xsd
        	http://www.springframework.org/schema/aop   
-       	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+       	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       	http://www.springframework.org/schema/data/mongo 
+	   	http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 		
 	<context:property-placeholder location="classpath:admin.properties" /> 
 	
@@ -125,6 +128,28 @@
 	<bean id="redisKeyTemplate"
 		class="org.springframework.data.redis.core.StringRedisTemplate" 
 	    p:connection-factory-ref="jedisConnFactory" >
+	</bean>
+	
+	<mongo:mongo host="${mongo.host}" port="${mongo.port}">
+		<mongo:options 
+			connections-per-host="8"
+			threads-allowed-to-block-for-connection-multiplier="4"
+			connect-timeout="1000" 
+			max-wait-time="1500" 
+			auto-connect-retry="true"
+			socket-keep-alive="true" 
+			socket-timeout="1500" 
+			slave-ok="true"
+			write-number="1" 
+			write-timeout="0" 
+			write-fsync="true" />
+	</mongo:mongo>
+
+	<mongo:db-factory id="mongoDbFactory" dbname="${mongo.db}" 
+		username="${mongo.user}" password="${mongo.password}" mongo-ref="mongo" />
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
 	</bean>
 	
     <import resource="spring-config-web.xml" />

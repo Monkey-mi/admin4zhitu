@@ -27,4 +27,8 @@ log4j.logger.freemarker.beans=ERROR
 log4j.logger.freemarker.cache=ERROR
 log4j.logger.net.sf.json=ERROR
 log4j.logger.com.opensearch=ERROR
+log4j.category.org.apache.activemq=ERROR
+log4j.category.org.springframework.batch=ERROR
+log4j.category.org.springframework.data.document.mongodb=ERROR
+log4j.category.org.springframework.transaction=ERROR
 
