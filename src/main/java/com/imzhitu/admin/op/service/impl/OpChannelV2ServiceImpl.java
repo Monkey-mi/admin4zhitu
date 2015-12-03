@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +25,7 @@ import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.TimeUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
+import com.imzhitu.admin.common.pojo.ChannelTheme;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpDataStatisticsDto;
@@ -39,6 +37,9 @@ import com.imzhitu.admin.op.service.OpChannelMemberService;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.service.AdminAndUserRelationshipService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service
 public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannelV2Service {
@@ -88,6 +89,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	
 	@Autowired
 	private ChannelAutoRejectIdCacheDao channelAutoPassIdCacheDao;
+	
+	@Autowired
+	private com.imzhitu.admin.op.mapper.ChannelThemeMapper channelThemeMapper;
 
 	@Override
 	public void insertOpChannel(String channelDesc, String channelIcon, String channelSubIcon, String channelBanner, String channelReview, String channelName, Integer channelTypeId, Integer ownerId, Integer themeId) throws Exception {
@@ -581,7 +585,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	    // 刷新频道redis缓存
 	    channelCacheDao.updateChannel(topTempList, superbTempList);
 	    // 刷新频道主题redis缓存
-	    webThemeCacheDao.updateTheme();
+//	    webThemeCacheDao.updateTheme();	FIXME 这个接口要换掉
 	    
 	}
 
@@ -687,13 +691,44 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 
 	/**
-	 * @author zhangbo 2015年6月17日
+	 * mishengliang 2015-12-02
+	 * 将方法从ｗｅｂ工程中抽到ａｄｍｉｎ，新建ｍａｐｐｅｒ层
 	 */
 	@Override
-	public List<OpChannelTheme> queryChannelThemeList() {
-		return webChannelThemeDao.queryAllTheme();
+	public void queryChannelThemeList(Map<String,Object> jsonMap) {
+		List<ChannelTheme> list= channelThemeMapper.queryAllTheme();
+		Integer total = channelThemeMapper.getTotal();
+		jsonMap.put(OptResult.ROWS, list);
+		jsonMap.put(OptResult.TOTAL, total);
+	}
+	
+	/**
+	 * 插入新的专属主题
+	 * @param themeName 　主题名
+		*	2015年12月2日
+		*	mishengliang
+	 */
+	@Override
+	public void insertChannelTheme(String themeName){
+		channelThemeMapper.insertChannelTheme(themeName);
 	}
 
+	/**
+	 * 修改专属主题
+	 */
+	@Override
+	public void updateChannelTheme(Integer themeId,String themeName){
+		channelThemeMapper.updateChannelTheme(themeId,themeName);
+	}
+	
+	/**
+	 * 删除专属主题
+	 */
+	@Override
+	public void deleteChannelTheme(Integer themeId){
+		channelThemeMapper.deleteChannelTheme(themeId);
+	}
+	
 	/**
 	 * @author lynch 2015-09-14
 	 */
