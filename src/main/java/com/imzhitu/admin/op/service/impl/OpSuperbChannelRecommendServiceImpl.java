@@ -139,7 +139,7 @@ public class OpSuperbChannelRecommendServiceImpl extends BaseServiceImpl impleme
 			}
 		}
 		channelCacheDao.updateChannel(topList, superbList);
-		channelThemeCacheDao.updateTheme();
+//		channelThemeCacheDao.updateTheme();	FIXME 这个接口要换掉
 	}
 
 }
