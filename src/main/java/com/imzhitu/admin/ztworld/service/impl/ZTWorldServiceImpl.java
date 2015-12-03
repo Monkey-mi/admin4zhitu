@@ -627,12 +627,8 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		extractActivityInfo(rtnList);
 		webUserInfoService.extractVerify(rtnList);
 		
-		if ( maxId == 0 && worldList.size() != 0 ) {
-			maxId = worldList.get(0).getId();
-		}
-		
 		// 若传递的maxId为0，则取当前列表第一个织图的id作为maxId返回前台
-		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
 		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
 		jsonMap.put(OptResult.TOTAL, totalCount);
 		
@@ -727,10 +723,60 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		
 		// 若传递的maxId为0，则取当前列表第一个织图的id作为maxId返回前台
-		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 ? worldList.get(0).getId() : maxId);
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
 		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
 		jsonMap.put(OptResult.TOTAL, totalCount);
 		
+	}
+
+	@Override
+	public void buildWorldMasonryByWorldDesc(Integer maxId, Integer page, Integer rows, String worldDesc, Map<String, Object> jsonMap) throws Exception {
+		// 根据织图描述（关键字）查询匹配的织图集合
+		JSONObject resultJson = openSearchService.queryWolrdDescInfo(worldDesc, (page - 1) * rows, rows);
+		
+		// 获取主要opensearch返回值对象items，这里主要封装的为worldId的集合
+		JSONArray resultJsonArray = resultJson.getJSONArray("items");
+		
+		// 定义opensearch返回的织图id集合
+		Integer[] worldIds = new Integer[resultJsonArray .size()];
+		for (int i = 0; i < resultJsonArray .size(); i++) {
+			JSONObject jObject = resultJsonArray.getJSONObject(i);
+			worldIds[i] = jObject.getInt("id");
+		}
+		
+		List<ZTWorld> worldList = ztWorldMapper.getWorldListByIds(worldIds);
+		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
+		
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
+		jsonMap.put(OptResult.TOTAL, resultJson.getLong("total"));
+	}
+
+	@Override
+	public void buildWorldMasonryByWorldLocation(Integer maxId, Integer page, Integer rows, String worldLocation, Map<String, Object> jsonMap) throws Exception {
+		// 根据织图地理位置信息（关键字）查询匹配的织图集合
+		JSONObject resultJson = openSearchService.queryHTWolrdLocationInfo(worldLocation, (page - 1) * rows, rows);
+		
+		// 获取主要opensearch返回值对象items，这里主要封装的为worldId的集合
+		JSONArray resultJsonArray = resultJson.getJSONArray("items");
+		
+		if ( resultJsonArray.size() == 0 ) {
+			return;
+		}
+		
+		// 定义opensearch返回的织图id集合
+		Integer[] worldIds = new Integer[resultJsonArray.size()];
+		for (int i = 0; i < resultJsonArray.size(); i++) {
+			JSONObject jObject = resultJsonArray.getJSONObject(i);
+			worldIds[i] = jObject.getInt("id");
+		}
+		
+		List<ZTWorld> worldList = ztWorldMapper.getWorldListByIds(worldIds);
+		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
+		
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
+		jsonMap.put(OptResult.TOTAL, resultJson.getLong("total"));
 	}
 
 }

@@ -106,7 +106,7 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 			return null;
 		}
 		
-		Map<String,Object>opts = new HashMap<String,Object>();
+		Map<String,Object> opts = new HashMap<String,Object>();
 		
 		opts.put("host", aliyunHanZouHost);
 		
@@ -118,6 +118,57 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 		
 		//指定搜索的关键词，如果没有输入索引名称，则使用default
 		search.setQueryString("default:'"+worldLocation+"'");
+		
+		//指定搜索返回的格式
+		search.setFormat("json");
+		
+		// 只返回id字段
+		search.addFetchField("id");
+		
+		// 根据id字段进行倒序排序
+		search.addSort("id", CloudsearchSearch.SORT_DECREASE);
+		
+		// 设置分页查询起始位置，和查询条数，即从结果集中的置顶位置开始查询指定条数出来返回
+		search.setStartHit(startHit);
+		search.setHits(limit);
+		
+		//解析结果
+		String result = search.search();
+		JSONObject resultObj = JSONObject.fromObject(result).getJSONObject("result");
+		
+		if(resultObj.isNullObject()){
+			return null;
+		}
+		
+		Integer num = resultObj.optInt("num");
+		if ( num ==null || num == 0){
+			return null;
+		}
+		JSONArray items = resultObj.getJSONArray("items");
+		if(items.isEmpty()){
+			return null;
+		}
+		
+		return resultObj;
+	}
+	
+	@Override
+	public JSONObject queryWolrdDescInfo(String worldDesc, int startHit, int limit) throws Exception {
+		if(null == worldDesc || "".equals(worldDesc.trim())){
+			return null;
+		}
+		Map<String,Object> opts = new HashMap<String,Object>();
+		
+		opts.put("host", aliyunHanZouHost);
+		
+		CloudsearchClient client = new CloudsearchClient(aliyunAccessKeyId,aliyunAccessKeySecret,opts,KeyTypeEnum.ALIYUN);
+		CloudsearchSearch search = new CloudsearchSearch(client);
+		
+		//添加制定的搜索应用
+		search.addIndex(worldLocationAppName);
+		
+		//指定搜索的关键词，如果没有输入索引名称，则使用default
+		search.setQueryString("worldDesc:'" + worldDesc + "'");
 		
 		//指定搜索返回的格式
 		search.setFormat("json");

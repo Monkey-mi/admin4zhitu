@@ -1614,102 +1614,40 @@ var htmTableTitle = "分享列表维护", //表格标题
 	
 	/**
 	 * 根据描述查询织图集合
+	 * @author zhangbo	2015-12-03
 	 */
 	function searchByWorldDesc() {
-		// TODO 临时方法，还要整改
 		maxId = 0;
 		var worldDesc = $('#ss_worldDesc').searchbox('getValue');
-		if(worldDesc == "") {
+		if(worldDesc.trim() == "") {
 			search();
 			return
 		}
+		// 获取当前查询页数
+		var rows = myQueryParams.rows;
+		// 重置查询条件
 		myQueryParams = {
 			'worldDesc' : worldDesc
 		};
-		
-		scroll(0,0);
-		$("#page-loading").show();
-		myQueryParams['page'] = 1;
-		myQueryParams['rows'] = 30;
-		myQueryParams['valid'] = $("#valid").combobox('getValue');
-		
-		$.post("./admin_ztworld/ztworld_queryHTWorldList", myQueryParams, function(result){
-			if(result['result'] == 0) {
-				if(result.maxId > maxId) {
-					maxId = result.maxId;
-					myQueryParams.maxId = maxId;
-				}
-				if(result.activityId != 'undefined') {
-					activityId = result.activityId;
-				} else {
-					activityId = 0;
-				}
-				dataList = [];
-				$(".world-opt-wrap").remove();
-				refreshPagination(result['total'], 1, 100);
-				var worlds = result['rows'];
-				var $worldBox = $('#world-box');
-				for(var i = 0; i < worlds.length; i++) {
-					var world = worlds[i];
-					dataList.push(world);
-					var $worldOpt = $('<div class="world-opt-wrap"></div>');
-					drawWorldOpt($worldOpt, world, i);
-					$worldBox.append($worldOpt);
-				}
-				$("#page-loading").hide();
-			} else {
-				$.messager.alert('失败提示',result['msg']);
-			}
-		}, "json");
+		loadData(1, rows);
 	}
 	
 	/**
 	 * 根据织图所标记的地理位置来查询织图
+	 * @author zhangbo	2015-12-03
 	 */
 	function searchByWorldLocation() {
-		// TODO 临时方法，还要整改
 		maxId = 0;
 		var worldLocation = $('#ss_worldLocation').searchbox('getValue');
-		if(worldLocation == "") {
+		if(worldLocation.trim() == "") {
 			return
 		}
+		// 获取当前查询页数
+		var rows = myQueryParams.rows;
+		// 重置查询条件
 		myQueryParams = {
 			'worldLocation' : worldLocation
 		};
-		
-		scroll(0,0);
-		$("#page-loading").show();
-		myQueryParams['page'] = 1;
-		myQueryParams['rows'] = 30;
-		myQueryParams['valid'] = $("#valid").combobox('getValue');
-		
-		$.post("./admin_ztworld/ztworld_queryHTWorldList", myQueryParams, function(result){
-			if(result['result'] == 0) {
-				if(result.maxId > maxId) {
-					maxId = result.maxId;
-					myQueryParams.maxId = maxId;
-				}
-				if(result.activityId != 'undefined') {
-					activityId = result.activityId;
-				} else {
-					activityId = 0;
-				}
-				dataList = [];
-				$(".world-opt-wrap").remove();
-				refreshPagination(result['total'], 1, 30);
-				var worlds = result['rows'];
-				var $worldBox = $('#world-box');
-				for(var i = 0; i < worlds.length; i++) {
-					var world = worlds[i];
-					dataList.push(world);
-					var $worldOpt = $('<div class="world-opt-wrap"></div>');
-					drawWorldOpt($worldOpt, world, i);
-					$worldBox.append($worldOpt);
-				}
-				$("#page-loading").hide();
-			} else {
-				$.messager.alert('失败提示',result['msg']);
-			}
-		}, "json");
+		loadData(1, rows);
 	}
 	

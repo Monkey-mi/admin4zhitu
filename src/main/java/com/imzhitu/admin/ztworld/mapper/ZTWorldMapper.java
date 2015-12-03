@@ -100,23 +100,6 @@ public interface ZTWorldMapper {
 	@DataSource("master")
 	public int updateKeepCount(ZTWorldDto dto);
 	
-	
-	/**
-	 * 根据条件查询织图
-	 * 
-	 * @param startDateStr 起始时间
-	 * @param endDateStr 结束时间
-	 * @param attrMap 织图条件
-	 * @param userAttrMap 用户条件
-	 * @param orderKey
-	 * @param orderBy
-	 * @param rowSelection
-	 * @return
-	 */
-//	public List<ZTWorldDto> queryHTWorldByAttrMap(Date currentDate, String startDateStr,
-//			String endDateStr, Map<String, Object> attrMap, Map<String, Object> userAttrMap, String orderKey, 
-//			String orderBy, RowSelection rowSelection);
-	
 	/**
 	 * 根据最大id查询织图
 	 * 
@@ -290,7 +273,9 @@ public interface ZTWorldMapper {
 	 * @param phoneCode	客户端代号，0：IOS，1：android
 	 * @param firstRow	分页起始行
 	 * @param rows		查询每页的数量
-	 * @return
+	 * 
+	 * @return List<ZTWorld>	织图对象集合
+	 * 
 	 * @author zhangbo	2015年11月27日
 	 */
 	List<ZTWorld> getWorldListValid(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
@@ -304,7 +289,9 @@ public interface ZTWorldMapper {
 	 * @param phoneCode	客户端代号，0：IOS，1：android
 	 * @param firstRow	分页起始行
 	 * @param rows		查询每页的数量
-	 * @return
+	 * 
+	 * @return total	在此时间段下有效织图总数
+	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
 	Integer getWorldListValidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
@@ -319,7 +306,9 @@ public interface ZTWorldMapper {
 	 * @param phoneCode	客户端代号，0：IOS，1：android
 	 * @param firstRow	分页起始行
 	 * @param rows		查询每页的数量
-	 * @return
+	 * 
+	 * @return List<ZTWorld>	织图对象集合
+	 * 
 	 * @author zhangbo	2015年11月27日
 	 */
 	List<ZTWorld> getWorldListInvalid(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
@@ -334,9 +323,22 @@ public interface ZTWorldMapper {
 	 * @param phoneCode	客户端代号，0：IOS，1：android
 	 * @param firstRow	分页起始行
 	 * @param rows		查询每页的数量
-	 * @return
+	 * 
+	 * @return total	在此时间段下无效织图总数
+	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
 	Integer getWorldListInvalidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
+	
+	/**
+	 * 根据织图id集合查询织图
+	 * 
+	 * @param ids	织图id集合
+	 * 
+	 * @return List<ZTWorld>	织图对象集合
+	 * 
+	 * @author zhangbo	2015年12月3日
+	 */
+	List<ZTWorld> getWorldListByIds(@Param("ids")Integer[] ids);
 
 }

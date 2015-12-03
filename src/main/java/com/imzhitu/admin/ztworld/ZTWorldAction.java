@@ -31,30 +31,15 @@ public class ZTWorldAction extends BaseCRUDAction {
 	private String ids;
 	private String worldIdKey;
 	private Integer worldId;
-	private String worldIds;
 	private String shortLink;
 	private String startTime;
 	private String endTime;
 	private String worldLabel;
-	private String worldLabe;
 	private Integer phoneCode;
-	private String platform;
 	private String authorName;
-
-	private String groupName;
-	private Integer groupId;
-
-	private Integer showLocationTag;
-	private String province;
-	private String city;
-	private String location;
 
 	private String worldJSON;
 
-	private Integer activityId; // 活动id
-	
-	private String labelIds;
-	private Integer typeId;
 	private Integer valid;
 	private Integer shield;
 	private String worldDesc;
@@ -109,6 +94,14 @@ public class ZTWorldAction extends BaseCRUDAction {
 			// 若马甲条件为1，则查询马甲织图
 			else if ( isZombie != null && isZombie == 1 ) {
 				worldService.buildWorldMasonryByZombie(maxId, page, rows, startTime, endTime, phoneCode, jsonMap);
+			}
+			// 若存在织图描述，则为按照织图描述查询
+			else if ( worldDesc != null && !worldDesc.trim().equals("") ) {
+				worldService.buildWorldMasonryByWorldDesc(maxId, page, rows, worldDesc, jsonMap);
+			}
+			// 若存在织图地理位置信息，则为按照织图地理位置信息查询
+			else if ( worldLocation != null && !worldLocation.trim().equals("") ) {
+				worldService.buildWorldMasonryByWorldLocation(maxId, page, rows, worldLocation, jsonMap);
 			}
 			// 默认查询瀑布流织图信息
 			else {
@@ -322,282 +315,93 @@ public class ZTWorldAction extends BaseCRUDAction {
 		}
 		return StrutsKey.JSON;
 	}
-	
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-
-	public Integer getWorldId() {
-		return worldId;
-	}
-
-	public void setWorldId(Integer worldId) {
-		this.worldId = worldId;
-	}
-
-	public Integer getId() {
-		return id;
-	}
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getWorldLabel() {
-		return worldLabel;
-	}
-
-	public void setWorldLabel(String worldLabel) {
-		this.worldLabel = worldLabel;
-	}
-
-	public String getGroupName() {
-		return groupName;
-	}
-
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-
-	public Integer getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(Integer groupId) {
-		this.groupId = groupId;
-	}
-
-	public String getIds() {
-		return ids;
 	}
 
 	public void setIds(String ids) {
 		this.ids = ids;
 	}
 
-	public Integer getPhoneCode() {
-		return phoneCode;
+	public void setWorldIdKey(String worldIdKey) {
+		this.worldIdKey = worldIdKey;
 	}
 
-	public void setPhoneCode(Integer phoneCode) {
-		this.phoneCode = phoneCode;
-	}
-
-	public String getPlatform() {
-		return platform;
-	}
-
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
-
-	public Integer getShowLocationTag() {
-		return showLocationTag;
-	}
-
-	public void setShowLocationTag(Integer showLocationTag) {
-		this.showLocationTag = showLocationTag;
-	}
-
-	public String getProvince() {
-		return province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public ZTWorldService getWorldService() {
-		return worldService;
-	}
-
-	public void setWorldService(ZTWorldService worldService) {
-		this.worldService = worldService;
-	}
-
-	public String getWorldIds() {
-		return worldIds;
-	}
-
-	public String getAuthorName() {
-		return authorName;
-	}
-
-	public void setAuthorName(String authorName) {
-		this.authorName = authorName;
-	}
-
-	public void setWorldIds(String worldIds) {
-		this.worldIds = worldIds;
-	}
-
-	public String getWorldJSON() {
-		return worldJSON;
-	}
-
-	public void setWorldJSON(String worldJSON) {
-		this.worldJSON = worldJSON;
-	}
-
-	public String getShortLink() {
-		return shortLink;
+	public void setWorldId(Integer worldId) {
+		this.worldId = worldId;
 	}
 
 	public void setShortLink(String shortLink) {
 		this.shortLink = shortLink;
 	}
 
-	public Integer getActivityId() {
-		return activityId;
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
 	}
 
-	public void setActivityId(Integer activityId) {
-		this.activityId = activityId;
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
-	public String getWorldIdKey() {
-		return worldIdKey;
+	public void setWorldLabel(String worldLabel) {
+		this.worldLabel = worldLabel;
 	}
 
-	public void setWorldIdKey(String worldIdKey) {
-		this.worldIdKey = worldIdKey;
+	public void setPhoneCode(Integer phoneCode) {
+		this.phoneCode = phoneCode;
 	}
 
-	public String getWorldLabe() {
-		return worldLabe;
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
 	}
 
-	public void setWorldLabe(String worldLabe) {
-		this.worldLabe = worldLabe;
-	}
-
-	public String getLabelIds() {
-		return labelIds;
-	}
-
-	public void setLabelIds(String labelIds) {
-		this.labelIds = labelIds;
-	}
-
-	public Integer getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(Integer typeId) {
-		this.typeId = typeId;
-	}
-
-	public Integer getValid() {
-		return valid;
+	public void setWorldJSON(String worldJSON) {
+		this.worldJSON = worldJSON;
 	}
 
 	public void setValid(Integer valid) {
 		this.valid = valid;
 	}
 
-	public Integer getShield() {
-		return shield;
-	}
-
 	public void setShield(Integer shield) {
 		this.shield = shield;
-	}
-
-	public Float getVer() {
-		return ver;
-	}
-
-	public void setVer(Float ver) {
-		this.ver = ver;
-	}
-
-	public String getLogoPath() {
-		return logoPath;
-	}
-
-	public void setLogoPath(String logoPath) {
-		this.logoPath = logoPath;
-	}
-
-	public String getLogoDesc() {
-		return logoDesc;
-	}
-
-	public void setLogoDesc(String logoDesc) {
-		this.logoDesc = logoDesc;
-	}
-	
-	public Integer getUser_level_id() {
-		return user_level_id;
-	}
-
-	public void setUser_level_id(Integer user_level_id) {
-		this.user_level_id = user_level_id;
-	}
-
-	public Integer getChildId() {
-		return childId;
-	}
-
-	public void setChildId(Integer childId) {
-		this.childId = childId;
-	}
-
-	public Boolean getIsNotAddClick() {
-		return isNotAddClick;
-	}
-
-	public void setIsNotAddClick(Boolean isNotAddClick) {
-		this.isNotAddClick = isNotAddClick;
-	}
-
-	public String getWorldDesc() {
-		return worldDesc;
 	}
 
 	public void setWorldDesc(String worldDesc) {
 		this.worldDesc = worldDesc;
 	}
 
-	public void setWorldLocation(String worldLocation) {
-		this.worldLocation = worldLocation;
+	public void setVer(Float ver) {
+		this.ver = ver;
 	}
 
-	public Integer getIsZombie() {
-		return isZombie;
+	public void setLogoPath(String logoPath) {
+		this.logoPath = logoPath;
+	}
+
+	public void setLogoDesc(String logoDesc) {
+		this.logoDesc = logoDesc;
+	}
+
+	public void setUser_level_id(Integer user_level_id) {
+		this.user_level_id = user_level_id;
+	}
+
+	public void setChildId(Integer childId) {
+		this.childId = childId;
+	}
+
+	public void setIsNotAddClick(Boolean isNotAddClick) {
+		this.isNotAddClick = isNotAddClick;
+	}
+
+	public void setWorldLocation(String worldLocation) {
+		this.worldLocation = worldLocation;
 	}
 
 	public void setIsZombie(Integer isZombie) {
 		this.isZombie = isZombie;
 	}
-	
 	
 }

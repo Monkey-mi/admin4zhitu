@@ -173,7 +173,9 @@ public interface ZTWorldService extends BaseService {
 	 * @param phoneCode	客户端代号：0：IOS，1：安卓，null：所有客户端
 	 * @param valid		是否生效：1：生效，0：未生效（用户删除），null：所有状态
 	 * @param jsonMap	返回页面参数
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
+	 * 
 	 * @author zhangbo	2015年11月25日
 	 */
 	void buildWorldMasonry(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer valid, Map<String, Object> jsonMap) throws Exception;
@@ -189,6 +191,9 @@ public interface ZTWorldService extends BaseService {
 	 * @param phoneCode	客户端代号：0：IOS，1：安卓，null：所有客户端
 	 * @param valid		是否生效：1：生效，0：未生效（用户删除），null：所有状态
 	 * @param jsonMap	返回页面参数
+	 * 
+	 * @throws Exception
+	 * 
 	 * @author zhangbo	2015年11月26日
 	 */
 	void buildWorldMasonryByUserLevel(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer user_level_id, Integer valid, Map<String, Object> jsonMap) throws Exception;
@@ -204,7 +209,40 @@ public interface ZTWorldService extends BaseService {
 	 * @param phoneCode	客户端代号：0：IOS，1：安卓，null：所有客户端
 	 * @param valid		是否生效：1：生效，0：未生效（用户删除），null：所有状态
 	 * @param jsonMap	返回页面参数
+	 * 
+	 * @throws Exception
+	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
 	void buildWorldMasonryByZombie(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Map<String, Object> jsonMap) throws Exception;
+
+	/**
+	 * 构建瀑布流织图信息，通过织图描述查询
+	 * 
+	 * @param maxId		最大织图id
+	 * @param page		分页查询：当前页面
+	 * @param rows		分页查询：每页数量
+	 * @param worldDesc	织图描述，为关键字匹配内容
+	 * @param jsonMap	返回页面参数
+	 * 
+	 * @throws Exception
+	 * 
+	 * @author zhangbo	2015年12月2日
+	 */
+	void buildWorldMasonryByWorldDesc(Integer maxId, Integer page, Integer rows, String worldDesc, Map<String, Object> jsonMap) throws Exception;
+	
+	/**
+	 * 构建瀑布流织图信息，通过织图地理位置信息查询
+	 * 
+	 * @param maxId			最大织图id
+	 * @param page			分页查询：当前页面
+	 * @param rows			分页查询：每页数量
+	 * @param worldLocation	织图描述，为关键字匹配内容
+	 * @param jsonMap		返回页面参数
+	 * 
+	 * @throws Exception
+	 * 
+	 * @author zhangbo	2015年12月2日
+	 */
+	void buildWorldMasonryByWorldLocation(Integer maxId, Integer page, Integer rows, String worldLocation, Map<String, Object> jsonMap) throws Exception;
 }

@@ -569,7 +569,7 @@
 		select 
 			count(*)
 		from
-			hts.htworld_htworld h	
+			hts.htworld_htworld h 
 	 	<where> 
 		 	h.valid = 0
 	 		<if test="startTime != null">
@@ -585,6 +585,21 @@
 		 		<![CDATA[ and h.id<=#{maxId}]]>
 		 	</if>			 	
 	 	</where>
+	</select>
+	
+	<!-- 根据织图id集合查询织图 -->
+	<select id="getWorldListByIds" resultMap="ZTWorldPojo" >
+		select 
+			*
+		from
+		 	hts.htworld_htworld h 
+	 	<where> 
+		 	h.id in
+	 		<foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>		 	
+	 	</where>
+	 	order by h.id desc
 	</select>
 	
 </mapper>
