@@ -42,6 +42,15 @@ var maxId = 0;
 				myQueryParams['maxId'] = maxId;
 			}
 		}
+		
+		$("#ss_channelTheme").combobox({
+			url:"./admin_op/v2channel_queryChannelThemeList",
+		 	valueField:'id',
+			textField:'themeName', 
+			loadFilter:function(data){
+				return data.rows;
+			}
+		});
 	};
 	
 	// 拥有者ID搜索中用到的参数
@@ -720,6 +729,8 @@ function updateChannelWorldOp(channelId,worldFlag) {
 	});
 };
 
+
+
 </script>
 </head>
 <body>
@@ -732,7 +743,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
 			<a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" plain="true" iconCls="icon-converter" id="refreshCacheBtn">刷新缓存</a>
 			<span class="search_label">所属专题过滤：</span>
-			<input id="ss_channelTheme" class="easyui-combobox" data-options="valueField:'themeId',textField:'themeName',url:'./admin_op/v2channel_queryChannelThemeList'" style="width:150px">
+			<input id="ss_channelTheme" >
 			<span class="search_label">有效性过滤：</span>
 			<select id="ss_valid" class="easyui-combobox" style="width:80px;">
 	   			<option value="">所有状态</option>
