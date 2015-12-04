@@ -133,6 +133,7 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	@Override
 	public void insertNearCityGroup(String description) throws Exception {
 		OpNearCityGroupDto dto = new OpNearCityGroupDto();
+		dto.setDescription(description);
 		long total = nearCityGroupMapper.queryNearCityGroupTotalCount(dto);
 		if(total == 0){
 			Integer maxSerial = nearCityGroupMapper.queryNearCityGroupMaxSerial();

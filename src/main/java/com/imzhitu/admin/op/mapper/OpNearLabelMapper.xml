@@ -36,7 +36,7 @@
 			<if test="latitude != null">
 				latitude = #{latitude},
 			</if>
-			<if test="desc != null">
+			<if test="description != null">
 				description = #{description},
 			</if>
 			<if test="bannerUrl != null">
@@ -78,7 +78,7 @@
 	
 	<!-- query total -->
 	<select id="queryNearLabelTotalCount" resultType="long">
-		select count(*) from hts.operations_near_label
+		select count(*) from hts.operations_near_label onl
 		<where>
 			<if test="cityId != null">
 				onl.city_id = #{cityId}
