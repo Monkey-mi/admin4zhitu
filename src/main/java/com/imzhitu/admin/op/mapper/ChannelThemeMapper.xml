@@ -10,14 +10,17 @@
 	</resultMap>
 	
 	
-	<select id="queryAllTheme" resultMap="ChannnelThemePojo">
+	<select id="queryAllThemeById" resultMap="ChannnelThemePojo">
 		select 
 		 	* 
 		from 
 		 	hts.operations_channel_theme
-		where 
-			valid = 1
-		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+		 <where>
+		 <if test="themeId != 0 and themeId != null">
+		 	id = #{themeId}
+		 </if>
+		 </where>	
+		 order by serial desc
 	</select>
 	
 	<select id="getTotal" resultType="Integer">
@@ -53,4 +56,13 @@
 		id = #{themeId}		
 		</if>
 	</delete>
+	
+	<update id="updateChannelThemeSerial">
+		update 
+			hts.operations_channel_theme
+		set
+		    serial = #{serial}	
+		where 
+			id = #{id}    
+	</update>
 </mapper>
