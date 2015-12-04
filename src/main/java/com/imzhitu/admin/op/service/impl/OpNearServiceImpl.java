@@ -13,6 +13,7 @@ import com.imzhitu.admin.common.pojo.OpNearCityGroupDto;
 import com.imzhitu.admin.common.pojo.OpNearLabelDto;
 import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
 import com.imzhitu.admin.common.pojo.OpNearRecommendCityDto;
+import com.imzhitu.admin.op.dao.mongo.NearLabelMongoDao;
 import com.imzhitu.admin.op.mapper.OpNearCityGroupMapper;
 import com.imzhitu.admin.op.mapper.OpNearLabelMapper;
 import com.imzhitu.admin.op.mapper.OpNearLabelWorldMapper;
@@ -33,6 +34,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	
 	@Autowired
 	private OpNearLabelWorldMapper nearLabelWorldMapper;
+	
+	@Autowired
+	private NearLabelMongoDao nearLabelMongoDao;
 	
 	@Override
 	public void queryNearLabel(Integer id, Integer cityId, int maxSerial,
@@ -68,6 +72,20 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		dto.setBannerUrl(bannerUrl);
 		dto.setSerial(serial);
 		nearLabelMapper.updateNearLabel(dto);
+		
+		com.hts.web.common.pojo.OpNearLabelDto webNearLabel = new com.hts.web.common.pojo.OpNearLabelDto();
+		webNearLabel.setBannerUrl(bannerUrl);
+		webNearLabel.setDescription(description);
+		webNearLabel.setId(id);
+		webNearLabel.setLabelName(labelName);
+		webNearLabel.setSerial(serial);
+		if(longitude != null && latitude != null){
+			Double[] loc = new Double[2];
+			loc[0] = longitude;
+			loc[1] = latitude;
+			webNearLabel.setLoc(loc);
+		}
+		nearLabelMongoDao.updateLabel(webNearLabel);
 	}
 
 	@Override
@@ -91,12 +109,25 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			dto.setSerial(1);
 		}
 		nearLabelMapper.insertNearLabel(dto);
+		
+		com.hts.web.common.pojo.OpNearLabelDto webNearLabel = new com.hts.web.common.pojo.OpNearLabelDto();
+		webNearLabel.setBannerUrl(bannerUrl);
+		webNearLabel.setDescription(description);
+		webNearLabel.setId(id);
+		webNearLabel.setLabelName(labelName);
+		webNearLabel.setSerial(serial);
+		Double[] loc = new Double[2];
+		loc[0] = longitude;
+		loc[1] = latitude;
+		webNearLabel.setLoc(loc);
+		nearLabelMongoDao.saveLabel(webNearLabel);
 	}
 
 	@Override
 	public void batchDeleteNearLabel(String idsStr) throws Exception {
 		Integer[] idsArray = StringUtil.convertStringToIds(idsStr);
 		nearLabelMapper.batchDeleteNearLabel(idsArray);
+		nearLabelMongoDao.deleteByIds(idsArray);
 	}
 
 	@Override
