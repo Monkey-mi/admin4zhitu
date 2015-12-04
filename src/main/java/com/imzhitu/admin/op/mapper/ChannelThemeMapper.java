@@ -16,7 +16,7 @@ public interface ChannelThemeMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<ChannelTheme> queryAllTheme();
+	public List<ChannelTheme> queryAllThemeById(@Param("themeId")Integer themeId);
 	
 	/**
 	 * 查询总数
