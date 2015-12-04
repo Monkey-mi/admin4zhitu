@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.hts.web.common.pojo.AddrCity;
 import com.imzhitu.admin.addr.pojo.City;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 
@@ -26,4 +27,13 @@ public interface CityMapper {
 
 	@DataSource("slave")
 	Integer getCityId(@Param("cityName")String cityName);
+	
+	/**
+	 * 查询所有城市缓存
+	 * 
+	 * @return
+	 * @author lynch 2015-12-03
+	 */
+	@DataSource("slave")
+	public List<com.hts.web.common.pojo.AddrCity> queryAllCityCache();
 }

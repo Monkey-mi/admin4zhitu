@@ -6,6 +6,15 @@
 		<id column="id" property="id" javaType="java.lang.Integer"/>
 		<result column="name" property="name" javaType="java.lang.String"/>
 	</resultMap>
+	
+	<resultMap id="WebCityMap" type="com.hts.web.common.pojo.AddrCity">
+		<id column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="name" property="name" javaType="java.lang.String"/>
+		<result column="short_name" property="shortName" javaType="java.lang.String"/>
+		<result column="longitude" property="longitude" javaType="java.lang.Double"/>
+		<result column="latitude" property="latitude" javaType="java.lang.Double"/>
+		<result column="radius" property="radius" javaType="java.lang.Float"/>
+	</resultMap>
 
 	<!-- 查询所有城市 -->
 	<select id="queryAllCity" resultMap="CityMap">
@@ -24,6 +33,13 @@
 		<if test="cityName!=null">
 			name like CONCAT('%',#{cityName},'%')
 		</if>
+	</select>
+	
+	<select id="queryAllCityCache" resultMap="WebCityMap">
+		select 
+			id,name,short_name,longitude,latitude,radius
+		from 
+			hts.addr_city
 	</select>
 	
 </mapper>

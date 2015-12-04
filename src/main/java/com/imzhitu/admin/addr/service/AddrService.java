@@ -73,6 +73,13 @@ public interface AddrService {
 		*	mishengliang
 	 */
 	public Integer getCountryId(String countryName);
+	
+	/**
+	 * 更新城市缓存
+	 * 
+	 * @author lynch 2015-12-03
+	 */
+	public void updateCityCache();
 }
 
 
