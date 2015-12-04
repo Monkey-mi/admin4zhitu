@@ -30,6 +30,7 @@ import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpDataStatisticsDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.op.dao.ChannelAutoRejectIdCacheDao;
+import com.imzhitu.admin.op.dao.OpChannelThemeCache;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
 import com.imzhitu.admin.op.service.OpChannelMemberService;
@@ -81,13 +82,13 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	private com.hts.web.operations.dao.ChannelLinkDao channelLinkDao;
 
 	@Autowired
-	private com.hts.web.operations.dao.ChannelThemeCacheDao webThemeCacheDao;
-
-	@Autowired
 	private ChannelAutoRejectIdCacheDao channelAutoPassIdCacheDao;
 	
 	@Autowired
 	private com.imzhitu.admin.op.mapper.ChannelThemeMapper channelThemeMapper;
+	
+	@Autowired
+	private OpChannelThemeCache channelThemeCache;
 
 	@Override
 	public void insertOpChannel(String channelDesc, String channelIcon, String channelSubIcon, String channelBanner, String channelReview, String channelName, Integer channelTypeId, Integer ownerId, Integer themeId) throws Exception {
@@ -509,19 +510,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 
 	/**
-	 * 查询昨天新增织图数，不包含马甲
-	 * 
-	 * @param yestoday
-	 * @param today
-	 * @param channelId
-	 * @return
-	 * @throws Exception
-	 */
-	/*
-	 * public long queryYestodayWorldIncreasement(Date yestoday, Date today,Integer channelId) throws Exception{ Date now = new Date(); DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); Date today1 = df.parse(df.format(now)); if(yestoday == null ){ yestoday = new Date(today1.getTime() - 24*60*60*1000); } if(today == null){ today = today1; } return opChannelV2Mapper.queryYestodayWorldIncreasement(yestoday, today, channelId); }
-	 */
-
-	/**
 	 * @author zhangbo 2015年6月10日
 	 */
 	@Override
@@ -742,7 +730,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 
 	/**
-	 * 刷新新版本主题缓存
+	 * 刷新频道主题缓存
 	 * 
 	 * @throws Exception 
 		*	2015年12月3日
@@ -750,7 +738,20 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 */
 	@Override
 	public void channelThemeRefreshCache(){
+		// 定义频道主题添加到缓存的集合
+		List<com.hts.web.common.pojo.OpChannelTheme> ctlist = new ArrayList<com.hts.web.common.pojo.OpChannelTheme>();
 		
+		// 获取所有频道主题，并转换成缓存需要的集合
+		List<ChannelTheme> allChannelTheme = channelThemeMapper.queryAllTheme();
+		for (ChannelTheme channelTheme : allChannelTheme) {
+			com.hts.web.common.pojo.OpChannelTheme ct = new com.hts.web.common.pojo.OpChannelTheme();
+			ct.setId(channelTheme.getId());
+			ct.setThemeName(channelTheme.getThemeName());
+			ctlist.add(ct);
+		}
+		
+		// 更新频道主题缓存
+		channelThemeCache.updateChannelTheme(ctlist);
 	}
 	
 }
