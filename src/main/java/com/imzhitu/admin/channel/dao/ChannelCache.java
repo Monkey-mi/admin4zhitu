@@ -2,7 +2,7 @@ package com.imzhitu.admin.channel.dao;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.constant.CacheKeies;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
@@ -13,7 +13,7 @@ import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
  * @author zhangbo	2015年12月4日
  *
  */
-@Service
+@Repository
 public class ChannelCache extends BaseCacheDaoImpl<com.hts.web.common.pojo.OpChannel> {
 	
 	/**

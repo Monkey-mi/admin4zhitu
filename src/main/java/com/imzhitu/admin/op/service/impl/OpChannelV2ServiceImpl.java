@@ -22,6 +22,7 @@ import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.TimeUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
 import com.imzhitu.admin.channel.dao.ChannelCache;
+import com.imzhitu.admin.channel.dao.ChannelThemeCache;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.ChannelTheme;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
@@ -29,7 +30,6 @@ import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpDataStatisticsDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.op.dao.ChannelAutoRejectIdCacheDao;
-import com.imzhitu.admin.op.dao.OpChannelThemeCache;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpChannelV2Mapper;
 import com.imzhitu.admin.op.service.OpChannelMemberService;
@@ -84,7 +84,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	private com.imzhitu.admin.op.mapper.ChannelThemeMapper channelThemeMapper;
 	
 	@Autowired
-	private OpChannelThemeCache channelThemeCache;
+	private ChannelThemeCache channelThemeCache;
 
 	@Override
 	public void insertOpChannel(String channelDesc, String channelIcon, String channelSubIcon, String channelBanner, String channelReview, String channelName, Integer channelTypeId, Integer ownerId, Integer themeId) throws Exception {
