@@ -11,9 +11,11 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpNearCityGroupDto;
 import com.imzhitu.admin.common.pojo.OpNearLabelDto;
+import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
 import com.imzhitu.admin.common.pojo.OpNearRecommendCityDto;
 import com.imzhitu.admin.op.mapper.OpNearCityGroupMapper;
 import com.imzhitu.admin.op.mapper.OpNearLabelMapper;
+import com.imzhitu.admin.op.mapper.OpNearLabelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpNearRecommendCityMapper;
 import com.imzhitu.admin.op.service.OpNearService;
 
@@ -28,6 +30,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	
 	@Autowired
 	private OpNearRecommendCityMapper nearRecommendCityMapper;
+	
+	@Autowired
+	private OpNearLabelWorldMapper nearLabelWorldMapper;
 	
 	@Override
 	public void queryNearLabel(Integer id, Integer cityId, int maxSerial,
@@ -168,6 +173,49 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		long total = nearRecommendCityMapper.queryNearRecommendCityTotalCount(dto);
 		if(total > 0){
 			List<OpNearRecommendCityDto> list  = nearRecommendCityMapper.queryNearRecommendCity(dto);
+			jsonMap.put(OptResult.ROWS, list);
+			jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getSerial());
+			jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+		}
+	}
+
+	@Override
+	public void insertNearLabelWorld(Integer worldId, Integer worldAuthorId,
+			Integer nearLabelId) throws Exception {
+		OpNearLabelWorldDto dto = new OpNearLabelWorldDto();
+		dto.setNearLabelId(nearLabelId);
+		long total = nearLabelWorldMapper.queryNearLabelWorldTotalCount(dto);
+		if(total > 0){
+			Integer maxSerial = nearLabelWorldMapper.queryNearLabelWorldMaxSerialByNearLabelId(nearLabelId);
+			dto.setSerial(maxSerial + 1);
+		}else{
+			dto.setSerial(1);
+		}
+		dto.setWorldId(worldId);
+		dto.setAuthorId(worldAuthorId);
+		nearLabelWorldMapper.insertNearLabelWorld(dto);
+	}
+
+	@Override
+	public void batchDeleteNearLabelWorld(String idsStr) throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		nearLabelWorldMapper.batchDeleteNearLabelWorld(ids);
+	}
+
+	@Override
+	public void queryNearLabelWorld(Integer id, Integer worldId,
+			Integer nearLabelId, int maxSerial, int start, int limit,
+			Map<String, Object> jsonMap) throws Exception {
+		OpNearLabelWorldDto dto = new OpNearLabelWorldDto();
+		dto.setFirstRow(limit * (start - 1));
+		dto.setLimit(limit);
+		dto.setId(id);
+		dto.setMaxId(maxSerial);
+		dto.setWorldId(worldId);
+		dto.setNearLabelId(nearLabelId);
+		long total = nearLabelWorldMapper.queryNearLabelWorldTotalCount(dto);
+		if(total > 0){
+			List<OpNearLabelWorldDto> list  = nearLabelWorldMapper.queryNearLabelWorld(dto);
 			jsonMap.put(OptResult.ROWS, list);
 			jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getSerial());
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, total);

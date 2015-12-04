@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imzhitu.admin.op.mapper.OpNearLabelWorldMapper">
 	<resultMap type="com.imzhitu.admin.common.pojo.OpNearLabelWorldDto" id="OpNearLabelWorldMap">
-		<result property="id" column="id" jdbcType="NUMERIC"/>
+		<result property="id" column="nearWorldLabelId" jdbcType="NUMERIC"/>
 		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
 		<result property="authorId" column="author_id" jdbcType="NUMERIC"/>
 		<result property="authorName" column="user_name" jdbcType="VARCHAR"/>
@@ -38,13 +38,13 @@
 		<result property="latestValid" column="latest_valid" jdbcType="NUMERIC"/>
 		<result property="shield" column="shield" jdbcType="NUMERIC"/>
 		<result property="squarerecd" column="squarerecd" jdbcType="NUMERIC"/>
-		<result property="worldId" column="id" jdbcType="NUMERIC"/>
+		<result property="worldId" column="world_id" jdbcType="NUMERIC"/>
 		<result property="user_level_id" column="user_level_id" jdbcType="INTEGER"/>
 		<result property="level_description" column="level_description" jdbcType="VARCHAR"/>
 		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
 		<result property="channelId" column="channel_id" jdbcType="VARCHAR"/>
 		
-		<result property="nearLabelId" column="nearLabelId" jdbcType="INTEGER"/>
+		<result property="nearLabelId" column="near_label_id" jdbcType="INTEGER"/>
 		<result property="nearLabelName" column="nearLabelName" jdbcType="VARCHAR"/>
 		<result property="serial" column="serial" jdbcType="INTEGER"/>
 	</resultMap>
@@ -71,9 +71,9 @@
 	
 	<!-- query -->
 	<select id="queryNearLabelWorld" resultMap="OpNearLabelWorldMap">
-		select *
+		select t.*,hh.*,nl.label_name as nearLabelName
 		from (
-			select * 
+			select id as nearWorldLabelId,near_label_id,world_id,serial
 			from hts.operations_near_label_world
 			<where>
 				<if test="id != null">
@@ -82,11 +82,45 @@
 				<if test="maxId != null and maxId != 0">
 					<![CDATA[ and serial <= #{maxId}]]>
 				</if>
+				<if test="worldId != null">
+					and world_id = #{worldId}
+				</if>
+				<if test="nearLabelId != null">
+					and near_label_id = #{nearLabelId}
+				</if>
 			</where>
 			order by serial desc
 			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" /> 
 		) t 
+		left join hts.operations_near_label nl on t.near_label_id=nl.id
 		left join hts.htworld_htworld hh on t.world_id = hh.id
+	</select>
+	
+	<!-- query total count -->
+	<select id="queryNearLabelWorldTotalCount" resultType="long">
+		select count(*)
+		from hts.operations_near_label_world
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and serial <= #{maxId}]]>
+			</if>
+			<if test="worldId != null">
+				and world_id = #{worldId}
+			</if>
+			<if test="nearLabelId != null">
+				and near_label_id = #{nearLabelId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- query max serial -->
+	<select id="queryNearLabelWorldMaxSerialByNearLabelId" resultType="Integer">
+		select max(serial) 
+		from hts.operations_near_label_world
+		where near_label_id = #{nearLabelId}
 	</select>
 	
 </mapper>

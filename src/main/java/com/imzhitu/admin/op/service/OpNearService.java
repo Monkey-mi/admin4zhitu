@@ -118,4 +118,36 @@ public interface OpNearService extends BaseService{
 	 * @author zxx 2015-12-4 17:33:05
 	 */
 	public void queryNearRecommendCity(Integer id,Integer cityId,Integer cityGroupId,int maxSerial,int start,int limit,Map<String,Object>jsonMap)throws Exception;
+	
+	/**
+	 * 增加附近标签织图
+	 * @param worldId
+	 * @param worldAuthorId
+	 * @param nearLabelId
+	 * @throws Exception
+	 * @author zxx 2015-12-4 18:15:38
+	 */
+	public void insertNearLabelWorld(Integer worldId,Integer worldAuthorId,Integer nearLabelId)throws Exception;
+	
+	/**
+	 * 批量删除附近织图
+	 * @param idsStr
+	 * @throws Exception
+	 * @author zxx 2015-12-4 18:15:38
+	 */
+	public void batchDeleteNearLabelWorld(String idsStr)throws Exception;
+	
+	/**
+	 * 查询附近标签织图
+	 * @param id
+	 * @param worldId
+	 * @param nearLabelId
+	 * @param maxSerial
+	 * @param start
+	 * @param limit
+	 * @param jsonMap
+	 * @throws Exception
+	 * @author zxx 2015-12-4 18:15:38
+	 */
+	public void queryNearLabelWorld(Integer id,Integer worldId,Integer nearLabelId,int maxSerial,int start,int limit,Map<String,Object>jsonMap)throws Exception;
 }

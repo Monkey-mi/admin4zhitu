@@ -27,6 +27,9 @@ public class OpNearAction extends BaseCRUDAction{
 	private Integer cityGroupId;
 	
 	private String idsStr;
+	private Integer worldId;
+	private Integer nearLabelId;
+	private Integer worldAuthorId;
 	
 	@Autowired 
 	private OpNearService nearService;
@@ -168,13 +171,58 @@ public class OpNearAction extends BaseCRUDAction{
 	}
 	
 	/**
-	 * 批量删除附近推荐城市
+	 * 批量删除附近标签织图
 	 * @return
 	 * @author zxx 2015-12-4 16:59:28
 	 */
 	public String batchDeleteRecommendCity(){
 		try{
 			nearService.batchDeleteNearRecommendCity(idsStr);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询附近标签织图
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String queryNearLabelWorld(){
+		try{
+			nearService.queryNearLabelWorld(id, worldId, nearLabelId, maxSerial, page, rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 增加附近标签织图
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String addNearLabelWorld(){
+		try{
+			nearService.insertNearLabelWorld(worldId, worldAuthorId, nearLabelId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 批量删除附标签织图
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String batchDeleteNearLabelWorld(){
+		try{
+			nearService.batchDeleteNearLabelWorld(idsStr);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -246,5 +294,28 @@ public class OpNearAction extends BaseCRUDAction{
 	public void setCityGroupId(Integer cityGroupId) {
 		this.cityGroupId = cityGroupId;
 	}
+	
+	public Integer getWorldId() {
+		return worldId;
+	}
 
+	public void setWorldId(Integer worldId) {
+		this.worldId = worldId;
+	}
+
+	public Integer getNearLabelId() {
+		return nearLabelId;
+	}
+
+	public void setNearLabelId(Integer nearLabelId) {
+		this.nearLabelId = nearLabelId;
+	}
+
+	public Integer getWorldAuthorId() {
+		return worldAuthorId;
+	}
+
+	public void setWorldAuthorId(Integer worldAuthorId) {
+		this.worldAuthorId = worldAuthorId;
+	}
 }
