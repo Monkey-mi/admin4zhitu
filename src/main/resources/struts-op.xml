@@ -168,6 +168,12 @@
 			</result>
 		</action>
 		
+		<action name="addr_*" class="com.imzhitu.admin.addr.AddrAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 		<action name="near_*" class="com.imzhitu.admin.op.OpNearAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>

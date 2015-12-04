@@ -6,13 +6,14 @@
 <title>商家信息</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath}/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
 
-	// 查询条件
-//	var queryParams = {};
+	// 行是否被勾选
+	var IsCheckFlag = false;
 	
 	var columnsFields = [
              {field: "ck",checkbox: true },
@@ -36,14 +37,12 @@
 			url: "./admin_trade/shop_buildShopList",
 			toolbar: "#tb",
 			idField: "id",
-			sortName: "id",
 			rownumbers: true,
 			columns: [columnsFields],
 			fitColumns: true,
 			autoRowHeight: true,
 			checkOnSelect: false,
 			selectOnCheck: true,
-			loadMsg: "处理中,请等待...",
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
 			pageSize: 10,
@@ -99,7 +98,7 @@
 				}
 			});	
 		}else{
-			$.messager.alert("温馨提示","请先选择记录，再执行批量删除操作!");
+			$.messager.alert("温馨提示","请先选择，再执行批量删除操作!");
 		}
 	};
 	
@@ -107,8 +106,8 @@
 </head>
 <body>
 	
+	<img id="page-loading" src="${webRootPath}/common/images/girl-loading.gif"/>
 	<div id="main" style="display: none;">
-		<img id="page-loading" alt="" src="${webRootPath}/common/images/girl-loading.gif"/>
 		
 		<table id="htm_table"></table>
 		
