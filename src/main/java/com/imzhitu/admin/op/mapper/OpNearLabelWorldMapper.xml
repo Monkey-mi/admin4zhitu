@@ -71,7 +71,7 @@
 	
 	<!-- query -->
 	<select id="queryNearLabelWorld" resultMap="OpNearLabelWorldMap">
-		select 
+		select *
 		from (
 			select * 
 			from hts.operations_near_label_world
@@ -82,8 +82,11 @@
 				<if test="maxId != null and maxId != 0">
 					<![CDATA[ and serial <= #{maxId}]]>
 				</if>
-			</where> 
-		)
+			</where>
+			order by serial desc
+			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" /> 
+		) t 
+		left join hts.htworld_htworld hh on t.world_id = hh.id
 	</select>
 	
 </mapper>
