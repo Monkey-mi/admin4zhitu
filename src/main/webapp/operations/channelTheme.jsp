@@ -28,6 +28,7 @@ var maxId = 0;
 	refreshCacheURL = "./admin_op/v2channel_refreshCacheChannelTheme";//刷新主题频道数据，同步redis和数据库中数据
 	
 	isUpdate = false;
+	rowIndex = 0;
 	themeIdOut = 0;
 	
 	htmTablePageList = [6,10,20];
@@ -58,7 +59,7 @@ var maxId = 0;
 		{field : 'themeName',title : '专题名', align : 'center'},
 		{field:'modify',title:'编辑',align:'center',
 			formatter:function(value,row,index){
-				return '<a title="修改信息" class="updateInfo" href="javascript:void(0);" onclick="javascript:modifyTheme('+ row.id +');">【修改】</a>';
+				return '<a title="修改信息" class="updateInfo" href="javascript:void(0);" onclick="javascript:modifyTheme('+ index +');">【修改】</a>';
 		}	
 		}
 		],
@@ -169,8 +170,8 @@ function openAddWindow(){
 //增加专属主题
 function addTheme(){
 	if(isUpdate){//更新主题
-		
-		var themeName = $('#themeName').val();
+		var themeName = $('#themeName').val();//获取框中数据
+	
 		$.post(updateChannelThemeURL,{
 			'themeId':themeIdOut,
 			'themeName':themeName
@@ -195,16 +196,17 @@ function addTheme(){
 }
 
 //打开修改专属主题窗口
-function modifyTheme(themeId){
+function modifyTheme(index){
 	$('#htm_edit').window('setTitle','修改主题');
 	$('#htm_edit').window('open');
-	$.post(loadDataURL,{
-		'themeId':themeId
-	},function(result){
-		$('#themeName').val(result.rows[0].themeName);
-		isUpdate = true;//指定为更新状态
-		themeIdOut = themeId;//指定更新id为全局
-	},"json");
+	
+	$('#htm_table').datagrid("unselectAll");//清空所有的选择
+	$('#htm_table').datagrid('selectRow',index);	
+	var row = $('#htm_table').datagrid('getSelected');
+	$('#themeName').val(row.themeName);//将输入框中显示原有值
+	themeIdOut = row.id;
+	
+	isUpdate = true;
 }
 
 

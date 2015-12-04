@@ -18,20 +18,6 @@
 		 order by serial desc
 	</select>
 	
-	<!-- 得到频道主题 -->
-	<select id="getChannelThemeById" resultMap="ChannnelThemePojo">
-		select 
-		 	* 
-		from 
-		 	hts.operations_channel_theme
-		 <where>
-		 <if test="themeId != 0 and themeId != null">
-		 	id = #{themeId}
-		 </if>
-		 </where>	
-		 order by serial desc
-	</select>
-	
 	<!-- 查询总数 -->
 	<select id="getTotal" resultType="Integer">
 		select 

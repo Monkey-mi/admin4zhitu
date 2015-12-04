@@ -18,15 +18,6 @@ public interface ChannelThemeMapper {
 	List<ChannelTheme>	queryAllTheme();
 
 	/**
-	 * 得到频道主题
-	 * 
-	 * @return
-	 * @author mishengliang	2015年12月2日
-	 */
-	@DataSource("slave")
-	ChannelTheme getChannelThemeById(@Param("themeId")Integer themeId);
-	
-	/**
 	 * 查询总数
 	 * 
 	 * @return
