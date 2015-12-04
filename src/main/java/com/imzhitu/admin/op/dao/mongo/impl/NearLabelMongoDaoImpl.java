@@ -20,16 +20,22 @@ public class NearLabelMongoDaoImpl extends BaseMongoDaoImpl implements NearLabel
 	public void deleteById(Integer id) {
 		
 	}
+	
+	@Override
+	public void deleteByIds(Integer[] ids) {
+		
+	}
 
 	@Override
 	public void updateLabel(OpNearLabelDto label) {
-//		if(label.getLoc() == null || (label.getLoc()[0] == 0 && label.getLoc()[1] == 0))
-//			throw new IllegalArgumentException("please set loc");
+		
 	}
 
 	@Override
 	public void updateSerial(Integer id, Integer serial) {
+		
 	}
+
 
 
 }
