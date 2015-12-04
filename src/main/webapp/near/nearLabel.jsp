@@ -17,11 +17,15 @@
              {field: "cityId",title: "城市id",align: "center"},
              {field: "cityName",title: "城市名称",align: "center"},
              {field: "labelName",title: "标签名称",align: "center"},
-             {field: "longitude",title: "id",align: "center"},
-             {field: "latitude",title: "id",align: "center"},
+             {field: "longitude",title: "经度",align: "center"},
+             {field: "latitude",title: "纬度",align: "center"},
              {field: "description",title: "标签描述",align: "center"},
-             {field: "bannerUrl",title: "图标",align: "center"},
-             {field: "serial",title: "图标",align: "center"}
+             {field: "bannerUrl",title: "图标",align: "center",
+             	formatter: function(value,row,index) {
+			  				return "<img title='无效' width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+			  			}
+			  },
+             {field: "serial",title: "序列号",align: "center"}
 	    ];
 	
 	$(function(){
@@ -112,7 +116,7 @@
 	function batchDelete() {
 		var rows = $("#htm_table").datagrid("getSelections");
 		if(rows.length > 0){
-			$.messager.confirm("温馨提示", "您确定要删除已选中的城市组吗？删除后，城市与此分组的关联关系也将被删除。", function(r){
+			$.messager.confirm("温馨提示", "您确定要删除已选中的城市组吗？删除后，附近标签与附近标签织图的关联关系也将被删除。", function(r){
 				if(r){
 					var nearLabelIds = [];
 					for(var i=0;i<rows.length;i++){
