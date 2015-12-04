@@ -8,15 +8,23 @@ import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.ChannelTheme;
 
 public interface ChannelThemeMapper {
-
+	
 	/**
 	 * 查询频道主题列表
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月4日
+	 */
+	List<ChannelTheme>	queryAllTheme();
+
+	/**
+	 * 得到频道主题
 	 * 
 	 * @return
 	 * @author mishengliang	2015年12月2日
 	 */
 	@DataSource("slave")
-	public List<ChannelTheme> queryAllThemeById(@Param("themeId")Integer themeId);
+	ChannelTheme getChannelThemeById(@Param("themeId")Integer themeId);
 	
 	/**
 	 * 查询总数
@@ -25,7 +33,7 @@ public interface ChannelThemeMapper {
 	 * @author mishengliang	2015年12月2日
 	 */
 	@DataSource("slave")
-	public Integer getTotal();
+	Integer getTotal();
 	
 	/**
 	 * 插入新的主题
@@ -34,7 +42,7 @@ public interface ChannelThemeMapper {
 	 * @author mishengliang	2015年12月2日
 	 */
 	@DataSource("master")
-	public void insertChannelTheme(@Param("themeName")String themeName);
+	void insertChannelTheme(@Param("themeName")String themeName);
 	
 	/**
 	 * 更新主题
@@ -43,7 +51,7 @@ public interface ChannelThemeMapper {
 	 * @author mishengliang	2015年12月2日
 	 */
 	@DataSource("master")
-	public void updateChannelTheme(@Param("themeId")Integer themeId,@Param("themeName")String themeName);
+	void updateChannelTheme(@Param("themeId")Integer themeId,@Param("themeName")String themeName);
 	
 	/**
 	 * 删除主题
@@ -52,7 +60,7 @@ public interface ChannelThemeMapper {
 	 * @author mishengliang	2015年12月2日
 	 */
 	@DataSource("master")
-	public void deleteChannelTheme(@Param("themeId")Integer themeId);
+	void deleteChannelTheme(@Param("themeId")Integer themeId);
 	
 	
 	/**
@@ -61,5 +69,6 @@ public interface ChannelThemeMapper {
 		*	2015年12月4日
 		*	mishengliang
 	 */
-	public void updateChannelThemeSerial(@Param("id")Integer id,@Param("serial")Integer serial);
+	@DataSource("master")
+	void updateChannelThemeSerial(@Param("id")Integer id,@Param("serial")Integer serial);
 }

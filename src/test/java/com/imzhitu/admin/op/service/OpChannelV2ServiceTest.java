@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.springframework.aop.ThrowsAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.imzhitu.admin.base.BaseTest;
@@ -60,7 +59,7 @@ public class OpChannelV2ServiceTest extends BaseTest {
 	@Test
 	public void queryChannelThemeListTest() throws Exception{
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.queryChannelThemeList(0,jsonMap);
+		service.queryChannelThemeList(jsonMap);
 	}
 	
 }

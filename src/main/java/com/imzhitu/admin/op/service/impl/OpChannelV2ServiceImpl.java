@@ -629,8 +629,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	 * 将方法从web工程中抽到admin，新建mapper层
 	 */
 	@Override
-	public void queryChannelThemeList(Integer themeId,Map<String,Object> jsonMap) {
-		List<ChannelTheme> list= channelThemeMapper.queryAllThemeById(themeId);
+	public void queryChannelThemeList(Map<String,Object> jsonMap) {
+		
+		List<ChannelTheme> list= channelThemeMapper.queryAllTheme();
 		Integer total = channelThemeMapper.getTotal();
 		jsonMap.put(OptResult.ROWS, list);
 		jsonMap.put(OptResult.TOTAL, total);
@@ -690,9 +691,8 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	public void channelThemeRefreshCache(){
 		// 定义频道主题添加到缓存的集合
 		List<com.hts.web.common.pojo.OpChannelTheme> ctlist = new ArrayList<com.hts.web.common.pojo.OpChannelTheme>();
-		Integer themeId = null;
 		// 获取所有频道主题，并转换成缓存需要的集合
-		List<ChannelTheme> allChannelTheme = channelThemeMapper.queryAllThemeById(themeId);
+		List<ChannelTheme> allChannelTheme = channelThemeMapper.queryAllTheme();
 		for (ChannelTheme channelTheme : allChannelTheme) {
 			com.hts.web.common.pojo.OpChannelTheme ct = new com.hts.web.common.pojo.OpChannelTheme();
 			ct.setId(channelTheme.getId());

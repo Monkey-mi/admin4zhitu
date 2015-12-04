@@ -9,8 +9,17 @@
 		<result column="serial" property="serial" javaType="java.lang.Integer"/>
 	</resultMap>
 	
+	<!-- 查询频道主题列表 -->
+	<select id="queryAllTheme" resultMap="ChannnelThemePojo">
+		select 
+		 	* 
+		from 
+		 	hts.operations_channel_theme
+		 order by serial desc
+	</select>
 	
-	<select id="queryAllThemeById" resultMap="ChannnelThemePojo">
+	<!-- 得到频道主题 -->
+	<select id="getChannelThemeById" resultMap="ChannnelThemePojo">
 		select 
 		 	* 
 		from 
@@ -23,40 +32,43 @@
 		 order by serial desc
 	</select>
 	
+	<!-- 查询总数 -->
 	<select id="getTotal" resultType="Integer">
-	select 
-		count(*)
-	from 
-		 hts.operations_channel_theme
-	where 
-		valid = 1
+		select 
+			count(*)
+		from 
+			 hts.operations_channel_theme
 	</select>
 	
+	<!-- 插入新的主题 -->
 	<insert id="insertChannelTheme">
-	insert into 
-	 	hts.operations_channel_theme(theme_name,valid,serial)
-	values
-		(#{themeName},1,0)
+		insert into 
+		 	hts.operations_channel_theme(theme_name,valid,serial)
+		values
+			(#{themeName},1,0)
 	</insert>
 	
+	<!-- 更新主题 -->
 	<update id="updateChannelTheme">
-	update 
-		hts.operations_channel_theme
-	set
-		theme_name = #{themeName}	
-	where
-		id = #{themeId}	
+		update 
+			hts.operations_channel_theme
+		set
+			theme_name = #{themeName}	
+		where
+			id = #{themeId}	
 	</update>
 	
+	<!-- 删除主题 -->
 	<delete id="deleteChannelTheme">
-	delete from 
-		hts.operations_channel_theme
-	where
-		<if test="themeId != 0">
-		id = #{themeId}		
-		</if>
+		delete from 
+			hts.operations_channel_theme
+		where
+			<if test="themeId != 0">
+				id = #{themeId}		
+			</if>
 	</delete>
 	
+	<!-- 更新排序 -->
 	<update id="updateChannelThemeSerial">
 		update 
 			hts.operations_channel_theme
@@ -65,4 +77,5 @@
 		where 
 			id = #{id}    
 	</update>
+	
 </mapper>

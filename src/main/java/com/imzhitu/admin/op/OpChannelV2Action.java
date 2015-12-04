@@ -418,8 +418,12 @@ public class OpChannelV2Action extends BaseCRUDAction {
 	 */
 	public String queryChannelThemeList() {
 		try {
-			 opChannelV2Service.queryChannelThemeList(themeId,jsonMap);
-			 JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+			if (themeId == null) {
+				opChannelV2Service.queryChannelThemeList(jsonMap);
+			} else {
+				jsonMap.put(OptResult.ROWS, null);
+			}
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 			log.error(e.getMessage(), e);

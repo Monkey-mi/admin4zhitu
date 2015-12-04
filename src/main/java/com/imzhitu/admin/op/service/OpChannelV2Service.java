@@ -229,7 +229,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 * @author zhangbo 2015年6月17日
 	 */
-	void queryChannelThemeList(Integer themeId,Map<String,Object> jsonMap);
+	void queryChannelThemeList(Map<String,Object> jsonMap);
 	
 	/**
 	 * 插入新的专属主题
