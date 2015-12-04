@@ -85,12 +85,9 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	
 	@Autowired
 	private ChannelThemeCache channelThemeCache;
-<<<<<<< HEAD
 	
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
-=======
->>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 
 	@Override
 	public void insertOpChannel(String channelDesc, String channelIcon, String channelSubIcon, String channelBanner, String channelReview, String channelName, Integer channelTypeId, Integer ownerId, Integer themeId) throws Exception {
@@ -693,8 +690,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	public void channelThemeRefreshCache(){
 		// 定义频道主题添加到缓存的集合
 		List<com.hts.web.common.pojo.OpChannelTheme> ctlist = new ArrayList<com.hts.web.common.pojo.OpChannelTheme>();
-<<<<<<< HEAD
-		Integer themeId = null; 
+		Integer themeId = null;
 		// 获取所有频道主题，并转换成缓存需要的集合
 		List<ChannelTheme> allChannelTheme = channelThemeMapper.queryAllThemeById(themeId);
 		for (ChannelTheme channelTheme : allChannelTheme) {
@@ -703,21 +699,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 			ct.setThemeName(channelTheme.getThemeName());
 			ctlist.add(ct);
 		}
-=======
->>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 		
-<<<<<<< HEAD
-=======
-		// 获取所有频道主题，并转换成缓存需要的集合
-		List<ChannelTheme> allChannelTheme = channelThemeMapper.queryAllTheme();
-		for (ChannelTheme channelTheme : allChannelTheme) {
-			com.hts.web.common.pojo.OpChannelTheme ct = new com.hts.web.common.pojo.OpChannelTheme();
-			ct.setId(channelTheme.getId());
-			ct.setThemeName(channelTheme.getThemeName());
-			ctlist.add(ct);
-		}
-		
->>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 		// 更新频道主题缓存
 		channelThemeCache.updateChannelTheme(ctlist);
 	}
