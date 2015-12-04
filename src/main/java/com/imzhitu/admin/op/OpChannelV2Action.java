@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.pojo.OpChannelLink;
-import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.common.pojo.ChannelTheme;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 import com.imzhitu.admin.constant.LoggerKeies;
 import com.imzhitu.admin.op.service.OpChannelV2Service;
@@ -245,22 +243,6 @@ public class OpChannelV2Action extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 
-	/**
-	 * 批量更新有效性
-	 * 
-	 * @return
-	 */
-	public String batchUpdateChannelValid() {
-		try {
-			opChannelV2Service.batchUpdateValid(channelIdsStr, valid);
-			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-			log.error(e.getMessage(), e);
-		}
-		return StrutsKey.JSON;
-	}
-
 	public String queryOpChannelByAdminUserId() {
 		try {
 			if (roleDao.isSuperOrOpAdminCurrentLogin()) {
@@ -436,7 +418,7 @@ public class OpChannelV2Action extends BaseCRUDAction {
 	 */
 	public String queryChannelThemeList() {
 		try {
-			 opChannelV2Service.queryChannelThemeList(jsonMap);
+			 opChannelV2Service.queryChannelThemeList(themeId,jsonMap);
 			 JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -525,6 +507,17 @@ public class OpChannelV2Action extends BaseCRUDAction {
 		}
 		return StrutsKey.JSON;
 	}
+	
+	
+	public String refreshCacheChannelTheme() {
+		try {
+			opChannelV2Service.channelThemeRefreshCache();
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 
 	private Integer channelId; // 频道id
 	private Integer ownerId; // 拥有者ID
@@ -543,7 +536,6 @@ public class OpChannelV2Action extends BaseCRUDAction {
 	private Integer danmu; // 弹幕标记。0非弹幕，1弹幕
 	private Integer moodFlag; // 发心情标记
 	private Integer worldFlag; // 织图标记
-	private String channelIdsStr; // channel id array string
 	private String worldAndAuthorIdsStr;// worldId and authorId，eg：123-114,124-114
 	private Integer themeId; // 主题ID
 	private String themeName;//主题名
@@ -627,12 +619,12 @@ public class OpChannelV2Action extends BaseCRUDAction {
 		this.worldFlag = worldFlag;
 	}
 
-	public void setChannelIdsStr(String channelIdsStr) {
-		this.channelIdsStr = channelIdsStr;
-	}
-
 	public void setWorldAndAuthorIdsStr(String worldAndAuthorIdsStr) {
 		this.worldAndAuthorIdsStr = worldAndAuthorIdsStr;
+	}
+	
+	public Integer getThemeId() {
+		return themeId;
 	}
 
 	public void setThemeId(Integer themeId) {
