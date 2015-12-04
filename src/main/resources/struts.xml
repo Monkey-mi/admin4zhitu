@@ -63,6 +63,7 @@
 	<include file="struts-logger.xml"></include>
 	<include file="struts-plat.xml"></include>
 	<include file="struts-properties.xml"></include>
+	<include file="struts-trade.xml"></include>
 </struts>
 
 
