@@ -225,7 +225,6 @@ function deleteTheme(){
 
 function refreshCache(){
 	$.post(refreshCacheURL,function(result){
-		
 	},"json");
 }
 

@@ -341,6 +341,15 @@ var maxId = 0;
 		    },
 		});
 		
+		$("#channelThemeId").combobox({
+			url:"./admin_op/v2channel_queryChannelThemeList",
+		 	valueField:'id',
+			textField:'themeName', 
+			loadFilter:function(data){
+				return data.rows;
+			}
+		});
+		
 		removePageLoading();
 		$("#main").show();
 	};
@@ -737,7 +746,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
 			<a href="javascript:void(0);" onclick="javascript:initEditWindow(0,0,false);" class="easyui-linkbutton" title="添加织图到广场" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
-			<a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" plain="true" iconCls="icon-converter" id="refreshCacheBtn">刷新缓存</a>
+			<!-- <a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" plain="true" iconCls="icon-converter" id="refreshCacheBtn">刷新缓存</a>-->
 			<span class="search_label">所属专题过滤：</span>
 			<input id="ss_channelTheme" >
 			<span class="search_label">有效性过滤：</span>
@@ -832,9 +841,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
 						<tr>
 							<td class="leftTd">专属主题：</td>
 							<td colspan="5">
-								<input id="channelThemeId" name="themeId" 
-									class="easyui-combobox" onchange="validateSubmitOnce=true;" 
-										data-options="valueField:'themeId',textField:'themeName',url:'./admin_op/v2channel_queryChannelThemeList'" />
+								<input id="channelThemeId" name="themeId" onchange="validateSubmitOnce=true;"/>
 							</td>
 						</tr>
 						
