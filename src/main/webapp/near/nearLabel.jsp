@@ -63,11 +63,11 @@
 			}
 		});
 		
-		$('#htm_serial').window({
-			title : '重新排序',
+		$('#add_nearLabel_window').window({
+			title : '添加附近标签',
 			modal : true,
 			width : 650,
-			height : 155,
+			height : 405,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -142,6 +142,7 @@
 			$.messager.alert("温馨提示","请先选择，再执行批量删除操作!");
 		}
 	};
+	
 	
 </script>
 </head>
@@ -220,6 +221,9 @@
 		</div>
 		
 	</div>
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
+	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
 	<script type="text/javascript">
 		Qiniu.uploader({
         runtimes: 'html5,flash,html4',
