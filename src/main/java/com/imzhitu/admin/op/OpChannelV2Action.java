@@ -519,6 +519,22 @@ public class OpChannelV2Action extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 
+	/**
+	 * 更新频道排序
+	 * 
+	 * @return
+	 */
+	public String updateChannelThemeSerial() {
+		String[] ids = request.getParameterValues("reIndexId");
+		try {
+			opChannelV2Service.addChannelThemeSerial(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	private Integer channelId; // 频道id
 	private Integer ownerId; // 拥有者ID
 	private String channelName; // 频道名称

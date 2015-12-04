@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hts.web.common.pojo.OpChannelLink;
-import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.service.BaseService;
-import com.imzhitu.admin.common.pojo.ChannelTheme;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 
 import net.sf.json.JSONArray;
@@ -125,13 +123,6 @@ public interface OpChannelV2Service extends BaseService{
 	void updateValid(Integer  channelId,Integer valid)throws Exception;
 	
 	/**
-	 * 批量update
-	 * @param channelIdsStr
-	 * @throws Exception
-	 */
-	void batchUpdateValid(String channelIdsStr,Integer valid)throws Exception;
-	
-	/**
 	 * 根据管理员账号查询其对应的频道
 	 * 
 	 * @param adminUserId
@@ -238,7 +229,7 @@ public interface OpChannelV2Service extends BaseService{
 	 * @return
 	 * @author zhangbo 2015年6月17日
 	 */
-	void queryChannelThemeList(Map<String,Object> jsonMap);
+	void queryChannelThemeList(Integer themeId,Map<String,Object> jsonMap);
 	
 	/**
 	 * 插入新的专属主题
@@ -289,5 +280,15 @@ public interface OpChannelV2Service extends BaseService{
 		*	mishengliang
 	 */
 	void channelThemeRefreshCache() throws Exception;
+	
+	
+	/**
+	 * 重新排序
+	 * @param ids
+	 * @throws Exception 
+		*	2015年12月4日
+		*	mishengliang
+	 */
+	void addChannelThemeSerial(String[] ids)  throws Exception;
 	
 }

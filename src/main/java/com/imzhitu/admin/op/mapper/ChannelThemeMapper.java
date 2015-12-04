@@ -58,4 +58,13 @@ public interface ChannelThemeMapper {
 	 */
 	@DataSource("master")
 	public void deleteChannelTheme(@Param("themeId")Integer themeId);
+	
+	
+	/**
+	 * 更新排序
+	 *  
+		*	2015年12月4日
+		*	mishengliang
+	 */
+	public void updateChannelThemeSerial(@Param("id")Integer id,@Param("serial")Integer serial);
 }
