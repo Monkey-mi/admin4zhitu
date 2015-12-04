@@ -13,16 +13,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hts.web.aliyun.service.OsChannelService;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.constant.Tag;
-import com.hts.web.common.pojo.OpChannel;
 import com.hts.web.common.pojo.OpChannelLink;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.common.util.TimeUtil;
 import com.imzhitu.admin.aliyun.service.OpenSearchService;
+import com.imzhitu.admin.channel.dao.ChannelCache;
 import com.imzhitu.admin.common.pojo.AdminAndUserRelationshipDto;
 import com.imzhitu.admin.common.pojo.ChannelTheme;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
@@ -55,9 +54,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	private com.hts.web.common.service.KeyGenService keyGenService;
 
 	@Autowired
-	private OsChannelService osChannelService;
-
-	@Autowired
 	private AdminAndUserRelationshipService adminAndUserRelationshipService;
 
 	@Autowired
@@ -73,7 +69,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	private UserInfoMapper userInfoMapper;
 
 	@Autowired
-	private com.hts.web.operations.dao.ChannelCacheDao channelCacheDao;
+	private ChannelCache channelCache;
 
 	@Autowired
 	private com.hts.web.operations.dao.ChannelDao channelDao;
@@ -363,35 +359,6 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 	}
 
 	/**
-	 * 批量更新
-	 */
-	@Override
-	public void batchUpdateValid(String channelIdsStr, Integer valid) throws Exception {
-		if (channelIdsStr == null || "".equals(channelIdsStr.trim())) {
-			return;
-		}
-		Integer[] channelIds = StringUtil.convertStringToIds(channelIdsStr);
-		List<OpChannel> list = new ArrayList<OpChannel>(channelIds.length);
-		for (int i = 0; i < channelIds.length; i++) {
-			updateValid(channelIds[i], valid);
-			OpChannelV2Dto d = queryOpChannelByIdOrName(channelIds[i], null);
-			if (null == d) {
-				continue;
-			}
-			OpChannel opChannel = new OpChannel();
-			opChannel.setChannelIcon(d.getChannelIcon());
-			opChannel.setChannelName(d.getChannelName());
-			opChannel.setChannelTitle(d.getChannelTitle());
-			opChannel.setChildCount(d.getWorldPictureCount());
-			opChannel.setId(d.getChannelId());
-			opChannel.setSerial(d.getSerial());
-			list.add(opChannel);
-		}
-
-		osChannelService.updateChannelAtOnce(list);
-	}
-
-	/**
 	 * 根据管理员账号查询其对应的频道
 	 * 
 	 * @param adminUserId
@@ -509,17 +476,15 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 		return opChannelV2Mapper.queryYestodayMemberIncreasement(yestodayTime, todayTime, channelId);
 	}
 
-	/**
-	 * @author zhangbo 2015年6月10日
-	 */
 	@Override
 	public void updateChannelCache() throws Exception {
+		
+		// 查询置顶频道，并且转换为客户端需要反序列化的com.hts.web.common.pojo.OpChannel对象
 	    List<OpChannelV2Dto> topList = opChannelV2Mapper.queryChannelTop();
 	    
-	    // 转换后的置顶 集合
-	    List<OpChannel> topTempList = new ArrayList<OpChannel>();
+	    List<com.hts.web.common.pojo.OpChannel> topTempList = new ArrayList<com.hts.web.common.pojo.OpChannel>();
 	    for (OpChannelV2Dto opChannelV2Dto : topList) {
-			topTempList.add(new OpChannel(
+			topTempList.add(new com.hts.web.common.pojo.OpChannel(
 					opChannelV2Dto.getChannelId(),
 					opChannelV2Dto.getOwnerId(),
 					opChannelV2Dto.getChannelName(),
@@ -546,31 +511,13 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 					opChannelV2Dto.getWorldFlag(),
 					opChannelV2Dto.getChannelReview()));
 	    }
-	    // 置顶频道id集合
-	    List<Integer> topChannelIds = new ArrayList<Integer>();
-	    for (OpChannel top : topTempList) {
-		topChannelIds.add(top.getId());
-	    }
 	    
 	    // 只查询1000条数据
-	    List<OpChannel> superbList = channelDao.querySuperbChannel(1000);
+	    List<com.hts.web.common.pojo.OpChannel> superbList = channelDao.querySuperbChannel(1000);
 	    
-	    // 筛选后的精选集合
-	    List<OpChannel> superbTempList = new ArrayList<OpChannel>();
-	    
-	    // 精选集合中不能包含置顶集合中的频道，若有，则移除，即不放入筛选后集合
-	    for (OpChannel superb : superbList) {
-		// 若不存在于置顶频道集合中，则放入筛选后的精选集合
-		if (!topChannelIds.contains(superb.getId())) {
-		    superbTempList.add(superb);
-		}
-	    }
-	    
-	    // 刷新频道redis缓存
-	    channelCacheDao.updateChannel(topTempList, superbTempList);
-	    // 刷新频道主题redis缓存
-//	    webThemeCacheDao.updateTheme();	FIXME 这个接口要换掉
-	    
+	    // 刷新频道（频道缓存中存储的为精选频道）与推荐频道（推荐频道中存储的为top频道）redis缓存
+	    channelCache.updateChannel(superbList);
+	    channelCache.updateRecommendChannel(topTempList);
 	}
 
 	/**

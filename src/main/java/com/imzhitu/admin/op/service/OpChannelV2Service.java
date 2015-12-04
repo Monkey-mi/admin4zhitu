@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hts.web.common.pojo.OpChannelLink;
-import com.hts.web.common.pojo.OpChannelTheme;
 import com.hts.web.common.service.BaseService;
-import com.imzhitu.admin.common.pojo.ChannelTheme;
 import com.imzhitu.admin.common.pojo.OpChannelV2Dto;
 
 import net.sf.json.JSONArray;
@@ -125,13 +123,6 @@ public interface OpChannelV2Service extends BaseService{
 	void updateValid(Integer  channelId,Integer valid)throws Exception;
 	
 	/**
-	 * 批量update
-	 * @param channelIdsStr
-	 * @throws Exception
-	 */
-	void batchUpdateValid(String channelIdsStr,Integer valid)throws Exception;
-	
-	/**
 	 * 根据管理员账号查询其对应的频道
 	 * 
 	 * @param adminUserId
@@ -159,7 +150,7 @@ public interface OpChannelV2Service extends BaseService{
 	long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId)throws Exception;
 
 	/**
-	 * 刷新频道缓存，同时刷新置顶与加精的频道
+	 * 刷新频道缓存，同时刷新置顶与加精的频道，置顶频道即推荐频道，加精频道即客户端频道缓存
 	 * 
 	 * @author zhangbo 2015年6月10日
 	 */
