@@ -7,7 +7,7 @@
 		<result column="city_name" property="cityName" jdbcType="VARCHAR"/>
 		<result column="longitude" property="longitude" jdbcType="DOUBLE"/>
 		<result column="latitude" property="latitude" jdbcType="DOUBLE"/>
-		<result column="desc" property="desc" jdbcType="VARCHAR"/>
+		<result column="description" property="description" jdbcType="VARCHAR"/>
 		<result column="banner_url" property="bannerUrl" jdbcType="VARCHAR"/>
 		<result column="serial" property="serial" jdbcType="INTEGER"/>
 		<result column="label_name" property="labelName" jdbcType="VARCHAR"/>
@@ -16,8 +16,8 @@
 	<!-- insert -->
 	<insert id="insertNearLabel">
 		insert into hts.operations_near_label
-		 	(city_id,label_name,longitude,latitude,desc,banner_url,serial)
-		values (#{cityId,#{labelName},#{longitude},#{latitude},#{desc},#{bannerUrl},#{serial})
+		 	(city_id,label_name,longitude,latitude,description,banner_url,serial)
+		values (#{cityId,#{labelName},#{longitude},#{latitude},#{description},#{bannerUrl},#{serial})
 	</insert>
 	
 	<!-- update -->
@@ -37,7 +37,7 @@
 				latitude = #{latitude},
 			</if>
 			<if test="desc != null">
-				desc = #{desc},
+				description = #{description},
 			</if>
 			<if test="bannerUrl != null">
 				banner_url = #{bannerUrl},
@@ -90,6 +90,12 @@
 				<![CDATA[ and onl.serial <= #{maxId}]]>
 			</if>
 		</where>
+	</select>
+	
+	<!-- query maxMaxSerial -->
+	<select id="selectMaxSerialByCityId" resultType="Integer">
+		select max(serial) from hts.operations_near_label
+		where city_id = #{cityId}
 	</select>
 	
 </mapper>

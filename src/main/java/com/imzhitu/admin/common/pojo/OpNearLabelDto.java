@@ -10,7 +10,7 @@ public class OpNearLabelDto extends AbstractNumberDto{
 	private String labelName;
 	private Double longitude;
 	private Double latitude;
-	private String desc;
+	private String description;
 	private String bannerUrl;
 	private Integer serial;
 	private Integer maxId = 0;
@@ -76,12 +76,6 @@ public class OpNearLabelDto extends AbstractNumberDto{
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
-	public String getDesc() {
-		return desc;
-	}
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
 	public String getBannerUrl() {
 		return bannerUrl;
 	}
@@ -93,6 +87,14 @@ public class OpNearLabelDto extends AbstractNumberDto{
 	}
 	public void setSerial(Integer serial) {
 		this.serial = serial;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }
