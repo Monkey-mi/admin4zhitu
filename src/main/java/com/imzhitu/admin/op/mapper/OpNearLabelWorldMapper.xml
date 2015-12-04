@@ -2,6 +2,88 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imzhitu.admin.op.mapper.OpNearLabelWorldMapper">
 	<resultMap type="com.imzhitu.admin.common.pojo.OpNearLabelWorldDto" id="OpNearLabelWorldMap">
+		<result property="id" column="id" jdbcType="NUMERIC"/>
+		<result property="shortLink" column="short_link" jdbcType="VARCHAR"/>
+		<result property="authorId" column="author_id" jdbcType="NUMERIC"/>
+		<result property="authorName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="authorAvatar" column="user_avatar" jdbcType="VARCHAR"/>
+		<result property="star" column="star" jdbcType="NUMERIC"/>
+		<result property="trust" column="trust" jdbcType="NUMERIC"/>
+		<result property="appVer" column="app_ver" jdbcType="FLOAT"/>
+		<result property="phoneSys" column="phone_sys" jdbcType="VARCHAR"/>
+		<result property="phoneVer" column="phone_ver" jdbcType="VARCHAR"/>
+		<result property="worldName" column="world_name" jdbcType="VARCHAR"/>
+		<result property="worldDesc" column="world_desc" jdbcType="VARCHAR"/>
+		<result property="worldLabel" column="world_label" jdbcType="VARCHAR"/>
+		<result property="worldType" column="world_type" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id" jdbcType="NUMERIC"/>
+		<result property="dateAdded" column="date_added" jdbcType="TIMESTAMP"/>
+		<result property="dateModified" column="date_modified" jdbcType="TIMESTAMP"/>
+		<result property="clickCount" column="click_count" jdbcType="NUMERIC"/>
+		<result property="likeCount" column="like_count" jdbcType="NUMERIC"/>
+		<result property="commentCount" column="comment_count" jdbcType="NUMERIC"/>
+		<result property="keepCount" column="keep_count" jdbcType="NUMERIC"/>
+		<result property="coverPath" column="cover_path" jdbcType="VARCHAR"/>
+		<result property="titlePath" column="title_path" jdbcType="VARCHAR"/>
+		<result property="titleThumbPath" column="title_thumb_path" jdbcType="VARCHAR"/>
+		<result property="longitude" column="longitude" jdbcType="DOUBLE"/>
+		<result property="latitude" column="latitude" jdbcType="DOUBLE"/>
+		<result property="locationDesc" column="location_desc" jdbcType="VARCHAR"/>
+		<result property="locationAddr" column="location_addr" jdbcType="VARCHAR"/>
+		<result property="phoneCode" column="phone_code" jdbcType="NUMERIC"/>
+		<result property="province" column="province" jdbcType="VARCHAR"/>
+		<result property="city" column="city" jdbcType="VARCHAR"/>
+		<result property="size" column="size" jdbcType="NUMERIC"/>
+		<result property="valid" column="valid" jdbcType="NUMERIC"/>
+		<result property="latestValid" column="latest_valid" jdbcType="NUMERIC"/>
+		<result property="shield" column="shield" jdbcType="NUMERIC"/>
+		<result property="squarerecd" column="squarerecd" jdbcType="NUMERIC"/>
+		<result property="worldId" column="id" jdbcType="NUMERIC"/>
+		<result property="user_level_id" column="user_level_id" jdbcType="INTEGER"/>
+		<result property="level_description" column="level_description" jdbcType="VARCHAR"/>
+		<result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+		<result property="channelId" column="channel_id" jdbcType="VARCHAR"/>
 		
+		<result property="nearLabelId" column="nearLabelId" jdbcType="INTEGER"/>
+		<result property="nearLabelName" column="nearLabelName" jdbcType="VARCHAR"/>
+		<result property="serial" column="serial" jdbcType="INTEGER"/>
 	</resultMap>
+	
+	<!-- insert -->
+	<insert id="insertNearLabelWorld">
+		insert into hts.operations_near_label_world(world_id,world_author_id,near_label_id,serial)
+		values (#{worldId},#{authorId},#{nearLabelId},#{serial})
+	</insert>
+	
+	<!-- batchDelete -->
+	<delete id="batchDeleteNearLabelWorld">
+		delete from hts.operations_near_label_world where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- update -->
+	<update id="updateNearLabelWorldSerial">
+		update hts.operations_near_label_world set serial=#{serial}
+		where id = #{id}
+	</update>
+	
+	<!-- query -->
+	<select id="queryNearLabelWorld" resultMap="OpNearLabelWorldMap">
+		select 
+		from (
+			select * 
+			from hts.operations_near_label_world
+			<where>
+				<if test="id != null">
+					id = #{id}
+				</if>
+				<if test="maxId != null and maxId != 0">
+					<![CDATA[ and serial <= #{maxId}]]>
+				</if>
+			</where> 
+		)
+	</select>
+	
 </mapper>

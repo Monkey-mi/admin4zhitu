@@ -24,12 +24,19 @@ public class OpNearAction extends BaseCRUDAction{
 	private String description;
 	private String bannerUrl;
 	private Integer serial;
+	private Integer cityGroupId;
 	
 	private String idsStr;
 	
 	@Autowired 
 	private OpNearService nearService;
 	
+	
+	/**
+	 * 查询附近标签
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
 	public String queryNearLabel(){
 		try{
 			nearService.queryNearLabel(id, cityId, maxSerial, page, rows, jsonMap);
@@ -40,6 +47,11 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 增加附近标签
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
 	public String insertNearLabel(){
 		try{
 			nearService.insertNearLabel(id, cityId, labelName, longitude, latitude, description, bannerUrl, serial);
@@ -50,6 +62,11 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 批量删除附近标签
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
 	public String batchDeleteNearLabel(){
 		try{
 			nearService.batchDeleteNearLabel(idsStr);
@@ -60,10 +77,105 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 更新附近标签
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
 	public String updateNearLabel(){
 		try{
 			nearService.updateNearLabel(id, cityId, labelName, longitude, latitude, description, bannerUrl, serial);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 增加附近城市分组
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String addCityGroup(){
+		try{
+			nearService.insertNearCityGroup(description);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 批量删除附近城市分组
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String batchDeleteCityGroup(){
+		try{
+			nearService.batchDeleteNearCityGroup(idsStr);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询附近城市分组
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String queryCityGroupList(){
+		try{
+			nearService.queryNearCityGroup(id, maxSerial, page,	rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询附近推荐城市
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String queryRecommendCity(){
+		try{
+			nearService.queryNearRecommendCity(id, cityId, cityGroupId, maxSerial, page, rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 增加附近推荐城市
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String addRecommendCity(){
+		try{
+			nearService.insertNearRecommendCity(cityId, cityGroupId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 批量删除附近推荐城市
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String batchDeleteRecommendCity(){
+		try{
+			nearService.batchDeleteNearRecommendCity(idsStr);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -125,6 +237,14 @@ public class OpNearAction extends BaseCRUDAction{
 
 	public void setIdsStr(String idsStr) {
 		this.idsStr = idsStr;
+	}
+	
+	public Integer getCityGroupId() {
+		return cityGroupId;
+	}
+
+	public void setCityGroupId(Integer cityGroupId) {
+		this.cityGroupId = cityGroupId;
 	}
 
 }

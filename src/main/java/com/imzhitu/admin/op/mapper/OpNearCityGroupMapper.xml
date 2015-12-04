@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpNearCityGroupMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpNearCityGroupDto" id="OpNearCityGroupMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="description" column="description" jdbcType="VARCHAR"/>
+		<result property="serial" column="serial" jdbcType="INTEGERs"/>
+	</resultMap>
+	
+	<!-- insert -->
+	<insert id="insertNearCityGroup">
+		insert into hts.operations_near_city_group(description,serial)
+		values(#{description},#{serial})
+	</insert>
+	
+	<!-- batchDelete -->
+	<delete id="batchDeleteNearCityGroup">
+		delete from hts.operations_near_city_group
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="queryNearCityGroup" resultMap="OpNearCityGroupMap">
+		select * from hts.operations_near_city_group
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and serial <= #{maxId}]]>
+			</if>
+		</where>
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" />
+	</select>
+	
+	<select id="queryNearCityGroupTotalCount" resultType="long">
+		select count(*)
+		from hts.operations_near_city_group
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and serial <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryNearCityGroupMaxSerial" resultType="Integer">
+		select max(serial)
+		from hts.operations_near_city_group
+	</select>
+	
+</mapper>

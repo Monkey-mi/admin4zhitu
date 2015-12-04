@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpNearRecommendCityMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpNearRecommendCityDto" id="OpNearRecommendCityMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="cityId" column="city_id" jdbcType="INTEGER"/>
+		<result property="cityGroupId" column="city_group_id" jdbcType="INTEGER"/>
+		<result property="serial" column="serial" jdbcType="INTEGER"/>
+		<result property="cityName" column="cityName" jdbcType="VARCHAR"/>
+		<result property="cityGroupName" column="cityGroupName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- insert -->
+	<insert id="insertNearRecommendCity">
+		insert into hts.operations_near_recommend_city(city_id,city_group_id,serial)
+		values(#{cityId},#{cityGroupId},#{serial})
+	</insert>
+	
+	<!-- batchDelete -->
+	<delete id="batchDeleteNearRecommendCity">
+		delete from hts.operations_near_recommend_city
+		where id in
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- query -->
+	<select id="queryNearRecommendCity" resultMap="OpNearRecommendCityMap">
+		select * from hts.operations_near_recommend_city rc 
+			left join hts.addr_city ac on rc.city_id=ac.id
+			left join hts.operations_near_city_group  cg on rc.city_group_id=cg.id
+		<where>
+			<if test="id != null">
+				rc.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and rc.serial <= #{maxId}]]>
+			</if>
+			<if test="cityId != null">
+				and rc.city_id = #{cityId}
+			</if>
+			<if test="cityGroupId != null">
+				and rc.city_group_id = #{cityGroupId}
+			</if>
+		</where>
+		order by rc.serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" />
+	</select>
+	
+	<!-- query total count -->
+	<select id="queryNearRecommendCityTotalCount" resultType="long">
+		select count(*) 
+		from hts.operations_near_recommend_city rc
+		<where>
+			<if test="id != null">
+				rc.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and rc.serial <= #{maxId}]]>
+			</if>
+			<if test="cityId != null">
+				and rc.city_id = #{cityId}
+			</if>
+			<if test="cityGroupId != null">
+				and rc.city_group_id = #{cityGroupId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- query max serial -->
+	<select id="queryNearRecommendCityMaxSerialByCityGroupId" resultType="Integer">
+		select max(serial)
+		from hts.operations_near_recommend_city
+		where city_group_id = #{cityGroupId}
+	</select>
+</mapper>	
