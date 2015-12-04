@@ -437,7 +437,7 @@ function getWorldDesc(worldDesc,world,index) {
 				  async:false 
 				}); 
 		}
-		return "<div title=" + worldDesc + " class='viewInfo easyui-tooltip'>" + worldDesc + "</div>";
+		return "<div class='viewInfo easyui-tooltip'>" + worldDesc + "</div>";
 	}
 	return '';
 };

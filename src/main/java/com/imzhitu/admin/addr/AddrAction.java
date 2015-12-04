@@ -4,6 +4,9 @@ import java.io.PrintWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hts.web.base.StrutsKey;
+import com.hts.web.base.constant.OptResult;
+import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.addr.service.AddrService;
 import com.imzhitu.admin.common.BaseCRUDAction;
 
@@ -77,4 +80,20 @@ public class AddrAction extends BaseCRUDAction {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * 更新城市缓存
+	 * 
+	 * @return
+	 */
+	public String updateCityCache() {
+		try {
+			addrService.updateCityCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch(Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 }

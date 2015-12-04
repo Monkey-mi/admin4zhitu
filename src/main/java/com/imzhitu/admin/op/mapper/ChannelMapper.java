@@ -19,15 +19,6 @@ import com.imzhitu.admin.common.pojo.OpChannel;
 public interface ChannelMapper {
 
 	/**
-	 * 查询有效频道列表
-	 * 
-	 * @param valid
-	 * @return
-	 */
-//	@DataSource("slave")
-//	public List<com.hts.web.common.pojo.OpChannel> queryValidChannel(@Param("limit")Integer limit);
-
-	/**
 	 * 查询频道列表
 	 * 
 	 * @param channel

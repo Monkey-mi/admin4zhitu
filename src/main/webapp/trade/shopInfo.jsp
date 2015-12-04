@@ -34,7 +34,6 @@
 			title: "商家信息列表",
 			width: $(document.body).width(),
 			url: "./admin_trade/shop_buildShopList",
-//			queryParams: queryParams,
 			toolbar: "#tb",
 			idField: "id",
 			sortName: "id",
@@ -73,23 +72,6 @@
 		// 展示界面
 		$("#main").show();
 	});
-	
-	/**
-	 * 批量添加
-	 * @author zhangbo 2015-11-20 
-	 */
-	function batchAdd() {
-		$.fancybox({
-			href: "page_trade_addShop",
-			margin: 20,
-			width: "45%",
-			height: "60%",
-			autoScale: true,
-			type: "iframe",
-			transitionIn: "none",	// 打开无动画
-			transitionOut: "elastic"	// 关闭动画：伸缩
-		});
-	};
 	
 	/**
 	 * 批量删除商家
@@ -132,13 +114,10 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:batchAdd();" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 			</span>
 		</div>
 		
-		<div>
-		</div>
 	</div>
 </body>
 </html>

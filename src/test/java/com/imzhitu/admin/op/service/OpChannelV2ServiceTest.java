@@ -60,7 +60,7 @@ public class OpChannelV2ServiceTest extends BaseTest {
 	@Test
 	public void queryChannelThemeListTest() throws Exception{
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		service.queryChannelThemeList(jsonMap);
+		service.queryChannelThemeList(0,jsonMap);
 	}
 	
 }

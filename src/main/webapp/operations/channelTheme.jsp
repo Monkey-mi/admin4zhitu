@@ -25,9 +25,13 @@ var maxId = 0;
 	saveChannelThemeURL = "./admin_op/v2channel_insertChannelTheme"; // 保存主题地址
 	updateChannelThemeURL = "./admin_op/v2channel_updateChannelTheme"; // 更新主题地址
 	deleteChannelThemeURL = "./admin_op/v2channel_deleteChannelTheme"; // 删除主题频道
+	refreshCacheURL = "./admin_op/v2channel_refreshCacheChannelTheme";//刷新主题频道数据，同步redis和数据库中数据
+	
+	isUpdate = false;
+	themeIdOut = 0;
 	
 	htmTablePageList = [6,10,20];
-	myIdField = 'channelId';
+	myIdField = 'id';
 	myPageSize = 6;
 	myOnBeforeRefresh = function(pageNumber, pageSize) {
 		if(pageNumber <= 1) {
@@ -126,7 +130,7 @@ function reSerial() {
 	var rows = $("#htm_table").datagrid('getSelections');
 	$('#serial_form .reindex_column').each(function(i){
 		if(i<rows.length)
-			$(this).val(rows[i]['themeId']);
+			$(this).val(rows[i]['id']);
 	});
 	// 打开添加窗口
 	$("#htm_serial").window('open');
@@ -164,19 +168,43 @@ function openAddWindow(){
 
 //增加专属主题
 function addTheme(){
-	var themeName = $('#themeName').val();
-	$.post(saveChannelThemeURL,{
-		'themeName':themeName
-	},function(){
-		$('#htm_edit').window('close');
-		$.messager.alert("温馨提示：","添加成功！");
-		$('#htm_table').datagrid("reload");
-	},"json");
+	if(isUpdate){//更新主题
+		
+		var themeName = $('#themeName').val();
+		$.post(updateChannelThemeURL,{
+			'themeId':themeIdOut,
+			'themeName':themeName
+		},function(r){
+				$('#htm_edit').window('close');
+				$.messager.alert("温馨提示：","修改成功！");
+				$('#htm_table').datagrid("reload");
+		},"json");
+		
+	}else{//增加主题
+		
+		var themeName = $('#themeName').val();
+		$.post(saveChannelThemeURL,{
+			'themeName':themeName
+		},function(result){
+				$('#htm_edit').window('close');
+				$.messager.alert("温馨提示：","添加成功！");
+				$('#htm_table').datagrid("reload");
+		},"json");
+		
+	}
 }
 
-//修改专属主题
+//打开修改专属主题窗口
 function modifyTheme(themeId){
+	$('#htm_edit').window('setTitle','修改主题');
 	$('#htm_edit').window('open');
+	$.post(loadDataURL,{
+		'themeId':themeId
+	},function(result){
+		$('#themeName').val(result.rows[0].themeName);
+		isUpdate = true;//指定为更新状态
+		themeIdOut = themeId;//指定更新id为全局
+	},"json");
 }
 
 
@@ -189,6 +217,13 @@ function deleteTheme(){
 	function(result){
 		$.messager.alert("温馨提示：","删除成功！");
 		$('#htm_table').datagrid("reload");
+		$('#htm_table').datagrid("unselectAll");
+	},"json");
+}
+
+function refreshCache(){
+	$.post(refreshCacheURL,function(result){
+		
 	},"json");
 }
 
@@ -200,9 +235,10 @@ function deleteTheme(){
 		<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
 			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加专属主题" plain="true" iconCls="icon-add" id="addBtn">添加</a>
-			<a href="javascript:void(0);" onclick="javascript:deleteTheme();" class="easyui-linkbutton" title="删除专属主题" plain="true" iconCls="icon-cut" id="addBtn">删除</a>
+			<a href="javascript:void(0);" onclick="javascript:deleteTheme();" class="easyui-linkbutton" title="删除专属主题" plain="true" iconCls="icon-cut" id="cutBtn">删除</a>
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排主题排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
+			<a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" title="刷新缓存之后才可以使修改生效！！！" plain="true"  iconCls="icon-reload" id="refreshBtn">刷新缓存</a>
    		</div>
 		</div> 
 	
@@ -227,7 +263,7 @@ function deleteTheme(){
 		
 		<!-- 频道重新排序 -->
 		<div id="htm_serial">
-			<form id="serial_form" action="./admin_op/channel_updateChannelSerial" method="post">
+			<form id="serial_form" action="./admin_op/v2channel_updateChannelThemeSerial" method="post">
 				<table class="htm_edit_table" width="580">
 					<tbody>
 						<tr>

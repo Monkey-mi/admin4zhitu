@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.op.mapper.OpNearLabelMapper">
+	<resultMap type="com.imzhitu.admin.common.pojo.OpNearLabelDto" id="OpNearLabelMap">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="city_id" property="cityId" jdbcType="INTEGER"/>
+		<result column="city_name" property="cityName" jdbcType="VARCHAR"/>
+		<result column="longitude" property="longitude" jdbcType="DOUBLE"/>
+		<result column="latitude" property="latitude" jdbcType="DOUBLE"/>
+		<result column="desc" property="desc" jdbcType="VARCHAR"/>
+		<result column="banner_url" property="bannerUrl" jdbcType="VARCHAR"/>
+		<result column="serial" property="serial" jdbcType="INTEGER"/>
+		<result column="label_name" property="labelName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- insert -->
+	<insert id="insertNearLabel">
+		insert into hts.operations_near_label
+		 	(city_id,label_name,longitude,latitude,desc,banner_url,serial)
+		values (#{cityId,#{labelName},#{longitude},#{latitude},#{desc},#{bannerUrl},#{serial})
+	</insert>
+	
+	<!-- update -->
+	<update id="updateNearLabel">
+		update hts.operations_near_label
+		<set>
+			<if test="cityId != null">
+				city_id = #{cityId},
+			</if>
+			<if test="labelName != null">
+				label_name = #{labelName},
+			</if>
+			<if test="longitude != null">
+				longitude = #{longitude},
+			</if>
+			<if test="latitude != null">
+				latitude = #{latitude},
+			</if>
+			<if test="desc != null">
+				desc = #{desc},
+			</if>
+			<if test="bannerUrl != null">
+				banner_url = #{bannerUrl},
+			</if>
+			<if test="serial != null">
+				serial = #{serial},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- batch delete -->
+	<delete id="batchDeleteNearLabel">
+		delete from hts.operations_near_label where id in 
+		<foreach collection="array" open="(" close=")" separator="," index="index" item="item">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- query -->
+	<select id="queryNearLabel" resultMap="OpNearLabelMap">
+		select onl.*,ac.name from hts.operations_near_label onl 
+			left join hts.addr_city  ac on onl.city_id=ac.id
+		<where>
+			<if test="cityId != null">
+				onl.city_id = #{cityId}
+			</if>
+			<if test="id != null">
+				and onl.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and onl.serial <= #{maxId}]]>
+			</if>
+		</where>
+		order by onl.serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" />
+	</select>
+	
+	<!-- query total -->
+	<select id="queryNearLabelTotalCount" resultType="long">
+		select count(*) from hts.operations_near_label
+		<where>
+			<if test="cityId != null">
+				onl.city_id = #{cityId}
+			</if>
+			<if test="id != null">
+				and onl.id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and onl.serial <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+</mapper>

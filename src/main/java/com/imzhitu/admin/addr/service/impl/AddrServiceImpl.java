@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.imzhitu.admin.addr.dao.redis.CityCacheDao;
 import com.imzhitu.admin.addr.mapper.CityMapper;
 import com.imzhitu.admin.addr.mapper.CountryMapper;
 import com.imzhitu.admin.addr.mapper.DistrictMapper;
@@ -38,6 +39,9 @@ public class AddrServiceImpl implements AddrService {
 	
 	@Autowired
 	private CountryMapper countryMapper;
+	
+	@Autowired
+	private CityCacheDao cityCacheDao;
 
 	@Override
 	public List<Map<String,Serializable>> queryProvinces() {
@@ -126,6 +130,11 @@ public class AddrServiceImpl implements AddrService {
 	 */
 	public Integer getCountryId(String countryName){
 		return countryMapper.getCountryId(countryName);
+	}
+
+	@Override
+	public void updateCityCache() {
+		cityCacheDao.updateCache();
 	}
 	
 }

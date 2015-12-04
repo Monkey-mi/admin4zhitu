@@ -522,13 +522,9 @@ function submitSerialForm() {
 				$('#htm_serial .loading').hide();
 				if(result['result'] == 0) { 
 					$('#htm_serial').window('close');  // 关闭添加窗口
-					maxId = 0;
-					myQueryParams['channel.maxId'] = maxId;
-					loadPageData(1);
 				} else {
 					$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 				}
-				
 			}
 		});
 	}

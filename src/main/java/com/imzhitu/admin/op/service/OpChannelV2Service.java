@@ -150,7 +150,7 @@ public interface OpChannelV2Service extends BaseService{
 	long queryYestodayMemberIncreasement(Long yestodayTime, Long todayTime,Integer  channelId)throws Exception;
 
 	/**
-	 * 刷新频道缓存，同时刷新置顶与加精的频道
+	 * 刷新频道缓存，同时刷新置顶与加精的频道，置顶频道即推荐频道，加精频道即客户端频道缓存
 	 * 
 	 * @author zhangbo 2015年6月10日
 	 */

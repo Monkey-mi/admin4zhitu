@@ -4,11 +4,13 @@
 
 <struts>
 	<package name="admin_trade" namespace="/admin_trade" extends="admin-package">
+	
 		<action name="shop_*" class="com.imzhitu.admin.trade.ShopAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>
 		</action>
+		
 		<action name="shopType_*" class="com.imzhitu.admin.trade.ShopTypeAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
