@@ -18,13 +18,14 @@ var maxId = 0;
 		myQueryParams.valid = 1;
 		loadPageData(initPage);
 	};
+	
 	hideIdColumn = false;
 	htmTableTitle = "主题列表"; // 表格标题
 	toolbarComponent = '#tb';
 	loadDataURL = "admin_op/near_queryNearLabelWorld"; // 数据装载请求地址
-	saveChannelThemeURL = "./admin_op/v2channel_insertChannelTheme"; // 保存主题地址
-	updateChannelThemeURL = "./admin_op/v2channel_updateChannelTheme"; // 更新主题地址
-	deleteChannelThemeURL = "./admin_op/v2channel_deleteChannelTheme"; // 删除主题频道
+	saveChannelThemeURL = "admin_op/near_addNearLabelWorld"; // 保存主题地址
+	updateChannelThemeURL = "admin_op/near_updateChannelTheme"; // 更新主题地址
+	deleteChannelThemeURL = "admin_op/near_batchDeleteNearLabelWorld"; // 删除主题频道
 	refreshCacheURL = "./admin_op/v2channel_refreshCacheChannelTheme";//刷新主题频道数据，同步redis和数据库中数据
 	
 	isUpdate = false;
@@ -55,13 +56,15 @@ var maxId = 0;
 	
 	columnsFields = [
 	    {field:'ck',checkbox:true},            
-		{field : 'id',title : 'id',align : 'center'},
+		{field : 'id',title : 'ID', hidden:true},
+		{field : 'worldId',title : '织图id',align : 'center'},
+		{field : 'nearLabelName',title : '附近标签名', align : 'center'}
+		/* {field : 'themeName',title : '专题名', align : 'center'},
 		{field : 'themeName',title : '专题名', align : 'center'},
-		{field:'modify',title:'编辑',align:'center',
-			formatter:function(value,row,index){
-				return '<a title="修改信息" class="updateInfo" href="javascript:void(0);" onclick="javascript:modifyTheme('+ index +');">【修改】</a>';
-		}	
-		}
+		{field : 'themeName',title : '专题名', align : 'center'},
+		{field : 'themeName',title : '专题名', align : 'center'},
+		{field : 'themeName',title : '专题名', align : 'center'},
+		{field : 'themeName',title : '专题名', align : 'center'} */
 		],
 
 	onBeforeInit = function() {
@@ -98,7 +101,7 @@ var maxId = 0;
 			title: '添加专题',
 			modal : true,
 			width : 300,
-			height : 145,
+			height : 245,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -114,6 +117,94 @@ var maxId = 0;
 				$("#edit_loading").show();
 			}
 		});
+		
+		$('#labelName').combogrid({
+		    panelWidth : 330,
+		    panelHeight : 330,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#search-label-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'labelName',
+		    url : './admin_op/near_queryNearLabel',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'id',align : 'center',width : 80},
+				{field : 'labelName',title : '标签名', align : 'center',width : 60, height:60},
+				{field : 'cityName',title : '城市名',align : 'center',width : 180}
+		    ]]
+/* 		    queryParams:searchChannelQueryParams, */
+/* 		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > searchChannelMaxId) {
+						searchChannelMaxId = data.maxId;
+						searchChannelQueryParams.maxId = searchChannelMaxId;
+					}
+				}
+		    	
+		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
+		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
+		    }, */
+		});
+		var p = $('#labelName').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+/* 				if(pageNumber <= 1) {
+					searchChannelMaxId = 0;
+					searchChannelQueryParams.maxId = searchChannelMaxId;
+				} */
+			}
+		});
+		
+		
+		$('#labelNameT').combogrid({
+		    panelWidth : 440,
+		    panelHeight : 330,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#search-labelT-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'channelName',
+		    url : './admin_op/channel_searchChannel',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'id',align : 'center',width : 80},
+				{field : 'channelIcon',title : 'icon', align : 'center',width : 60, height:60,
+					formatter:function(value,row,index) {
+						return "<img width='50px' height='50px' alt='' class='htm_column_img' style='margin:3px 0 3px 0;' src='" + value + "'/>";
+					}
+				},
+				{field : 'channelName',title : '频道名称',align : 'center',width : 280}
+		    ]]
+/* 		    queryParams:searchChannelQueryParams, */
+/* 		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > searchChannelMaxId) {
+						searchChannelMaxId = data.maxId;
+						searchChannelQueryParams.maxId = searchChannelMaxId;
+					}
+				}
+		    	
+		    	$('#ss-channel').combogrid("setValue", baseTools.getCookie("CHANNEL_WORLD_CHANNEL_ID"));
+		    	$('#ss-channel').combogrid("grid").datagrid("clearSelections");
+		    }, */
+		});
+		var p = $('#labelNameT').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+/* 				if(pageNumber <= 1) {
+					searchChannelMaxId = 0;
+					searchChannelQueryParams.maxId = searchChannelMaxId;
+				} */
+			}
+		});
+		
 		
 		removePageLoading();
 		$("#main").show();
@@ -168,7 +259,7 @@ function openAddWindow(){
 }
 
 //增加专属主题
-function addTheme(){
+function addWorldLabel(){
 	if(isUpdate){//更新主题
 		var themeName = $('#themeName').val();//获取框中数据
 	
@@ -182,10 +273,14 @@ function addTheme(){
 		},"json");
 		
 	}else{//增加主题
-		
-		var themeName = $('#themeName').val();
+		var worldAuthorId = 0;
+		var nearLabelId = $('#labelName').combogrid('getValue');
+		var worldId = $('#worldId').val();
+		alert(labelName+':'+worldId);
 		$.post(saveChannelThemeURL,{
-			'themeName':themeName
+			'nearLabelId':nearLabelId,
+			'worldId':worldId,
+			'worldAuthorId':worldAuthorId
 		},function(result){
 				$('#htm_edit').window('close');
 				$.messager.alert("温馨提示：","添加成功！");
@@ -200,11 +295,9 @@ function modifyTheme(index){
 	$('#htm_edit').window('setTitle','修改主题');
 	$('#htm_edit').window('open');
 	
-	$('#htm_table').datagrid("unselectAll");//清空所有的选择
-	$('#htm_table').datagrid('selectRow',index);	
 	var row = $('#htm_table').datagrid('getSelected');
-	$('#themeName').val(row.themeName);//将输入框中显示原有值
-	themeIdOut = row.id;
+	$('#worldId').val(row.worldId);
+	$('#labelName').combogrid('setValue',row.nearLabelName);//将输入框中显示原有值
 	
 	isUpdate = true;
 }
@@ -212,9 +305,15 @@ function modifyTheme(index){
 
 //删除专属主题
 function deleteTheme(){
-	var themeId = $('#htm_table').datagrid('getSelected').id;
+	var ids = [];
+	var rows = $('#htm_table').datagrid('getSelections');
+	for(var i = 0;i < rows.length; i++){
+		ids.push(rows[i]['id']);	
+	}
+	ids = ids.join();
+	
 	$.post(deleteChannelThemeURL,{
-		'themeId':themeId
+		'idsStr':ids
 	},
 	function(result){
 		$.messager.alert("温馨提示：","删除成功！");
@@ -223,9 +322,13 @@ function deleteTheme(){
 	},"json");
 }
 
-function refreshCache(){
-	$.post(refreshCacheURL,function(result){
-	},"json");
+function searchChannel() {
+	searchChannelMaxId = 0;
+	maxId = 0;
+	var query = $('#channel-searchbox').searchbox('getValue');
+	searchChannelQueryParams.maxId = searchChannelMaxId;
+	searchChannelQueryParams.query = query;
+/* 	$("#ss-channel").combogrid('grid').datagrid("load",searchChannelQueryParams); */
 }
 
 </script>
@@ -235,25 +338,29 @@ function refreshCache(){
 		<table id="htm_table"></table>
 		<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
-			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加专属主题" plain="true" iconCls="icon-add" id="addBtn">添加</a>
-			<a href="javascript:void(0);" onclick="javascript:deleteTheme();" class="easyui-linkbutton" title="删除专属主题" plain="true" iconCls="icon-cut" id="cutBtn">删除</a>
-			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排主题排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
+			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加关系" plain="true" iconCls="icon-add" id="addBtn">添加</a>
+			<a href="javascript:void(0);" onclick="javascript:deleteTheme();" class="easyui-linkbutton" title="批量删除织图" plain="true" iconCls="icon-cut" id="cutBtn">批量删除</a>
+			<a href="javascript:void(0);" onclick="javascript:modifyTheme();" class="easyui-linkbutton" title="修改" plain="true"  iconCls="icon-reload" id="refreshBtn">修改</a>
+			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
-			<a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" title="刷新缓存之后才可以使修改生效！！！" plain="true"  iconCls="icon-reload" id="refreshBtn">刷新缓存</a>
+			<input id="labelNameT" name="labelNameT" style="width:100px" />
    		</div>
 		</div> 
 	
 		<!-- 添加记录 -->
 		<div id="htm_edit" align="center">
-			<form id="edit_form" action="./admin_op/v2channel_insertOpChannel" method="post">
+			<form id="edit_form" >
 				<table id="htm_edit_table" style="width:250px;line-height:40px;">
 					<tbody>
 						<tr>
-							<td align="center">专题名:<input id="themeName" name="themeName" style="width:100px" /></td>
+							<td align="center">织图ID:<input id="worldId" name="worldId" style="width:100px" /></td>
 						</tr>
 						<tr>
+							<td align="center">附近标签:<input id="labelName" name="labelName" style="width:100px" /></td>
+						</tr>						
+						<tr>
 							<td align="center">
-								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addTheme();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addWorldLabel();">确定</a>
 								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_edit').window('close');">取消</a>
 							</td>
 						</tr>
@@ -310,6 +417,14 @@ function refreshCache(){
 				</table>
 			</form>
 		</div>
+	</div>
+	
+	<div id="search-label-tb" style="padding:5px;height:auto" class="none">
+		<input id="label-searchbox" searcher="" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
+	</div>
+	
+	<div id="search-labelT-tb" style="padding:5px;height:auto" class="none">
+		<input id="label-searchbox" searcher="" class="easyui-searchbox" prompt="频道名/ID搜索" style="width:200px;"/>
 	</div>
 	
 </body>
