@@ -17,7 +17,7 @@
 	<insert id="insertNearLabel">
 		insert into hts.operations_near_label
 		 	(city_id,label_name,longitude,latitude,description,banner_url,serial)
-		values (#{cityId,#{labelName},#{longitude},#{latitude},#{description},#{bannerUrl},#{serial})
+		values (#{cityId},#{labelName},#{longitude},#{latitude},#{description},#{bannerUrl},#{serial})
 	</insert>
 	
 	<!-- update -->
