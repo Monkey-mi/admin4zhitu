@@ -1,12 +1,17 @@
 package com.imzhitu.admin.op;
 
+import java.io.PrintWriter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
+import com.imzhitu.admin.common.pojo.OpNearLabelDto;
 import com.imzhitu.admin.op.service.OpNearService;
+
+import net.sf.json.JSONArray;
 
 /**
  * 附近模块 控制层
@@ -31,18 +36,22 @@ public class OpNearAction extends BaseCRUDAction{
 	private Integer nearLabelId;
 	private Integer worldAuthorId;
 	
-	@Autowired 
+	private OpNearLabelDto nearLabel = new OpNearLabelDto();
+	
+	@Autowired
 	private OpNearService nearService;
 	
 	
 	/**
 	 * 查询附近标签
+	 * 
 	 * @return
 	 * @author zxx 2015-12-4 16:59:28
+	 * @author lynch 2015-12-05
 	 */
 	public String queryNearLabel(){
 		try{
-			nearService.queryNearLabel(id, cityId, maxSerial, page, rows, jsonMap);
+			nearService.queryNearLabel(nearLabel, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -52,12 +61,14 @@ public class OpNearAction extends BaseCRUDAction{
 	
 	/**
 	 * 增加附近标签
+	 * 
 	 * @return
 	 * @author zxx 2015-12-4 16:59:28
+	 * @author lynch 2015-12-05
 	 */
 	public String insertNearLabel(){
 		try{
-			nearService.insertNearLabel(id, cityId, labelName, longitude, latitude, description, bannerUrl, serial);
+			nearService.insertNearLabel(nearLabel);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -67,8 +78,10 @@ public class OpNearAction extends BaseCRUDAction{
 	
 	/**
 	 * 批量删除附近标签
+	 * 
 	 * @return
 	 * @author zxx 2015-12-4 16:59:28
+	 * @author lynch 2015-12-05
 	 */
 	public String batchDeleteNearLabel(){
 		try{
@@ -82,16 +95,52 @@ public class OpNearAction extends BaseCRUDAction{
 	
 	/**
 	 * 更新附近标签
+	 * 
 	 * @return
 	 * @author zxx 2015-12-4 16:59:28
+	 * @author lynch 2015-12-05
 	 */
 	public String updateNearLabel(){
 		try{
-			nearService.updateNearLabel(id, cityId, labelName, longitude, latitude, description, bannerUrl, serial);
+			nearService.updateNearLabel(nearLabel);
 			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新附近标签排序
+	 * 
+	 * @return
+	 * @author lynch 2015-12-05
+	 */
+	public String updateNearLabelSerial() {
+		String[] idStrs = request.getParameterValues("reIndexId");
+		try{
+			nearService.updateNearLabelSearial(idStrs);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 根据id查询附近标签
+	 * 
+	 * @return
+	 * @author lynch 2015-12-05
+	 */
+	public String queryNearLabelById() {
+		try{
+			OpNearLabelDto label = nearService.queryNearLabelById(id);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, label, OptResult.JSON_KEY_OBJ, jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		
 		return StrutsKey.JSON;
 	}
 	
@@ -138,6 +187,24 @@ public class OpNearAction extends BaseCRUDAction{
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询城市列表
+	 * 
+	 * @return
+	 * @author zhangbo	2015年11月20日
+	 */
+	public void getCityGroup() {
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			JSONArray jsArray = JSONArray.fromObject(nearService.getCityGroup());
+			out.print(jsArray.toString());
+			out.flush();
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
 	}
 	
 	/**
@@ -223,6 +290,17 @@ public class OpNearAction extends BaseCRUDAction{
 	public String batchDeleteNearLabelWorld(){
 		try{
 			nearService.batchDeleteNearLabelWorld(idsStr);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String updateNearLabelWorldSerial(){
+		String[] ids = request.getParameterValues("reIndexId");
+		try{
+			nearService.updateNearLabelWorldSerial(ids);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

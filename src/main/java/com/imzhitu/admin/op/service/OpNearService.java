@@ -1,8 +1,11 @@
 package com.imzhitu.admin.op.service;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
+import com.imzhitu.admin.common.pojo.OpNearLabelDto;
 
 /**
  * 附近模块 业务层接口
@@ -10,56 +13,67 @@ import com.hts.web.common.service.BaseService;
  *
  */
 public interface OpNearService extends BaseService{
+	
 	/**
 	 * 分页查询附近标签
-	 * @param id
-	 * @param cityId
-	 * @param maxSerial
+	 * 
+	 * @param label
 	 * @param start
 	 * @param limit
 	 * @param jsonMap
 	 * @throws Exception
 	 * @author zxx 2015-12-4 11:06:09
+	 * @author lynch 2015-12-05
 	 */
-	public void queryNearLabel(Integer id,Integer cityId,int maxSerial,int start,int limit,Map<String,Object>jsonMap)throws Exception;
+	public void queryNearLabel(OpNearLabelDto label, int start, int limit,
+			Map<String , Object> jsonMap) throws Exception;
 	
 	/**
 	 * 更新 附近标签
-	 * @param id
-	 * @param cityId
-	 * @param labelName
-	 * @param longitude
-	 * @param latitude
-	 * @param description
-	 * @param bannerUrl
-	 * @param serial
+	 * 
+	 * @param label
 	 * @throws Exception
 	 * @author zxx 2015-12-4 11:06:09
+	 * @author lynch 2015-12-05
 	 */
-	public void updateNearLabel(Integer id,Integer cityId,String labelName,Double longitude,Double latitude,String description,String bannerUrl,Integer serial)throws Exception;
+	public void updateNearLabel(OpNearLabelDto label)throws Exception;
 	
 	/**
 	 * 添加附近标签
-	 * @param id
-	 * @param cityId
-	 * @param labelName
-	 * @param longitude
-	 * @param latitude
-	 * @param description
-	 * @param bannerUrl
-	 * @param serial
+	 * 
+	 * @param label
 	 * @throws Exception
 	 * @author zxx 2015-12-4 11:06:09
 	 */
-	public void insertNearLabel(Integer id,Integer cityId,String labelName,Double longitude,Double latitude,String description,String bannerUrl,Integer serial)throws Exception;
+	public void insertNearLabel(OpNearLabelDto label)throws Exception;
 	
 	/**
 	 * 批量删除附近标签
+	 * 
 	 * @param idsStr
 	 * @throws Exception
 	 * @author zxx 2015-12-4 11:06:09
 	 */
 	public void batchDeleteNearLabel(String idsStr)throws Exception;
+	
+	/**
+	 * 根据id查询附近标签
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 * @author lynch 2015-12-05
+	 */
+	public OpNearLabelDto queryNearLabelById(Integer id) throws Exception;
+	
+	/**
+	 * 更新附近标签排序
+	 * 
+	 * @param idStrs
+	 * @throws Exception
+	 * @author lynch 2015-12-05
+	 */
+	public void updateNearLabelSearial(String[] idStrs) throws Exception;
 	
 	/**
 	 * 插入附近城市组
@@ -150,4 +164,22 @@ public interface OpNearService extends BaseService{
 	 * @author zxx 2015-12-4 18:15:38
 	 */
 	public void queryNearLabelWorld(Integer id,Integer worldId,Integer nearLabelId,int maxSerial,int start,int limit,Map<String,Object>jsonMap)throws Exception;
+	
+	/**
+	 * 重新排序
+	 * 
+	 * @param ids
+	 * @throws Exception 
+		*	2015年12月5日
+		*	mishengliang
+	 */
+	public  void updateNearLabelWorldSerial(String[] ids) throws Exception;
+
+	/**
+	 * 查询城市分组
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月5日
+	 */
+	public List<Map<String,Serializable>> getCityGroup();
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.imzhitu.admin.op.mapper.OpNearLabelMapper">
+
 	<resultMap type="com.imzhitu.admin.common.pojo.OpNearLabelDto" id="OpNearLabelMap">
 		<result column="id" property="id" jdbcType="INTEGER"/>
 		<result column="city_id" property="cityId" jdbcType="INTEGER"/>
@@ -16,8 +17,8 @@
 	<!-- insert -->
 	<insert id="insertNearLabel">
 		insert into hts.operations_near_label
-		 	(city_id,label_name,longitude,latitude,description,banner_url,serial)
-		values (#{cityId},#{labelName},#{longitude},#{latitude},#{description},#{bannerUrl},#{serial})
+		 	(id, city_id,label_name,longitude,latitude,description,banner_url,serial)
+		values (#{id},#{cityId},#{labelName},#{longitude},#{latitude},#{description},#{bannerUrl},#{serial})
 	</insert>
 	
 	<!-- update -->
@@ -59,11 +60,15 @@
 	
 	<!-- query -->
 	<select id="queryNearLabel" resultMap="OpNearLabelMap">
-		select onl.*,ac.name from hts.operations_near_label onl 
-			left join hts.addr_city  ac on onl.city_id=ac.id
+		select onl.*,ac.name as city_name from hts.operations_near_label onl, hts.addr_city ac 
+		
 		<where>
+			onl.city_id=ac.id
 			<if test="cityId != null">
-				onl.city_id = #{cityId}
+				and onl.city_id = #{cityId}
+			</if>
+			<if test="labelName != null">
+				and onl.label_name like #{labelName}
 			</if>
 			<if test="id != null">
 				and onl.id = #{id}
@@ -81,7 +86,10 @@
 		select count(*) from hts.operations_near_label onl
 		<where>
 			<if test="cityId != null">
-				onl.city_id = #{cityId}
+				and onl.city_id = #{cityId}
+			</if>
+			<if test="labelName != null">
+				and onl.label_name like #{labelName}
 			</if>
 			<if test="id != null">
 				and onl.id = #{id}
@@ -96,6 +104,16 @@
 	<select id="selectMaxSerialByCityId" resultType="Integer">
 		select max(serial) from hts.operations_near_label
 		where city_id = #{cityId}
+	</select>
+	
+	<update id="updateSerial">
+		update hts.operations_near_label set serial=#{serial} where id=#{id}
+	</update>	
+	
+	<select id="queryNearLabelById" resultMap="OpNearLabelMap">
+		select id, city_id,label_name,longitude,latitude,description,banner_url,serial
+			from hts.operations_near_label 
+		where id=#{id}
 	</select>
 	
 </mapper>

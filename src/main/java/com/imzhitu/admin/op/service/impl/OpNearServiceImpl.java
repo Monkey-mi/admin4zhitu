@@ -1,14 +1,21 @@
 package com.imzhitu.admin.op.service.impl;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.service.impl.BaseServiceImpl;
+import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.addr.pojo.City;
+import com.imzhitu.admin.addr.service.AddrService;
 import com.imzhitu.admin.common.pojo.OpNearCityGroupDto;
 import com.imzhitu.admin.common.pojo.OpNearLabelDto;
 import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
@@ -38,96 +45,94 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	@Autowired
 	private NearLabelMongoDao nearLabelMongoDao;
 	
+	@Autowired
+	private com.hts.web.common.service.KeyGenService webKeyGenService;
+	
+	@Autowired
+	private AddrService addrService;
+	
 	@Override
-	public void queryNearLabel(Integer id, Integer cityId, int maxSerial,
-			int start, int limit, Map<String, Object> jsonMap) throws Exception {
-		OpNearLabelDto dto = new OpNearLabelDto();
-		dto.setId(id);
-		dto.setCityId(cityId);
-		dto.setMaxId(maxSerial);
-		dto.setFirstRow(limit * (start-1 ));
-		dto.setLimit(limit);
-		
-		long total = nearLabelMapper.queryNearLabelTotalCount(dto);
-		if(total > 0){
-			List<OpNearLabelDto> list = nearLabelMapper.queryNearLabel(dto);
-			jsonMap.put(OptResult.ROWS, list);
-			jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getSerial());
-			jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+	public void queryNearLabel(OpNearLabelDto label, int start, int limit, 
+			Map<String, Object> jsonMap) throws Exception {
+		if(label.getLabelName() != null) {
+			label.setLabelName("%" + label.getLabelName() + "%");
 		}
-		
+		buildNumberDtos("getSerial", label, start, limit, jsonMap, 
+				new NumberDtoListAdapter<OpNearLabelDto>() {
+
+			@Override
+			public List<? extends Serializable> queryList(OpNearLabelDto dto) {
+				return nearLabelMapper.queryNearLabel(dto);
+			}
+
+			@Override
+			public long queryTotal(OpNearLabelDto dto) {
+				return nearLabelMapper.queryNearLabelTotalCount(dto);
+			}
+		});
 	}
 
 	@Override
-	public void updateNearLabel(Integer id, Integer cityId, String labelName,
-			Double longitude, Double latitude, String description,
-			String bannerUrl, Integer serial) throws Exception {
-		OpNearLabelDto dto = new OpNearLabelDto();
-		dto.setId(id);
-		dto.setCityId(cityId);
-		dto.setLabelName(labelName);
-		dto.setLongitude(longitude);
-		dto.setLatitude(latitude);
-		dto.setDescription(description);
-		dto.setBannerUrl(bannerUrl);
-		dto.setSerial(serial);
-		nearLabelMapper.updateNearLabel(dto);
-		
-		com.hts.web.common.pojo.OpNearLabelDto webNearLabel = new com.hts.web.common.pojo.OpNearLabelDto();
-		webNearLabel.setBannerUrl(bannerUrl);
-		webNearLabel.setDescription(description);
-		webNearLabel.setId(id);
-		webNearLabel.setLabelName(labelName);
-		webNearLabel.setSerial(serial);
-		if(longitude != null && latitude != null){
-			Double[] loc = new Double[2];
-			loc[0] = longitude;
-			loc[1] = latitude;
-			webNearLabel.setLoc(loc);
+	public void updateNearLabel(OpNearLabelDto label) throws Exception {
+		if(label.getCityId() != null) {
+			City city = addrService.queryCityById(label.getCityId());
+			label.setLongitude(city.getLongitude());
+			label.setLatitude(city.getLatitude());
 		}
-		nearLabelMongoDao.updateLabel(webNearLabel);
+		com.hts.web.common.pojo.OpNearLabelDto webLabel = new com.hts.web.common.pojo.OpNearLabelDto();
+		BeanUtils.copyProperties(webLabel, label);
+		if(label.getLongitude() != null || label.getLatitude() != null) {
+			webLabel.setLoc(new Double[]{label.getLongitude(), label.getLatitude()});
+		}
+		nearLabelMongoDao.updateLabel(webLabel);
+		nearLabelMapper.updateNearLabel(label);
 	}
 
 	@Override
-	public void insertNearLabel(Integer id, Integer cityId, String labelName,
-			Double longitude, Double latitude, String description,
-			String bannerUrl, Integer serial) throws Exception {
-		OpNearLabelDto dto = new OpNearLabelDto();
-		dto.setId(id);
-		dto.setCityId(cityId);
-		dto.setLabelName(labelName);
-		dto.setLongitude(longitude);
-		dto.setLatitude(latitude);
-		dto.setDescription(description);
-		dto.setBannerUrl(bannerUrl);
+	public void insertNearLabel(OpNearLabelDto label) throws Exception {
+		if(label.getCityId() == null)
+			throw new IllegalArgumentException("please set city id");
 		
-		long total = nearLabelMapper.queryNearLabelTotalCount(dto);
-		if(total > 0){
-			Integer maxSerial = nearLabelMapper.selectMaxSerialByCityId(cityId);
-			dto.setSerial(maxSerial + 1);
-		}else{
-			dto.setSerial(1);
+		City city = addrService.queryCityById(label.getCityId());
+		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_LABEL_ID);
+		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_LABEL_SERIAL);
+		
+		label.setLongitude(city.getLongitude());
+		label.setLatitude(city.getLatitude());
+		label.setId(id);
+		label.setSerial(serial);
+
+		com.hts.web.common.pojo.OpNearLabelDto webLabel = new com.hts.web.common.pojo.OpNearLabelDto();
+		BeanUtils.copyProperties(webLabel, label);
+		if(label.getLongitude() != null || label.getLatitude() != null) {
+			webLabel.setLoc(new Double[]{label.getLongitude(), label.getLatitude()});
 		}
-		nearLabelMapper.insertNearLabel(dto);
-		
-		com.hts.web.common.pojo.OpNearLabelDto webNearLabel = new com.hts.web.common.pojo.OpNearLabelDto();
-		webNearLabel.setBannerUrl(bannerUrl);
-		webNearLabel.setDescription(description);
-		webNearLabel.setId(id);
-		webNearLabel.setLabelName(labelName);
-		webNearLabel.setSerial(serial);
-		Double[] loc = new Double[2];
-		loc[0] = longitude;
-		loc[1] = latitude;
-		webNearLabel.setLoc(loc);
-		nearLabelMongoDao.saveLabel(webNearLabel);
+		nearLabelMongoDao.saveLabel(webLabel);
+		nearLabelMapper.insertNearLabel(label);
 	}
 
 	@Override
 	public void batchDeleteNearLabel(String idsStr) throws Exception {
 		Integer[] idsArray = StringUtil.convertStringToIds(idsStr);
-		nearLabelMapper.batchDeleteNearLabel(idsArray);
 		nearLabelMongoDao.deleteByIds(idsArray);
+		nearLabelMapper.batchDeleteNearLabel(idsArray);
+	}
+	
+	@Override
+	public OpNearLabelDto queryNearLabelById(Integer id) throws Exception {
+		return nearLabelMapper.queryNearLabelById(id);
+	}
+
+	@Override
+	public void updateNearLabelSearial(String[] idStrs) throws Exception {
+		for(int i = idStrs.length - 1; i >= 0; i--) {
+			if(StringUtil.checkIsNULL(idStrs[i]))
+				continue;
+			int id = Integer.parseInt(idStrs[i]);
+			Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_LABEL_SERIAL);
+			nearLabelMongoDao.updateSerial(id, serial);
+			nearLabelMapper.updateSerial(id, serial);
+		}
 	}
 
 	@Override
@@ -165,6 +170,24 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getSerial());
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 		}
+	}
+	
+	/**
+	 * 获取城市分组
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月5日
+	 */
+	public List<Map<String,Serializable>> getCityGroup() {
+		List<Map<String,Serializable>> rtnList = new ArrayList<Map<String,Serializable>>();
+		for (OpNearCityGroupDto cg : nearCityGroupMapper.queryNearCityGroup(null)) {
+			Map<String,Serializable> map = new HashMap<String, Serializable>();
+			map.put("id", cg.getId());
+			map.put("description", cg.getDescription());
+			rtnList.add(map);
+		}
+		
+		return rtnList;
 	}
 
 	@Override
@@ -254,4 +277,25 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		}
 	}
 
+	/**
+	 * 重新排序
+	 * 
+	 * @param ids
+	 * @throws Exception 
+		*	2015年12月5日
+		*	mishengliang
+	 */
+	@Override
+	public  void updateNearLabelWorldSerial(String[] idStrs) {
+		for (int i = idStrs.length - 1; i >= 0; i--) {
+			if (StringUtil.checkIsNULL(idStrs[i]))
+				continue;
+			int id = Integer.parseInt(idStrs[i]);
+			Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.LABEL_WORLD_SERIAL);
+			OpNearLabelWorldDto dto = new OpNearLabelWorldDto();
+			dto.setId(id);
+			dto.setSerial(serial);
+			nearLabelWorldMapper.updateNearLabelWorldSerial(dto);
+		}
+	}
 }

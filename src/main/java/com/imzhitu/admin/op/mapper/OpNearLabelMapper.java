@@ -2,6 +2,8 @@ package com.imzhitu.admin.op.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.common.pojo.OpNearLabelDto;
 
@@ -49,7 +51,7 @@ public interface OpNearLabelMapper {
 	 * @return
 	 * @author zxx 2015-12-4 09:48:06
 	 */
-	@DataSource("master")
+	@DataSource("slave")
 	long queryNearLabelTotalCount(OpNearLabelDto dto);
 	
 	/**
@@ -58,6 +60,29 @@ public interface OpNearLabelMapper {
 	 * @return
 	 * @author zxx 2015-12-4 09:48:06
 	 */
-	@DataSource("master")
+	@DataSource("slave")
 	public Integer selectMaxSerialByCityId(Integer cityId);
+
+	/**
+	 * 更新序号
+	 * 
+	 * @param id
+	 * @param serial
+	 * 
+	 * @author lynch 2015-12-05
+	 */
+	@DataSource("master")
+	public void updateSerial(@Param("id")Integer id, @Param("serial")Integer serial);
+	
+	/**
+	 * 根据id查询标签
+	 * 
+	 * @param id
+	 * @return
+	 * 
+	 * @author lynch 2015-12-05
+	 */
+	@DataSource("slave")
+	public OpNearLabelDto queryNearLabelById(@Param("id")Integer id);
+	
 }
