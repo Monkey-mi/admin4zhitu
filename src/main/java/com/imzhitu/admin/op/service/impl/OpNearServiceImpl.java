@@ -1,5 +1,8 @@
 package com.imzhitu.admin.op.service.impl;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -165,6 +168,24 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getSerial());
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 		}
+	}
+	
+	/**
+	 * 获取城市分组
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月5日
+	 */
+	public List<Map<String,Serializable>> getCityGroup() {
+		List<Map<String,Serializable>> rtnList = new ArrayList<Map<String,Serializable>>();
+		for (OpNearCityGroupDto cg : nearCityGroupMapper.queryNearCityGroup(null)) {
+			Map<String,Serializable> map = new HashMap<String, Serializable>();
+			map.put("id", cg.getId());
+			map.put("description", cg.getDescription());
+			rtnList.add(map);
+		}
+		
+		return rtnList;
 	}
 
 	@Override

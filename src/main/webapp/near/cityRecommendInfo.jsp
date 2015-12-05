@@ -59,6 +59,19 @@
 			}
 		});
 		
+		$("#city_group").combobox({
+        	url: "./admin_op/near_getCityGroup",
+         	valueField: "id",
+        	textField: "description", 
+        	onSelect:function(rec){
+        		var params = {
+        			cityGroupId:rec.id
+        		};
+        		
+        		$("#htm_table").datagrid("load",params);
+        	}
+        });
+		
 		$('#add_city_window').window({
 			title : "添加城市",
 			modal : true,
@@ -148,6 +161,7 @@
 			<span>
 				<a href="javascript:void(0);" onclick="javascript:$('#add_city_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
+				<input id="city_group" style="width:120px" />
 			</span>
 		</div>
 		
@@ -172,7 +186,7 @@
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addRecommendCity()">确定</a>
 						</td>
 					</tr>
-					<tr class="loading none">
+					<tr class="loading" style="display:none">
 						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
 							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
 							<span style="vertical-align:middle;">排序中...</span>

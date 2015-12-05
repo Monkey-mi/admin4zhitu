@@ -1,5 +1,7 @@
 package com.imzhitu.admin.op;
 
+import java.io.PrintWriter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
@@ -7,6 +9,8 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.op.service.OpNearService;
+
+import net.sf.json.JSONArray;
 
 /**
  * 附近模块 控制层
@@ -31,7 +35,7 @@ public class OpNearAction extends BaseCRUDAction{
 	private Integer nearLabelId;
 	private Integer worldAuthorId;
 	
-	@Autowired 
+	@Autowired
 	private OpNearService nearService;
 	
 	
@@ -138,6 +142,24 @@ public class OpNearAction extends BaseCRUDAction{
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询城市列表
+	 * 
+	 * @return
+	 * @author zhangbo	2015年11月20日
+	 */
+	public void getCityGroup() {
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			JSONArray jsArray = JSONArray.fromObject(nearService.getCityGroup());
+			out.print(jsArray.toString());
+			out.flush();
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
 	}
 	
 	/**
