@@ -59,6 +59,20 @@
 			}
 		});
 		
+		$('#add_city_window').window({
+			title : "添加城市",
+			modal : true,
+			width : 650,
+			height : 155,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-converter',
+			resizable : false
+		});
+		
 		// 展示界面
 		$("#main").show();
 	});
