@@ -5,58 +5,66 @@ import java.io.Serializable;
 /**
  * 城市对象，与数据库保持一致
  * 
- * @author zhangbo	2015年11月19日
+ * @author zhangbo 2015年11月19日
  *
  */
 public class City implements Serializable {
 
 	/**
 	 * 序列号
-	 * @author zhangbo	2015年11月19日
+	 * 
+	 * @author zhangbo 2015年11月19日
 	 */
 	private static final long serialVersionUID = 3497285948768007521L;
 
 	/**
 	 * 城市主键id
-	 * @author zhangbo	2015年11月19日
+	 * 
+	 * @author zhangbo 2015年11月19日
 	 */
 	private Integer id;
-	
+
 	/**
 	 * 名称
-	 * @author zhangbo	2015年11月19日
+	 * 
+	 * @author zhangbo 2015年11月19日
 	 */
 	private String name;
-	
+
+	/**
+	 * 简称
+	 * 
+	 * @author lynch 2015-12-05
+	 */
+	private String shortName;
+
 	/**
 	 * 省份id
-	 * @author zhangbo	2015年11月19日
+	 * 
+	 * @author zhangbo 2015年11月19日
 	 */
 	private Integer provinceId;
+
+	/**
+	 * 经度
+	 * 
+	 * @author lynch 2015-12-05
+	 */
+	private Double longitude;
+
+	/**
+	 * 纬度
+	 * 
+	 * @author lynch 2015-12-05
+	 */
+	private Double latitude;
 	
 	/**
-	 * 最小经度
-	 * @author zhangbo	2015年11月19日
+	 * 半径
+	 * 
+	 * @author lynch 2015-12-05
 	 */
-	private Long longitudeMin;
-	
-	/**
-	 * 最大经度
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Long longitudeMax;
-	
-	/**
-	 * 最小纬度
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Long latitudeMin;
-	
-	/**
-	 * 最大纬度
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Long latitudeMax;
+	private Float radius;
 
 	/**
 	 * @return the id
@@ -66,7 +74,8 @@ public class City implements Serializable {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(Integer id) {
 		this.id = id;
@@ -80,7 +89,8 @@ public class City implements Serializable {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -94,66 +104,43 @@ public class City implements Serializable {
 	}
 
 	/**
-	 * @param provinceId the provinceId to set
+	 * @param provinceId
+	 *            the provinceId to set
 	 */
 	public void setProvinceId(Integer provinceId) {
 		this.provinceId = provinceId;
 	}
 
-	/**
-	 * @return the longitudeMin
-	 */
-	public Long getLongitudeMin() {
-		return longitudeMin;
+	public String getShortName() {
+		return shortName;
 	}
 
-	/**
-	 * @param longitudeMin the longitudeMin to set
-	 */
-	public void setLongitudeMin(Long longitudeMin) {
-		this.longitudeMin = longitudeMin;
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 
-	/**
-	 * @return the longitudeMax
-	 */
-	public Long getLongitudeMax() {
-		return longitudeMax;
+	public Double getLongitude() {
+		return longitude;
 	}
 
-	/**
-	 * @param longitudeMax the longitudeMax to set
-	 */
-	public void setLongitudeMax(Long longitudeMax) {
-		this.longitudeMax = longitudeMax;
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
 	}
 
-	/**
-	 * @return the latitudeMin
-	 */
-	public Long getLatitudeMin() {
-		return latitudeMin;
+	public Double getLatitude() {
+		return latitude;
 	}
 
-	/**
-	 * @param latitudeMin the latitudeMin to set
-	 */
-	public void setLatitudeMin(Long latitudeMin) {
-		this.latitudeMin = latitudeMin;
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
 	}
 
-	/**
-	 * @return the latitudeMax
-	 */
-	public Long getLatitudeMax() {
-		return latitudeMax;
+	public Float getRadius() {
+		return radius;
 	}
 
-	/**
-	 * @param latitudeMax the latitudeMax to set
-	 */
-	public void setLatitudeMax(Long latitudeMax) {
-		this.latitudeMax = latitudeMax;
+	public void setRadius(Float radius) {
+		this.radius = radius;
 	}
-
+	
 }

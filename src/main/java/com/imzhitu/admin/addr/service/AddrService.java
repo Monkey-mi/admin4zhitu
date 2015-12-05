@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.hts.web.common.pojo.AddrCity;
+import com.imzhitu.admin.addr.pojo.City;
+
 /**
  * 地理位置接口类
  * 
@@ -80,6 +83,14 @@ public interface AddrService {
 	 * @author lynch 2015-12-03
 	 */
 	public void updateCityCache();
+
+	/**
+	 * 根据id查询城市信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public City queryCityById(Integer id);
 }
 
 

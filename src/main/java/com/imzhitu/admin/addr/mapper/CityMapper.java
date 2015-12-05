@@ -36,4 +36,15 @@ public interface CityMapper {
 	 */
 	@DataSource("slave")
 	public List<com.hts.web.common.pojo.AddrCity> queryAllCityCache();
+	
+	/**
+	 * 根据id查询城市
+	 * 
+	 * @param 
+	 * id
+	 * @return
+	 * @author lynch 2015-15-05
+	 */
+	@DataSource("slave")
+	public City queryCityById(Integer id);
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hts.web.common.pojo.AddrCity;
 import com.imzhitu.admin.addr.dao.redis.CityCacheDao;
 import com.imzhitu.admin.addr.mapper.CityMapper;
 import com.imzhitu.admin.addr.mapper.CountryMapper;
@@ -135,6 +136,11 @@ public class AddrServiceImpl implements AddrService {
 	@Override
 	public void updateCityCache() {
 		cityCacheDao.updateCache();
+	}
+
+	@Override
+	public City queryCityById(Integer id) {
+		return cMapper.queryCityById(id);
 	}
 	
 }

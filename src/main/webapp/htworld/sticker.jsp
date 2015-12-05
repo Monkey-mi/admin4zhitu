@@ -858,7 +858,7 @@ function searchStickerByName() {
 							</td>
 						</tr>
 						<tr class="none">
-							<td colspan="６"><input type="text" name="sticker.id" id="id_edit" onchange="validateSubmitOnce=true;"/></td>
+							<td colspan="6"><input type="text" name="sticker.id" id="id_edit" onchange="validateSubmitOnce=true;"/></td>
 						</tr>
 						<tr class="none">
 							<td colspan="6"><input type="text" name="sticker.valid" id="valid_edit" onchange="validateSubmitOnce=true;"/></td>

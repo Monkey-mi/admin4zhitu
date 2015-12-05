@@ -189,7 +189,7 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		
 		return rtnList;
 	}
-
+	
 	@Override
 	public void insertNearRecommendCity(Integer cityId, Integer cityGroupId)
 			throws Exception {

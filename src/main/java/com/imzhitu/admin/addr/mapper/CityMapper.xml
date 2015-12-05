@@ -4,7 +4,12 @@
 
 	<resultMap id="CityMap" type="com.imzhitu.admin.addr.pojo.City">
 		<id column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="province_id" property="provinceId" javaType="java.lang.Integer"/>
 		<result column="name" property="name" javaType="java.lang.String"/>
+		<result column="short_name" property="shortName" javaType="java.lang.String"/>
+		<result column="longitude" property="longitude" javaType="java.lang.Double"/>
+		<result column="latitude" property="latitude" javaType="java.lang.Double"/>
+		<result column="radius" property="radius" javaType="java.lang.Float"/>
 	</resultMap>
 	
 	<resultMap id="WebCityMap" type="com.hts.web.common.pojo.AddrCity">
@@ -19,7 +24,7 @@
 	<!-- 查询所有城市 -->
 	<select id="queryAllCity" resultMap="CityMap">
 		select 
-			id,name 
+			id,name,short_name,longitude,latitude,radius
 		from 
 			hts.addr_city
 	</select>
@@ -40,6 +45,15 @@
 			id,name,short_name,longitude,latitude,radius
 		from 
 			hts.addr_city
+	</select>
+	
+	<select id="queryCityById" resultMap="CityMap">
+		select 
+			id,name,short_name,longitude,latitude,radius
+		from 
+			hts.addr_city
+		where 
+			id=#{id}
 	</select>
 	
 </mapper>

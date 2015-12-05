@@ -53,8 +53,8 @@
 			}
 		});
 		
-		$('#htm_serial').window({
-			title : '重新排序',
+		$('#add_cityGroup_window').window({
+			title : '添加城市分组',
 			modal : true,
 			width : 650,
 			height : 155,
@@ -160,7 +160,7 @@
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addCityGroup()">确定</a>
 						</td>
 					</tr>
-					<tr class="loading none">
+					<tr class="loading" style="display:none">
 						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
 							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
 							<span style="vertical-align:middle;">排序中...</span>

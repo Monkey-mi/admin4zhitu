@@ -2,7 +2,14 @@ package com.imzhitu.admin.common.pojo;
 
 import com.hts.web.common.pojo.AbstractNumberDto;
 
+/**
+ * 附近标签信息
+ * 
+ * @author lynch
+ *
+ */
 public class OpNearLabelDto extends AbstractNumberDto{
+	
 	private static final long serialVersionUID = -2650022252782052499L;
 	private Integer id;
 	private Integer cityId;
@@ -13,33 +20,7 @@ public class OpNearLabelDto extends AbstractNumberDto{
 	private String description;
 	private String bannerUrl;
 	private Integer serial;
-	private Integer maxId = 0;
-	private Integer firstRow; // 起始位置
-	private Integer limit;
 	
-	public Integer getMaxId() {
-		return maxId;
-	}
-
-	public void setMaxId(Integer maxId) {
-		this.maxId = maxId;
-	}
-
-	public Integer getLimit() {
-		return limit;
-	}
-
-	public void setLimit(Integer limit) {
-		this.limit = limit;
-	}
-
-	public Integer getFirstRow() {
-		return firstRow;
-	}
-
-	public void setFirstRow(Integer firstRow) {
-		this.firstRow = firstRow;
-	}
 	public Integer getId() {
 		return id;
 	}

@@ -5,69 +5,74 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>附近标签管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
-<link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
+<jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 <script type="text/javascript">
-
-	// 行是否被勾选
-	var IsCheckFlag = false;
+	var maxId = 0,
+	init = function() {
+		toolbarComponent = '#tb';
+		myQueryParams = {
+			'nearLabel.maxId' : maxId
+		}
+		loadPageData(initPage);
+	},
+	htmTableTitle = "附近标签列表", //表格标题
+	loadDataURL = "./admin_op/near_queryNearLabel",
+	deleteURI = "./admin_op/near_deleteNeaerLabels?ids=", //删除请求地址
+	saveURL = "./admin_op/near_saveNearLabel", // 保存贴纸地址
+	updateByIdURL = "./admin_op/near_updateNearLabel", // 更新贴纸地址
+	queryByIdURL = "./admin_op/near_queryNearLabelById",
 	
-	var columnsFields = [
-             {field: "ck",checkbox: true},
-             {field: "id",title: "id",align: "center"},
-             {field: "cityId",title: "城市id",align: "center"},
-             {field: "cityName",title: "城市名称",align: "center"},
-             {field: "labelName",title: "标签名称",align: "center"},
-             {field: "longitude",title: "经度",align: "center"},
-             {field: "latitude",title: "纬度",align: "center"},
-             {field: "description",title: "标签描述",align: "center"},
-             {field: "bannerUrl",title: "图标",align: "center",
-             	formatter: function(value,row,index) {
-			  				return "<img title='无效' width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
-			  			}
-			  },
-             {field: "serial",title: "序列号",align: "center"}
-	    ];
-	
-	$(function(){
-		// 主表格
-		$("#htm_table").datagrid({
-			title: "城市分组列表",
-			width: $(document.body).width(),
-			url: "./admin_op/near_queryNearLabel",
-			toolbar: "#tb",
-			idField: "id",
-			rownumbers: true,
-			columns: [columnsFields],
-			fitColumns: true,
-			autoRowHeight: true,
-			checkOnSelect: false,
-			selectOnCheck: true,
-			onClickCell: function(rowIndex, field, value) {
-				IsCheckFlag = false;
-			},
-			onSelect: function(rowIndex, rowData) {
-				if ( !IsCheckFlag ) {
-					IsCheckFlag = true;
-					$(this).datagrid("unselectRow", rowIndex);
-				}
-			},
-			onUnselect: function(rowIndex, rowData) {
-				if ( !IsCheckFlag ) {
-					IsCheckFlag = true;
-					$(this).datagrid("selectRow", rowIndex);
-				}
-			},
-			onLoadSuccess: function(data) {
-				// 数据加载成功，loading动画隐藏
-				$("#page-loading").hide();
+	myOnBeforeRefresh = function(pageNumber, pageSize) {
+		if(pageNumber <= 1) {
+			maxId = 0;
+			myQueryParams['nearLabel.maxId'] = maxId;
+		}
+	},
+	myOnLoadSuccess = function(data) {
+		if(data.result == 0) {
+			if(data.maxId > maxId) {
+				maxId = data.maxId;
+				myQueryParams['nearLabel.maxId'] = maxId;
 			}
-		});
+		}
+	},
+	
+	columnsFields = [
+    	{field: "ck",checkbox: true},
+    	{field: "id",title: "id",align: "center"},
+    	{field: "cityId",title: "城市id",align: "center"},
+        {field: "cityName",title: "城市名称",align: "center"},
+        {field: "labelName",title: "标签名称",align: "center"},
+        /*
+        {field: "longitude",title: "经度",align: "center"},
+        {field: "latitude",title: "纬度",align: "center"},
+        */
+        {field: "description",title: "标签描述",align: "center"},
+        {field: "bannerUrl",title: "图标",align: "center",
+           	formatter: function(value,row,index) {
+	  				return "<img title='无效' width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+	  		}
+	 	},
+        {field: "serial",title: "序列号",align: "center"},
+        {field : 'opt',title : '操作',align : 'center',rowspan : 1,
+			formatter : function(value, row, index ) {
+				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.id + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
+			}
+		},
+          
+    ],
+    
+    htmTablePageList = [15,10,20,30,50],
+    onBeforeInit = function() {
+		showPageLoading();
+	},
+	onAfterInit = function() {
 		
-		$('#add_nearLabel_window').window({
-			title : '添加附近标签',
+		$('#htm_serial').window({
+			title : '重新排序',
 			modal : true,
-			width : 650,
-			height : 405,
+			width : 600,
+			height : 255,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -77,145 +82,341 @@
 			resizable : false
 		});
 		
-		// 展示界面
+		$('#htm_edit').window({
+			title : '添加标签',
+			modal : true,
+			width : 650,
+			height : 345,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-edit',
+			resizable : false
+		});
+		
+		removePageLoading();
 		$("#main").show();
+	};
+	
+/**
+ * 初始化贴纸信息编辑窗口
+ */
+function initEditWindow(id, index, isUpdate) {
+	loadEditFormValidate(index, isUpdate);
+	if(isUpdate) {
+		$('#htm_edit').panel('setTitle', '修改标签');
+		$('#htm_edit').window('open');
+		$.post(queryByIdURL,{
+			"id":id
+		}, function(result){
+			if(result['result'] == 0) {
+				var obj = result['obj'];
+				$("#stickerPath_edit").val(obj['stickerPath']);
+				$("#stickerImg_edit").attr('src', obj['stickerPath']);
+				$("#stickerThumbPath_edit").val(obj['stickerThumbPath']);
+				$("#stickerThumbImg_edit").attr('src', obj['stickerThumbPath']);
+				$("#stickerDemoPath_edit").val(obj['stickerDemoPath']);
+				$("#stickerDemoImg_edit").attr('src', obj['stickerDemoPath']);
+				$("#setId_edit").combogrid('setValue', obj['setId']);
+				if(obj['hasLock'] == 0) {
+					$("#unlock_edit").attr('checked', 'checked');
+				} else {
+					$("#lock_edit").attr('checked', 'checked');
+				}
+				
+				if(obj['fill'] == 0) {
+					$("#unfill_edit").attr('checked', 'checked');
+				} else {
+					$("#fill_edit").attr('checked', 'checked');
+				}
+				
+				if(obj['labelId'] != 0) {
+					$('#labelId_edit').combogrid('setValue',obj['labelId']);
+				}
+				
+				$("#id_edit").val(obj['id']);
+				$("#serial_edit").val(obj['serial']);
+				
+				$("#edit_loading").hide();
+				$("#edit_form").show();
+			} else {
+				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+			}
+			
+		},"json");
+	} else {
+		$("#id_edit").val(id);
+		$("#serial_edit").val(0);
+		
+		//var currSetId = $('#ss-setId').combogrid('getValue');
+		
+		$('#htm_edit').panel('setTitle', '添加标签');
+		$('#htm_edit').window('open');
+		$("#edit_loading").hide();
+		$("#edit_form").show();
+	}
+}
+
+//提交表单，以后补充装载验证信息
+function loadEditFormValidate(index, isUpdate) {
+	var url = saveURL;
+	if(isUpdate) {
+		url = updateByIdURL;
+	}
+	var $form = $('#edit_form');
+	formSubmitOnce = true; //每次打开窗口formSubmitOnce都重新设为true
+	$.formValidator.initConfig({
+		formid : $form.attr("id"),			
+		onsuccess : function() {
+			if(formSubmitOnce==true){
+				//第一次提交表单前formSubmitOnnce设为false，避免重复提交表单
+				formSubmitOnce = false;
+				$("#edit_form .opt_btn").hide();
+				$("#edit_form .loading").show();
+				//验证成功后以异步方式提交表单
+				$.post(url,$form.serialize(),
+					function(result){
+						formSubmitOnce = true;
+						$("#edit_form .opt_btn").show();
+						$("#edit_form .loading").hide();
+						if(result['result'] == 0) {
+							$('#htm_edit').window('close');  //关闭添加窗口
+							
+							if(isUpdate) {
+								$("#htm_table").datagrid('reload');
+							} else {
+								maxId = 0;
+								myQueryParams['nearLabel.maxId'] = maxId;
+								$("#htm_table").datagrid('load',myQueryParams);
+							}
+						} else {
+							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+						}
+					},"json");				
+				return false;
+			}
+		}
 	});
 	
-	/**
-	 * 新增附近标签
-	 * @author zhangbo 2015-12-04
-	 */
-	function addnearLabel() {
-		var $form = $('#add_nearLabel_form');
-		if($form.form('validate')) {
-			$('#add_nearLabel_form .opt_btn').hide();
-			$('#add_nearLabel_form .loading').show();
-			$form.form('submit', {
-				url: $form.attr("action"),
-				success: function(data){
-					var result = $.parseJSON(data);
-					$('#add_nearLabel_form .opt_btn').show();
-					$('#add_nearLabel_form .loading').hide();
-					if(result['result'] == 0) {
-						// 关闭添加窗口，刷新页面 
-						$('#add_nearLabel_window').window('close');
-						$("#htm_table").datagrid("load");
-					} else {
-						$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
-					}
-					
-				}
-			});
-		}
-	};
+	$("#bannerUrl_edit")
+	.formValidator({empty:false, onshow:"请选banner（必填）",onfocus:"请选banner",oncorrect:"正确！"})
+	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
 	
-	/**
-	 * 批量删除附近标签
-	 * @author zhangbo 2015-12-04
-	 */
-	function batchDelete() {
-		var rows = $("#htm_table").datagrid("getSelections");
-		if(rows.length > 0){
-			$.messager.confirm("温馨提示", "您确定要删除已选中的城市组吗？删除后，附近标签与附近标签织图的关联关系也将被删除。", function(r){
-				if(r){
-					var nearLabelIds = [];
-					for(var i=0;i<rows.length;i++){
-						nearLabelIds[i] = rows[i].id;
-					}
-					var params = {
-							idsStr: nearLabelIds.toString()
-						};
-					$.post("./admin_op/near_batchDeleteNearLabel", params, function(result){
-					    if(result['result'] == 0){
-							$.messager.alert("温馨提示","删除" + rows.length + "条记录");
-							// 清除所有已选择的记录，避免重复提交id值
-							$("#htm_table").datagrid("clearSelections");
-							// 批量删除刷新当前页
-							$("#htm_table").datagrid("reload");
-						}else{
-							alert(result['msg']);
-						}
-					});
-				}
-			});	
-		}else{
-			$.messager.alert("温馨提示","请先选择，再执行批量删除操作!");
-		}
-	};
 	
+	$("#cityId_edit")
+	.formValidator({empty:false, onshow:"请选城市（必填）",onfocus:"请选城市",oncorrect:"正确！"});
+	
+	$("#labelName_edit")
+	.formValidator({empty:false, onshow:"请输入名字（必填）",onfocus:"最多30个字符",oncorrect:"正确！"})
+	.inputValidator({max:30, onerror : "最多15个字符"});
+	
+	$("#description_edit")
+	.formValidator({empty:true, onshow:"请输入描述（可选）",onfocus:"最多500个字符",oncorrect:"正确！"})
+	.inputValidator({max:500, onerror : "最多500个字符"});
+}
+
+/**
+ * 新增附近标签
+ * @author zhangbo 2015-12-04
+ */
+function addnearLabel() {
+	var $form = $('#add_nearLabel_form');
+	if($form.form('validate')) {
+		$('#add_nearLabel_form .opt_btn').hide();
+		$('#add_nearLabel_form .loading').show();
+		$form.form('submit', {
+			url: $form.attr("action"),
+			success: function(data){
+				var result = $.parseJSON(data);
+				$('#add_nearLabel_form .opt_btn').show();
+				$('#add_nearLabel_form .loading').hide();
+				if(result['result'] == 0) {
+					// 关闭添加窗口，刷新页面 
+					$('#add_nearLabel_window').window('close');
+					$("#htm_table").datagrid("load");
+				} else {
+					$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
+				}
+				
+			}
+		});
+	}
+};
 	
 </script>
 </head>
 <body>
-	
-	<img id="page-loading" src="${webRootPath}/common/images/girl-loading.gif"/>
 	<div id="main" style="display: none;">
 		
 		<table id="htm_table"></table>
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:$('#add_nearLabel_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="javascript:initEditWindow(0,0,false);" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 			</span>
 		</div>
 		
 		<!-- 添加城市分组窗口 -->
-		<div id="add_nearLabel_window">
-			<form id="add_nearLabel_form" action="./admin_op/near_insertNearLabel" method="post">
+		<div id="htm_edit">
+			<form id="edit_form" action="./admin_op/near_insertNearLabel" method="post">
 				<table class="htm_edit_table" width="580">
 					<tr>
-						<td class="leftTd">banner图片：</td>
+						<td class="leftTd">大Banner：</td>
 						<td>
-							<input id="i-path" name="bannerUrl" class="none" readonly="readonly" >
-							<a id="nearLabel_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="nearLabel_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
-							<div id="nearLabel_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+							<input id="bannerUrl_edit" name="nearLabel.bannerUrl" class="none" readonly="readonly" >
+							<a id="bannerUrl_edit_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="nbannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
+							<div id="bannerUrl_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
 								上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
+						<td>
+							<div id="bannerUrl_editTip" style="display: inline-block;" class="tipDIV"></div>
+						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">城市Id：</td>
-						<td class="leftTd">
-							<input type="text" name="cityId"/>
+						<td class="leftTd">城市：</td>
+						<td>
+							<input type="text" id="cityId_edit" name="nearLabel.cityId"  onchange="validateSubmitOnce=true;"/>
+						</td>
+						<td class="rightTd">
+							<div id="cityId_editTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="leftTd">标签名称：</td>
-						<td class="leftTd">
-							<input type="text" name="labelName"/>
+						<td>
+							<textarea id="labelName_edit" type="text" name="nearLabel.labelName" style="width:300px;"  onchange="validateSubmitOnce=true;"></textarea>
 						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">纬度：</td><!-- 经纬度是从城市那里获取的。接受工作的人，敬请悉知 -->
-						<td class="leftTd">
-							<input  name="longitude" readonly="readonly"/>
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">经度：</td>
-						<td class="leftTd">
-							<input  name="latitude" readonly="readonly"/>
+						<td class="rightTd">
+							<div id="labelName_editTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="leftTd">描述：</td>
-						<td class="leftTd">
-							<input type="text" name="description"/>
+						<td>
+							<textarea id="description_edit" type="text" name="nearLabel.description" style="width:300px;"  onchange="validateSubmitOnce=true;"></textarea>
+						</td>
+						<td class="rightTd">
+							<div id="description_editTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
+					
+					<tr class="none">
+						<td colspan="3"><input type="text" name="nearLabel.id" id="id_edit" onchange="validateSubmitOnce=true;"/></td>
+					</tr>
+					
+					<tr class="none">
+						<td colspan="3"><input type="text" name="nearLabel.serial" id="serial_edit" onchange="validateSubmitOnce=true;"/></td>
+					</tr>
+					
 					<tr>
-						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addnearLabel()">确定</a>
+						<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="$('#edit_form').submit();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_edit').window('close');">取消</a>
 						</td>
 					</tr>
 					<tr class="loading none">
-						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+						<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
 							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-							<span style="vertical-align:middle;">排序中...</span>
+							<span style="vertical-align:middle;">加载中...</span>
 						</td>
 					</tr>
+				</table>
+			</form>
+		</div>
+		
+		<!-- 重排索引 -->
+		<div id="htm_serial">
+			<form id="serial_form" action="./admin_ztworld/sticker_updateStickerSerial" method="post">
+				<table class="htm_edit_table" width="580">
+					<tbody>
+						<tr>
+							<td class="leftTd">贴纸ID：</td>
+							<td>
+								<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitSerialForm();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_serial').window('close');">取消</a>
+							</td>
+						</tr>
+						<tr class="loading none">
+							<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+								<span style="vertical-align:middle;">排序中...</span>
+							</td>
+						</tr>
+					</tbody>
 				</table>
 			</form>
 		</div>
@@ -227,7 +428,7 @@
 	<script type="text/javascript">
 		Qiniu.uploader({
         runtimes: 'html5,flash,html4',
-        browse_button: 'nearLabel_thumb_upload_btn',
+        browse_button: 'bannerUrl_edit_upload_btn',
         max_file_size: '100mb',
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
@@ -238,9 +439,9 @@
         auto_start: true,
         init: {
             'FilesAdded': function(up, files) {
-            	$("#nearLabel_thumb_upload_btn").hide();
-            	$("#nearLabel_thumb_img_edit").hide();
-            	var $status = $("#nearLabel_thumb_img_upload_status");
+            	$("#bannerUrl_edit_upload_btn").hide();
+            	$("#bannerImg_edit").hide();
+            	var $status = $("#bannerUrl_edit_upload_status");
             	$status.find('.upload_progress:eq(0)').text(0);
             	$status.show();
             	
@@ -249,19 +450,19 @@
             },
             
             'UploadProgress': function(up, file) {
-            	var $status = $("#nearLabel_thumb_img_upload_status");
+            	var $status = $("#bannerUrl_edit_upload_status");
             	$status.find('.upload_progress:eq(0)').text(file.percent);
 
             },
             'UploadComplete': function() {
-            	$("#nearLabel_thumb_upload_btn").show();
-            	$("#nearLabel_thumb_img_edit").show();
-            	$("#nearLabel_thumb_img_upload_status").hide();
+            	$("#bannerUrl_edit_upload_btn").show();
+            	$("#bannerImg_edit_edit").show();
+            	$("#bannerUrl_edit_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
             	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
-            	$("#nearLabel_thumb_img_edit").attr('src', url);
-            	$("#i-thumb").val(url);
+            	$("#bannerImg_edit").attr('src', url);
+            	$("#bannerUrl_edit").val(url);
             },
             'Error': function(up, err, errTip) {
                 $.messager.alert('上传失败',errTip);  // 提示添加信息失败
