@@ -387,6 +387,26 @@ function searchWorldByLabel(){
 	$("#htm_table").datagrid("load", myQueryParams);
 }
 
+function searchLabelTById() {
+	labelMaxId = 0;
+	var labelName = $('#labelT-searchbox').searchbox('getValue');
+	labelQueryParams = {
+		'maxId' : labelMaxId,
+		'nearLabel.labelName' : labelName
+	};
+	$("#labelNameT").combogrid('grid').datagrid("load",labelQueryParams);
+}
+
+function searchLabelById() {
+	labelMaxId = 0;
+	var labelName = $('#label-searchbox').searchbox('getValue');
+	labelQueryParams = {
+		'maxId' : labelMaxId,
+		'nearLabel.labelName' : labelName
+	};
+	$("#labelName").combogrid('grid').datagrid("load",labelQueryParams);
+}
+
 </script>
 </head>
 <body>
@@ -396,7 +416,7 @@ function searchWorldByLabel(){
 		<div>
 			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加关系" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:deleteTheme();" class="easyui-linkbutton" title="批量删除织图" plain="true" iconCls="icon-cut" id="cutBtn">批量删除</a>
-			<a href="javascript:void(0);" onclick="javascript:modifyTheme();" class="easyui-linkbutton" title="修改" plain="true"  iconCls="icon-reload" id="refreshBtn">修改</a>
+			<a href="javascript:void(0);" onclick="javascript:modifyTheme();" class="easyui-linkbutton" title="修改" plain="true"  iconCls="icon-edit" id="refreshBtn">修改</a>
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
 			标签名：<input id="labelNameT" name="labelNameT" style="width:100px" />
@@ -478,11 +498,11 @@ function searchWorldByLabel(){
 	</div>
 	
 	<div id="search-label-tb" style="padding:5px;height:auto" class="none">
-		<input id="label-searchbox" searcher="" class="easyui-searchbox" prompt="标签名/ID搜索" style="width:200px;"/>
+		<input id="label-searchbox" searcher="searchLabelById" class="easyui-searchbox" prompt="标签名 搜索" style="width:200px;"/>
 	</div>
 	
 	<div id="search-labelT-tb" style="padding:5px;height:auto" class="none">
-		<input id="label-searchbox" searcher="" class="easyui-searchbox" prompt="标签名/ID搜索" style="width:200px;"/>
+		<input id="labelT-searchbox" searcher="searchLabelTById" class="easyui-searchbox" prompt="标签名 搜索" style="width:200px;"/>
 	</div>
 	
 </body>
