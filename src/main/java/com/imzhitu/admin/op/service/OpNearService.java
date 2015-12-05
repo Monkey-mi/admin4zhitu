@@ -150,4 +150,14 @@ public interface OpNearService extends BaseService{
 	 * @author zxx 2015-12-4 18:15:38
 	 */
 	public void queryNearLabelWorld(Integer id,Integer worldId,Integer nearLabelId,int maxSerial,int start,int limit,Map<String,Object>jsonMap)throws Exception;
+	
+	/**
+	 * 重新排序
+	 * 
+	 * @param ids
+	 * @throws Exception 
+		*	2015年12月5日
+		*	mishengliang
+	 */
+	public  void updateNearLabelWorldSerial(String[] ids) throws Exception;
 }

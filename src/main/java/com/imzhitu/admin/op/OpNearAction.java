@@ -230,6 +230,17 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	public String updateNearLabelWorldSerial(){
+		String[] ids = request.getParameterValues("reIndexId");
+		try{
+			nearService.updateNearLabelWorldSerial(ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

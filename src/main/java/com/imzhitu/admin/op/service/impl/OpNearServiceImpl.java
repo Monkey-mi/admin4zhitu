@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.service.impl.BaseServiceImpl;
+import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpNearCityGroupDto;
 import com.imzhitu.admin.common.pojo.OpNearLabelDto;
@@ -37,6 +38,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	
 	@Autowired
 	private NearLabelMongoDao nearLabelMongoDao;
+	
+	@Autowired
+	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
 	@Override
 	public void queryNearLabel(Integer id, Integer cityId, int maxSerial,
@@ -254,4 +258,26 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		}
 	}
 
+	
+	/**
+	 * 重新排序
+	 * 
+	 * @param ids
+	 * @throws Exception 
+		*	2015年12月5日
+		*	mishengliang
+	 */
+	@Override
+	public  void updateNearLabelWorldSerial(String[] idStrs) {
+		for (int i = idStrs.length - 1; i >= 0; i--) {
+			if (StringUtil.checkIsNULL(idStrs[i]))
+				continue;
+			int id = Integer.parseInt(idStrs[i]);
+			Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.LABEL_WORLD_SERIAL);
+			OpNearLabelWorldDto dto = new OpNearLabelWorldDto();
+			dto.setId(id);
+			dto.setSerial(serial);
+			nearLabelWorldMapper.updateNearLabelWorldSerial(dto);
+		}
+	}
 }

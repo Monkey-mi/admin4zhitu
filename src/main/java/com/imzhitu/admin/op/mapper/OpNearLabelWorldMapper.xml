@@ -81,13 +81,13 @@
 				</if>
 				<if test="maxId != null and maxId != 0">
 					<![CDATA[ and serial <= #{maxId}]]>
-				</if>
-				<if test="worldId != null">
-					and world_id = #{worldId}
-				</if>
-				<if test="nearLabelId != null">
-					and near_label_id = #{nearLabelId}
-				</if>
+			</if>
+			<if test="worldId != null and worldId != 0">
+				and world_id = #{worldId}
+			</if>
+			<if test="nearLabelId != null and nearLabelId != 0">
+				and near_label_id = #{nearLabelId}
+			</if>
 			</where>
 			order by serial desc
 			<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" /> 
@@ -107,10 +107,10 @@
 			<if test="maxId != null and maxId != 0">
 				<![CDATA[ and serial <= #{maxId}]]>
 			</if>
-			<if test="worldId != null">
+			<if test="worldId != null and worldId != 0">
 				and world_id = #{worldId}
 			</if>
-			<if test="nearLabelId != null">
+			<if test="nearLabelId != null and nearLabelId != 0">
 				and near_label_id = #{nearLabelId}
 			</if>
 		</where>
