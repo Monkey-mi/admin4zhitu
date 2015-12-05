@@ -1,5 +1,7 @@
 package com.imzhitu.admin.op.service;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
@@ -150,6 +152,7 @@ public interface OpNearService extends BaseService{
 	 * @author zxx 2015-12-4 18:15:38
 	 */
 	public void queryNearLabelWorld(Integer id,Integer worldId,Integer nearLabelId,int maxSerial,int start,int limit,Map<String,Object>jsonMap)throws Exception;
+<<<<<<< HEAD
 	
 	/**
 	 * 重新排序
@@ -160,4 +163,14 @@ public interface OpNearService extends BaseService{
 		*	mishengliang
 	 */
 	public  void updateNearLabelWorldSerial(String[] ids) throws Exception;
+=======
+
+	/**
+	 * 查询城市分组
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月5日
+	 */
+	public List<Map<String,Serializable>> getCityGroup();
+>>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 }
