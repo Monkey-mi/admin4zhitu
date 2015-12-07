@@ -1449,7 +1449,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 	   		</div>
 	   		
 			<div style="display: inline-block;float: right; margin-right: 5px; margin-top:3px;">
-				<input id="ss_shortLink" searcher="searchByShortLink" class="easyui-searchbox" prompt="输入织图ID或短链搜索" style="width:100px;" />
+				<input id="ss_shortLink" searcher="searchByWorldId" class="easyui-searchbox" prompt="输入织图ID" style="width:100px;" />
 				<input id="ss_authorName" searcher="searchByAuthorName" class="easyui-searchbox" prompt="输入用户昵称或ID搜索" style="width:100px;" />
 				<input id="ss_worldDesc" searcher="searchByWorldDesc" class="easyui-searchbox" prompt="输入描述模糊搜索" style="width:100px;" />
 			</div>
