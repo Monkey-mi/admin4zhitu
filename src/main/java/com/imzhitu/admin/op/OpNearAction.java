@@ -23,6 +23,7 @@ public class OpNearAction extends BaseCRUDAction{
 	private static final long serialVersionUID = -4388190459643752462L;
 	private Integer id;
 	private Integer cityId;
+    private String cityName;
 	private String labelName;
 	private Double longitude;
 	private Double latitude;
@@ -308,6 +309,14 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	public OpNearLabelDto getNearLabel() {
+		return nearLabel;
+	}
+
+	public void setNearLabel(OpNearLabelDto nearLabel) {
+		this.nearLabel = nearLabel;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -320,6 +329,15 @@ public class OpNearAction extends BaseCRUDAction{
 	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
 	}
+	
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
 	public String getLabelName() {
 		return labelName;
 	}

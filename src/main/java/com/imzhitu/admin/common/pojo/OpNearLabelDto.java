@@ -21,6 +21,26 @@ public class OpNearLabelDto extends AbstractNumberDto{
 	private String bannerUrl;
 	private Integer serial;
 	
+	public OpNearLabelDto() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public OpNearLabelDto(Integer id, Integer cityId, String cityName, String labelName, Double longitude,
+			Double latitude, String description, String bannerUrl, Integer serial) {
+		super();
+		this.id = id;
+		this.cityId = cityId;
+		this.cityName = cityName;
+		this.labelName = labelName;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.description = description;
+		this.bannerUrl = bannerUrl;
+		this.serial = serial;
+	}
+
+
 	public Integer getId() {
 		return id;
 	}
