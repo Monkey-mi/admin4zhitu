@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.hts.web.common.pojo.AddrCity;
 import com.imzhitu.admin.addr.pojo.City;
 
 /**
@@ -89,8 +88,21 @@ public interface AddrService {
 	 * 
 	 * @param id
 	 * @return
+	 * @author lynch 2015-12-05
 	 */
 	public City queryCityById(Integer id);
+	
+	/**
+	 * 查询城市列表
+	 * 
+	 * @param city
+	 * @param start
+	 * @param limit
+	 * @param jsonMap
+	 * @author lynch 2015-12-05
+	 */
+	public void queryCity(City city, int start, int limit, 
+			Map<String, Object> jsonMap) throws Exception;
 }
 
 

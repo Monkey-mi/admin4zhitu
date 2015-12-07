@@ -47,4 +47,22 @@ public interface CityMapper {
 	 */
 	@DataSource("slave")
 	public City queryCityById(Integer id);
+	
+	/**
+	 * 查询城市列表
+	 * 
+	 * @param city
+	 * @return
+	 * @author lynch 2015-12-05
+	 */
+	public List<City> queryCity(City city);
+	
+	/**
+	 * 查询城市总数
+	 * 
+	 * @param city
+	 * @return
+	 * @author lynch 2015-12-05
+	 */
+	public long queryCityCount(City city);
 }

@@ -15,10 +15,11 @@
 		}
 		loadPageData(initPage);
 	},
+	hideIdColumn = false,
 	htmTableTitle = "附近标签列表", //表格标题
 	loadDataURL = "./admin_op/near_queryNearLabel",
-	deleteURI = "./admin_op/near_deleteNeaerLabels?ids=", //删除请求地址
-	saveURL = "./admin_op/near_saveNearLabel", // 保存贴纸地址
+	deleteURI = "./admin_op/near_batchDeleteNearLabel?idsStr=", //删除请求地址
+	saveURL = "./admin_op/near_insertNearLabel", // 保存贴纸地址
 	updateByIdURL = "./admin_op/near_updateNearLabel", // 更新贴纸地址
 	queryByIdURL = "./admin_op/near_queryNearLabelById",
 	
@@ -36,11 +37,32 @@
 			}
 		}
 	},
-	
+	myOnCheck = function(rowIndex, rowData) {
+		selectedIds.push(rowData.id);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnUncheck = function(rowIndex, rowData) {
+		for(var i = 0; i < selectedIds.length; i++)
+			if(rowData.id == selectedIds[i])
+				selectedIds.splice(i,1);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnCheckAll = function(rows) {
+		selectedIds = [];
+		for(var i = 0; i < rows.length; i++)
+			selectedIds.push(rows[i]['id']);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnUncheckAll = function(rows) {
+		selectedIds = [];
+		updateSortingCount(0);
+	}
 	columnsFields = [
     	{field: "ck",checkbox: true},
     	{field: "id",title: "id",align: "center"},
+    	/*
     	{field: "cityId",title: "城市id",align: "center"},
+    	*/
         {field: "cityName",title: "城市名称",align: "center"},
         {field: "labelName",title: "标签名称",align: "center"},
         /*
@@ -59,10 +81,17 @@
 				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.id + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
 			}
 		},
-          
     ],
     
     htmTablePageList = [15,10,20,30,50],
+    
+    cityMaxId = 0,
+	cityQueryParams = {},
+	
+	editCityMaxId = 0,
+	editCityQueryParams = {},
+	selectedIds = [],
+    
     onBeforeInit = function() {
 		showPageLoading();
 	},
@@ -93,7 +122,100 @@
 			maximizable : false,
 			collapsible : false,
 			iconCls : 'icon-edit',
-			resizable : false
+			resizable : false,
+			onClose : function() {
+				var $form = $('#edit_form');
+				clearFormData($form);
+				$("#edit_form .opt_btn").show();
+				$("#edit_form .loading").hide();
+				$("#bannerImg_edit").attr("src", "./base/images/bg_empty.png");
+				$("#cityId_edit").combogrid('clear');
+				$("#edit_form").hide();
+				$("#edit_loading").show();
+			}
+		});
+		
+		
+		$('#ss-cityId').combogrid({
+			panelWidth : 340,
+		    panelHeight : 250,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#search-city-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'name',
+		    url : './admin_addr/addr_queryCity',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'ID',align : 'center', width : 60},
+				{field : 'name',title : '名称',align : 'center', width : 180},
+		    ]],
+		    queryParams:cityQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > cityMaxId) {
+						cityMaxId = data.maxId;
+						cityQueryParams['city.maxId'] = cityMaxId;
+					}
+				}
+		    },
+		    onChange : function(newValue, oldValue) {
+		    	maxId = 0;
+		    	myQueryParams = {
+	    			'nearLabel.maxId' : maxId,
+	    			'nearLabel.cityId' : newValue
+		    	};
+		    	loadPageData(1);
+		    }
+		});
+		var p = $('#ss-cityId').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					cityMaxId = 0;
+					cityQueryParams['city.maxId'] = cityMaxId;
+				}
+			}
+		});
+		
+		$('#cityId_edit').combogrid({
+			panelWidth : 340,
+		    panelHeight : 250,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#edit-search-city-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'name',
+		    url : './admin_addr/addr_queryCity',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'ID',align : 'center', width : 60},
+				{field : 'name',title : '名称',align : 'center', width : 180},
+		    ]],
+		    queryParams:editCityQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > editCityMaxId) {
+						editCityMaxId = data.maxId;
+						editCityQueryParams['city.maxId'] = editCityMaxId;
+					}
+				}
+		    },
+		});
+		var p = $('#cityId_edit').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					editCityMaxId = 0;
+					editCityQueryParams['city.maxId'] = editCityMaxId;
+				}
+			}
 		});
 		
 		removePageLoading();
@@ -113,28 +235,12 @@ function initEditWindow(id, index, isUpdate) {
 		}, function(result){
 			if(result['result'] == 0) {
 				var obj = result['obj'];
-				$("#stickerPath_edit").val(obj['stickerPath']);
-				$("#stickerImg_edit").attr('src', obj['stickerPath']);
-				$("#stickerThumbPath_edit").val(obj['stickerThumbPath']);
-				$("#stickerThumbImg_edit").attr('src', obj['stickerThumbPath']);
-				$("#stickerDemoPath_edit").val(obj['stickerDemoPath']);
-				$("#stickerDemoImg_edit").attr('src', obj['stickerDemoPath']);
-				$("#setId_edit").combogrid('setValue', obj['setId']);
-				if(obj['hasLock'] == 0) {
-					$("#unlock_edit").attr('checked', 'checked');
-				} else {
-					$("#lock_edit").attr('checked', 'checked');
-				}
+				$("#bannerUrl_edit").val(obj['bannerUrl']);
+				$("#bannerImg_edit").attr('src', obj['bannerUrl']);
+				$("#cityId_edit").combogrid('setValue', obj['cityId']);
 				
-				if(obj['fill'] == 0) {
-					$("#unfill_edit").attr('checked', 'checked');
-				} else {
-					$("#fill_edit").attr('checked', 'checked');
-				}
-				
-				if(obj['labelId'] != 0) {
-					$('#labelId_edit').combogrid('setValue',obj['labelId']);
-				}
+				$("#labelName_edit").val(obj['labelName']);
+				$("#description_edit").val(obj['description']);
 				
 				$("#id_edit").val(obj['id']);
 				$("#serial_edit").val(obj['serial']);
@@ -149,8 +255,6 @@ function initEditWindow(id, index, isUpdate) {
 	} else {
 		$("#id_edit").val(id);
 		$("#serial_edit").val(0);
-		
-		//var currSetId = $('#ss-setId').combogrid('getValue');
 		
 		$('#htm_edit').panel('setTitle', '添加标签');
 		$('#htm_edit').window('open');
@@ -217,33 +321,80 @@ function loadEditFormValidate(index, isUpdate) {
 	.inputValidator({max:500, onerror : "最多500个字符"});
 }
 
+function searchLabelByName() {
+	maxId = 0;
+	myQueryParams['nearLabel.maxId'] = maxId;
+	myQueryParams['nearLabel.labelName'] = $('#ss-labelName').searchbox('getValue');
+	myQueryParams['nearLabel.cityId'] = '';
+	$("#htm_table").datagrid("load",myQueryParams);
+}
+
+function searchCity() {
+	cityMaxId = 0;
+	cityQueryParams['city.maxId'] = cityMaxId;
+	cityQueryParams['city.name'] = $('#city-searchbox').searchbox('getValue');
+	$("#ss-cityId").combogrid('grid').datagrid("load",cityQueryParams);
+}
+
+function searchEditCity() {
+	editCityMaxId = 0;
+	editCityQueryParams['city.maxId'] = editCityMaxId;
+	editCityQueryParams['city.name'] = $('#edit-city-searchbox').searchbox('getValue');
+	$("#cityId_edit").combogrid('grid').datagrid("load",editCityQueryParams);
+}
+
+
+function updateSortingCount(count) {
+	$("#sorting-count").text(count);
+}
+
+function clearSortingCount() {
+	$("#sorting-count").text(0);
+	clearFormData($('#serial_form'));
+}
+
 /**
- * 新增附近标签
- * @author zhangbo 2015-12-04
+ * 重新排序
  */
-function addnearLabel() {
-	var $form = $('#add_nearLabel_form');
+function reSerial() {
+	$('#htm_serial .opt_btn').show();
+	$('#htm_serial .loading').hide();
+	$("#serial_form").find('input[name="reIndexId"]').val('');
+	if(selectedIds.length > 0) {
+		for(var i = 0; i < selectedIds.length; i++) {
+			$("#serial_form").find('input[name="reIndexId"]').eq(i).val(selectedIds[i]);
+			$("#serial_form").form('validate');
+		}
+	}
+	// 打开添加窗口
+	$("#htm_serial").window('open');
+}
+
+function submitSerialForm() {
+	var $form = $('#serial_form');
 	if($form.form('validate')) {
-		$('#add_nearLabel_form .opt_btn').hide();
-		$('#add_nearLabel_form .loading').show();
-		$form.form('submit', {
-			url: $form.attr("action"),
+		$('#htm_serial .opt_btn').hide();
+		$('#htm_serial .loading').show();
+		$('#serial_form').form('submit', {
+			url: $form.attr('action'),
 			success: function(data){
 				var result = $.parseJSON(data);
-				$('#add_nearLabel_form .opt_btn').show();
-				$('#add_nearLabel_form .loading').hide();
-				if(result['result'] == 0) {
-					// 关闭添加窗口，刷新页面 
-					$('#add_nearLabel_window').window('close');
-					$("#htm_table").datagrid("load");
+				$('#htm_serial .opt_btn').show();
+				$('#htm_serial .loading').hide();
+				if(result['result'] == 0) { 
+					$('#htm_serial').window('close');  //关闭添加窗口
+					maxId = 0;
+					myQueryParams['nearLabel.maxId'] = maxId;
+					clearSortingCount();
+					loadPageData(1);
 				} else {
-					$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
+					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 				}
 				
 			}
 		});
 	}
-};
+}
 	
 </script>
 </head>
@@ -253,10 +404,15 @@ function addnearLabel() {
 		<table id="htm_table"></table>
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
-			<span>
 				<a href="javascript:void(0);" onclick="javascript:initEditWindow(0,0,false);" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
-				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
-			</span>
+				<a href="javascript:void(0);" onclick="htmDelete('id')" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
+				<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" 
+				title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序+<span id="sorting-count">0</span></a>
+				
+				<span class="search_label">选择城市：</span>
+				<input id="ss-cityId" />
+				
+				<input id="ss-labelName" searcher="searchLabelByName" class="easyui-searchbox" prompt="输入名字搜索" />
 		</div>
 		
 		<!-- 添加城市分组窗口 -->
@@ -266,9 +422,9 @@ function addnearLabel() {
 					<tr>
 						<td class="leftTd">大Banner：</td>
 						<td>
-							<input id="bannerUrl_edit" name="nearLabel.bannerUrl" class="none" readonly="readonly" >
+							<input id="bannerUrl_edit" name="nearLabel.bannerUrl" class="none" readonly="readonly" />
 							<a id="bannerUrl_edit_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="nbannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
+							<img id="bannerImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
 							<div id="bannerUrl_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
 								上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
@@ -331,11 +487,11 @@ function addnearLabel() {
 		
 		<!-- 重排索引 -->
 		<div id="htm_serial">
-			<form id="serial_form" action="./admin_ztworld/sticker_updateStickerSerial" method="post">
+			<form id="serial_form" action="./admin_op/near_updateNearLabelSerial" method="post">
 				<table class="htm_edit_table" width="580">
 					<tbody>
 						<tr>
-							<td class="leftTd">贴纸ID：</td>
+							<td class="leftTd">标签ID：</td>
 							<td>
 								<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
 								<input name="reIndexId" class="reindex_column"/>
@@ -407,6 +563,7 @@ function addnearLabel() {
 						<tr>
 							<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
 								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitSerialForm();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-undo" onclick="clearSortingCount()();">清空</a>
 								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_serial').window('close');">取消</a>
 							</td>
 						</tr>
@@ -419,6 +576,14 @@ function addnearLabel() {
 					</tbody>
 				</table>
 			</form>
+		</div>
+		
+		<div id="search-city-tb" style="padding:5px;height:auto" class="none">
+			<input id="city-searchbox" searcher="searchCity" class="easyui-searchbox" prompt="输入名称搜索" style="width:200px;"/>
+		</div>
+		
+		<div id="edit-search-city-tb" style="padding:5px;height:auto" class="none">
+			<input id="edit-city-searchbox" searcher="searchEditCity" class="easyui-searchbox" prompt="输入名称搜索" style="width:200px;"/>
 		</div>
 		
 	</div>
@@ -456,7 +621,7 @@ function addnearLabel() {
             },
             'UploadComplete': function() {
             	$("#bannerUrl_edit_upload_btn").show();
-            	$("#bannerImg_edit_edit").show();
+            	$("#bannerImg_edit").show();
             	$("#bannerUrl_edit_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
@@ -470,7 +635,7 @@ function addnearLabel() {
             'Key': function(up, file) {
             	var timestamp = Date.parse(new Date());
             	var suffix = /\.[^\.]+/.exec(file.name);
-                var key = "op/notice/" + timestamp+suffix;
+                var key = "op/near/" + timestamp+suffix;
                 return key;
             }
         }

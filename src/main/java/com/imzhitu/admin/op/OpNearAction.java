@@ -396,4 +396,13 @@ public class OpNearAction extends BaseCRUDAction{
 	public void setWorldAuthorId(Integer worldAuthorId) {
 		this.worldAuthorId = worldAuthorId;
 	}
+
+	public OpNearLabelDto getNearLabel() {
+		return nearLabel;
+	}
+
+	public void setNearLabel(OpNearLabelDto nearLabel) {
+		this.nearLabel = nearLabel;
+	}
+	
 }

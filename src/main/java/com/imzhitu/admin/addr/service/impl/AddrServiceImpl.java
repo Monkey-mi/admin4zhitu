@@ -9,7 +9,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.pojo.AddrCity;
+import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.addr.dao.redis.CityCacheDao;
 import com.imzhitu.admin.addr.mapper.CityMapper;
 import com.imzhitu.admin.addr.mapper.CountryMapper;
@@ -27,7 +29,7 @@ import com.imzhitu.admin.addr.service.AddrService;
  *
  */
 @Service
-public class AddrServiceImpl implements AddrService {
+public class AddrServiceImpl extends BaseServiceImpl implements AddrService {
 	
 	@Autowired
 	private ProvinceMapper pMapper;
@@ -141,6 +143,25 @@ public class AddrServiceImpl implements AddrService {
 	@Override
 	public City queryCityById(Integer id) {
 		return cMapper.queryCityById(id);
+	}
+
+	@Override
+	public void queryCity(City city, int start, int limit, Map<String, Object> jsonMap) throws Exception {
+		if(city.getName() != null) {
+			city.setName("%" + city.getName() + "%");
+		}
+		buildNumberDtos(city, start, limit, jsonMap, new NumberDtoListAdapter<City>() {
+
+			@Override
+			public List<? extends Serializable> queryList(City dto) {
+				return cMapper.queryCity(dto);
+			}
+
+			@Override
+			public long queryTotal(City dto) {
+				return cMapper.queryCityCount(dto);
+			}
+		});
 	}
 	
 }

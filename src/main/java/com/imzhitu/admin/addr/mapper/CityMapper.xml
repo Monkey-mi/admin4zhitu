@@ -49,11 +49,51 @@
 	
 	<select id="queryCityById" resultMap="CityMap">
 		select 
-			id,name,short_name,longitude,latitude,radius
+			id,province_id,name,short_name,longitude,latitude,radius
 		from 
 			hts.addr_city
 		where 
 			id=#{id}
+	</select>
+	
+	
+	<select id="queryCity" resultMap="CityMap">
+		select id,province_id,name,short_name,longitude,latitude,radius
+		from hts.addr_city
+		<where>
+			<if test="provinceId != null">
+				province_id = #{provinceId}
+			</if>
+			<if test="name != null">
+				and name like #{name}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and id <= #{maxId}]]>
+			</if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause" />
+	</select>
+	
+	<select id="queryCityCount" resultType="long">
+		select count(*) from hts.addr_city
+		<where>
+			<if test="provinceId != null">
+				province_id = #{provinceId}
+			</if>
+			<if test="name != null">
+				and name like #{name}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[ and id <= #{maxId}]]>
+			</if>
+		</where>
 	</select>
 	
 </mapper>

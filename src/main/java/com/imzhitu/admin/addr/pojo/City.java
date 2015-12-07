@@ -2,13 +2,15 @@ package com.imzhitu.admin.addr.pojo;
 
 import java.io.Serializable;
 
+import com.hts.web.common.pojo.AbstractNumberDto;
+
 /**
  * 城市对象，与数据库保持一致
  * 
  * @author zhangbo 2015年11月19日
  *
  */
-public class City implements Serializable {
+public class City extends AbstractNumberDto {
 
 	/**
 	 * 序列号
