@@ -139,10 +139,10 @@ var maxId = 0;
 		});
 		
 		$('#htm_edit').window({
-			title: '添加专题',
+			title: '添加织图',
 			modal : true,
 			width : 300,
-			height : 245,
+			height : 205,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -174,8 +174,8 @@ var maxId = 0;
 		    pagination : true,
 		    columns:[[
 				{field : 'id',title : 'id',align : 'center',width : 80},
-				{field : 'labelName',title : '标签名', align : 'center',width : 60, height:60},
-				{field : 'cityName',title : '城市名',align : 'center',width : 180}
+				{field : 'labelName',title : '标签名', align : 'center',width : 180, height:60},
+				{field : 'cityName',title : '城市名',align : 'center',width : 60}
 		    ]]
 /* 		    queryParams:searchChannelQueryParams, */
 /* 		    onLoadSuccess:function(data) {
@@ -216,8 +216,8 @@ var maxId = 0;
 		    pagination : true,
 		    columns:[[
 				{field : 'id',title : 'id',align : 'center',width : 80},
-				{field : 'labelName',title : '标签名', align : 'center',width : 60, height:60},
-				{field : 'cityName',title : '城市名',align : 'center',width : 180}
+				{field : 'labelName',title : '标签名', align : 'center',width : 180, height:60},
+				{field : 'cityName',title : '城市名',align : 'center',width : 60}
 		    ]]
 /* 		    queryParams:searchChannelQueryParams, */
 /* 		    onLoadSuccess:function(data) {
