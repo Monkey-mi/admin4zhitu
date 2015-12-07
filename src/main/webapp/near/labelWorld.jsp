@@ -32,7 +32,6 @@ var maxId = 0;
 	
 	isUpdate = false;
 	rowIndex = 0;
-	themeIdOut = 0;
 	
 	htmTablePageList = [10,20];
 	myIdField = 'id';
@@ -49,6 +48,10 @@ var maxId = 0;
 				maxId = data.maxId;
 				myQueryParams['maxId'] = maxId;
 			}
+		}
+		if(data.total == 0){
+			   $(this).datagrid('appendRow', { itemid: '<div style="text-align:center;color:red">没有相关记录！</div>' }).datagrid('mergeCells', { index: 0, field: 'itemid', colspan: 13 })
+               $(this).closest('div.datagrid-wrap').find('div.datagrid-pager').hide();
 		}
 	};
 	
@@ -296,17 +299,7 @@ function openAddWindow(){
 
 //增加标签织图
 function addWorldLabel(){
-	if(isUpdate){//更新主题
-		var themeName = $('#themeName').val();//获取框中数据
-	
-		$.post(updateNearLabelWorld,{
-			'themeId':themeIdOut,
-			'themeName':themeName
-		},function(r){
-				$('#htm_edit').window('close');
-				$.messager.alert("温馨提示：","修改成功！");
-				$('#htm_table').datagrid("reload");
-		},"json");
+	if(isUpdate){//更新主题,留下更新的接口
 		
 	}else{//增加主题
 		var worldAuthorId = 0;
@@ -323,18 +316,6 @@ function addWorldLabel(){
 		},"json");
 		
 	}
-}
-
-//打开修改专属主题窗口
-function modifyTheme(index){
-	$('#htm_edit').window('setTitle','修改附近标签织图');
-	$('#htm_edit').window('open');
-	
-	var row = $('#htm_table').datagrid('getSelected');
-	$('#worldId').val(row.worldId);
-	$('#labelName').combogrid('setValue',row.nearLabelName);//将输入框中显示原有值
-	
-	isUpdate = true;
 }
 
 
@@ -383,7 +364,7 @@ function searchWorldByLabel(){
 	worldId = 0;
 	myQueryParams.maxId = maxId;
 	myQueryParams.nearLabelId = nearLabelId;
-	myQueryParams.worldId = worldId;
+/* 	myQueryParams.worldId = worldId; */
 	$("#htm_table").datagrid("load", myQueryParams);
 }
 
@@ -416,7 +397,6 @@ function searchLabelById() {
 		<div>
 			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加关系" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:deleteTheme();" class="easyui-linkbutton" title="批量删除织图" plain="true" iconCls="icon-cut" id="cutBtn">批量删除</a>
-			<a href="javascript:void(0);" onclick="javascript:modifyTheme();" class="easyui-linkbutton" title="修改" plain="true"  iconCls="icon-edit" id="refreshBtn">修改</a>
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
 			标签名：<input id="labelNameT" name="labelNameT" style="width:100px" />

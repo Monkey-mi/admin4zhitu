@@ -269,12 +269,10 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		dto.setWorldId(worldId);
 		dto.setNearLabelId(nearLabelId);
 		long total = nearLabelWorldMapper.queryNearLabelWorldTotalCount(dto);
-		if(total > 0){
-			List<OpNearLabelWorldDto> list  = nearLabelWorldMapper.queryNearLabelWorld(dto);
+		List<OpNearLabelWorldDto> list  = nearLabelWorldMapper.queryNearLabelWorld(dto);
 			jsonMap.put(OptResult.ROWS, list);
 			jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getSerial());
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
-		}
 	}
 
 	/**
