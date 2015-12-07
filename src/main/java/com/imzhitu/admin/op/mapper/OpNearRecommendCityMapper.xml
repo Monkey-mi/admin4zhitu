@@ -27,7 +27,13 @@
 	
 	<!-- query -->
 	<select id="queryNearRecommendCity" resultMap="OpNearRecommendCityMap">
-		select * from hts.operations_near_recommend_city rc 
+		select 
+			rc.id,
+			rc.city_id,
+			rc.city_group_id,
+			ac.name as cityName, 
+			cg.description as cityGroupName
+		from hts.operations_near_recommend_city rc 
 			left join hts.addr_city ac on rc.city_id=ac.id
 			left join hts.operations_near_city_group  cg on rc.city_group_id=cg.id
 		<where>
