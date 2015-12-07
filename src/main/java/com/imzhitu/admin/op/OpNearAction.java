@@ -309,14 +309,6 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	public OpNearLabelDto getNearLabel() {
-		return nearLabel;
-	}
-
-	public void setNearLabel(OpNearLabelDto nearLabel) {
-		this.nearLabel = nearLabel;
-	}
-
 	public Integer getId() {
 		return id;
 	}
