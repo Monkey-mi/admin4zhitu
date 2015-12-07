@@ -245,4 +245,20 @@ public interface ZTWorldService extends BaseService {
 	 * @author zhangbo	2015年12月2日
 	 */
 	void buildWorldMasonryByWorldLocation(Integer maxId, Integer page, Integer rows, String worldLocation, Map<String, Object> jsonMap) throws Exception;
+	
+	
+	
+	/**
+	 * 构建瀑布流织图信息，通过织图ID查询
+	 * 
+	 * @param maxId     最大织图id
+	 * @param page        分页查询：当前页面
+	 * @param rows		分页查询：每页数量
+	 * @param worldId 	//织图ID
+	 * @param jsonMap 	返回页面参数
+	 * @throws Exception 
+		*	2015年12月7日
+		*	mishengliang
+	 */
+	void buildWorldMasonryByWorldId(Integer maxId, Integer page, Integer rows, Integer worldId, Map<String, Object> jsonMap) throws Exception;
 }

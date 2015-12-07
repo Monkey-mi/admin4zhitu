@@ -779,4 +779,17 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		jsonMap.put(OptResult.TOTAL, resultJson.getLong("total"));
 	}
 
+	
+	@Override
+	public void buildWorldMasonryByWorldId(Integer maxId, Integer page, Integer rows, Integer worldId, Map<String, Object> jsonMap) throws Exception{
+		Integer[] worldIds = new Integer[]{worldId};
+		
+		List<ZTWorld> worldList = ztWorldMapper.getWorldListByIds(worldIds);
+		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
+		
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
+		jsonMap.put(OptResult.TOTAL, worldList.size());
+	}
+	
 }

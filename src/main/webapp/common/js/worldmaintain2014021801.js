@@ -414,11 +414,11 @@ function unShield(worldId,index) {
 		},"json");
 }
 
-function searchByShortLink() {
+function searchByWorldId() {
 	maxId = 0;
-	var shortLink = $('#ss_shortLink').searchbox('getValue');
+	var shortLink = $('#ss_worldId').searchbox('getValue');
 	myQueryParams = {
-		'shortLink' : shortLink
+		'worldId' : worldId
 	};
 	$("#htm_table").datagrid("load",myQueryParams);
 }

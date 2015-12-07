@@ -1550,18 +1550,21 @@ var htmTableTitle = "分享列表维护", //表格标题
 		$worldOpt.children('.world-opt-area:eq(0)').remove();
 	};
 	
-	function searchByShortLink() {
+	/**
+	 * 通过织图ID查询
+	 */
+	function searchByWorldId() {
 		maxId = 0;
-		var shortLink = $('#ss_shortLink').searchbox('getValue');
-		if(shortLink == "") {
+		var worldId = $('#ss_worldId').searchbox('getValue');
+		if(worldId == "") {
 			search();
 			return
 		}
 		var rows = myQueryParams.rows;
 		myQueryParams = {
-			'shortLink' : shortLink
+			'worldId' : worldId
 		};
-		loadData(1, myQueryParams.rows);
+		loadData(1, rows);
 	}
 
 	function searchByAuthorName() {

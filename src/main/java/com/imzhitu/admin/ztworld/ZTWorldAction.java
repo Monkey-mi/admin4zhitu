@@ -11,6 +11,7 @@ import com.hts.web.common.util.StringUtil;
 import com.hts.web.ztworld.service.impl.ZTWorldServiceImpl;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 import net.sf.json.JSONObject;
 
@@ -102,6 +103,9 @@ public class ZTWorldAction extends BaseCRUDAction {
 			// 若存在织图地理位置信息，则为按照织图地理位置信息查询
 			else if ( worldLocation != null && !worldLocation.trim().equals("") ) {
 				worldService.buildWorldMasonryByWorldLocation(maxId, page, rows, worldLocation, jsonMap);
+			}
+			else if ( worldId != null  ) {
+				worldService.buildWorldMasonryByWorldId(maxId, page, rows, worldId, jsonMap);
 			}
 			// 默认查询瀑布流织图信息
 			else {
