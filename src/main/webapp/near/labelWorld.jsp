@@ -90,7 +90,6 @@ var maxId = 0;
 				return "织图用户";
 			}
 		}},
-		userLevelColumn,
 		clickCountColumn,
 		likeCountColumn,
 		commentCountColumn,
