@@ -35,6 +35,7 @@ public class OpNearAction extends BaseCRUDAction{
 	private String idsStr;
 	private Integer worldId;
 	private Integer nearLabelId;
+	private String nearLabelIds;
 	private Integer worldAuthorId;
 	
 	private OpNearLabelDto nearLabel = new OpNearLabelDto();
@@ -284,6 +285,21 @@ public class OpNearAction extends BaseCRUDAction{
 	}
 	
 	/**
+	 * 批量增加附近标签织图
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String addNearLabelWorlds(){
+		try{
+			nearService.insertNearLabelWorlds(worldId, worldAuthorId, nearLabelIds);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
 	 * 批量删除附标签织图
 	 * @return
 	 * @author zxx 2015-12-4 16:59:28
@@ -302,12 +318,76 @@ public class OpNearAction extends BaseCRUDAction{
 		String[] ids = request.getParameterValues("reIndexId");
 		try{
 			nearService.updateNearLabelWorldSerial(ids);
-			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
+	
+	/**
+	 * 更新附近城市分组
+	 * @return
+	 * @author zxx 2015-12-8 11:33:34
+	 */
+	public String updateNearCityGroupSerial(){
+		String[] ids = request.getParameterValues("reIndexId");
+		try{
+			nearService.reIndexNearCityGroup(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新附近推荐城市
+	 * @return
+	 * @author zxx 2015-12-8 11:33:34
+	 */
+	public String updateNearRecommendCitySerial(){
+		String[] ids = request.getParameterValues("reIndexId");
+		try{
+			nearService.reIndexNearRecommendCity(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询缓存里的附近推荐城市
+	 * @return
+	 * @author zxx 2015-12-8 11:36:05
+	 */
+	public String queryNearRecommendCityCache(){
+		try{
+			nearService.queryNearRecommendCityCache(jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新附近推荐城市缓存
+	 * @return
+	 * @author zxx 2015-12-8 11:33:34
+	 */
+	public String updateNearRecommendCityCahce(){
+		try{
+			nearService.updateNearRecommendCityCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	
 	
 	public Integer getId() {
 		return id;
@@ -389,6 +469,14 @@ public class OpNearAction extends BaseCRUDAction{
 
 	public void setWorldId(Integer worldId) {
 		this.worldId = worldId;
+	}
+	
+	public String getNearLabelIds() {
+		return nearLabelIds;
+	}
+
+	public void setNearLabelIds(String nearLabelIds) {
+		this.nearLabelIds = nearLabelIds;
 	}
 
 	public Integer getNearLabelId() {

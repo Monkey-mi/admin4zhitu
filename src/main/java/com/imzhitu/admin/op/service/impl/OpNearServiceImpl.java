@@ -14,6 +14,7 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
+import com.hts.web.operations.service.NearService;
 import com.imzhitu.admin.addr.pojo.City;
 import com.imzhitu.admin.addr.service.AddrService;
 import com.imzhitu.admin.common.pojo.OpNearCityGroupDto;
@@ -51,6 +52,10 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	@Autowired
 	private AddrService addrService;
 	
+	@Autowired
+	private NearService nearService;
+	
+	
 	@Override
 	public void queryNearLabel(OpNearLabelDto label, int start, int limit, 
 			Map<String, Object> jsonMap) throws Exception {
@@ -81,7 +86,7 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		}
 		com.hts.web.common.pojo.OpNearLabelDto webLabel = new com.hts.web.common.pojo.OpNearLabelDto();
 		BeanUtils.copyProperties(webLabel, label);
-		if(label.getLongitude() != null || label.getLatitude() != null) {
+		if(label.getLongitude() != null && label.getLatitude() != null) {
 			webLabel.setLoc(new Double[]{label.getLongitude(), label.getLatitude()});
 		}
 		nearLabelMongoDao.updateLabel(webLabel);
@@ -139,13 +144,8 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	public void insertNearCityGroup(String description) throws Exception {
 		OpNearCityGroupDto dto = new OpNearCityGroupDto();
 		dto.setDescription(description);
-		long total = nearCityGroupMapper.queryNearCityGroupTotalCount(dto);
-		if(total == 0){
-			Integer maxSerial = nearCityGroupMapper.queryNearCityGroupMaxSerial();
-			dto.setSerial(maxSerial + 1);
-		}else{
-			dto.setSerial(1);
-		}
+		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_CITY_GROUP_SERIAL);
+		dto.setSerial(serial);
 		nearCityGroupMapper.insertNearCityGroup(dto);
 	}
 
@@ -195,14 +195,8 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			throws Exception {
 		OpNearRecommendCityDto dto = new OpNearRecommendCityDto();
 		dto.setCityGroupId(cityGroupId);
-		long total = nearRecommendCityMapper.queryNearRecommendCityTotalCount(dto);
-		if(total > 0){
-			Integer maxSerial = nearRecommendCityMapper.queryNearRecommendCityMaxSerialByCityGroupId(cityGroupId);
-			dto.setSerial(maxSerial + 1);
-		}else{
-			dto.setSerial(1);
-		}
-		
+		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_RECOMMEND_CITY_SERIAL);
+		dto.setSerial(serial);
 		dto.setCityId(cityId);
 		
 		nearRecommendCityMapper.insertNearRecommendCity(dto);
@@ -234,6 +228,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		}
 	}
 
+	/**
+	 * 添加织图标签
+	 */
 	@Override
 	public void insertNearLabelWorld(Integer worldId, Integer worldAuthorId,
 			Integer nearLabelId) throws Exception {
@@ -251,6 +248,19 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		nearLabelWorldMapper.insertNearLabelWorld(dto);
 	}
 
+	/**
+	 * 批量添加织图标签
+	 */
+	@Override
+	public void insertNearLabelWorlds(Integer worldId, Integer worldAuthorId,
+			String  nearLabelIds) throws Exception {
+			String[]  nearLabelIdsForInt = nearLabelIds.split(","); 
+			for(int i = 0; i < nearLabelIdsForInt.length; i++){
+				int labelId = Integer.parseInt(nearLabelIdsForInt[i]);
+				insertNearLabelWorld(worldId,worldAuthorId,labelId);
+			}
+	}
+	
 	@Override
 	public void batchDeleteNearLabelWorld(String idsStr) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
@@ -269,9 +279,12 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		dto.setWorldId(worldId);
 		dto.setNearLabelId(nearLabelId);
 		long total = nearLabelWorldMapper.queryNearLabelWorldTotalCount(dto);
-		List<OpNearLabelWorldDto> list  = nearLabelWorldMapper.queryNearLabelWorld(dto);
-			jsonMap.put(OptResult.ROWS, list);
+		List<OpNearLabelWorldDto> list  = null;
+		if(total > 0){
+			list  = nearLabelWorldMapper.queryNearLabelWorld(dto);
 			jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getSerial());
+		}
+			jsonMap.put(OptResult.ROWS, list);
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 	}
 
@@ -296,4 +309,44 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			nearLabelWorldMapper.updateNearLabelWorldSerial(dto);
 		}
 	}
+
+	@Override
+	public void updateNearRecommendCityCache() throws Exception {
+		nearService.updateRecommendCityCache();
+	}
+
+	@Override
+	public void queryNearRecommendCityCache(Map<String,Object>jsonMap) throws Exception {
+		nearService.buildRecommendCity(jsonMap);
+	}
+
+	@Override
+	public void reIndexNearCityGroup(String[] idStrs) throws Exception {
+		
+		for (int i = idStrs.length - 1; i >= 0; i--) {
+			if (StringUtil.checkIsNULL(idStrs[i]))
+				continue;
+			int id = Integer.parseInt(idStrs[i]);
+			Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_CITY_GROUP_SERIAL);
+			OpNearCityGroupDto dto = new OpNearCityGroupDto();
+			dto.setId(id);
+			dto.setSerial(serial);
+			nearCityGroupMapper.updateNearCityGroupSerial(dto);
+		}
+	}
+
+	@Override
+	public void reIndexNearRecommendCity(String[] idStrs) throws Exception {
+		for (int i = idStrs.length - 1; i >= 0; i--) {
+			if (StringUtil.checkIsNULL(idStrs[i]))
+				continue;
+			int id = Integer.parseInt(idStrs[i]);
+			Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_RECOMMEND_CITY_SERIAL);
+			OpNearRecommendCityDto dto = new OpNearRecommendCityDto();
+			dto.setId(id);
+			dto.setSerial(serial);
+			nearRecommendCityMapper.updateNearRecommendCitySerial(dto);
+		}
+	}
+	
 }
