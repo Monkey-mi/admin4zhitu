@@ -24,9 +24,8 @@ var maxId = 0;
 	htmTableTitle = "主题列表"; // 表格标题
 	toolbarComponent = '#tb';
 	loadDataURL = "admin_op/near_queryNearLabelWorld"; // 数据装载请求地址
-	saveNearLabelWorld = "admin_op/near_addNearLabelWorld"; // 保存主题地址
-	updateNearLabelWorld = "admin_op/near_updateChannelTheme"; // 更新主题地址
-	deleteNearLabelWorld = "admin_op/near_batchDeleteNearLabelWorld"; // 删除主题频道
+	saveNearLabelWorld = "admin_op/near_addNearLabelWorld"; // 保存织图标签
+	deleteNearLabelWorld = "admin_op/near_batchDeleteNearLabelWorld"; // 删除织图标签
 	
 	showWorldAndInteractPage="page_htworld_htworldShow";
 	
@@ -139,10 +138,10 @@ var maxId = 0;
 		});
 		
 		$('#htm_edit').window({
-			title: '添加专题',
+			title: '添加织图',
 			modal : true,
 			width : 300,
-			height : 245,
+			height : 205,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -174,8 +173,8 @@ var maxId = 0;
 		    pagination : true,
 		    columns:[[
 				{field : 'id',title : 'id',align : 'center',width : 80},
-				{field : 'labelName',title : '标签名', align : 'center',width : 60, height:60},
-				{field : 'cityName',title : '城市名',align : 'center',width : 180}
+				{field : 'labelName',title : '标签名', align : 'center',width : 180, height:60},
+				{field : 'cityName',title : '城市名',align : 'center',width : 60}
 		    ]]
 /* 		    queryParams:searchChannelQueryParams, */
 /* 		    onLoadSuccess:function(data) {
@@ -216,8 +215,8 @@ var maxId = 0;
 		    pagination : true,
 		    columns:[[
 				{field : 'id',title : 'id',align : 'center',width : 80},
-				{field : 'labelName',title : '标签名', align : 'center',width : 60, height:60},
-				{field : 'cityName',title : '城市名',align : 'center',width : 180}
+				{field : 'labelName',title : '标签名', align : 'center',width : 180, height:60},
+				{field : 'cityName',title : '城市名',align : 'center',width : 60}
 		    ]]
 /* 		    queryParams:searchChannelQueryParams, */
 /* 		    onLoadSuccess:function(data) {
