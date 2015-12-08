@@ -231,10 +231,10 @@
 					if(result['result'] == 0) { 
 						$('#htm_serial').window('close');  // 关闭添加窗口
 						maxId = 0;
-						 /* myQueryParams['channel.maxId'] = maxId;  */
-						loadPageData(1);
-						$('#htm_table').datagrid("unselectAll");
+						 $("#htm_table").datagrid('reload');
+						$('#htm_table').datagrid("clearSelections");
 						$("#reSerialCount").text(0);
+						
 					} else {
 						$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 					}
