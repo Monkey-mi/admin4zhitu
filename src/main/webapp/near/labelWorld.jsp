@@ -24,9 +24,8 @@ var maxId = 0;
 	htmTableTitle = "主题列表"; // 表格标题
 	toolbarComponent = '#tb';
 	loadDataURL = "admin_op/near_queryNearLabelWorld"; // 数据装载请求地址
-	saveNearLabelWorld = "admin_op/near_addNearLabelWorld"; // 保存主题地址
-	updateNearLabelWorld = "admin_op/near_updateChannelTheme"; // 更新主题地址
-	deleteNearLabelWorld = "admin_op/near_batchDeleteNearLabelWorld"; // 删除主题频道
+	saveNearLabelWorld = "admin_op/near_addNearLabelWorld"; // 保存织图标签
+	deleteNearLabelWorld = "admin_op/near_batchDeleteNearLabelWorld"; // 删除织图标签
 	
 	showWorldAndInteractPage="page_htworld_htworldShow";
 	
@@ -163,8 +162,7 @@ var maxId = 0;
 		    panelWidth : 330,
 		    panelHeight : 330,
 		    loadMsg : '加载中，请稍后...',
-			pageList : [4,10,20],
-			pageSize : 4,
+			pageList : [10,20],
 			toolbar:"#search-label-tb",
 		    multiple : false,
 		    required : false,
@@ -205,8 +203,7 @@ var maxId = 0;
 		    panelWidth : 330,
 		    panelHeight : 330,
 		    loadMsg : '加载中，请稍后...',
-			pageList : [4,10,20],
-			pageSize : 4,
+			pageList : [10,20],
 			toolbar:"#search-labelT-tb",
 		    multiple : false,
 		    required : false,

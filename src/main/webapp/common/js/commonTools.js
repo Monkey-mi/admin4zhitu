@@ -158,3 +158,23 @@ commonTools.openWorldAddToChannelPage = function(worldId){
 };
 
 
+/**
+ * 打开织图添加到标签织图页面
+ * @param	worldId	织图id
+ * @author zhangbo 2015-10-10
+ */
+commonTools.openWorldAddToWorldLabelPage = function(worldId,worldAuthorId){
+	var url = "./page_near_htworldAddToNearLabelWorld";
+	url += "?worldId=" + worldId +"" +"&worldAuthorId=" + worldAuthorId;
+	$.fancybox({
+		href: url,
+		margin: 20,
+		width: "60%",
+		height: "80%",
+		autoScale: true, 	
+		type: "iframe",
+		transitionIn: "none",	// 打开无动画
+		transitionOut: "elastic"	// 关闭动画：伸缩
+	});
+};
+

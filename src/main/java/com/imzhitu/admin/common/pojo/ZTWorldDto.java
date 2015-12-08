@@ -2,6 +2,7 @@ package com.imzhitu.admin.common.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -95,6 +96,8 @@ public class ZTWorldDto extends AbstractNumberDto implements Serializable, World
 	private Integer[] world_Ids; // 织图主键id集合
 	
 	private Integer isZombie;//是否为马甲织图
+	
+	private String nearLabelNames;
 	
 	public Integer getUser_level_id() {
 		return user_level_id;
@@ -653,6 +656,13 @@ public class ZTWorldDto extends AbstractNumberDto implements Serializable, World
 	
 	public void setWorld_Ids(Integer[] world_Ids) {
 		this.world_Ids = world_Ids;
+	}
+	
+	public String getNearLabelNames() {
+		return nearLabelNames;
+	}
+	public void setNearLabelNames(String nearLabelNames) {
+		this.nearLabelNames = nearLabelNames;
 	}
 	
 }

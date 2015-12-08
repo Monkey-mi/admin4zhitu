@@ -348,6 +348,19 @@ function drawOptArea($worldOpt, world, index) {
 			+ "</span>"
 			+ "</div>");
 	
+	// 添加四五行分隔线
+	var $optDivider4To5 = $('<hr class="divider"></hr>');
+	
+	// 添加第五行操作title
+	var $opt5LineTitle = $('<div class="world-opt-head-wrap">'
+			+ '<span class="world-opt-head" style="width:70px">附近标签</span>'
+			+ '</div>');
+	
+	// 添加第五行操作title对应的按钮
+	var $opt5LineBtn = $('<div class="world-channel" style="width:230px">'
+			+ getLabelName(world['nearLabelNames'], world, index)
+			+ '</div>');
+	
 	$opt.append($opt1LineTitle);
 	$opt.append($opt1LineBtn);
 	$opt.append($optDivider1To2);
@@ -359,6 +372,9 @@ function drawOptArea($worldOpt, world, index) {
 	$opt.append($optDivider3To4);
 	$opt.append($opt4LineTitle);
 	$opt.append($opt4LineBtn);
+	$opt.append($optDivider4To5);
+	$opt.append($opt5LineTitle);
+	$opt.append($opt5LineBtn);
 	
 	$worldOpt.append($opt);
 }
@@ -544,6 +560,22 @@ function getChannelName(channelName, world, index) {
 		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='commonTools.openWorldAddToChannelPage(" + world.id + ")'/>";
 	} else {
 		return "<a onclick='commonTools.openWorldAddToChannelPage(" + world.id + ")'>" + channelName + "</a>";
+	}
+};
+
+
+/**
+ * 
+ * @param channelName
+ * @param world
+ * @param index
+ * @returns {String}
+ */
+function getLabelName(channelName, world, index) {
+	if(channelName=="") {
+		return "<img title='添加到频道' class='htm_column_img pointer'  src='./common/images/edit_add.png' onclick='commonTools.openWorldAddToWorldLabelPage(" + world.id + ","+ world.authorId+")'/>";
+	} else {
+		return "<a onclick='commonTools.openWorldAddToWorldLabelPage(" + world.id + ","+ world.authorId+")'>" + channelName + "</a>";
 	}
 };
 
