@@ -420,7 +420,7 @@ function submitSerialForm() {
 			<form id="edit_form" action="./admin_op/near_insertNearLabel" method="post">
 				<table class="htm_edit_table" width="580">
 					<tr>
-						<td class="leftTd">大Banner：</td>
+						<td class="leftTd">Banner：</td>
 						<td>
 							<input id="bannerUrl_edit" name="nearLabel.bannerUrl" class="none" readonly="readonly" />
 							<a id="bannerUrl_edit_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 

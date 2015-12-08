@@ -72,10 +72,16 @@
         	}
         });
 		
+		$("#cityGroupId_add").combobox({
+        	url: "./admin_op/near_getCityGroup",
+         	valueField: "id",
+        	textField: "description", 
+        });
+		
 		$('#add_city_window').window({
 			title : "添加城市",
 			modal : true,
-			width : 650,
+			width : 520,
 			height : 155,
 			shadow : false,
 			closed : true,
@@ -152,7 +158,6 @@
 </head>
 <body>
 	
-	<img id="page-loading" src="${webRootPath}/common/images/girl-loading.gif"/>
 	<div id="main" style="display: none;">
 		
 		<table id="htm_table"></table>
@@ -168,28 +173,35 @@
 		<!-- 添加推荐城市窗口 -->
 		<div id="add_city_window">
 			<form id="add_city_form" action="./admin_op/near_addRecommendCity" method="post">
-				<table class="htm_edit_table" width="580">
+				<table class="htm_edit_table" width="480" style="margin-top:10px;">
 					<tr>
-						<td class="leftTd">城市：</td>
-						<td class="leftTd">
+						<td class="leftTd" style="text-align:right">城市：</td>
+						<td>
 							<input name="cityId" class="easyui-combobox" data-options="valueField:'id',textField:'name',url:'./admin_op/addr_getCityMap'"/>
 						</td>
-					</tr>
-					<tr>
-					<td class="leftTd">分组id：</td>
-						<td class="leftTd">
-							<input type="text" name="cityGroupId"/>
+						<td class="rightTd">
+							请选择城市
 						</td>
 					</tr>
 					<tr>
-						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+						<td class="leftTd" style="text-align:right">地区：</td>
+						<td>
+							<input id="cityGroupId_add" type="text" name="cityGroupId"/>
+						</td>
+						<td>
+							请选择地区
+						</td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addRecommendCity()">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#add_city_window').window('close');">取消</a>
 						</td>
 					</tr>
 					<tr class="loading" style="display:none">
-						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+						<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
 							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
-							<span style="vertical-align:middle;">排序中...</span>
+							<span style="vertical-align:middle;">操作中...</span>
 						</td>
 					</tr>
 				</table>
