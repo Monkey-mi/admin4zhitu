@@ -143,6 +143,17 @@ public interface OpNearService extends BaseService{
 	 */
 	public void insertNearLabelWorld(Integer worldId,Integer worldAuthorId,Integer nearLabelId)throws Exception;
 	
+	
+	/**
+	 * 批量增加附近标签织图
+	 * @param worldId
+	 * @param worldAuthorId
+	 * @param nearLabelIds  标签s
+	 * @throws Exception
+	 * @author zxx 2015-12-4 18:15:38
+	 */
+	public void insertNearLabelWorlds(Integer worldId,Integer worldAuthorId,String nearLabelIds)throws Exception;
+	
 	/**
 	 * 批量删除附近织图
 	 * @param idsStr

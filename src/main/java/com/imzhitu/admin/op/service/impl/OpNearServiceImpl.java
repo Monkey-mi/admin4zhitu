@@ -234,6 +234,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		}
 	}
 
+	/**
+	 * 添加织图标签
+	 */
 	@Override
 	public void insertNearLabelWorld(Integer worldId, Integer worldAuthorId,
 			Integer nearLabelId) throws Exception {
@@ -251,6 +254,19 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		nearLabelWorldMapper.insertNearLabelWorld(dto);
 	}
 
+	/**
+	 * 批量添加织图标签
+	 */
+	@Override
+	public void insertNearLabelWorlds(Integer worldId, Integer worldAuthorId,
+			String  nearLabelIds) throws Exception {
+			String[]  nearLabelIdsForInt = nearLabelIds.split(","); 
+			for(int i = 0; i < nearLabelIdsForInt.length; i++){
+				int labelId = Integer.parseInt(nearLabelIdsForInt[i]);
+				insertNearLabelWorld(worldId,worldAuthorId,labelId);
+			}
+	}
+	
 	@Override
 	public void batchDeleteNearLabelWorld(String idsStr) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
@@ -269,9 +285,12 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		dto.setWorldId(worldId);
 		dto.setNearLabelId(nearLabelId);
 		long total = nearLabelWorldMapper.queryNearLabelWorldTotalCount(dto);
-		List<OpNearLabelWorldDto> list  = nearLabelWorldMapper.queryNearLabelWorld(dto);
-			jsonMap.put(OptResult.ROWS, list);
+		List<OpNearLabelWorldDto> list  = null;
+		if(total > 0){
+			list  = nearLabelWorldMapper.queryNearLabelWorld(dto);
 			jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getSerial());
+		}
+			jsonMap.put(OptResult.ROWS, list);
 			jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 	}
 

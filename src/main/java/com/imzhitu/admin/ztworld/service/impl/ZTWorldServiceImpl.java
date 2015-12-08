@@ -24,6 +24,7 @@ import com.imzhitu.admin.common.WorldWithInteract;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpActivityWorldValidDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
+import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.UserMsgAtWorldDto;
 import com.imzhitu.admin.common.pojo.UserTrust;
@@ -32,6 +33,7 @@ import com.imzhitu.admin.interact.dao.InteractWorldDao;
 import com.imzhitu.admin.interact.service.InteractTypeOptionWorldService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
 import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
+import com.imzhitu.admin.op.mapper.OpNearLabelWorldMapper;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
 import com.imzhitu.admin.ztworld.dao.HTWorldCacheDao;
@@ -110,6 +112,9 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	
 	@Autowired
 	private InteractTypeOptionWorldService worldSuperReserveService;
+	
+	@Autowired
+	private OpNearLabelWorldMapper nearLabelWorldMapper;
 	
 	public Integer getCacheLatestSize() {
 		return cacheLatestSize;
@@ -687,6 +692,22 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			// 根据织图id，查询是否为精选备选，然后拼装织图DTO信息
 			boolean exist = worldSuperReserveService.isExist(world.getId());
 			dto.setSquarerecd(exist? 1 : 0);
+			
+			//根据织图ID查询对应的织图附近标签
+			OpNearLabelWorldDto labelWorlDdto = new OpNearLabelWorldDto();
+			labelWorlDdto.setWorldId(world.getId());
+			List<OpNearLabelWorldDto> list  = nearLabelWorldMapper.queryNearLabelWorld(labelWorlDdto);
+			String nearLabelName = "";
+			
+			for(int i=0;i<list.size();i++) {
+				if (i==0) {
+					nearLabelName = list.get(i).getNearLabelName();
+				} else {
+					nearLabelName = nearLabelName + "," + list.get(i).getNearLabelName();
+				}
+			}
+			
+			dto.setNearLabelNames(nearLabelName);
 			
 			rtnList.add(dto);
 		}

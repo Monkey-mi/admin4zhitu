@@ -35,6 +35,7 @@ public class OpNearAction extends BaseCRUDAction{
 	private String idsStr;
 	private Integer worldId;
 	private Integer nearLabelId;
+	private String nearLabelIds;
 	private Integer worldAuthorId;
 	
 	private OpNearLabelDto nearLabel = new OpNearLabelDto();
@@ -284,6 +285,21 @@ public class OpNearAction extends BaseCRUDAction{
 	}
 	
 	/**
+	 * 批量增加附近标签织图
+	 * @return
+	 * @author zxx 2015-12-4 16:59:28
+	 */
+	public String addNearLabelWorlds(){
+		try{
+			nearService.insertNearLabelWorlds(worldId, worldAuthorId, nearLabelIds);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
 	 * 批量删除附标签织图
 	 * @return
 	 * @author zxx 2015-12-4 16:59:28
@@ -389,6 +405,14 @@ public class OpNearAction extends BaseCRUDAction{
 
 	public void setWorldId(Integer worldId) {
 		this.worldId = worldId;
+	}
+	
+	public String getNearLabelIds() {
+		return nearLabelIds;
+	}
+
+	public void setNearLabelIds(String nearLabelIds) {
+		this.nearLabelIds = nearLabelIds;
 	}
 
 	public Integer getNearLabelId() {
