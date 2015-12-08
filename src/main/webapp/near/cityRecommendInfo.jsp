@@ -5,11 +5,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>城市推荐信息</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
+<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}" />
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript">
 
 	// 行是否被勾选
-	var IsCheckFlag = false;
+	var IsCheckFlag = true;
 	
 	var columnsFields = [
              {field: "ck",checkbox: true },
@@ -42,20 +43,20 @@
 				IsCheckFlag = false;
 			},
 			onSelect: function(rowIndex, rowData) {
+				// 选择操作时刷新展示重新排序所选择的数量
+				$("#reSerialCount").text($(this).datagrid('getSelections').length);
 				if ( !IsCheckFlag ) {
 					IsCheckFlag = true;
 					$(this).datagrid("unselectRow", rowIndex);
 				}
-				// 选择操作时刷新展示重新排序所选择的数量
-				$("#reSerialCount").text($(this).datagrid('getSelections').length);
 			},
 			onUnselect: function(rowIndex, rowData) {
+				// 选择操作时刷新展示重新排序所选择的数量
+				$("#reSerialCount").text($(this).datagrid('getSelections').length);
 				if ( !IsCheckFlag ) {
 					IsCheckFlag = true;
 					$(this).datagrid("selectRow", rowIndex);
 				}
-				// 选择操作时刷新展示重新排序所选择的数量
-				$("#reSerialCount").text($(this).datagrid('getSelections').length);
 			},
 			onLoadSuccess: function(data) {
 				// 数据加载成功，loading动画隐藏
@@ -101,6 +102,20 @@
 			modal : true,
 			width : 650,
 			height : 155,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-converter',
+			resizable : false
+		});
+		
+		$('#html_viewDataInCache').window({
+			title : '在缓存里面的数据',
+			modal : true,
+			width : 650,
+			height : 455,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -229,6 +244,21 @@
 		}
 	}
 	
+	function preView(){
+		$('#html_viewDataInCache .opt_btn').hide();
+		$('#html_viewDataInCache .loading').show();
+		$('#html_viewDataInCache').window('open');
+		$.post("./admin_op/near_updateNearRecommendCitySerial",function(result){
+			if(result['result']== 0){
+				var date = result['msg'];
+				
+			}else{
+				$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
+			}
+		});
+		
+	}
+	
 </script>
 </head>
 <body>
@@ -244,6 +274,7 @@
 				<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 					<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
 				<a href="javascript:void(0);" onclick="updateCache()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">更新缓存</a>
+				<a href="javascript:void(0);" onclick="preView()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">预览缓存数据</a>
 				<input id="city_group" style="width:120px" />
 				
 			</span>
@@ -289,7 +320,7 @@
 		
 		<!-- 频道重新排序 -->
 		<div id="htm_serial">
-			<form id="serial_form" action="admin_op/near_updateNearRecommendCitySerial" method="post">
+			<form id="serial_form" action="./admin_op/near_updateNearRecommendCitySerial" method="post">
 				<table class="htm_edit_table" width="580">
 					<tbody>
 						<tr>
@@ -334,6 +365,18 @@
 					</tbody>
 				</table>
 			</form>
+		</div>
+		
+		<!-- 预览 缓存里面的数据 -->
+		<div id="html_viewDataInCache">
+			<div class="loading none" style="text-align: center;padding-top: 10px;">
+				<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+				<span style="vertical-align:middle;">加载数据中...</span>
+			</div>
+			<div class="recommendCityData">
+				<div style="float:left;width:20%"></div>
+				<div></div>
+			</div>
 		</div>
 		
 	</div>

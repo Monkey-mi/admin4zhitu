@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>地区信息</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
-<jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<jsp:include page="../common/CRUDHeader.jsp"></jsp:include> 
 <script type="text/javascript">
 	var maxId = 0,
 	init = function() {
@@ -15,17 +15,16 @@
 	hideIdColumn = false,
 	htmTableTitle = "地区列表", //表格标题
 	loadDataURL = "./admin_op/near_queryCityGroupList",
-	deleteURI = "./admin_op/near_batchDeleteCityGroup?idsStr="
-
+	deleteURI = "./admin_op/near_batchDeleteCityGroup?idsStr=",
+	mySortName = '',
 	columnsFields = [
-             {field: "ck",checkbox: true},
-             {field: "id",title: "id",align: "center"},
+             {field:'ck',checkbox:true},
+             {field: "id",title: "ID",align: "center"},
              {field: "description",title: "组名",align: "center"}
 	    ];
 	
 	$(function(){
 		// 主表格
-		/*
 		$("#htm_table").datagrid({
 			title: "城市分组列表",
 			width: $(document.body).width(),
@@ -42,27 +41,27 @@
 				IsCheckFlag = false;
 			},
 			onSelect: function(rowIndex, rowData) {
+				// 选择操作时刷新展示重新排序所选择的数量
+				$("#reSerialCount").text($(this).datagrid('getSelections').length);
 				if ( !IsCheckFlag ) {
 					IsCheckFlag = true;
 					$(this).datagrid("unselectRow", rowIndex);
 				}
-				// 选择操作时刷新展示重新排序所选择的数量
-				$("#reSerialCount").text($(this).datagrid('getSelections').length);
 			},
 			onUnselect: function(rowIndex, rowData) {
+				$("#reSerialCount").text($(this).datagrid('getSelections').length);
 				if ( !IsCheckFlag ) {
 					IsCheckFlag = true;
 					$(this).datagrid("selectRow", rowIndex);
 				}
 				// 选择操作时刷新展示重新排序所选择的数量
-				$("#reSerialCount").text($(this).datagrid('getSelections').length);
 			},
 			onLoadSuccess: function(data) {
 				// 数据加载成功，loading动画隐藏
 				$("#page-loading").hide();
 			}
 		});
-		*/
+		
 		
 		$('#add_cityGroup_window').window({
 			title : '添加地区',
