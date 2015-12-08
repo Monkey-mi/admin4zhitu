@@ -69,10 +69,6 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		return list;
 	}
 	
-	@Autowired
-	private NearService nearService;
-	
-	
 	@Override
 	public void queryNearLabel(OpNearLabelDto label, int start, int limit, 
 			Map<String, Object> jsonMap) throws Exception {
