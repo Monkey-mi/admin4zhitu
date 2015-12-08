@@ -45,11 +45,12 @@ public interface OpNearCityGroupMapper {
 	@DataSource("master")
 	public long queryNearCityGroupTotalCount(OpNearCityGroupDto dto);
 	
+	
 	/**
-	 * 附近最大序列号
-	 * @return
-	 * @author zxx 2015-12-4 16:41:27
+	 * 更新排序
+	 * @param dto
+	 * @author zxx 2015-12-8 10:49:20
 	 */
 	@DataSource("master")
-	public Integer queryNearCityGroupMaxSerial();
+	public void updateNearCityGroupSerial(OpNearCityGroupDto dto);
 }

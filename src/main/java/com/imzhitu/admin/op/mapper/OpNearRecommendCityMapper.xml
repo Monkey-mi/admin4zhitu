@@ -25,6 +25,12 @@
 		</foreach>
 	</delete>
 	
+	<!-- update -->
+	<update id="updateNearRecommendCitySerial">
+		update hts.operations_near_recommend_city set serial=#{serial}
+		where id = #{id}
+	</update>
+	
 	<!-- query -->
 	<select id="queryNearRecommendCity" resultMap="OpNearRecommendCityMap">
 		select 
@@ -74,10 +80,4 @@
 		</where>
 	</select>
 	
-	<!-- query max serial -->
-	<select id="queryNearRecommendCityMaxSerialByCityGroupId" resultType="Integer">
-		select max(serial)
-		from hts.operations_near_recommend_city
-		where city_group_id = #{cityGroupId}
-	</select>
 </mapper>	
