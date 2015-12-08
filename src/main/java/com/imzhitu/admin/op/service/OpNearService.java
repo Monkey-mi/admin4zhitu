@@ -221,4 +221,31 @@ public interface OpNearService extends BaseService{
 	 * @author zhangbo	2015年12月5日
 	 */
 	public List<Map<String,Serializable>> getCityGroup();
+	
+	/**
+	 * 查询附近织图
+	 * @param cityId
+	 * @param maxId
+	 * @param limit
+	 * @param jsonMap
+	 * @throws Exception
+	 * @author zxx 2015-12-8 20:33:24
+	 */
+	public void queryNearWorld(Integer cityId,int maxId,int limit,Map<String,Object>jsonMap)throws Exception;
+	
+	/**
+	 * 插入附近织图
+	 * @param worldId
+	 * @throws Exception
+	 * @author zxx 2015-12-8 20:48:22
+	 */
+	public void insertNearWorld(Integer worldId)throws Exception;
+	
+	/**
+	 * 批量删除附近织图
+	 * @param idsStr
+	 * @throws Exception
+	 * @author zxx 2015-12-8 20:48:27
+	 */
+	public void batchDeleteNearWorld(String idsStr)throws Exception;
 }

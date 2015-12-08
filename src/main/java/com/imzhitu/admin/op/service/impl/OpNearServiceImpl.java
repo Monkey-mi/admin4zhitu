@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.common.pojo.HTWorld;
+import com.hts.web.common.pojo.OpNearWorldDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.service.NearService;
+import com.hts.web.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.addr.pojo.City;
 import com.imzhitu.admin.addr.service.AddrService;
 import com.imzhitu.admin.common.pojo.OpNearCityGroupDto;
@@ -59,6 +62,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	
 	@Autowired
 	private UserInfoService userInfoService;
+	
+	@Autowired
+	private HTWorldDao worldDao;
 	
 	private List<OpNearLabelWorldDto> addUserInfo(List<OpNearLabelWorldDto> list) throws Exception{
 		for(int i = 0; i < list.size(); i++){
@@ -361,6 +367,37 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			dto.setId(id);
 			dto.setSerial(serial);
 			nearRecommendCityMapper.updateNearRecommendCitySerial(dto);
+		}
+	}
+
+	@Override
+	public void queryNearWorld(Integer cityId, int maxId, int limit,
+			Map<String, Object> jsonMap) throws Exception {
+		long total = nearService.queryNearWorldTotalCount(cityId);
+		if( total > 0 ){
+			List<OpNearWorldDto> list = nearService.queryNearWorldByCityId(cityId, maxId, limit);
+			if(list != null && !(list.isEmpty())){
+				jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(list.size()-1).getRecommendId());
+				jsonMap.put(OptResult.ROWS, list);
+				jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+			}
+		}
+	}
+
+	@Override
+	public void insertNearWorld(Integer worldId) throws Exception {
+		if(worldId == null){
+			throw new NullPointerException("worldId is null");
+		}
+		HTWorld world = worldDao.queryWorldById(worldId);
+		nearService.saveNearWorld(world);
+	}
+
+	@Override
+	public void batchDeleteNearWorld(String idsStr) throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		for(Integer id:ids){
+			nearService.deleteNearWorld(id);
 		}
 	}
 	
