@@ -192,8 +192,8 @@
 	};
 	
 	function updateCache(){
-		$.post("./admin_op/near_updateNearRecommendCityCahce", function(result){
-			$.messager.alert(result["msg"]);
+		$.post("./admin_op/near_updateNearRecommendCityCahce",{}, function(result){
+			$.messager.alert("温馨提示",result['msg']);
 		});
 	}
 	
@@ -248,7 +248,7 @@
 		$('#html_viewDataInCache .opt_btn').hide();
 		$('#html_viewDataInCache .loading').show();
 		$('#html_viewDataInCache').window('open');
-		$.post("./admin_op/near_updateNearRecommendCitySerial",function(result){
+		$.post("./admin_op/near_updateNearRecommendCitySerial",{},function(result){
 			if(result['result']== 0){
 				var date = result['msg'];
 				
@@ -273,8 +273,8 @@
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 				<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 					<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
-				<a href="javascript:void(0);" onclick="updateCache()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">更新缓存</a>
-				<a href="javascript:void(0);" onclick="preView()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">预览缓存数据</a>
+				<a href="javascript:void(0);" onclick="updateCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">更新缓存</a>
+				<a href="javascript:void(0);" onclick="preView()" class="easyui-linkbutton" plain="true" iconCls="icon-search">预览缓存数据</a>
 				<input id="city_group" style="width:120px" />
 				
 			</span>
