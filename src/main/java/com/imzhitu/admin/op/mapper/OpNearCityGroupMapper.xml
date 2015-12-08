@@ -22,6 +22,12 @@
 		</foreach>
 	</delete>
 	
+	<!-- update -->
+	<update id="updateNearCityGroupSerial">
+		update hts.operations_near_city_group set serial=#{serial}
+		where id=#{id}
+	</update>
+	
 	<select id="queryNearCityGroup" resultMap="OpNearCityGroupMap">
 		select * from hts.operations_near_city_group
 		<where>
@@ -47,11 +53,6 @@
 				<![CDATA[ and serial <= #{maxId}]]>
 			</if>
 		</where>
-	</select>
-	
-	<select id="queryNearCityGroupMaxSerial" resultType="Integer">
-		select max(serial)
-		from hts.operations_near_city_group
 	</select>
 	
 </mapper>

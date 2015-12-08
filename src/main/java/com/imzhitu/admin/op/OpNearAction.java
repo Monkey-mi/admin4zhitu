@@ -318,12 +318,76 @@ public class OpNearAction extends BaseCRUDAction{
 		String[] ids = request.getParameterValues("reIndexId");
 		try{
 			nearService.updateNearLabelWorldSerial(ids);
-			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
+	
+	/**
+	 * 更新附近城市分组
+	 * @return
+	 * @author zxx 2015-12-8 11:33:34
+	 */
+	public String updateNearCityGroupSerial(){
+		String[] ids = request.getParameterValues("reIndexId");
+		try{
+			nearService.reIndexNearCityGroup(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新附近推荐城市
+	 * @return
+	 * @author zxx 2015-12-8 11:33:34
+	 */
+	public String updateNearRecommendCitySerial(){
+		String[] ids = request.getParameterValues("reIndexId");
+		try{
+			nearService.reIndexNearRecommendCity(ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询缓存里的附近推荐城市
+	 * @return
+	 * @author zxx 2015-12-8 11:36:05
+	 */
+	public String queryNearRecommendCityCache(){
+		try{
+			nearService.queryNearRecommendCityCache(jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新附近推荐城市缓存
+	 * @return
+	 * @author zxx 2015-12-8 11:33:34
+	 */
+	public String updateNearRecommendCityCahce(){
+		try{
+			nearService.updateNearRecommendCityCache();
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	
 	
 	public Integer getId() {
 		return id;

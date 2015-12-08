@@ -45,12 +45,12 @@ public interface OpNearRecommendCityMapper {
 	@DataSource("master")
 	public long queryNearRecommendCityTotalCount(OpNearRecommendCityDto dto);
 	
+	
 	/**
-	 * 
-	 * @param groupId
-	 * @return
-	 * @author zxx 2015-12-4 17:24:05
+	 * 更新附近推荐城市serial
+	 * @param dto
+	 * @author zxx 2015-12-8 11:26:09
 	 */
 	@DataSource("master")
-	public Integer queryNearRecommendCityMaxSerialByCityGroupId(Integer groupId);
+	public void updateNearRecommendCitySerial(OpNearRecommendCityDto dto);
 }

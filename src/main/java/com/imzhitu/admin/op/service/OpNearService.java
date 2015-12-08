@@ -120,7 +120,14 @@ public interface OpNearService extends BaseService{
 	public void batchDeleteNearRecommendCity(String idsStr)throws Exception;
 	
 	/**
-	 * 查询附近默认城市
+	 * 重新排序附近城市分组
+	 * @param idsStr
+	 * @throws Exception
+	 */
+	public void reIndexNearCityGroup(String[] idStrs)throws Exception;
+	
+	/**
+	 * 查询附近推荐城市
 	 * @param id
 	 * @param cityId
 	 * @param cityGroupId
@@ -132,6 +139,27 @@ public interface OpNearService extends BaseService{
 	 * @author zxx 2015-12-4 17:33:05
 	 */
 	public void queryNearRecommendCity(Integer id,Integer cityId,Integer cityGroupId,int maxSerial,int start,int limit,Map<String,Object>jsonMap)throws Exception;
+	
+	/**
+	 * 跟新附近推荐城市缓存
+	 * @throws Exception
+	 * @author zxx 2015-12-8 10:13:05
+	 */
+	public void updateNearRecommendCityCache()throws Exception;
+	
+	/**
+	 * 查询附近推荐城市缓存
+	 * @throws Exception
+	 * @author zxx 2015-12-8 10:32:58
+	 */
+	public void queryNearRecommendCityCache(Map<String,Object>jsonMap)throws Exception;
+	
+	/**
+	 * 重新排序附近推荐城市
+	 * @param idStrs
+	 * @throws Exception
+	 */
+	public void reIndexNearRecommendCity(String[] idStrs)throws Exception;
 	
 	/**
 	 * 增加附近标签织图
