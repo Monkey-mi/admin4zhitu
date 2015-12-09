@@ -11,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.database.RowCallback;
 import com.hts.web.common.pojo.HTWorld;
 import com.hts.web.common.pojo.OpNearWorldDto;
+import com.hts.web.common.pojo.UserInfoDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.service.NearService;
+import com.hts.web.userinfo.dao.UserInfoDao;
 import com.hts.web.ztworld.dao.HTWorldDao;
 import com.imzhitu.admin.addr.pojo.City;
 import com.imzhitu.admin.addr.service.AddrService;
@@ -65,6 +68,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	
 	@Autowired
 	private HTWorldDao worldDao;
+	
+	@Autowired
+	private UserInfoDao userInfoDao;
 	
 	private List<OpNearLabelWorldDto> addUserInfo(List<OpNearLabelWorldDto> list) throws Exception{
 		for(int i = 0; i < list.size(); i++){
@@ -375,8 +381,33 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			Map<String, Object> jsonMap) throws Exception {
 		long total = nearService.queryNearWorldTotalCount(cityId);
 		if( total > 0 ){
-			List<OpNearWorldDto> list = nearService.queryNearWorldByCityId(cityId, maxId, limit);
+			final List<OpNearWorldDto> list = nearService.queryNearWorldByCityId(cityId, maxId, limit);
 			if(list != null && !(list.isEmpty())){
+				final Map<Integer,List<Integer>> indexMap = new HashMap<Integer, List<Integer>>();
+				for (int i = 0; i < list.size(); i++) {
+					Integer auid = list.get(i).getAuthorId();
+					if(indexMap.containsKey(auid)) {
+						indexMap.get(auid).add(i);
+					} else {
+						List<Integer> l = new ArrayList<Integer>();
+						l.add(i);
+						indexMap.put(auid, l);
+					}
+				}
+				Integer[] uids = new Integer[indexMap.size()];
+				indexMap.keySet().toArray(uids);
+				
+				userInfoDao.queryUserInfoDtos(uids, new RowCallback<UserInfoDto>() {
+					
+					@Override
+					public void callback(UserInfoDto t) {
+						Integer uid = t.getId();
+						for(Integer i : indexMap.get(uid)) {
+							list.get(i).setUserInfo(t);
+						}
+					}
+				});
+				
 				jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(list.size()-1).getRecommendId());
 				jsonMap.put(OptResult.ROWS, list);
 				jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
