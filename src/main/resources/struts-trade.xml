@@ -5,16 +5,23 @@
 <struts>
 	<package name="admin_trade" namespace="/admin_trade" extends="admin-package">
 	
-		<action name="shop_*" class="com.imzhitu.admin.trade.ShopAction" method="{1}">
+		<action name="shop_*" class="com.imzhitu.admin.trade.shop.ShopAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>
 		</action>
 		
-		<action name="shopType_*" class="com.imzhitu.admin.trade.ShopTypeAction" method="{1}">
+		<action name="shopType_*" class="com.imzhitu.admin.trade.shop.ShopTypeAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>
 			</result>
 		</action>
+		
+		<action name="itemSet_*" class="com.imzhitu.admin.trade.item.ItemSetAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 </struts>

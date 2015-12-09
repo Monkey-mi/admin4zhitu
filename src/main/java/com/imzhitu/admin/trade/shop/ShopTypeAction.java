@@ -1,11 +1,11 @@
-package com.imzhitu.admin.trade;
+package com.imzhitu.admin.trade.shop;
 
 import java.io.PrintWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.trade.service.ShopTypeService;
+import com.imzhitu.admin.trade.shop.service.ShopTypeService;
 
 import net.sf.json.JSONArray;
 

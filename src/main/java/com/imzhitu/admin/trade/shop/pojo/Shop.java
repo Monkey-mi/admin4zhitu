@@ -1,12 +1,15 @@
-package com.imzhitu.admin.trade;
+package com.imzhitu.admin.trade.shop.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author zhangbo	2015年11月23日
+ * 商家对象，与数据库保持一致
+ * 
+ * @author zhangbo	2015年11月19日
  *
  */
-public class ShopBAK {
+public class Shop implements Serializable {
 
 	/**
 	 * 序列号
@@ -33,28 +36,40 @@ public class ShopBAK {
 	private String description;
 	
 	/**
+	 * 经度
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Double longitude;
+	
+	/**
+	 * 纬度
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Double latitude;
+	
+	/**
 	 * 国家id，对应所在国家
 	 * @author zhangbo	2015年11月19日
 	 */
-	private String countryId;
+	private Integer countryId;
 	
 	/**
 	 * 省id，对应所在省份
 	 * @author zhangbo	2015年11月19日
 	 */
-	private String provinceId;
+	private Integer provinceId;
 	
 	/**
 	 * 市id，对应所在城市
 	 * @author zhangbo	2015年11月19日
 	 */
-	private String cityId;
+	private Integer cityId;
 	
 	/**
 	 * 区id，对应所在城市行政区
 	 * @author zhangbo	2015年11月19日
 	 */
-	private String districtId;
+	private Integer districtId;
 	
 	/**
 	 * 详细地址
@@ -157,9 +172,13 @@ public class ShopBAK {
 	 * 评论总数
 	 * @author zhangbo	2015年11月19日
 	 */
-	private String comment;
+	private Integer commentCount;
 	
-	private String poi;
+	/**
+	 * 图片总数
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Integer picCount;
 
 	/**
 	 * @return the id
@@ -204,58 +223,86 @@ public class ShopBAK {
 	}
 
 	/**
+	 * @return the longitude
+	 */
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	/**
+	 * @param longitude the longitude to set
+	 */
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
+	/**
+	 * @return the latitude
+	 */
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	/**
+	 * @param latitude the latitude to set
+	 */
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	/**
 	 * @return the countryId
 	 */
-	public String getCountryId() {
+	public Integer getCountryId() {
 		return countryId;
 	}
 
 	/**
 	 * @param countryId the countryId to set
 	 */
-	public void setCountryId(String countryId) {
+	public void setCountryId(Integer countryId) {
 		this.countryId = countryId;
 	}
 
 	/**
 	 * @return the provinceId
 	 */
-	public String getProvinceId() {
+	public Integer getProvinceId() {
 		return provinceId;
 	}
 
 	/**
 	 * @param provinceId the provinceId to set
 	 */
-	public void setProvinceId(String provinceId) {
+	public void setProvinceId(Integer provinceId) {
 		this.provinceId = provinceId;
 	}
 
 	/**
 	 * @return the cityId
 	 */
-	public String getCityId() {
+	public Integer getCityId() {
 		return cityId;
 	}
 
 	/**
 	 * @param cityId the cityId to set
 	 */
-	public void setCityId(String cityId) {
+	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
 	}
 
 	/**
 	 * @return the districtId
 	 */
-	public String getDistrictId() {
+	public Integer getDistrictId() {
 		return districtId;
 	}
 
 	/**
 	 * @param districtId the districtId to set
 	 */
-	public void setDistrictId(String districtId) {
+	public void setDistrictId(Integer districtId) {
 		this.districtId = districtId;
 	}
 
@@ -484,33 +531,31 @@ public class ShopBAK {
 	}
 
 	/**
-	 * @return the comment
+	 * @return the commentCount
 	 */
-	public String getComment() {
-		return comment;
+	public Integer getCommentCount() {
+		return commentCount;
 	}
 
 	/**
-	 * @param comment the comment to set
+	 * @param commentCount the commentCount to set
 	 */
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setCommentCount(Integer commentCount) {
+		this.commentCount = commentCount;
 	}
 
 	/**
-	 * @return the poi
+	 * @return the picCount
 	 */
-	public String getPoi() {
-		return poi;
+	public Integer getPicCount() {
+		return picCount;
 	}
 
 	/**
-	 * @param poi the poi to set
+	 * @param picCount the picCount to set
 	 */
-	public void setPoi(String poi) {
-		this.poi = poi;
+	public void setPicCount(Integer picCount) {
+		this.picCount = picCount;
 	}
 	
-	
-		
 }

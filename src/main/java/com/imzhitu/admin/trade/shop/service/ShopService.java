@@ -1,4 +1,4 @@
-package com.imzhitu.admin.trade.service;
+package com.imzhitu.admin.trade.shop.service;
 
 import java.util.Map;
 

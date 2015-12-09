@@ -21,6 +21,18 @@ public class OpMsgBulletin extends AbstractNumberDto{
 	private String bulletinThumb;
 	private Integer serial;
 	
+	/**
+	 * 扩展数据，用于存储除基本数据外，客户端需要的额外类型
+	 * @author zhangbo	2015年12月5日
+	 */
+	private Object extData;
+	
+	/**
+	 * 扩展数据，用于存储除基本数据外，客户端需要的额外类型
+	 * @author zhangbo	2015年12月5日
+	 */
+	private Object extData1;
+	
 	public String getBulletinName() {
 		return bulletinName;
 	}
@@ -98,4 +110,17 @@ public class OpMsgBulletin extends AbstractNumberDto{
 	public void setSerial(Integer serial) {
 		this.serial = serial;
 	}
+	public Object getExtData() {
+		return extData;
+	}
+	public void setExtData(Object extData) {
+		this.extData = extData;
+	}
+	public Object getExtData1() {
+		return extData1;
+	}
+	public void setExtData1(Object extData1) {
+		this.extData1 = extData1;
+	}
+	
 }

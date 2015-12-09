@@ -1,4 +1,4 @@
-package com.imzhitu.admin.trade.service.impl;
+package com.imzhitu.admin.trade.shop.service.impl;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.imzhitu.admin.addr.AddrUtil;
-import com.imzhitu.admin.trade.mapper.ShopMapper;
-import com.imzhitu.admin.trade.pojo.Shop;
-import com.imzhitu.admin.trade.pojo.ShopDTO;
-import com.imzhitu.admin.trade.service.ShopService;
+import com.imzhitu.admin.trade.shop.mapper.ShopMapper;
+import com.imzhitu.admin.trade.shop.pojo.Shop;
+import com.imzhitu.admin.trade.shop.pojo.ShopDTO;
+import com.imzhitu.admin.trade.shop.service.ShopService;
 
 /**
  * 商家业务逻辑实现类

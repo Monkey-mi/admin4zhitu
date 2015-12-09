@@ -1,15 +1,12 @@
-package com.imzhitu.admin.trade.pojo;
+package com.imzhitu.admin.trade.shop;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 商家对象，与数据库保持一致
- * 
- * @author zhangbo	2015年11月19日
+ * @author zhangbo	2015年11月23日
  *
  */
-public class Shop implements Serializable {
+public class ShopBAK {
 
 	/**
 	 * 序列号
@@ -36,40 +33,28 @@ public class Shop implements Serializable {
 	private String description;
 	
 	/**
-	 * 经度
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Double longitude;
-	
-	/**
-	 * 纬度
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Double latitude;
-	
-	/**
 	 * 国家id，对应所在国家
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Integer countryId;
+	private String countryId;
 	
 	/**
 	 * 省id，对应所在省份
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Integer provinceId;
+	private String provinceId;
 	
 	/**
 	 * 市id，对应所在城市
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Integer cityId;
+	private String cityId;
 	
 	/**
 	 * 区id，对应所在城市行政区
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Integer districtId;
+	private String districtId;
 	
 	/**
 	 * 详细地址
@@ -172,13 +157,9 @@ public class Shop implements Serializable {
 	 * 评论总数
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Integer commentCount;
+	private String comment;
 	
-	/**
-	 * 图片总数
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Integer picCount;
+	private String poi;
 
 	/**
 	 * @return the id
@@ -223,86 +204,58 @@ public class Shop implements Serializable {
 	}
 
 	/**
-	 * @return the longitude
-	 */
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	/**
-	 * @param longitude the longitude to set
-	 */
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
-
-	/**
-	 * @return the latitude
-	 */
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	/**
-	 * @param latitude the latitude to set
-	 */
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	/**
 	 * @return the countryId
 	 */
-	public Integer getCountryId() {
+	public String getCountryId() {
 		return countryId;
 	}
 
 	/**
 	 * @param countryId the countryId to set
 	 */
-	public void setCountryId(Integer countryId) {
+	public void setCountryId(String countryId) {
 		this.countryId = countryId;
 	}
 
 	/**
 	 * @return the provinceId
 	 */
-	public Integer getProvinceId() {
+	public String getProvinceId() {
 		return provinceId;
 	}
 
 	/**
 	 * @param provinceId the provinceId to set
 	 */
-	public void setProvinceId(Integer provinceId) {
+	public void setProvinceId(String provinceId) {
 		this.provinceId = provinceId;
 	}
 
 	/**
 	 * @return the cityId
 	 */
-	public Integer getCityId() {
+	public String getCityId() {
 		return cityId;
 	}
 
 	/**
 	 * @param cityId the cityId to set
 	 */
-	public void setCityId(Integer cityId) {
+	public void setCityId(String cityId) {
 		this.cityId = cityId;
 	}
 
 	/**
 	 * @return the districtId
 	 */
-	public Integer getDistrictId() {
+	public String getDistrictId() {
 		return districtId;
 	}
 
 	/**
 	 * @param districtId the districtId to set
 	 */
-	public void setDistrictId(Integer districtId) {
+	public void setDistrictId(String districtId) {
 		this.districtId = districtId;
 	}
 
@@ -531,31 +484,33 @@ public class Shop implements Serializable {
 	}
 
 	/**
-	 * @return the commentCount
+	 * @return the comment
 	 */
-	public Integer getCommentCount() {
-		return commentCount;
+	public String getComment() {
+		return comment;
 	}
 
 	/**
-	 * @param commentCount the commentCount to set
+	 * @param comment the comment to set
 	 */
-	public void setCommentCount(Integer commentCount) {
-		this.commentCount = commentCount;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	/**
-	 * @return the picCount
+	 * @return the poi
 	 */
-	public Integer getPicCount() {
-		return picCount;
+	public String getPoi() {
+		return poi;
 	}
 
 	/**
-	 * @param picCount the picCount to set
+	 * @param poi the poi to set
 	 */
-	public void setPicCount(Integer picCount) {
-		this.picCount = picCount;
+	public void setPoi(String poi) {
+		this.poi = poi;
 	}
 	
+	
+		
 }

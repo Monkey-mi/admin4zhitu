@@ -20,6 +20,7 @@ public class CityCacheDaoImpl extends BaseCacheDaoImpl<AddrCity> implements City
 	
 	@Override
 	public void updateCache() {
+		// TODO 此处城市缓存，最好通过queryAllCity方法获取，然后再转换成客户端使用的web对象存储到redis中，这样只增加业务逻辑的复杂度，而不增加数据层面的复杂度
 		List<AddrCity> list = cityMapper.queryAllCityCache();
 		
 		if(getRedisTemplate().hasKey(CacheKeies.ADDR_CITY)) {

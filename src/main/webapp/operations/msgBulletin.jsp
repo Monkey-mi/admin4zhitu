@@ -298,9 +298,28 @@
 				$.messager.alert('提示',result['msg']);
 			}
 		},"json");
-		
-		
-	}
+	};
+	
+	/**
+	 * 将勾选的公告添加到有奖活动
+	 * @author zhangbo	2015-12-08
+	 */
+	function addToAwardActivity() {
+		var rows = $('#htm_table').datagrid('getSelections');	
+		var ids = [];
+		for(var i=0;i<rows.length;i+=1){	
+			ids.push(rows[i]['id']);
+		}
+		$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
+		$('#htm_table').datagrid('loading');
+		var param = {
+				bullentinIds: ids.toString()
+		};
+		$.post("./admin_trade/itemSet_addAwardActivityByBullentin", param, function(result){
+			$('#htm_table').datagrid('loaded');
+			$.messager.alert("温馨提示",result.msg);
+		});
+	};
 	
 	
 </script>
@@ -319,6 +338,7 @@
 		        <option value="" selected="selected">全部</option>
 		        <option value="0">正在展示</option>
 	   		</select>
+	   		<a href="javascript:void(0);" onclick="javascript:addToAwardActivity();" class="easyui-linkbutton" title="勾选当前公告，添加到活动下有奖活动分组" plain="true" iconCls="icon-add">添加到有奖活动</a>
 		</div>
 		<table id="htm_table"></table>
 		<!-- 添加记录 -->

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.trade.item.mapper.ItemSetMapper">
+
+	<resultMap id="ItemSetMap" type="com.imzhitu.admin.trade.item.pojo.ItemSet">
+		<id column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="description" property="description" javaType="java.lang.String"/>
+		<result column="path" property="path" javaType="java.lang.String"/>
+		<result column="thumb" property="thumb" javaType="java.lang.String"/>
+		<result column="type" property="type" javaType="java.lang.Integer"/>
+		<result column="link" property="link" javaType="java.lang.String"/>
+		<result column="operator" property="operator" javaType="java.lang.Integer"/>
+		<result column="serial" property="serial" javaType="java.lang.Integer"/>
+	</resultMap>
+	
+	<!-- 新增商品集合 -->
+	<insert id="insert">
+		insert into 
+			hts.item_set 
+			(description, path, thumb, type, link, operator, serial)
+	 	values 
+	 		(#{description}, #{path}, #{thumb}, #{type}, #{link}, #{operator}, #{serial})
+	</insert>
+	
+	<!-- 根据id更新商品集合 -->
+	<update id="update">
+		update 
+			hts.item_set 
+		<set>
+	      <if test="description != null">description = #{description},</if>
+	      <if test="path != null">path = #{path},</if>
+	      <if test="thumb != null">thumb = #{thumb},</if>
+	      <if test="type != null">type = #{type},</if>
+	      <if test="link != null">link = #{link},</if>
+	      <if test="operator != null">operator = #{operator},</if>
+	      <if test="serial != null">serial = #{serial}</if>
+	    </set>
+	  	where 
+	  		id = #{id}
+	</update>
+
+	<!-- 根据id删除商品集合 -->
+	<delete id="deleteById">
+		delete from hts.item_set where id = #{id}
+	</delete>
+	
+	<!-- 查询商品集合总数 -->
+	<select id="queryItemSetList" resultMap="ItemSetMap">
+		select 
+			*
+		from 
+			hts.item_set 
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 查询商品集合总数 -->
+	<select id="queryItemSetTotal" resultType="INTEGER">
+		select 
+			count(*)
+		from 
+			hts.item_set 
+	</select>
+	
+</mapper>

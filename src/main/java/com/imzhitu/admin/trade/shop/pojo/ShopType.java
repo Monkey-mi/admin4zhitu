@@ -1,4 +1,4 @@
-package com.imzhitu.admin.trade.pojo;
+package com.imzhitu.admin.trade.shop.pojo;
 
 import java.io.Serializable;
 

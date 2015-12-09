@@ -1,4 +1,4 @@
-package com.imzhitu.admin.trade;
+package com.imzhitu.admin.trade.shop;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -6,7 +6,7 @@ import com.hts.web.base.StrutsKey;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.trade.service.ShopService;
+import com.imzhitu.admin.trade.shop.service.ShopService;
 
 /**
  * 商家信息控制类

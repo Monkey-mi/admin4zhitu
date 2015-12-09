@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.imzhitu.admin.trade.mapper.ShopMapper">
+<mapper namespace="com.imzhitu.admin.trade.shop.mapper.ShopMapper">
 
-	<resultMap id="ShopMap" type="com.imzhitu.admin.trade.pojo.Shop">
+	<resultMap id="ShopMap" type="com.imzhitu.admin.trade.shop.pojo.Shop">
 		<id column="id" property="id" javaType="java.lang.Integer"/>
 		<result column="name" property="name" javaType="java.lang.String"/>
 		<result column="description" property="description" javaType="java.lang.String"/>

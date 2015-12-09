@@ -1,4 +1,4 @@
-package com.imzhitu.admin.trade.mapper;
+package com.imzhitu.admin.trade.shop.mapper;
 
 import org.apache.ibatis.annotations.Param;
 

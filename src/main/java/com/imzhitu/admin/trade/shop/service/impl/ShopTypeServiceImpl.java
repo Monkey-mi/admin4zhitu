@@ -1,13 +1,13 @@
-package com.imzhitu.admin.trade.service.impl;
+package com.imzhitu.admin.trade.shop.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.imzhitu.admin.trade.mapper.ShopTypeMapper;
-import com.imzhitu.admin.trade.pojo.ShopType;
-import com.imzhitu.admin.trade.service.ShopTypeService;
+import com.imzhitu.admin.trade.shop.mapper.ShopTypeMapper;
+import com.imzhitu.admin.trade.shop.pojo.ShopType;
+import com.imzhitu.admin.trade.shop.service.ShopTypeService;
 
 /**
  * @author zhangbo	2015年11月20日
