@@ -29,6 +29,7 @@ import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
 import com.imzhitu.admin.common.pojo.OpNearRecommendCityDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.op.dao.mongo.NearLabelMongoDao;
+import com.imzhitu.admin.op.dao.mongo.NearWorldMongoDao;
 import com.imzhitu.admin.op.mapper.OpNearCityGroupMapper;
 import com.imzhitu.admin.op.mapper.OpNearLabelMapper;
 import com.imzhitu.admin.op.mapper.OpNearLabelWorldMapper;
@@ -71,6 +72,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	
 	@Autowired
 	private UserInfoDao userInfoDao;
+	
+	@Autowired
+	private NearWorldMongoDao nearWorldMongoDao;
 	
 	private List<OpNearLabelWorldDto> addUserInfo(List<OpNearLabelWorldDto> list) throws Exception{
 		for(int i = 0; i < list.size(); i++){
@@ -377,11 +381,11 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	}
 
 	@Override
-	public void queryNearWorld(Integer cityId, int maxId, int limit,
+	public void queryNearWorld(Integer cityId, int maxId,int start, int limit,
 			Map<String, Object> jsonMap) throws Exception {
-		long total = nearService.queryNearWorldTotalCount(cityId);
+		long total = nearWorldMongoDao.queryNearTotalCount(cityId);
 		if( total > 0 ){
-			final List<OpNearWorldDto> list = nearService.queryNearWorldByCityId(cityId, maxId, limit);
+			final List<OpNearWorldDto> list = nearWorldMongoDao.queryNear(maxId, cityId, start, limit);
 			if(list != null && !(list.isEmpty())){
 				final Map<Integer,List<Integer>> indexMap = new HashMap<Integer, List<Integer>>();
 				for (int i = 0; i < list.size(); i++) {
@@ -408,7 +412,7 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 					}
 				});
 				
-				jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(list.size()-1).getRecommendId());
+				jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getRecommendId());
 				jsonMap.put(OptResult.ROWS, list);
 				jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 			}

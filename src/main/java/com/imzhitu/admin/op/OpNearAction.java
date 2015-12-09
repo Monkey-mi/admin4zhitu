@@ -389,7 +389,7 @@ public class OpNearAction extends BaseCRUDAction{
 	
 	public String queryNearWorld(){
 		try{
-			nearService.queryNearWorld(cityId, maxSerial, rows, jsonMap);
+			nearService.queryNearWorld(cityId, maxSerial,rows * (page - 1), rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -400,7 +400,7 @@ public class OpNearAction extends BaseCRUDAction{
 	public String insertNearWorld(){
 		try{
 			nearService.insertNearWorld(worldId);
-			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
 		}catch(Exception e){
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}

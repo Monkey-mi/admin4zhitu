@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>附近织图管理</title>
-<jsp:include page="../common/header.jsp"></jsp:include>
+<jsp:include page="../common/header.jsp"></jsp:include><!--  -->
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -13,6 +13,8 @@
 <script type="text/javascript">
 
 var	htmTablePageList = [10,20],
+	editCityMaxId = 0,
+	editCityQueryParams={},
 	worldKey = 'id',
 	hideIdColumn = false,
 	IsCheckFlag = false,
@@ -22,11 +24,12 @@ var	htmTablePageList = [10,20],
 	mySortName = '',
 	loadDataURL = "./admin_op/near_queryNearWorld",
 	deleteURI = "./admin_op/near_batchDeleteNearWorld", //删除请求地址
-	saveURL = "./admin_op/near_addNearWorld", // 保存贴纸地址
+	saveURL = "./admin_op/near_insertNearWorld", // 保存贴纸地址
 	init = function() {
 		toolbarComponent = '#tb';
 		myQueryParams = {
-			'cityId' : 21760
+			'cityId' : 21760,
+			'maxSerial':0
 		}
 		loadPageData(initPage);
 	},
@@ -37,7 +40,9 @@ var	htmTablePageList = [10,20],
 	},
 	myOnLoadSuccess = function(data) {
 		if(data.result == 0) {
-			myQueryParams.maxSerial = data.maxSerial;
+			if(myQueryParams.maxSerial < data.maxSerial){
+				myQueryParams.maxSerial = data.maxSerial;
+			}
 		}
 	},
 	
@@ -134,7 +139,7 @@ var	htmTablePageList = [10,20],
 			title: '添加织图',
 			modal : true,
 			width : 300,
-			height : 205,
+			height : 155,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -151,6 +156,43 @@ var	htmTablePageList = [10,20],
 			}
 		});
 		
+		$('#cityId_edit').combogrid({
+			panelWidth : 340,
+		    panelHeight : 250,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [4,10,20],
+			pageSize : 4,
+			toolbar:"#edit-search-city-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'name',
+		    url : './admin_addr/addr_queryCity',
+		    pagination : true,
+		    columns:[[
+				{field : 'id',title : 'ID',align : 'center', width : 60},
+				{field : 'name',title : '名称',align : 'center', width : 180},
+		    ]],
+		    queryParams:editCityQueryParams,
+		    onLoadSuccess:function(data) {
+		    	if(data.result == 0) {
+					if(data.maxId > editCityMaxId) {
+						editCityMaxId = data.maxId;
+						editCityQueryParams['city.maxId'] = editCityMaxId;
+					}
+				}
+		    },
+		});
+		var p = $('#cityId_edit').combogrid('grid').datagrid('getPager');
+		p.pagination({
+			onBeforeRefresh : function(pageNumber, pageSize) {
+				if(pageNumber <= 1) {
+					editCityMaxId = 0;
+					editCityQueryParams['city.maxId'] = editCityMaxId;
+				}
+			}
+		});
+		
 		$("#main").show();
 	}
 
@@ -160,41 +202,69 @@ function openAddWindow(){
 }
 
 //增加标签织图
-function addWorldLabel(){
-	var worldAuthorId = 0;
-	var nearLabelId = $('#labelName').combogrid('getValue');
+function addNearWorld(){
 	var worldId = $('#worldId').val();
-	$.post(saveNearLabelWorld,{
-		'nearLabelId':nearLabelId,
-		'worldId':worldId,
-		'worldAuthorId':worldAuthorId
+	$.post(saveURL,{
+		'worldId':worldId
 	},function(result){
+		if(result['result'] == 0 ){
 			$('#htm_edit').window('close');
-			$.messager.alert("温馨提示：","添加成功！");
 			$('#htm_table').datagrid("reload");
+		}
+		$.messager.alert("温馨提示：",result['msg']);
 	},"json");
 }
 
 
 //删除专属主题
 function deleteNearWorld(){
-	var ids = [];
-	var rows = $('#htm_table').datagrid('getSelections');
-	for(var i = 0;i < rows.length; i++){
-		ids.push(rows[i]['id']);	
-	}
-	ids = ids.join();
-	
-	$.post(deleteNearLabelWorld,{
-		'idsStr':ids
-	},
-	function(result){
-		$.messager.alert("温馨提示：","删除成功！");
-		$('#htm_table').datagrid("reload");
-		$('#htm_table').datagrid("clearSelections");
-	},"json");
+	var rows = $("#htm_table").datagrid("getSelections");
+		if(rows.length > 0){
+			$.messager.confirm("温馨提示", "您确定要删除已选中的城市吗？", function(r){
+				if(r){
+					var cityIds = [];
+					for(var i=0;i<rows.length;i++){
+						cityIds[i] = rows[i].id;
+					}
+					var params = {
+							idsStr: cityIds.toString()
+						};
+					$.post(deleteURI, params, function(result){
+						if(result['result'] == 0){
+							$.messager.alert("温馨提示","删除" + rows.length + "条记录");
+							// 清除所有已选择的记录，避免重复提交id值
+							$("#htm_table").datagrid("clearSelections");
+							// 批量删除刷新当前页
+							$("#htm_table").datagrid("reload");
+						}else{
+							$.messager.alert(result["msg"]);
+						}
+					});
+				}
+			});	
+		}else{
+			$.messager.alert("温馨提示","请先选择，再执行批量删除操作!");
+		}
 }
 
+
+function searchEditCity() {
+	editCityMaxId = 0;
+	editCityQueryParams['city.maxId'] = editCityMaxId;
+	editCityQueryParams['city.name'] = $('#edit-city-searchbox').searchbox('getValue');
+	$("#cityId_edit").combogrid('grid').datagrid("load",editCityQueryParams);
+}
+
+function searchNearWorldByCityId(){
+	var cityId = $("#cityId_edit").combogrid('getValue');
+	if(cityId){
+		myQueryParams = {
+			'cityId' : cityId,
+			'maxSerial':0
+		}
+		$('#htm_table').datagrid("load",myQueryParams);
+	}
+}
 
 </script>
 </head>
@@ -205,7 +275,8 @@ function deleteNearWorld(){
 		<div>
 			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加关系" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:deleteNearWorld();" class="easyui-linkbutton" title="批量删除织图" plain="true" iconCls="icon-cut" id="cutBtn">批量删除</a>
-			<a href="javascript:void(0);" onclick="javascript:searchWorldByLabel();" plain="true" class="easyui-linkbutton" iconCls="icon-search" id="search_btn">查询</a>
+			<input type="text" id="cityId_edit" name="nearLabel.cityId"  onchange="validateSubmitOnce=true;"/>
+			<a href="javascript:void(0);" onclick="javascript:searchNearWorldByCityId();" plain="true" class="easyui-linkbutton" iconCls="icon-search" id="search_btn">查询</a>
    		</div>
 		</div> 
 	
@@ -218,11 +289,8 @@ function deleteNearWorld(){
 							<td align="center">织图ID:<input id="worldId" name="worldId" style="width:100px" /></td>
 						</tr>
 						<tr>
-							<td align="center">附近标签:<input id="labelName" name="labelName" style="width:100px" /></td>
-						</tr>						
-						<tr>
 							<td align="center">
-								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addWorldLabel();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addNearWorld();">确定</a>
 								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_edit').window('close');">取消</a>
 							</td>
 						</tr>
@@ -231,5 +299,8 @@ function deleteNearWorld(){
 			</form>
 		</div>
 	
+	<div id="edit-search-city-tb" style="padding:5px;height:auto" class="none">
+		<input id="edit-city-searchbox" searcher="searchEditCity" class="easyui-searchbox" prompt="输入名称搜索" style="width:200px;"/>
+	</div>
 </body>
 </html>

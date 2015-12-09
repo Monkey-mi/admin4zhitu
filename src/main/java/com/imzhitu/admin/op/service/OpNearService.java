@@ -231,7 +231,7 @@ public interface OpNearService extends BaseService{
 	 * @throws Exception
 	 * @author zxx 2015-12-8 20:33:24
 	 */
-	public void queryNearWorld(Integer cityId,int maxId,int limit,Map<String,Object>jsonMap)throws Exception;
+	public void queryNearWorld(Integer cityId,int maxId,int start,int limit,Map<String,Object>jsonMap)throws Exception;
 	
 	/**
 	 * 插入附近织图
