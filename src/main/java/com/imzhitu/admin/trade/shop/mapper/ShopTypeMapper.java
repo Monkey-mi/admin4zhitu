@@ -1,11 +1,11 @@
-package com.imzhitu.admin.trade.mapper;
+package com.imzhitu.admin.trade.shop.mapper;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
-import com.imzhitu.admin.trade.pojo.ShopType;
+import com.imzhitu.admin.trade.shop.pojo.ShopType;
 
 /**
  * 商家类型数据操作类

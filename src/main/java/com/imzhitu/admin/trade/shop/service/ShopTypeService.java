@@ -1,8 +1,9 @@
-package com.imzhitu.admin.trade.service;
+package com.imzhitu.admin.trade.shop.service;
 
 import java.util.List;
 
-import com.imzhitu.admin.trade.pojo.ShopType;
+import com.imzhitu.admin.trade.shop.pojo.ShopType;
+
 
 /**
  * @author zhangbo	2015年11月20日
