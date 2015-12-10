@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import com.imzhitu.admin.trade.item.pojo.Item;
 
 /**
+ * 商品数据操作类
+ * 
  * @author zhangbo	2015年12月9日
  *
  */
