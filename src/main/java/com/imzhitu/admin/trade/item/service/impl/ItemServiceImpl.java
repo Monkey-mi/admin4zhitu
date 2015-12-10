@@ -1,11 +1,13 @@
 package com.imzhitu.admin.trade.item.service.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hts.web.base.constant.OptResult;
 import com.imzhitu.admin.trade.item.mapper.ItemMapper;
 import com.imzhitu.admin.trade.item.pojo.Item;
 import com.imzhitu.admin.trade.item.service.ItemService;
@@ -26,8 +28,9 @@ public class ItemServiceImpl implements ItemService {
 	public void buildItemList(Integer page, Integer rows, Map<String, Object> jsonMap) {
 		Integer fristRow = (page-1) * rows;
 		Integer limit = rows;
-		itemMapper.queryItemList(fristRow, limit);
-		
+		List<Item> list = itemMapper.queryItemList(fristRow, limit);
+		jsonMap.put(OptResult.ROWS, list);
+		jsonMap.put(OptResult.TOTAL,3);		
 	}
 
 	@Override

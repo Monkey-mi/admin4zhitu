@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.trade.item.mapper.ItemAndSetRelationMapper">
+	
+	<!-- 插入关系表中数据 -->
+	<insert id="insertItemToSet">
+		insert into 
+			hts.item_set_r
+			(item_id,Item_set_id)
+	 	values 
+	 		(#{itemId}, #{itemSetId})
+	</insert>
+	
+	
+</mapper>

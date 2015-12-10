@@ -118,7 +118,7 @@
 	 * @author zhangbo	2015-12-10
 	 */
 	function openAddItemToItemSet(itemSetId) {
-		var url = "./page_trade_item_itemAddToItemSet";
+		var url = "./page_item_itemAddToItemSet";
 		url += "?itemSetId=" + itemSetId;
 		$.fancybox({
 			href: url,

@@ -2,9 +2,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<style type="text/css">
+	.leftTd{
+		text-align:right;
+	}
+</style>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>商品管理页</title>
 <jsp:include page="/common/header.jsp"></jsp:include>
+<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}" />
 <link type="text/css" rel="stylesheet" href="${webRootPath}/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -89,6 +95,21 @@
 			}
 		});
 		
+		
+		$("#add_item_window").window({
+			title : "添加商品",
+			modal : true,
+			width : 820,
+			height : 600,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : "icon-converter",
+			resizable : false
+		});
+		
 		// 展示界面
 		$("#main").show();
 	});
@@ -163,6 +184,7 @@
 			$.messager.alert("温馨提示","请先选择，再执行批量删除操作!");
 		}
 	};
+
 	
 </script>
 </head>
@@ -177,7 +199,7 @@
 			<span>
 				<a href="javascript:void(0);" onclick="javascript:$('#add_item_window').window('open');" class="easyui-linkbutton" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" iconCls="icon-cut">批量删除</a>
-				<select id="ss_isCache" class="easyui-combobox"  style="width:100px;">
+				<select id="ss_isCache" class="easyui-combobox"  style="width:110px;">
 			        <option value="" selected="selected">全部</option>
 			        <option value="1">限时秒杀正在展示</option>
 			        <option value="2">推荐商品正在展示</option>
@@ -186,28 +208,26 @@
 		</div>
 		
 		<!-- 添加商品集合 -->
-		<div id="add_item_window">
+		<div id="add_item_window" >
 			<form id="add_item_form" method="post">
-				<table class="htm_edit_table" width="480">
+				<table class="htm_edit_table" width="760px" >
 					<tr>
-						<td class="leftTd">商品图片：</td>
-						<td>
-							<input id="item_path" name="imgPath" readonly="readonly" >
-							<a id="item_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="item_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
-							<div id="item_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
-								上传中...<span class="upload_progress"></span><span>%</span>
+						<td colspan="2"  class="leftTd" style="width:40px">图片：</td>
+						<td colspan="2" style="width:130">
+							<input class="none" type="text" name="pics" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="channelImg_edit01"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<div id="channelIcon_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">商品缩略图：</td>
-						<td>
-							<input id="item_thumb" name="imgThumb" readonly="readonly" >
-							<a id="item_thumb_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="item_thumb_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
-							<div id="item_thumb_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
-								上传中...<span class="upload_progress"></span><span>%</span>
+						<td colspan="2" class="leftTd">缩略图：</td>
+						<td colspan="2">
+							<input class="none" type="text" name="pic02" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="channelImg_edit02"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<div id="channelIcon_edit_upload_status02" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 					</tr>
@@ -216,23 +236,35 @@
 						<td>
 							<input id="item_name" name="name" style="width:220px;" >
 						</td>
+						<td class="leftTd">促销价：</td>
+						<td>
+							<input id="item_sale" name="sale" style="width:220px;" >
+						</td>
 					</tr>
 					<tr>
 						<td class="leftTd">简介：</td>
 						<td>
-							<input id="item_summary" name="summary" style="width:270px;" >
+							<input id="item_summary" name="summary" style="width:220px;" >
 						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">详情描述：</td>
+						<td class="leftTd">库存量：</td>
 						<td>
-							<textarea id="item_description" name="description" rows="13" style="width:220px;">
+							<input id="item_stock" name="stock" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">关联织图id：</td>
+						<td class="leftTd">描述：</td>
+						<td>
+							<textarea id="item_description" name="description" rows="1" style="width:220px;" ></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">织图id：</td>
 						<td>
 							<input id="item_worldId" name="worldId" style="width:220px;" >
+						</td>
+						<td class="leftTd">点赞数：</td>
+						<td>
+							<input id="item_like" name="like" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
@@ -240,66 +272,45 @@
 						<td>
 							<input id="item_price" name="price" style="width:220px;" >
 						</td>
-					</tr>
-					<tr>
 						<td class="leftTd">促销价：</td>
 						<td>
 							<input id="item_sale" name="sale" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">销售量：</td>
+						<td class="leftTd">类型：</td>
 						<td>
-							<input id="item_sales" name="sales" style="width:220px;" >
+							<select id="item_trueItemType" class="easyui-combobox" name="trueItemType" style="width:220px;" panelHeight="auto" >
+							    <option value="1">淘宝</option>
+							    <option value="2">天猫</option>
+							</select>
 						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">库存量：</td>
-						<td>
-							<input id="item_stock" name="stock" style="width:220px;" >
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">淘宝商品真实id：</td>
-						<td>
-							<input id="item_trueItemId" name="trueItemId" style="width:220px;" >
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">淘宝商品类型（1：淘宝，2：天猫）：</td>
-						<td>
-							<input id="item_trueItemType" name="trueItemType" style="width:220px;" >
-						</td>
-					</tr>
-					<tr>
 						<td class="leftTd">类别：</td>
 						<td>
 							<input id="item_categoryId" name="categoryId" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
+						<td class="leftTd">淘宝ID：</td>
+						<td>
+							<input id="item_trueItemId" name="trueItemId" style="width:220px;" >
+						</td>
 						<td class="leftTd">品牌：</td>
 						<td>
 							<input id="item_brandId" name="brandId" style="width:220px;" >
 						</td>
 					</tr>
-					<tr>
-						<td class="leftTd">点赞数量：</td>
-						<td>
-							<input id="item_like" name="like" style="width:220px;" >
-						</td>
+					<tr style="display:none">
+						<td class="none" ><input id="item_id" name="id" ></td>
 					</tr>
 					<tr>
-						<td class="none"><input id="item_id" name="id"></td>
-					</tr>
-					<tr>
-						<td colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="itemFormSubmit();">添加</a>
+						<td colspan="4" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="itemFormSubmit();">确定</a>
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#add_item_window').window('close');">取消</a>
 						</td>
 					</tr>
 				</table>
-			</form>
+			</form> 
 		</div>
 		
 	</div>
@@ -309,105 +320,105 @@
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
 	<script type="text/javascript">
 	
-		Qiniu.uploader({
-	        runtimes: 'html5,flash,html4',
-	        browse_button: 'item_upload_btn',
-	        max_file_size: '100mb',
-	        flash_swf_url: 'js/plupload/Moxie.swf',
-	        chunk_size: '4mb',
-	        uptoken_url: './admin_qiniu/uptoken',
-	        domain: 'http://static.imzhitu.com/',
-	        unique_names: false,
-	        save_key: false,
-	        auto_start: true,
-	        init: {
-	            'FilesAdded': function(up, files) {
-	            	$("#item_upload_btn").hide();
-	            	$("#item_img_edit").hide();
-	            	var $status = $("#item_img_upload_status");
-	            	$status.find('.upload_progress:eq(0)').text(0);
-	            	$status.show();
-	            	
-	            },
-	            'BeforeUpload': function(up, file) {
-	            },
-	            
-	            'UploadProgress': function(up, file) {
-	            	var $status = $("#item_img_upload_status");
-	            	$status.find('.upload_progress:eq(0)').text(file.percent);
-	
-	            },
-	            'UploadComplete': function() {
-	            	$("#item_upload_btn").show();
-	            	$("#item_img_edit").show();
-	            	$("#item_img_upload_status").hide();
-	            },
-	            'FileUploaded': function(up, file, info) {
-	            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
-	            	$("#item_img_edit").attr('src', url);
-	            	$("#i-path").val(url);
-	            },
-	            'Error': function(up, err, errTip) {
-	                $.messager.alert('上传失败',errTip);  // 提示添加信息失败
-	            },
-	            'Key': function(up, file) {
-	            	var timestamp = Date.parse(new Date());
-	            	var suffix = /\.[^\.]+/.exec(file.name);
-	                var key = "op/notice/" + timestamp+suffix;
-	                return key;
-	            }
-	        }
-	    });
-	    
-	    Qiniu.uploader({
-	        runtimes: 'html5,flash,html4',
-	        browse_button: 'item_thumb_upload_btn',
-	        max_file_size: '100mb',
-	        flash_swf_url: 'js/plupload/Moxie.swf',
-	        chunk_size: '4mb',
-	        uptoken_url: './admin_qiniu/uptoken',
-	        domain: 'http://static.imzhitu.com/',
-	        unique_names: false,
-	        save_key: false,
-	        auto_start: true,
-	        init: {
-	            'FilesAdded': function(up, files) {
-	            	$("#item_thumb_upload_btn").hide();
-	            	$("#item_thumb_img_edit").hide();
-	            	var $status = $("#item_thumb_img_upload_status");
-	            	$status.find('.upload_progress:eq(0)').text(0);
-	            	$status.show();
-	            	
-	            },
-	            'BeforeUpload': function(up, file) {
-	            },
-	            
-	            'UploadProgress': function(up, file) {
-	            	var $status = $("#item_thumb_img_upload_status");
-	            	$status.find('.upload_progress:eq(0)').text(file.percent);
-	
-	            },
-	            'UploadComplete': function() {
-	            	$("#item_thumb_upload_btn").show();
-	            	$("#item_thumb_img_edit").show();
-	            	$("#item_thumb_img_upload_status").hide();
-	            },
-	            'FileUploaded': function(up, file, info) {
-	            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
-	            	$("#item_thumb_img_edit").attr('src', url);
-	            	$("#i-thumb").val(url);
-	            },
-	            'Error': function(up, err, errTip) {
-	                $.messager.alert('上传失败',errTip);  // 提示添加信息失败
-	            },
-	            'Key': function(up, file) {
-	            	var timestamp = Date.parse(new Date());
-	            	var suffix = /\.[^\.]+/.exec(file.name);
-	                var key = "op/notice/" + timestamp+suffix;
-	                return key;
-	            }
-	        }
-	    });
+	  // 此为展示图片上传组件 01
+	Qiniu.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'pic_edit_upload_btn01',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        chunk_size: '4mb',
+        uptoken_url: './admin_qiniu/uptoken',
+        domain: 'http://static.imzhitu.com/',
+        unique_names: false,
+        save_key: false,
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+            	$("#pic_edit_upload_btn01").hide();
+            	$("#channelImg_edit01").hide();
+            	var $status = $("#channelIcon_edit_upload_status01");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(0);
+            	$status.show();
+            },
+            'BeforeUpload': function(up, file) {
+            },
+            'UploadProgress': function(up, file) {
+            	var $status = $("#pic_edit_upload_btn01");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(file.percent);
+            },
+            'UploadComplete': function() {
+            	$("#pic_edit_upload_btn01").show();
+            	$("#channelImg_edit01").show();
+            	$("#channelIcon_edit_upload_status01").hide();
+            },
+            'FileUploaded': function(up, file, info) {
+            	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+            	$("#channelImg_edit01").attr('src', url);
+            	$("#channelIcon_edit01").val(url);
+            },
+            'Error': function(up, err, errTip) {
+                $.messager.alert('上传失败',errTip);
+             },
+            'Key': function(up, file) {
+            	var timestamp = Date.parse(new Date());
+            	var suffix = /\.[^\.]+/.exec(file.name);
+                var key = "trade/item/" + timestamp+suffix;
+                return key;
+            }
+        }
+    });
+  
+	  // 此为展示图片上传组件 02
+	Qiniu.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'pic_edit_upload_btn02',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        chunk_size: '4mb',
+        uptoken_url: './admin_qiniu/uptoken',
+        domain: 'http://static.imzhitu.com/',
+        unique_names: false,
+        save_key: false,
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+            	$("#pic_edit_upload_btn02").hide();
+            	$("#channelImg_edit02").hide();
+            	var $status = $("#channelIcon_edit_upload_status02");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(0);
+            	$status.show();
+            },
+            'BeforeUpload': function(up, file) {
+            },
+            'UploadProgress': function(up, file) {
+            	var $status = $("#pic_edit_upload_btn02");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(file.percent);
+            },
+            'UploadComplete': function() {
+            	$("#pic_edit_upload_btn02").show();
+            	$("#channelImg_edit02").show();
+            	$("#channelIcon_edit_upload_status02").hide();
+            },
+            'FileUploaded': function(up, file, info) {
+            	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+            	$("#channelImg_edit02").attr('src', url);
+            	$("#channelIcon_edit02").val(url);
+            },
+            'Error': function(up, err, errTip) {
+                $.messager.alert('上传失败',errTip);
+             },
+            'Key': function(up, file) {
+            	var timestamp = Date.parse(new Date());
+            	var suffix = /\.[^\.]+/.exec(file.name);
+                var key = "trade/item/" + timestamp+suffix;
+                return key;
+            }
+        }
+    });
     
 	</script>
 	
