@@ -30,7 +30,7 @@ public class InteractZombieWorldServiceTest extends BaseTest{
 		String coverPath = "1807891425.jpg";
 		String titlePath = "1807891425.jpg";
 		String titleThumbPath = "1807891425.jpg.middleImage";
-		service.saveZombieWorld(childsJSON, 1, 527, null,null,null, null, coverPath, titlePath, titleThumbPath, null, null, null, 238823,null);
+		service.saveZombieWorld(childsJSON, 1, 527, null,null,null, null, coverPath, titlePath, titleThumbPath, null, null, null, titleThumbPath, 238823,null);
 	}
 	
 	@Test
