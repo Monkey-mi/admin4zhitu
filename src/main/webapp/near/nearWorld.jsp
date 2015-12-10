@@ -80,6 +80,14 @@ var	htmTablePageList = [10,20],
 				return row.userInfo.userName;
 			}
 		},
+		{
+  			field: "titleThumbPath",
+  			title: "预览",
+  			align: "center",
+  			formatter: function(value,row,index){
+  				return "<a title='播放织图' class='updateInfo' href='javascript:commonTools.showWorld(\"" + row.shortLink + "\")'><img width='100px' height='100px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' /></a>";
+ 			}
+  		},
 		clickCountColumn,
 		likeCountColumn,
 		commentCountColumn,
@@ -120,15 +128,7 @@ var	htmTablePageList = [10,20],
 				}
 				return '';
 			}
-		},
-		{
-  			field: "titleThumbPath",
-  			title: "预览",
-  			align: "center",
-  			formatter: function(value,row,index){
-  				return "<a title='播放织图' class='updateInfo' href='javascript:commonTools.showWorld(\"" + row.shortLink + "\")'><img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' /></a>";
- 			}
-  		}
+		}
 	];
 
 	 onBeforeInit = function() {
