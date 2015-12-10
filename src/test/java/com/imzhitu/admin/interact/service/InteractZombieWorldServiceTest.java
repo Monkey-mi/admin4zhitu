@@ -30,12 +30,12 @@ public class InteractZombieWorldServiceTest extends BaseTest{
 		String coverPath = "1807891425.jpg";
 		String titlePath = "1807891425.jpg";
 		String titleThumbPath = "1807891425.jpg.middleImage";
-		service.saveZombieWorld(childsJSON, 1, 527, null,null,null, null, coverPath, titlePath, titleThumbPath, null, null, null, 238823,null);
+		service.saveZombieWorld(childsJSON, 1, 527, null,null,null, null, coverPath, titlePath, titleThumbPath, null, null, null,null, 238823,null);
 	}
 	
 	@Test
 	public void savaZombieWorldToHtWorldTest()throws Exception{
-		service.saveZombieWorldToHtWorld(399);
+		service.saveZombieWorldToHtWorld(1000);
 //		String localPath="e:\\your\\1419493801.jpg.thumbnail";
 //		if(localPath == null || localPath.equals(""))return ;
 //		int nameBeginPos = localPath.lastIndexOf('\\');
