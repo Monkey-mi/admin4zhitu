@@ -22,7 +22,7 @@ public interface InteractZombieService {
 			Integer authorId, String worldName,
 			String worldDesc, String worldLabel, String labelIds,  
 			String coverPath, String titlePath, String titleThumbPath, 
-			Double longitude, Double latitude,
+			Double longitude, Double latitude,String city,
 			String locationAddr, Integer size,Integer channelId)throws Exception;
 	
 	/**
