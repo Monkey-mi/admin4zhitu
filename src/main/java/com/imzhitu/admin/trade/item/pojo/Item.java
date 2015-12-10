@@ -106,6 +106,12 @@ public class Item implements Serializable {
 	 * @author zhangbo	2015年12月9日
 	 */
 	private Integer brandId;
+	
+	/**
+	 * 点赞数量
+	 * @author zhangbo	2015年12月10日
+	 */
+	private Integer like;
 
 	/**
 	 * @return the id
@@ -315,6 +321,20 @@ public class Item implements Serializable {
 	 */
 	public void setBrandId(Integer brandId) {
 		this.brandId = brandId;
+	}
+
+	/**
+	 * @return the like
+	 */
+	public Integer getLike() {
+		return like;
+	}
+
+	/**
+	 * @param like the like to set
+	 */
+	public void setLike(Integer like) {
+		this.like = like;
 	}
 	
 }

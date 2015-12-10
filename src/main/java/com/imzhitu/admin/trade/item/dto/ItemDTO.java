@@ -118,6 +118,12 @@ public class ItemDTO implements Serializable {
 	 * @author zhangbo	2015年12月9日
 	 */
 	private String brand;
+	
+	/**
+	 * 点赞数量
+	 * @author zhangbo	2015年12月10日
+	 */
+	private Integer like;
 
 	/**
 	 * @return the id
@@ -355,6 +361,20 @@ public class ItemDTO implements Serializable {
 	 */
 	public void setBrand(String brand) {
 		this.brand = brand;
+	}
+
+	/**
+	 * @return the like
+	 */
+	public Integer getLike() {
+		return like;
+	}
+
+	/**
+	 * @param like the like to set
+	 */
+	public void setLike(Integer like) {
+		this.like = like;
 	}
 	
 }
