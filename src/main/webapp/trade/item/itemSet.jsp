@@ -48,7 +48,10 @@
 			},
 			{field: "opt", title: "操作", align: "center",
 				formatter : function(value, row, index ) {
-					return "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:$('#add_itemSet_window').window('open'); updateItemSet("+ row.id + ")'>【修改】</a>";
+					var rtn = "<span>";
+					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:$('#add_itemSet_window').window('open'); updateItemSet("+ row.id + ")'>【修改】</a>";
+					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='openAddItemToItemSet("+ row.id + ")'>【添加商品】</a>"
+					return 
 				}
 			}
 		];
@@ -109,6 +112,24 @@
 		$("#itemSet_link").val(row.link);
 		$("#itemSet_desc").val(row.itemSetDesc);
 	};
+	
+	/**
+	 * 添加商品到商品集合
+	 * @author zhangbo	2015-12-10
+	 */
+	function openAddItemToItemSet(itemSetId) {
+		var url = "./page_trade_item_itemAddToItemSet";
+		url += "?itemSetId=" + itemSetId;
+		$.fancybox({
+			href: url,
+			width: "98%",
+			height: "98%",
+			autoScale: true,
+			type: "iframe",
+			transitionIn: "none",	// 打开无动画
+			transitionOut: "elastic"	// 关闭动画：伸缩
+		});
+	}
 	
 	/**
 	 * 提交商品集合

@@ -110,6 +110,12 @@ public class ItemAction extends BaseCRUDAction {
 	private Integer brandId;
 	
 	/**
+	 * 点赞数量
+	 * @author zhangbo	2015年12月10日
+	 */
+	private Integer like;
+	
+	/**
 	 * 商品id集合，以逗号分隔
 	 * @author zhangbo	2015年12月9日
 	 */

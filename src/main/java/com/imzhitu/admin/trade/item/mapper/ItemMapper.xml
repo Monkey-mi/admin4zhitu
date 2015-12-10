@@ -18,15 +18,16 @@
 		<result column="item_type" property="itemType" javaType="java.lang.Integer"/>
 		<result column="category_id" property="categoryId" javaType="java.lang.Integer"/>
 		<result column="brand_id" property="brandId" javaType="java.lang.Integer"/>
+		<result column="like" property="like" javaType="java.lang.Integer"/>
 	</resultMap>
 	
 	<!-- 新增商品，商品对象设置的属性都会持久化到数据库 -->
 	<insert id="insert">
 		insert into 
 			hts.item 
-			(name, summary, description, world_id, img_path, img_thumb, price, sale, sales, stock, item_id, item_type, category_id, brand_id)
+			(name, summary, description, world_id, img_path, img_thumb, price, sale, sales, stock, item_id, item_type, category_id, brand_id, like)
 	 	values 
-	 		(#{name}, #{summary}, #{description}, #{worldId}, #{imgPath}, #{imgThumb}, #{price}, #{sale}, #{sales}, #{stock}, #{itemId}, #{itemType}, #{categoryId}, #{brandId})
+	 		(#{name}, #{summary}, #{description}, #{worldId}, #{imgPath}, #{imgThumb}, #{price}, #{sale}, #{sales}, #{stock}, #{itemId}, #{itemType}, #{categoryId}, #{brandId}, #{like})
 	</insert>
 	
 	<!-- 根据id更新商品，可以更新商品对象的所有属性 -->
@@ -48,6 +49,7 @@
 	      <if test="itemType != null">item_type = #{itemType}</if>
 	      <if test="categoryId != null">category_id = #{categoryId}</if>
 	      <if test="brandId != null">brand_id = #{brandId}</if>
+	      <if test="like != null">like = #{like}</if>
 	    </set>
 	  	where 
 	  		id = #{id}

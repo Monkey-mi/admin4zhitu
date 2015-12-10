@@ -50,6 +50,11 @@
 		<action name="page_*_*">
 			<result type="dispatcher">/{1}/{2}.jsp</result>
 		</action>
+		
+		<action name="page_*_*_*">
+			<result type="dispatcher">/{1}/{2}/{3}.jsp</result>
+		</action>
+		
 	</package>
 	
 	<include file="struts-constant.xml" />
