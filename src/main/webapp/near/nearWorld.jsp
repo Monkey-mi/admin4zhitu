@@ -83,6 +83,7 @@ var	htmTablePageList = [10,20],
 		clickCountColumn,
 		likeCountColumn,
 		commentCountColumn,
+		worldURLColumn,
 		{field : 'worldDesc',title : '织图描述',align : 'center', width : 100,
 			formatter: function(value,row,index){
 				var uri = 'page_user_userInfo?userId=';
