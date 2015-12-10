@@ -17,6 +17,12 @@
 			</result>
 		</action>
 		
+		<action name="item_*" class="com.imzhitu.admin.trade.item.ItemAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 		<action name="itemSet_*" class="com.imzhitu.admin.trade.item.ItemSetAction" method="{1}">
 			<result name="json" type="json">
 				<param name="root">jsonMap</param>

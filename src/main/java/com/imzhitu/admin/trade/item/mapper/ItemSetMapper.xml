@@ -44,7 +44,7 @@
 		delete from hts.item_set where id = #{id}
 	</delete>
 	
-	<!-- 查询商品集合总数 -->
+	<!-- 分页查询商品集合 -->
 	<select id="queryItemSetList" resultMap="ItemSetMap">
 		select 
 			*

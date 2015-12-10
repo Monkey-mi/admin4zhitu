@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>商品集合公告管理页</title>
+<title>商品管理页</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath}/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
@@ -17,38 +17,35 @@
 	
 	var columnsFields = [
 			{field: "ck", checkbox:true},
-			{field: "id", title: "ID", align: "center", width: 80},
-			{field: "path", title: "商品集合图片", align: "center",
+			{field: "id", title: "商品ID", align: "center"},
+			{field: "name", title: "商品名称", align: "center"},
+			{field: "summary", title: "简介", align: "center"},
+			{field: "description", title: "详情描述", align: "center"},
+			{field: "worldId", title: "关联织图id", align: "center"},
+			{field: "price", title: "价格", align: "center"},
+			{field: "sale", title: "促销价", align: "center"},
+			{field: "sales", title: "销售量", align: "center"},
+			{field: "stock", title: "库存量", align: "center"},
+			{field: "category", title: "类别", align: "center"},
+			{field: "brand", title: "品牌", align: "center"},
+			{field: "imgPath", title: "商品图片", align: "center",
 				formatter: function(value,row,index) {
 	  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
 	  			}
 			},
-			{field: "type", title: "链接类型", align: "center",
-				formatter:function(value,row,index){
-					// 目前商品banner的点击都是跳到网页
-					return "网页连接";
-				}
-			},
-			{field: "link", title: "链接内容", align: "center"},
-			{field: "description", title: "描述", align: "center"},
-			{field: "thumb", title: "缩略图", align: "center",
+			{field: "imgThumb", title: "商品缩略图", align: "center",
 				formatter: function(value,row,index) {
-		  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
-		  			}
-		  	},
-			{field: "createTime", title: "创建时间", align: "center",
-				formatter:function(value,row,index){
-					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+					return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
 				}
 			},
-			{field: "modifyTime", title: "最后修改时间", align: "center",
+			{field: "createTime", title: "创建时间", align: "center",
 				formatter:function(value,row,index){
 					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 				}
 			},
 			{field: "opt", title: "操作", align: "center",
 				formatter : function(value, row, index ) {
-					return "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:$('#add_itemSet_window').window('open'); updateItemSet("+ row.id + ")'>【修改】</a>";
+					return "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:$('#add_item_window').window('open'); updateitem("+ row.id + ")'>【修改】</a>";
 				}
 			}
 		];
@@ -56,9 +53,9 @@
 	$(function(){
 		// 主表格
 		$("#htm_table").datagrid({
-			title: "商品集合公告列表",
+			title: "商品列表",
 			width: $(document.body).width(),
-			url: "./admin_trade/itemSet_buildItemSetList",
+			url: "./admin_trade/item_buildItemList",
 			toolbar: "#tb",
 			idField: "id",
 			rownumbers: true,
@@ -69,8 +66,8 @@
 			selectOnCheck: true,
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
-			pageSize: 5,
-			pageList: [5,10],
+			pageSize: 10,
+			pageList: [10,20,50],
 			onClickCell: function(rowIndex, field, value) {
 				IsCheckFlag = false;
 			},
@@ -100,14 +97,21 @@
 	 * 更新商品集合
 	 * @author zhangbo	2015-12-08
 	 */
-	function updateItemSet(itemSetId) {
-		var row = $("#htm_table").datagrid("selectRecord", itemSetId);
-		$("#itemSet_id").val(row.id);
-		$("#itemSet_path").val(row.itemSetPath);
-		$("#itemSet_thumb").val(row.itemSetThumb);
-		$("#itemSet_type").val(row.itemSetType);
-		$("#itemSet_link").val(row.link);
-		$("#itemSet_desc").val(row.itemSetDesc);
+	function updateitem(itemId) {
+		var row = $("#htm_table").datagrid("selectRecord", itemId);
+		$("#item_id").val(row.id);
+		$("#item_path").val(row.imgPath);
+		$("#item_thumb").val(row.imgThumb);
+		$("#item_name").val(row.name);
+		$("#item_summary").val(row.summary);
+		$("#item_description").val(row.description);
+		$("#item_worldId").val(row.worldId);
+		$("#item_price").val(row.price);
+		$("#item_sale").val(row.sale);
+		$("#item_sales").val(row.sales);
+		$("#item_stock").val(row.stock);
+		$("#item_categoryId").val(row.categoryId);
+		$("#item_brandId").val(row.brandId);
 	};
 	
 	/**
@@ -115,13 +119,13 @@
 	 * @author zhangbo	2015-12-08
 	 */
 	function formSubmit() {
-		if( $('#add_itemSet_form').form('validate') ) {
-			$('#add_itemSet_form').form('submit', {
-				url: "./admin_trade/itemSet_saveItemSet",
+		if( $('#add_item_form').form('validate') ) {
+			$('#add_item_form').form('submit', {
+				url: "./admin_trade/item_saveitem",
 				success: function(data){
 					var result = $.parseJSON(data);
 					if(result['result'] == 0) {
-						$('#add_itemSet_form').window('close');  // 关闭添加窗口
+						$('#add_item_form').window('close');  // 关闭添加窗口
 					} else {
 						$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 					}
@@ -131,8 +135,8 @@
 	};
 	
 	/**
-	 * 批量删除商品集合banner
-	 * @author zhangbo 2015-12-08
+	 * 批量删除商品
+	 * @author zhangbo 2015-12-09
 	 */
 	function batchDelete(){
 		var rows = $("#htm_table").datagrid("getSelections");
@@ -146,7 +150,7 @@
 					var params = {
 							ids: ids.toString()
 						};
-					$.post("./admin_trade/itemSet_batchDelete", params, function(result){
+					$.post("./admin_trade/item_batchDelete", params, function(result){
 						$.messager.alert("温馨提示","删除" + rows.length + "条记录");
 						// 清除所有已选择的记录，避免重复提交id值
 						$("#htm_table").datagrid("clearSelections");
@@ -171,7 +175,7 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');" class="easyui-linkbutton" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="javascript:$('#add_item_window').window('open');" class="easyui-linkbutton" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" iconCls="icon-cut">批量删除</a>
 				<select id="ss_isCache" class="easyui-combobox"  style="width:100px;">
 			        <option value="" selected="selected">全部</option>
@@ -182,57 +186,110 @@
 		</div>
 		
 		<!-- 添加商品集合 -->
-		<div id="add_itemSet_window">
-			<form id="add_itemSet_form" method="post">
+		<div id="add_item_window">
+			<form id="add_item_form" method="post">
 				<table class="htm_edit_table" width="480">
 					<tr>
-						<td class="leftTd">商品集合图片路径：</td>
+						<td class="leftTd">商品图片：</td>
 						<td>
-							<input id="itemSet_path" name="path" readonly="readonly" >
-							<a id="itemSet_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="itemSet_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
-							<div id="itemSet_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+							<input id="item_path" name="imgPath" readonly="readonly" >
+							<a id="item_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="item_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
+							<div id="item_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
 								上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">商品集合缩略图路径：</td>
+						<td class="leftTd">商品缩略图：</td>
 						<td>
-							<input id="itemSet_thumb" name="thumb" readonly="readonly" >
-							<a id="itemSet_thumb_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="itemSet_thumb_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
-							<div id="itemSet_thumb_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
+							<input id="item_thumb" name="imgThumb" readonly="readonly" >
+							<a id="item_thumb_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="item_thumb_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
+							<div id="item_thumb_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
 								上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">链接类型：</td>
+						<td class="leftTd">名称：</td>
 						<td>
-							<select id="itemSet_type" name="type" class="easyui-combobox" style="width:223px;" >
-							<!-- 此链接类型数值，是为了以后兼容公告，故如此流水，因为公告链接类型原来有4种，此处属于追加，数值6是有奖活动，在后台逻辑写死 -->
-								<option value="0" selected="selected">无需跳转</option>
-	        					<option value="5">限时秒杀网页连接</option>
-	        					<option value="7">好物推荐网页连接</option>
-							</select>
+							<input id="item_name" name="name" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">链接：</td>
-						<td><input id="itemSet_link" name="link" style="width:220px;" ></td>
+						<td class="leftTd">简介：</td>
+						<td>
+							<input id="item_summary" name="summary" style="width:270px;" >
+						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">描述：</td>
-						<td><input id="itemSet_desc" name="description" style="width:220px;" ></td>
+						<td class="leftTd">详情描述：</td>
+						<td>
+							<textarea id="item_description" name="description" rows="13" style="width:220px;">
+						</td>
 					</tr>
 					<tr>
-						<td class="none"><input id="itemSet_id" name="id"></td>
+						<td class="leftTd">关联织图id：</td>
+						<td>
+							<input id="item_worldId" name="worldId" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">价格：</td>
+						<td>
+							<input id="item_price" name="price" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">促销价：</td>
+						<td>
+							<input id="item_sale" name="sale" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">销售量：</td>
+						<td>
+							<input id="item_sales" name="sales" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">库存量：</td>
+						<td>
+							<input id="item_stock" name="stock" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">淘宝商品真实id：</td>
+						<td>
+							<input id="item_trueItemId" name="trueItemId" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">淘宝商品类型（1：淘宝，2：天猫）：</td>
+						<td>
+							<input id="item_trueItemType" name="trueItemType" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">类别：</td>
+						<td>
+							<input id="item_categoryId" name="categoryId" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">品牌：</td>
+						<td>
+							<input id="item_brandId" name="brandId" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="none"><input id="item_id" name="id"></td>
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="formSubmit();">添加</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#add_itemSet_window').window('close');">取消</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#add_item_window').window('close');">取消</a>
 						</td>
 					</tr>
 				</table>
@@ -248,7 +305,7 @@
 	
 		Qiniu.uploader({
 	        runtimes: 'html5,flash,html4',
-	        browse_button: 'itemSet_upload_btn',
+	        browse_button: 'item_upload_btn',
 	        max_file_size: '100mb',
 	        flash_swf_url: 'js/plupload/Moxie.swf',
 	        chunk_size: '4mb',
@@ -259,9 +316,9 @@
 	        auto_start: true,
 	        init: {
 	            'FilesAdded': function(up, files) {
-	            	$("#itemSet_upload_btn").hide();
-	            	$("#itemSet_img_edit").hide();
-	            	var $status = $("#itemSet_img_upload_status");
+	            	$("#item_upload_btn").hide();
+	            	$("#item_img_edit").hide();
+	            	var $status = $("#item_img_upload_status");
 	            	$status.find('.upload_progress:eq(0)').text(0);
 	            	$status.show();
 	            	
@@ -270,18 +327,18 @@
 	            },
 	            
 	            'UploadProgress': function(up, file) {
-	            	var $status = $("#itemSet_img_upload_status");
+	            	var $status = $("#item_img_upload_status");
 	            	$status.find('.upload_progress:eq(0)').text(file.percent);
 	
 	            },
 	            'UploadComplete': function() {
-	            	$("#itemSet_upload_btn").show();
-	            	$("#itemSet_img_edit").show();
-	            	$("#itemSet_img_upload_status").hide();
+	            	$("#item_upload_btn").show();
+	            	$("#item_img_edit").show();
+	            	$("#item_img_upload_status").hide();
 	            },
 	            'FileUploaded': function(up, file, info) {
 	            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
-	            	$("#itemSet_img_edit").attr('src', url);
+	            	$("#item_img_edit").attr('src', url);
 	            	$("#i-path").val(url);
 	            },
 	            'Error': function(up, err, errTip) {
@@ -298,7 +355,7 @@
 	    
 	    Qiniu.uploader({
 	        runtimes: 'html5,flash,html4',
-	        browse_button: 'itemSet_thumb_upload_btn',
+	        browse_button: 'item_thumb_upload_btn',
 	        max_file_size: '100mb',
 	        flash_swf_url: 'js/plupload/Moxie.swf',
 	        chunk_size: '4mb',
@@ -309,9 +366,9 @@
 	        auto_start: true,
 	        init: {
 	            'FilesAdded': function(up, files) {
-	            	$("#itemSet_thumb_upload_btn").hide();
-	            	$("#itemSet_thumb_img_edit").hide();
-	            	var $status = $("#itemSet_thumb_img_upload_status");
+	            	$("#item_thumb_upload_btn").hide();
+	            	$("#item_thumb_img_edit").hide();
+	            	var $status = $("#item_thumb_img_upload_status");
 	            	$status.find('.upload_progress:eq(0)').text(0);
 	            	$status.show();
 	            	
@@ -320,18 +377,18 @@
 	            },
 	            
 	            'UploadProgress': function(up, file) {
-	            	var $status = $("#itemSet_thumb_img_upload_status");
+	            	var $status = $("#item_thumb_img_upload_status");
 	            	$status.find('.upload_progress:eq(0)').text(file.percent);
 	
 	            },
 	            'UploadComplete': function() {
-	            	$("#itemSet_thumb_upload_btn").show();
-	            	$("#itemSet_thumb_img_edit").show();
-	            	$("#itemSet_thumb_img_upload_status").hide();
+	            	$("#item_thumb_upload_btn").show();
+	            	$("#item_thumb_img_edit").show();
+	            	$("#item_thumb_img_upload_status").hide();
 	            },
 	            'FileUploaded': function(up, file, info) {
 	            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
-	            	$("#itemSet_thumb_img_edit").attr('src', url);
+	            	$("#item_thumb_img_edit").attr('src', url);
 	            	$("#i-thumb").val(url);
 	            },
 	            'Error': function(up, err, errTip) {
