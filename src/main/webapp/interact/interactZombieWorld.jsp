@@ -17,7 +17,8 @@
 	var loadItemId = [];
 	var pageAllItemId = [];
 	var maxId = 0;
-	var worldURLPrefix = 'http://www.imzhitu.com/DT';
+	var worldURLPrefix = 'http://www.imzhitu.com/DT',
+	mySortName = '',
 	hideIdColumn = false;
 	htmTableTitle = "马甲发图计划管理"; //表格标题
 	htmTablePageList = [10,30,50,100,150,300,500];
@@ -90,6 +91,9 @@
 		{field : 'htworldId', title:'织图ID', align : 'center'},
 		{field : 'channelId',title:'频道ID',align : 'center',editor:'text'},
 		{field : 'channelName',title:'频道名称',align:'center'},
+		{field : 'city',title:'城市',align:'center'}, 
+		{field : 'longitude',title:'经度',align:'center'}, 
+		{field : 'latitude',title:'纬度',align:'center'}, 
  		{field : 'worldLabel',title:'织图标签',align:'center'}, 
 		{
 			field : 'commnet',
