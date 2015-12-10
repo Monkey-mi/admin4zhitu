@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>商品管理页</title>
-<jsp:include page="../common/header.jsp"></jsp:include>
+<jsp:include page="/common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath}/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -118,7 +118,7 @@
 	 * 提交商品集合
 	 * @author zhangbo	2015-12-08
 	 */
-	function formSubmit() {
+	function itemFormSubmit() {
 		if( $('#add_item_form').form('validate') ) {
 			$('#add_item_form').form('submit', {
 				url: "./admin_trade/item_saveitem",
@@ -284,11 +284,17 @@
 						</td>
 					</tr>
 					<tr>
+						<td class="leftTd">点赞数量：</td>
+						<td>
+							<input id="item_like" name="like" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
 						<td class="none"><input id="item_id" name="id"></td>
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="formSubmit();">添加</a>
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="itemFormSubmit();">添加</a>
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#add_item_window').window('close');">取消</a>
 						</td>
 					</tr>
