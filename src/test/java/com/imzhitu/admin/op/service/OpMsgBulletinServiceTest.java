@@ -48,4 +48,9 @@ public class OpMsgBulletinServiceTest extends BaseTest{
 		long total = service.queryMsgBulletinTotalCount(null, null, null, null);
 		log.info("===========total count:"+total);
 	}
+	
+	@Test
+	public void updateMsgBulletinCacheTest()throws Exception{
+		service.updateMsgBulletinCache("32,33,34,35,36,37,38,39,40", 0);
+	}
 }

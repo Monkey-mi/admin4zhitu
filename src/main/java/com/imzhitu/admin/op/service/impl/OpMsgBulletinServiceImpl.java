@@ -187,10 +187,10 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 		}
 		
 		//更新 用户推荐列表缓存com.hts.web.base.constant.CacheKeies.OP_MSG_USER_THEME 对应的type为1
-		OpMsgBulletin tmpBulletin = new OpMsgBulletin();
-		List<com.hts.web.common.pojo.OpMsgBulletin> webUserThemeList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
-		tmpBulletin.setBulletinType(1);
 		try{
+			OpMsgBulletin tmpBulletin = new OpMsgBulletin();
+			List<com.hts.web.common.pojo.OpMsgBulletin> webUserThemeList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
+			tmpBulletin.setBulletinType(1);
 			List<OpMsgBulletin> userThemeList = msgBulletinMapper.queryMsgBulletin(tmpBulletin);
 			if(userThemeList != null && userThemeList.size() > 0){
 				for( OpMsgBulletin dto:userThemeList){
@@ -212,10 +212,38 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 			log.warn(e.getMessage());
 		}
 		
-		//缓存活动/专题推荐列表 com.hts.web.base.constant.CacheKeies.OP_MSG_THEME 对应的type为4
-		List<com.hts.web.common.pojo.OpMsgBulletin> webThemeList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
-		tmpBulletin.setBulletinType(4);
+		//更新频道推荐缓存com.hts.web.base.constant.CacheKeies.OP_MSG_CHANNEL_THEME 对应的type为2
 		try{
+			OpMsgBulletin tmpChannelBulletin = new OpMsgBulletin();
+			List<com.hts.web.common.pojo.OpMsgBulletin> webChannelThemeList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
+			tmpChannelBulletin.setBulletinType(2);
+			List<OpMsgBulletin> channelThemeList = msgBulletinMapper.queryMsgBulletin(tmpChannelBulletin);
+			if(channelThemeList != null && channelThemeList.size() > 0){
+				for( OpMsgBulletin dto:channelThemeList){
+					com.hts.web.common.pojo.OpMsgBulletin webChannelBulletin = new com.hts.web.common.pojo.OpMsgBulletin();
+					webChannelBulletin.setBulletinPath(dto.getBulletinPath());
+					webChannelBulletin.setBulletinType(dto.getBulletinType());
+					webChannelBulletin.setId(dto.getId());
+					webChannelBulletin.setLink(dto.getLink());
+					webChannelBulletin.setBulletinName(dto.getBulletinName());
+					webChannelBulletin.setBulletinThumb(dto.getBulletinThumb());
+					webChannelThemeList.add(webChannelBulletin);
+				}
+			}
+			
+			if( webBulletinList.size() > 0 ) {
+				bulletinCacheDao.updateChannelThemeBulletin(webChannelThemeList);
+			}
+		}catch(Exception e){
+			log.warn(e.getMessage());
+		}
+		
+		//缓存活动/专题推荐列表 com.hts.web.base.constant.CacheKeies.OP_MSG_THEME 对应的type为4
+		
+		try{
+			OpMsgBulletin tmpBulletin = new OpMsgBulletin();
+			List<com.hts.web.common.pojo.OpMsgBulletin> webThemeList = new ArrayList<com.hts.web.common.pojo.OpMsgBulletin>();
+			tmpBulletin.setBulletinType(4);
 			List<OpMsgBulletin> themeList = msgBulletinMapper.queryMsgBulletin(tmpBulletin);
 			if(themeList != null && themeList.size() > 0){
 				for( OpMsgBulletin dto:themeList){
