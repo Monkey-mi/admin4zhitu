@@ -85,7 +85,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
 	 */
 	public String saveZombieWorld() {
 		try {
-			service.saveZombieWorld(childs, titleId, authorId, worldName, worldDesc, worldLabel, null, coverPath, titlePath, thumbTitlePath, longitude, latitude, locationAddr, size, channelId);
+			service.saveZombieWorld(childs, titleId, authorId, worldName, worldDesc, worldLabel, null, coverPath, titlePath, thumbTitlePath, longitude, latitude,city, locationAddr, size, channelId);
 			JSONUtil.optResult(0, "success", jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optResult(-1, "fail", jsonMap);

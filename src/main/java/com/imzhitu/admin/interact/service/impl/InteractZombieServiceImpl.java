@@ -32,6 +32,7 @@ import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.MD5Encrypt;
 import com.hts.web.common.util.StringUtil;
+import com.hts.web.operations.service.NearService;
 import com.hts.web.userinfo.dao.UserInfoDao;
 import com.hts.web.ztworld.dao.HTWorldChildWorldDao;
 import com.hts.web.ztworld.dao.HTWorldDao;
@@ -116,6 +117,9 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	@Autowired
 	com.imzhitu.admin.interact.service.impl.InteractWorldServiceImpl interactWorldServiceImpl;
 	
+	@Autowired
+	private NearService nearService;
+	
 	private Logger log = Logger.getLogger(InteractZombieServiceImpl.class);
 
 	private String baseThumbPathAixin = "http://static.imzhitu.com/world/thumbs/1403056393000.png";
@@ -127,7 +131,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 	@Override
 	public Integer saveZombieWorld(String childsJSON, Integer titleId, Integer authorId, String worldName,
 			String worldDesc, String worldLabel, String labelIds, String coverPath, String titlePath,
-			String titleThumbPath, Double longitude, Double latitude, String locationAddr, Integer size,
+			String titleThumbPath, Double longitude, Double latitude, String city,String locationAddr, Integer size,
 			Integer channelId) throws Exception {
 		Date now = new Date();
 		ZombieWorld zombieWorld = new ZombieWorld();
@@ -290,6 +294,12 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		Long count = worldDao.queryWorldCountByAuthorId(zw.getAuthorId());
 		Integer childCount = worldDao.queryChildCount(zw.getAuthorId());
 		userInfoDao.updateWorldAndChildCount(zw.getAuthorId(), count.intValue(), childCount);
+		
+		try{
+			nearService.saveNearWorld(htworld);
+		}catch(Exception e){
+			log.warn("插入附近织图失败");
+		}
 
 		// 保存子世界
 		Map<Integer, Integer> childWorldIdMap = new HashMap<Integer, Integer>();
