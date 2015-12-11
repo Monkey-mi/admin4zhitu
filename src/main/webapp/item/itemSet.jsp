@@ -19,12 +19,17 @@
 	
 	var columnsFields = [
 			{field: "ck", checkbox:true},
-			{field: "id", title: "ID", align: "center", width: 80},
+			{field: "id", title: "ID", align: "center", width: 30},
 			{field: "path", title: "商品集合图片", align: "center",
 				formatter: function(value,row,index) {
 	  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
 	  			}
 			},
+			{field: "thumb", title: "缩略图", align: "center",
+				formatter: function(value,row,index) {
+		  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+		  			}
+		  	},
 			{field: "type", title: "链接类型", align: "center",
 				formatter:function(value,row,index){
 					// 目前商品banner的点击都是跳到网页
@@ -33,11 +38,6 @@
 			},
 			{field: "link", title: "链接内容", align: "center"},
 			{field: "description", title: "描述", align: "center"},
-			{field: "thumb", title: "缩略图", align: "center",
-				formatter: function(value,row,index) {
-		  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
-		  			}
-		  	},
 			{field: "createTime", title: "创建时间", align: "center",
 				formatter:function(value,row,index){
 					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
@@ -51,7 +51,7 @@
 			{field: "opt", title: "操作", align: "center",
 				formatter : function(value, row, index ) {
 					var rtn = "<span>";
-					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:$('#add_itemSet_window').window('open'); updateItemSet("+ row.id + ")'>【修改】</a>";
+					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:updateItemSet("+ row.id + ")'>【修改】</a>";
 					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='openAddItemToItemSet("+ row.id + ")'>【添加商品】</a>";
 					return rtn;
 				}
@@ -134,13 +134,16 @@
 	 * @author zhangbo	2015-12-08
 	 */
 	function updateItemSet(itemSetId) {
-		var row = $("#htm_table").datagrid("selectRecord", itemSetId);
+		$("#htm_table").datagrid("selectRecord", itemSetId);
+		var row = $("#htm_table").datagrid('getSelected');
 		$("#itemSet_id").val(row.id);
 		$("#itemSet_path").val(row.itemSetPath);
 		$("#itemSet_thumb").val(row.itemSetThumb);
 		$("#itemSet_type").val(row.itemSetType);
 		$("#itemSet_link").val(row.link);
 		$("#itemSet_desc").val(row.itemSetDesc);
+		
+		$('#add_itemSet_window').window('open');
 	};
 	
 	/**
@@ -250,15 +253,15 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');" class="easyui-linkbutton" iconCls="icon-add">添加</a>
-				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" iconCls="icon-cut">批量删除</a>
+				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton"  plain="true" iconCls="icon-cut">批量删除</a>
 				<select id="ss_isCache" class="easyui-combobox"  style="width:100px;">
 			        <option value="" selected="selected">全部</option>
 			        <option value="1">限时秒杀正在展示</option>
 			        <option value="2">推荐商品正在展示</option>
 		   		</select>
-		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" iconCls="icon-cut">刷新推荐商品缓存</a>
-		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" iconCls="icon-cut">刷新秒杀商品缓存</a>
+		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">刷新推荐商品缓存</a>
+		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton"  plain="true" iconCls="icon-cut">刷新秒杀商品缓存</a>
 			</span>
 		</div>
 		
