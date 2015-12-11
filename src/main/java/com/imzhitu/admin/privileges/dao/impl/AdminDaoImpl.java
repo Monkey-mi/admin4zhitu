@@ -107,13 +107,16 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao{
 			@Override
 			public AdminUser mapRow(ResultSet rs, int rowNum)
 					throws SQLException {
-//				return new AdminUser(
-//						rs.getInt("id"),
-//						rs.getString("login_code"),
-//						rs.getString("user_name"),
-//						null,
-//						rs.getInt("valid"));
-				return null;
+				return new  AdminUser(
+						rs.getInt("id"),
+						rs.getString("login_code"),
+						rs.getString("user_name"),
+						null,
+						null,
+						rs.getInt("valid"),
+						null);
+						
+			/*	return null;*/
 			}
 		}, new RowSelection(page, rows));
 	}

@@ -5,11 +5,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>商品集合公告管理页</title>
 <jsp:include page="/common/header.jsp"></jsp:include>
-<link type="text/css" rel="stylesheet" href="${webRootPath}/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
-<link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
+<link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}" />
+<link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
+<script type="text/javascript" src="${webRootPath }/base/js/baseTools.js"></script>
 <script type="text/javascript">
 
 	// 行是否被勾选
@@ -50,8 +52,8 @@
 				formatter : function(value, row, index ) {
 					var rtn = "<span>";
 					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:$('#add_itemSet_window').window('open'); updateItemSet("+ row.id + ")'>【修改】</a>";
-					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='openAddItemToItemSet("+ row.id + ")'>【添加商品】</a>"
-					return 
+					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='openAddItemToItemSet("+ row.id + ")'>【添加商品】</a>";
+					return rtn;
 				}
 			}
 		];
@@ -99,7 +101,7 @@
 			title : '添加商品集合banner',
 			modal : true,
 			width : 650,
-			height : 155,
+			height : 400,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -113,7 +115,7 @@
 			title : '添加商品集合banner',
 			modal : true,
 			width : 650,
-			height : 155,
+			height : 300,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -170,7 +172,7 @@
 				success: function(data){
 					var result = $.parseJSON(data);
 					if(result['result'] == 0) {
-						$('#add_itemSet_form').window('close');  // 关闭添加窗口
+						$('#add_itemSet_window').window('close');  // 关闭添加窗口
 					} else {
 						$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 					}
@@ -266,23 +268,21 @@
 				<table class="htm_edit_table" width="480">
 					<tr>
 						<td class="leftTd">商品集合图片路径：</td>
-						<td>
-							<input id="itemSet_path" name="path" readonly="readonly" >
-							<a id="itemSet_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="itemSet_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
-							<div id="itemSet_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
-								上传中...<span class="upload_progress"></span><span>%</span>
+						<td  style="width:130">
+							<input class="none" type="text" name="path" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="channelImg_edit01"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<div id="channelIcon_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<td class="leftTd">商品集合缩略图路径：</td>
-						<td>
-							<input id="itemSet_thumb" name="thumb" readonly="readonly" >
-							<a id="itemSet_thumb_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="itemSet_thumb_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
-							<div id="itemSet_thumb_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
-								上传中...<span class="upload_progress"></span><span>%</span>
+						<td >
+							<input class="none" type="text" name="thumb" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="channelImg_edit02"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<div id="channelIcon_edit_upload_status02" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 					</tr>
@@ -353,105 +353,105 @@
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/qiniu.min.js"></script>
 	<script type="text/javascript">
 	
-		Qiniu.uploader({
-	        runtimes: 'html5,flash,html4',
-	        browse_button: 'itemSet_upload_btn',
-	        max_file_size: '100mb',
-	        flash_swf_url: 'js/plupload/Moxie.swf',
-	        chunk_size: '4mb',
-	        uptoken_url: './admin_qiniu/uptoken',
-	        domain: 'http://static.imzhitu.com/',
-	        unique_names: false,
-	        save_key: false,
-	        auto_start: true,
-	        init: {
-	            'FilesAdded': function(up, files) {
-	            	$("#itemSet_upload_btn").hide();
-	            	$("#itemSet_img_edit").hide();
-	            	var $status = $("#itemSet_img_upload_status");
-	            	$status.find('.upload_progress:eq(0)').text(0);
-	            	$status.show();
-	            	
-	            },
-	            'BeforeUpload': function(up, file) {
-	            },
-	            
-	            'UploadProgress': function(up, file) {
-	            	var $status = $("#itemSet_img_upload_status");
-	            	$status.find('.upload_progress:eq(0)').text(file.percent);
-	
-	            },
-	            'UploadComplete': function() {
-	            	$("#itemSet_upload_btn").show();
-	            	$("#itemSet_img_edit").show();
-	            	$("#itemSet_img_upload_status").hide();
-	            },
-	            'FileUploaded': function(up, file, info) {
-	            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
-	            	$("#itemSet_img_edit").attr('src', url);
-	            	$("#i-path").val(url);
-	            },
-	            'Error': function(up, err, errTip) {
-	                $.messager.alert('上传失败',errTip);  // 提示添加信息失败
-	            },
-	            'Key': function(up, file) {
-	            	var timestamp = Date.parse(new Date());
-	            	var suffix = /\.[^\.]+/.exec(file.name);
-	                var key = "op/notice/" + timestamp+suffix;
-	                return key;
-	            }
-	        }
-	    });
-	    
-	    Qiniu.uploader({
-	        runtimes: 'html5,flash,html4',
-	        browse_button: 'itemSet_thumb_upload_btn',
-	        max_file_size: '100mb',
-	        flash_swf_url: 'js/plupload/Moxie.swf',
-	        chunk_size: '4mb',
-	        uptoken_url: './admin_qiniu/uptoken',
-	        domain: 'http://static.imzhitu.com/',
-	        unique_names: false,
-	        save_key: false,
-	        auto_start: true,
-	        init: {
-	            'FilesAdded': function(up, files) {
-	            	$("#itemSet_thumb_upload_btn").hide();
-	            	$("#itemSet_thumb_img_edit").hide();
-	            	var $status = $("#itemSet_thumb_img_upload_status");
-	            	$status.find('.upload_progress:eq(0)').text(0);
-	            	$status.show();
-	            	
-	            },
-	            'BeforeUpload': function(up, file) {
-	            },
-	            
-	            'UploadProgress': function(up, file) {
-	            	var $status = $("#itemSet_thumb_img_upload_status");
-	            	$status.find('.upload_progress:eq(0)').text(file.percent);
-	
-	            },
-	            'UploadComplete': function() {
-	            	$("#itemSet_thumb_upload_btn").show();
-	            	$("#itemSet_thumb_img_edit").show();
-	            	$("#itemSet_thumb_img_upload_status").hide();
-	            },
-	            'FileUploaded': function(up, file, info) {
-	            	var url = 'http://static.imzhitu.com/'+$.parseJSON(info).key;
-	            	$("#itemSet_thumb_img_edit").attr('src', url);
-	            	$("#i-thumb").val(url);
-	            },
-	            'Error': function(up, err, errTip) {
-	                $.messager.alert('上传失败',errTip);  // 提示添加信息失败
-	            },
-	            'Key': function(up, file) {
-	            	var timestamp = Date.parse(new Date());
-	            	var suffix = /\.[^\.]+/.exec(file.name);
-	                var key = "op/notice/" + timestamp+suffix;
-	                return key;
-	            }
-	        }
-	    });
+	  // 此为展示图片上传组件 01
+	Qiniu.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'pic_edit_upload_btn01',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        chunk_size: '4mb',
+        uptoken_url: './admin_qiniu/uptoken',
+        domain: 'http://static.imzhitu.com/',
+        unique_names: false,
+        save_key: false,
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+            	$("#pic_edit_upload_btn01").hide();
+            	$("#channelImg_edit01").hide();
+            	var $status = $("#channelIcon_edit_upload_status01");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(0);
+            	$status.show();
+            },
+            'BeforeUpload': function(up, file) {
+            },
+            'UploadProgress': function(up, file) {
+            	var $status = $("#pic_edit_upload_btn01");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(file.percent);
+            },
+            'UploadComplete': function() {
+            	$("#pic_edit_upload_btn01").show();
+            	$("#channelImg_edit01").show();
+            	$("#channelIcon_edit_upload_status01").hide();
+            },
+            'FileUploaded': function(up, file, info) {
+            	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+            	$("#channelImg_edit01").attr('src', url);
+            	$("#channelIcon_edit01").val(url);
+            },
+            'Error': function(up, err, errTip) {
+                $.messager.alert('上传失败',errTip);
+             },
+            'Key': function(up, file) {
+            	var timestamp = Date.parse(new Date());
+            	var suffix = /\.[^\.]+/.exec(file.name);
+                var key = "trade/item/" + timestamp+suffix;
+                return key;
+            }
+        }
+    });
+  
+	  // 此为展示图片上传组件 02
+	Qiniu.uploader({
+        runtimes: 'html5,flash,html4',
+        browse_button: 'pic_edit_upload_btn02',
+        max_file_size: '100mb',
+        flash_swf_url: 'js/plupload/Moxie.swf',
+        chunk_size: '4mb',
+        uptoken_url: './admin_qiniu/uptoken',
+        domain: 'http://static.imzhitu.com/',
+        unique_names: false,
+        save_key: false,
+        auto_start: true,
+        init: {
+            'FilesAdded': function(up, files) {
+            	$("#pic_edit_upload_btn02").hide();
+            	$("#channelImg_edit02").hide();
+            	var $status = $("#channelIcon_edit_upload_status02");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(0);
+            	$status.show();
+            },
+            'BeforeUpload': function(up, file) {
+            },
+            'UploadProgress': function(up, file) {
+            	var $status = $("#pic_edit_upload_btn02");
+            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
+            	$status.find('.upload_progress:eq(0)').text(file.percent);
+            },
+            'UploadComplete': function() {
+            	$("#pic_edit_upload_btn02").show();
+            	$("#channelImg_edit02").show();
+            	$("#channelIcon_edit_upload_status02").hide();
+            },
+            'FileUploaded': function(up, file, info) {
+            	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
+            	$("#channelImg_edit02").attr('src', url);
+            	$("#channelIcon_edit02").val(url);
+            },
+            'Error': function(up, err, errTip) {
+                $.messager.alert('上传失败',errTip);
+             },
+            'Key': function(up, file) {
+            	var timestamp = Date.parse(new Date());
+            	var suffix = /\.[^\.]+/.exec(file.name);
+                var key = "trade/item/" + timestamp+suffix;
+                return key;
+            }
+        }
+    });
     
 	</script>
 	

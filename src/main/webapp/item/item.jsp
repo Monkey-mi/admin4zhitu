@@ -25,12 +25,14 @@
 			{field: "summary", title: "简介", align: "center"},
 			{field: "description", title: "详情描述", align: "center"},
 			{field: "worldId", title: "关联织图id", align: "center"},
+			{field: "itemId", title: "织图id", align: "center"},
 			{field: "price", title: "价格", align: "center"},
 			{field: "sale", title: "促销价", align: "center"},
 			{field: "sales", title: "销售量", align: "center"},
 			{field: "stock", title: "库存量", align: "center"},
-			{field: "category", title: "类别", align: "center"},
-			{field: "brand", title: "品牌", align: "center"},
+			{field: "categoryId", title: "类别", align: "center"},
+			{field: "brandId", title: "品牌", align: "center"},
+			{field: "like", title: "点赞数", align: "center"},
 			{field: "imgPath", title: "商品图片", align: "center",
 				formatter: function(value,row,index) {
 	  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
@@ -41,14 +43,14 @@
 					return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
 				}
 			},
-			{field: "createTime", title: "创建时间", align: "center",
+/* 			{field: "createTime", title: "创建时间", align: "center",
 				formatter:function(value,row,index){
 					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 				}
-			},
+			}, */
 			{field: "opt", title: "操作", align: "center",
 				formatter : function(value, row, index ) {
-					return "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:$('#add_item_window').window('open'); updateitem("+ row.id + ")'>【修改】</a>";
+					return "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:updateitem("+ row.id + ")'>【修改】</a>";
 				}
 			}
 		];
@@ -116,7 +118,8 @@
 	 * @author zhangbo	2015-12-08
 	 */
 	function updateitem(itemId) {
-		var row = $("#htm_table").datagrid("selectRecord", itemId);
+		$("#htm_table").datagrid("selectRecord", itemId);
+		var row =  $("#htm_table").datagrid("getSelected");
 		$("#item_id").val(row.id);
 		$("#item_path").val(row.imgPath);
 		$("#item_thumb").val(row.imgThumb);
@@ -124,12 +127,16 @@
 		$("#item_summary").val(row.summary);
 		$("#item_description").val(row.description);
 		$("#item_worldId").val(row.worldId);
+		$('#item_trueItemId').val(row.itemId);
 		$("#item_price").val(row.price);
 		$("#item_sale").val(row.sale);
 		$("#item_sales").val(row.sales);
 		$("#item_stock").val(row.stock);
 		$("#item_categoryId").val(row.categoryId);
 		$("#item_brandId").val(row.brandId);
+		$("#item_like").val(row.like);
+		
+		$('#add_item_window').window('open');
 	};
 	
 	/**
@@ -143,7 +150,7 @@
 				success: function(data){
 					var result = $.parseJSON(data);
 					if(result['result'] == 0) {
-						$('#add_item_form').window('close');  // 关闭添加窗口
+						$('#add_item_window').window('close');  // 关闭添加窗口
 					} else {
 						$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 					}

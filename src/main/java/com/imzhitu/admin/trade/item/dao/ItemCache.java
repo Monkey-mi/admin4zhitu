@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.constant.CacheKeies;
 
@@ -13,6 +14,7 @@ import com.hts.web.base.constant.CacheKeies;
  * @author zhangbo	2015年12月10日
  *
  */
+@Repository
 public class ItemCache {
 	
 	/**

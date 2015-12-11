@@ -18,7 +18,7 @@
 		<result column="item_type" property="itemType" javaType="java.lang.Integer"/>
 		<result column="category_id" property="categoryId" javaType="java.lang.Integer"/>
 		<result column="brand_id" property="brandId" javaType="java.lang.Integer"/>
-		<result column="like" property="like" javaType="java.lang.Integer"/>
+		<result column="like_num" property="like" javaType="java.lang.Integer"/>
 	</resultMap>
 	
 	<!-- 新增商品，商品对象设置的属性都会持久化到数据库 -->

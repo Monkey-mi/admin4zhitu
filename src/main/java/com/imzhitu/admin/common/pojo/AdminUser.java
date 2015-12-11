@@ -30,6 +30,20 @@ public class AdminUser extends AbstractNumberDto {
 		super();
 	}
 
+
+	public AdminUser(Integer id, String loginCode, String userName, String password, byte[] passwordEncrypt,
+			Integer valid, Integer[] roleIds) {
+		super();
+		this.id = id;
+		this.loginCode = loginCode;
+		this.userName = userName;
+		this.password = password;
+		this.passwordEncrypt = passwordEncrypt;
+		this.valid = valid;
+		this.roleIds = roleIds;
+	}
+
+
 	public Integer getId() {
 		return id;
 	}
