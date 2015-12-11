@@ -38,6 +38,7 @@
 			},
 			{field: "link", title: "链接内容", align: "center"},
 			{field: "description", title: "描述", align: "center"},
+			{field: "operator", title: "最后修改者", align: "center"},
 			{field: "createTime", title: "创建时间", align: "center",
 				formatter:function(value,row,index){
 					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
@@ -98,6 +99,29 @@
 			}
 		});
 		
+		$("#ss_isCache").combobox({
+		    data: [{
+			        "id": "",
+			        "text": "全部",
+			        "selected": true
+		    	},{
+			        "id": 1,
+			        "text": "限时秒杀正在展示"
+			    },
+			    {
+			        "id":2,
+			        "text": "推荐商品正在展示"
+			    }],
+		    valueField: "id",
+		    textField: "text",
+		    onSelect: function(rec){
+		    	var param = {
+	    			cacheFlag: rec.id
+		    	};
+		    	$("#htm_table").datagrid("load",param);
+	        }
+		});
+		
 		$("#add_itemSet_window").window({
 			title : '添加商品集合banner',
 			modal : true,
@@ -113,7 +137,7 @@
 		});
 		
 		$("#refresh_seckill_window").window({
-			title : '添加商品集合banner',
+			title : '刷新秒杀商品集合',
 			modal : true,
 			width : 650,
 			height : 300,
@@ -135,18 +159,20 @@
 	 * @author zhangbo	2015-12-08
 	 */
 	function updateItemSet(itemSetId) {
-		$('#add_itemSet_window').window('open');
-		
 		$("#htm_table").datagrid("selectRecord", itemSetId);
-		var row = $("#htm_table").datagrid('getSelected');
-		$("#itemSet_id").val(row.id);
-		$("#itemSet_path").val(row.itemSetPath);
-		$("#itemSet_thumb").val(row.itemSetThumb);
-		$("#itemSet_type").val(row.itemSetType);
-		$("#itemSet_link").val(row.link);
-		$("#itemSet_desc").val(row.itemSetDesc);
+		var row = $("#htm_table").datagrid("getSelected");
 		
-		$('#add_itemSet_window').window('open');
+		$("#itemSet_id").val(row.id);
+		$("#itemSet_path").val(row.path);	// 为path设值
+		$("#itemSet_path_edit").attr("src", row.path);	// 展示商品集合图片
+		$("#itemSet_thumb").val(row.thumb);	// 为thumb设值
+		$("#itemSet_thumb_edit").attr("src", row.thumb);	// 展示商品集合缩略图
+		$("#itemSet_type").combobox("select", row.type);
+		$("#itemSet_link").val(row.link);
+		$("#itemSet_desc").val(row.description);
+		
+		$("#add_itemSet_window").window("open");
+		$("#htm_table").datagrid("clearSelections");
 	};
 	
 	/**
@@ -179,6 +205,7 @@
 					var result = $.parseJSON(data);
 					if(result['result'] == 0) {
 						$('#add_itemSet_window').window('close');  // 关闭添加窗口
+						$("#htm_table").datagrid("reload");
 					} else {
 						$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 					}
@@ -215,6 +242,49 @@
 		}else{
 			$.messager.alert("温馨提示","请先选择，再执行批量删除操作!");
 		}
+	};
+	
+	/**
+	 * 刷新redis缓存
+	 * @author zhangbo 2015-12-10
+	 */
+	function openSeckillSetCacheWin() {
+		var rows = $("#htm_table").datagrid("getSelections");
+		if(rows.length > 0){
+			$("#refresh_seckill_window").window("open");
+			var ids = [];
+			for(var i=0;i<rows.length;i++){
+				ids[i] = rows[i].id;
+			}
+			$("#itemSet_ids").val(ids.toString());
+		}else{
+			$.messager.alert("温馨提示","请先选择，再执行更新缓存操作!");
+		}
+	};
+	
+	/**
+	 * 提交限时秒杀缓存
+	 * @author zhangbo	2015-12-11
+	 */
+	function seckillSetCacheSubmit() {
+		$.messager.confirm("温馨提示", "您确定要更新商品集合吗？确定后，选中的商品集合将会在客户端生效", function(r){
+			if(r){
+				if( $('#refresh_seckill_form').form('validate') ) {
+					$('#refresh_seckill_form').form('submit', {
+						url: "./admin_trade/itemSet_refreshSeckillSetCache",
+						success: function(data){
+							var result = $.parseJSON(data);
+							if(result['result'] == 0) {
+								$('#refresh_seckill_window').window('close');  // 关闭添加窗口
+								$("#htm_table").datagrid("reload");
+							} else {
+								$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
+							}
+						}
+					});
+				}
+			}
+		});
 	};
 	
 	/**
@@ -258,13 +328,9 @@
 			<span>
 				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
-				<select id="ss_isCache" class="easyui-combobox"  style="width:100px;">
-			        <option value="" selected="selected">全部</option>
-			        <option value="1">限时秒杀正在展示</option>
-			        <option value="2">推荐商品正在展示</option>
-		   		</select>
+		   		<input id="ss_isCache" class="easyui-combobox">
 		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新推荐商品缓存</a>
-		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新秒杀商品缓存</a>
+		   		<a href="javascript:void(0);" onclick="openSeckillSetCacheWin()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新秒杀商品缓存</a>
 			</span>
 		</div>
 		
@@ -275,20 +341,20 @@
 					<tr>
 						<td class="leftTd">商品集合图片路径：</td>
 						<td  style="width:130">
-							<input class="none" type="text" name="path" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-							<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="channelImg_edit01"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
-							<div id="channelIcon_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
+							<input id="itemSet_path" name="path" class="none" type="text" onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<a id="itemSet_path_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="itemSet_path_edit" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<div id="itemSet_path_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<td class="leftTd">商品集合缩略图路径：</td>
 						<td >
-							<input class="none" type="text" name="thumb" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-							<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="channelImg_edit02"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
-							<div id="channelIcon_edit_upload_status02" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
+							<input id="itemSet_thumb" name="thumb" class="none" type="text" onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<a id="itemSet_thumb_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="itemSet_thumb_edit" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<div id="itemSet_thumb_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 					</tr>
@@ -316,7 +382,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="formSubmit();">添加</a>
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="formSubmit();">确定</a>
 						</td>
 					</tr>
 				</table>
@@ -325,16 +391,12 @@
 		
 		<!-- 设置秒杀商品集合到redis缓存 -->
 		<div id="refresh_seckill_window">
-			<form id="refresh_seckill_form" action="./admin_trade/itemSet_refreshSeckillSetCache" method="post">
+			<form id="refresh_seckill_form" method="post">
 				<table class="htm_edit_table" width="480">
 					<tr>
 						<td class="leftTd">商品集合ID：</td>
 						<td>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
-							<input name="reIndexId" class="reindex_column"/>
+							<input id="itemSet_ids" name="ids" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
@@ -345,7 +407,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="refreshRecommendItemSetCache();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="seckillSetCacheSubmit();">确定</a>
 						</td>
 					</tr>
 				</table>
@@ -362,7 +424,7 @@
 	  // 此为展示图片上传组件 01
 	Qiniu.uploader({
         runtimes: 'html5,flash,html4',
-        browse_button: 'pic_edit_upload_btn01',
+        browse_button: 'itemSet_path_upload_btn',
         max_file_size: '100mb',
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
@@ -373,9 +435,9 @@
         auto_start: true,
         init: {
             'FilesAdded': function(up, files) {
-            	$("#pic_edit_upload_btn01").hide();
-            	$("#channelImg_edit01").hide();
-            	var $status = $("#channelIcon_edit_upload_status01");
+            	$("#itemSet_path_upload_btn").hide();
+            	$("#itemSet_path_edit").hide();
+            	var $status = $("#itemSet_path_edit_upload_status");
             	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
             	$status.find('.upload_progress:eq(0)').text(0);
             	$status.show();
@@ -383,19 +445,19 @@
             'BeforeUpload': function(up, file) {
             },
             'UploadProgress': function(up, file) {
-            	var $status = $("#pic_edit_upload_btn01");
+            	var $status = $("#itemSet_path_upload_btn");
             	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
             	$status.find('.upload_progress:eq(0)').text(file.percent);
             },
             'UploadComplete': function() {
-            	$("#pic_edit_upload_btn01").show();
-            	$("#channelImg_edit01").show();
-            	$("#channelIcon_edit_upload_status01").hide();
+            	$("#itemSet_path_upload_btn").show();
+            	$("#itemSet_path_edit").show();
+            	$("#itemSet_path_edit_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
             	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
-            	$("#channelImg_edit01").attr('src', url);
-            	$("#channelIcon_edit01").val(url);
+            	$("#itemSet_path_edit").attr('src', url);
+            	$("#itemSet_path").val(url);
             },
             'Error': function(up, err, errTip) {
                 $.messager.alert('上传失败',errTip);
@@ -412,7 +474,7 @@
 	  // 此为展示图片上传组件 02
 	Qiniu.uploader({
         runtimes: 'html5,flash,html4',
-        browse_button: 'pic_edit_upload_btn02',
+        browse_button: 'itemSet_thumb_upload_btn',
         max_file_size: '100mb',
         flash_swf_url: 'js/plupload/Moxie.swf',
         chunk_size: '4mb',
@@ -423,9 +485,9 @@
         auto_start: true,
         init: {
             'FilesAdded': function(up, files) {
-            	$("#pic_edit_upload_btn02").hide();
-            	$("#channelImg_edit02").hide();
-            	var $status = $("#channelIcon_edit_upload_status02");
+            	$("#itemSet_thumb_upload_btn").hide();
+            	$("#itemSet_thumb_edit").hide();
+            	var $status = $("#itemSet_thumb_edit_upload_status");
             	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
             	$status.find('.upload_progress:eq(0)').text(0);
             	$status.show();
@@ -433,19 +495,19 @@
             'BeforeUpload': function(up, file) {
             },
             'UploadProgress': function(up, file) {
-            	var $status = $("#pic_edit_upload_btn02");
+            	var $status = $("#itemSet_thumb_upload_btn");
             	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
             	$status.find('.upload_progress:eq(0)').text(file.percent);
             },
             'UploadComplete': function() {
-            	$("#pic_edit_upload_btn02").show();
-            	$("#channelImg_edit02").show();
-            	$("#channelIcon_edit_upload_status02").hide();
+            	$("#itemSet_thumb_upload_btn").show();
+            	$("#itemSet_thumb_edit").show();
+            	$("#itemSet_thumb_edit_upload_status").hide();
             },
             'FileUploaded': function(up, file, info) {
             	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
-            	$("#channelImg_edit02").attr('src', url);
-            	$("#channelIcon_edit02").val(url);
+            	$("#itemSet_thumb_edit").attr('src', url);
+            	$("#itemSet_thumb").val(url);
             },
             'Error': function(up, err, errTip) {
                 $.messager.alert('上传失败',errTip);

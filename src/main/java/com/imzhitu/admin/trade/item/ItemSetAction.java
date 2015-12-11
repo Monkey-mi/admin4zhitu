@@ -201,11 +201,7 @@ public class ItemSetAction extends BaseCRUDAction {
 	 */
 	public String refreshRecommendItemSetCache() {
 		try {
-			String[] ids = request.getParameterValues("reIndexId");
-			Integer[] idArray = new Integer[ids.length];
-			for (int i = 0; i < ids.length; i++) {
-				idArray[i] = Integer.valueOf(ids[i]);
-			}
+			Integer[] idArray = StringUtil.convertStringToIds(ids);
 			itemSetService.refreshRecommendItemSetCache(idArray);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {

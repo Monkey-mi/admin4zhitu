@@ -1,6 +1,6 @@
 package com.imzhitu.admin.privileges.service.impl;
 
-import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hts.web.base.HTSException;
 import com.hts.web.common.pojo.AbstractNumberDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.MD5Encrypt;
@@ -37,6 +36,13 @@ public class AdminServiceImpl extends BaseServiceImpl implements AdminService{
 	 * 默认密码
 	 */
 	private static final String DEFAULT_PASS = "huanghao20110820";
+	
+	/**
+	 * 管理员id，名称map
+	 * 
+	 * @author zhangbo	2015年12月11日
+	 */
+	private Map<Integer, String> adminUserMap;
 
 	@Autowired
 	private AdminUserInfoMapper adminUserInfoMapper;
@@ -139,6 +145,20 @@ public class AdminServiceImpl extends BaseServiceImpl implements AdminService{
 	@Override
 	public void logProperty() {
 //		logger.debug(test);
+	}
+
+	@Override
+	public String getAdminUserNameById(Integer id) throws Exception {
+		String name = "";
+		if ( adminUserMap == null ) {
+			adminUserMap = new HashMap<Integer, String>();
+			List<AdminUser> list = adminUserInfoMapper.queryUserNameAndId();
+			for (AdminUser adminUser : list) {
+				adminUserMap.put(adminUser.getId(), adminUser.getUserName());
+			}
+		}
+		name = adminUserMap.get(id);
+		return name ;
 	}
 	
 }
