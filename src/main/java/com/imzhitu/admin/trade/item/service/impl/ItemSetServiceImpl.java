@@ -218,6 +218,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 			seckill.setBulletinType(itemSet.getType());
 			seckill.setLink(itemSet.getLink());
 			seckill.setDeadline(deadlineDate.getTime());	// 限时秒杀要设置截止日期
+			seckillList.add(seckill);
 			
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
@@ -257,6 +258,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 			recommendItem.setBulletinThumb(itemSet.getThumb());
 			recommendItem.setBulletinType(itemSet.getType());
 			recommendItem.setLink(itemSet.getLink());
+			recommendItemList.add(recommendItem);
 			
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
