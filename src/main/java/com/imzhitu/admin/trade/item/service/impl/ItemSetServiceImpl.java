@@ -24,6 +24,7 @@ import com.imzhitu.admin.trade.item.dao.ItemCache;
 import com.imzhitu.admin.trade.item.dao.ItemSetCache;
 import com.imzhitu.admin.trade.item.dto.ItemSetDTO;
 import com.imzhitu.admin.trade.item.mapper.ItemAndSetRelationMapper;
+import com.imzhitu.admin.trade.item.mapper.ItemSeckillMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemSetMapper;
 import com.imzhitu.admin.trade.item.pojo.Item;
 import com.imzhitu.admin.trade.item.pojo.ItemSet;
@@ -67,6 +68,9 @@ public class ItemSetServiceImpl implements ItemSetService {
 	
 	@Autowired
 	private ItemCache itemCache;
+	
+	@Autowired
+	private ItemSeckillMapper itemSeckillMapper;
 	
 	/**
 	 * 客户端商品公告缓存
@@ -214,6 +218,16 @@ public class ItemSetServiceImpl implements ItemSetService {
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
 			itemCache.updateItemListBySetId(ItemSetId, itemListToWebItemList(itemList, deadlineDate));
+			
+			// 将查询出的商品列表设置为秒杀商品
+			for (Item item : itemList) {
+				// id与deadline确定唯一性，重复插入会报错，不影响整体循环
+				try {
+					itemSeckillMapper.insert(item.getId(), deadlineDate);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		// 更新限时秒杀集合
 		itemSetCache.updateSeckill(seckillList);
