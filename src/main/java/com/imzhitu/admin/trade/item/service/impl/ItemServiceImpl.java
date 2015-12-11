@@ -43,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
 	
 	/**
 	 * mishengliang 2015-12-11
-	 * 需要后续丰富出来方法，包括在ItemCache 引入类和修改getRedis方法等
+	 * 通过集合ID查询商品
 	 */
 	@Override
 	public void buildItemListBySetId(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
