@@ -2,31 +2,21 @@ package com.imzhitu.admin.trade.item.dao;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.constant.CacheKeies;
 import com.hts.web.base.database.RowSelection;
-import com.hts.web.common.dao.BaseCacheDao;
 import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
-import com.hts.web.trade.item.dto.ItemDTO;
 
 /**
  * 商品redis缓存操作类
+ * 注：存储数据供客户端使用，为web端商品对象
  * 
  * @author zhangbo	2015年12月10日
  *
  */
 @Repository
-public class ItemCache extends com.hts.web.common.dao.impl.BaseCacheDaoImpl<ItemDTO>{
-	
-	/**
-	 * redis操作对象，存储数据供客户端使用，为web端商品对象
-	 * @author zhangbo	2015年12月8日
-	 */
-/*	@Autowired
-	private RedisTemplate<String, com.hts.web.trade.item.dto.ItemDTO> redisTemplate;*/
+public class ItemCache extends BaseCacheDaoImpl<com.hts.web.trade.item.dto.ItemDTO>{
 	
 	public void updateItemListBySetId(Integer ItemSetId, List<com.hts.web.trade.item.dto.ItemDTO> itemList) {
 		// 若存在redis的key值，则清空缓存
