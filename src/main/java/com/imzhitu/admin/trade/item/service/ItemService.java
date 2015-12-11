@@ -21,6 +21,8 @@ public interface ItemService {
 	 */
 	void buildItemList(Integer page, Integer rows, Map<String, Object> jsonMap);
 	
+	void buildItemListBySetId(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap);
+	
 	/**
 	 * @param name
 	 * @param imgPath

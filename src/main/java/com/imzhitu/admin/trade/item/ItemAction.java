@@ -116,10 +116,16 @@ public class ItemAction extends BaseCRUDAction {
 	private Integer like;
 	
 	/**
-	 * 商品id集合，以逗号分隔
+	 * 商品id的集合，以逗号分隔
 	 * @author zhangbo	2015年12月9日
 	 */
 	private String ids;
+	
+	/**
+	 * 商品集合id
+	 * @author mishengliang
+	 */
+	private Integer itemSetId;
 	
 	@Autowired
 	private ItemService itemService;
@@ -154,6 +160,22 @@ public class ItemAction extends BaseCRUDAction {
 	public String buildItemList() {
 		try {
 			itemService.buildItemList(page, rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 构造商品列表通过商品集合ID
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月9日
+	 */
+	public String buildItemListBySetId() {
+		try {
+			itemService.buildItemListBySetId(itemSetId,page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -306,6 +328,14 @@ public void setTrueItemType(Integer trueItemType) {
 
 	public void setIds(String ids) {
 		this.ids = ids;
+	}
+
+	public Integer getItemSetId() {
+		return itemSetId;
+	}
+
+	public void setItemSetId(Integer itemSetId) {
+		this.itemSetId = itemSetId;
 	}
 	
 }

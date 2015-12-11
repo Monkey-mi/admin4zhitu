@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
+import com.hts.web.base.database.RowSelection;
+import com.imzhitu.admin.trade.item.dao.ItemCache;
 import com.imzhitu.admin.trade.item.mapper.ItemMapper;
 import com.imzhitu.admin.trade.item.pojo.Item;
 import com.imzhitu.admin.trade.item.service.ItemService;
@@ -23,14 +25,34 @@ public class ItemServiceImpl implements ItemService {
 	
 	@Autowired
 	private ItemMapper itemMapper;
+	
+	@Autowired
+	private ItemCache itemCache;
+	
 
 	@Override
 	public void buildItemList(Integer page, Integer rows, Map<String, Object> jsonMap) {
 		Integer fristRow = (page-1) * rows;
 		Integer limit = rows;
+		
 		List<Item> list = itemMapper.queryItemList(fristRow, limit);
 		jsonMap.put(OptResult.ROWS, list);
 		jsonMap.put(OptResult.TOTAL,3);		
+	}
+	
+	
+	/**
+	 * mishengliang 2015-12-11
+	 * 需要后续丰富出来方法，包括在ItemCache 引入类和修改getRedis方法等
+	 */
+	@Override
+	public void buildItemListBySetId(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
+		int start = (page - 1)*rows;
+		int limit = rows;
+		List<com.hts.web.trade.item.dto.ItemDTO> list = itemCache.queryItemListBySetId(itemSetId, new RowSelection(start, limit));
+		//list需要由web的对象改为admin的对象，需要转化
+		jsonMap.put(OptResult.ROWS, list);
+		jsonMap.put(OptResult.TOTAL,5);		
 	}
 
 	@Override

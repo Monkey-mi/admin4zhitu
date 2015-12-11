@@ -201,13 +201,8 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:$('#add_item_window').window('open');" class="easyui-linkbutton" iconCls="icon-add">添加</a>
-				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" iconCls="icon-cut">批量删除</a>
-				<select id="ss_isCache" class="easyui-combobox"  style="width:110px;">
-			        <option value="" selected="selected">全部</option>
-			        <option value="1">限时秒杀正在展示</option>
-			        <option value="2">推荐商品正在展示</option>
-		   		</select>
+				<a href="javascript:void(0);" onclick="javascript:$('#add_item_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 			</span>
 		</div>
 		
