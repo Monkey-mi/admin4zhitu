@@ -20,6 +20,7 @@ import com.imzhitu.admin.common.pojo.OpMsgBulletin;
 import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
+import com.imzhitu.admin.privileges.service.AdminService;
 import com.imzhitu.admin.trade.item.dao.ItemCache;
 import com.imzhitu.admin.trade.item.dao.ItemSetCache;
 import com.imzhitu.admin.trade.item.dto.ItemSetDTO;
@@ -71,6 +72,9 @@ public class ItemSetServiceImpl implements ItemSetService {
 	
 	@Autowired
 	private ItemSeckillMapper itemSeckillMapper;
+	
+	@Autowired
+	private AdminService adminService;
 	
 	/**
 	 * 客户端商品公告缓存
@@ -151,7 +155,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setThumb(itemSet.getThumb());
 				dto.setType(itemSet.getType());
 				dto.setLink(itemSet.getLink());
-				dto.setOperator(AdminLoginUtil.getAdminUserName(itemSet.getOperator()));
+			/*	dto.setOperator(AdminLoginUtil.getAdminUserName(itemSet.getOperator()));*/
 				dto.setCreateTime(itemSet.getCreateTime());
 				dto.setModifyTime(itemSet.getModifyTime());
 				rtnList.add(dto);
@@ -214,6 +218,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 			seckill.setBulletinType(itemSet.getType());
 			seckill.setLink(itemSet.getLink());
 			seckill.setDeadline(deadlineDate.getTime());	// 限时秒杀要设置截止日期
+			seckillList.add(seckill);
 			
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
@@ -253,6 +258,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 			recommendItem.setBulletinThumb(itemSet.getThumb());
 			recommendItem.setBulletinType(itemSet.getType());
 			recommendItem.setLink(itemSet.getLink());
+			recommendItemList.add(recommendItem);
 			
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
@@ -271,27 +277,28 @@ public class ItemSetServiceImpl implements ItemSetService {
 	 * @author zhangbo	2015年12月11日
 	 */
 	private List<com.hts.web.trade.item.dto.ItemDTO> itemListToWebItemList(List<Item> itemList, Date deadline) {
-		
 		// 定义web端的item集合
 		List<com.hts.web.trade.item.dto.ItemDTO> rtnList = new ArrayList<com.hts.web.trade.item.dto.ItemDTO>();
-		for (Item item : itemList) {
-			com.hts.web.trade.item.dto.ItemDTO dto = new com.hts.web.trade.item.dto.ItemDTO();
-			dto.setId(item.getId());
-			dto.setName(item.getName());
-			dto.setSummary(item.getSummary());
-			dto.setDescription(item.getDescription());
-			dto.setWorldId(item.getWorldId());
-			dto.setImgPath(item.getImgPath());
-			dto.setImgThumb(item.getImgThumb());
-			dto.setPrice(item.getPrice());
-			dto.setSale(item.getSale());
-			dto.setSales(item.getSales());
-			dto.setStock(item.getStock());
-			dto.setItemId(item.getItemId());
-			dto.setItemType(item.getItemType());
-			dto.setLike(item.getLike());
-			dto.setLink(item.getLink());
-			dto.setDeadline(deadline);
+		if ( itemList != null && itemList.size() != 0 ) {
+			for (Item item : itemList) {
+				com.hts.web.trade.item.dto.ItemDTO dto = new com.hts.web.trade.item.dto.ItemDTO();
+				dto.setId(item.getId());
+				dto.setName(item.getName());
+				dto.setSummary(item.getSummary());
+				dto.setDescription(item.getDescription());
+				dto.setWorldId(item.getWorldId());
+				dto.setImgPath(item.getImgPath());
+				dto.setImgThumb(item.getImgThumb());
+				dto.setPrice(item.getPrice());
+				dto.setSale(item.getSale());
+				dto.setSales(item.getSales());
+				dto.setStock(item.getStock());
+				dto.setItemId(item.getItemId());
+				dto.setItemType(item.getItemType());
+				dto.setLike(item.getLike());
+				dto.setLink(item.getLink());
+				dto.setDeadline(deadline);
+			}
 		}
 		return rtnList;
 	}
