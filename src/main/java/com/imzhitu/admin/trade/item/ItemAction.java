@@ -133,9 +133,9 @@ public class ItemAction extends BaseCRUDAction {
 	public String saveitem() {
 		try {
 			if ( id == null ) {
-				itemService.insertItem(name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId);
+				itemService.insertItem(name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId,like);
 			} else {
-				itemService.updateItem(id,name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId);
+				itemService.updateItem(id,name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId,like);
 			}
 			
 			JSONUtil.optSuccess(jsonMap);
@@ -172,4 +172,140 @@ public class ItemAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public String getImgThumb() {
+		return imgThumb;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Integer getWorldId() {
+		return worldId;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public BigDecimal getSale() {
+		return sale;
+	}
+
+	public Integer getSales() {
+		return sales;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public Integer getTrueItemId() {
+		return trueItemId;
+	}
+
+	public Integer getTrueItemType() {
+		return trueItemType;
+	}
+
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+
+	public Integer getBrandId() {
+		return brandId;
+	}
+
+	public Integer getLike() {
+		return like;
+	}
+
+	public String getIds() {
+		return ids;
+	}
+
+public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	public void setImgThumb(String imgThumb) {
+		this.imgThumb = imgThumb;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+public void setDescription(String description) {
+		this.description = description;
+	}
+
+public void setWorldId(Integer worldId) {
+	this.worldId = worldId;
+}
+
+public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public void setSale(BigDecimal sale) {
+		this.sale = sale;
+	}
+
+	public void setSales(Integer sales) {
+		this.sales = sales;
+	}
+
+public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public void setTrueItemId(Integer trueItemId) {
+		this.trueItemId = trueItemId;
+	}
+
+public void setTrueItemType(Integer trueItemType) {
+		this.trueItemType = trueItemType;
+	}
+
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public void setBrandId(Integer brandId) {
+		this.brandId = brandId;
+	}
+
+	public void setLike(Integer like) {
+		this.like = like;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+	
 }

@@ -11,10 +11,7 @@
 <title>商品管理页</title>
 <jsp:include page="/common/header.jsp"></jsp:include>
 <link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}" />
-<link type="text/css" rel="stylesheet" href="${webRootPath}/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
-<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
 
@@ -100,7 +97,7 @@
 			title : "添加商品",
 			modal : true,
 			width : 820,
-			height : 600,
+			height : 460,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -212,18 +209,16 @@
 			<form id="add_item_form" method="post">
 				<table class="htm_edit_table" width="760px" >
 					<tr>
-						<td colspan="2"  class="leftTd" style="width:40px">图片：</td>
-						<td colspan="2" style="width:130">
+						<td  class="leftTd" style="width:50px">图片：</td>
+						<td  style="width:130">
 							<input class="none" type="text" name="pics" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
 							<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 							<img id="channelImg_edit01"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
 							<div id="channelIcon_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
-					</tr>
-					<tr>
-						<td colspan="2" class="leftTd">缩略图：</td>
-						<td colspan="2">
+						<td  class="leftTd">缩略图：</td>
+						<td >
 							<input class="none" type="text" name="pic02" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
 							<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 							<img id="channelImg_edit02"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
@@ -236,9 +231,9 @@
 						<td>
 							<input id="item_name" name="name" style="width:220px;" >
 						</td>
-						<td class="leftTd">促销价：</td>
+						<td class="leftTd">销售量：</td>
 						<td>
-							<input id="item_sale" name="sale" style="width:220px;" >
+							<input id="item_sales" name="sales" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
@@ -255,6 +250,10 @@
 						<td class="leftTd">描述：</td>
 						<td>
 							<textarea id="item_description" name="description" rows="1" style="width:220px;" ></textarea>
+						</td>
+						<td class="leftTd">链接：</td>
+						<td>
+							<input id="item_Link" name="Link" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
@@ -304,7 +303,7 @@
 						<td class="none" ><input id="item_id" name="id" ></td>
 					</tr>
 					<tr>
-						<td colspan="4" style="text-align: center;padding-top: 10px;">
+						<td colspan="4"   style="text-align: center;padding-top: 30px;" >
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="itemFormSubmit();">确定</a>
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#add_item_window').window('close');">取消</a>
 						</td>
