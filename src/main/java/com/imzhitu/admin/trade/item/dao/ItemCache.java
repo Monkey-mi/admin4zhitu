@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.constant.CacheKeies;
+import com.hts.web.base.database.RowSelection;
 
 /**
  * 商品redis缓存操作类
@@ -36,5 +37,17 @@ public class ItemCache {
 			redisTemplate.opsForList().rightPushAll(CacheKeies.ITEM_LIST_BY_SETID, itemList.toArray(list));
 		}
 		
+	}
+	
+	/**
+	 * 根据商品集合id，查询其下的商品列表
+	 * 
+	 * @param ItemSetId		商品集合id
+	 * @param rowSelection	分页对象
+	 * @return
+	 * @author zhangbo	2015年12月7日
+	 */
+	public List<com.hts.web.trade.item.dto.ItemDTO> queryItemListBySetId(Integer ItemSetId, RowSelection rowSelection) {
+		return redisTemplate.opsForList().range(CacheKeies.ITEM_LIST_BY_SETID + ItemSetId, rowSelection.getFirstRow(), rowSelection.getMaxRow() - 1);
 	}
 }
