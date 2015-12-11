@@ -95,6 +95,34 @@
 			}
 		});
 		
+		$("#add_itemSet_window").window({
+			title : '添加商品集合banner',
+			modal : true,
+			width : 650,
+			height : 155,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-converter',
+			resizable : false
+		});
+		
+		$("#refresh_seckill_window").window({
+			title : '添加商品集合banner',
+			modal : true,
+			width : 650,
+			height : 155,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-converter',
+			resizable : false
+		});
+		
 		// 展示界面
 		$("#main").show();
 	});
@@ -181,6 +209,34 @@
 		}
 	};
 	
+	/**
+	 * 刷新redis缓存
+	 * @author zhangbo 2015-12-10
+	 */
+	function refreshRecommendItemSetCache() {
+		var rows = $("#htm_table").datagrid("getSelections");
+		if(rows.length > 0){
+			$.messager.confirm("温馨提示", "您确定要更新商品集合吗？确定后，选中的商品集合将会在客户端生效", function(r){
+				if(r){
+					var ids = [];
+					for(var i=0;i<rows.length;i++){
+						ids[i] = rows[i].id;
+					}
+					var params = {
+							ids: ids.toString()
+						};
+					$.post("./admin_trade/itemSet_refreshRecommendItemSetCache", params, function(result){
+						if (result.result == 0) {
+							$.messager.alert("温馨提示",result.msg);
+						}
+					});
+				}
+			});	
+		}else{
+			$.messager.alert("温馨提示","请先选择，再执行更新缓存操作!");
+		}
+	};
+	
 </script>
 </head>
 <body>
@@ -199,6 +255,8 @@
 			        <option value="1">限时秒杀正在展示</option>
 			        <option value="2">推荐商品正在展示</option>
 		   		</select>
+		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" iconCls="icon-cut">刷新推荐商品缓存</a>
+		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" iconCls="icon-cut">刷新秒杀商品缓存</a>
 			</span>
 		</div>
 		
@@ -253,13 +311,41 @@
 					<tr>
 						<td colspan="2" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="formSubmit();">添加</a>
-							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#add_itemSet_window').window('close');">取消</a>
 						</td>
 					</tr>
 				</table>
 			</form>
 		</div>
 		
+		<!-- 设置秒杀商品集合到redis缓存 -->
+		<div id="refresh_seckill_window">
+			<form id="refresh_seckill_form" action="./admin_trade/itemSet_refreshSeckillSetCache" method="post">
+				<table class="htm_edit_table" width="480">
+					<tr>
+						<td class="leftTd">商品集合ID：</td>
+						<td>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">截止日期：</td>
+						<td>
+							<input name="deadline" class="easyui-datetimebox" required="true">
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="refreshRecommendItemSetCache();">确定</a>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	
 	</div>
 	
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>

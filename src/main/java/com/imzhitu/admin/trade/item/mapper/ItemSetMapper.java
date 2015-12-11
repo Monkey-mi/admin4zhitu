@@ -75,4 +75,13 @@ public interface ItemSetMapper {
 	 */
 	Integer queryItemSetTotal();
 	
+	/**
+	 * 根据id，获取商品集合对象
+	 * 
+	 * @param id	商品集合id
+	 * @return
+	 * @author zhangbo	2015年12月11日
+	 */
+	ItemSet getItemSetById(@Param("id")Integer id);
+	
 }

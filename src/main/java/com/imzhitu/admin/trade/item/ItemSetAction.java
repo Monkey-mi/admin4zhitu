@@ -81,6 +81,12 @@ public class ItemSetAction extends BaseCRUDAction {
 	 */
 	private Integer cacheFlag;
 	
+	/**
+	 * 限时秒杀截止日期
+	 * @author zhangbo	2015年12月11日
+	 */
+	private String deadline;
+	
 	@Autowired
 	private ItemSetService itemSetService;
 	
@@ -169,7 +175,45 @@ public class ItemSetAction extends BaseCRUDAction {
 		}
 		return StrutsKey.JSON;
 	}
-
+	
+	/**
+	 * 刷新限时秒杀redis缓存
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月10日
+	 */
+	public String refreshSeckillSetCache() {
+		try {
+			Integer[] idArray = StringUtil.convertStringToIds(ids);
+			itemSetService.refreshSeckillSetCache(idArray, deadline);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 刷新推荐商品redis缓存
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月10日
+	 */
+	public String refreshRecommendItemSetCache() {
+		try {
+			String[] ids = request.getParameterValues("reIndexId");
+			Integer[] idArray = new Integer[ids.length];
+			for (int i = 0; i < ids.length; i++) {
+				idArray[i] = Integer.valueOf(ids[i]);
+			}
+			itemSetService.refreshRecommendItemSetCache(idArray);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public String getItemIds() {
 		return itemIds;
 	}
@@ -212,6 +256,10 @@ public class ItemSetAction extends BaseCRUDAction {
 
 	public void setCacheFlag(Integer cacheFlag) {
 		this.cacheFlag = cacheFlag;
+	}
+
+	public void setDeadline(String deadline) {
+		this.deadline = deadline;
 	}
 	
 }

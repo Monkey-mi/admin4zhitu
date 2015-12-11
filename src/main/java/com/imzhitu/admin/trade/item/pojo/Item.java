@@ -112,6 +112,12 @@ public class Item implements Serializable {
 	 * @author zhangbo	2015年12月10日
 	 */
 	private Integer like;
+	
+	/**
+	 * 商品链接内容
+	 * @author zhangbo	2015年12月11日
+	 */
+	private String link;
 
 	/**
 	 * @return the id
@@ -335,6 +341,20 @@ public class Item implements Serializable {
 	 */
 	public void setLike(Integer like) {
 		this.like = like;
+	}
+
+	/**
+	 * @return the link
+	 */
+	public String getLink() {
+		return link;
+	}
+
+	/**
+	 * @param link the link to set
+	 */
+	public void setLink(String link) {
+		this.link = link;
 	}
 	
 }

@@ -56,5 +56,5 @@ public interface ItemMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	void deleteById(@Param("id")Integer id);
-
+	
 }

@@ -62,4 +62,14 @@
 			hts.item_set 
 	</select>
 	
+	<!-- 根据id，获取商品集合对象 -->
+	<select id="getItemSetById" resultMap="ItemSetMap">
+		select 
+			*
+		from 
+			hts.item_set 
+		where
+			id = #{id}
+	</select>
+	
 </mapper>

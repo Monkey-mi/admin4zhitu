@@ -1,5 +1,7 @@
 package com.imzhitu.admin.trade.item.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,9 +20,12 @@ import com.imzhitu.admin.common.pojo.OpMsgBulletin;
 import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
+import com.imzhitu.admin.trade.item.dao.ItemCache;
 import com.imzhitu.admin.trade.item.dao.ItemSetCache;
 import com.imzhitu.admin.trade.item.dto.ItemSetDTO;
+import com.imzhitu.admin.trade.item.mapper.ItemAndSetRelationMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemSetMapper;
+import com.imzhitu.admin.trade.item.pojo.Item;
 import com.imzhitu.admin.trade.item.pojo.ItemSet;
 import com.imzhitu.admin.trade.item.service.ItemSetService;
 
@@ -57,6 +62,12 @@ public class ItemSetServiceImpl implements ItemSetService {
 	@Autowired
 	private KeyGenService keyGenService;
 	
+	@Autowired
+	private ItemAndSetRelationMapper itemAndSetRelationMapper;
+	
+	@Autowired
+	private ItemCache itemCache;
+	
 	/**
 	 * 客户端商品公告缓存
 	 * @author zhangbo	2015年12月9日
@@ -90,7 +101,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	@Override
-	public void buildItemSetList(Integer page, Integer rows, Integer cacheFlag, Map<String, Object> jsonMap) {
+	public void buildItemSetList(Integer page, Integer rows, Integer cacheFlag, Map<String, Object> jsonMap) throws Exception {
 		// 定义返回前台商品集合列表
 		List<ItemSetDTO> rtnList = new ArrayList<ItemSetDTO>();
 		// 定义商品集合总数
@@ -150,24 +161,125 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	@Override
-	public void addItemSet(String description, String path, String thumb, Integer type, String link) {
+	public void addItemSet(String description, String path, String thumb, Integer type, String link) throws Exception {
 		// 采用公告流水序号
 		Integer  serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_SERIAL);
 		itemSetMapper.insert(description, path, thumb, type, link, AdminLoginUtil.getCurrentLoginId(), serial);
 	}
 	
 	@Override
-	public void updateItemSet(Integer id, String description, String path, String thumb, Integer type, String link) {
+	public void updateItemSet(Integer id, String description, String path, String thumb, Integer type, String link) throws Exception {
 		// 采用公告流水序号
 		Integer  serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_SERIAL);
 		itemSetMapper.update(id, description, path, thumb, type, link, AdminLoginUtil.getCurrentLoginId(), serial);
 	}
 	
 	@Override
-	public void batchDelete(Integer[] idArray) {
+	public void batchDelete(Integer[] idArray) throws Exception {
 		for (Integer id : idArray) {
 			itemSetMapper.deleteById(id);
 		}
+	}
+	
+	@Override
+	public void refreshSeckillSetCache(Integer[] ids, String deadline) throws Exception {
+		
+		// 定义并转化限时秒杀截止日期
+		Date deadlineDate = null;
+		if ( deadline != null && deadline != "") {
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			deadlineDate = format.parse(deadline);
+		}
+		
+		// 定义web秒杀商品集合列表
+		List<com.hts.web.operations.pojo.SeckillBulletin> seckillList = new ArrayList<com.hts.web.operations.pojo.SeckillBulletin>();
+		
+		// 循环处理商品集合id
+		for (Integer ItemSetId : ids) {
+			// 定义秒杀对象公告
+			com.hts.web.operations.pojo.SeckillBulletin seckill = new com.hts.web.operations.pojo.SeckillBulletin();
+			
+			// 查询商品集合对象，然后转换成web端存储的秒杀公告
+			ItemSet itemSet = itemSetMapper.getItemSetById(ItemSetId);
+			
+			// 转换对应属性
+			seckill.setId(itemSet.getId());
+			seckill.setBulletinName(itemSet.getDescription());
+			seckill.setBulletinPath(itemSet.getPath());
+			seckill.setBulletinThumb(itemSet.getThumb());
+			seckill.setBulletinType(itemSet.getType());
+			seckill.setLink(itemSet.getLink());
+			seckill.setDeadline(deadlineDate.getTime());
+			
+			// 刷新此商品集合id，其下对应的商品列表redis集合
+			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
+			itemCache.updateItemListBySetId(ItemSetId, itemListToWebItemList(itemList, deadlineDate));
+		}
+		// 更新限时秒杀集合
+		itemSetCache.updateSeckill(seckillList);
+	}
+
+	@Override
+	public void refreshRecommendItemSetCache(Integer[] ids) throws Exception {
+		// 定义web推荐商品集合列表
+		List<com.hts.web.operations.pojo.RecommendItemBulletin> recommendItemList = new ArrayList<com.hts.web.operations.pojo.RecommendItemBulletin>();
+		
+		// 循环处理商品集合id
+		for (Integer ItemSetId : ids) {
+			// 定义推荐商品对象公告
+			com.hts.web.operations.pojo.RecommendItemBulletin recommendItem = new com.hts.web.operations.pojo.RecommendItemBulletin();
+			
+			// 查询商品集合对象，然后转换成web端存储的推荐商品公告
+			ItemSet itemSet = itemSetMapper.getItemSetById(ItemSetId);
+			
+			// 转换对应属性
+			recommendItem.setId(itemSet.getId());
+			recommendItem.setBulletinName(itemSet.getDescription());
+			recommendItem.setBulletinPath(itemSet.getPath());
+			recommendItem.setBulletinThumb(itemSet.getThumb());
+			recommendItem.setBulletinType(itemSet.getType());
+			recommendItem.setLink(itemSet.getLink());
+			
+			// 刷新此商品集合id，其下对应的商品列表redis集合
+			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
+			itemCache.updateItemListBySetId(ItemSetId, itemListToWebItemList(itemList, null));
+		}
+		// 更新限时秒杀集合
+		itemSetCache.updateRecommendItem(recommendItemList);
+	}
+	
+	/**
+	 * 商品列表转换成web端使用的存储在redis缓存中的item对象
+	 * 
+	 * @param itemList	要转换的商品列表
+	 * @param deadline	若传递为null，则不为秒杀商品，若为秒杀商品，必须传递截止日期
+	 * @return
+	 * @author zhangbo	2015年12月11日
+	 */
+	private List<com.hts.web.trade.item.dto.ItemDTO> itemListToWebItemList(List<Item> itemList, Date deadline) {
+		
+		// 定义web端的item集合
+		List<com.hts.web.trade.item.dto.ItemDTO> rtnList = new ArrayList<com.hts.web.trade.item.dto.ItemDTO>();
+		for (Item item : itemList) {
+			com.hts.web.trade.item.dto.ItemDTO dto = new com.hts.web.trade.item.dto.ItemDTO();
+			dto.setId(item.getId());
+			dto.setName(item.getName());
+			dto.setSummary(item.getSummary());
+			dto.setDescription(item.getDescription());
+			dto.setWorldId(item.getWorldId());
+			dto.setImgPath(item.getImgPath());
+			dto.setImgThumb(item.getImgThumb());
+			dto.setPrice(item.getPrice());
+			dto.setSale(item.getSale());
+			dto.setSales(item.getSales());
+			dto.setStock(item.getStock());
+			dto.setItemId(item.getItemId());
+			dto.setItemType(item.getItemType());
+			dto.setLike(item.getLike());
+			dto.setLink(item.getLink());
+			dto.setDeadline(deadline);
+		}
+		return rtnList;
 	}
 	
 }

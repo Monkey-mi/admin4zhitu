@@ -31,7 +31,7 @@ public interface ItemSetService {
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
-	void buildItemSetList(Integer page, Integer rows, Integer cacheFlag, Map<String, Object> jsonMap);
+	void buildItemSetList(Integer page, Integer rows, Integer cacheFlag, Map<String, Object> jsonMap) throws Exception;
 
 	/**
 	 * 新增商品集合
@@ -44,7 +44,7 @@ public interface ItemSetService {
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
-	void addItemSet(String description, String path, String thumb, Integer type, String link);
+	void addItemSet(String description, String path, String thumb, Integer type, String link) throws Exception;
 	
 	/**
 	 * 更新商品集合
@@ -58,14 +58,31 @@ public interface ItemSetService {
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
-	void updateItemSet(Integer id, String description, String path, String thumb, Integer type, String link);
+	void updateItemSet(Integer id, String description, String path, String thumb, Integer type, String link) throws Exception;
 	
 	/**
 	 * 批量删除商家集合banner
 	 * 
-	 * @param idArray	商家集合id的集合
+	 * @param ids	商家集合id的集合
 	 * @author zhangbo	2015年12月8日
 	 */
-	void batchDelete(Integer[] idArray);
+	void batchDelete(Integer[] ids) throws Exception;
+	
+	/**
+	 * 刷新redis缓存，会刷新限时秒杀商品集合banner，与限时秒杀商品集合下商品列表的缓存
+	 * 
+	 * @param ids		商家集合id的集合
+	 * @param deadline	秒杀截止日期 
+	 * @author zhangbo	2015年12月10日
+	 */
+	void refreshSeckillSetCache(Integer[] ids, String deadline) throws Exception;
+
+	/**
+	 * 刷新redis缓存，会刷新推荐商品集合banner，与推荐商品集合下商品列表的缓存
+	 * 
+	 * @param ids	商家集合id的集合
+	 * @author zhangbo	2015年12月10日
+	 */
+	void refreshRecommendItemSetCache(Integer[] ids) throws Exception;
 
 }
