@@ -43,7 +43,7 @@ public interface ItemMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("slave")
-	List<Item> queryItemList(@Param("firstRow")Integer firstRow, @Param("limit")Integer limit);
+	List<Item> queryItemList(Item item);
 	
 	/**
 	 * 查询商品总数

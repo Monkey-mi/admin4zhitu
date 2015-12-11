@@ -10,7 +10,7 @@
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
 	var itemSetId = <%= itemSetId%>;
-	
+	var myQueryParams = {};
 	addToItemSetURL = "./admin_trade/itemSet_insertItemToSet";
 	
 	var columnsFields = [
@@ -30,7 +30,7 @@
 			},
 			{field: "isThisSet", title: "本集合", align: "center",
 				formatter: function(value,row,index) {
-					return "<a style='text-decoration : none' href='javascript:void(0);' onclick='javascript:addItemToSet('"+ row.id +"')'>【添加】</a>";
+					return "<a style='text-decoration : none' href='javascript:void(0);' onclick='javascript:addItemToSet("+ row.id + ")'>【添加】</a>";
 				}
 			},
 		];
@@ -43,6 +43,7 @@
 			url: "./admin_trade/item_buildItemList",
 			toolbar: "#tb",
 			idField: "id",
+			queryParams:myQueryParams,
 			rownumbers: true,
 			columns: [columnsFields],
 			fitColumns: true,
@@ -63,14 +64,9 @@
 		
 	});
 	
-	function addToItemSet(){
-		var rows = $("#htm_table").datagrid("getSelections");
-		var ids = [];
-		for(var i = 0;i < rows.length; i++){
-			ids[i] = rows[i].id;
-		}
+	function addItemToSet(itemId){
 		$.post(addToItemSetURL,{
-			itemIds:ids.join(','),
+			itemIds:itemId,
 			id:itemSetId
 		},function(result){
 			if (result.result == 0) {
@@ -81,22 +77,29 @@
 		},'json');
 	}
 	
+	function searchByItemName(){
+		var itemName = $('#item_name').searchbox('getValue');
+		alert(itemName);
+		myQueryParams.name = itemName;
+		$("#htm_table").datagrid('load');
+	}
+	
 	/*  
 	***************************************************************
 	上面为所有商品展示列表；下面为本集合下的商品展示列表
 	***************************************************************
 	*/
-	var myQueryParams = {itemSetId:itemSetId};
+	var myQueryParamsSet = {itemSetId:itemSetId};
 	
 	$(function(){
 		// 主表格
 		$("#htm_table_set").datagrid({
 			title: "集合商品列表",
 			width: $(document.body).width(),
-			url: "./admin_trade/item_buildItemList",
+			url: "./admin_trade/item_buildItemListBySetId",
 			toolbar: "#tb_set",
 			idField: "id",
-			queryParams:myQueryParams,
+			queryParams:myQueryParamsSet,
 			rownumbers: true,
 			columns: [columnsFieldsForSet],
 			fitColumns: true,
@@ -138,8 +141,6 @@
 </head>
 <body>
 
-		
-		
 	
 	<div id="main" style="display: none;">
 	
@@ -161,6 +162,7 @@
 			<div id="tb" style="padding:5px;height:auto" class="none">
 				<span>
 					<a href="javascript:void(0);" onclick="javascript:addToItemSet();" class="easyui-linkbutton" plain=true  iconCls="icon-add">批量添加</a>
+					<input id="item_name" searcher="searchByItemName" class="easyui-searchbox" prompt="输入商品名搜索" style="width:150px;" />
 				</span>
 			</div>
 			

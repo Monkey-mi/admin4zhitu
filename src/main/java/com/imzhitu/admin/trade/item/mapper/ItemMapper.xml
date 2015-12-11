@@ -66,6 +66,11 @@
 			*
 		from 
 			hts.item 
+		<where>
+		<if test="name != null">
+			name like CONCAT('%','#{name}','%')
+		</if>
+		</where>	
 		order by id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>

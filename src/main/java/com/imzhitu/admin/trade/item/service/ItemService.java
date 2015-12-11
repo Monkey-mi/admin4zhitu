@@ -19,8 +19,17 @@ public interface ItemService {
 	 * @param jsonMap	返回值json
 	 * @author zhangbo	2015年12月9日
 	 */
-	void buildItemList(Integer page, Integer rows, Map<String, Object> jsonMap);
+	void buildItemList(String name,Integer page, Integer rows, Map<String, Object> jsonMap);
 	
+	/**
+	 * 通过集合ID查询商品列表
+	 * @param itemSetId
+	 * @param page
+	 * @param rows
+	 * @param jsonMap 
+		*	2015年12月11日
+		*	mishengliang
+	 */
 	void buildItemListBySetId(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap);
 	
 	/**

@@ -79,4 +79,14 @@ public interface AdminService extends BaseService{
 	 */
 	public void logProperty();
 	
+	/**
+	 * 根据id，查询管理员名称
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 * @author zhangbo	2015年12月11日
+	 */
+	public String getAdminUserNameById(Integer id) throws Exception; 
+	
 }

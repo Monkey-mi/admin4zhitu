@@ -155,7 +155,11 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setThumb(itemSet.getThumb());
 				dto.setType(itemSet.getType());
 				dto.setLink(itemSet.getLink());
+<<<<<<< HEAD
 			/*	dto.setOperator(AdminLoginUtil.getAdminUserName(itemSet.getOperator()));*/
+=======
+				dto.setOperator(adminService.getAdminUserNameById(itemSet.getOperator()));
+>>>>>>> branch 'dev' of https://github.com/imzhitu/admin4zhitu.git
 				dto.setCreateTime(itemSet.getCreateTime());
 				dto.setModifyTime(itemSet.getModifyTime());
 				rtnList.add(dto);

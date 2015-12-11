@@ -15,7 +15,7 @@ import com.hts.web.common.dao.impl.BaseCacheDaoImpl;
  * @author zhangbo	2015年12月10日
  *
  */
-@Repository
+@Repository("com.imzhitu.admin.trade.item.dao.ItemCache")
 public class ItemCache extends BaseCacheDaoImpl<com.hts.web.trade.item.dto.ItemDTO>{
 	
 	public void updateItemListBySetId(Integer ItemSetId, List<com.hts.web.trade.item.dto.ItemDTO> itemList) {

@@ -3,13 +3,15 @@ package com.imzhitu.admin.trade.item.pojo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.hts.web.common.pojo.AbstractNumberDto;
+
 /**
  * 商品数据映射对象
  * 
  * @author zhangbo	2015年12月9日
  *
  */
-public class Item implements Serializable {
+public class Item extends AbstractNumberDto implements Serializable {
 
 	/**
 	 * 序列号

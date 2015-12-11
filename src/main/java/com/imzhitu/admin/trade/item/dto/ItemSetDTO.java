@@ -3,6 +3,9 @@ package com.imzhitu.admin.trade.item.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.apache.struts2.json.annotations.JSON;
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * 商品集合数据传输对象
  * 
@@ -198,6 +201,7 @@ public class ItemSetDTO implements Serializable {
 	/**
 	 * @return the createTime
 	 */
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -212,6 +216,7 @@ public class ItemSetDTO implements Serializable {
 	/**
 	 * @return the modifyTime
 	 */
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Date getModifyTime() {
 		return modifyTime;
 	}

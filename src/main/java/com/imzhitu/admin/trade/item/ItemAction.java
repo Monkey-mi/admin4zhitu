@@ -153,19 +153,20 @@ public class ItemAction extends BaseCRUDAction {
 
 	/**
 	 * 构造商品列表
-	 * 
+	 * 现在只有通过商品名搜索，后续按需求增加字段搜索
 	 * @return
 	 * @author zhangbo	2015年12月9日
 	 */
 	public String buildItemList() {
 		try {
-			itemService.buildItemList(page, rows, jsonMap);
+			itemService.buildItemList(name,page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
+	
 	
 	/**
 	 * 构造商品列表通过商品集合ID

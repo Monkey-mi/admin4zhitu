@@ -29,13 +29,35 @@ public class ItemServiceImpl implements ItemService {
 	@Autowired
 	private ItemCache itemCache;
 	
+	@SuppressWarnings("null")
+	private List<Item> transFormateByItemDTO(List<com.hts.web.trade.item.dto.ItemDTO> listFromWeb){
+		List<Item> list = null;
+		if (listFromWeb != null) {
+			for(com.hts.web.trade.item.dto.ItemDTO dto : listFromWeb){
+				Item item = null;
+				item.setId(dto.getId());
+				item.setImgPath(dto.getImgPath());
+				item.setImgThumb(dto.getImgThumb());
+				item.setName(dto.getName());
+				item.setSummary(dto.getSummary());
+				
+				list.add(item);
+			}
+		}
+		return list;
+	}
 
 	@Override
-	public void buildItemList(Integer page, Integer rows, Map<String, Object> jsonMap) {
+	public void buildItemList(String name,Integer page, Integer rows, Map<String, Object> jsonMap) {
 		Integer fristRow = (page-1) * rows;
 		Integer limit = rows;
 		
-		List<Item> list = itemMapper.queryItemList(fristRow, limit);
+		Item item = new Item();
+		item.setName(name);
+		item.setFirstRow(fristRow);
+		item.setLimit(limit);
+		
+		List<Item> list = itemMapper.queryItemList(item);
 		jsonMap.put(OptResult.ROWS, list);
 		jsonMap.put(OptResult.TOTAL,3);		
 	}
@@ -49,8 +71,8 @@ public class ItemServiceImpl implements ItemService {
 	public void buildItemListBySetId(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
 		int start = (page - 1)*rows;
 		int limit = rows;
-		List<com.hts.web.trade.item.dto.ItemDTO> list = itemCache.queryItemListBySetId(itemSetId, new RowSelection(start, limit));
-		//list需要由web的对象改为admin的对象，需要转化
+		List<com.hts.web.trade.item.dto.ItemDTO> listFromWeb = itemCache.queryItemListBySetId(itemSetId, new RowSelection(start, limit));
+		List<Item> list = transFormateByItemDTO(listFromWeb);
 		jsonMap.put(OptResult.ROWS, list);
 		jsonMap.put(OptResult.TOTAL,5);		
 	}

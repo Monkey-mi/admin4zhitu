@@ -186,7 +186,7 @@ public class ItemSetAction extends BaseCRUDAction {
 		try {
 			Integer[] idArray = StringUtil.convertStringToIds(ids);
 			itemSetService.refreshSeckillSetCache(idArray, deadline);
-			JSONUtil.optSuccess(jsonMap);
+			JSONUtil.optSuccess("刷新成功", jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -201,13 +201,9 @@ public class ItemSetAction extends BaseCRUDAction {
 	 */
 	public String refreshRecommendItemSetCache() {
 		try {
-			String[] ids = request.getParameterValues("reIndexId");
-			Integer[] idArray = new Integer[ids.length];
-			for (int i = 0; i < ids.length; i++) {
-				idArray[i] = Integer.valueOf(ids[i]);
-			}
+			Integer[] idArray = StringUtil.convertStringToIds(ids);
 			itemSetService.refreshRecommendItemSetCache(idArray);
-			JSONUtil.optSuccess(jsonMap);
+			JSONUtil.optSuccess("刷新成功", jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
