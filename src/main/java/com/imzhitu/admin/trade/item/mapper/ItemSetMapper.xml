@@ -11,6 +11,8 @@
 		<result column="link" property="link" javaType="java.lang.String"/>
 		<result column="operator" property="operator" javaType="java.lang.Integer"/>
 		<result column="serial" property="serial" javaType="java.lang.Integer"/>
+		<result column="create_time" property="createTime" javaType="java.util.Date"/>
+		<result column="modify_time" property="modifyTime" javaType="java.util.Date"/>
 	</resultMap>
 	
 	<!-- 新增商品集合 -->

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.trade.item.pojo.ItemSet;
 
 /**
@@ -27,6 +28,7 @@ public interface ItemSetMapper {
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("master")
 	void insert(@Param("description")String description, @Param("path")String path, @Param("thumb")String thumb, 
 			@Param("type")Integer type, @Param("link")String link, @Param("operator")Integer operator, @Param("serial")Integer serial);
 
@@ -44,6 +46,7 @@ public interface ItemSetMapper {
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("master")
 	void update(@Param("id")Integer id, @Param("description")String description, @Param("path")String path, @Param("thumb")String thumb, 
 			@Param("type")Integer type, @Param("link")String link, @Param("operator")Integer operator, @Param("serial")Integer serial);
 
@@ -54,6 +57,7 @@ public interface ItemSetMapper {
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("master")
 	void deleteById(@Param("id")Integer id);
 
 	/**
@@ -65,6 +69,7 @@ public interface ItemSetMapper {
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("slave")
 	List<ItemSet> queryItemSetList(@Param("firstRow")Integer firstRow, @Param("limit")Integer limit);
 
 	/**
@@ -73,6 +78,7 @@ public interface ItemSetMapper {
 	 * @return	total	商品集合总数
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("slave")
 	Integer queryItemSetTotal();
 	
 	/**
@@ -82,6 +88,7 @@ public interface ItemSetMapper {
 	 * @return
 	 * @author zhangbo	2015年12月11日
 	 */
+	@DataSource("slave")
 	ItemSet getItemSetById(@Param("id")Integer id);
 	
 }

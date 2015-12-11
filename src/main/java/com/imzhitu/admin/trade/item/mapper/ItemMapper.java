@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.trade.item.pojo.Item;
 
 /**
@@ -20,6 +21,7 @@ public interface ItemMapper {
 	 * @param item
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("master")
 	void insert(Item item);
 	
 	/**
@@ -28,6 +30,7 @@ public interface ItemMapper {
 	 * @param item
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("master")
 	void update(Item item);
 
 	/**
@@ -39,6 +42,7 @@ public interface ItemMapper {
 	 * @return List<Item>	商品结果集
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("slave")
 	List<Item> queryItemList(@Param("firstRow")Integer firstRow, @Param("limit")Integer limit);
 	
 	/**
@@ -47,6 +51,7 @@ public interface ItemMapper {
 	 * @return total	商品总数
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("slave")
 	Integer queryItemTotal();
 	
 	/**
@@ -55,6 +60,7 @@ public interface ItemMapper {
 	 * @param id
 	 * @author zhangbo	2015年12月9日
 	 */
+	@DataSource("master")
 	void deleteById(@Param("id")Integer id);
 	
 }

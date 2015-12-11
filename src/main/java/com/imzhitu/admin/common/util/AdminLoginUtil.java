@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.imzhitu.admin.common.pojo.AdminUser;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.privileges.dao.AdminDao;
+import com.imzhitu.admin.privileges.dao.impl.AdminDaoImpl;
 
 /**
  * <p>
@@ -20,9 +21,6 @@ import com.imzhitu.admin.privileges.dao.AdminDao;
  *
  */
 public class AdminLoginUtil {
-	
-	@Autowired
-	private static AdminDao adminDao;
 	
 	/**
 	 * 管理员账号集合
@@ -54,6 +52,7 @@ public class AdminLoginUtil {
 	 */
 	public static String getAdminUserName(Integer adminUserId) {
 		if ( adminUserList == null ) {
+			AdminDao adminDao = new AdminDaoImpl();
 			adminUserList = adminDao.queryUserInfoList(1, 100, new HashMap<String, Object>());
 		}
 		String adminUserName = "";

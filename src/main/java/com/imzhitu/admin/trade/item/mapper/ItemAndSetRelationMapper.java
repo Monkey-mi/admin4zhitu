@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.trade.item.pojo.Item;
 
 /**
@@ -22,6 +23,7 @@ public interface ItemAndSetRelationMapper {
 		*	2015年12月10日
 		*	mishengliang
 	 */
+	@DataSource("master")
 	void insertItemToSet(@Param("itemSetId")Integer itemSetId,@Param("itemId")Integer itemId);
 	
 	/**
@@ -31,6 +33,7 @@ public interface ItemAndSetRelationMapper {
 	 * @return
 	 * @author zhangbo	2015年12月10日
 	 */
+	@DataSource("slave")
 	List<Item> queryItemListBySetId(@Param("itemSetId")Integer itemSetId);
 
 }

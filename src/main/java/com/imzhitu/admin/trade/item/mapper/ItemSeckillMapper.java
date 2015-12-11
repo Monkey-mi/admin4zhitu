@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
+
 /**
  * 秒杀商品数据操作类
  * 
@@ -19,6 +21,7 @@ public interface ItemSeckillMapper {
 	 * @param deadline	截止日期
 	 * @author zhangbo	2015年12月11日
 	 */
+	@DataSource("master")
 	void insert(@Param("id")Integer id, @Param("deadline")Date deadline);
 	
 	
