@@ -152,6 +152,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		zombieWorld.setWorldName(worldName);
 		zombieWorld.setAddDate(now);
 		zombieWorld.setModifyDate(now);
+		zombieWorld.setCity(city);
+		
 		if (channelId == null) {
 			zombieWorld.setChannelId(0);
 		} else {
