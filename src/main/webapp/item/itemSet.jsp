@@ -245,6 +245,32 @@
 	};
 	
 	/**
+	 * 重新排序
+	 * @author zhangbo 2015-12-11
+	 */
+	function reorder() {
+		var rows = $("#htm_table").datagrid("getSelections");
+		if(rows.length > 0){
+			var ids = [];
+			for(var i=0;i<rows.length;i++){
+				ids[i] = rows[i].id;
+			}
+			var params = {
+					ids: ids.toString()
+				};
+			$.post("./admin_trade/itemSet_reorder", params, function(result){
+				$.messager.alert("温馨提示","删除" + rows.length + "条记录");
+				// 清除所有已选择的记录，避免重复提交id值
+				$("#htm_table").datagrid("clearSelections");
+				// 批量删除刷新当前页
+				$("#htm_table").datagrid("reload");
+			});
+		}else{
+			$.messager.alert("温馨提示","请先选择，再执行重新排序!");
+		}
+	}
+	
+	/**
 	 * 刷新redis缓存
 	 * @author zhangbo 2015-12-10
 	 */
@@ -327,6 +353,7 @@
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
 				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="reorder()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 		   		<input id="ss_isCache" class="easyui-combobox">
 		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新推荐商品缓存</a>
