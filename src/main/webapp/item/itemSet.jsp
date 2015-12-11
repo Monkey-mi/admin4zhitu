@@ -8,7 +8,7 @@
 <link type="text/css" rel="stylesheet" href="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.css"></link>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
-<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}" />
+<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}"></link>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript" src="${webRootPath }/base/js/baseTools.js"></script>
@@ -19,10 +19,10 @@
 	
 	var columnsFields = [
 			{field: "ck", checkbox:true},
-			{field: "id", title: "ID", align: "center", width: 80},
+			{field: "id", title: "ID", align: "center"},
 			{field: "path", title: "商品集合图片", align: "center",
 				formatter: function(value,row,index) {
-	  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+	  				return "<img width='200px' height='90px' class='htm_column_img' src='" + value + "'/>";
 	  			}
 			},
 			{field: "type", title: "链接类型", align: "center",
@@ -35,7 +35,7 @@
 			{field: "description", title: "描述", align: "center"},
 			{field: "thumb", title: "缩略图", align: "center",
 				formatter: function(value,row,index) {
-		  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+		  				return "<img width='200px' height='90px' class='htm_column_img' src='" + value + "'/>";
 		  			}
 		  	},
 			{field: "createTime", title: "创建时间", align: "center",
@@ -51,8 +51,10 @@
 			{field: "opt", title: "操作", align: "center",
 				formatter : function(value, row, index ) {
 					var rtn = "<span>";
-					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:$('#add_itemSet_window').window('open'); updateItemSet("+ row.id + ")'>【修改】</a>";
+					rtn += "<a class='updateInfo' onclick='javascript:$('#add_itemSet_window').window('open'); updateItemSet("+ row.id + ");'>【修改】</a>";
+					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:updateItemSet("+ row.id + ")'>【修改】</a>";
 					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='openAddItemToItemSet("+ row.id + ")'>【添加商品】</a>";
+					rtn += "</span>";
 					return rtn;
 				}
 			}
@@ -250,15 +252,15 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');" class="easyui-linkbutton" iconCls="icon-add">添加</a>
-				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" iconCls="icon-cut">批量删除</a>
+				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 				<select id="ss_isCache" class="easyui-combobox"  style="width:100px;">
 			        <option value="" selected="selected">全部</option>
 			        <option value="1">限时秒杀正在展示</option>
 			        <option value="2">推荐商品正在展示</option>
 		   		</select>
-		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" iconCls="icon-cut">刷新推荐商品缓存</a>
-		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" iconCls="icon-cut">刷新秒杀商品缓存</a>
+		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新推荐商品缓存</a>
+		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新秒杀商品缓存</a>
 			</span>
 		</div>
 		
@@ -456,5 +458,4 @@
 	</script>
 	
 </body>
-</html>
 </html>
