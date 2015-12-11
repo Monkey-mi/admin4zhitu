@@ -99,4 +99,11 @@ public class OpNearServiceTest extends BaseTest{
 		nearService.queryNearLabelWorld(null, null, 1, 0, 1, 10, jsonMap);
 		log.info(jsonMap);
 	}
+	
+	@Test
+	public void queryNearWorldTest() throws Exception {
+		Map<String,Object>jsonMap = new HashMap<String, Object>();
+		nearService.queryNearWorld(21760, 0, 1, 10, jsonMap);
+		log.info(jsonMap);
+	}
 }

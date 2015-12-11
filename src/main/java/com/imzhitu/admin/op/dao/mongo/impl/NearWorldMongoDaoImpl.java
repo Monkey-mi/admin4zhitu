@@ -23,7 +23,7 @@ public class NearWorldMongoDaoImpl extends BaseMongoDaoImpl implements NearWorld
 	private static String collection = MongoHTS.NEAR_WORLD;
 	@Override
 	public List<OpNearWorldDto> queryNear(int maxId,int cityId,int start, int limit) {
-		Criteria criteria = Criteria.where("cityId").is(cityId);
+		Criteria criteria = Criteria.where("cityId").is(cityId).and("id").gt(2971557);
 		if(maxId > 0) {
 			criteria = criteria.and("recommendId").lte(maxId);
 		}
@@ -37,7 +37,7 @@ public class NearWorldMongoDaoImpl extends BaseMongoDaoImpl implements NearWorld
 
 	@Override
 	public long queryNearTotalCount(int cityId) {
-		Criteria criteria = Criteria.where("cityId").is(cityId);
+		Criteria criteria = Criteria.where("cityId").is(cityId).and("id").gt(2971557);
 		return getMongoTemplate().count(new Query(criteria), OpNearWorldDto.class,collection);
 	}
 }
