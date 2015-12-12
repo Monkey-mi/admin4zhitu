@@ -64,14 +64,14 @@ public class ItemServiceImpl implements ItemService {
 	 */
 	@Override
 	public void buildItemList(String name,Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
-		Integer fristRow = (page-1) * rows;
-		Integer limit = rows;
+/*		Integer fristRow = (page-1) * rows;
+		Integer limit = rows;*/
 		
 		Item item = new Item();
-		item.setName(name);
-		item.setFirstRow(fristRow);
-		item.setLimit(limit);
 		item.setItemSetId(itemSetId);
+		item.setName(name);
+/*		item.setFirstRow(fristRow);
+		item.setLimit(limit);*/
 		
 		List<Item> list = null;
 		
@@ -113,7 +113,7 @@ public class ItemServiceImpl implements ItemService {
 		List<com.hts.web.trade.item.dto.ItemDTO> listFromWeb = itemCache.queryItemListBySetId(itemSetId, new RowSelection(start, limit));
 		List<Item> list = transFormateByItemDTO(listFromWeb);
 		jsonMap.put(OptResult.ROWS, list);
-		jsonMap.put(OptResult.TOTAL,5);		
+		jsonMap.put(OptResult.TOTAL,list.size());		
 	}
 
 	@Override
@@ -143,7 +143,8 @@ public class ItemServiceImpl implements ItemService {
 		item.setBrandId(brandId);
 		item.setLike(like);
 		item.setLink(link);
-		
+		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SERIAL);
+		item.setSerial(serial);
 		itemMapper.insert(item);
 	}
 

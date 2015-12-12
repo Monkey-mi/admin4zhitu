@@ -26,9 +26,9 @@
 	<insert id="insert">
 		insert into 
 			hts.item 
-			(name, summary, description, world_id, img_path, img_thumb, price, sale, sales, stock, item_id, item_type, category_id, brand_id, like_num,link)
+			(name, summary, description, world_id, img_path, img_thumb, price, sale, sales, stock, item_id, item_type, category_id, brand_id, like_num,link,serial)
 	 	values 
-	 		(#{name}, #{summary}, #{description}, #{worldId}, #{imgPath}, #{imgThumb}, #{price}, #{sale}, #{sales}, #{stock}, #{itemId}, #{itemType}, #{categoryId}, #{brandId}, #{like},#{link})
+	 		(#{name}, #{summary}, #{description}, #{worldId}, #{imgPath}, #{imgThumb}, #{price}, #{sale}, #{sales}, #{stock}, #{itemId}, #{itemType}, #{categoryId}, #{brandId}, #{like},#{link},#{serial})
 	</insert>
 	
 	<!-- 根据id更新商品，可以更新商品对象的所有属性 -->
