@@ -195,6 +195,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	public void batchDelete(Integer[] idArray) throws Exception {
 		for (Integer id : idArray) {
 			itemSetMapper.deleteById(id);
+			itemSetCache.deleteFromSeckillTempById(id);
 		}
 	}
 	
@@ -202,7 +203,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	public void addSeckillToTemp(Integer id, Date deadline) throws Exception {
 		itemSetCache.addSeckillTemp(id, deadline);
 		// 当添加到秒杀商品集合时，刷新序号，使其排到最顶层
-		itemSetMapper.updateSerial(id, Admin.KEYGEN_ITEM_SET_SERIAL);
+		itemSetMapper.updateSerial(id, keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
 	}
 
 	@Override
@@ -214,6 +215,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	public void refreshItemSetCache() throws Exception {
 		refreshSeckillCache();
 		refreshRecommendItemCache();
+		refreshItemListToCache();
 	}
 
 	/**
@@ -249,7 +251,6 @@ public class ItemSetServiceImpl implements ItemSetService {
 			
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
-			itemCache.updateItemListBySetId(ItemSetId, itemListToWebItemList(itemList, seckillTemp.get(ItemSetId)));
 			
 			// 将查询出的商品列表设置为秒杀商品
 			for (Item item : itemList) {
@@ -291,13 +292,24 @@ public class ItemSetServiceImpl implements ItemSetService {
 			recommendItem.setLink(itemSet.getLink());
 			recommendItem.setSerial(itemSet.getSerial());
 			recommendItemList.add(recommendItem);
-			
+		}
+		// 更新限时秒杀集合
+		itemSetCache.updateRecommendItem(recommendItemList);
+	}
+	
+	/**
+	 * 刷新商品集合其下的商品列表到redis中
+	 * 
+	 * @author zhangbo	2015年12月12日
+	 */
+	private void refreshItemListToCache() {
+		// 查询全部商品集合，分页传递为null，则表明查询全部
+		List<ItemSet> itemSetList = itemSetMapper.queryItemSetList(null, null);
+		for (ItemSet itemSet : itemSetList) {
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(itemSet.getId());
 			itemCache.updateItemListBySetId(itemSet.getId(), itemListToWebItemList(itemList, null));
 		}
-		// 更新限时秒杀集合
-		itemSetCache.updateRecommendItem(recommendItemList);
 	}
 
 	/**

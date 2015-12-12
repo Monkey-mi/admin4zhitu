@@ -98,7 +98,7 @@ public interface ItemSetMapper {
 	 * @param serial	序号
 	 * @author zhangbo	2015年12月12日
 	 */
-	void updateSerial(Integer id, Integer serial);
+	void updateSerial(@Param("id")Integer id, @Param("serial")Integer serial);
 
 	/**
 	 * 分页查询商品集合列表，并且结果集不包含传递过去的商品id
