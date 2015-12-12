@@ -35,6 +35,7 @@
 					return rtn;
 				}
 			},
+			
 			{field: "isSeckill", title: "是否秒杀", align: "center",
 				formatter : function(value, row, index ) {
 	  				// 若已经为秒杀商品集合，则点击会取消秒杀商品
