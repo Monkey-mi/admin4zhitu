@@ -101,7 +101,8 @@
 		$("#item_brandId").val("");
 		$("#item_like").val("");
 		$("#item_link").val("");
-		$('#add_item_window').window('open');
+		$('#add_item_window').window('open'); 
+		
 		$("#item_name").focus();
 	}
 	

@@ -55,7 +55,7 @@
 	});
 	
 	/**
-	 * 提交商品集合
+	 * 提交商品
 	 * @author zhangbo	2015-12-08
 	 */
 	function itemFormSubmit() {
@@ -194,7 +194,7 @@
 					<tr>
 						<td class="leftTd">名称：</td>
 						<td>
-							<input id="item_name" name="name" style="width:220px;" >
+							<input id="item_name" name="name" style="width:220px;" required="true">
 						</td>
 						<td class="leftTd">点赞数：</td>
 						<td>
@@ -204,7 +204,7 @@
 					<tr>
 						<td class="leftTd">简介：</td>
 						<td>
-							<input id="item_summary" name="summary" style="width:220px;" >
+							<input id="item_summary" name="summary" style="width:220px;" required="true">
 						</td>
 						<td class="leftTd">织图id：</td>
 						<td>
@@ -214,7 +214,7 @@
 					<tr>
 						<td class="leftTd">描述：</td>
 						<td>
-							<textarea id="item_description" name="description" rows="1" style="width:220px;" ></textarea>
+							<textarea id="item_description" name="description" rows="1" style="width:220px;" required="true"></textarea>
 						</td>
 						<td class="leftTd"></td>
 						<td>
@@ -223,7 +223,7 @@
 					<tr>
 						<td class="leftTd">价格：</td>
 						<td>
-							<input id="item_price" name="price" style="width:220px;" >
+							<input id="item_price" name="price" style="width:220px;" required="true">
 						</td>
 						<td class="leftTd"></td>
 						<td>
@@ -232,7 +232,7 @@
 					<tr>
 						<td class="leftTd">链接：</td>
 						<td>
-							<input id="item_link" name="link" style="width:220px;" >
+							<input id="item_link" name="link" style="width:220px;" required="true">
 						</td>
 						<td class="leftTd"></td>
 						<td>
@@ -253,7 +253,7 @@
 					<tr>
 						<td class="leftTd">淘宝ID：</td>
 						<td>
-							<input id="item_trueItemId" name="trueItemId" style="width:220px;" >
+							<input id="item_trueItemId" name="trueItemId" style="width:220px;" required="true" >
 						</td>
 						<td class="leftTd"></td>
 						<td>
