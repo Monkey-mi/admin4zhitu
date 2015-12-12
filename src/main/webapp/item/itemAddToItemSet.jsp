@@ -173,7 +173,7 @@
 			<div id="tb_set" style="padding:5px;height:auto" class="none">
 				<span>
 					<a href="javascript:void(0);" onclick="javascript:batchDeleteItemFromSet();" class="easyui-linkbutton" plain=true  iconCls="icon-cut">批量删除</a>
-					<a href="javascript:void(0);" onclick="javascript:reSuperbForSet();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
+					<a href="javascript:void(0);" onclick="javascript:reSuperb();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
 				</span>
 			</div>
 		
