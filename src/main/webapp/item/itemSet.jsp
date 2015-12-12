@@ -35,7 +35,6 @@
 					return rtn;
 				}
 			},
-			
 			{field: "isSeckill", title: "是否秒杀", align: "center",
 				formatter : function(value, row, index ) {
 	  				// 若已经为秒杀商品集合，则点击会取消秒杀商品
@@ -44,7 +43,6 @@
 	  				} else {
 	  					return "<img title='点击成为秒杀商品集合' class='htm_column_img pointer' onclick='openSeckillWin("+ row.id +")' src='./common/images/tip.png'/>";
 	  				}
-	  				
 				}
 			},
 			{field: "operator", title: "最后修改者", align: "center"},
