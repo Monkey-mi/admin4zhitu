@@ -273,8 +273,16 @@ public class ItemSetServiceImpl implements ItemSetService {
 	 * @author zhangbo	2015年12月12日
 	 */
 	private void refreshRecommendItemCache() {
-		// 由于业务确定，只刷新商品集合列表中的前10条数据到redis中
-		List<ItemSet> itemSetList = itemSetMapper.queryItemSetListNotInIds(getSeckillTempIds() , 0, 10);
+		// 定义商品集合列表，由于业务确定，只刷新商品集合列表中的前10条数据到redis中
+		List<ItemSet> itemSetList = new ArrayList<ItemSet>();
+		
+		// 若秒杀中没有数据，则直接查数据库
+		Integer[] seckillItemSetIds = getSeckillTempIds();
+		if ( seckillItemSetIds.length != 0 ) {
+			itemSetList = itemSetMapper.queryItemSetListNotInIds(seckillItemSetIds , 0, 10);
+		} else {
+			itemSetList = itemSetMapper.queryItemSetList(0, 10);
+		}
 		
 		// 定义web推荐商品集合列表
 		List<com.hts.web.operations.pojo.RecommendItemBulletin> recommendItemList = new ArrayList<com.hts.web.operations.pojo.RecommendItemBulletin>();
