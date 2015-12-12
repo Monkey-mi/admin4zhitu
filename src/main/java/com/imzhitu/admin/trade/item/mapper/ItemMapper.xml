@@ -42,16 +42,16 @@
 	      <if test="worldId != null">world_id = #{worldId},</if>
 	      <if test="imgPath != null">img_path = #{imgPath},</if>
 	      <if test="imgThumb != null">img_thumb = #{imgThumb},</if>
-	      <if test="price != null">price = #{price}</if>
-	      <if test="sale != null">sale = #{sale}</if>
-	      <if test="sales != null">sales = #{sales}</if>
-	      <if test="stock != null">stock = #{stock}</if>
-	      <if test="itemId != null">item_id = #{itemId}</if>
-	      <if test="itemType != null">item_type = #{itemType}</if>
-	      <if test="categoryId != null">category_id = #{categoryId}</if>
-	      <if test="brandId != null">brand_id = #{brandId}</if>
-	      <if test="like != null">like_num = #{like}</if>
-	       <if test="link != null">link = #{link}</if>
+	      <if test="price != null">price = #{price},</if>
+	      <if test="sale != null">sale = #{sale},</if>
+	      <if test="sales != null">sales = #{sales},</if>
+	      <if test="stock != null">stock = #{stock},</if>
+	      <if test="itemId != null">item_id = #{itemId},</if>
+	      <if test="itemType != null">item_type = #{itemType},</if>
+	      <if test="categoryId != null">category_id = #{categoryId},</if>
+	      <if test="brandId != null">brand_id = #{brandId},</if>
+	      <if test="like != null">like_num = #{like},</if>
+	       <if test="link != null">link = #{link},</if>
 	      <if test="serial != null">serial = #{serial}</if>
 	    </set>
 	  	where 

@@ -67,6 +67,7 @@
 					if(result['result'] == 0) {
 						$('#add_item_window').window('close');  // 关闭添加窗口
 						$('#htm_table').datagrid("reload");
+						$('#item_id').val('');
 					} else {
 						$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
 					}
