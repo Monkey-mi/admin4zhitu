@@ -222,6 +222,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 	@Override
 	public void addSeckillToTemp(Integer id, Date deadline) throws Exception {
 		itemSetCache.addSeckillTemp(id, deadline);
+		// 当添加到秒杀商品集合时，刷新序号，使其排到最顶层
+		itemSetMapper.updateSerial(id, Admin.KEYGEN_ITEM_SET_SERIAL);
 	}
 
 	@Override
@@ -290,13 +292,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 	 * @author zhangbo	2015年12月12日
 	 */
 	private void refreshRecommendItemCache() {
-		// 获取秒杀商品集合临时存储中的id 
-		Set<Integer> seckillKeySet = itemSetCache.getSeckillTemp().keySet();
-		Integer[] ids = new Integer[seckillKeySet.size()];
-		ids = seckillKeySet.toArray(ids);
-		
 		// 由于业务确定，只刷新商品集合列表中的前10条数据到redis中
-		List<ItemSet> itemSetList = itemSetMapper.queryItemSetListNotInIds(ids , 0, 10);
+		List<ItemSet> itemSetList = itemSetMapper.queryItemSetListNotInIds(getSeckillTempIds() , 0, 10);
 		
 		// 定义web推荐商品集合列表
 		List<com.hts.web.operations.pojo.RecommendItemBulletin> recommendItemList = new ArrayList<com.hts.web.operations.pojo.RecommendItemBulletin>();
@@ -358,6 +355,19 @@ public class ItemSetServiceImpl implements ItemSetService {
 		}
 		return rtnList;
 	}
+	
+	/**
+	 * 获取秒杀商品集合ids
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月12日
+	 */
+	private Integer[] getSeckillTempIds() {
+		// 获取秒杀商品集合临时存储中的id 
+		Set<Integer> seckillKeySet = itemSetCache.getSeckillTemp().keySet();
+		Integer[] ids = new Integer[seckillKeySet.size()];
+		return seckillKeySet.toArray(ids);
+	}
 
 	@Override
 	public void reorder(String ids) {
@@ -365,6 +375,13 @@ public class ItemSetServiceImpl implements ItemSetService {
 		Integer[] idArray = StringUtil.convertStringToIds(ids);
 		for (int i = idArray.length -1; i >= 0; i--) {
 			itemSetMapper.updateSerial(idArray[i], keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
+		}
+		
+		// 为了简便开发，这里没有过滤idArray中存在的秒杀商品集合id，而是直接重新刷新了一下秒杀商品集合对象的serial
+		// 为保证秒杀商品集合一直为最大serial状态，要重新刷新一下
+		Integer[] seckillTempIds = getSeckillTempIds();
+		for (int i = seckillTempIds.length -1; i >= 0; i--) {
+			itemSetMapper.updateSerial(seckillTempIds[i], keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
 		}
 	}
 	
