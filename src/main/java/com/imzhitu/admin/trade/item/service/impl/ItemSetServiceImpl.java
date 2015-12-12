@@ -97,8 +97,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 			awardActivity.setBulletinName(bulletin.getBulletinName());
 			awardActivity.setBulletinPath(bulletin.getBulletinPath());
 			awardActivity.setBulletinThumb(bulletin.getBulletinThumb());
-			// TODO 由于客户端，即web代码，接口方法对app提供的BulletinType对象，类型为5的，表明是有奖活动，这里可能后续有变化
-			awardActivity.setBulletinType(5);
+			// TODO 由于客户端，即web代码，接口方法对app提供的BulletinType对象，类型为6的，表明是有奖活动，这里可能后续有变化
+			awardActivity.setBulletinType(6);
 			awardActivity.setLink(bulletin.getLink());
 			
 			awardActivityList.add(awardActivity);
@@ -168,17 +168,44 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	@Override
-	public void addItemSet(String description, String path, String thumb, Integer type, String link) throws Exception {
+	public void addItemSet(String description, String path, String thumb, Integer type) throws Exception {
 		// 采用公告流水序号
-		Integer  serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_SERIAL);
-		itemSetMapper.insert(description, path, thumb, type, link, AdminLoginUtil.getCurrentLoginId(), serial);
+		Integer  serial = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL);
+		Integer id = itemSetMapper.insert(description, path, thumb, type, AdminLoginUtil.getCurrentLoginId(), serial);
+		updateItemSet(id, null, null, null, null, handleLink(id));
 	}
 	
 	@Override
-	public void updateItemSet(Integer id, String description, String path, String thumb, Integer type, String link) throws Exception {
-		// 采用公告流水序号
-		Integer  serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_SERIAL);
-		itemSetMapper.update(id, description, path, thumb, type, link, AdminLoginUtil.getCurrentLoginId(), serial);
+	public void updateItemSet(Integer id, String description, String path, String thumb, Integer type) throws Exception {
+		updateItemSet(id, description, path, thumb, type, handleLink(id));
+	}
+	
+	/**
+	 * 更新商品集合
+	 * 
+	 * @param id
+	 * @param description
+	 * @param path
+	 * @param thumb
+	 * @param type
+	 * @param link
+	 * @throws Exception
+	 * @author zhangbo	2015年12月12日
+	 */
+	private void updateItemSet(Integer id, String description, String path, String thumb, Integer type, String link) throws Exception {
+		itemSetMapper.update(id, description, path, thumb, type, AdminLoginUtil.getCurrentLoginId());
+	}
+	
+	/**
+	 * 处理链接内容
+	 * 
+	 * @param id	商品集合id
+	 * @return
+	 * @author zhangbo	2015年12月12日
+	 */
+	private String handleLink(Integer id) {
+		// 链接内容目前为固定写死，不由人工控制
+		return "http://imzhitu.com/item/itemset.html?itemSetId=" + id;
 	}
 	
 	@Override

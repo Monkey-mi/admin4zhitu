@@ -225,7 +225,13 @@ public class Admin {
 	 * 分类织图SERIAL
 	 * 
 	 */
-	public static final Integer KEYGEN_ZT_TYPEWORLD_SERIAL	= 14; 
+	public static final Integer KEYGEN_ZT_TYPEWORLD_SERIAL	= 14;
+	
+	/**
+	 * 商品集合serial流水
+	 * @author zhangbo	2015年12月12日
+	 */
+	public static final Integer KEYGEN_ITEM_SET_SERIAL	= 15;
 	
 	
 	/**

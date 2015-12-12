@@ -62,12 +62,6 @@ public class ItemSetAction extends BaseCRUDAction {
 	private Integer type;
 	
 	/**
-	 * 商品集合banner点击链接内容
-	 * @author zhangbo	2015年12月9日
-	 */
-	private String link;
-	
-	/**
 	 * 商品集合id集合，以逗号分隔
 	 * @author zhangbo	2015年12月8日
 	 */
@@ -103,7 +97,7 @@ public class ItemSetAction extends BaseCRUDAction {
 	public String addAwardActivityByBullentin() {
 		try {
 			itemSetService.addAwardActivityByBullentin(bullentinIds);
-			JSONUtil.optSuccess(jsonMap);
+			JSONUtil.optSuccess("添加成功", jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -136,9 +130,9 @@ public class ItemSetAction extends BaseCRUDAction {
 		try {
 			// 若id不存在，则为新增，否则为更新
 			if ( id == null ) {
-				itemSetService.addItemSet(description, path, thumb, type, link);
+				itemSetService.addItemSet(description, path, thumb, type);
 			} else {
-				itemSetService.updateItemSet(id, description, path, thumb, type, link);
+				itemSetService.updateItemSet(id, description, path, thumb, type);
 			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
@@ -260,10 +254,6 @@ public class ItemSetAction extends BaseCRUDAction {
 
 	public void setType(Integer type) {
 		this.type = type;
-	}
-
-	public void setLink(String link) {
-		this.link = link;
 	}
 
 	public void setIds(String ids) {
