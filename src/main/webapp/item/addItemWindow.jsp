@@ -109,7 +109,6 @@
 	
 		
     	//商品的重新排序模块
-    	//商品的重新排序模块
         function reSuperbForSet() {
         	$("#superb_form").find('input[name="reIndexId"]').val('');
         	$("#schedula").datetimebox('clear');
@@ -151,9 +150,9 @@
         				
         			}
         		});
-        	} */
+        	} 
         	
-        }
+        }*/
 		
 </script>
 </head>
