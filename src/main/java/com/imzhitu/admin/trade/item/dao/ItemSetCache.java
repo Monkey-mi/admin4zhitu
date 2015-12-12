@@ -1,9 +1,15 @@
 package com.imzhitu.admin.trade.item.dao;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.BoundListOperations;
+import org.springframework.data.redis.core.BoundZSetOperations;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +31,9 @@ public class ItemSetCache {
 	 */
 	@Autowired
 	private RedisTemplate<String, ? extends com.hts.web.common.pojo.OpMsgBulletin> redisTemplate;
+	
+	@Autowired
+	private RedisTemplate<String, Map<Integer, Date>> seckillTempRedisTemplate;
 	
 	/**
 	 * 更新限时秒杀redis缓存集合
@@ -86,6 +95,29 @@ public class ItemSetCache {
 			
 			// 从右放入数据，即与现有的list数据顺序保持一致
 			boundListOps.rightPushAll(recommendItemList.toArray(list));
+		}
+	}
+	
+	/**
+	 * 从记录秒杀Map中删除指定的商家集合
+	 * 
+	 * @param itemSetId	商家集合id
+	 * @author zhangbo	2015年12月12日
+	 */
+	public void deleteFromSeckillTempById(Integer itemSetId) {
+		// 从redis中获取
+		BoundHashOperations<String, Integer, Date> boundHashOps = seckillTempRedisTemplate.boundHashOps(CacheKeies.ITEM_SECKILLITEMSET_TEMP);	
+		
+		// 若存在redis的key值，则清空缓存
+		if(redisTemplate.hasKey(CacheKeies.ITEM_SECKILLITEMSET_TEMP)) {
+			redisTemplate.delete(CacheKeies.ITEM_SECKILLITEMSET_TEMP);
+		}
+		
+		
+		Map<Integer, Date> entries = boundHashOps.entries();
+		Date date = boundHashOps.get(itemSetId);
+		
+		if ( date != null ) {
 		}
 	}
 	

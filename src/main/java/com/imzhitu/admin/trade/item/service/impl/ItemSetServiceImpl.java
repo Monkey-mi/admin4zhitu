@@ -302,5 +302,11 @@ public class ItemSetServiceImpl implements ItemSetService {
 		}
 		return rtnList;
 	}
+
+	@Override
+	public void cancelSeckill(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

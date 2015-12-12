@@ -210,6 +210,22 @@ public class ItemSetAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 从秒杀商品集合中去除传递过来的商品集合id
+	 * @return
+	 * @author zhangbo	2015年12月12日
+	 */
+	public String cancelSeckill() {
+		try {
+			itemSetService.cancelSeckill(id);
+			JSONUtil.optSuccess("取消成功", jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+		
+	}
+	
 	public String getItemIds() {
 		return itemIds;
 	}

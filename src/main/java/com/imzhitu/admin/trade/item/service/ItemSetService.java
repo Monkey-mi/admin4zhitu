@@ -85,4 +85,12 @@ public interface ItemSetService {
 	 */
 	void refreshRecommendItemSetCache(Integer[] ids) throws Exception;
 
+	/**
+	 * 从秒杀商品集合中去除传递过来的商品集合id
+	 * 
+	 * @param id	商家集合id
+	 * @author zhangbo	2015年12月12日
+	 */
+	void cancelSeckill(Integer id);
+
 }

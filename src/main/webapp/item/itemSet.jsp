@@ -19,43 +19,36 @@
 	
 	var columnsFields = [
 			{field: "ck", checkbox:true},
-			{field: "id", title: "ID", align: "center"},
-			{field: "path", title: "商品集合图片", align: "center",
+			{field: "id", title: "ID", align: "center", width: 30},
+			{field: "path", title: "商品集合图片", align: "center", width: 80,
 				formatter: function(value,row,index) {
 	  				return "<img width='200px' height='90px' class='htm_column_img' src='" + value + "'/>";
 	  			}
 			},
-			{field: "thumb", title: "缩略图", align: "center",
-				formatter: function(value,row,index) {
-		  				return "<img width='100px' height='90px' class='htm_column_img' src='" + value + "'/>";
-		  			}
-		  	},
-			{field: "type", title: "链接类型", align: "center",
-				formatter:function(value,row,index){
-					// 目前商品banner的点击都是跳到网页
-					return "网页连接";
-				}
-			},
-			{field: "link", title: "链接内容", align: "center"},
-			{field: "description", title: "描述", align: "center"},
-			{field: "operator", title: "最后修改者", align: "center"},
-			{field: "createTime", title: "创建时间", align: "center",
-				formatter:function(value,row,index){
-					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-				}
-			},
-			{field: "modifyTime", title: "最后修改时间", align: "center",
-				formatter:function(value,row,index){
-					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-				}
-			},
-			{field: "opt", title: "操作", align: "center",
+			{field: "description", title: "描述", align: "center", width: 100},
+			{field: "opt", title: "操作", align: "center", width: 70,
 				formatter : function(value, row, index ) {
 					var rtn = "<span>";
 					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:updateItemSet("+ row.id + ")'>【修改】</a>";
 					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='openAddItemToItemSet("+ row.id + ")'>【添加商品】</a>";
 					rtn += "</span>";
 					return rtn;
+				}
+			},
+			{field: "isSeckill", title: "是否秒杀", align: "center",
+				formatter : function(value, row, index ) {
+	  				// 若已经为秒杀商品集合，则点击会取消秒杀商品
+	  				if ( value == 1 ) {
+	  					return "<img title='已为秒杀,点击取消秒杀' class='htm_column_img pointer' onclick='cancelSeckill("+ row.id +")' src='./common/images/ok.png'/>";
+	  				} else {
+	  					return "<img title='点击成为秒杀商品集合' class='htm_column_img pointer' onclick='openSeckillWin("+ row.id +")' src='./common/images/tip.png'/>";
+	  				}
+				}
+			},
+			{field: "operator", title: "最后修改者", align: "center"},
+			{field: "modifyTime", title: "最后修改时间", align: "center",
+				formatter:function(value,row,index){
+					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 				}
 			}
 		];
@@ -77,7 +70,7 @@
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
 			pageSize: 5,
-			pageList: [5,10],
+			pageList: [5,10,20],
 			onClickCell: function(rowIndex, field, value) {
 				IsCheckFlag = false;
 			},
@@ -268,7 +261,7 @@
 		}else{
 			$.messager.alert("温馨提示","请先选择，再执行重新排序!");
 		}
-	}
+	};
 	
 	/**
 	 * 刷新redis缓存
@@ -341,6 +334,25 @@
 		}
 	};
 	
+	/**
+	 * 取消秒杀
+	 * @param itemSetId	商品集合id
+	 * @author zhangbo	2015-12-12
+	 */
+	function cancelSeckill(itemSetId) {
+		var params = {
+				id: itemSetId
+			};
+		$.post("./admin_trade/itemSet_cancelSeckill", params, function(result){
+			if(result.result == 0) {
+				$("#htm_table").datagrid("reload");
+			} else {
+				$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
+			}
+		});
+	};
+	
+	
 </script>
 </head>
 <body>
@@ -352,7 +364,7 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');$('#add_itemSet_form').form('reset');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="reorder()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 		   		<input id="ss_isCache" class="easyui-combobox">
