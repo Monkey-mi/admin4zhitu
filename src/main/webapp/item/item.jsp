@@ -80,8 +80,32 @@
 		$("#main").show();
 	});
 	
+	
+	//添加商品
+	function addItem(){
+		$("#item_id").val("");
+		$("#imgPath").val("");
+		$("#imgThumb").val("");
+		$("#item_name").val("");
+		$("#item_summary").val("");
+		$("#item_description").val("");
+		$("#item_worldId").val("");
+		$('#item_trueItemId').val("");
+		$("#item_price").val("");
+		$("#item_sale").val("");
+		$("#item_sales").val("");
+		$("#item_stock").val("");
+		$("#item_categoryId").val("");
+		$("#item_brandId").val("");
+		$("#item_like").val("");
+		$("#item_link").val("");
+		$('#add_item_window').window('open');
+	}
+	
+	
+	
 	/**
-	 * 更新商品集合
+	 * 更新商品
 	 * @author zhangbo	2015-12-08
 	 */
 	function updateitem(itemId) {
@@ -154,7 +178,7 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:$('#add_item_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="javascript:addItem()" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 			 	<a href="javascript:void(0);" onclick="javascript:reSuperb();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
 			</span>
