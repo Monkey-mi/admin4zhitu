@@ -27,7 +27,7 @@
 			},
 			{field: "thumb", title: "缩略图", align: "center",
 				formatter: function(value,row,index) {
-		  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+		  				return "<img width='100px' height='90px' class='htm_column_img' src='" + value + "'/>";
 		  			}
 		  	},
 			{field: "type", title: "链接类型", align: "center",
@@ -36,7 +36,7 @@
 					return "网页连接";
 				}
 			},
-			{field: "link", title: "链接内容", align: "center",width:10},
+			{field: "link", title: "链接内容", align: "center"},
 			{field: "description", title: "描述", align: "center"},
 			{field: "operator", title: "最后修改者", align: "center"},
 			{field: "createTime", title: "创建时间", align: "center",
@@ -70,7 +70,7 @@
 			idField: "id",
 			rownumbers: true,
 			columns: [columnsFields],
-			fitColumns: true,
+			fitColumns: true, 
 			autoRowHeight: true,
 			checkOnSelect: false,
 			selectOnCheck: true,

@@ -43,4 +43,12 @@
 	</select>
 	
 	
+	
+	<delete id="batchDeleteItemFromSet">
+	delete from 
+		hts.item_set_r
+	where
+		item_id = #{itemId}	and item_set_id = #{itemSetId}
+	</delete>
+	
 </mapper>

@@ -120,6 +120,12 @@ public class Item extends AbstractNumberDto implements Serializable {
 	 * @author zhangbo	2015年12月11日
 	 */
 	private String link;
+	
+	
+	/**
+	 * 商品集合ID
+	 */
+	private Integer itemSetId;
 
 	/**
 	 * @return the id
@@ -358,5 +364,14 @@ public class Item extends AbstractNumberDto implements Serializable {
 	public void setLink(String link) {
 		this.link = link;
 	}
+
+	public Integer getItemSetId() {
+		return itemSetId;
+	}
+
+	public void setItemSetId(Integer itemSetId) {
+		this.itemSetId = itemSetId;
+	}
+	
 	
 }

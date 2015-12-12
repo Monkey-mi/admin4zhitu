@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowSelection;
 import com.imzhitu.admin.trade.item.dao.ItemCache;
+import com.imzhitu.admin.trade.item.mapper.ItemAndSetRelationMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemMapper;
 import com.imzhitu.admin.trade.item.pojo.Item;
 import com.imzhitu.admin.trade.item.service.ItemService;
@@ -29,6 +30,9 @@ public class ItemServiceImpl implements ItemService {
 	@Autowired
 	private ItemCache itemCache;
 	
+	@Autowired
+	private ItemAndSetRelationMapper itemAndSetRelationMapper;
+	
 	@SuppressWarnings("null")
 	private List<Item> transFormateByItemDTO(List<com.hts.web.trade.item.dto.ItemDTO> listFromWeb){
 		List<Item> list = null;
@@ -47,8 +51,11 @@ public class ItemServiceImpl implements ItemService {
 		return list;
 	}
 
+	/**
+	 * 查询总的商品，但传入集合ID时，需要查找非此集合下的商品，用与商品捡如集合时使用
+	 */
 	@Override
-	public void buildItemList(String name,Integer page, Integer rows, Map<String, Object> jsonMap) {
+	public void buildItemList(String name,Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
 		Integer fristRow = (page-1) * rows;
 		Integer limit = rows;
 		
@@ -56,8 +63,30 @@ public class ItemServiceImpl implements ItemService {
 		item.setName(name);
 		item.setFirstRow(fristRow);
 		item.setLimit(limit);
+		item.setItemSetId(itemSetId);
 		
-		List<Item> list = itemMapper.queryItemList(item);
+		List<Item> list = null;
+		
+		 list = itemMapper.queryItemList(item);
+		jsonMap.put(OptResult.ROWS, list);
+		jsonMap.put(OptResult.TOTAL,3);		
+	}
+	
+	/**
+	 * 查询集合下的商品
+	 */
+	@Override
+	public void buildItemListForSetItem(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
+		Integer fristRow = (page-1) * rows;
+		Integer limit = rows;
+		
+		Item item = new Item();
+		item.setFirstRow(fristRow);
+		item.setLimit(limit);
+		
+		List<Item> list = null;
+		
+		list = itemMapper.queryItemListBySetId(itemSetId);
 		jsonMap.put(OptResult.ROWS, list);
 		jsonMap.put(OptResult.TOTAL,3);		
 	}
@@ -129,6 +158,24 @@ public class ItemServiceImpl implements ItemService {
 		item.setLike(like);
 		
 		itemMapper.update(item);
+	}
+	
+	/**
+	 * 删除集合中的商品
+	 * @param itemSetId
+	 * @param ids 
+		*	2015年12月12日
+		*	mishengliang
+	 */
+	@Override
+	public void batchDeleteItemFromSet(Integer itemSetId,Integer[] ids){
+		try {
+			for(Integer itemId : ids){
+				itemAndSetRelationMapper.batchDeleteItemFromSet(itemSetId,itemId);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 }

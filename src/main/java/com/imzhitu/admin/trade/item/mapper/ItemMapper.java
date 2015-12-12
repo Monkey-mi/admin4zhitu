@@ -46,6 +46,16 @@ public interface ItemMapper {
 	List<Item> queryItemList(Item item);
 	
 	/**
+	 * 通过集合ID查寻商品
+	 * @param itemSetId
+	 * @return 
+		*	2015年12月12日
+		*	mishengliang
+	 */
+	@DataSource("slave")
+	List<Item> queryItemListBySetId(@Param("itemSetId")Integer itemSetId);
+	
+	/**
 	 * 查询商品总数
 	 * 
 	 * @return total	商品总数

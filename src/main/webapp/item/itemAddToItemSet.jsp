@@ -10,7 +10,9 @@
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
 	var itemSetId = <%= itemSetId%>;
-	var myQueryParams = {};
+	var myQueryParams = {
+			'itemSetId':itemSetId,
+			'isForItemSet':0};
 	addToItemSetURL = "./admin_trade/itemSet_insertItemToSet";
 	
 	var columnsFields = [
@@ -71,6 +73,8 @@
 		},function(result){
 			if (result.result == 0) {
 				$.messager.alert('温馨提示','添加成功！');
+				$("#htm_table_set").datagrid("reload");
+				$("#htm_table").datagrid('load');
 			} else {
 				
 			}
@@ -79,7 +83,6 @@
 	
 	function searchByItemName(){
 		var itemName = $('#item_name').searchbox('getValue');
-		alert(itemName);
 		myQueryParams.name = itemName;
 		$("#htm_table").datagrid('load');
 	}
@@ -89,14 +92,18 @@
 	上面为所有商品展示列表；下面为本集合下的商品展示列表
 	***************************************************************
 	*/
-	var myQueryParamsSet = {itemSetId:itemSetId};
+	var myQueryParamsSet = {
+			itemSetId:itemSetId,
+			isForItemSet:1		//1表示为查询集合下的商品
+	};
+	var batchDeleteItemFromSetURL = "./admin_trade/item_batchDeleteItemFromSet";
 	
 	$(function(){
 		// 主表格
 		$("#htm_table_set").datagrid({
 			title: "集合商品列表",
 			width: $(document.body).width(),
-			url: "./admin_trade/item_buildItemListBySetId",
+			url: "./admin_trade/item_buildItemList",
 			toolbar: "#tb_set",
 			idField: "id",
 			queryParams:myQueryParamsSet,
@@ -137,6 +144,26 @@
 				}
 			}
 		];
+		
+		function batchDeleteItemFromSet(){
+			var rows = $("#htm_table_set").datagrid("getSelections");
+			var deleteIds = [];
+			for(var i = 0; i < rows.length; i++){
+				deleteIds[i] = rows[i].id;
+			}
+			$.post(batchDeleteItemFromSetURL,{
+				'itemSetId':itemSetId,
+				'ids':deleteIds.join(",")
+			},function(result){
+				if (result.result == 0) {
+					$.messager.alert("温馨提示","删除成功");
+					$("#htm_table_set").datagrid("reload");
+					$("#htm_table").datagrid("reload");
+				} else {
+
+				}
+			},"json");
+		}
 </script>
 </head>
 <body>
@@ -161,7 +188,7 @@
 			<!-- toolbar -->
 			<div id="tb" style="padding:5px;height:auto" class="none">
 				<span>
-					<a href="javascript:void(0);" onclick="javascript:addToItemSet();" class="easyui-linkbutton" plain=true  iconCls="icon-add">批量添加</a>
+			<!-- 		<a href="javascript:void(0);" onclick="javascript:addToItemSet();" class="easyui-linkbutton" plain=true  iconCls="icon-add">批量添加</a> -->
 					<input id="item_name" searcher="searchByItemName" class="easyui-searchbox" prompt="输入商品名搜索" style="width:150px;" />
 				</span>
 			</div>
