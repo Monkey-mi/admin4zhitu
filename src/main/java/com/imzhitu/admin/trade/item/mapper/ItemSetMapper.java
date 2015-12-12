@@ -90,5 +90,25 @@ public interface ItemSetMapper {
 	 */
 	@DataSource("slave")
 	ItemSet getItemSetById(@Param("id")Integer id);
+
+	/**
+	 * 更新序号
+	 * 
+	 * @param id		商家集合id
+	 * @param serial	序号
+	 * @author zhangbo	2015年12月12日
+	 */
+	void updateSerial(Integer id, Integer serial);
+
+	/**
+	 * 分页查询商品集合列表，并且结果集不包含传递过去的商品id
+	 * 
+	 * @param ids		商品集合ids
+	 * @param fristRow	分页查询起始位置
+	 * @param limit		分页查询每页数量
+	 * @return
+	 * @author zhangbo	2015年12月12日
+	 */
+	List<ItemSet> queryItemSetListNotInIds(@Param("ids")Integer[] ids, @Param("firstRow")Integer firstRow, @Param("limit")Integer limit);
 	
 }

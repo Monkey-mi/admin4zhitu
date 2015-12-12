@@ -55,13 +55,6 @@ public class ItemSetAction extends BaseCRUDAction {
 	private String thumb;
 	
 	/**
-	 * 商品集合链接类型数值
-	 * 是为了以后兼容公告，故采用与公告链接类型流水形式，因为公告链接类型原来有4种，为1-4，现在5代表限时秒杀，7代表好物推荐 
-	 * @author zhangbo	2015年12月9日
-	 */
-	private Integer type;
-	
-	/**
 	 * 商品集合id集合，以逗号分隔
 	 * @author zhangbo	2015年12月8日
 	 */
@@ -130,9 +123,9 @@ public class ItemSetAction extends BaseCRUDAction {
 		try {
 			// 若id不存在，则为新增，否则为更新
 			if ( id == null ) {
-				itemSetService.addItemSet(description, path, thumb, type);
+				itemSetService.addItemSet(description, path, thumb);
 			} else {
-				itemSetService.updateItemSet(id, description, path, thumb, type);
+				itemSetService.updateItemSet(id, description, path, thumb);
 			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
@@ -228,6 +221,22 @@ public class ItemSetAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 重新排序
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月12日
+	 */
+	public String reorder() {
+		try {
+			itemSetService.reorder(ids);
+			JSONUtil.optSuccess("排序成功", jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public String getItemIds() {
 		return itemIds;
 	}
@@ -250,10 +259,6 @@ public class ItemSetAction extends BaseCRUDAction {
 
 	public void setThumb(String thumb) {
 		this.thumb = thumb;
-	}
-
-	public void setType(Integer type) {
-		this.type = type;
 	}
 
 	public void setIds(String ids) {

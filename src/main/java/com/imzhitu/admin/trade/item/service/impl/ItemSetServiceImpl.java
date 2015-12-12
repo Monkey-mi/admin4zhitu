@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,8 +98,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 			awardActivity.setBulletinName(bulletin.getBulletinName());
 			awardActivity.setBulletinPath(bulletin.getBulletinPath());
 			awardActivity.setBulletinThumb(bulletin.getBulletinThumb());
-			// TODO 由于客户端，即web代码，接口方法对app提供的BulletinType对象，类型为6的，表明是有奖活动，这里可能后续有变化
-			awardActivity.setBulletinType(6);
+			awardActivity.setBulletinType(bulletin.getBulletinType());
 			awardActivity.setLink(bulletin.getLink());
 			
 			awardActivityList.add(awardActivity);
@@ -168,15 +168,19 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	@Override
-	public void addItemSet(String description, String path, String thumb, Integer type) throws Exception {
+	public void addItemSet(String description, String path, String thumb) throws Exception {
 		// 采用公告流水序号
 		Integer  serial = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL);
-		Integer id = itemSetMapper.insert(description, path, thumb, type, AdminLoginUtil.getCurrentLoginId(), serial);
+		// 链接类型为网页链接，则设置为1，是以公告处类型为标准设定
+		Integer type = 1;
+		Integer id = itemSetMapper.insert(description, path, thumb, type , AdminLoginUtil.getCurrentLoginId(), serial);
 		updateItemSet(id, null, null, null, null, handleLink(id));
 	}
 	
 	@Override
-	public void updateItemSet(Integer id, String description, String path, String thumb, Integer type) throws Exception {
+	public void updateItemSet(Integer id, String description, String path, String thumb) throws Exception {
+		// 链接类型为网页链接，则设置为1，是以公告处类型为标准设定
+		Integer type = 1;
 		updateItemSet(id, description, path, thumb, type, handleLink(id));
 	}
 	
@@ -286,8 +290,13 @@ public class ItemSetServiceImpl implements ItemSetService {
 	 * @author zhangbo	2015年12月12日
 	 */
 	private void refreshRecommendItemCache() {
+		// 获取秒杀商品集合临时存储中的id 
+		Set<Integer> seckillKeySet = itemSetCache.getSeckillTemp().keySet();
+		Integer[] ids = new Integer[seckillKeySet.size()];
+		ids = seckillKeySet.toArray(ids);
+		
 		// 由于业务确定，只刷新商品集合列表中的前10条数据到redis中
-		List<ItemSet> itemSetList = itemSetMapper.queryItemSetList(0, 10);
+		List<ItemSet> itemSetList = itemSetMapper.queryItemSetListNotInIds(ids , 0, 10);
 		
 		// 定义web推荐商品集合列表
 		List<com.hts.web.operations.pojo.RecommendItemBulletin> recommendItemList = new ArrayList<com.hts.web.operations.pojo.RecommendItemBulletin>();
@@ -348,6 +357,15 @@ public class ItemSetServiceImpl implements ItemSetService {
 			}
 		}
 		return rtnList;
+	}
+
+	@Override
+	public void reorder(String ids) {
+		// 重新排序，勾选的倒序设置serial，这样查询后，按照serial查询就与勾选顺序相同
+		Integer[] idArray = StringUtil.convertStringToIds(ids);
+		for (int i = idArray.length -1; i >= 0; i--) {
+			itemSetMapper.updateSerial(idArray[i], keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
+		}
 	}
 	
 }

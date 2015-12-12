@@ -37,12 +37,22 @@
 	      <if test="thumb != null">thumb = #{thumb},</if>
 	      <if test="type != null">type = #{type},</if>
 	      <if test="link != null">link = #{link},</if>
-	      <if test="operator != null">operator = #{operator},</if>
+	      <if test="operator != null">operator = #{operator}</if>
 	    </set>
 	  	where 
 	  		id = #{id}
 	</update>
-
+	
+	<!-- 更新序号 -->
+	<update id="updateSerial">
+		update 
+			hts.item_set 
+		set
+			serial = #{serial}
+	  	where 
+	  		id = #{id}
+	</update>
+	
 	<!-- 根据id删除商品集合 -->
 	<delete id="deleteById">
 		delete from hts.item_set where id = #{id}
@@ -74,6 +84,21 @@
 			hts.item_set 
 		where
 			id = #{id}
+	</select>
+	
+	<!-- 分页查询商品集合列表，并且结果集不包含ids -->
+	<select id="queryItemSetListNotInIds" resultMap="ItemSetMap">
+		select 
+			*
+		from 
+			hts.item_set 
+		where
+			id not in
+			<foreach collection="ids" open="(" close=")" separator="," index="index" item="item">
+				#{item}
+			</foreach>
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
 </mapper>

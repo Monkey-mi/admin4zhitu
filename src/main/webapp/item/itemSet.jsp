@@ -257,7 +257,7 @@
 					ids: ids.toString()
 				};
 			$.post("./admin_trade/itemSet_reorder", params, function(result){
-				$.messager.alert("温馨提示","删除" + rows.length + "条记录");
+				$.messager.alert("温馨提示","排序" + rows.length + "条记录");
 				// 清除所有已选择的记录，避免重复提交id值
 				$("#htm_table").datagrid("clearSelections");
 				// 批量删除刷新当前页
@@ -377,21 +377,6 @@
 							<div id="itemSet_thumb_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">链接类型：</td>
-						<td>
-							<select id="itemSet_type" name="type" class="easyui-combobox" style="width:223px;" >
-							<!-- 此链接类型数值，是为了以后兼容公告，故如此流水，因为公告链接类型原来有4种，此处属于追加，数值6是有奖活动，在后台逻辑写死 -->
-								<option value="0" selected="selected">无需跳转</option>
-	        					<option value="5">限时秒杀网页连接</option>
-	        					<option value="7">好物推荐网页连接</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">链接：</td>
-						<td><input id="itemSet_link" name="link" style="width:220px;" ></td>
 					</tr>
 					<tr>
 						<td class="leftTd">描述：</td>
