@@ -107,18 +107,10 @@
 			columns: [columnsFieldsForSet],
 			fitColumns: true,
 			autoRowHeight: true,
-			checkOnSelect: false,
-			selectOnCheck: true,
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
 			pageSize: 10,
 			pageList: [10,20,50],
-			onSelect: function(rowIndex, rowData) {
-			},
-			onUnselect: function(rowIndex, rowData) {
-			},
-			onLoadSuccess: function(data) {
-			}
 		});
 		// 展示界面
 		$("#main").show();

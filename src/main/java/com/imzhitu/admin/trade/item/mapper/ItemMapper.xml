@@ -106,6 +106,7 @@
 			hi.id =  his.item_id
 			and 
 			his.item_set_id = #{itemSetId}
+		order by serial desc	
 	</select>
 	
 </mapper>

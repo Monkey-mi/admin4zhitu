@@ -38,7 +38,7 @@
 			resizable : false
 		}).show();
 		
-		//排序窗口初始化
+ 		//排序窗口初始化
 		$('#htm_superb_set').window({
 			title : '重新排序',
 			modal : true,
@@ -51,7 +51,7 @@
 			collapsible : false,
 			iconCls : 'icon-tip',
 			resizable : false
-		}).show();
+		}).show(); 
 	});
 	
 	/**
@@ -123,36 +123,8 @@
         	
         }
 	
-	
- 		//提交排序
-        function submitReSuperbForm() {
-        	var $form = $('#superb_form');
-        	if($form.form('validate')) {
-        		$('#htm_superb .opt_btn').hide();
-        		$('#htm_superb .loading').show();
-        		$('#superb_form').form('submit', {
-        			url: $form.attr('action'),
-        			success: function(data){
-        				var result = $.parseJSON(data);
-        				$('#htm_superb .opt_btn').show();
-        				$('#htm_superb .loading').hide();
-        				if(result['result'] == 0) { 
-        					
-        					$('#htm_table_set').datagrid('clearSelections');
-        					$('#htm_table_set').datagrid('load');
-        					$('#htm_superb_set').window('close');  //关闭添加窗口
-        				} else {
-        					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-        				}
-        				
-        			}
-        		});
-        	} 
-        	
-        }
 		
-		
-    	//集合商品的重新排序模块
+ 	//集合商品的重新排序模块
         function reSuperbForSet() {
         	$("#superb_form_set").find('input[name="reIndexId"]').val('');
         	$("#schedula").datetimebox('clear');
@@ -160,12 +132,12 @@
         	$('#htm_superb .loading').hide();
         	
         	var rows = $("#htm_table_set").datagrid('getSelections');
-        	$('#superb_form .reindex_column').each(function(i){
+        	$('#superb_form_set .reindex_column').each(function(i){
         		if(i<rows.length)
         			$(this).val(rows[i]['id']);
         	});
         	// 打开添加窗口
-        	$("#htm_superb").window('open');
+        	$("#htm_superb_set").window('open');
         	
         }
         
@@ -181,9 +153,9 @@
         				$('#htm_superb_set .opt_btn').show();
         				$('#htm_superb_set .loading').hide();
         				if(result['result'] == 0) { 
-        					
         					$('#htm_table_set').datagrid('clearSelections');
-        					$('#htm_table_set').datagrid('load');
+        					$('#htm_table_set').datagrid('reload');
+        					$('#htm_table').datagrid('reload');
         					$('#htm_superb_set').window('close');  //关闭添加窗口
         				} else {
         					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
@@ -193,7 +165,7 @@
         		});
         	} 
         	
-        }
+        } 
 </script>
 </head>
 <body>
@@ -347,7 +319,7 @@
 	</div>
 	
 	<!-- 集合重排模块 -->
-	<div id="htm_superb_set" hidden=true>
+<div id="htm_superb_set" hidden=true>
 		<form id="superb_form_set" action="./admin_trade/item_reOrderIndexforItem" method="post">
 			<table class="htm_edit_table" width="580">
 				<tbody>
