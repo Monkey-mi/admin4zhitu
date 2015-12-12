@@ -1,5 +1,9 @@
 package com.imzhitu.admin.trade.item;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
@@ -182,34 +186,22 @@ public class ItemSetAction extends BaseCRUDAction {
 	 * @return
 	 * @author zhangbo	2015年12月10日
 	 */
-	public String refreshSeckillSetCache() {
+	public String addSeckill() {
 		try {
-			Integer[] idArray = StringUtil.convertStringToIds(ids);
-			itemSetService.refreshSeckillSetCache(idArray, deadline);
+			// 定义并转化限时秒杀截止日期
+			Date deadlineDate = null;
+			if ( deadline != null && deadline != "") {
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				deadlineDate = format.parse(deadline);
+			}
+			itemSetService.addSeckillToTemp(id, deadlineDate);
 			JSONUtil.optSuccess("刷新成功", jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
-	
-	/**
-	 * 刷新推荐商品redis缓存
-	 * 
-	 * @return
-	 * @author zhangbo	2015年12月10日
-	 */
-	public String refreshRecommendItemSetCache() {
-		try {
-			Integer[] idArray = StringUtil.convertStringToIds(ids);
-			itemSetService.refreshRecommendItemSetCache(idArray);
-			JSONUtil.optSuccess("刷新成功", jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
+
 	/**
 	 * 从秒杀商品集合中去除传递过来的商品集合id
 	 * @return
@@ -217,13 +209,29 @@ public class ItemSetAction extends BaseCRUDAction {
 	 */
 	public String cancelSeckill() {
 		try {
-			itemSetService.cancelSeckill(id);
+			itemSetService.cancelSeckillFromTemp(id);
 			JSONUtil.optSuccess("取消成功", jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 		
+	}
+	
+	/**
+	 * 刷新商品集合redis缓存
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月10日
+	 */
+	public String refreshItemSetCache() {
+		try {
+			itemSetService.refreshItemSetCache();
+			JSONUtil.optSuccess("刷新成功", jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
 	}
 	
 	public String getItemIds() {

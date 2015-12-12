@@ -1,7 +1,5 @@
 package com.imzhitu.admin.trade.item.service.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -155,9 +153,10 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setThumb(itemSet.getThumb());
 				dto.setType(itemSet.getType());
 				dto.setLink(itemSet.getLink());
-				/*dto.setOperator(adminService.getAdminUserNameById(itemSet.getOperator()));*/
+				dto.setOperator(adminService.getAdminUserNameById(itemSet.getOperator()));
 				dto.setCreateTime(itemSet.getCreateTime());
 				dto.setModifyTime(itemSet.getModifyTime());
+				dto.setDeadline(itemSetCache.getSeckillTemp().get(itemSet.getId()));
 				rtnList.add(dto);
 			}
 			total = itemSetMapper.queryItemSetTotal();
@@ -190,20 +189,35 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	@Override
-	public void refreshSeckillSetCache(Integer[] ids, String deadline) throws Exception {
-		
-		// 定义并转化限时秒杀截止日期
-		Date deadlineDate = null;
-		if ( deadline != null && deadline != "") {
-			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			deadlineDate = format.parse(deadline);
-		}
-		
+	public void addSeckillToTemp(Integer id, Date deadline) throws Exception {
+		itemSetCache.addSeckillTemp(id, deadline);
+	}
+
+	@Override
+	public void cancelSeckillFromTemp(Integer id) throws Exception {
+		itemSetCache.deleteFromSeckillTempById(id);
+	}
+
+	@Override
+	public void refreshItemSetCache() throws Exception {
+		refreshSeckillCache();
+		refreshRecommendItemCache();
+	}
+
+	/**
+	 * 刷新限时秒杀商品集合redis缓存
+	 * 
+	 * @author zhangbo	2015年12月12日
+	 */
+	private void refreshSeckillCache() {
 		// 定义web秒杀商品集合列表
 		List<com.hts.web.operations.pojo.SeckillBulletin> seckillList = new ArrayList<com.hts.web.operations.pojo.SeckillBulletin>();
 		
+		// 得到秒杀临时存储中的itemSetId与截止时间Map
+		Map<Integer, Date> seckillTemp = itemSetCache.getSeckillTemp();
+		
 		// 循环处理商品集合id
-		for (Integer ItemSetId : ids) {
+		for (Integer ItemSetId : seckillTemp.keySet()) {
 			// 定义秒杀对象公告
 			com.hts.web.operations.pojo.SeckillBulletin seckill = new com.hts.web.operations.pojo.SeckillBulletin();
 			
@@ -217,18 +231,19 @@ public class ItemSetServiceImpl implements ItemSetService {
 			seckill.setBulletinThumb(itemSet.getThumb());
 			seckill.setBulletinType(itemSet.getType());
 			seckill.setLink(itemSet.getLink());
-			seckill.setDeadline(deadlineDate.getTime());	// 限时秒杀要设置截止日期
+			seckill.setDeadline(seckillTemp.get(ItemSetId).getTime());	// 限时秒杀要设置截止日期
+			seckill.setSerial(itemSet.getSerial());
 			seckillList.add(seckill);
 			
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
-			itemCache.updateItemListBySetId(ItemSetId, itemListToWebItemList(itemList, deadlineDate));
+			itemCache.updateItemListBySetId(ItemSetId, itemListToWebItemList(itemList, seckillTemp.get(ItemSetId)));
 			
 			// 将查询出的商品列表设置为秒杀商品
 			for (Item item : itemList) {
 				// id与deadline确定唯一性，重复插入会报错，不影响整体循环
 				try {
-					itemSeckillMapper.insert(item.getId(), deadlineDate);
+					itemSeckillMapper.insert(item.getId(), seckillTemp.get(ItemSetId));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -237,19 +252,23 @@ public class ItemSetServiceImpl implements ItemSetService {
 		// 更新限时秒杀集合
 		itemSetCache.updateSeckill(seckillList);
 	}
-
-	@Override
-	public void refreshRecommendItemSetCache(Integer[] ids) throws Exception {
+	
+	/**
+	 * 刷新推荐商品集合redis缓存
+	 * 
+	 * @author zhangbo	2015年12月12日
+	 */
+	private void refreshRecommendItemCache() {
+		// 由于业务确定，只刷新商品集合列表中的前10条数据到redis中
+		List<ItemSet> itemSetList = itemSetMapper.queryItemSetList(0, 10);
+		
 		// 定义web推荐商品集合列表
 		List<com.hts.web.operations.pojo.RecommendItemBulletin> recommendItemList = new ArrayList<com.hts.web.operations.pojo.RecommendItemBulletin>();
 		
 		// 循环处理商品集合id
-		for (Integer ItemSetId : ids) {
+		for (ItemSet itemSet : itemSetList) {
 			// 定义推荐商品对象公告
 			com.hts.web.operations.pojo.RecommendItemBulletin recommendItem = new com.hts.web.operations.pojo.RecommendItemBulletin();
-			
-			// 查询商品集合对象，然后转换成web端存储的推荐商品公告
-			ItemSet itemSet = itemSetMapper.getItemSetById(ItemSetId);
 			
 			// 转换对应属性
 			recommendItem.setId(itemSet.getId());
@@ -258,16 +277,17 @@ public class ItemSetServiceImpl implements ItemSetService {
 			recommendItem.setBulletinThumb(itemSet.getThumb());
 			recommendItem.setBulletinType(itemSet.getType());
 			recommendItem.setLink(itemSet.getLink());
+			recommendItem.setSerial(itemSet.getSerial());
 			recommendItemList.add(recommendItem);
 			
 			// 刷新此商品集合id，其下对应的商品列表redis集合
-			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
-			itemCache.updateItemListBySetId(ItemSetId, itemListToWebItemList(itemList, null));
+			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(itemSet.getId());
+			itemCache.updateItemListBySetId(itemSet.getId(), itemListToWebItemList(itemList, null));
 		}
 		// 更新限时秒杀集合
 		itemSetCache.updateRecommendItem(recommendItemList);
 	}
-	
+
 	/**
 	 * 商品列表转换成web端使用的存储在redis缓存中的item对象
 	 * 
@@ -301,11 +321,6 @@ public class ItemSetServiceImpl implements ItemSetService {
 			}
 		}
 		return rtnList;
-	}
-
-	@Override
-	public void cancelSeckill(Integer id) throws Exception {
-		itemSetCache.deleteFromSeckillTempById(id);
 	}
 	
 }

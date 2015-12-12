@@ -41,8 +41,13 @@
 	  				if ( value == 1 ) {
 	  					return "<img title='已为秒杀,点击取消秒杀' class='htm_column_img pointer' onclick='cancelSeckill("+ row.id +")' src='./common/images/ok.png'/>";
 	  				} else {
-	  					return "<img title='点击成为秒杀商品集合' class='htm_column_img pointer' onclick='openSeckillWin("+ row.id +")' src='./common/images/tip.png'/>";
+	  					return "<img title='点击成为秒杀商品集合' class='htm_column_img pointer' onclick='openSeckillCacheWin("+ row.id +")' src='./common/images/tip.png'/>";
 	  				}
+				}
+			},
+			{field: "deadline", title: "截止时间", align: "center",
+				formatter:function(value,row,index){
+					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
 				}
 			},
 			{field: "operator", title: "最后修改者", align: "center"},
@@ -264,21 +269,12 @@
 	};
 	
 	/**
-	 * 刷新redis缓存
+	 * 打开设置秒杀window
 	 * @author zhangbo 2015-12-10
 	 */
-	function openSeckillSetCacheWin() {
-		var rows = $("#htm_table").datagrid("getSelections");
-		if(rows.length > 0){
-			$("#refresh_seckill_window").window("open");
-			var ids = [];
-			for(var i=0;i<rows.length;i++){
-				ids[i] = rows[i].id;
-			}
-			$("#itemSet_ids").val(ids.toString());
-		}else{
-			$.messager.alert("温馨提示","请先选择，再执行更新缓存操作!");
-		}
+	function openSeckillCacheWin(itemSetId) {
+		$("#refresh_seckill_window").window("open");
+		$("#seckill_itemSetId").val(itemSetId);
 	};
 	
 	/**
@@ -290,7 +286,7 @@
 			if(r){
 				if( $('#refresh_seckill_form').form('validate') ) {
 					$('#refresh_seckill_form').form('submit', {
-						url: "./admin_trade/itemSet_refreshSeckillSetCache",
+						url: "./admin_trade/itemSet_addSeckill",
 						success: function(data){
 							var result = $.parseJSON(data);
 							if(result['result'] == 0) {
@@ -310,28 +306,14 @@
 	 * 刷新redis缓存
 	 * @author zhangbo 2015-12-10
 	 */
-	function refreshRecommendItemSetCache() {
-		var rows = $("#htm_table").datagrid("getSelections");
-		if(rows.length > 0){
-			$.messager.confirm("温馨提示", "您确定要更新商品集合吗？确定后，选中的商品集合将会在客户端生效", function(r){
-				if(r){
-					var ids = [];
-					for(var i=0;i<rows.length;i++){
-						ids[i] = rows[i].id;
-					}
-					var params = {
-							ids: ids.toString()
-						};
-					$.post("./admin_trade/itemSet_refreshRecommendItemSetCache", params, function(result){
-						if (result.result == 0) {
-							$.messager.alert("温馨提示",result.msg);
-						}
-					});
-				}
-			});	
-		}else{
-			$.messager.alert("温馨提示","请先选择，再执行更新缓存操作!");
-		}
+	function refreshItemSetCache() {
+		$.messager.confirm("温馨提示", "您确定要更新商品集合吗？确定后，选中的商品集合将会在客户端生效", function(r){
+			if(r){
+				$.post("./admin_trade/itemSet_refreshItemSetCache", function(result){
+					$.messager.alert("温馨提示",result.msg);
+				});
+			}
+		});
 	};
 	
 	/**
@@ -368,8 +350,7 @@
 				<a href="javascript:void(0);" onclick="reorder()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 		   		<input id="ss_isCache" class="easyui-combobox">
-		   		<a href="javascript:void(0);" onclick="refreshRecommendItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新推荐商品缓存</a>
-		   		<a href="javascript:void(0);" onclick="openSeckillSetCacheWin()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新秒杀商品缓存</a>
+		   		<a href="javascript:void(0);" onclick="refreshItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新缓存</a>
 			</span>
 		</div>
 		
@@ -435,7 +416,7 @@
 					<tr>
 						<td class="leftTd">商品集合ID：</td>
 						<td>
-							<input id="itemSet_ids" name="ids" style="width:220px;" >
+							<input id="seckill_itemSetId" name="id" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>

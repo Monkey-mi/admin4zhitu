@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 商品集合数据传输对象
@@ -85,6 +84,12 @@ public class ItemSetDTO implements Serializable {
 	 * @author zhangbo	2015年12月9日
 	 */
 	private Date deadline;
+	
+	/**
+	 * 是否为秒杀，1：秒杀，2：不为秒杀，默认为不是秒杀
+	 * @author zhangbo	2015年12月12日
+	 */
+	private Integer isSeckill = 0;
 	
 	/**
 	 * @return the id
@@ -231,15 +236,34 @@ public class ItemSetDTO implements Serializable {
 	/**
 	 * @return the deadline
 	 */
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Date getDeadline() {
 		return deadline;
 	}
 
 	/**
+	 * 若设置deadline，要同时设置是否秒杀标记位为1
 	 * @param deadline the deadline to set
 	 */
 	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
+		if ( deadline != null ) {
+			setIsSeckill(1);
+		}
+	}
+
+	/**
+	 * @return the isSeckill
+	 */
+	public Integer getIsSeckill() {
+		return isSeckill;
+	}
+
+	/**
+	 * @param isSeckill the isSeckill to set
+	 */
+	private void setIsSeckill(Integer isSeckill) {
+		this.isSeckill = isSeckill;
 	}
 	
 }

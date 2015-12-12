@@ -130,4 +130,16 @@ public class ItemSetCache {
 		boundHashOps.putAll(seckillMap);
 	}
 	
+	/**
+	 * 获取秒杀商品集合临时存储
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月12日
+	 */
+	public Map<Integer, Date> getSeckillTemp() {
+		// 从redis中获取秒杀商品集合记录
+		BoundHashOperations<String, Integer, Date> boundHashOps = seckillTempRedisTemplate.boundHashOps(CacheKeies.ITEM_SECKILLITEMSET_TEMP);
+		return boundHashOps.entries();
+	}
+	
 }

@@ -1,5 +1,6 @@
 package com.imzhitu.admin.trade.item.service;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -71,19 +72,11 @@ public interface ItemSetService {
 	/**
 	 * 刷新redis缓存，会刷新限时秒杀商品集合banner，与限时秒杀商品集合下商品列表的缓存
 	 * 
-	 * @param ids		商家集合id的集合
+	 * @param id		商家集合id
 	 * @param deadline	秒杀截止日期 
 	 * @author zhangbo	2015年12月10日
 	 */
-	void refreshSeckillSetCache(Integer[] ids, String deadline) throws Exception;
-
-	/**
-	 * 刷新redis缓存，会刷新推荐商品集合banner，与推荐商品集合下商品列表的缓存
-	 * 
-	 * @param ids	商家集合id的集合
-	 * @author zhangbo	2015年12月10日
-	 */
-	void refreshRecommendItemSetCache(Integer[] ids) throws Exception;
+	void addSeckillToTemp(Integer id, Date deadline) throws Exception;
 
 	/**
 	 * 从秒杀商品集合中去除传递过来的商品集合id
@@ -91,6 +84,14 @@ public interface ItemSetService {
 	 * @param id	商家集合id
 	 * @author zhangbo	2015年12月12日
 	 */
-	void cancelSeckill(Integer id) throws Exception;
+	void cancelSeckillFromTemp(Integer id) throws Exception;
+	
+	/**
+	 * 刷新redis缓存，会刷新限时秒杀商品集合与推荐商品集合banner，与其下关联的商品列表的缓存
+	 * 
+	 * @param ids	商家集合id的集合
+	 * @author zhangbo	2015年12月10日
+	 */
+	void refreshItemSetCache() throws Exception;
 
 }
