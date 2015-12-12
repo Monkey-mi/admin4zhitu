@@ -91,6 +91,6 @@ public interface ItemSetService {
 	 * @param id	商家集合id
 	 * @author zhangbo	2015年12月12日
 	 */
-	void cancelSeckill(Integer id);
+	void cancelSeckill(Integer id) throws Exception;
 
 }

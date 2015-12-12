@@ -304,9 +304,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 
 	@Override
-	public void cancelSeckill(Integer id) {
-		// TODO Auto-generated method stub
-		
+	public void cancelSeckill(Integer id) throws Exception {
+		itemSetCache.deleteFromSeckillTempById(id);
 	}
 	
 }
