@@ -155,7 +155,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setThumb(itemSet.getThumb());
 				dto.setType(itemSet.getType());
 				dto.setLink(itemSet.getLink());
-				dto.setOperator(adminService.getAdminUserNameById(itemSet.getOperator()));
+				/*dto.setOperator(adminService.getAdminUserNameById(itemSet.getOperator()));*/
 				dto.setCreateTime(itemSet.getCreateTime());
 				dto.setModifyTime(itemSet.getModifyTime());
 				rtnList.add(dto);

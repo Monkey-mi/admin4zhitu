@@ -35,5 +35,16 @@ public interface ItemAndSetRelationMapper {
 	 */
 	@DataSource("slave")
 	List<Item> queryItemListBySetId(@Param("itemSetId")Integer itemSetId);
+	
+	
+	/**
+	 * 删除集合中商品
+	 * @param itemSetId
+	 * @param itemId 
+		*	2015年12月12日
+		*	mishengliang
+	 */
+	@DataSource("slave")
+	void batchDeleteItemFromSet(@Param("itemSetId")Integer itemSetId,@Param("itemId")Integer itemId);
 
 }

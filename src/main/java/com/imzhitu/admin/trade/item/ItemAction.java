@@ -1,6 +1,7 @@
 package com.imzhitu.admin.trade.item;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -127,6 +128,12 @@ public class ItemAction extends BaseCRUDAction {
 	 */
 	private Integer itemSetId;
 	
+	/**
+	 * 是否查询集合下商品的Flag
+	 * @author mishengliang
+	 */
+	private Integer isForItemSet;
+	
 	@Autowired
 	private ItemService itemService;
 	
@@ -153,19 +160,24 @@ public class ItemAction extends BaseCRUDAction {
 
 	/**
 	 * 构造商品列表
-	 * 
+	 * 现在只有通过商品名搜索，后续按需求增加字段搜索
 	 * @return
 	 * @author zhangbo	2015年12月9日
 	 */
 	public String buildItemList() {
 		try {
-			itemService.buildItemList(page, rows, jsonMap);
+			if(isForItemSet == 1){//是否为查询set下的商品
+				itemService.buildItemListForSetItem(itemSetId,page, rows, jsonMap);
+			}else{
+				itemService.buildItemList(name,itemSetId,page, rows, jsonMap);
+			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
+	
 	
 	/**
 	 * 构造商品列表通过商品集合ID
@@ -194,6 +206,23 @@ public class ItemAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 
+	/**
+	 * 删除集合中的商品
+	 * @return 
+		*	2015年12月12日
+		*	mishengliang
+	 */
+	public String batchDeleteItemFromSet(){
+		try {
+			Integer[] idArray = StringUtil.convertStringToIds(ids);
+			itemService.batchDeleteItemFromSet(itemSetId,idArray);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public Integer getId() {
 		return id;
 	}
@@ -336,6 +365,14 @@ public void setTrueItemType(Integer trueItemType) {
 
 	public void setItemSetId(Integer itemSetId) {
 		this.itemSetId = itemSetId;
+	}
+
+	public Integer getIsForItemSet() {
+		return isForItemSet;
+	}
+
+	public void setIsForItemSet(Integer isForItemSet) {
+		this.isForItemSet = isForItemSet;
 	}
 	
 }

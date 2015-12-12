@@ -63,7 +63,7 @@
 			idField: "id",
 			rownumbers: true,
 			columns: [columnsFields],
-			fitColumns: true,
+			fitColumns: true, 
 			autoRowHeight: true,
 			checkOnSelect: false,
 			selectOnCheck: true,
