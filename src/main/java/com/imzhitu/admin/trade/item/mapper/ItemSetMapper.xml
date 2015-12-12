@@ -16,15 +16,12 @@
 	</resultMap>
 	
 	<!-- 新增商品集合 -->
-	<insert id="insert">
-	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
-		SELECT LAST_INSERT_ID() AS id
-	</selectKey>
+	<insert id="insert" parameterType="com.imzhitu.admin.trade.item.pojo.ItemSet" useGeneratedKeys="true" keyProperty="id">
 		insert into 
 			hts.item_set 
-			(description, path, thumb, type, operator, serial)
+			(id, description, path, thumb, type, operator, link, serial)
 	 	values 
-	 		(#{description}, #{path}, #{thumb}, #{type}, #{operator}, #{serial})
+	 		(#{id}, #{description}, #{path}, #{thumb}, #{type}, #{operator}, #{link}, #{serial})
 	</insert>
 	
 	<!-- 根据id更新商品集合 -->
@@ -36,7 +33,6 @@
 	      <if test="path != null">path = #{path},</if>
 	      <if test="thumb != null">thumb = #{thumb},</if>
 	      <if test="type != null">type = #{type},</if>
-	      <if test="link != null">link = #{link},</if>
 	      <if test="operator != null">operator = #{operator}</if>
 	    </set>
 	  	where 

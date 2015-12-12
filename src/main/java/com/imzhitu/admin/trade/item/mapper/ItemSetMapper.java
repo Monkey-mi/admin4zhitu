@@ -18,6 +18,7 @@ public interface ItemSetMapper {
 	/**
 	 * 新增商品集合
 	 * 
+	 * @param id			商品集合id
 	 * @param description	商品集合描述
 	 * @param path			商品集合图片路径
 	 * @param thumb			商品集合缩略图路径
@@ -29,8 +30,8 @@ public interface ItemSetMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("master")
-	Integer insert(@Param("description")String description, @Param("path")String path, @Param("thumb")String thumb, 
-			@Param("type")Integer type, @Param("operator")Integer operator, @Param("serial")Integer serial);
+	void insert(@Param("id")Integer id, @Param("description")String description, @Param("path")String path, @Param("thumb")String thumb, 
+			@Param("type")Integer type, @Param("link")String link, @Param("operator")Integer operator, @Param("serial")Integer serial);
 
 	/**
 	 * 根据id更新商品集合
@@ -47,8 +48,7 @@ public interface ItemSetMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("master")
-	void update(@Param("id")Integer id, @Param("description")String description, @Param("path")String path, @Param("thumb")String thumb, 
-			@Param("type")Integer type, @Param("operator")Integer operator);
+	void update(@Param("id")Integer id, @Param("description")String description, @Param("path")String path, @Param("thumb")String thumb, @Param("operator")Integer operator);
 
 	/**
 	 * 根据id删除商品集合
