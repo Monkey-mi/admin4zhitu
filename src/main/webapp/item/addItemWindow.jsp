@@ -91,11 +91,12 @@
         				$('#htm_superb .opt_btn').show();
         				$('#htm_superb .loading').hide();
         				if(result['result'] == 0) { 
-        					$('#htm_superb').window('close');  //关闭添加窗口
+        					
         					mySortName = "serial";
         					mySortOrder = "desc";
-        					$('#dg').datagrid('unselectAll');
-        					$('#dg').datagrid('load');
+        					$('#htm_table').datagrid('clearSelections');
+        					$('#htm_table').datagrid('load');
+        					$('#htm_superb').window('close');  //关闭添加窗口
         				} else {
         					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
         				}
@@ -106,6 +107,54 @@
         	
         }
 	
+		
+    	//商品的重新排序模块
+    	//商品的重新排序模块
+        function reSuperbForSet() {
+        	$("#superb_form").find('input[name="reIndexId"]').val('');
+        	$("#schedula").datetimebox('clear');
+        	$('#htm_superb .opt_btn').show();
+        	$('#htm_superb .loading').hide();
+        	
+        	var rows = $("#htm_table_set").datagrid('getSelections');
+        	$('#superb_form .reindex_column').each(function(i){
+        		if(i<rows.length)
+        			$(this).val(rows[i]['id']);
+        	});
+        	// 打开添加窗口
+        	$("#htm_superb").window('open');
+        	
+        }
+	
+/* 		//提交排序
+        function submitReSuperbForm() {
+        	var $form = $('#superb_form');
+        	if($form.form('validate')) {
+        		$('#htm_superb .opt_btn').hide();
+        		$('#htm_superb .loading').show();
+        		$('#superb_form').form('submit', {
+        			url: $form.attr('action'),
+        			success: function(data){
+        				var result = $.parseJSON(data);
+        				$('#htm_superb .opt_btn').show();
+        				$('#htm_superb .loading').hide();
+        				if(result['result'] == 0) { 
+        					
+        					mySortName = "serial";
+        					mySortOrder = "desc";
+        					$('#htm_table_set').datagrid('clearSelections');
+        					$('#htm_table_set').datagrid('load');
+        					$('#htm_superb').window('close');  //关闭添加窗口
+        				} else {
+        					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+        				}
+        				
+        			}
+        		});
+        	} */
+        	
+        }
+		
 </script>
 </head>
 <body>
@@ -116,17 +165,17 @@
 					<tr>
 						<td  class="leftTd" style="width:50px">图片：</td>
 						<td  style="width:130">
-							<input class="none" type="text" name="pics" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<input class="none" type="text" name="imgPath" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
 							<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="channelImg_edit01"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<img id="item_path"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
 							<div id="channelIcon_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 						<td  class="leftTd">缩略图：</td>
 						<td >
-							<input class="none" type="text" name="pic02" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<input class="none" type="text" name="imgThumb" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
 							<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="channelImg_edit02"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<img id="item_thumb"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
 							<div id="channelIcon_edit_upload_status02" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
@@ -219,7 +268,7 @@
 		
 	<!-- 重排模块 -->
 	<div id="htm_superb" hidden=true>
-		<form id="superb_form" action="./admin_interact/addModule_reOrderIndexforPic" method="post">
+		<form id="superb_form" action="./admin_trade/item_reOrderIndexforItem" method="post">
 			<table class="htm_edit_table" width="580">
 				<tbody>
 					<tr>
@@ -283,7 +332,7 @@
         init: {
             'FilesAdded': function(up, files) {
             	$("#pic_edit_upload_btn01").hide();
-            	$("#channelImg_edit01").hide();
+            	$("#item_path").hide();
             	var $status = $("#channelIcon_edit_upload_status01");
             	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
             	$status.find('.upload_progress:eq(0)').text(0);
@@ -298,12 +347,12 @@
             },
             'UploadComplete': function() {
             	$("#pic_edit_upload_btn01").show();
-            	$("#channelImg_edit01").show();
+            	$("#item_path").show();
             	$("#channelIcon_edit_upload_status01").hide();
             },
             'FileUploaded': function(up, file, info) {
             	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
-            	$("#channelImg_edit01").attr('src', url);
+            	$("#item_path").attr('src', url);
             	$("#channelIcon_edit01").val(url);
             },
             'Error': function(up, err, errTip) {
@@ -333,7 +382,7 @@
         init: {
             'FilesAdded': function(up, files) {
             	$("#pic_edit_upload_btn02").hide();
-            	$("#channelImg_edit02").hide();
+            	$("#item_thumb").hide();
             	var $status = $("#channelIcon_edit_upload_status02");
             	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
             	$status.find('.upload_progress:eq(0)').text(0);
@@ -348,12 +397,12 @@
             },
             'UploadComplete': function() {
             	$("#pic_edit_upload_btn02").show();
-            	$("#channelImg_edit02").show();
+            	$("#item_thumb").show();
             	$("#channelIcon_edit_upload_status02").hide();
             },
             'FileUploaded': function(up, file, info) {
             	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
-            	$("#channelImg_edit02").attr('src', url);
+            	$("#item_thumb").attr('src', url);
             	$("#channelIcon_edit02").val(url);
             },
             'Error': function(up, err, errTip) {

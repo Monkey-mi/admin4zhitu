@@ -18,15 +18,15 @@
 <script type="text/javascript">
 
 	// 行是否被勾选
-	var IsCheckFlag = false;
+//	var IsCheckFlag = false;
 	var myQueryParams = {'isForItemSet':0};
 	
 	var columnsFields = [
 			{field: "ck", checkbox:true},
 			{field: "id", title: "商品ID", align: "center"},
-			{field: "name", title: "商品名称", align: "center"},
-			{field: "summary", title: "简介", align: "center"},
-			{field: "description", title: "详情描述", align: "center"},
+			{field: "name", title: "商品名称", align: "center",width:30},
+			{field: "summary", title: "简介", align: "center",width:30},
+			{field: "description", title: "详情描述", align: "center",width:30},
 			{field: "worldId", title: "关联织图id", align: "center"},
 			{field: "itemId", title: "织图id", align: "center"},
 			{field: "price", title: "价格", align: "center"},
@@ -46,11 +46,6 @@
 					return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
 				}
 			},
-/* 			{field: "createTime", title: "创建时间", align: "center",
-				formatter:function(value,row,index){
-					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-				}
-			}, */
 			{field: "opt", title: "操作", align: "center",
 				formatter : function(value, row, index ) {
 					return "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:updateitem("+ row.id + ")'>【修改】</a>";
@@ -69,33 +64,16 @@
 			queryParams:myQueryParams,
 			rownumbers: true,
 			columns: [columnsFields],
-			fitColumns: true,
+			/* fitColumns: true, */
 			autoRowHeight: true,
-			checkOnSelect: false,
-			selectOnCheck: true,
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
 			pageSize: 10,
 			pageList: [10,20,50],
-			onClickCell: function(rowIndex, field, value) {
-				IsCheckFlag = false;
-			},
-			onSelect: function(rowIndex, rowData) {
-				if ( !IsCheckFlag ) {
-					IsCheckFlag = true;
-					$(this).datagrid("unselectRow", rowIndex);
-				}
-			},
-			onUnselect: function(rowIndex, rowData) {
-				if ( !IsCheckFlag ) {
-					IsCheckFlag = true;
-					$(this).datagrid("selectRow", rowIndex);
-				}
-			},
 			onLoadSuccess: function(data) {
 				// 数据加载成功，loading动画隐藏
 				$("#page-loading").hide();
-			}
+			},
 		});
 		
 		// 展示界面
@@ -110,8 +88,8 @@
 		$("#htm_table").datagrid("selectRecord", itemId);
 		var row =  $("#htm_table").datagrid("getSelected");
 		$("#item_id").val(row.id);
-		$("#item_path").val(row.imgPath);
-		$("#item_thumb").val(row.imgThumb);
+		$("#item_path").attr("src",row.imgPath);
+		$("#item_thumb").attr("src",row.imgThumb);
 		$("#item_name").val(row.name);
 		$("#item_summary").val(row.summary);
 		$("#item_description").val(row.description);

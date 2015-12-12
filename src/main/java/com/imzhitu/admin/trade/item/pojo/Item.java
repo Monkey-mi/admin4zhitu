@@ -127,6 +127,12 @@ public class Item extends AbstractNumberDto implements Serializable {
 	 */
 	private Integer itemSetId;
 
+	
+	/**
+	 * 排序字段
+	 */
+	private Integer serial;
+	
 	/**
 	 * @return the id
 	 */
@@ -372,6 +378,13 @@ public class Item extends AbstractNumberDto implements Serializable {
 	public void setItemSetId(Integer itemSetId) {
 		this.itemSetId = itemSetId;
 	}
-	
+
+	public Integer getSerial() {
+		return serial;
+	}
+
+	public void setSerial(Integer serial) {
+		this.serial = serial;
+	}
 	
 }

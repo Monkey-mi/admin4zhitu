@@ -3,6 +3,8 @@ package com.imzhitu.admin.trade.item.service;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import org.springframework.aop.ThrowsAdvice;
+
 /**
  * 商品业务操作类
  * 
@@ -102,4 +104,11 @@ public interface ItemService {
 	 */
 	void batchDeleteItemFromSet(Integer itemSetId,Integer[] ids) throws Exception;
 	
+	/**
+	 * 
+	 * @throws Exception 
+		*	2015年12月12日
+		*	mishengliang
+	 */
+	void reOrderIndexforItem(String[] ids)throws Exception;
 }

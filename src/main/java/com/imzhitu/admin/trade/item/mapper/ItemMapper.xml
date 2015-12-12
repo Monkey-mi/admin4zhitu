@@ -50,6 +50,7 @@
 	      <if test="categoryId != null">category_id = #{categoryId}</if>
 	      <if test="brandId != null">brand_id = #{brandId}</if>
 	      <if test="like != null">like_num = #{like}</if>
+	      <if test="serial != null">serial = #{serial}</if>
 	    </set>
 	  	where 
 	  		id = #{id}
@@ -81,7 +82,7 @@
 			)
 		</if>
 		</where>	
-		order by id desc
+		order by serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	

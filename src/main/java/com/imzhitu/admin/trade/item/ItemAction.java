@@ -223,6 +223,17 @@ public class ItemAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	public String reOrderIndexforItem(){
+		try {
+			String[]  ids = request.getParameterValues("reIndexId");
+			itemService.reOrderIndexforItem(ids);
+			JSONUtil.optSuccess(jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

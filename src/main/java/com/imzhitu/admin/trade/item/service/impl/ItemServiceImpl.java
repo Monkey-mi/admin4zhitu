@@ -4,11 +4,16 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.lucene.search.TotalHitCountCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aliyun.common.utils.Lists;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowSelection;
+import com.hts.web.common.service.impl.KeyGenServiceImpl;
+import com.hts.web.common.util.StringUtil;
+import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
 import com.imzhitu.admin.trade.item.dao.ItemCache;
 import com.imzhitu.admin.trade.item.mapper.ItemAndSetRelationMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemMapper;
@@ -32,6 +37,9 @@ public class ItemServiceImpl implements ItemService {
 	
 	@Autowired
 	private ItemAndSetRelationMapper itemAndSetRelationMapper;
+	
+	@Autowired
+	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
 	@SuppressWarnings("null")
 	private List<Item> transFormateByItemDTO(List<com.hts.web.trade.item.dto.ItemDTO> listFromWeb){
@@ -68,8 +76,9 @@ public class ItemServiceImpl implements ItemService {
 		List<Item> list = null;
 		
 		 list = itemMapper.queryItemList(item);
+		 int total = list.size();
 		jsonMap.put(OptResult.ROWS, list);
-		jsonMap.put(OptResult.TOTAL,3);		
+		jsonMap.put(OptResult.TOTAL,total);		
 	}
 	
 	/**
@@ -87,8 +96,9 @@ public class ItemServiceImpl implements ItemService {
 		List<Item> list = null;
 		
 		list = itemMapper.queryItemListBySetId(itemSetId);
+		int total = list.size();
 		jsonMap.put(OptResult.ROWS, list);
-		jsonMap.put(OptResult.TOTAL,3);		
+		jsonMap.put(OptResult.TOTAL,total);		
 	}
 	
 	
@@ -178,4 +188,19 @@ public class ItemServiceImpl implements ItemService {
 		}
 	}
 
+	@Override
+	public void reOrderIndexforItem(String idStrs[]){
+		for (int i = idStrs.length - 1; i >= 0; i--) {
+			if (StringUtil.checkIsNULL(idStrs[i]))
+				continue;
+			int id = Integer.parseInt(idStrs[i]);
+			Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SERIAL);
+			
+			Item item = new Item();
+			
+			item.setId(id);
+			item.setSerial(serial);
+			itemMapper.update(item);
+		}
+	}
 }
