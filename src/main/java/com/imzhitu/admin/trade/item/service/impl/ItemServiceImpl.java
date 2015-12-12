@@ -124,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public void insertItem(String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Integer trueItemId, Integer trueItemType,
+	public void insertItem(String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Long trueItemId, Integer trueItemType,
 			Integer categoryId, Integer brandId,Integer like,String link) {
 		Item item = new Item();
 		item.setName(name);
@@ -148,7 +148,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public void updateItem(Integer id, String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Integer trueItemId, Integer trueItemType,
+	public void updateItem(Integer id, String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Long trueItemId, Integer trueItemType,
 			Integer categoryId, Integer brandId,Integer like,String link) {
 		Item item = new Item();
 		item.setId(id);

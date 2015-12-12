@@ -62,7 +62,7 @@ public interface ItemService {
 	 * @param brandId
 	 * @author zhangbo	2015年12月9日
 	 */
-	void insertItem(String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Integer trueItemId, Integer trueItemType, Integer categoryId,
+	void insertItem(String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Long trueItemId, Integer trueItemType, Integer categoryId,
 			Integer brandId,Integer like,String link);
 
 	/**
@@ -83,7 +83,7 @@ public interface ItemService {
 	 * @param brandId
 	 * @author zhangbo	2015年12月9日
 	 */
-	void updateItem(Integer id, String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Integer trueItemId, Integer trueItemType,
+	void updateItem(Integer id, String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Long trueItemId, Integer trueItemType,
 			Integer categoryId, Integer brandId,Integer like,String link);
 
 	/**

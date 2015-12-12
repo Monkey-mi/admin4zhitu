@@ -172,23 +172,23 @@
 		
         
         function submitReSuperbFormForSet() {
-        	var $form = $('#superb_form');
+        	var $form = $('#superb_form_set');
         	if($form.form('validate')) {
-        		$('#htm_superb .opt_btn').hide();
-        		$('#htm_superb .loading').show();
-        		$('#superb_form').form('submit', {
+        		$('#htm_superb_set .opt_btn').hide();
+        		$('#htm_superb_set .loading').show();
+        		$('#superb_form_set').form('submit', {
         			url: $form.attr('action'),
         			success: function(data){
         				var result = $.parseJSON(data);
-        				$('#htm_superb .opt_btn').show();
-        				$('#htm_superb .loading').hide();
+        				$('#htm_superb_set .opt_btn').show();
+        				$('#htm_superb_set .loading').hide();
         				if(result['result'] == 0) { 
         					
         					mySortName = "serial";
         					mySortOrder = "desc";
         					$('#htm_table_set').datagrid('clearSelections');
         					$('#htm_table_set').datagrid('load');
-        					$('#htm_superb').window('close');  //关闭添加窗口
+        					$('#htm_superb_set').window('close');  //关闭添加窗口
         				} else {
         					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
         				}

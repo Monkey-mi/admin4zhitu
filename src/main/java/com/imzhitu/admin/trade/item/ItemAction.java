@@ -90,7 +90,7 @@ public class ItemAction extends BaseCRUDAction {
 	 * 淘宝商品真实id
 	 * @author zhangbo	2015年12月9日
 	 */
-	private Integer trueItemId;
+	private Long trueItemId;
 	
 	/**
 	 * 淘宝商品类型（1：淘宝，2：天猫）
@@ -283,8 +283,12 @@ public class ItemAction extends BaseCRUDAction {
 		return stock;
 	}
 
-	public Integer getTrueItemId() {
+	public Long getTrueItemId() {
 		return trueItemId;
+	}
+
+	public void setTrueItemId(Long trueItemId) {
+		this.trueItemId = trueItemId;
 	}
 
 	public Integer getTrueItemType() {
@@ -349,10 +353,6 @@ public void setPrice(BigDecimal price) {
 
 public void setStock(Integer stock) {
 		this.stock = stock;
-	}
-
-	public void setTrueItemId(Integer trueItemId) {
-		this.trueItemId = trueItemId;
 	}
 
 public void setTrueItemType(Integer trueItemType) {

@@ -14,7 +14,7 @@
 		<result column="sale" property="sale" javaType="java.math.BigDecimal"/>
 		<result column="sales" property="sales" javaType="java.lang.Integer"/>
 		<result column="stock" property="stock" javaType="java.lang.Integer"/>
-		<result column="item_id" property="itemId" javaType="java.lang.Integer"/>
+		<result column="item_id" property="itemId" javaType="java.lang.Long"/>
 		<result column="item_type" property="itemType" javaType="java.lang.Integer"/>
 		<result column="category_id" property="categoryId" javaType="java.lang.Integer"/>
 		<result column="brand_id" property="brandId" javaType="java.lang.Integer"/>
