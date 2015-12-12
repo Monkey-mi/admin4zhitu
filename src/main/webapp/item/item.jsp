@@ -17,6 +17,7 @@
 
 	// 行是否被勾选
 	var IsCheckFlag = false;
+	var myQueryParams = {'isForItemSet':0};
 	
 	var columnsFields = [
 			{field: "ck", checkbox:true},
@@ -63,6 +64,7 @@
 			url: "./admin_trade/item_buildItemList",
 			toolbar: "#tb",
 			idField: "id",
+			queryParams:myQueryParams,
 			rownumbers: true,
 			columns: [columnsFields],
 			fitColumns: true,
