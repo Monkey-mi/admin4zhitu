@@ -129,6 +129,11 @@ public class ItemAction extends BaseCRUDAction {
 	private Integer itemSetId;
 	
 	/**
+	 * 商品链接
+	 */
+	private String link;
+	
+	/**
 	 * 是否查询集合下商品的Flag
 	 * @author mishengliang
 	 */
@@ -146,9 +151,9 @@ public class ItemAction extends BaseCRUDAction {
 	public String saveitem() {
 		try {
 			if ( id == null ) {
-				itemService.insertItem(name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId,like);
+				itemService.insertItem(name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId,like,link);
 			} else {
-				itemService.updateItem(id,name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId,like);
+				itemService.updateItem(id,name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId,like,link);
 			}
 			
 			JSONUtil.optSuccess(jsonMap);
@@ -384,6 +389,14 @@ public void setTrueItemType(Integer trueItemType) {
 
 	public void setIsForItemSet(Integer isForItemSet) {
 		this.isForItemSet = isForItemSet;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 	
 }

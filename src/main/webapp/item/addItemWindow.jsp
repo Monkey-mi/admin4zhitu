@@ -125,7 +125,7 @@
         	
         }
 	
-/* 		//提交排序
+ 		//提交排序
         function submitReSuperbForm() {
         	var $form = $('#superb_form');
         	if($form.form('validate')) {
@@ -152,7 +152,7 @@
         		});
         	} 
         	
-        }*/
+        }
 		
 </script>
 </head>
@@ -165,16 +165,16 @@
 						<td  class="leftTd" style="width:50px">图片：</td>
 						<td  style="width:130">
 							<input class="none" type="text" name="imgPath" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-							<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="item_path"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 10px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="item_path"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="100px" height="100px">
 							<div id="channelIcon_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
 						<td  class="leftTd">缩略图：</td>
 						<td >
 							<input class="none" type="text" name="imgThumb" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
-							<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="item_thumb"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 10px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="item_thumb"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="100px" height="100px">
 							<div id="channelIcon_edit_upload_status02" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
@@ -184,9 +184,9 @@
 						<td>
 							<input id="item_name" name="name" style="width:220px;" >
 						</td>
-						<td class="leftTd">销售量：</td>
+						<td class="leftTd">点赞数：</td>
 						<td>
-							<input id="item_sales" name="sales" style="width:220px;" >
+							<input id="item_like" name="like" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
@@ -194,9 +194,9 @@
 						<td>
 							<input id="item_summary" name="summary" style="width:220px;" >
 						</td>
-						<td class="leftTd">库存量：</td>
+						<td class="leftTd">织图id：</td>
 						<td>
-							<input id="item_stock" name="stock" style="width:220px;" >
+							<input id="item_worldId" name="worldId" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
@@ -204,19 +204,8 @@
 						<td>
 							<textarea id="item_description" name="description" rows="1" style="width:220px;" ></textarea>
 						</td>
-						<td class="leftTd">链接：</td>
+						<td class="leftTd"></td>
 						<td>
-							<input id="item_Link" name="Link" style="width:220px;" >
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">织图id：</td>
-						<td>
-							<input id="item_worldId" name="worldId" style="width:220px;" >
-						</td>
-						<td class="leftTd">点赞数：</td>
-						<td>
-							<input id="item_like" name="like" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
@@ -224,9 +213,17 @@
 						<td>
 							<input id="item_price" name="price" style="width:220px;" >
 						</td>
-						<td class="leftTd">促销价：</td>
+						<td class="leftTd"></td>
 						<td>
-							<input id="item_sale" name="sale" style="width:220px;" >
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">链接：</td>
+						<td>
+							<input id="item_Link" name="link" style="width:220px;" >
+						</td>
+						<td class="leftTd"></td>
+						<td>
 						</td>
 					</tr>
 					<tr>
@@ -237,9 +234,8 @@
 							    <option value="2">天猫</option>
 							</select>
 						</td>
-						<td class="leftTd">类别：</td>
+						<td class="leftTd"></td>
 						<td>
-							<input id="item_categoryId" name="categoryId" style="width:220px;" >
 						</td>
 					</tr>
 					<tr>
@@ -247,9 +243,8 @@
 						<td>
 							<input id="item_trueItemId" name="trueItemId" style="width:220px;" >
 						</td>
-						<td class="leftTd">品牌：</td>
+						<td class="leftTd"></td>
 						<td>
-							<input id="item_brandId" name="brandId" style="width:220px;" >
 						</td>
 					</tr>
 					<tr style="display:none">

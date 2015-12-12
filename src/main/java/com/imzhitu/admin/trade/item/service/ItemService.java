@@ -63,7 +63,7 @@ public interface ItemService {
 	 * @author zhangbo	2015年12月9日
 	 */
 	void insertItem(String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Integer trueItemId, Integer trueItemType, Integer categoryId,
-			Integer brandId,Integer like);
+			Integer brandId,Integer like,String link);
 
 	/**
 	 * @param id
@@ -84,7 +84,7 @@ public interface ItemService {
 	 * @author zhangbo	2015年12月9日
 	 */
 	void updateItem(Integer id, String name, String imgPath, String imgThumb, String summary, String description, Integer worldId, BigDecimal price, BigDecimal sale, Integer sales, Integer stock, Integer trueItemId, Integer trueItemType,
-			Integer categoryId, Integer brandId,Integer like);
+			Integer categoryId, Integer brandId,Integer like,String link);
 
 	/**
 	 * 批量删除商品
