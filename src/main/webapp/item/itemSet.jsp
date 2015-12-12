@@ -15,7 +15,7 @@
 <script type="text/javascript">
 
 	// 行是否被勾选
-	var IsCheckFlag = false;
+	var IsCheckFlag = true;
 	
 	var columnsFields = [
 			{field: "ck", checkbox:true},
@@ -82,15 +82,20 @@
 			pageSize: 5,
 			pageList: [5,10,20],
 			onClickCell: function(rowIndex, field, value) {
+				alert(IsCheckFlag);
 				IsCheckFlag = false;
 			},
 			onSelect: function(rowIndex, rowData) {
 				if ( !IsCheckFlag ) {
+					// 选择操作时刷新展示重新排序所选择的数量
+					$("#reSerialCount").text($("#htm_table").datagrid("getSelections").length);
 					IsCheckFlag = true;
 					$(this).datagrid("unselectRow", rowIndex);
 				}
 			},
 			onUnselect: function(rowIndex, rowData) {
+				// 选择操作时刷新展示重新排序所选择的数量
+				$("#reSerialCount").text($("#htm_table").datagrid("getSelections").length);
 				if ( !IsCheckFlag ) {
 					IsCheckFlag = true;
 					$(this).datagrid("selectRow", rowIndex);
@@ -267,6 +272,7 @@
 				$("#htm_table").datagrid("clearSelections");
 				// 批量删除刷新当前页
 				$("#htm_table").datagrid("reload");
+				$("#reSerialCount").text(0);
 			});
 		}else{
 			$.messager.alert("温馨提示","请先选择，再执行重新排序!");
@@ -352,7 +358,7 @@
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
 				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');$('#add_itemSet_form').form('reset');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
-				<a href="javascript:void(0);" onclick="reorder()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序</a>
+				<a href="javascript:void(0);" onclick="reorder()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 		   		<input id="ss_isCache" class="easyui-combobox">
 		   		<a href="javascript:void(0);" onclick="refreshItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新缓存</a>
