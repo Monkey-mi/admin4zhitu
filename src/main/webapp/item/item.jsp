@@ -38,12 +38,12 @@
 			{field: "like", title: "点赞数", align: "center"},
 			{field: "imgPath", title: "商品图片", align: "center",
 				formatter: function(value,row,index) {
-	  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+	  				return "<img width='100px' height='100px' class='htm_column_img' src='" + value + "'/>";
 	  			}
 			},
 			{field: "imgThumb", title: "商品缩略图", align: "center",
 				formatter: function(value,row,index) {
-					return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+					return "<img width='100px' height='100px' class='htm_column_img' src='" + value + "'/>";
 				}
 			},
 			{field: "opt", title: "操作", align: "center",
@@ -102,6 +102,7 @@
 		$("#item_categoryId").val(row.categoryId);
 		$("#item_brandId").val(row.brandId);
 		$("#item_like").val(row.like);
+		$("#item_link").val(row.link);
 		
 		$('#add_item_window').window('open');
 	};

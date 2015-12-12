@@ -37,6 +37,21 @@
 			iconCls : 'icon-tip',
 			resizable : false
 		}).show();
+		
+		//排序窗口初始化
+		$('#htm_superb_set').window({
+			title : '重新排序',
+			modal : true,
+			width : 600,
+			height : 145,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-tip',
+			resizable : false
+		}).show();
 	});
 	
 	/**
@@ -108,9 +123,9 @@
         }
 	
 		
-    	//商品的重新排序模块
+    	//集合商品的重新排序模块
         function reSuperbForSet() {
-        	$("#superb_form").find('input[name="reIndexId"]').val('');
+        	$("#superb_form_set").find('input[name="reIndexId"]').val('');
         	$("#schedula").datetimebox('clear');
         	$('#htm_superb .opt_btn').show();
         	$('#htm_superb .loading').hide();
@@ -143,7 +158,7 @@
         					mySortOrder = "desc";
         					$('#htm_table_set').datagrid('clearSelections');
         					$('#htm_table_set').datagrid('load');
-        					$('#htm_superb').window('close');  //关闭添加窗口
+        					$('#htm_superb_set').window('close');  //关闭添加窗口
         				} else {
         					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
         				}
@@ -154,6 +169,34 @@
         	
         }
 		
+        
+        function submitReSuperbFormForSet() {
+        	var $form = $('#superb_form');
+        	if($form.form('validate')) {
+        		$('#htm_superb .opt_btn').hide();
+        		$('#htm_superb .loading').show();
+        		$('#superb_form').form('submit', {
+        			url: $form.attr('action'),
+        			success: function(data){
+        				var result = $.parseJSON(data);
+        				$('#htm_superb .opt_btn').show();
+        				$('#htm_superb .loading').hide();
+        				if(result['result'] == 0) { 
+        					
+        					mySortName = "serial";
+        					mySortOrder = "desc";
+        					$('#htm_table_set').datagrid('clearSelections');
+        					$('#htm_table_set').datagrid('load');
+        					$('#htm_superb').window('close');  //关闭添加窗口
+        				} else {
+        					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+        				}
+        				
+        			}
+        		});
+        	} 
+        	
+        }
 </script>
 </head>
 <body>
@@ -220,7 +263,7 @@
 					<tr>
 						<td class="leftTd">链接：</td>
 						<td>
-							<input id="item_Link" name="link" style="width:220px;" >
+							<input id="item_link" name="link" style="width:220px;" >
 						</td>
 						<td class="leftTd"></td>
 						<td>
@@ -305,6 +348,53 @@
 			</table>
 		</form>
 	</div>
+	
+	<!-- 集合重排模块 -->
+	<div id="htm_superb_set" hidden=true>
+		<form id="superb_form_set" action="./admin_trade/item_reOrderIndexforItem" method="post">
+			<table class="htm_edit_table" width="580">
+				<tbody>
+					<tr>
+						<td class="leftTd">织图ID：</td>
+						<td>
+							<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<br />
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReSuperbFormForSet();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_superb_set').window('close');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">排序中...</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+		
 		
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/i18n/zh_CN.js"></script>
