@@ -169,9 +169,16 @@ public class ItemSetServiceImpl implements ItemSetService {
 	
 	@Override
 	public void addItemSet(String description, String path, String thumb) throws Exception {
+		// 根据流水得到id
+		Integer id = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_ID);
+		
 		// 链接类型为网页链接，则设置为1，是以公告处类型为标准设定
 		Integer type = 1;
-		itemSetMapper.insert(keyGenService.generateId(Admin.KEYGEN_ITEM_SET_ID), description, path, thumb, type, handleLink(Admin.KEYGEN_ITEM_SET_ID), AdminLoginUtil.getCurrentLoginId(), keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
+		
+		// 根据流水得到serial
+		Integer serial = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL);
+		
+		itemSetMapper.insert(id, description, path, thumb, type, handleLink(id), AdminLoginUtil.getCurrentLoginId(), serial);
 	}
 	
 	@Override
@@ -195,6 +202,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	public void batchDelete(Integer[] idArray) throws Exception {
 		for (Integer id : idArray) {
 			itemSetMapper.deleteById(id);
+			itemSetCache.deleteFromSeckillTempById(id);
 		}
 	}
 	
@@ -202,7 +210,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	public void addSeckillToTemp(Integer id, Date deadline) throws Exception {
 		itemSetCache.addSeckillTemp(id, deadline);
 		// 当添加到秒杀商品集合时，刷新序号，使其排到最顶层
-		itemSetMapper.updateSerial(id, Admin.KEYGEN_ITEM_SET_SERIAL);
+		itemSetMapper.updateSerial(id, keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
 	}
 
 	@Override
@@ -214,6 +222,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	public void refreshItemSetCache() throws Exception {
 		refreshSeckillCache();
 		refreshRecommendItemCache();
+		refreshItemListToCache();
 	}
 
 	/**
@@ -227,37 +236,37 @@ public class ItemSetServiceImpl implements ItemSetService {
 		
 		// 得到秒杀临时存储中的itemSetId与截止时间Map
 		Map<Integer, Date> seckillTemp = itemSetCache.getSeckillTemp();
-		
-		// 循环处理商品集合id
-		for (Integer ItemSetId : seckillTemp.keySet()) {
-			// 定义秒杀对象公告
-			com.hts.web.operations.pojo.SeckillBulletin seckill = new com.hts.web.operations.pojo.SeckillBulletin();
-			
-			// 查询商品集合对象，然后转换成web端存储的秒杀公告
-			ItemSet itemSet = itemSetMapper.getItemSetById(ItemSetId);
-			
-			// 转换对应属性
-			seckill.setId(itemSet.getId());
-			seckill.setBulletinName(itemSet.getDescription());
-			seckill.setBulletinPath(itemSet.getPath());
-			seckill.setBulletinThumb(itemSet.getThumb());
-			seckill.setBulletinType(itemSet.getType());
-			seckill.setLink(itemSet.getLink());
-			seckill.setDeadline(seckillTemp.get(ItemSetId).getTime());	// 限时秒杀要设置截止日期
-			seckill.setSerial(itemSet.getSerial());
-			seckillList.add(seckill);
-			
-			// 刷新此商品集合id，其下对应的商品列表redis集合
-			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
-			itemCache.updateItemListBySetId(ItemSetId, itemListToWebItemList(itemList, seckillTemp.get(ItemSetId)));
-			
-			// 将查询出的商品列表设置为秒杀商品
-			for (Item item : itemList) {
-				// id与deadline确定唯一性，重复插入会报错，不影响整体循环
-				try {
-					itemSeckillMapper.insert(item.getId(), seckillTemp.get(ItemSetId));
-				} catch (Exception e) {
-					e.printStackTrace();
+		if ( seckillTemp != null ) {
+			// 循环处理商品集合id
+			for (Integer ItemSetId : seckillTemp.keySet()) {
+				// 定义秒杀对象公告
+				com.hts.web.operations.pojo.SeckillBulletin seckill = new com.hts.web.operations.pojo.SeckillBulletin();
+				
+				// 查询商品集合对象，然后转换成web端存储的秒杀公告
+				ItemSet itemSet = itemSetMapper.getItemSetById(ItemSetId);
+				
+				// 转换对应属性
+				seckill.setId(itemSet.getId());
+				seckill.setBulletinName(itemSet.getDescription());
+				seckill.setBulletinPath(itemSet.getPath());
+				seckill.setBulletinThumb(itemSet.getThumb());
+				seckill.setBulletinType(itemSet.getType());
+				seckill.setLink(itemSet.getLink());
+				seckill.setDeadline(seckillTemp.get(ItemSetId).getTime());	// 限时秒杀要设置截止日期
+				seckill.setSerial(itemSet.getSerial());
+				seckillList.add(seckill);
+				
+				// 刷新此商品集合id，其下对应的商品列表redis集合
+				List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
+				
+				// 将查询出的商品列表设置为秒杀商品
+				for (Item item : itemList) {
+					// id与deadline确定唯一性，重复插入会报错，不影响整体循环
+					try {
+						itemSeckillMapper.insert(item.getId(), seckillTemp.get(ItemSetId));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -271,8 +280,16 @@ public class ItemSetServiceImpl implements ItemSetService {
 	 * @author zhangbo	2015年12月12日
 	 */
 	private void refreshRecommendItemCache() {
-		// 由于业务确定，只刷新商品集合列表中的前10条数据到redis中
-		List<ItemSet> itemSetList = itemSetMapper.queryItemSetListNotInIds(getSeckillTempIds() , 0, 10);
+		// 定义商品集合列表，由于业务确定，只刷新商品集合列表中的前10条数据到redis中
+		List<ItemSet> itemSetList = new ArrayList<ItemSet>();
+		
+		// 若秒杀中没有数据，则直接查数据库
+		Integer[] seckillItemSetIds = getSeckillTempIds();
+		if ( seckillItemSetIds.length != 0 ) {
+			itemSetList = itemSetMapper.queryItemSetListNotInIds(seckillItemSetIds , 0, 10);
+		} else {
+			itemSetList = itemSetMapper.queryItemSetList(0, 10);
+		}
 		
 		// 定义web推荐商品集合列表
 		List<com.hts.web.operations.pojo.RecommendItemBulletin> recommendItemList = new ArrayList<com.hts.web.operations.pojo.RecommendItemBulletin>();
@@ -291,13 +308,24 @@ public class ItemSetServiceImpl implements ItemSetService {
 			recommendItem.setLink(itemSet.getLink());
 			recommendItem.setSerial(itemSet.getSerial());
 			recommendItemList.add(recommendItem);
-			
+		}
+		// 更新限时秒杀集合
+		itemSetCache.updateRecommendItem(recommendItemList);
+	}
+	
+	/**
+	 * 刷新商品集合其下的商品列表到redis中
+	 * 
+	 * @author zhangbo	2015年12月12日
+	 */
+	private void refreshItemListToCache() {
+		// 查询全部商品集合，分页传递为null，则表明查询全部
+		List<ItemSet> itemSetList = itemSetMapper.queryItemSetList(null, null);
+		for (ItemSet itemSet : itemSetList) {
 			// 刷新此商品集合id，其下对应的商品列表redis集合
 			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(itemSet.getId());
 			itemCache.updateItemListBySetId(itemSet.getId(), itemListToWebItemList(itemList, null));
 		}
-		// 更新限时秒杀集合
-		itemSetCache.updateRecommendItem(recommendItemList);
 	}
 
 	/**

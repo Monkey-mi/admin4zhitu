@@ -27,7 +27,7 @@ public class ItemCache extends BaseCacheDaoImpl<com.hts.web.trade.item.dto.ItemD
 			com.hts.web.trade.item.dto.ItemDTO[] list = new com.hts.web.trade.item.dto.ItemDTO[itemList.size()];
 			
 			// 从右放入数据，即与现有的list数据顺序保持一致
-			getRedisTemplate().opsForList().rightPushAll(CacheKeies.ITEM_LIST_BY_SETID, itemList.toArray(list));
+			getRedisTemplate().opsForList().rightPushAll(CacheKeies.ITEM_LIST_BY_SETID + ItemSetId, itemList.toArray(list));
 		}
 		
 	}
