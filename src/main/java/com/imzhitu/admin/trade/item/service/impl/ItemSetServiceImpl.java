@@ -229,36 +229,37 @@ public class ItemSetServiceImpl implements ItemSetService {
 		
 		// 得到秒杀临时存储中的itemSetId与截止时间Map
 		Map<Integer, Date> seckillTemp = itemSetCache.getSeckillTemp();
-		
-		// 循环处理商品集合id
-		for (Integer ItemSetId : seckillTemp.keySet()) {
-			// 定义秒杀对象公告
-			com.hts.web.operations.pojo.SeckillBulletin seckill = new com.hts.web.operations.pojo.SeckillBulletin();
-			
-			// 查询商品集合对象，然后转换成web端存储的秒杀公告
-			ItemSet itemSet = itemSetMapper.getItemSetById(ItemSetId);
-			
-			// 转换对应属性
-			seckill.setId(itemSet.getId());
-			seckill.setBulletinName(itemSet.getDescription());
-			seckill.setBulletinPath(itemSet.getPath());
-			seckill.setBulletinThumb(itemSet.getThumb());
-			seckill.setBulletinType(itemSet.getType());
-			seckill.setLink(itemSet.getLink());
-			seckill.setDeadline(seckillTemp.get(ItemSetId).getTime());	// 限时秒杀要设置截止日期
-			seckill.setSerial(itemSet.getSerial());
-			seckillList.add(seckill);
-			
-			// 刷新此商品集合id，其下对应的商品列表redis集合
-			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
-			
-			// 将查询出的商品列表设置为秒杀商品
-			for (Item item : itemList) {
-				// id与deadline确定唯一性，重复插入会报错，不影响整体循环
-				try {
-					itemSeckillMapper.insert(item.getId(), seckillTemp.get(ItemSetId));
-				} catch (Exception e) {
-					e.printStackTrace();
+		if ( seckillTemp != null ) {
+			// 循环处理商品集合id
+			for (Integer ItemSetId : seckillTemp.keySet()) {
+				// 定义秒杀对象公告
+				com.hts.web.operations.pojo.SeckillBulletin seckill = new com.hts.web.operations.pojo.SeckillBulletin();
+				
+				// 查询商品集合对象，然后转换成web端存储的秒杀公告
+				ItemSet itemSet = itemSetMapper.getItemSetById(ItemSetId);
+				
+				// 转换对应属性
+				seckill.setId(itemSet.getId());
+				seckill.setBulletinName(itemSet.getDescription());
+				seckill.setBulletinPath(itemSet.getPath());
+				seckill.setBulletinThumb(itemSet.getThumb());
+				seckill.setBulletinType(itemSet.getType());
+				seckill.setLink(itemSet.getLink());
+				seckill.setDeadline(seckillTemp.get(ItemSetId).getTime());	// 限时秒杀要设置截止日期
+				seckill.setSerial(itemSet.getSerial());
+				seckillList.add(seckill);
+				
+				// 刷新此商品集合id，其下对应的商品列表redis集合
+				List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
+				
+				// 将查询出的商品列表设置为秒杀商品
+				for (Item item : itemList) {
+					// id与deadline确定唯一性，重复插入会报错，不影响整体循环
+					try {
+						itemSeckillMapper.insert(item.getId(), seckillTemp.get(ItemSetId));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
