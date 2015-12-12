@@ -88,6 +88,8 @@
 		$("#htm_table").datagrid("selectRecord", itemId);
 		var row =  $("#htm_table").datagrid("getSelected");
 		$("#item_id").val(row.id);
+		$("#imgPath").val(row.imgPath);
+		$("#imgThumb").val(row.imgThumb);
 		$("#item_path").attr("src",row.imgPath);
 		$("#item_thumb").attr("src",row.imgThumb);
 		$("#item_name").val(row.name);

@@ -123,6 +123,34 @@
         	
         }
 	
+	
+ 		//提交排序
+        function submitReSuperbForm() {
+        	var $form = $('#superb_form');
+        	if($form.form('validate')) {
+        		$('#htm_superb .opt_btn').hide();
+        		$('#htm_superb .loading').show();
+        		$('#superb_form').form('submit', {
+        			url: $form.attr('action'),
+        			success: function(data){
+        				var result = $.parseJSON(data);
+        				$('#htm_superb .opt_btn').show();
+        				$('#htm_superb .loading').hide();
+        				if(result['result'] == 0) { 
+        					
+        					$('#htm_table_set').datagrid('clearSelections');
+        					$('#htm_table_set').datagrid('load');
+        					$('#htm_superb_set').window('close');  //关闭添加窗口
+        				} else {
+        					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+        				}
+        				
+        			}
+        		});
+        	} 
+        	
+        }
+		
 		
     	//集合商品的重新排序模块
         function reSuperbForSet() {
@@ -140,36 +168,6 @@
         	$("#htm_superb").window('open');
         	
         }
-	
- 		//提交排序
-        function submitReSuperbForm() {
-        	var $form = $('#superb_form');
-        	if($form.form('validate')) {
-        		$('#htm_superb .opt_btn').hide();
-        		$('#htm_superb .loading').show();
-        		$('#superb_form').form('submit', {
-        			url: $form.attr('action'),
-        			success: function(data){
-        				var result = $.parseJSON(data);
-        				$('#htm_superb .opt_btn').show();
-        				$('#htm_superb .loading').hide();
-        				if(result['result'] == 0) { 
-        					
-        					mySortName = "serial";
-        					mySortOrder = "desc";
-        					$('#htm_table_set').datagrid('clearSelections');
-        					$('#htm_table_set').datagrid('load');
-        					$('#htm_superb_set').window('close');  //关闭添加窗口
-        				} else {
-        					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-        				}
-        				
-        			}
-        		});
-        	} 
-        	
-        }
-		
         
         function submitReSuperbFormForSet() {
         	var $form = $('#superb_form_set');
@@ -184,8 +182,6 @@
         				$('#htm_superb_set .loading').hide();
         				if(result['result'] == 0) { 
         					
-        					mySortName = "serial";
-        					mySortOrder = "desc";
         					$('#htm_table_set').datagrid('clearSelections');
         					$('#htm_table_set').datagrid('load');
         					$('#htm_superb_set').window('close');  //关闭添加窗口
@@ -208,7 +204,7 @@
 					<tr>
 						<td  class="leftTd" style="width:50px">图片：</td>
 						<td  style="width:130">
-							<input class="none" type="text" name="imgPath" id="channelIcon_edit01"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<input class="none" type="text" name="imgPath" id="imgPath"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
 							<a id="pic_edit_upload_btn01" style="position: absolute; margin:30px 0 0 10px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 							<img id="item_path"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="100px" height="100px">
 							<div id="channelIcon_edit_upload_status01" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
@@ -216,7 +212,7 @@
 						</td>
 						<td  class="leftTd">缩略图：</td>
 						<td >
-							<input class="none" type="text" name="imgThumb" id="channelIcon_edit02"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<input class="none" type="text" name="imgThumb" id="imgThumb"  onchange="validateSubmitOnce=true;" readonly="readonly"/>
 							<a id="pic_edit_upload_btn02" style="position: absolute; margin:30px 0 0 10px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 							<img id="item_thumb"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="100px" height="100px">
 							<div id="channelIcon_edit_upload_status02" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
@@ -310,7 +306,7 @@
 			<table class="htm_edit_table" width="580">
 				<tbody>
 					<tr>
-						<td class="leftTd">织图ID：</td>
+						<td class="leftTd">商品ID：</td>
 						<td>
 							<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
 							<input name="reIndexId" class="reindex_column"/>
@@ -356,7 +352,7 @@
 			<table class="htm_edit_table" width="580">
 				<tbody>
 					<tr>
-						<td class="leftTd">织图ID：</td>
+						<td class="leftTd">商品ID：</td>
 						<td>
 							<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
 							<input name="reIndexId" class="reindex_column"/>
@@ -438,7 +434,7 @@
             'FileUploaded': function(up, file, info) {
             	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
             	$("#item_path").attr('src', url);
-            	$("#channelIcon_edit01").val(url);
+            	$("#imgPath").val(url);
             },
             'Error': function(up, err, errTip) {
                 $.messager.alert('上传失败',errTip);
@@ -488,7 +484,7 @@
             'FileUploaded': function(up, file, info) {
             	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
             	$("#item_thumb").attr('src', url);
-            	$("#channelIcon_edit02").val(url);
+            	$("#imgThumb").val(url);
             },
             'Error': function(up, err, errTip) {
                 $.messager.alert('上传失败',errTip);
