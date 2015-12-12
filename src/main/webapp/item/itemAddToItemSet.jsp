@@ -6,6 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>添加商品</title>
 <jsp:include page="/common/header.jsp"></jsp:include>
+<!-- 添加商品模块jsp引用  -->
+<jsp:include page="/item/addItemWindow.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
@@ -177,6 +179,7 @@
 			<div id="tb_set" style="padding:5px;height:auto" class="none">
 				<span>
 					<a href="javascript:void(0);" onclick="javascript:batchDeleteItemFromSet();" class="easyui-linkbutton" plain=true  iconCls="icon-cut">批量删除</a>
+					<a href="javascript:void(0);" onclick="javascript:reSuperb();" class="easyui-linkbutton" title="重排排序" plain="true" iconCls="icon-converter" id="reIndexedBtn">重新排序</a>
 				</span>
 			</div>
 		
@@ -188,14 +191,12 @@
 			<!-- toolbar -->
 			<div id="tb" style="padding:5px;height:auto" class="none">
 				<span>
-			<!-- 		<a href="javascript:void(0);" onclick="javascript:addToItemSet();" class="easyui-linkbutton" plain=true  iconCls="icon-add">批量添加</a> -->
+					<a href="javascript:void(0);" onclick="javascript:$('#add_item_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 					<input id="item_name" searcher="searchByItemName" class="easyui-searchbox" prompt="输入商品名搜索" style="width:150px;" />
 				</span>
 			</div>
 			
 	</div>
-	
-		
 	
 </body>
 </html>
