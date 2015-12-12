@@ -82,20 +82,19 @@
 			pageSize: 5,
 			pageList: [5,10,20],
 			onClickCell: function(rowIndex, field, value) {
-				alert(IsCheckFlag);
 				IsCheckFlag = false;
 			},
 			onSelect: function(rowIndex, rowData) {
+				// 选择操作时刷新展示重新排序所选择的数量
+				$("#reSerialCount").text($(this).datagrid("getSelections").length);
 				if ( !IsCheckFlag ) {
-					// 选择操作时刷新展示重新排序所选择的数量
-					$("#reSerialCount").text($("#htm_table").datagrid("getSelections").length);
 					IsCheckFlag = true;
 					$(this).datagrid("unselectRow", rowIndex);
 				}
 			},
 			onUnselect: function(rowIndex, rowData) {
 				// 选择操作时刷新展示重新排序所选择的数量
-				$("#reSerialCount").text($("#htm_table").datagrid("getSelections").length);
+				$("#reSerialCount").text($(this).datagrid("getSelections").length);
 				if ( !IsCheckFlag ) {
 					IsCheckFlag = true;
 					$(this).datagrid("selectRow", rowIndex);
