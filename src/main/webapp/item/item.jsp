@@ -84,6 +84,8 @@
 	//添加商品
 	function addItem(){
 		$("#item_id").val("");
+		$("#item_path").attr("src",null);
+		$("#item_thumb").attr("src",null);
 		$("#imgPath").val("");
 		$("#imgThumb").val("");
 		$("#item_name").val("");
@@ -100,6 +102,7 @@
 		$("#item_like").val("");
 		$("#item_link").val("");
 		$('#add_item_window').window('open');
+		$("#item_name").focus();
 	}
 	
 	
