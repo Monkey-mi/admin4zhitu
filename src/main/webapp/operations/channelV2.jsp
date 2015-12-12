@@ -746,7 +746,7 @@ function updateChannelWorldOp(channelId,worldFlag) {
 			<a href="javascript:void(0);" onclick="javascript:initEditWindow(0,0,false);" class="easyui-linkbutton" title="添加织图到广场" plain="true" iconCls="icon-add" id="addBtn">添加</a>
 			<a href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" title="重排活动排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序
 			<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
-			<!-- <a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" plain="true" iconCls="icon-converter" id="refreshCacheBtn">刷新缓存</a>-->
+			<a href="javascript:void(0);" onclick="javascript:refreshCache();" class="easyui-linkbutton" plain="true" iconCls="icon-converter" id="refreshCacheBtn">刷新缓存</a>
 			<span class="search_label">所属专题过滤：</span>
 			<input id="ss_channelTheme" >
 			<span class="search_label">有效性过滤：</span>

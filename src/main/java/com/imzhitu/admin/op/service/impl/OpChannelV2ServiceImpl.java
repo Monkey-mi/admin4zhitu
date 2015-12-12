@@ -485,7 +485,7 @@ public class OpChannelV2ServiceImpl extends BaseServiceImpl implements OpChannel
 
 	@Override
 	public void updateChannelCache() throws Exception {
-List<OpChannelV2Dto> topList = opChannelV2Mapper.queryChannelTop();
+		List<OpChannelV2Dto> topList = opChannelV2Mapper.queryChannelTop();
 	    
 	    // 转换后的置顶 集合
 	    List<OpChannel> topTempList = new ArrayList<OpChannel>();
@@ -520,7 +520,7 @@ List<OpChannelV2Dto> topList = opChannelV2Mapper.queryChannelTop();
 	    // 置顶频道id集合
 	    List<Integer> topChannelIds = new ArrayList<Integer>();
 	    for (OpChannel top : topTempList) {
-		topChannelIds.add(top.getId());
+	    	topChannelIds.add(top.getId());
 	    }
 	    
 	    // 只查询1000条数据
@@ -531,10 +531,10 @@ List<OpChannelV2Dto> topList = opChannelV2Mapper.queryChannelTop();
 	    
 	    // 精选集合中不能包含置顶集合中的频道，若有，则移除，即不放入筛选后集合
 	    for (OpChannel superb : superbList) {
-		// 若不存在于置顶频道集合中，则放入筛选后的精选集合
-		if (!topChannelIds.contains(superb.getId())) {
-		    superbTempList.add(superb);
-		}
+			// 若不存在于置顶频道集合中，则放入筛选后的精选集合
+			if (!topChannelIds.contains(superb.getId())) {
+			    superbTempList.add(superb);
+			}
 	    }
 	    
 	    // 刷新频道redis缓存
