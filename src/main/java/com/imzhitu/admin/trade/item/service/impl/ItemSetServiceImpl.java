@@ -169,9 +169,16 @@ public class ItemSetServiceImpl implements ItemSetService {
 	
 	@Override
 	public void addItemSet(String description, String path, String thumb) throws Exception {
+		// 根据流水得到id
+		Integer id = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_ID);
+		
 		// 链接类型为网页链接，则设置为1，是以公告处类型为标准设定
 		Integer type = 1;
-		itemSetMapper.insert(keyGenService.generateId(Admin.KEYGEN_ITEM_SET_ID), description, path, thumb, type, handleLink(Admin.KEYGEN_ITEM_SET_ID), AdminLoginUtil.getCurrentLoginId(), keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
+		
+		// 根据流水得到serial
+		Integer serial = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL);
+		
+		itemSetMapper.insert(id, description, path, thumb, type, handleLink(id), AdminLoginUtil.getCurrentLoginId(), serial);
 	}
 	
 	@Override
