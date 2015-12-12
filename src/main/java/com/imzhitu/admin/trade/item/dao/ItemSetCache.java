@@ -117,17 +117,7 @@ public class ItemSetCache {
 	public void deleteFromSeckillTempById(Integer itemSetId) {
 		// 从redis中获取秒杀商品集合记录
 		BoundHashOperations<String, Integer, Date> boundHashOps = seckillTempRedisTemplate.boundHashOps(CacheKeies.ITEM_SECKILLITEMSET_TEMP);
-		
-		// 得到itemSetId，与秒杀哦截止时间的键值Map
-		Map<Integer, Date> seckillMap = boundHashOps.entries();
-		
-		for (Integer id : seckillMap.keySet()) {
-			if ( id == itemSetId ) {
-				seckillMap.remove(itemSetId);
-			}
-		}
-		
-		boundHashOps.putAll(seckillMap);
+		boundHashOps.delete(itemSetId);
 	}
 	
 	/**

@@ -169,35 +169,14 @@ public class ItemSetServiceImpl implements ItemSetService {
 	
 	@Override
 	public void addItemSet(String description, String path, String thumb) throws Exception {
-		// 采用公告流水序号
-		Integer  serial = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL);
 		// 链接类型为网页链接，则设置为1，是以公告处类型为标准设定
 		Integer type = 1;
-		Integer id = itemSetMapper.insert(description, path, thumb, type , AdminLoginUtil.getCurrentLoginId(), serial);
-		updateItemSet(id, null, null, null, null, handleLink(id));
+		itemSetMapper.insert(keyGenService.generateId(Admin.KEYGEN_ITEM_SET_ID), description, path, thumb, type, handleLink(Admin.KEYGEN_ITEM_SET_ID), AdminLoginUtil.getCurrentLoginId(), keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
 	}
 	
 	@Override
 	public void updateItemSet(Integer id, String description, String path, String thumb) throws Exception {
-		// 链接类型为网页链接，则设置为1，是以公告处类型为标准设定
-		Integer type = 1;
-		updateItemSet(id, description, path, thumb, type, handleLink(id));
-	}
-	
-	/**
-	 * 更新商品集合
-	 * 
-	 * @param id
-	 * @param description
-	 * @param path
-	 * @param thumb
-	 * @param type
-	 * @param link
-	 * @throws Exception
-	 * @author zhangbo	2015年12月12日
-	 */
-	private void updateItemSet(Integer id, String description, String path, String thumb, Integer type, String link) throws Exception {
-		itemSetMapper.update(id, description, path, thumb, type, AdminLoginUtil.getCurrentLoginId());
+		itemSetMapper.update(id, description, path, thumb, AdminLoginUtil.getCurrentLoginId());
 	}
 	
 	/**
