@@ -47,7 +47,12 @@
 			},
 			{field: "deadline", title: "截止时间", align: "center",
 				formatter:function(value,row,index){
-					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+					// 若不为秒杀商品集合，则返回空
+					if ( row.isSeckill == 0 ) {
+						return "";
+					} else {
+						return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+					}
 				}
 			},
 			{field: "operator", title: "最后修改者", align: "center"},
