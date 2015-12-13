@@ -70,20 +70,20 @@
 		from 
 			hts.item
 		<where>
-		<if test="name != null">
-			name like CONCAT('%',#{name},'%')
-		</if>
-		<if test="itemSetId != null">
-		and id not in(
-				select 
-					item_id
-				from 
-					hts.item_set_r
-				where 
-					item_set_id = #{itemSetId}		
-			)
-		</if>
-		</where>	
+			<if test="name != null">
+				name like CONCAT('%',#{name},'%')
+			</if>
+			<if test="itemSetId != null">
+			and id not in (
+					select 
+						item_id
+					from 
+						hts.item_set_r
+					where 
+						item_set_id = #{itemSetId}		
+				)
+			</if>
+		</where>
 		order by serial desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
@@ -94,19 +94,49 @@
 			count(*)
 		from 
 			hts.item
+		<where>
+			<if test="name != null">
+				name like CONCAT('%',#{name},'%')
+			</if>
+			<if test="itemSetId != null">
+				and id not in (
+					select 
+						item_id
+					from 
+						hts.item_set_r
+					where 
+						item_set_id = #{itemSetId}		
+				)
+			</if>
+		</where>
 	</select>
-	
-	<!--  通过集合ID查询商品 -->
-	<select id="queryItemListBySetId" resultMap="ItemMap">
+
+	<select id="querSetItem" resultMap="ItemMap">
 		select 
 			hi.* 
 		from 
 			hts.item hi, hts.item_set_r his
-		where
-			hi.id =  his.item_id
-			and 
-			his.item_set_id = #{itemSetId}
-		order by serial desc	
+		<where>
+			hi.id =  his.item_id and his.item_set_id = #{itemSetId}
+			<if test="name != null">
+				and hi.name like CONCAT('%',#{name},'%')
+			</if>
+		</where>
+		order by his.serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="querSetItemTotal" resultType="LONG">
+		select 
+			count(*)
+		from 
+			hts.item hi, hts.item_set_r his
+		<where>
+			hi.id =  his.item_id and his.item_set_id = #{itemSetId}
+			<if test="name != null">
+				and hi.name like CONCAT('%',#{name},'%')
+			</if>
+		</where>
 	</select>
 	
 </mapper>

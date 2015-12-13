@@ -21,7 +21,8 @@ public interface ItemService {
 	 * @param jsonMap	返回值json
 	 * @author zhangbo	2015年12月9日
 	 */
-	void buildItemList(String name,Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap);
+	void buildItemList(String name,Integer itemSetId,Integer page, Integer rows, 
+			Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 查询集合下的商品
@@ -32,7 +33,7 @@ public interface ItemService {
 		*	2015年12月12日
 		*	mishengliang
 	 */
-	void buildItemListForSetItem(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap);
+//	void buildItemListForSetItem(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap);
 	
 	/**
 	 * 通过集合ID查询商品列表
@@ -43,7 +44,8 @@ public interface ItemService {
 		*	2015年12月11日
 		*	mishengliang
 	 */
-	void buildItemListBySetId(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap);
+	void buildSetItem(Integer itemSetId,Integer page, Integer rows,
+			Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * @param name

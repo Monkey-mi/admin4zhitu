@@ -228,19 +228,6 @@ public class Admin {
 	public static final Integer KEYGEN_ZT_TYPEWORLD_SERIAL	= 14;
 	
 	/**
-	 * 商品集合serial流水
-	 * @author zhangbo	2015年12月12日
-	 */
-	public static final Integer KEYGEN_ITEM_SET_SERIAL	= 15;
-	
-	/**
-	 * 商品集合id流水
-	 * @author zhangbo	2015年12月12日
-	 */
-	public static final Integer KEYGEN_ITEM_SET_ID	= 16;
-	
-	
-	/**
 	 * admin系统与daemon守护系统共同操作redis的key值
 	 * @author zhangbo	2015年7月17日
 	 */

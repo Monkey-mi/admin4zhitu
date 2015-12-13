@@ -171,11 +171,7 @@ public class ItemAction extends BaseCRUDAction {
 	 */
 	public String buildItemList() {
 		try {
-			if(isForItemSet == 1){//是否为查询set下的商品
-				itemService.buildItemListForSetItem(itemSetId,page, rows, jsonMap);
-			}else{
-				itemService.buildItemList(name,itemSetId,page, rows, jsonMap);
-			}
+			itemService.buildItemList(name, itemSetId, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -190,9 +186,9 @@ public class ItemAction extends BaseCRUDAction {
 	 * @return
 	 * @author zhangbo	2015年12月9日
 	 */
-	public String buildItemListBySetId() {
+	public String buildSetItem() {
 		try {
-			itemService.buildItemListBySetId(itemSetId,page, rows, jsonMap);
+			itemService.buildSetItem(itemSetId,page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

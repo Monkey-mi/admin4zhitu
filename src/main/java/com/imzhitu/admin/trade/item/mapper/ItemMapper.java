@@ -46,23 +46,13 @@ public interface ItemMapper {
 	List<Item> queryItemList(Item item);
 	
 	/**
-	 * 通过集合ID查寻商品
-	 * @param itemSetId
-	 * @return 
-		*	2015年12月12日
-		*	mishengliang
-	 */
-	@DataSource("slave")
-	List<Item> queryItemListBySetId(@Param("itemSetId")Integer itemSetId);
-	
-	/**
 	 * 查询商品总数
 	 * 
 	 * @return total	商品总数
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("slave")
-	Integer queryItemTotal();
+	Integer queryItemTotal(Item item);
 	
 	/**
 	 * 根据id删除商品
@@ -72,5 +62,27 @@ public interface ItemMapper {
 	 */
 	@DataSource("master")
 	void deleteById(@Param("id")Integer id);
+	
+	
+	/**
+	 * 通过查寻集合内的商品
+	 * @param itemSetId
+	 * @return 
+		*	2015年12月12日
+		*	mishengliang
+	 */
+	@DataSource("slave")
+	List<Item> querSetItem(Item item);
+	
+	/**
+	 * 查询集合内的商品总数
+	 * 
+	 * @param item
+	 * @return
+	 * 
+	 * @author lynch 2015-12-13
+	 */
+	@DataSource("slave")
+	public long querySetItemTotal(Item item);
 	
 }

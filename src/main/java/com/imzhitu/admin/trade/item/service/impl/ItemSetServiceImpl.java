@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowSelection;
+import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.pojo.RecommendItemBulletin;
 import com.hts.web.operations.pojo.SeckillBulletin;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpMsgBulletin;
-import com.imzhitu.admin.common.service.KeyGenService;
 import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
 import com.imzhitu.admin.privileges.service.AdminService;
@@ -59,9 +59,9 @@ public class ItemSetServiceImpl implements ItemSetService {
 	
 	@Autowired
 	private ItemSetCache itemSetCache;
-	
+
 	@Autowired
-	private KeyGenService keyGenService;
+	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
 	@Autowired
 	private ItemAndSetRelationMapper itemAndSetRelationMapper;
@@ -170,13 +170,13 @@ public class ItemSetServiceImpl implements ItemSetService {
 	@Override
 	public void addItemSet(String description, String path, String thumb) throws Exception {
 		// 根据流水得到id
-		Integer id = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_ID);
+		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_ID);
 		
 		// 链接类型为网页链接，则设置为1，是以公告处类型为标准设定
 		Integer type = 1;
 		
 		// 根据流水得到serial
-		Integer serial = keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL);
+		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL);
 		
 		itemSetMapper.insert(id, description, path, thumb, type, handleLink(id), AdminLoginUtil.getCurrentLoginId(), serial);
 	}
@@ -210,7 +210,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	public void addSeckillToTemp(Integer id, Date deadline) throws Exception {
 		itemSetCache.addSeckillTemp(id, deadline);
 		// 当添加到秒杀商品集合时，刷新序号，使其排到最顶层
-		itemSetMapper.updateSerial(id, keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
+		itemSetMapper.updateSerial(id, webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
 	}
 
 	@Override
@@ -382,14 +382,14 @@ public class ItemSetServiceImpl implements ItemSetService {
 		// 重新排序，勾选的倒序设置serial，这样查询后，按照serial查询就与勾选顺序相同
 		Integer[] idArray = StringUtil.convertStringToIds(ids);
 		for (int i = idArray.length -1; i >= 0; i--) {
-			itemSetMapper.updateSerial(idArray[i], keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
+			itemSetMapper.updateSerial(idArray[i], webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
 		}
 		
 		// 为了简便开发，这里没有过滤idArray中存在的秒杀商品集合id，而是直接重新刷新了一下秒杀商品集合对象的serial
 		// 为保证秒杀商品集合一直为最大serial状态，要重新刷新一下
 		Integer[] seckillTempIds = getSeckillTempIds();
 		for (int i = seckillTempIds.length -1; i >= 0; i--) {
-			itemSetMapper.updateSerial(seckillTempIds[i], keyGenService.generateId(Admin.KEYGEN_ITEM_SET_SERIAL));
+			itemSetMapper.updateSerial(seckillTempIds[i], webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
 		}
 	}
 	

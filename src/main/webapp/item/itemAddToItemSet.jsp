@@ -12,9 +12,8 @@
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
 	var itemSetId = <%= itemSetId%>;
-	var myQueryParams = {
-			'itemSetId':itemSetId,
-			'isForItemSet':0};
+	
+	myQueryParams = {};
 	addToItemSetURL = "./admin_trade/itemSet_insertItemToSet";
 	
 	var columnsFields = [
@@ -26,11 +25,6 @@
 				formatter: function(value,row,index) {
 	  				return "<img width='100px' height='40px' class='htm_column_img' src='" + value + "'/>";
 	  			}
-			},
-			{field: "imgThumb", title: "商品缩略图", align: "center",
-				formatter: function(value,row,index) {
-					return "<img width='100px' height='40px' class='htm_column_img' src='" + value + "'/>";
-				}
 			},
 			{field: "isThisSet", title: "本集合", align: "center",
 				formatter: function(value,row,index) {
@@ -56,8 +50,8 @@
 			selectOnCheck: true,
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
-			pageSize: 10,
-			pageList: [10,20,50]
+			pageSize: 5,
+			pageList: [5,10,20]
 		});
 		
 	});
@@ -89,8 +83,7 @@
 	***************************************************************
 	*/
 	var myQueryParamsSet = {
-			itemSetId:itemSetId,
-			isForItemSet:1		//1表示为查询集合下的商品
+			itemSetId:itemSetId
 	};
 	var batchDeleteItemFromSetURL = "./admin_trade/item_batchDeleteItemFromSet";
 	
@@ -99,7 +92,7 @@
 		$("#htm_table_set").datagrid({
 			title: "集合商品列表",
 			width: $(document.body).width(),
-			url: "./admin_trade/item_buildItemList",
+			url: "./admin_trade/item_buildSetItem",
 			toolbar: "#tb_set",
 			idField: "id",
 			queryParams:myQueryParamsSet,
@@ -109,8 +102,8 @@
 			autoRowHeight: true,
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
-			pageSize: 10,
-			pageList: [10,20,50],
+			pageSize: 5,
+			pageList: [5,10,20]
 		});
 		// 展示界面
 		$("#main").show();
@@ -125,11 +118,6 @@
 				formatter: function(value,row,index) {
 	  				return "<img width='100px' height='40px' class='htm_column_img' src='" + value + "'/>";
 	  			}
-			},
-			{field: "imgThumb", title: "商品缩略图", align: "center",
-				formatter: function(value,row,index) {
-					return "<img width='100px' height='40px' class='htm_column_img' src='" + value + "'/>";
-				}
 			}
 		];
 		

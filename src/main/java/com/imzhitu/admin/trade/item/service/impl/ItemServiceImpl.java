@@ -1,5 +1,6 @@
 package com.imzhitu.admin.trade.item.service.impl;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.aliyun.common.utils.Lists;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowSelection;
+import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
@@ -27,7 +29,7 @@ import com.imzhitu.admin.trade.item.service.ItemService;
  *
  */
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 	
 	@Autowired
 	private ItemMapper itemMapper;
@@ -61,59 +63,86 @@ public class ItemServiceImpl implements ItemService {
 
 	/**
 	 * 查询总的商品，但传入集合ID时，需要查找非此集合下的商品，用与商品捡如集合时使用
+	 * @throws Exception 
 	 */
 	@Override
-	public void buildItemList(String name,Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
-/*		Integer fristRow = (page-1) * rows;
-		Integer limit = rows;*/
+	public void buildItemList(String name,Integer itemSetId,Integer page, Integer rows,
+			Map<String, Object> jsonMap) throws Exception {
+//		Integer fristRow = (page-1) * rows;
+//		Integer limit = rows;
+//		
+//		Item item = new Item();
+//		item.setItemSetId(itemSetId);
+//		item.setName(name);
+//		item.setFirstRow(fristRow);
+//		item.setLimit(limit);
+//		
+//		List<Item> list = null;
+//		
+//		list = itemMapper.queryItemList(item);
+//		int total = itemMapper.queryItemTotal();
+//		jsonMap.put(OptResult.ROWS, list);
+//		jsonMap.put(OptResult.TOTAL,total);
 		
 		Item item = new Item();
 		item.setItemSetId(itemSetId);
 		item.setName(name);
-/*		item.setFirstRow(fristRow);
-		item.setLimit(limit);*/
 		
-		List<Item> list = null;
+		buildNumberDtos(item, page, rows, jsonMap, new NumberDtoListAdapter<Item>() {
+
+			@Override
+			public List<? extends Serializable> queryList(Item dto) {
+				return itemMapper.queryItemList(dto);
+			}
+
+			@Override
+			public long queryTotal(Item dto) {
+				return itemMapper.queryItemTotal(dto);
+			}
+		});
 		
-		 list = itemMapper.queryItemList(item);
-		 int total = list.size();
-		jsonMap.put(OptResult.ROWS, list);
-		jsonMap.put(OptResult.TOTAL,total);		
 	}
 	
 	/**
 	 * 查询集合下的商品
 	 */
+//	@Override
+//	public void buildItemListForSetItem(Integer itemSetId,Integer page, Integer rows,
+//			Map<String, Object> jsonMap) {
+//		Integer fristRow = (page-1) * rows;
+//		Integer limit = rows;
+//		
+//		Item item = new Item();
+//		item.setFirstRow(fristRow);
+//		item.setLimit(limit);
+//		
+//		List<Item> list = null;
+//		
+//		list = itemMapper.queryItemListBySetId(itemSetId);
+//		int total = list.size();
+//		jsonMap.put(OptResult.ROWS, list);
+//		jsonMap.put(OptResult.TOTAL,total);		
+//	}
+	
+	
 	@Override
-	public void buildItemListForSetItem(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
-		Integer fristRow = (page-1) * rows;
-		Integer limit = rows;
-		
+	public void buildSetItem(Integer itemSetId,Integer page, Integer rows, 
+			Map<String, Object> jsonMap) throws Exception{
 		Item item = new Item();
-		item.setFirstRow(fristRow);
-		item.setLimit(limit);
+		item.setItemSetId(itemSetId);
 		
-		List<Item> list = null;
-		
-		list = itemMapper.queryItemListBySetId(itemSetId);
-		int total = list.size();
-		jsonMap.put(OptResult.ROWS, list);
-		jsonMap.put(OptResult.TOTAL,total);		
-	}
-	
-	
-	/**
-	 * mishengliang 2015-12-11
-	 * 通过集合ID查询商品
-	 */
-	@Override
-	public void buildItemListBySetId(Integer itemSetId,Integer page, Integer rows, Map<String, Object> jsonMap) {
-		int start = (page - 1)*rows;
-		int limit = rows;
-		List<com.hts.web.trade.item.dto.ItemDTO> listFromWeb = itemCache.queryItemListBySetId(itemSetId, new RowSelection(start, limit));
-		List<Item> list = transFormateByItemDTO(listFromWeb);
-		jsonMap.put(OptResult.ROWS, list);
-		jsonMap.put(OptResult.TOTAL,list.size());		
+		buildNumberDtos(item, page, rows, jsonMap, new NumberDtoListAdapter<Item>() {
+
+			@Override
+			public List<? extends Serializable> queryList(Item dto) {
+				return itemMapper.querSetItem(dto);
+			}
+
+			@Override
+			public long queryTotal(Item dto) {
+				return itemMapper.querySetItemTotal(dto);
+			}
+		});
 	}
 
 	@Override
