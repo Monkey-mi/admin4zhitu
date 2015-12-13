@@ -13,9 +13,6 @@ import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowSelection;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
-import com.hts.web.operations.pojo.RecommendItemBulletin;
-import com.hts.web.operations.pojo.SeckillBulletin;
-import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpMsgBulletin;
 import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
@@ -89,17 +86,19 @@ public class ItemSetServiceImpl implements ItemSetService {
 		List<OpMsgBulletin> bulletinlist = msgBulletinMapper.queryMsgBulletinByIds(bullentinIds);
 		
 		// 定义存储到缓存的有奖活动集合，由于是更新供客户端调用的redis，所以定义为web端对象
-		List<com.hts.web.operations.pojo.AwardActivityBulletin> awardActivityList = new ArrayList<com.hts.web.operations.pojo.AwardActivityBulletin>();
+		List<com.hts.web.operations.pojo.ItemSetBulletin> awardActivityList = new ArrayList<com.hts.web.operations.pojo.ItemSetBulletin>();
 		
 		for (OpMsgBulletin bulletin : bulletinlist) {
 			// 转换对象
-			com.hts.web.operations.pojo.AwardActivityBulletin awardActivity = new com.hts.web.operations.pojo.AwardActivityBulletin();
+			com.hts.web.operations.pojo.ItemSetBulletin awardActivity = new com.hts.web.operations.pojo.ItemSetBulletin();
 			awardActivity.setId(bulletin.getId());
 			awardActivity.setBulletinName(bulletin.getBulletinName());
 			awardActivity.setBulletinPath(bulletin.getBulletinPath());
 			awardActivity.setBulletinThumb(bulletin.getBulletinThumb());
 			awardActivity.setBulletinType(bulletin.getBulletinType());
 			awardActivity.setLink(bulletin.getLink());
+			// 由于整体活动内商品集合展示需要，并且要根据serial提示是否有更新，所以此处serial的设值使用itemSet的serial
+			awardActivity.setSerial(webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
 			
 			awardActivityList.add(awardActivity);
 		}
@@ -115,8 +114,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 		
 		// 若是查询正在展示的商品集合，则从redis缓存中获取，1为正在展示的限时秒杀，2为正在展示的推荐商品，其他情况为查询全部数据
 		if ( cacheFlag == seckillCacheFlag ) {
-			List<SeckillBulletin> seckillList = itemBulletinCache.querySeckill(new RowSelection(1,0));
-			for (SeckillBulletin seckill : seckillList) {
+			List<com.hts.web.operations.pojo.ItemSetBulletin> seckillList = itemBulletinCache.querySeckill(new RowSelection(1,0));
+			for (com.hts.web.operations.pojo.ItemSetBulletin seckill : seckillList) {
 				ItemSetDTO dto = new ItemSetDTO();
 				dto.setId(seckill.getId());
 				dto.setDescription(seckill.getBulletinName());
@@ -129,8 +128,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 			}
 			total = seckillList.size();
 		} else if ( cacheFlag == recommendItemCacheFlag ) {
-			List<RecommendItemBulletin> rItemList = itemBulletinCache.queryRecommendItem(new RowSelection(1,0));
-			for (RecommendItemBulletin rItem : rItemList) {
+			List<com.hts.web.operations.pojo.ItemSetBulletin> rItemList = itemBulletinCache.queryRecommendItem(new RowSelection(1,0));
+			for (com.hts.web.operations.pojo.ItemSetBulletin rItem : rItemList) {
 				ItemSetDTO dto = new ItemSetDTO();
 				dto.setId(rItem.getId());
 				dto.setDescription(rItem.getBulletinName());
@@ -232,7 +231,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	 */
 	private void refreshSeckillCache() {
 		// 定义web秒杀商品集合列表
-		List<com.hts.web.operations.pojo.SeckillBulletin> seckillList = new ArrayList<com.hts.web.operations.pojo.SeckillBulletin>();
+		List<com.hts.web.operations.pojo.ItemSetBulletin> seckillList = new ArrayList<com.hts.web.operations.pojo.ItemSetBulletin>();
 		
 		// 得到秒杀临时存储中的itemSetId与截止时间Map
 		Map<Integer, Date> seckillTemp = itemSetCache.getSeckillTemp();
@@ -240,7 +239,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 			// 循环处理商品集合id
 			for (Integer ItemSetId : seckillTemp.keySet()) {
 				// 定义秒杀对象公告
-				com.hts.web.operations.pojo.SeckillBulletin seckill = new com.hts.web.operations.pojo.SeckillBulletin();
+				com.hts.web.operations.pojo.ItemSetBulletin seckill = new com.hts.web.operations.pojo.ItemSetBulletin();
 				
 				// 查询商品集合对象，然后转换成web端存储的秒杀公告
 				ItemSet itemSet = itemSetMapper.getItemSetById(ItemSetId);
@@ -292,12 +291,12 @@ public class ItemSetServiceImpl implements ItemSetService {
 		}
 		
 		// 定义web推荐商品集合列表
-		List<com.hts.web.operations.pojo.RecommendItemBulletin> recommendItemList = new ArrayList<com.hts.web.operations.pojo.RecommendItemBulletin>();
+		List<com.hts.web.operations.pojo.ItemSetBulletin> recommendItemList = new ArrayList<com.hts.web.operations.pojo.ItemSetBulletin>();
 		
 		// 循环处理商品集合id
 		for (ItemSet itemSet : itemSetList) {
 			// 定义推荐商品对象公告
-			com.hts.web.operations.pojo.RecommendItemBulletin recommendItem = new com.hts.web.operations.pojo.RecommendItemBulletin();
+			com.hts.web.operations.pojo.ItemSetBulletin recommendItem = new com.hts.web.operations.pojo.ItemSetBulletin();
 			
 			// 转换对应属性
 			recommendItem.setId(itemSet.getId());

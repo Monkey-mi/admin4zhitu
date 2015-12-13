@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -23,11 +22,11 @@ import com.hts.web.base.constant.CacheKeies;
 public class ItemSetCache {
 	
 	/**
-	 * redis操作对象，存储数据供客户端使用，为web端公告对象子类
+	 * redis操作对象，存储数据供客户端使用，为web端商品集合公告对象
 	 * @author zhangbo	2015年12月8日
 	 */
 	@Autowired
-	private RedisTemplate<String, ? extends com.hts.web.common.pojo.OpMsgBulletin> redisTemplate;
+	private RedisTemplate<String, com.hts.web.operations.pojo.ItemSetBulletin> redisTemplate;
 	
 	@Autowired
 	private RedisTemplate<String, Map<Integer, Date>> seckillTempRedisTemplate;
@@ -38,18 +37,16 @@ public class ItemSetCache {
 	 * @param seckillList<com.hts.web.operations.pojo.SeckillBulletin>	限时秒杀公告集合，由于是用于客户端调用，所以泛型存储的为web端秒杀公告对象
 	 * @author zhangbo	2015年12月8日
 	 */
-	@SuppressWarnings("unchecked")
-	public void updateSeckill(List<com.hts.web.operations.pojo.SeckillBulletin> seckillList) {
-		// 若存在redis的key值，则清空缓存
-		if(redisTemplate.hasKey(CacheKeies.OP_MSG_SECKILL)) {
-			redisTemplate.delete(CacheKeies.OP_MSG_SECKILL);
-		}
+	public void updateSeckill(List<com.hts.web.operations.pojo.ItemSetBulletin> seckillList) {
 		if(seckillList.size() > 0) {
-			com.hts.web.operations.pojo.SeckillBulletin[] list = new com.hts.web.operations.pojo.SeckillBulletin[seckillList.size()];
-			BoundListOperations<String, com.hts.web.operations.pojo.SeckillBulletin> boundListOps = (BoundListOperations<String, com.hts.web.operations.pojo.SeckillBulletin>) redisTemplate.opsForList().getOperations().boundListOps(CacheKeies.OP_MSG_SECKILL);
+			// 若存在redis的key值，则清空缓存
+			if(redisTemplate.hasKey(CacheKeies.OP_MSG_SECKILL)) {
+				redisTemplate.delete(CacheKeies.OP_MSG_SECKILL);
+			}
+			com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[seckillList.size()];
 			
 			// 从右放入数据，即与现有的list数据顺序保持一致
-			boundListOps.rightPushAll(seckillList.toArray(list));
+			redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_SECKILL, seckillList.toArray(list));
 		}
 	}
 	
@@ -59,18 +56,16 @@ public class ItemSetCache {
 	 * @param awardActivityList<com.hts.web.operations.pojo.AwardActivityBulletin>	有奖活动公告集合，由于是用于客户端调用，所以泛型存储的为web端有奖活动公告对象
 	 * @author zhangbo	2015年12月8日
 	 */
-	@SuppressWarnings("unchecked")
-	public void updateAwardActivity(List<com.hts.web.operations.pojo.AwardActivityBulletin> awardActivityList) {
-		// 若存在redis的key值，则清空缓存
-		if(redisTemplate.hasKey(CacheKeies.OP_MSG_AWARD_ACTIVITY)) {
-			redisTemplate.delete(CacheKeies.OP_MSG_AWARD_ACTIVITY);
-		}
+	public void updateAwardActivity(List<com.hts.web.operations.pojo.ItemSetBulletin> awardActivityList) {
 		if(awardActivityList.size() > 0) {
-			com.hts.web.operations.pojo.AwardActivityBulletin[] list = new com.hts.web.operations.pojo.AwardActivityBulletin[awardActivityList.size()];
-			BoundListOperations<String, com.hts.web.operations.pojo.AwardActivityBulletin> boundListOps = (BoundListOperations<String, com.hts.web.operations.pojo.AwardActivityBulletin>) redisTemplate.opsForList().getOperations().boundListOps(CacheKeies.OP_MSG_AWARD_ACTIVITY);
+			// 若存在redis的key值，则清空缓存
+			if(redisTemplate.hasKey(CacheKeies.OP_MSG_AWARD_ACTIVITY)) {
+				redisTemplate.delete(CacheKeies.OP_MSG_AWARD_ACTIVITY);
+			}
+			com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[awardActivityList.size()];
 			
 			// 从右放入数据，即与现有的list数据顺序保持一致
-			boundListOps.rightPushAll(awardActivityList.toArray(list));
+			redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_AWARD_ACTIVITY, awardActivityList.toArray(list));
 		}
 	}
 	
@@ -80,18 +75,16 @@ public class ItemSetCache {
 	 * @param recommendItemList<com.hts.web.operations.pojo.RecommendItemBulletin>	商品推荐公告集合，由于是用于客户端调用，所以泛型存储的为web端推荐商品公告对象
 	 * @author zhangbo	2015年12月8日
 	 */
-	@SuppressWarnings("unchecked")
-	public void updateRecommendItem(List<com.hts.web.operations.pojo.RecommendItemBulletin> recommendItemList) {
-		// 若存在redis的key值，则清空缓存
-		if(redisTemplate.hasKey(CacheKeies.OP_MSG_RECOMMEND_ITEM)) {
-			redisTemplate.delete(CacheKeies.OP_MSG_RECOMMEND_ITEM);
-		}
+	public void updateRecommendItem(List<com.hts.web.operations.pojo.ItemSetBulletin> recommendItemList) {
 		if(recommendItemList.size() > 0) {
-			com.hts.web.operations.pojo.RecommendItemBulletin[] list = new com.hts.web.operations.pojo.RecommendItemBulletin[recommendItemList.size()];
-			BoundListOperations<String, com.hts.web.operations.pojo.RecommendItemBulletin> boundListOps = (BoundListOperations<String, com.hts.web.operations.pojo.RecommendItemBulletin>) redisTemplate.opsForList().getOperations().boundListOps(CacheKeies.OP_MSG_RECOMMEND_ITEM);
+			// 若存在redis的key值，则清空缓存
+			if(redisTemplate.hasKey(CacheKeies.OP_MSG_RECOMMEND_ITEM)) {
+				redisTemplate.delete(CacheKeies.OP_MSG_RECOMMEND_ITEM);
+			}
+			com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[recommendItemList.size()];
 			
 			// 从右放入数据，即与现有的list数据顺序保持一致
-			boundListOps.rightPushAll(recommendItemList.toArray(list));
+			redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_RECOMMEND_ITEM, recommendItemList.toArray(list));
 		}
 	}
 	
