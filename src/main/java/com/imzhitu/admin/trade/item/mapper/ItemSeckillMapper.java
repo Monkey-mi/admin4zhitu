@@ -24,6 +24,13 @@ public interface ItemSeckillMapper {
 	@DataSource("master")
 	void insert(@Param("id")Integer id, @Param("deadline")Date deadline);
 	
-	
+	/**
+	 * 根据商品id集合删除
+	 * 
+	 * @param ids		商品id集合
+	 * @author zhangbo	2015年12月11日
+	 */
+	@DataSource("master")
+	void deleteByIds(@Param("ids")Integer[] ids);
 	
 }

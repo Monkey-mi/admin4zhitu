@@ -11,4 +11,13 @@
 	 		(#{id}, #{deadline})
 	</insert>
 	
+	<!-- 根据商品id集合删除 -->
+	<delete id="deleteByIds">
+		delete from hts.item_seckill where id in
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
 </mapper>
