@@ -358,6 +358,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setLike(item.getLike());
 				dto.setLink(item.getLink());
 				dto.setDeadline(deadline);
+				rtnList.add(dto);
 			}
 		}
 		return rtnList;
