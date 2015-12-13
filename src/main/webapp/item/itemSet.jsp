@@ -180,6 +180,7 @@
 		
 		$("#add_itemSet_window").window("open");
 		$("#htm_table").datagrid("clearSelections");
+		$("#htm_table").datagrid("clearChecked");
 	};
 	
 	/**
@@ -241,6 +242,7 @@
 						$.messager.alert("温馨提示","删除" + rows.length + "条记录");
 						// 清除所有已选择的记录，避免重复提交id值
 						$("#htm_table").datagrid("clearSelections");
+						$("#htm_table").datagrid("clearChecked");
 						// 批量删除刷新当前页
 						$("#htm_table").datagrid("reload");
 					});
@@ -269,6 +271,7 @@
 				$.messager.alert("温馨提示","排序" + rows.length + "条记录");
 				// 清除所有已选择的记录，避免重复提交id值
 				$("#htm_table").datagrid("clearSelections");
+				$("#htm_table").datagrid("clearChecked");
 				// 批量删除刷新当前页
 				$("#htm_table").datagrid("reload");
 				$("#reSerialCount").text(0);
