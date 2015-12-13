@@ -10,7 +10,6 @@ import com.hts.web.base.StrutsKey;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
-import com.imzhitu.admin.trade.item.service.ItemAndSetRelationService;
 import com.imzhitu.admin.trade.item.service.ItemSetService;
 
 /**
@@ -21,9 +20,6 @@ import com.imzhitu.admin.trade.item.service.ItemSetService;
  */
 @SuppressWarnings("serial")
 public class ItemSetAction extends BaseCRUDAction {
-	
-	@Autowired
-	private ItemAndSetRelationService  itemAndSetRelationService;
 	
 	/**
 	 * 商品ids
@@ -144,22 +140,6 @@ public class ItemSetAction extends BaseCRUDAction {
 		try {
 			Integer[] idArray = StringUtil.convertStringToIds(ids);
 			itemSetService.batchDelete(idArray);
-			JSONUtil.optSuccess(jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 增加商品和商品集合之间关系
-	 * @return 
-		*	2015年12月10日
-		*	mishengliang
-	 */
-	public String insertItemToSet(){
-		try {
-			itemAndSetRelationService.insertItemToSet(id, itemIds);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

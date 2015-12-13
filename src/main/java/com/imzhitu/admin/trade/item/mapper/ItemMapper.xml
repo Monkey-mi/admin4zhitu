@@ -14,24 +14,25 @@
 		<result column="sale" property="sale" javaType="java.math.BigDecimal"/>
 		<result column="sales" property="sales" javaType="java.lang.Integer"/>
 		<result column="stock" property="stock" javaType="java.lang.Integer"/>
-		<result column="item_id" property="itemId" javaType="java.lang.Long"/>
-		<result column="item_type" property="itemType" javaType="java.lang.Integer"/>
+		<result column="taobao_id" property="taobaoId" javaType="java.lang.Long"/>
+		<result column="taobao_type" property="taobaoType" javaType="java.lang.Integer"/>
 		<result column="category_id" property="categoryId" javaType="java.lang.Integer"/>
 		<result column="brand_id" property="brandId" javaType="java.lang.Integer"/>
-		<result column="like_num" property="like" javaType="java.lang.Integer"/>
+		<result column="like_num" property="likeNum" javaType="java.lang.Integer"/>
 		<result column="link" property="link" javaType="java.lang.String"/>
 	</resultMap>
 	
-	<!-- 新增商品，商品对象设置的属性都会持久化到数据库 -->
 	<insert id="insert">
 		insert into 
 			hts.item 
-			(name, summary, description, world_id, img_path, img_thumb, price, sale, sales, stock, item_id, item_type, category_id, brand_id, like_num,link,serial)
+			(id, name, summary, description, world_id, img_path, img_thumb, price, sale,
+			 sales, stock, taobao_id, taobao_type, category_id, brand_id, like_num,link)
 	 	values 
-	 		(#{name}, #{summary}, #{description}, #{worldId}, #{imgPath}, #{imgThumb}, #{price}, #{sale}, #{sales}, #{stock}, #{itemId}, #{itemType}, #{categoryId}, #{brandId}, #{like},#{link},#{serial})
+	 		(#{id}, #{name}, #{summary}, #{description}, #{worldId}, #{imgPath}, 
+	 		#{imgThumb}, #{price}, #{sale}, #{sales}, #{stock}, #{taobaoId}, #{taobaoType}, 
+	 		#{categoryId}, #{brandId}, #{likeNum},#{link})
 	</insert>
 	
-	<!-- 根据id更新商品，可以更新商品对象的所有属性 -->
 	<update id="update">
 		update 
 			hts.item 
@@ -46,24 +47,29 @@
 	      <if test="sale != null">sale = #{sale},</if>
 	      <if test="sales != null">sales = #{sales},</if>
 	      <if test="stock != null">stock = #{stock},</if>
-	      <if test="itemId != null">item_id = #{itemId},</if>
-	      <if test="itemType != null">item_type = #{itemType},</if>
+	      <if test="taobaoId != null">taobao_id = #{taobaoId},</if>
+	      <if test="taobaoType != null">taobao_type = #{taobaoType},</if>
 	      <if test="categoryId != null">category_id = #{categoryId},</if>
 	      <if test="brandId != null">brand_id = #{brandId},</if>
-	      <if test="like != null">like_num = #{like},</if>
+	      <if test="likeNum != null">like_num = #{likeNum},</if>
 	       <if test="link != null">link = #{link},</if>
-	      <if test="serial != null">serial = #{serial}</if>
 	    </set>
 	  	where 
 	  		id = #{id}
 	</update>
 
-	<!-- 根据id删除商品 -->
 	<delete id="deleteById">
 		delete from hts.item where id = #{id}
 	</delete>
 	
-	<!-- 分页查询商品 -->
+	<delete id="deleteByIds">
+		delete from hts.item where id in 
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
+	</delete>
+	
 	<select id="queryItemList" resultMap="ItemMap">
 		select 
 			* 
@@ -84,12 +90,11 @@
 				)
 			</if>
 		</where>
-		order by serial desc
+		order by id desc
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
-	<!-- 查询商品总数 -->
-	<select id="queryItemTotal" resultType="INTEGER">
+	<select id="queryItemTotal" resultType="long">
 		select 
 			count(*)
 		from 
@@ -110,33 +115,9 @@
 			</if>
 		</where>
 	</select>
+	
+	<select id="queryItemById" resultMap="ItemMap">
+		select * from hts.item where id=#{id}
+	</select>
 
-	<select id="querSetItem" resultMap="ItemMap">
-		select 
-			hi.* 
-		from 
-			hts.item hi, hts.item_set_r his
-		<where>
-			hi.id =  his.item_id and his.item_set_id = #{itemSetId}
-			<if test="name != null">
-				and hi.name like CONCAT('%',#{name},'%')
-			</if>
-		</where>
-		order by his.serial desc
-		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
-	</select>
-	
-	<select id="querSetItemTotal" resultType="LONG">
-		select 
-			count(*)
-		from 
-			hts.item hi, hts.item_set_r his
-		<where>
-			hi.id =  his.item_id and his.item_set_id = #{itemSetId}
-			<if test="name != null">
-				and hi.name like CONCAT('%',#{name},'%')
-			</if>
-		</where>
-	</select>
-	
 </mapper>

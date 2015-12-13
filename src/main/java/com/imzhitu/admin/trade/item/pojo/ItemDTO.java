@@ -1,4 +1,4 @@
-package com.imzhitu.admin.trade.item.dto;
+package com.imzhitu.admin.trade.item.pojo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,6 +17,10 @@ public class ItemDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 4140769167628522080L;
 
+	private Integer itemSetSerial;
+	private Integer itemSetId;
+	private Integer itemId;
+	
 	/**
 	 * 商品主键id
 	 * @author zhangbo	2015年12月9日
@@ -87,13 +91,13 @@ public class ItemDTO implements Serializable {
 	 * 淘宝商品真实id
 	 * @author zhangbo	2015年12月9日
 	 */
-	private Integer itemId;
+	private Long taobaoId;
 	
 	/**
 	 * 淘宝物品:1,天猫:2
 	 * @author zhangbo	2015年12月9日
 	 */
-	private Integer itemType;
+	private Integer taobaoType;
 	
 	/**
 	 * 类别id
@@ -123,7 +127,9 @@ public class ItemDTO implements Serializable {
 	 * 点赞数量
 	 * @author zhangbo	2015年12月10日
 	 */
-	private Integer like;
+	private Integer likeNum;
+	
+	private String link;
 
 	/**
 	 * @return the id
@@ -279,32 +285,20 @@ public class ItemDTO implements Serializable {
 		this.stock = stock;
 	}
 
-	/**
-	 * @return the itemId
-	 */
-	public Integer getItemId() {
-		return itemId;
+	public Long getTaobaoId() {
+		return taobaoId;
 	}
 
-	/**
-	 * @param itemId the itemId to set
-	 */
-	public void setItemId(Integer itemId) {
-		this.itemId = itemId;
+	public void setTaobaoId(Long taobaoId) {
+		this.taobaoId = taobaoId;
 	}
 
-	/**
-	 * @return the itemType
-	 */
-	public Integer getItemType() {
-		return itemType;
+	public Integer getTaobaoType() {
+		return taobaoType;
 	}
 
-	/**
-	 * @param itemType the itemType to set
-	 */
-	public void setItemType(Integer itemType) {
-		this.itemType = itemType;
+	public void setTaobaoType(Integer taobaoType) {
+		this.taobaoType = taobaoType;
 	}
 
 	/**
@@ -363,18 +357,45 @@ public class ItemDTO implements Serializable {
 		this.brand = brand;
 	}
 
-	/**
-	 * @return the like
-	 */
-	public Integer getLike() {
-		return like;
+	public Integer getLikeNum() {
+		return likeNum;
 	}
 
-	/**
-	 * @param like the like to set
-	 */
-	public void setLike(Integer like) {
-		this.like = like;
+	public void setLikeNum(Integer likeNum) {
+		this.likeNum = likeNum;
+	}
+
+	public Integer getItemSetSerial() {
+		return itemSetSerial;
+	}
+
+	public void setItemSetSerial(Integer itemSetSerial) {
+		this.itemSetSerial = itemSetSerial;
+	}
+
+	public Integer getItemSetId() {
+		return itemSetId;
+	}
+
+	public void setItemSetId(Integer itemSetId) {
+		this.itemSetId = itemSetId;
+	}
+
+	public Integer getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Integer itemId) {
+		this.itemId = itemId;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 	
+
 }

@@ -23,8 +23,6 @@ import com.hts.web.common.util.Log;
  */
 @RunWith(SpringJUnit4ClassRunner.class)  
 @ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/spring-config.xml"}) 
-//@TransactionConfiguration(transactionManager="transactionManager",defaultRollback=false)
-//@Transactional
 public abstract class BaseTest {
 	
 	protected Logger logger = Logger.getLogger(BaseTest.class);

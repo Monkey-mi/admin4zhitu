@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.trade.item.mapper.ItemSetRelationMapper">
+
+	<resultMap id="ItemMap" type="com.imzhitu.admin.trade.item.pojo.Item">
+		<result column="serial" property="itemSetSerial" javaType="java.lang.Integer"/>
+		<result column="item_set_id" property="itemSetId" javaType="java.lang.Integer"/>
+		<result column="item_id" property="itemId" javaType="java.lang.Integer"/>
+		<result column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="name" property="name" javaType="java.lang.String"/>
+		<result column="summary" property="summary" javaType="java.lang.String"/>
+		<result column="description" property="description" javaType="java.lang.String"/>
+		<result column="world_id" property="worldId" javaType="java.lang.Integer"/>
+		<result column="img_path" property="imgPath" javaType="java.lang.String"/>
+		<result column="img_thumb" property="imgThumb" javaType="java.lang.String"/>
+		<result column="price" property="price" javaType="java.math.BigDecimal"/>
+		<result column="sale" property="sale" javaType="java.math.BigDecimal"/>
+		<result column="sales" property="sales" javaType="java.lang.Integer"/>
+		<result column="stock" property="stock" javaType="java.lang.Integer"/>
+		<result column="taobao_id" property="taobaoId" javaType="java.lang.Long"/>
+		<result column="taobao_type" property="taobaoType" javaType="java.lang.Integer"/>
+		<result column="link" property="link" javaType="java.lang.String"/>
+		<result column="category_id" property="categoryId" javaType="java.lang.Integer"/>
+		<result column="brand_id" property="brandId" javaType="java.lang.Integer"/>
+		<result column="like_num" property="likeNum" javaType="java.lang.Integer"/>
+	</resultMap>
+
+	<insert id="saveItem">
+		insert into 
+			hts.item_set_r
+			(item_id,item_set_id, serial)
+	 	values 
+	 		(#{itemId}, #{itemSetId}, #{serial})
+	</insert>
+	
+	
+	<select id="queryItemListBySetId" resultMap="ItemMap">
+		select 
+			i.*
+		from 
+			hts.item_set_r isr, 
+			hts.item i
+		where 
+			isr.item_set_id = #{itemSetId}
+			and isr.item_id = i.id
+		order by isr.serial desc
+	</select>
+	
+	<delete id="deleteByItemId">
+		delete from
+			hts.item_set_r
+		where 
+			item_set_id=#{itemSetId} and item_id=#{itemId}	
+	</delete>
+	
+	
+	<update id="updateSerial">
+		update 
+			hts.item_set_r
+		set 
+			serial=#{serial}
+		where 
+			item_id=#{itemId} and item_set_id=#{itemSetId}
+	</update>
+	
+	<select id="querSetItem" resultMap="ItemMap">
+		select 
+			hi.*, his.serial, his.item_set_id
+		from 
+			hts.item hi, hts.item_set_r his
+		<where>
+			hi.id =  his.item_id and his.item_set_id = #{itemSetId}
+			<if test="name != null">
+				and hi.name like CONCAT('%',#{name},'%')
+			</if>
+		</where>
+		order by his.serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="querySetItemTotal" resultType="LONG">
+		select 
+			count(*)
+		from 
+			hts.item hi, hts.item_set_r his
+		<where>
+			hi.id =  his.item_id and his.item_set_id = #{itemSetId}
+			<if test="name != null">
+				and hi.name like CONCAT('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="querySetId" resultType="int">
+		select item_set_id from hts.item_set_r where item_id=#{itemId}
+	</select>
+	
+</mapper>

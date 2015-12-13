@@ -22,7 +22,7 @@ public interface ItemMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("master")
-	void insert(Item item);
+	public void insert(Item item);
 	
 	/**
 	 * 根据id更新商品，可以更新商品对象的所有属性
@@ -31,28 +31,7 @@ public interface ItemMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("master")
-	void update(Item item);
-
-	/**
-	 * 分页查询商品，若fristRow与limit传递为null，则查询全部商品
-	 * 
-	 * @param fristRow	分页起始位置
-	 * @param limit		每页查询数量
-	 * 
-	 * @return List<Item>	商品结果集
-	 * @author zhangbo	2015年12月9日
-	 */
-	@DataSource("slave")
-	List<Item> queryItemList(Item item);
-	
-	/**
-	 * 查询商品总数
-	 * 
-	 * @return total	商品总数
-	 * @author zhangbo	2015年12月9日
-	 */
-	@DataSource("slave")
-	Integer queryItemTotal(Item item);
+	public void update(Item item);
 	
 	/**
 	 * 根据id删除商品
@@ -61,28 +40,43 @@ public interface ItemMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("master")
-	void deleteById(@Param("id")Integer id);
-	
+	public void deleteById(@Param("id")Integer id);
 	
 	/**
-	 * 通过查寻集合内的商品
-	 * @param itemSetId
-	 * @return 
-		*	2015年12月12日
-		*	mishengliang
+	 * 根据ids删除商品
+	 * 
+	 * @param ids
+	 * @author lynch 2015-12-13
 	 */
-	@DataSource("slave")
-	List<Item> querSetItem(Item item);
-	
+	@DataSource("master")
+	public void deleteByIds(@Param("ids")Integer[] ids);
+
 	/**
-	 * 查询集合内的商品总数
+	 * 查询商品列表
 	 * 
 	 * @param item
 	 * @return
-	 * 
-	 * @author lynch 2015-12-13
 	 */
 	@DataSource("slave")
-	public long querySetItemTotal(Item item);
+	public List<Item> queryItemList(Item item);
+	
+	/**
+	 * 查询商品总数
+	 * 
+	 * @param item
+	 * @return
+	 */
+	@DataSource("slave")
+	public long queryItemTotal(Item item);
+	
+	/**
+	 * 根据id查询商品
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@DataSource("slave")
+	public Item queryItemById(Integer id);
+	
 	
 }

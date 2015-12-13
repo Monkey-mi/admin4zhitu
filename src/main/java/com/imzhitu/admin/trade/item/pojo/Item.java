@@ -19,6 +19,9 @@ public class Item extends AbstractNumberDto implements Serializable {
 	 */
 	private static final long serialVersionUID = -7475538724248855547L;
 	
+	private Integer itemSetSerial;
+	private Integer itemId;
+	
 	/**
 	 * 商品主键id
 	 * @author zhangbo	2015年12月9日
@@ -89,13 +92,13 @@ public class Item extends AbstractNumberDto implements Serializable {
 	 * 淘宝商品真实id
 	 * @author zhangbo	2015年12月9日
 	 */
-	private Long itemId;
+	private Long taobaoId;
 	
 	/**
 	 * 淘宝物品:1,天猫:2
 	 * @author zhangbo	2015年12月9日
 	 */
-	private Integer itemType;
+	private Integer taobaoType;
 	
 	/**
 	 * 类别id
@@ -113,7 +116,7 @@ public class Item extends AbstractNumberDto implements Serializable {
 	 * 点赞数量
 	 * @author zhangbo	2015年12月10日
 	 */
-	private Integer like;
+	private Integer likeNum;
 	
 	/**
 	 * 商品链接内容
@@ -140,7 +143,7 @@ public class Item extends AbstractNumberDto implements Serializable {
 		return id;
 	}
 
-	/**
+	/**i
 	 * @param id the id to set
 	 */
 	public void setId(Integer id) {
@@ -288,28 +291,6 @@ public class Item extends AbstractNumberDto implements Serializable {
 	}
 
 
-	public Long getItemId() {
-		return itemId;
-	}
-
-	public void setItemId(Long itemId) {
-		this.itemId = itemId;
-	}
-
-	/**
-	 * @return the itemType
-	 */
-	public Integer getItemType() {
-		return itemType;
-	}
-
-	/**
-	 * @param itemType the itemType to set
-	 */
-	public void setItemType(Integer itemType) {
-		this.itemType = itemType;
-	}
-
 	/**
 	 * @return the categoryId
 	 */
@@ -338,18 +319,12 @@ public class Item extends AbstractNumberDto implements Serializable {
 		this.brandId = brandId;
 	}
 
-	/**
-	 * @return the like
-	 */
-	public Integer getLike() {
-		return like;
+	public Integer getLikeNum() {
+		return likeNum;
 	}
 
-	/**
-	 * @param like the like to set
-	 */
-	public void setLike(Integer like) {
-		this.like = like;
+	public void setLikeNum(Integer likeNum) {
+		this.likeNum = likeNum;
 	}
 
 	/**
@@ -381,5 +356,38 @@ public class Item extends AbstractNumberDto implements Serializable {
 	public void setSerial(Integer serial) {
 		this.serial = serial;
 	}
+
+	public Long getTaobaoId() {
+		return taobaoId;
+	}
+
+	public void setTaobaoId(Long taobaoId) {
+		this.taobaoId = taobaoId;
+	}
+
+	public Integer getTaobaoType() {
+		return taobaoType;
+	}
+
+	public void setTaobaoType(Integer taobaoType) {
+		this.taobaoType = taobaoType;
+	}
+
+	public Integer getItemSetSerial() {
+		return itemSetSerial;
+	}
+
+	public void setItemSetSerial(Integer itemSetSerial) {
+		this.itemSetSerial = itemSetSerial;
+	}
+
+	public Integer getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Integer itemId) {
+		this.itemId = itemId;
+	}
+	
 	
 }

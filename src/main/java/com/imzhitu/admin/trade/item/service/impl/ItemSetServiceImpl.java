@@ -19,12 +19,12 @@ import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
 import com.imzhitu.admin.privileges.service.AdminService;
 import com.imzhitu.admin.trade.item.dao.ItemCache;
 import com.imzhitu.admin.trade.item.dao.ItemSetCache;
-import com.imzhitu.admin.trade.item.dto.ItemSetDTO;
-import com.imzhitu.admin.trade.item.mapper.ItemAndSetRelationMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemSeckillMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemSetMapper;
+import com.imzhitu.admin.trade.item.mapper.ItemSetRelationMapper;
 import com.imzhitu.admin.trade.item.pojo.Item;
 import com.imzhitu.admin.trade.item.pojo.ItemSet;
+import com.imzhitu.admin.trade.item.pojo.ItemSetDTO;
 import com.imzhitu.admin.trade.item.service.ItemSetService;
 
 /**
@@ -61,7 +61,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
 	@Autowired
-	private ItemAndSetRelationMapper itemAndSetRelationMapper;
+	private ItemSetRelationMapper itemAndSetRelationMapper;
 	
 	@Autowired
 	private ItemCache itemCache;
@@ -386,9 +386,9 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setSale(item.getSale());
 				dto.setSales(item.getSales());
 				dto.setStock(item.getStock());
-				dto.setItemId(item.getItemId());
-				dto.setItemType(item.getItemType());
-				dto.setLike(item.getLike());
+				dto.setItemId(item.getTaobaoId());
+				dto.setItemType(item.getTaobaoType());
+				dto.setLike(item.getLikeNum());
 				dto.setLink(item.getLink());
 				dto.setDeadline(deadline);
 				rtnList.add(dto);
