@@ -1,143 +1,32 @@
 package com.imzhitu.admin.trade.item;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
+import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
-import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
+import com.imzhitu.admin.trade.item.pojo.Item;
 import com.imzhitu.admin.trade.item.service.ItemService;
 
 /**
- * 商品控制类
+ * 商品模块REST接口
  * 
- * @author zhangbo	2015年12月8日
+ * @author lynch
  *
  */
-@SuppressWarnings("serial")
 public class ItemAction extends BaseCRUDAction {
 	
 	/**
-	 * 商品主键id
-	 * @author zhangbo	2015年12月9日
+	 * 
 	 */
+	private static final long serialVersionUID = -6495522537093771785L;
+
 	private Integer id;
-	
-	/**
-	 * 商品图片路径
-	 * @author zhangbo	2015年12月9日
-	 */
-	private String imgPath;
-	
-	/**
-	 * 商品缩略图路径
-	 * @author zhangbo	2015年12月9日
-	 */
-	private String imgThumb;
-	
-	/**
-	 * 商品名称
-	 * @author zhangbo	2015年12月9日
-	 */
-	private String name;
-	
-	/**
-	 * 商品简介
-	 * @author zhangbo	2015年12月9日
-	 */
-	private String summary;
-	
-	/**
-	 * 商品详情描述
-	 * @author zhangbo	2015年12月9日
-	 */
-	private String description;
-	
-	/**
-	 * 商品关联织图id
-	 * @author zhangbo	2015年12月9日
-	 */
-	private Integer worldId;
-	
-	/**
-	 * 商品价格
-	 * @author zhangbo	2015年12月9日
-	 */
-	private BigDecimal price;
-	
-	/**
-	 * 商品促销价
-	 * @author zhangbo	2015年12月9日
-	 */
-	private BigDecimal sale;
-	
-	/**
-	 * 商品销售量
-	 * @author zhangbo	2015年12月9日
-	 */
-	private Integer sales;
-	
-	/**
-	 * 商品库存量
-	 * @author zhangbo	2015年12月9日
-	 */
-	private Integer stock;
-	
-	/**
-	 * 淘宝商品真实id
-	 * @author zhangbo	2015年12月9日
-	 */
-	private Long trueItemId;
-	
-	/**
-	 * 淘宝商品类型（1：淘宝，2：天猫）
-	 * @author zhangbo	2015年12月9日
-	 */
-	private Integer trueItemType;
-	
-	/**
-	 * 商品类别
-	 * @author zhangbo	2015年12月9日
-	 */
-	private Integer categoryId;
-	
-	/**
-	 * 商品品牌
-	 * @author zhangbo	2015年12月9日
-	 */
-	private Integer brandId;
-	
-	/**
-	 * 点赞数量
-	 * @author zhangbo	2015年12月10日
-	 */
-	private Integer like;
-	
-	/**
-	 * 商品id的集合，以逗号分隔
-	 * @author zhangbo	2015年12月9日
-	 */
 	private String ids;
-	
-	/**
-	 * 商品集合id
-	 * @author mishengliang
-	 */
+	private Integer itemId;
 	private Integer itemSetId;
-	
-	/**
-	 * 商品链接
-	 */
-	private String link;
-	
-	/**
-	 * 是否查询集合下商品的Flag
-	 * @author mishengliang
-	 */
-	private Integer isForItemSet;
+	private Item item = new Item();
 	
 	@Autowired
 	private ItemService itemService;
@@ -146,49 +35,40 @@ public class ItemAction extends BaseCRUDAction {
 	 * 保存商品
 	 * 
 	 * @return
-	 * @author zhangbo	2015年12月9日
 	 */
-	public String saveitem() {
+	public String saveItem() {
 		try {
-			if ( id == null ) {
-				itemService.insertItem(name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId,like,link);
-			} else {
-				itemService.updateItem(id,name,imgPath,imgThumb,summary,description,worldId,price,sale,sales,stock,trueItemId,trueItemType,categoryId,brandId,like,link);
-			}
-			
-			JSONUtil.optSuccess(jsonMap);
+			itemService.saveItem(item);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
 		return StrutsKey.JSON;
 	}
-	
+
 	/**
-	 * 构造商品列表
-	 * 现在只有通过商品名搜索，后续按需求增加字段搜索
-	 * @return
-	 * @author zhangbo	2015年12月9日
-	 */
-	public String buildItemList() {
-		try {
-			itemService.buildItemList(name, itemSetId, page, rows, jsonMap);
-			JSONUtil.optSuccess(jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	
-	/**
-	 * 构造商品列表通过商品集合ID
+	 * 更新商品
 	 * 
 	 * @return
-	 * @author zhangbo	2015年12月9日
 	 */
-	public String buildSetItem() {
+	public String updateItem() {
 		try {
-			itemService.buildSetItem(itemSetId,page, rows, jsonMap);
+			itemService.updateItem(item);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询商品列表
+	 * 
+	 * @return
+	 */
+	public String queryItemList() {
+		try {
+			itemService.buildItemList(item, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -196,10 +76,44 @@ public class ItemAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
-	public String batchDelete() {
+	/**
+	 * 根据id查询商品
+	 * 
+	 * @return
+	 */
+	public String queryItemById() {
 		try {
-			Integer[] idArray = StringUtil.convertStringToIds(ids);
-			itemService.batchDelete(idArray);
+			Item item = itemService.queryItemById(id);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, item, OptResult.JSON_KEY_OBJ, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 批量删除
+	 * 
+	 * @return
+	 */
+	public String batchDeleteItem() {
+		try {
+			itemService.batchDeleteItem(ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询集合内的商品列表
+	 * 
+	 * @return
+	 */
+	public String querySetItem() {
+		try {
+			itemService.buildSetItem(item, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -209,14 +123,28 @@ public class ItemAction extends BaseCRUDAction {
 
 	/**
 	 * 删除集合中的商品
+	 * 
 	 * @return 
-		*	2015年12月12日
-		*	mishengliang
 	 */
-	public String batchDeleteItemFromSet(){
+	public String batchDeleteSetItem(){
 		try {
-			Integer[] idArray = StringUtil.convertStringToIds(ids);
-			itemService.batchDeleteItemFromSet(itemSetId,idArray);
+			itemService.batchDeleteSetItem(itemSetId, ids);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新集合内商品的排序
+	 * 
+	 * @return
+	 */
+	public String updateSetItemSerial(){
+		try {
+			String[]  ids = request.getParameterValues("reIndexId");
+			itemService.updateSetItemSerial(itemSetId, ids);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -224,11 +152,15 @@ public class ItemAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
-	public String reOrderIndexforItem(){
+	/**
+	 * 添加商品到集合
+	 * 
+	 * @return
+	 */
+	public String saveSetItem() {
 		try {
-			String[]  ids = request.getParameterValues("reIndexId");
-			itemService.reOrderIndexforItem(ids);
-			JSONUtil.optSuccess(jsonMap);
+			itemService.saveSetItem(itemSetId, itemId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -239,132 +171,12 @@ public class ItemAction extends BaseCRUDAction {
 		return id;
 	}
 
-	public String getImgPath() {
-		return imgPath;
-	}
-
-	public String getImgThumb() {
-		return imgThumb;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getWorldId() {
-		return worldId;
-	}
-
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public BigDecimal getSale() {
-		return sale;
-	}
-
-	public Integer getSales() {
-		return sales;
-	}
-
-	public Integer getStock() {
-		return stock;
-	}
-
-	public Long getTrueItemId() {
-		return trueItemId;
-	}
-
-	public void setTrueItemId(Long trueItemId) {
-		this.trueItemId = trueItemId;
-	}
-
-	public Integer getTrueItemType() {
-		return trueItemType;
-	}
-
-	public Integer getCategoryId() {
-		return categoryId;
-	}
-
-	public Integer getBrandId() {
-		return brandId;
-	}
-
-	public Integer getLike() {
-		return like;
-	}
-
 	public String getIds() {
 		return ids;
 	}
 
-public void setId(Integer id) {
+	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
-	}
-
-	public void setImgThumb(String imgThumb) {
-		this.imgThumb = imgThumb;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-public void setDescription(String description) {
-		this.description = description;
-	}
-
-public void setWorldId(Integer worldId) {
-	this.worldId = worldId;
-}
-
-public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-
-	public void setSale(BigDecimal sale) {
-		this.sale = sale;
-	}
-
-	public void setSales(Integer sales) {
-		this.sales = sales;
-	}
-
-public void setStock(Integer stock) {
-		this.stock = stock;
-	}
-
-public void setTrueItemType(Integer trueItemType) {
-		this.trueItemType = trueItemType;
-	}
-
-	public void setCategoryId(Integer categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public void setBrandId(Integer brandId) {
-		this.brandId = brandId;
-	}
-
-	public void setLike(Integer like) {
-		this.like = like;
 	}
 
 	public void setIds(String ids) {
@@ -379,20 +191,21 @@ public void setTrueItemType(Integer trueItemType) {
 		this.itemSetId = itemSetId;
 	}
 
-	public Integer getIsForItemSet() {
-		return isForItemSet;
+	public Item getItem() {
+		return item;
 	}
 
-	public void setIsForItemSet(Integer isForItemSet) {
-		this.isForItemSet = isForItemSet;
+	public void setItem(Item item) {
+		this.item = item;
 	}
 
-	public String getLink() {
-		return link;
+	public Integer getItemId() {
+		return itemId;
 	}
 
-	public void setLink(String link) {
-		this.link = link;
+	public void setItemId(Integer itemId) {
+		this.itemId = itemId;
 	}
 	
+
 }

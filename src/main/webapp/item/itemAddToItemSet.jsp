@@ -13,20 +13,32 @@
 <script type="text/javascript">
 	var itemSetId = <%= itemSetId%>;
 	
-	myQueryParams = {};
-	addToItemSetURL = "./admin_trade/itemSet_insertItemToSet";
+	myQueryParams = {
+		"item.itemSetId":itemSetId
+		
+	};
+	addToItemSetURL = "./admin_trade/item_saveSetItem";
 	
 	var columnsFields = [
 			{field: "ck", checkbox:true},
 			{field: "id", title: "商品ID", align: "center"},
-			{field: "name", title: "商品名称", align: "center"},
-			{field: "summary", title: "简介", align: "center"},
+			{field: "name", title: "商品名称", align: "center",width:30},
+ 			{field: "summary", title: "简介", align: "center",width:30},
+ 			{field: "description", title: "详情描述", align: "center",width:30},
+ 			{field: "price", title: "价格", align: "center"},
+ 			{field: "link", title: "链接", align: "center",
+ 				formatter: function(value,row,index) {
+ 	  				return "<a href='"+value+"' target='_blank'>"+value+"</a>";
+ 	  			}
+ 			},
+ 			{field: "worldId", title: "关联织图id", align: "center"},
+ 			{field: "likeNum", title: "点赞数", align: "center"},
 			{field: "imgPath", title: "商品图片", align: "center",
 				formatter: function(value,row,index) {
 	  				return "<img width='100px' height='40px' class='htm_column_img' src='" + value + "'/>";
 	  			}
 			},
-			{field: "isThisSet", title: "本集合", align: "center",
+			{field: "isThisSet", title: "操作", align: "center",
 				formatter: function(value,row,index) {
 					return "<a style='text-decoration : none' href='javascript:void(0);' onclick='javascript:addItemToSet("+ row.id + ")'>【添加】</a>";
 				}
@@ -36,9 +48,9 @@
 	$(function(){
 		// 主表格
 		$("#htm_table").datagrid({
-			title: "商品列表",
+			title: "商品库",
 			width: $(document.body).width(),
-			url: "./admin_trade/item_buildItemList",
+			url: "./admin_trade/item_queryItemList",
 			toolbar: "#tb",
 			idField: "id",
 			queryParams:myQueryParams,
@@ -58,11 +70,10 @@
 	
 	function addItemToSet(itemId){
 		$.post(addToItemSetURL,{
-			itemIds:itemId,
-			id:itemSetId
+			'itemId':itemId,
+			'itemSetId':itemSetId
 		},function(result){
 			if (result.result == 0) {
-				$.messager.alert('温馨提示','添加成功！');
 				$("#htm_table_set").datagrid("reload");
 				$("#htm_table").datagrid('load');
 			} else {
@@ -73,7 +84,7 @@
 	
 	function searchByItemName(){
 		var itemName = $('#item_name').searchbox('getValue');
-		myQueryParams.name = itemName;
+		myQueryParams['item.name'] = itemName;
 		$("#htm_table").datagrid('load');
 	}
 	
@@ -83,16 +94,16 @@
 	***************************************************************
 	*/
 	var myQueryParamsSet = {
-			itemSetId:itemSetId
+		'item.itemSetId':itemSetId
 	};
-	var batchDeleteItemFromSetURL = "./admin_trade/item_batchDeleteItemFromSet";
+	var batchDeleteItemFromSetURL = "./admin_trade/item_batchDeleteSetItem";
 	
 	$(function(){
 		// 主表格
 		$("#htm_table_set").datagrid({
-			title: "集合商品列表",
+			title: "专题商品",
 			width: $(document.body).width(),
-			url: "./admin_trade/item_buildSetItem",
+			url: "./admin_trade/item_querySetItem",
 			toolbar: "#tb_set",
 			idField: "id",
 			queryParams:myQueryParamsSet,
@@ -112,8 +123,17 @@
 		var columnsFieldsForSet = [
 			{field: "ck", checkbox:true},
 			{field: "id", title: "商品ID", align: "center"},
-			{field: "name", title: "商品名称", align: "center"},
-			{field: "summary", title: "简介", align: "center"},
+			{field: "name", title: "商品名称", align: "center",width:30},
+ 			{field: "summary", title: "简介", align: "center",width:30},
+ 			{field: "description", title: "详情描述", align: "center",width:30},
+ 			{field: "price", title: "价格", align: "center"},
+ 			{field: "link", title: "链接", align: "center",
+ 				formatter: function(value,row,index) {
+ 	  				return "<a href='"+value+"' target='_blank'>"+value+"</a>";
+ 	  			}
+ 			},
+ 			{field: "worldId", title: "关联织图id", align: "center"},
+ 			{field: "likeNum", title: "点赞数", align: "center"},
 			{field: "imgPath", title: "商品图片", align: "center",
 				formatter: function(value,row,index) {
 	  				return "<img width='100px' height='40px' class='htm_column_img' src='" + value + "'/>";
@@ -132,7 +152,6 @@
 				'ids':deleteIds.join(",")
 			},function(result){
 				if (result.result == 0) {
-					$.messager.alert("温馨提示","删除成功");
 					$("#htm_table_set").datagrid("reload");
 					$("#htm_table").datagrid("reload");
 				} else {
@@ -165,7 +184,9 @@
 			<!-- toolbar -->
 			<div id="tb" style="padding:5px;height:auto" class="none">
 				<span>
+					<!-- 
 					<a href="javascript:void(0);" onclick="javascript:$('#add_item_window').window('open');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+					 -->
 					<input id="item_name" searcher="searchByItemName" class="easyui-searchbox" prompt="输入商品名搜索" style="width:150px;" />
 				</span>
 			</div>

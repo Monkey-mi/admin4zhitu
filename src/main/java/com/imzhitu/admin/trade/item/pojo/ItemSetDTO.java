@@ -1,4 +1,4 @@
-package com.imzhitu.admin.trade.item.dto;
+package com.imzhitu.admin.trade.item.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
