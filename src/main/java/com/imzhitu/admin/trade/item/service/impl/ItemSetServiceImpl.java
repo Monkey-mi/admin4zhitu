@@ -88,9 +88,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 		Integer[] bullentinIds = StringUtil.convertStringToIds(ids);
 		
 		if ( bullentinIds.length != 0) {
-			// 倒序设置对象，这样才能保证按照list的顺序，serial排序是依次减小的
-			for (int i = bullentinIds.length -1; i >= 0; i--) {
-				OpMsgBulletin bulletin = msgBulletinMapper.getMsgBulletinById(bullentinIds[i]);
+			for (Integer bullentinId : bullentinIds) {
+				OpMsgBulletin bulletin = msgBulletinMapper.getMsgBulletinById(bullentinId);
 				// 转换对象
 				com.hts.web.operations.pojo.ItemSetBulletin awardActivity = new com.hts.web.operations.pojo.ItemSetBulletin();
 				awardActivity.setId(bulletin.getId());
@@ -100,10 +99,13 @@ public class ItemSetServiceImpl implements ItemSetService {
 				awardActivity.setBulletinType(bulletin.getBulletinType());
 				awardActivity.setLink(bulletin.getLink());
 				
-				// 由于整体活动内商品集合展示需要，并且要根据serial提示是否有更新，所以此处serial的设值使用itemSet的serial
-				awardActivity.setSerial(webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
-				
 				awardActivityList.add(awardActivity);
+			}
+			
+			// 倒序设置一遍serial，这样才能保证按照list的顺序，serial排序是依次减小的
+			for (int i = awardActivityList.size() -1; i >= 0; i--) {
+				// 由于整体活动内商品集合展示需要，并且要根据serial提示是否有更新，所以此处serial的设值使用itemSet的serial
+				awardActivityList.get(i).setSerial(webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
 			}
 		}
 		

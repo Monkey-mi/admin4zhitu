@@ -160,6 +160,20 @@
 		
 		// 展示界面
 		$("#main").show();
+		
+		$("#itemSet_path")
+		.formValidator({empty:false, onshow:"请选图片（必填）",onfocus:"请选图片",oncorrect:"正确！"})
+		.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
+		
+		$("#itemSet_thumb")
+		.formValidator({empty:false, onshow:"请选图片（必填）",onfocus:"请选图片",oncorrect:"正确！"})
+		.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
+		
+		$("#itemSet_title")
+		.formValidator({empty:false, onshow:"请输入标题（必填）",onfocus:"请输入标题",oncorrect:"正确！"});
+		
+		$("#itemSet_desc")
+		.formValidator({empty:true, onshow:"请输入描述（可选）",onfocus:"请输入描述",oncorrect:"正确！"});
 	});
 	
 	/**
@@ -217,10 +231,12 @@
 						$('#add_itemSet_window').window('close');  // 关闭添加窗口
 						$("#htm_table").datagrid("reload");
 					} else {
-						$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
+						$.messager.alert("温馨提示",result['msg']);  // 提示添加信息失败
 					}
 				}
 			});
+		} else {
+			$.messager.alert("温馨提示","请补全需要填写的字段");
 		}
 	};
 	
@@ -349,7 +365,6 @@
 		});
 	};
 	
-	
 </script>
 </head>
 <body>
@@ -372,34 +387,47 @@
 		<!-- 添加商品集合 -->
 		<div id="add_itemSet_window">
 			<form id="add_itemSet_form" method="post">
-				<table class="htm_edit_table" width="480">
+				<table class="htm_edit_table" width="580">
 					<tr>
-						<td class="leftTd">商品集合图片路径：</td>
+						<td class="leftTd">图片路径：</td>
 						<td  style="width:130">
-							<input id="itemSet_path" name="path" class="none" type="text" onchange="validateSubmitOnce=true;" readonly="readonly"/>
+							<input id="itemSet_path" name="path" class="none" type="text" readonly="readonly" required="true"/>
 							<a id="itemSet_path_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 							<img id="itemSet_path_edit" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
 							<div id="itemSet_path_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
 						</td>
+						<td class="rightTd">
+							<div id="itemSet_path_editTip" style="display: inline-block;" class="tipDIV"></div>
+						</td>
 					</tr>
 					<tr>
-						<td class="leftTd">商品集合缩略图路径：</td>
+						<td class="leftTd">缩略图路径：</td>
 						<td >
-							<input id="itemSet_thumb" name="thumb" class="none" type="text" onchange="validateSubmitOnce=true;" readonly="readonly"/>
-							<a id="itemSet_thumb_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="itemSet_thumb_edit" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
+							<input id="itemSet_thumb" name="thumb" class="none" type="text" readonly="readonly" required="true"/>
+							<a id="itemSet_thumb_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="itemSet_thumb_edit" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
 							<div id="itemSet_thumb_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
+						</td>
+						<td class="rightTd">
+							<div id="itemSet_thumb_editTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="leftTd">标题：</td>
-						<td><input id="itemSet_title" name="title" style="width:220px;" ></td>
+						<td>
+							<input id="itemSet_title" name="title" style="width:220px;" required="true">
+						</td>
+						<td class="rightTd">
+							<div id="itemSet_title_editTip" style="display: inline-block;" class="tipDIV"></div>
+						</td>
 					</tr>
 					<tr>
 						<td class="leftTd">描述：</td>
-						<td><input id="itemSet_desc" name="description" style="width:220px;" ></td>
+						<td colspan="2">
+							<textarea id="itemSet_desc" name="description" style="width:480px;" rows="8"></textarea>
+						</td>
 					</tr>
 					<tr>
 						<td class="none"><input id="itemSet_id" name="id"></td>
