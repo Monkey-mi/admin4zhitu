@@ -11,7 +11,7 @@
 <title>商品管理页</title>
 <jsp:include page="/common/header.jsp"></jsp:include>
 <!-- 添加商品模块jsp引用  -->
-<jsp:include page="/item/addItemWindow.jsp"></jsp:include>
+<jsp:include page="/item/showItemWindowAndreOrder.jsp"></jsp:include>
 <link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}" />
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>

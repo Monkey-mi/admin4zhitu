@@ -26,6 +26,12 @@ public class ItemSetDTO implements Serializable {
 	private Integer id;
 	
 	/**
+	 * 商品集合标题
+	 * @author zhangbo	2015年12月14日
+	 */
+	private String title;
+	
+	/**
 	 * 商品集合描述
 	 * @author zhangbo	2015年12月8日
 	 */
@@ -104,7 +110,35 @@ public class ItemSetDTO implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
 
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 	/**
 	 * @return the path
 	 */
@@ -131,20 +165,6 @@ public class ItemSetDTO implements Serializable {
 	 */
 	public void setThumb(String thumb) {
 		this.thumb = thumb;
-	}
-
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	/**

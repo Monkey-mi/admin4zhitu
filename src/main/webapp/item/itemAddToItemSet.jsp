@@ -7,7 +7,7 @@
 <title>添加商品</title>
 <jsp:include page="/common/header.jsp"></jsp:include>
 <!-- 添加商品模块jsp引用  -->
-<jsp:include page="/item/addItemWindow.jsp"></jsp:include>
+<jsp:include page="/item/showItemWindowAndreOrder.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/common.css"></link>
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
@@ -35,12 +35,12 @@
  			{field: "likeNum", title: "点赞数", align: "center"},
 			{field: "imgPath", title: "商品图片", align: "center",
 				formatter: function(value,row,index) {
-	  				return "<img width='100px' height='40px' class='htm_column_img' src='" + value + "'/>";
+	  				return "<a onmouseover='setShowItemInfoTimer("+ row.id +")' onmouseout='javascript:clearShowItemInfo();'><img width='50px' height='50px' class='htm_column_img' src='" + value + "'/></a>";
 	  			}
 			},
 			{field: "isThisSet", title: "操作", align: "center",
 				formatter: function(value,row,index) {
-					return "<a style='text-decoration : none' href='javascript:void(0);' onclick='javascript:addItemToSet("+ row.id + ")'>【添加】</a>";
+					return "<a style='text-decoration : none' href='javascript:void(0);' onclick='javascript:addItemToSet("+ row.id + ",event)'>【添加】</a>";
 				}
 			},
 		];
@@ -136,7 +136,7 @@
  			{field: "likeNum", title: "点赞数", align: "center"},
 			{field: "imgPath", title: "商品图片", align: "center",
 				formatter: function(value,row,index) {
-	  				return "<img width='100px' height='40px' class='htm_column_img' src='" + value + "'/>";
+	  				return "<a onmouseover='setShowItemInfoTimer("+ row.id +")' onmouseout='javascript:clearShowItemInfo();'><img width='50px' height='50px' class='htm_column_img' src='" + value + "'/></a>";
 	  			}
 			}
 		];

@@ -81,16 +81,16 @@ public class ItemSetServiceImpl implements ItemSetService {
 
 	@Override
 	public void addAwardActivityByBullentin(String ids) throws Exception {
+		// 定义存储到缓存的有奖活动集合，由于是更新供客户端调用的redis，所以定义为web端对象
+		List<com.hts.web.operations.pojo.ItemSetBulletin> awardActivityList = new ArrayList<com.hts.web.operations.pojo.ItemSetBulletin>();
+		
 		// 根据勾选的公告id，查询将要操作的公告集合
 		Integer[] bullentinIds = StringUtil.convertStringToIds(ids);
 		
 		if ( bullentinIds.length != 0) {
-			List<OpMsgBulletin> bulletinlist = msgBulletinMapper.queryMsgBulletinByIds(bullentinIds);
-			
-			// 定义存储到缓存的有奖活动集合，由于是更新供客户端调用的redis，所以定义为web端对象
-			List<com.hts.web.operations.pojo.ItemSetBulletin> awardActivityList = new ArrayList<com.hts.web.operations.pojo.ItemSetBulletin>();
-			
-			for (OpMsgBulletin bulletin : bulletinlist) {
+			// 倒序设置对象，这样才能保证按照list的顺序，serial排序是依次减小的
+			for (int i = bullentinIds.length -1; i >= 0; i--) {
+				OpMsgBulletin bulletin = msgBulletinMapper.getMsgBulletinById(bullentinIds[i]);
 				// 转换对象
 				com.hts.web.operations.pojo.ItemSetBulletin awardActivity = new com.hts.web.operations.pojo.ItemSetBulletin();
 				awardActivity.setId(bulletin.getId());
@@ -100,17 +100,14 @@ public class ItemSetServiceImpl implements ItemSetService {
 				awardActivity.setBulletinType(bulletin.getBulletinType());
 				awardActivity.setLink(bulletin.getLink());
 				
+				// 由于整体活动内商品集合展示需要，并且要根据serial提示是否有更新，所以此处serial的设值使用itemSet的serial
+				awardActivity.setSerial(webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
+				
 				awardActivityList.add(awardActivity);
 			}
-			
-			// 倒序设置一遍serial，这样才能保证按照list的顺序，serial排序是依次减小的
-			for (int i = awardActivityList.size() -1; i >= 0; i--) {
-				// 由于整体活动内商品集合展示需要，并且要根据serial提示是否有更新，所以此处serial的设值使用itemSet的serial
-				awardActivityList.get(i).setSerial(webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
-			}
-			
-			itemSetCache.updateAwardActivity(awardActivityList);
 		}
+		
+		itemSetCache.updateAwardActivity(awardActivityList);
 	}
 	
 	@Override
@@ -126,7 +123,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 			for (com.hts.web.operations.pojo.ItemSetBulletin seckill : seckillList) {
 				ItemSetDTO dto = new ItemSetDTO();
 				dto.setId(seckill.getId());
-				dto.setDescription(seckill.getBulletinName());
+				dto.setTitle(seckill.getBulletinName());		// 由于公告名称对应标题
+				dto.setDescription(seckill.getBulletinDesc());
 				dto.setPath(seckill.getBulletinPath());
 				dto.setThumb(seckill.getBulletinThumb());
 				dto.setType(seckill.getBulletinType());
@@ -140,7 +138,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 			for (com.hts.web.operations.pojo.ItemSetBulletin rItem : rItemList) {
 				ItemSetDTO dto = new ItemSetDTO();
 				dto.setId(rItem.getId());
-				dto.setDescription(rItem.getBulletinName());
+				dto.setTitle(rItem.getBulletinName());		// 由于公告名称对应标题
+				dto.setDescription(rItem.getBulletinDesc());
 				dto.setPath(rItem.getBulletinPath());
 				dto.setThumb(rItem.getBulletinThumb());
 				dto.setType(rItem.getBulletinType());
@@ -155,6 +154,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 			for (ItemSet itemSet : itemSetList) {
 				ItemSetDTO dto = new ItemSetDTO();
 				dto.setId(itemSet.getId());
+				dto.setTitle(itemSet.getTitle());
 				dto.setDescription(itemSet.getDescription());
 				dto.setPath(itemSet.getPath());
 				dto.setThumb(itemSet.getThumb());
@@ -175,7 +175,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	@Override
-	public void addItemSet(String description, String path, String thumb) throws Exception {
+	public void addItemSet(String title, String description, String path, String thumb) throws Exception {
 		// 根据流水得到id
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_ID);
 		
@@ -185,12 +185,12 @@ public class ItemSetServiceImpl implements ItemSetService {
 		// 根据流水得到serial
 		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL);
 		
-		itemSetMapper.insert(id, description, path, thumb, type, handleLink(id), AdminLoginUtil.getCurrentLoginId(), serial);
+		itemSetMapper.insert(id, title, description, path, thumb, type, handleLink(id), AdminLoginUtil.getCurrentLoginId(), serial);
 	}
 	
 	@Override
-	public void updateItemSet(Integer id, String description, String path, String thumb) throws Exception {
-		itemSetMapper.update(id, description, path, thumb, AdminLoginUtil.getCurrentLoginId());
+	public void updateItemSet(Integer id, String title, String description, String path, String thumb) throws Exception {
+		itemSetMapper.update(id, title, description, path, thumb, AdminLoginUtil.getCurrentLoginId());
 	}
 	
 	/**
@@ -293,7 +293,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 				
 				// 转换对应属性
 				seckill.setId(itemSet.getId());
-				seckill.setBulletinName(itemSet.getDescription());
+				seckill.setBulletinName(itemSet.getTitle());	// 将标题设置在bulletinName字段中
+				seckill.setBulletinDesc(itemSet.getDescription());
 				seckill.setBulletinPath(itemSet.getPath());
 				seckill.setBulletinThumb(itemSet.getThumb());
 				seckill.setBulletinType(itemSet.getType());
@@ -334,7 +335,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 			
 			// 转换对应属性
 			recommendItem.setId(itemSet.getId());
-			recommendItem.setBulletinName(itemSet.getDescription());
+			recommendItem.setBulletinName(itemSet.getTitle());	// 将标题设置在bulletinName字段中
+			recommendItem.setBulletinDesc(itemSet.getDescription());
 			recommendItem.setBulletinPath(itemSet.getPath());
 			recommendItem.setBulletinThumb(itemSet.getThumb());
 			recommendItem.setBulletinType(itemSet.getType());

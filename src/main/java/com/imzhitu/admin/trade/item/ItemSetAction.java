@@ -22,15 +22,16 @@ import com.imzhitu.admin.trade.item.service.ItemSetService;
 public class ItemSetAction extends BaseCRUDAction {
 	
 	/**
-	 * 商品ids
-	 */
-	private String itemIds;
-
-	/**
 	 * 商品集合主键id
 	 * @author zhangbo	2015年12月9日
 	 */
 	private Integer id;
+	
+	/**
+	 * 商品集合标题
+	 * @author zhangbo	2015年12月14日
+	 */
+	private String title;
 	
 	/**
 	 * 商品集合描述
@@ -119,9 +120,9 @@ public class ItemSetAction extends BaseCRUDAction {
 		try {
 			// 若id不存在，则为新增，否则为更新
 			if ( id == null ) {
-				itemSetService.addItemSet(description, path, thumb);
+				itemSetService.addItemSet(title, description, path, thumb);
 			} else {
-				itemSetService.updateItemSet(id, description, path, thumb);
+				itemSetService.updateItemSet(id, title, description, path, thumb);
 			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
@@ -217,16 +218,12 @@ public class ItemSetAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
-	public String getItemIds() {
-		return itemIds;
-	}
-
-	public void setItemIds(String itemIds) {
-		this.itemIds = itemIds;
-	}
-
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public void setDescription(String description) {

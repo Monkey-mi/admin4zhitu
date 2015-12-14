@@ -231,7 +231,7 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 				}
 			}
 			
-			if( webBulletinList.size() > 0 ) {
+			if( webChannelThemeList.size() > 0 ) {
 				bulletinCacheDao.updateChannelThemeBulletin(webChannelThemeList);
 			}
 		}catch(Exception e){

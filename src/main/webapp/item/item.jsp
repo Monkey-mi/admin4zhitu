@@ -4,6 +4,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>商品管理</title>
+<!--  引入商品浮窗展示页面 -->
+<jsp:include page="/item/showItemWindowAndreOrder.jsp"></jsp:include>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 <script type="text/javascript">
@@ -53,7 +55,7 @@
  			{field: "likeNum", title: "点赞数", align: "center"},
  			{field: "imgPath", title: "商品图片", align: "center",
  				formatter: function(value,row,index) {
- 	  				return "<img width='100px' height='100px' class='htm_column_img' src='" + value + "'/>";
+	  				return "<a onmouseover='setShowItemInfoTimer("+ row.id +")' onmouseout='javascript:clearShowItemInfo();'><img width='100px' height='100px' class='htm_column_img' src='" + value + "'/></a>";
  	  			}
  			},
  			{field : 'opt',title : '操作',align : 'center',rowspan : 1,
@@ -295,7 +297,7 @@ function searchItemByName() {
 					<tr>
 						<td class="leftTd">类型：</td>
 						<td>
-							<select id="taobaoType_edit" class="easyui-combobox" name="item.taobaoType" />
+							<select id="taobaoType_edit" class="easyui-combobox" name="item.taobaoType" panelHeight="auto"/>
 							    <option value="1">淘宝</option>
 							    <option value="2">天猫</option>
 							</select>
