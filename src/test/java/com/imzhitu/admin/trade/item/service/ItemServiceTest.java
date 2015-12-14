@@ -60,6 +60,7 @@ public class ItemServiceTest extends BaseTest {
 	@Test
 	public void saveSetItemTest() throws Exception {
 		service.saveSetItem(1, 131);
+		service.batchDeleteSetItem(1, "131");
 	}
 	
 	@Test
