@@ -4,6 +4,7 @@
 
 	<resultMap id="ItemSetMap" type="com.imzhitu.admin.trade.item.pojo.ItemSet">
 		<id column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="title" property="title" javaType="java.lang.String"/>
 		<result column="description" property="description" javaType="java.lang.String"/>
 		<result column="path" property="path" javaType="java.lang.String"/>
 		<result column="thumb" property="thumb" javaType="java.lang.String"/>
@@ -19,9 +20,9 @@
 	<insert id="insert" parameterType="com.imzhitu.admin.trade.item.pojo.ItemSet" useGeneratedKeys="true" keyProperty="id">
 		insert into 
 			hts.item_set 
-			(id, description, path, thumb, type, operator, link, serial)
+			(id, title, description, path, thumb, type, operator, link, serial)
 	 	values 
-	 		(#{id}, #{description}, #{path}, #{thumb}, #{type}, #{operator}, #{link}, #{serial})
+	 		(#{id}, #{title}, #{description}, #{path}, #{thumb}, #{type}, #{operator}, #{link}, #{serial})
 	</insert>
 	
 	<!-- 根据id更新商品集合 -->
@@ -29,6 +30,7 @@
 		update 
 			hts.item_set 
 		<set>
+	      <if test="title != null">title = #{title},</if>
 	      <if test="description != null">description = #{description},</if>
 	      <if test="path != null">path = #{path},</if>
 	      <if test="thumb != null">thumb = #{thumb},</if>

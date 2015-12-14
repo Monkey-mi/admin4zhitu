@@ -175,7 +175,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	@Override
-	public void addItemSet(String description, String path, String thumb) throws Exception {
+	public void addItemSet(String title, String description, String path, String thumb) throws Exception {
 		// 根据流水得到id
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_ID);
 		
@@ -185,12 +185,12 @@ public class ItemSetServiceImpl implements ItemSetService {
 		// 根据流水得到serial
 		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL);
 		
-		itemSetMapper.insert(id, description, path, thumb, type, handleLink(id), AdminLoginUtil.getCurrentLoginId(), serial);
+		itemSetMapper.insert(id, title, description, path, thumb, type, handleLink(id), AdminLoginUtil.getCurrentLoginId(), serial);
 	}
 	
 	@Override
-	public void updateItemSet(Integer id, String description, String path, String thumb) throws Exception {
-		itemSetMapper.update(id, description, path, thumb, AdminLoginUtil.getCurrentLoginId());
+	public void updateItemSet(Integer id, String title, String description, String path, String thumb) throws Exception {
+		itemSetMapper.update(id, title, description, path, thumb, AdminLoginUtil.getCurrentLoginId());
 	}
 	
 	/**
@@ -293,7 +293,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 				
 				// 转换对应属性
 				seckill.setId(itemSet.getId());
-				seckill.setBulletinName(itemSet.getDescription());
+				seckill.setBulletinName(itemSet.getTitle());	// 将标题设置在bulletinName字段中
+				seckill.setBulletinDesc(itemSet.getDescription());
 				seckill.setBulletinPath(itemSet.getPath());
 				seckill.setBulletinThumb(itemSet.getThumb());
 				seckill.setBulletinType(itemSet.getType());
@@ -334,7 +335,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 			
 			// 转换对应属性
 			recommendItem.setId(itemSet.getId());
-			recommendItem.setBulletinName(itemSet.getDescription());
+			recommendItem.setBulletinName(itemSet.getTitle());	// 将标题设置在bulletinName字段中
+			recommendItem.setBulletinDesc(itemSet.getDescription());
 			recommendItem.setBulletinPath(itemSet.getPath());
 			recommendItem.setBulletinThumb(itemSet.getThumb());
 			recommendItem.setBulletinType(itemSet.getType());

@@ -392,6 +392,10 @@
 						</td>
 					</tr>
 					<tr>
+						<td class="leftTd">标题：</td>
+						<td><input id="itemSet_title" name="title" style="width:220px;" ></td>
+					</tr>
+					<tr>
 						<td class="leftTd">描述：</td>
 						<td><input id="itemSet_desc" name="description" style="width:220px;" ></td>
 					</tr>
