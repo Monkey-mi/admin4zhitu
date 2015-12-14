@@ -4,10 +4,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>商品管理</title>
-<!--  引入商品浮窗展示页面 -->
-<jsp:include page="/item/showItemWindowAndreOrder.jsp"></jsp:include>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
 	var maxId = 0,
 	init = function() {
@@ -85,10 +84,11 @@
 			resizable : false,
 			onClose : function() {
 				var $form = $('#edit_form');
-				clearFormData($form);
+//				clearFormData($form);
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
-				$("#img_edit").attr("src", "./base/images/bg_empty.png");
+//				$("#img_edit").attr("src", "./base/images/bg_empty.png");
+				commonTools.clearFormData($form);
 				$("#edit_form").hide();
 				$("#edit_loading").show();
 			}
