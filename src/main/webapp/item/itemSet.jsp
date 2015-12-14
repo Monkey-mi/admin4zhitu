@@ -21,12 +21,12 @@
 			{field: "ck", checkbox:true},
 			{field: "id", title: "ID", align: "center", width: 30},
 			{field: "title", title: "标题", align: "center", width: 80},
+			{field: "description", title: "描述", align: "center", width: 100},
 			{field: "path", title: "商品集合图片", align: "center", width: 80,
 				formatter: function(value,row,index) {
-	  				return "<img width='200px' height='90px' class='htm_column_img' src='" + value + "'/>";
-	  			}
+					return "<img width='200px' height='90px' class='htm_column_img' src='" + value + "'/>";
+				}
 			},
-			{field: "description", title: "描述", align: "center", width: 100},
 			{field: "opt", title: "操作", align: "center", width: 70,
 				formatter : function(value, row, index ) {
 					var rtn = "<span>";
@@ -42,7 +42,7 @@
 	  				if ( value == 1 ) {
 	  					return "<img title='已为秒杀,点击取消秒杀' class='htm_column_img pointer' onclick='cancelSeckill("+ row.id +")' src='./common/images/ok.png'/>";
 	  				} else {
-	  					return "<img title='点击成为秒杀商品集合' class='htm_column_img pointer' onclick='openSeckillCacheWin("+ row.id +")' src='./common/images/tip.png'/>";
+	  					return "<img title='点击成为秒杀商品集合' class='htm_column_img pointer' onclick='openSeckillCacheWin("+ row.id +")' src='./common/images/edit_add.png'/>";
 	  				}
 				}
 			},
@@ -161,6 +161,10 @@
 		// 展示界面
 		$("#main").show();
 		
+		$.formValidator.initConfig({
+			formid : $('#add_itemSet_form').attr("id")	
+		});
+		
 		$("#itemSet_path")
 		.formValidator({empty:false, onshow:"请选图片（必填）",onfocus:"请选图片",oncorrect:"正确！"})
 		.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
@@ -264,6 +268,8 @@
 						// 批量删除刷新当前页
 						$("#htm_table").datagrid("reload");
 					});
+					// 选择操作时刷新展示重新排序所选择的数量
+					$("#reSerialCount").text(0);
 				}
 			});	
 		}else{
@@ -313,24 +319,20 @@
 	 * @author zhangbo	2015-12-11
 	 */
 	function seckillSetCacheSubmit() {
-		$.messager.confirm("温馨提示", "您确定要更新商品集合吗？确定后，选中的商品集合将会在客户端生效", function(r){
-			if(r){
-				if( $('#refresh_seckill_form').form('validate') ) {
-					$('#refresh_seckill_form').form('submit', {
-						url: "./admin_trade/itemSet_addSeckill",
-						success: function(data){
-							var result = $.parseJSON(data);
-							if(result['result'] == 0) {
-								$('#refresh_seckill_window').window('close');  // 关闭添加窗口
-								$("#htm_table").datagrid("reload");
-							} else {
-								$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
-							}
-						}
-					});
+		if( $('#refresh_seckill_form').form('validate') ) {
+			$('#refresh_seckill_form').form('submit', {
+				url: "./admin_trade/itemSet_addSeckill",
+				success: function(data){
+					var result = $.parseJSON(data);
+					if(result['result'] == 0) {
+						$('#refresh_seckill_window').window('close');  // 关闭添加窗口
+						$("#htm_table").datagrid("reload");
+					} else {
+						$.messager.alert("温馨提示",result['msg']);  // 提示添加信息失败
+					}
 				}
-			}
-		});
+			});
+		}
 	};
 	
 	/**
@@ -398,7 +400,7 @@
 							</div>
 						</td>
 						<td class="rightTd">
-							<div id="itemSet_path_editTip" style="display: inline-block;" class="tipDIV"></div>
+							<div id="itemSet_pathTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
 					<tr>
@@ -411,7 +413,7 @@
 							</div>
 						</td>
 						<td class="rightTd">
-							<div id="itemSet_thumb_editTip" style="display: inline-block;" class="tipDIV"></div>
+							<div id="itemSet_thumbTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
 					<tr>
@@ -420,20 +422,20 @@
 							<input id="itemSet_title" name="title" style="width:220px;" required="true">
 						</td>
 						<td class="rightTd">
-							<div id="itemSet_title_editTip" style="display: inline-block;" class="tipDIV"></div>
+							<div id="itemSet_titleTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="leftTd">描述：</td>
 						<td colspan="2">
-							<textarea id="itemSet_desc" name="description" style="width:480px;" rows="8"></textarea>
+							<textarea id="itemSet_desc" name="description" style="width:450px;" rows="5"></textarea>
 						</td>
 					</tr>
 					<tr>
 						<td class="none"><input id="itemSet_id" name="id"></td>
 					</tr>
 					<tr>
-						<td colspan="2" style="text-align: center;padding-top: 10px;">
+						<td colspan="3" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="formSubmit();">确定</a>
 						</td>
 					</tr>
