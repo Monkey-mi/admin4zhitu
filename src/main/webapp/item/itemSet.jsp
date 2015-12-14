@@ -20,6 +20,7 @@
 	var columnsFields = [
 			{field: "ck", checkbox:true},
 			{field: "id", title: "ID", align: "center", width: 30},
+			{field: "title", title: "标题", align: "center", width: 80},
 			{field: "path", title: "商品集合图片", align: "center", width: 80,
 				formatter: function(value,row,index) {
 	  				return "<img width='200px' height='90px' class='htm_column_img' src='" + value + "'/>";
@@ -170,13 +171,14 @@
 		var row = $("#htm_table").datagrid("getSelected");
 		
 		$("#itemSet_id").val(row.id);
+		$("#itemSet_title").val(row.title);
+		$("#itemSet_desc").val(row.description);
 		$("#itemSet_path").val(row.path);	// 为path设值
 		$("#itemSet_path_edit").attr("src", row.path);	// 展示商品集合图片
 		$("#itemSet_thumb").val(row.thumb);	// 为thumb设值
 		$("#itemSet_thumb_edit").attr("src", row.thumb);	// 展示商品集合缩略图
 		$("#itemSet_type").combobox("select", row.type);
 		$("#itemSet_link").val(row.link);
-		$("#itemSet_desc").val(row.description);
 		
 		$("#add_itemSet_window").window("open");
 		$("#htm_table").datagrid("clearSelections");

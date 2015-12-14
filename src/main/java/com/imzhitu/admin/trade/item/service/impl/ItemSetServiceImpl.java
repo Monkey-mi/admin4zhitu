@@ -126,7 +126,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 			for (com.hts.web.operations.pojo.ItemSetBulletin seckill : seckillList) {
 				ItemSetDTO dto = new ItemSetDTO();
 				dto.setId(seckill.getId());
-				dto.setDescription(seckill.getBulletinName());
+				dto.setTitle(seckill.getBulletinName());		// 由于公告名称对应标题
+				dto.setDescription(seckill.getBulletinDesc());
 				dto.setPath(seckill.getBulletinPath());
 				dto.setThumb(seckill.getBulletinThumb());
 				dto.setType(seckill.getBulletinType());
@@ -140,7 +141,8 @@ public class ItemSetServiceImpl implements ItemSetService {
 			for (com.hts.web.operations.pojo.ItemSetBulletin rItem : rItemList) {
 				ItemSetDTO dto = new ItemSetDTO();
 				dto.setId(rItem.getId());
-				dto.setDescription(rItem.getBulletinName());
+				dto.setTitle(rItem.getBulletinName());		// 由于公告名称对应标题
+				dto.setDescription(rItem.getBulletinDesc());
 				dto.setPath(rItem.getBulletinPath());
 				dto.setThumb(rItem.getBulletinThumb());
 				dto.setType(rItem.getBulletinType());
@@ -155,6 +157,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 			for (ItemSet itemSet : itemSetList) {
 				ItemSetDTO dto = new ItemSetDTO();
 				dto.setId(itemSet.getId());
+				dto.setTitle(itemSet.getTitle());
 				dto.setDescription(itemSet.getDescription());
 				dto.setPath(itemSet.getPath());
 				dto.setThumb(itemSet.getThumb());
