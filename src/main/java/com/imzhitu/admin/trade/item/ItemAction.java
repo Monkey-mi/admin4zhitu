@@ -143,9 +143,11 @@ public class ItemAction extends BaseCRUDAction {
 	 */
 	public String updateSetItemSerial(){
 		try {
+			String setIdString = request.getParameter("itemSetId");
 			String[]  ids = request.getParameterValues("reIndexId");
-			itemService.updateSetItemSerial(itemSetId, ids);
-			JSONUtil.optSuccess(jsonMap);
+			Integer setId = Integer.parseInt(setIdString);
+			itemService.updateSetItemSerial(setId, ids);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
