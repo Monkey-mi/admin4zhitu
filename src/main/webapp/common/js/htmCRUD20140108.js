@@ -339,28 +339,6 @@ function isSelected(rows) {
 	}
 }
 
-/**
- * 清空表单数据
- * @param form
- */
-function clearFormData(form) {
-	$(form).find(':input').each(function() {
-		switch (this.type) {
-		case 'passsword':
-		case 'select-multiple':
-		case 'select-one':
-		case 'text':
-		case 'file':
-		case 'textarea':
-			$(this).val('');
-			break;
-		case 'checkbox':
-		case 'radio':
-			this.checked = false;
-		}
-	});
-}
-
 var editIndex = undefined;
 function endEditing(){
     if (editIndex == undefined){
