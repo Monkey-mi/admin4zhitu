@@ -8,6 +8,7 @@
 <script type="text/javascript">
 	var itemSetId = <%= itemSetId%>;
 	var showItemInfoTimer;
+	var showItemSetInfoTimer;
 	
 	$(function(){
 		
@@ -112,6 +113,44 @@
         	$("#showItemInfoWindow").css('display','none');
         }
         
+        
+        /* 浮动窗口显示商品集合信息 */
+        
+        function setShowItemSetInfoTimer(itemSetId){
+        	if(showItemSetInfoTimer != ''){
+        		clearShowItemSetInfoTimer();
+        	}
+        	showItemSetInfoTimer = setTimeout("showItemSetInfo"+"("+ itemSetId +")",400);
+        }
+        
+        function clearShowItemSetInfoTimer(){
+        	$("#set_imgPath_show").attr("src",null);
+        	$("#set_summary_show").text('');
+        	$("#set_description_show").text('');
+        	clearTimeout(showItemSetInfoTimer);
+        }
+        
+        function showItemSetInfo(itemSetId){
+        	//ID获取行值
+        	$('#htm_table').datagrid("selectRecord",itemSetId);
+        	var row = $('#htm_table').datagrid("getSelected");
+        	//赋值给浮动页面
+        	$("#set_imgPath_show").attr("src",row.path);
+        	$("#set_summary_show").text(row.title);
+        	$("#set_description_show").text(row.description);
+        	//设置浮动页面显示位置
+    		$("#showItemSetInfoWindow").css('left', ($(window).width() - 630)/2 + 'px');
+    		$("#showItemSetInfoWindow").css('top',$(document).scrollTop() + ($(window).height() - 220)/2  + 'px');
+    		$("#showItemSetInfoWindow").css('display','');
+    		return false;
+        }
+        
+        function clearShowItemSetInfo(){
+        	$('#htm_table').datagrid("clearSelections");
+        	clearTimeout(showItemSetInfoTimer);
+        	$("#showItemSetInfoWindow").css('display','none');
+        }
+        
 </script>
 </head>
 <body>
@@ -172,6 +211,16 @@
 		<div style="width:300px;margin:-300px 10px 10px 320px">
 			<div id="summary_show" style="font-size:12px;text-align: left;color:#fffff;margin-bottom:8px"></div>
 			<div id="description_show" style="color:#797373;font-size:10px;text-align: justify;"></div>
+		</div>
+	</div>
+		
+		
+	<!--  浮动商品集合信息展示 -->	
+	<div id="showItemSetInfoWindow" style="display:none;height:220px;width:630px;position:absolute;z-index:1000;background:#ffffff;box-shadow: 0px 0px 10px #888888;">
+		<div style="margin:10px;width:400px;"><img id="set_imgPath_show" alt="" src="" style="width:400px;height:200px;" /></div>
+		<div style="width:200px;margin:-200px 10px 10px 420px">
+			<div id="set_summary_show" style="font-size:12px;text-align: left;color:#fffff;margin-bottom:8px"></div>
+			<div id="set_description_show" style="color:#797373;font-size:10px;text-align: justify;"></div>
 		</div>
 	</div>
 		
