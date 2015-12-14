@@ -64,4 +64,13 @@ public interface OpMsgBulletinMapper {
 	 */
 	@DataSource("slave")
 	public List<OpMsgBulletin> queryMsgBulletinByIds(@Param("ids")Integer[] ids);
+	
+	/**
+	 * 根据id，得到公告对象
+	 * 
+	 * @param id	公告id
+	 * @return
+	 * @author zhangbo	2015年12月14日
+	 */
+	OpMsgBulletin getMsgBulletinById(@Param("id")Integer id);
 }

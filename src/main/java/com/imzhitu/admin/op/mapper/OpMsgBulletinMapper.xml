@@ -114,4 +114,13 @@
 		</foreach>
 	</select>
 	
+	<!-- 根据id，得到公告对象 -->
+	<select id="getMsgBulletinById" resultMap="OpMsgBulletinMap">
+		select 
+			* 
+		from 
+			hts_admin.op_msg_bulletin 
+		where id = #{id} 
+	</select>
+	
 </mapper>

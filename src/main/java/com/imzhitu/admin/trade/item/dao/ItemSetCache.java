@@ -38,16 +38,14 @@ public class ItemSetCache {
 	 * @author zhangbo	2015年12月8日
 	 */
 	public void updateSeckill(List<com.hts.web.operations.pojo.ItemSetBulletin> seckillList) {
-		if(seckillList.size() > 0) {
-			// 若存在redis的key值，则清空缓存
-			if(redisTemplate.hasKey(CacheKeies.OP_MSG_SECKILL)) {
-				redisTemplate.delete(CacheKeies.OP_MSG_SECKILL);
-			}
-			com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[seckillList.size()];
-			
-			// 从右放入数据，即与现有的list数据顺序保持一致
-			redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_SECKILL, seckillList.toArray(list));
+		// 若存在redis的key值，则清空缓存
+		if(redisTemplate.hasKey(CacheKeies.OP_MSG_SECKILL)) {
+			redisTemplate.delete(CacheKeies.OP_MSG_SECKILL);
 		}
+		com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[seckillList.size()];
+		
+		// 从右放入数据，即与现有的list数据顺序保持一致
+		redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_SECKILL, seckillList.toArray(list));
 	}
 	
 	/**
@@ -57,16 +55,14 @@ public class ItemSetCache {
 	 * @author zhangbo	2015年12月8日
 	 */
 	public void updateAwardActivity(List<com.hts.web.operations.pojo.ItemSetBulletin> awardActivityList) {
-		if(awardActivityList.size() > 0) {
-			// 若存在redis的key值，则清空缓存
-			if(redisTemplate.hasKey(CacheKeies.OP_MSG_AWARD_ACTIVITY)) {
-				redisTemplate.delete(CacheKeies.OP_MSG_AWARD_ACTIVITY);
-			}
-			com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[awardActivityList.size()];
-			
-			// 从右放入数据，即与现有的list数据顺序保持一致
-			redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_AWARD_ACTIVITY, awardActivityList.toArray(list));
+		// 若存在redis的key值，则清空缓存
+		if(redisTemplate.hasKey(CacheKeies.OP_MSG_AWARD_ACTIVITY)) {
+			redisTemplate.delete(CacheKeies.OP_MSG_AWARD_ACTIVITY);
 		}
+		com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[awardActivityList.size()];
+		
+		// 从右放入数据，即与现有的list数据顺序保持一致
+		redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_AWARD_ACTIVITY, awardActivityList.toArray(list));
 	}
 	
 	/**
@@ -76,16 +72,14 @@ public class ItemSetCache {
 	 * @author zhangbo	2015年12月8日
 	 */
 	public void updateRecommendItem(List<com.hts.web.operations.pojo.ItemSetBulletin> recommendItemList) {
-		if(recommendItemList.size() > 0) {
-			// 若存在redis的key值，则清空缓存
-			if(redisTemplate.hasKey(CacheKeies.OP_MSG_RECOMMEND_ITEM)) {
-				redisTemplate.delete(CacheKeies.OP_MSG_RECOMMEND_ITEM);
-			}
-			com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[recommendItemList.size()];
-			
-			// 从右放入数据，即与现有的list数据顺序保持一致
-			redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_RECOMMEND_ITEM, recommendItemList.toArray(list));
+		// 若存在redis的key值，则清空缓存
+		if(redisTemplate.hasKey(CacheKeies.OP_MSG_RECOMMEND_ITEM)) {
+			redisTemplate.delete(CacheKeies.OP_MSG_RECOMMEND_ITEM);
 		}
+		com.hts.web.operations.pojo.ItemSetBulletin[] list = new com.hts.web.operations.pojo.ItemSetBulletin[recommendItemList.size()];
+		
+		// 从右放入数据，即与现有的list数据顺序保持一致
+		redisTemplate.opsForList().rightPushAll(CacheKeies.OP_MSG_RECOMMEND_ITEM, recommendItemList.toArray(list));
 	}
 	
 	/**
