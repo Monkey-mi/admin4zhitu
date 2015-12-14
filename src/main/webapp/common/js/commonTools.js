@@ -178,3 +178,31 @@ commonTools.openWorldAddToWorldLabelPage = function(worldId,worldAuthorId){
 	});
 };
 
+/**
+ * 清空表单数据
+ * @param form	表单对象
+ * @author zhutianjie	2015-12-14
+ */
+commonTools.clearFormData = function(form) {
+	// 去除input中数据
+	$(form).find(':input').each(function() {
+		switch (this.type) {
+		case 'passsword':
+		case 'select-multiple':
+		case 'select-one':
+		case 'text':
+		case 'file':
+		case 'textarea':
+			$(this).val('');
+			break;
+		case 'checkbox':
+		case 'radio':
+			this.checked = false;
+		}
+	});
+	// 替换图片为空图片
+	$(form).find('img').each(function() {
+		$(this).attr("src", "./././base/images/bg_empty.png");
+	});
+};
+
