@@ -101,9 +101,8 @@
 		        	$("#description_show").text('');
         		}
         	},"json");
-        	
-    		$("#showItemInfoWindow").css('left',(window.innerWidth- 600)/2 + 'px');
-    		$("#showItemInfoWindow").css('top',(window.innerHeight- 300)/2  + 'px');
+    		$("#showItemInfoWindow").css('left', ($(window).width() - 600)/2 + 'px');
+    		$("#showItemInfoWindow").css('top',$(document).scrollTop() + ($(window).height() - 300)/2  + 'px');
     		$("#showItemInfoWindow").css('display','');
     		return false;
         }
