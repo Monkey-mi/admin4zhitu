@@ -133,16 +133,16 @@
 		});
 		
 		$("#add_itemSet_window").window({
-			title : '添加商品集合banner',
+			title : '添加商品专题',
 			modal : true,
 			width : 650,
-			height : 400,
+			height : 530,
 			shadow : false,
 			closed : true,
 			minimizable : false,
 			maximizable : false,
 			collapsible : false,
-			iconCls : 'icon-converter',
+			iconCls : 'icon-add',
 			resizable : false
 		});
 		
@@ -380,7 +380,7 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');$('#add_itemSet_form').form('reset');" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
+				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');commonTools.clearFormData($('#add_itemSet_form'));" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="reorder()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
 		   		<input id="ss_isCache" class="easyui-combobox">
@@ -421,7 +421,7 @@
 					<tr>
 						<td class="leftTd">标题：</td>
 						<td>
-							<input id="itemSet_title" name="title" style="width:220px;" required="true">
+							<textarea id="itemSet_title" name="title" style="width:260px;" rows="5"></textarea>
 						</td>
 						<td class="rightTd">
 							<div id="itemSet_titleTip" style="display: inline-block;" class="tipDIV"></div>
@@ -430,7 +430,7 @@
 					<tr>
 						<td class="leftTd">描述：</td>
 						<td colspan="2">
-							<textarea id="itemSet_desc" name="description" style="width:450px;" rows="5"></textarea>
+							<textarea id="itemSet_desc" name="description" style="width:450px;height:120px;" rows="20"></textarea>
 						</td>
 					</tr>
 					<tr>
