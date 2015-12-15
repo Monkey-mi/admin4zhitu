@@ -19,7 +19,7 @@ import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
 import com.imzhitu.admin.privileges.service.AdminService;
 import com.imzhitu.admin.trade.item.dao.ItemCache;
 import com.imzhitu.admin.trade.item.dao.ItemSetCache;
-import com.imzhitu.admin.trade.item.mapper.ItemSeckillMapper;
+import com.imzhitu.admin.trade.item.mapper.ItemMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemSetMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemSetRelationMapper;
 import com.imzhitu.admin.trade.item.pojo.Item;
@@ -52,6 +52,9 @@ public class ItemSetServiceImpl implements ItemSetService {
 	private ItemSetMapper itemSetMapper;
 	
 	@Autowired
+	private ItemMapper itemMapper;
+	
+	@Autowired
 	private OpMsgBulletinMapper msgBulletinMapper;
 	
 	@Autowired
@@ -65,9 +68,6 @@ public class ItemSetServiceImpl implements ItemSetService {
 	
 	@Autowired
 	private ItemCache itemCache;
-	
-	@Autowired
-	private ItemSeckillMapper itemSeckillMapper;
 	
 	@Autowired
 	private AdminService adminService;
@@ -220,50 +220,11 @@ public class ItemSetServiceImpl implements ItemSetService {
 		itemSetCache.addSeckillTemp(id, deadline);
 		// 当添加到秒杀商品集合时，刷新序号，使其排到最顶层
 		itemSetMapper.updateSerial(id, webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
-		
-		// 添加关联商品到秒杀商品中
-		addItemToSeckill(id, deadline);
 	}
 	
 	@Override
 	public void cancelSeckillFromTemp(Integer id) throws Exception {
 		itemSetCache.deleteFromSeckillTempById(id);
-		
-		deleteItemFromSeckill(id);
-	}
-
-	/**
-	 * 根据商品集合id，将其下关联的商品添加为秒杀商品
-	 * 
-	 * @param ItemSetId	商品集合id
-	 * @param deadline	截止日期
-	 * @author zhangbo	2015年12月13日
-	 */
-	private void addItemToSeckill(Integer ItemSetId, Date deadline) {
-		// 根据商品集合id，查询其下商品
-		List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
-		
-		// 将查询出的商品列表设置为秒杀商品
-		for (Item item : itemList) {
-			// id与deadline确定唯一性，重复插入会报错，不影响整体循环
-			itemSeckillMapper.insert(item.getId(), deadline);
-		}
-		
-	}
-
-	/**
-	 * 根据商品集合id，将其下关联的商品移出秒杀商品
-	 * 
-	 * @param ItemSetId	商品集合id
-	 * @author zhangbo	2015年12月13日
-	 */
-	private void deleteItemFromSeckill(Integer ItemSetId) {
-		// 刷新此商品集合id，其下对应的商品列表redis集合
-		List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(ItemSetId);
-		if ( itemList != null && itemList.size() != 0 ) {
-			Integer[] ids = new Integer[itemList.size()]; 
-			itemSeckillMapper.deleteByIds(ids);
-		}
 	}
 
 	@Override
@@ -351,17 +312,26 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	/**
-	 * 刷新商品集合其下的商品列表到redis中
+	 * 刷新全部商品集合其下的商品列表到redis中
 	 * 
 	 * @author zhangbo	2015年12月12日
 	 */
 	private void refreshItemListToCache() {
 		// 查询全部商品集合，分页传递为null，则表明查询全部
 		List<ItemSet> itemSetList = itemSetMapper.queryItemSetList(null, null);
+		
+		// 先全部清空所有商品对应的位置redis缓存，然后再由下面的循环处理，重新赋值商品位置缓存
+		itemCache.emptyItemPosition(getItemIds(itemMapper.queryItemList(null)));
+		
 		for (ItemSet itemSet : itemSetList) {
+			// 查询将要刷新的商品list
+			List<com.hts.web.trade.item.dto.ItemDTO> webItemList = itemListToWebItemList(itemAndSetRelationMapper.queryItemListBySetId(itemSet.getId()));
+			
 			// 刷新此商品集合id，其下对应的商品列表redis集合
-			List<Item> itemList = itemAndSetRelationMapper.queryItemListBySetId(itemSet.getId());
-			itemCache.updateItemListBySetId(itemSet.getId(), itemListToWebItemList(itemList, null));
+			itemCache.updateItemListBySetId(itemSet.getId(), webItemList);
+			
+			// 刷新此商品集合id，其下对应的商品位置redis缓存
+			itemCache.updateItemPosition(itemSet.getId(), webItemList);
 		}
 	}
 
@@ -373,7 +343,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	 * @return
 	 * @author zhangbo	2015年12月11日
 	 */
-	private List<com.hts.web.trade.item.dto.ItemDTO> itemListToWebItemList(List<Item> itemList, Date deadline) {
+	private List<com.hts.web.trade.item.dto.ItemDTO> itemListToWebItemList(List<Item> itemList) {
 		// 定义web端的item集合
 		List<com.hts.web.trade.item.dto.ItemDTO> rtnList = new ArrayList<com.hts.web.trade.item.dto.ItemDTO>();
 		if ( itemList != null && itemList.size() != 0 ) {
@@ -394,12 +364,20 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setItemType(item.getTaobaoType());
 				dto.setLike(item.getLikeNum());
 				dto.setLink(item.getLink());
-				dto.setDeadline(deadline);
 				rtnList.add(dto);
 			}
 		}
 		return rtnList;
 	}
+	
+	private Integer[] getItemIds(List<Item> itemList) {
+		Integer[] ids = new Integer[itemList.size()];
+		for (int i = 0; i < itemList.size(); i++) {
+			ids[i] = itemList.get(i).getId();
+		}
+		return ids;
+	}
+	
 	
 	/**
 	 * 获取秒杀商品集合ids
