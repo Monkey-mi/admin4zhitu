@@ -70,11 +70,13 @@ public class InteractAutoResponseServiceImpl extends BaseServiceImpl implements 
 			@Override
 			public List< ? extends AbstractNumberDto> queryList(InteractAutoResponseDto dto){
 				List<InteractAutoResponseDto> list = autoResponseMapper.queryUncompleteResponse(dto);
+				int i = 0;
 				//上上次评论
 				for(InteractAutoResponseDto o:list){
-					if(o.getPreReId() != 0){
-						String preComment = autoResponseMapper.queryPreComment(o.getPreReId());
-						o.setPreComment(preComment);
+					if(o.getAuthor() != 0 && o.getWorldId() != 0){
+						String preComment = autoResponseMapper.queryPreComment(o);
+						list.get(i).setPreComment(preComment);
+						i++;
 					}
 				}
 				
