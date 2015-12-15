@@ -417,6 +417,36 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	public String queryNearWorldLast(){
+		try{
+			nearService.queryNearWorldLast(cityId, maxSerial,rows * (page - 1), rows, jsonMap);
+			JSONUtil.optSuccess(jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String insertNearWorldLast(){
+		try{
+			nearService.insertNearWorldLast(worldId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	public String batchDeleteNearWorldLast(){
+		try{
+			nearService.batchDeleteNearWorldLast(idsStr);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	
 	
 	public Integer getId() {

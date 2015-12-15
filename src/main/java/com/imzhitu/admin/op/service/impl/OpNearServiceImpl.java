@@ -29,6 +29,7 @@ import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
 import com.imzhitu.admin.common.pojo.OpNearRecommendCityDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.op.dao.mongo.NearLabelMongoDao;
+import com.imzhitu.admin.op.dao.mongo.NearWorldLastMongoDao;
 import com.imzhitu.admin.op.dao.mongo.NearWorldMongoDao;
 import com.imzhitu.admin.op.mapper.OpNearCityGroupMapper;
 import com.imzhitu.admin.op.mapper.OpNearLabelMapper;
@@ -75,6 +76,9 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	
 	@Autowired
 	private NearWorldMongoDao nearWorldMongoDao;
+	
+	@Autowired
+	private NearWorldLastMongoDao nearWorldLastMongoDao;
 	
 	private List<OpNearLabelWorldDto> addUserInfo(List<OpNearLabelWorldDto> list) throws Exception{
 		for(int i = 0; i < list.size(); i++){
@@ -433,6 +437,62 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		for(Integer id:ids){
 			nearService.deleteNearWorld(id);
+		}
+	}
+
+	@Override
+	public void queryNearWorldLast(Integer cityId, int maxId, int start,
+			int limit, Map<String, Object> jsonMap) throws Exception {
+		long total = nearWorldLastMongoDao.queryNearTotalCount(cityId);
+		if( total > 0 ){
+			final List<OpNearWorldDto> list = nearWorldLastMongoDao.queryNear(maxId, cityId, start, limit);
+			if(list != null && !(list.isEmpty())){
+				final Map<Integer,List<Integer>> indexMap = new HashMap<Integer, List<Integer>>();
+				for (int i = 0; i < list.size(); i++) {
+					Integer auid = list.get(i).getAuthorId();
+					if(indexMap.containsKey(auid)) {
+						indexMap.get(auid).add(i);
+					} else {
+						List<Integer> l = new ArrayList<Integer>();
+						l.add(i);
+						indexMap.put(auid, l);
+					}
+				}
+				Integer[] uids = new Integer[indexMap.size()];
+				indexMap.keySet().toArray(uids);
+				
+				userInfoDao.queryUserInfoDtos(uids, new RowCallback<UserInfoDto>() {
+					
+					@Override
+					public void callback(UserInfoDto t) {
+						Integer uid = t.getId();
+						for(Integer i : indexMap.get(uid)) {
+							list.get(i).setUserInfo(t);
+						}
+					}
+				});
+				
+				jsonMap.put(OptResult.JSON_KEY_MAX_SERIAL, list.get(0).getRecommendId());
+				jsonMap.put(OptResult.ROWS, list);
+				jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+			}
+		}
+	}
+
+	@Override
+	public void insertNearWorldLast(Integer worldId) throws Exception {
+		if(worldId == null){
+			throw new NullPointerException("worldId is null");
+		}
+		HTWorld world = worldDao.queryWorldById(worldId);
+		nearService.saveNearWorld(world);//TO-DO
+	}
+
+	@Override
+	public void batchDeleteNearWorldLast(String idsStr) throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		for(Integer id:ids){
+			nearService.deleteNearWorld(id);//TO-DO
 		}
 	}
 	
