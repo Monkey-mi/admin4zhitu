@@ -229,8 +229,13 @@ public class ItemSetServiceImpl implements ItemSetService {
 
 	@Override
 	public void refreshItemSetCache() throws Exception {
+		// 刷新限时秒杀
 		refreshSeckillCache();
+		
+		// 刷新推荐商品
 		refreshRecommendItemCache();
+		
+		// 刷新商品集合其下的商品列表
 		refreshItemListToCache();
 	}
 
