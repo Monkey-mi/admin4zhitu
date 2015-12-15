@@ -34,6 +34,9 @@ public class ChannelCache extends BaseCacheDaoImpl<com.hts.web.common.pojo.OpCha
 	}
 	
 	/**
+	 * TODO 此方法是在3.2版本设计，目前这个方法没有被用到，是由于更改了逻辑，在web端调用的时候，推荐频道从CacheKeies.OP_CHANNEL中获取前6位
+	 * 不再通过运营系统操作频道置顶来动态设置数量，后续若有需要，再使用，等3.2之前老版本消化后，看是否再重新采用这个redis，或者重新设计
+	 * 
 	 * 更新推荐频道缓存
 	 * 
 	 * @param clist	推荐频道集合（频道对象为web端com.hts.web.common.pojo.OpChannel，不然客户端调用反序列化时会不正确）
