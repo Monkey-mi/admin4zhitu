@@ -85,6 +85,17 @@ public interface InteractZombieService {
 		*	mishengliang
 	 */
 	public void addCommentsFile(File commentsFile,Integer zombieWorldId)throws Exception;
+	
+	/**
+	 * 更新马甲织图的位置信息
+	 * note：文件里面的内容格式是：纬度,经度,城市
+	 *                    纬度,经度,城市
+	 * @param idsStr
+	 * @param locationFile
+	 * @throws Exception
+	 * @author zxx 2015-12-15 10:43:48
+	 */
+	public void updateZombieWorldLocation(String idsStr,File locationFile)throws Exception;
 
 	/**
 	 * 更新马甲织图地理位置信息

@@ -845,4 +845,59 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		dto.setModifyDate(new Date());
 		zombieWorldMapper.updateZombieWorld(dto);
 	}
+
+	@Override
+	public void updateZombieWorldLocation(String idsStr, File locationFile)
+			throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
+		detector.add(new ParsingDetector(false)); 
+		detector.add(JChardetFacade.getInstance());
+		detector.add(ASCIIDetector.getInstance()); 
+		detector.add(UnicodeDetector.getInstance()); 
+		java.nio.charset.Charset set = null;
+		
+		if (locationFile == null) throw new Exception("你没有选择文件。");
+		set = detector.detectCodepage(locationFile.toURI().toURL());
+		String charsetName = set.name();
+		
+		// 除了GB开头的编码，其他一律用UTF-8
+		String charset = charsetName != null && charsetName.startsWith("GB") ? charsetName : "UTF-8";
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(locationFile), charset));
+			String line = null;
+			int i = 0;
+			List<Double> latitudeList = new ArrayList<Double>(); 
+			List<Double> longitudeList = new ArrayList<Double>(); 
+			List<String> city = new ArrayList<String>(); 
+			while((line = reader.readLine()) != null) {
+				try{
+					String locationStr = line.trim();
+					String[] splitStr = locationStr.split(",");
+					if(splitStr.length == 3){
+						latitudeList.add(i, Double.parseDouble(splitStr[0]));
+						longitudeList.add(i, Double.parseDouble(splitStr[1]));
+						city.add(i,splitStr[2].trim());
+						i++;
+					}
+				}catch(Exception e){
+					log.warn("read file:"+locationFile+"exception. \ncause:"+e.getMessage());
+				}
+			}
+			
+			if(city.isEmpty()){
+				throw new Exception("read location file failed");
+			}
+			
+			for(int j=0; j<ids.length; j++){
+				int t = j % city.size();
+				updateZombieWorldAddressinfo(ids[j],null,null,longitudeList.get(t),latitudeList.get(t),null,city.get(t));
+			}
+		}catch(Exception e){
+			throw e;
+		}finally {
+			reader.close();
+		}
+	}
 }
