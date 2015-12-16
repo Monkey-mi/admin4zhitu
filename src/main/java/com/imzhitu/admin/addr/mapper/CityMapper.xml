@@ -36,7 +36,7 @@
 		hts.addr_city
 	where
 		<if test="cityName!=null">
-			name like CONCAT('%',#{cityName},'%')
+			short_name =#{cityName}
 		</if>
 	</select>
 	
@@ -94,6 +94,17 @@
 				<![CDATA[ and id <= #{maxId}]]>
 			</if>
 		</where>
+	</select>
+	
+	
+	<select id="queryCityByIds" resultMap="CityMap">
+		select id,province_id,name,short_name,longitude,latitude,radius
+		from hts.addr_city
+		where id in 
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
 	</select>
 	
 </mapper>
