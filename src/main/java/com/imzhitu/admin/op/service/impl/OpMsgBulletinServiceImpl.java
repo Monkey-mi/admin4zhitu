@@ -351,11 +351,10 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	public void buildNearBulletin(NearBulletinDto bulletin, 
 			int start, int limit, Map<String, Object> jsonMap) throws Exception {
 		
-		buildNumberDtos(bulletin, start, limit, jsonMap, new NumberDtoListAdapter<NearBulletinDto>() {
+		buildNumberDtos("getSerial", bulletin, start, limit, jsonMap, new NumberDtoListAdapter<NearBulletinDto>() {
 
 			@Override
 			public List<NearBulletinDto> queryList(NearBulletinDto dto) {
-				
 				List<NearBulletinDto> list = null;
 				
 				if(dto.getCityId() != null && !dto.getCityId().equals(0))
@@ -369,7 +368,6 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 
 			@Override
 			public long queryTotal(NearBulletinDto dto) {
-				
 				long total = 0l;
 				
 				if(dto.getCityId() != null && !dto.getCityId().equals(0))
@@ -430,10 +428,8 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 				cityIdxMap.put(cityId, l);
 			}
 		}
-		System.out.println(cityIdxMap);
 		Integer[] ids = new Integer[cityIdxMap.size()];
 		cityIdxMap.keySet().toArray(ids);
-		System.out.println(ids.length);
 		List<City> list = addrService.queryCityByIds(ids);
 		for(City city : list) {
 			for(Integer idx : cityIdxMap.get(city.getId())) {
@@ -446,6 +442,34 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	public void delNearBulletinById(Integer id) throws Exception {
 		nearBulletinMapper.delById(id);
 		nearBulletinMongoDao.delByBulletinId(id);
+	}
+
+	@Override
+	public NearBulletinDto queryNearBulletinById(Integer id) throws Exception {
+		NearBulletinDto dto = nearBulletinMapper.queryById(id);
+		
+		List<NearBulletinCityDto> cityList = nearBulletinMongoDao.queryCityByBulletinIds(new Integer[]{id});
+		if(!cityList.isEmpty()) {
+			extractCityName(cityList);
+			
+			for(NearBulletinCityDto city : cityList) {
+				dto.getCities().add(city.getCityName());
+				dto.getCityIds().add(city.getCityId());
+			}
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public void updateCityBulletinSerial(String[] idStrs) throws Exception {
+		Integer serial;
+		for(int i = idStrs.length-1; i >= 0; i--) {
+			if(!StringUtil.checkIsNULL(idStrs[i])) {
+				serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_NEAR_BULLETIN_SERIAL);
+				nearBulletinMongoDao.updateSerial(Integer.parseInt(idStrs[i]), serial);
+			}
+		}
 	}
 
 }

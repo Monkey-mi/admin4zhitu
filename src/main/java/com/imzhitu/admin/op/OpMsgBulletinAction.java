@@ -3,6 +3,7 @@ package com.imzhitu.admin.op;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.IllegalClassException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
@@ -141,8 +142,41 @@ public class OpMsgBulletinAction extends BaseCRUDAction {
 					}
 				}
 				nearBulletin.setCityIds(list);
+			} else {
+				throw new IllegalClassException("please select cityid");
 			}
 			msgBulletinService.saveNearBulletin(nearBulletin);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+
+	/**
+	 * 根据id查询附近公告
+	 * 
+	 * @return
+	 */
+	public String queryNearBulletinById() {
+		try {
+			NearBulletinDto dto = msgBulletinService.queryNearBulletinById(id);
+			JSONUtil.optResult(OptResult.OPT_SUCCESS, dto, OptResult.JSON_KEY_OBJ, jsonMap);
+		} catch(Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 根据ids删除置顶城市的公告
+	 * 
+	 * @return
+	 */
+	public String deleteCityBulletinByIds() {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		try {
+			msgBulletinService.delCityBulletinByIds(ids);
 			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -150,6 +184,48 @@ public class OpMsgBulletinAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 
+	/**
+	 * 更新附近公告
+	 * 
+	 * @return
+	 */
+	public String updateNearBulletin() {
+		try {
+			String[] cityIdStrs = request.getParameterValues("cityId");
+			if(cityIdStrs != null && cityIdStrs.length > 0) {
+				List<Integer> list = new ArrayList<Integer>();
+				for(String idStr : cityIdStrs) {
+					if(!StringUtil.checkIsNULL(idStr)) {
+						list.add(Integer.parseInt(idStr));
+					}
+				}
+				nearBulletin.setCityIds(list);
+			}
+			msgBulletinService.updateNearBulletin(nearBulletin);
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新城市公告序号
+	 * 
+	 * @return
+	 */
+	public String updateCityBulletinSerial() {
+		try {
+			String[] idStrs = request.getParameterValues("reIndexId");
+			msgBulletinService.updateCityBulletinSerial(idStrs);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+				
+	}
+	
 	public Integer getId() {
 		return id;
 	}

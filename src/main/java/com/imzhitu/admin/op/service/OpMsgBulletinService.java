@@ -131,4 +131,21 @@ public interface OpMsgBulletinService extends BaseService{
 	 */
 	public void delNearBulletinById(Integer id) throws Exception;
 	
+	/**
+	 * 根据id查询附近公告
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public NearBulletinDto queryNearBulletinById(Integer id) throws Exception;
+	
+	
+	/**
+	 * 更新城市公告序号
+	 * 
+	 * @param ids
+	 * @throws Exception
+	 */
+	public void updateCityBulletinSerial(String[] idStrs) throws Exception;
 }

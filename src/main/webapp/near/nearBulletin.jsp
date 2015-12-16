@@ -16,12 +16,12 @@
 		}
 		loadPageData(initPage);
 	},
-	hideIdColumn = true,
+	hideIdColumn = false,
 	htmTableTitle = "附近专题列表", //表格标题
 	loadDataURL = "./admin_op/msgBulletin_queryNearBulletin",
-	deleteURI = "./admin_op/msgBulletin_deleteNearBulletinByIds?ids=", //删除请求地址
+	deleteURI = "./admin_op/msgBulletin_deleteCityBulletinByIds?idsStr=", //删除请求地址
 	saveURL = "./admin_op/msgBulletin_saveNearBulletin",
-	updateByIdURL = "./admin_op/msgBulletin_updateBulletin",
+	updateByIdURL = "./admin_op/msgBulletin_updateNearBulletin",
 	queryByIdURL = "./admin_op/msgBulletin_queryNearBulletinById",
 	delByIdURL = "./admin_op/msgBulletin_deleteNearBulletinById",
 	
@@ -44,15 +44,37 @@
 				$("#htm_table").datagrid("showColumn", "cities");
 				$("#del-btn").hide();
 				$("#add-btn").show();
+				$("#reserial-btn").hide();
 			} else {
 				$("#htm_table").datagrid("showColumn", "ck");
 				$("#htm_table").datagrid("hideColumn", "opt");
 				$("#htm_table").datagrid("hideColumn", "cities");
 				$("#del-btn").show();
 				$("#add-btn").hide();
+				$("#reserial-btn").show();
 			}
 		}
 	},
+	myOnCheck = function(rowIndex, rowData) {
+		selectedIds.push(rowData.id);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnUncheck = function(rowIndex, rowData) {
+		for(var i = 0; i < selectedIds.length; i++)
+			if(rowData.id == selectedIds[i])
+				selectedIds.splice(i,1);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnCheckAll = function(rows) {
+		selectedIds = [];
+		for(var i = 0; i < rows.length; i++)
+			selectedIds.push(rows[i]['id']);
+		updateSortingCount(selectedIds.length);
+	},
+	myOnUncheckAll = function(rows) {
+		selectedIds = [];
+		updateSortingCount(0);
+	}
 	columnsFields = [
   			{field: "ck", checkbox:true, hidden: true},
  			{field: "id", title: "ID", align: "center"},
@@ -61,8 +83,17 @@
 	  				return "<img width='180px' height='100px' class='htm_column_img' src='" + value + "'/>";
  	  			}
  			},
+ 			{field: "bulletinName", title: "专题名", align: "center"},
  			{field: "bulletinType", title: "跳转类型", align: "center",
  				formatter: function(value,row,index) {
+ 					switch(value) {
+ 					case 1:
+ 						return "网页链接";
+ 					case 3:
+ 						return "用户ID";
+ 					case 4:
+ 						return "活动标签";
+ 					}
  					return value;
  	  			}
  			},
@@ -89,6 +120,8 @@
 	
 	editCityMaxId = 0,
 	editCityQueryParams = {},
+	
+	selectedIds = [],
     
     
     onBeforeInit = function() {
@@ -101,7 +134,7 @@
 			title : '添加附近专题',
 			modal : true,
 			width : 620,
-			height : 420,
+			height : 480,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -114,7 +147,10 @@
 				clearFormData($form);
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
-				$("#img_edit").attr("src", "./base/images/bg_empty.png");
+				$("#bulletinImg_edit").attr("src", "./base/images/bg_empty.png");
+				$("#thumbImg_edit").attr("src", "./base/images/bg_empty.png");
+				$("#bulletinType_edit").combobox("setValue", 1);
+				$("#cityIds_edit").combogrid("clear");
 				$("#edit_form").hide();
 				$("#edit_loading").show();
 			}
@@ -204,6 +240,20 @@
 			}
 		});
 		
+		$('#htm_serial').window({
+			title : '重新排序',
+			modal : true,
+			width : 600,
+			height : 255,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-converter',
+			resizable : false
+		});
+		
 		
 		removePageLoading();
 		$("#main").show();
@@ -224,18 +274,17 @@ function initEditWindow(id, index, isUpdate) {
 				var obj = result['obj'];
 				$("#bulletinPath_edit").val(obj['bulletinPath']);
 				$("#bulletinImg_edit").attr('src', obj['bulletinPath']);
-				$("#name_edit").val(obj['name']);
-				$("#summary_edit").val(obj['summary']);
-				$("#description_edit").val(obj['description']);
-				$("#price_edit").val(obj['price']);
-				$("#link_edit").val(obj['link']);
+				$("#thumb_edit").val(obj['bulletinThumb']);
+				$("#thumbImg_edit").attr('src', obj['bulletinThumb']);
 				
-				$("#taobaoType_edit").combobox('setValue', obj['taobaoType']);
-				$("#taobaoId_edit").val(obj['taobaoId']);
-				$("#likeNum_edit").val(obj['likeNum']);
-				$("#worldId_edit").val(obj['worldId']);
+				$("#link_edit").val(obj['link']);
+				$("#bulletinName_edit").val(obj['bulletinName']);
+				
+				$("#cityIds_edit").combogrid("setValues", obj["cityIds"]);
+				$("#cityIds_edit").combogrid("setText", obj["cities"]);
 				
 				$("#id_edit").val(obj['id']);
+				$("#serial_edit").val(obj['serial']);
 				
 				$("#edit_loading").hide();
 				$("#edit_form").show();
@@ -297,20 +346,18 @@ function loadEditFormValidate(index, isUpdate) {
 	});
 	
 	$("#bulletinPath_edit")
-	.formValidator({empty:false, onshow:"1242x640（必填）",onfocus:"请选图片",oncorrect:"正确！"})
+	.formValidator({empty:false, onshow:"可自定义,上传大图后生成",onfocus:"请输入大图链接",oncorrect:"正确！"})
 	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
 	
-	/*
 	$("#thumb_edit")
-	.formValidator({empty:false, onshow:"请选图片（必填）",onfocus:"请选图片",oncorrect:"正确！"})
+	.formValidator({empty:false, onshow:"可自定义,上传缩略图后生成",onfocus:"请输入缩略图链接",oncorrect:"正确！"})
 	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
-	*/
 	
 	$("#bulletinName_edit")
 	.formValidator({empty:true, onshow:"输入专题名,方便搜索哦",onfocus:"请输入专题名",oncorrect:"正确！"});
 	
 	$("#link_edit")
-	.formValidator({empty:false, onshow:"请输入跳转链接（必填）",onfocus:"请输入跳转链接",oncorrect:"正确！"});
+	.formValidator({empty:false, onshow:"url|用户id|活动标签（必填）",onfocus:"请输入跳转链接",oncorrect:"正确！"});
 	
 	$("#bulletinType_edit")
 	.formValidator({empty:true, onshow:"请选择跳转类型（必选）",onfocus:"请选择跳转类型",oncorrect:"正确！"});
@@ -320,10 +367,10 @@ function loadEditFormValidate(index, isUpdate) {
 	
 }
 
-function searchItemByName() {
+function searchByName() {
 	maxId = 0;
-	myQueryParams['item.maxId'] = maxId;
-	myQueryParams['item.name'] = $('#ss-itemName').searchbox('getValue');
+	myQueryParams['nearBulletin.maxId'] = maxId;
+	myQueryParams['nearBulletin.bulletinName'] = $('#ss-bulletinName').searchbox('getValue');
 	$("#htm_table").datagrid("load",myQueryParams);
 }
 
@@ -343,7 +390,7 @@ function searchEditCity() {
 }
 
 function deleteById(id) {
-	$.messager.confirm('删除记录', '您确定要删除已选中的记录?', function(r){ 	
+	$.messager.confirm('删除记录', '您确定要删除已选中的专题?删除后在所有城市都看不到此专题!', function(r){ 	
 		if(r){				
 			$.post(delByIdURL, {
 				'id' : id
@@ -358,6 +405,59 @@ function deleteById(id) {
 		}	
 	});	
 }
+
+function updateSortingCount(count) {
+	$("#sorting-count").text(count);
+}
+
+function clearSortingCount() {
+	$("#sorting-count").text(0);
+	commonTools.clearFormData($('#serial_form'));
+}
+
+/**
+ * 重新排序
+ */
+function reSerial() {
+	$('#htm_serial .opt_btn').show();
+	$('#htm_serial .loading').hide();
+	$("#serial_form").find('input[name="reIndexId"]').val('');
+	if(selectedIds.length > 0) {
+		for(var i = 0; i < selectedIds.length; i++) {
+			$("#serial_form").find('input[name="reIndexId"]').eq(i).val(selectedIds[i]);
+			$("#serial_form").form('validate');
+		}
+	}
+	// 打开添加窗口
+	$("#htm_serial").window('open');
+}
+
+function submitSerialForm() {
+	var $form = $('#serial_form');
+	if($form.form('validate')) {
+		$('#htm_serial .opt_btn').hide();
+		$('#htm_serial .loading').show();
+		$('#serial_form').form('submit', {
+			url: $form.attr('action'),
+			success: function(data){
+				var result = $.parseJSON(data);
+				$('#htm_serial .opt_btn').show();
+				$('#htm_serial .loading').hide();
+				if(result['result'] == 0) { 
+					$('#htm_serial').window('close');  //关闭添加窗口
+					maxId = 0;
+					myQueryParams['nearBulletin.maxId'] = maxId;
+					clearSortingCount();
+					loadPageData(1);
+				} else {
+					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+				}
+				
+			}
+		});
+	}
+}
+
 	
 </script>
 </head>
@@ -368,14 +468,13 @@ function deleteById(id) {
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<a id="add-btn" href="javascript:void(0);" onclick="javascript:initEditWindow(0,0,false);" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
-			<a id="del-btn" href="javascript:void(0);" onclick="htmDelete('id')" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
-			
-			<!-- 
-			<input id="ss-itemName" searcher="searchItemByName" class="easyui-searchbox" prompt="输入名字搜索" />
-			 -->
-			
+			<a id="del-btn" style="display:none;" href="javascript:void(0);" onclick="htmDelete('id')" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
+			<a id="reserial-btn" style="display:none;" href="javascript:void(0);" onclick="javascript:reSerial();" class="easyui-linkbutton" 
+				title="重排排序" plain="true" iconCls="icon-converter" id="reSerialBtn">重新排序+<span id="sorting-count">0</span></a>
 			<span class="search_label">选择城市：</span>
 			<input id="ss-cityId" />
+			<input id="ss-bulletinName" searcher="searchByName" class="easyui-searchbox" prompt="输入名字搜索" />
+			
 			
 		</div>
 		
@@ -384,9 +483,8 @@ function deleteById(id) {
 			<form id="edit_form" action="./admin_op/near_insertNearLabel" method="post">
 				<table class="htm_edit_table" width="580px" >
 					<tr>
-						<td  class="leftTd" style="width:50px">大图：</td>
+						<td  class="leftTd">上传大图：</td>
 						<td>
-							<input id="bulletinPath_edit" name="nearBulletin.bulletinPath" class="none" readonly="readonly" />
 							<a id="bulletinPath_edit_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 							<img id="bulletinImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="180px" height="90px">
 							<div id="bulletinPath_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
@@ -394,18 +492,39 @@ function deleteById(id) {
 							</div>
 						</td>
 						<td class="rightTd">
-							<div id="bulletinPath_editTip" style="display: inline-block;" class="tipDIV"></div>
+							规格:1240x640px
 						</td>
 					</tr>
+					
 					<tr>
-						<td  class="leftTd" style="width:50px">缩略图：</td>
+						<td  class="leftTd">上传缩略图：</td>
 						<td>
-							<input id="thumb_edit" name="item.imgPath" class="none" readonly="readonly" />
-							<a id="thumb_edit_upload_btn" style="position: absolute; margin:20px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="thumbImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="120px" height="60px">
+							<a id="thumb_edit_upload_btn" style="position: absolute; margin:20px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
+							<img id="thumbImg_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="60px" height="60px">
 							<div id="thumb_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
 								上传中...<span class="upload_progress"></span><span>%</span>
 							</div>
+						</td>
+						<td class="rightTd">
+							规格:300x300px
+						</td>
+					</tr>
+					
+					<tr>
+						<td  class="leftTd">大图链接：</td>
+						<td>
+							<input id="bulletinPath_edit" name="nearBulletin.bulletinPath" style="width:280px;"/>
+						</td>
+						<td class="rightTd">
+							<div id="bulletinPath_editTip" style="display: inline-block;" class="tipDIV"></div>
+						</td>
+						
+					</tr>
+					
+					<tr>
+						<td  class="leftTd">缩略图链接：</td>
+						<td>
+							<input id="thumb_edit" name="nearBulletin.bulletinThumb" style="width:280px;"/>
 						</td>
 						<td class="rightTd">
 							<div id="thumb_editTip" style="display: inline-block;" class="tipDIV"></div>
@@ -436,7 +555,7 @@ function deleteById(id) {
 					<tr>
 						<td class="leftTd">城市：</td>
 						<td>
-							<input type="text" id="cityIds_edit" name="cityId"  onchange="validateSubmitOnce=true;"/>
+							<input type="text" id="cityIds_edit" name="cityId"  style="width:286px;" onchange="validateSubmitOnce=true;"/>
 						</td>
 						<td class="rightTd">
 							<div id="cityIds_editTip" style="display: inline-block;" class="tipDIV"></div>
@@ -455,19 +574,127 @@ function deleteById(id) {
 					
 					<tr style="display:none">
 						<td colspan="3">
-							<input id="id_edit" name="item.id" />
+							<input id="id_edit" name="nearBulletin.id" />
+						</td>
+					</tr>
+					
+					<tr style="display:none">
+						<td colspan="3">
+							<input id="serial_edit" name="nearBulletin.serial" />
 						</td>
 					</tr>
 					
 					<tr>
-						<td colspan="3" style="text-align: center;padding-top: 20px;" >
+						<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
 							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="$('#edit_form').submit();">确定</a>
 							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_edit').window('close');">取消</a>
 						</td>
 					</tr>
+					<tr class="loading none">
+						<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">加载中...</span>
+						</td>
+					</tr>
+					
 				</table>
 			</form>
 		</div>
+		
+		
+		<!-- 重排索引 -->
+		<div id="htm_serial">
+			<form id="serial_form" action="./admin_op/msgBulletin_updateCityBulletinSerial" method="post">
+				<table class="htm_edit_table" width="580">
+					<tbody>
+						<tr>
+							<td class="leftTd">ID：</td>
+							<td>
+								<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<br />
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+								<input name="reIndexId" class="reindex_column"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="opt_btn" colspan="3" style="text-align: center;padding-top: 10px;">
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitSerialForm();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-undo" onclick="clearSortingCount()();">清空</a>
+								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_serial').window('close');">取消</a>
+							</td>
+						</tr>
+						<tr class="loading none">
+							<td colspan="3" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+								<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+								<span style="vertical-align:middle;">排序中...</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		
 		<div id="search-city-tb" style="padding:5px;height:auto" class="none">
 			<input id="city-searchbox" searcher="searchCity" class="easyui-searchbox" prompt="输入名称搜索" style="width:200px;"/>
 		</div>

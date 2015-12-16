@@ -301,7 +301,6 @@ function htmWindowUpdate(updateURI) {
  */
 function htmDelete(idKey) {
 	var rows = $('#htm_table').datagrid('getSelections');
-	console.log(rows);
 	if(isSelected(rows)){
 		$.messager.confirm('删除记录', '您确定要删除已选中的记录?', function(r){ 	
 			if(r){				

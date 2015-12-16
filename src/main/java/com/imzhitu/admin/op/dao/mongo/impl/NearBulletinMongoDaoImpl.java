@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hts.web.base.database.MongoHTS;
 import com.hts.web.common.dao.impl.BaseMongoDaoImpl;
+import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.op.dao.mongo.NearBulletinMongoDao;
 import com.imzhitu.admin.op.pojo.NearBulletinCityDto;
 import com.imzhitu.admin.op.pojo.NearBulletinDto;
@@ -45,8 +46,8 @@ public class NearBulletinMongoDaoImpl extends BaseMongoDaoImpl implements NearBu
 			criteria = criteria.and("serial").lte(bulletin.getMaxId());
 		}
 		
-		if(bulletin.getBulletinName() != null) {
-			criteria = criteria.and("bulletinName").is("/" + bulletin.getBulletinName() + "/");
+		if(!StringUtil.checkIsNULL(bulletin.getBulletinName())) {
+			criteria = criteria.and("bulletinName").regex(bulletin.getBulletinName());
 		}
 		
 		List<com.hts.web.operations.pojo.NearBulletin> list = 
@@ -76,8 +77,8 @@ public class NearBulletinMongoDaoImpl extends BaseMongoDaoImpl implements NearBu
 			criteria = criteria.and("serial").lte(bulletin.getMaxId());
 		}
 		
-		if(bulletin.getBulletinName() != null) {
-			criteria = criteria.and("bulletinName").is("/" + bulletin.getBulletinName() + "/");
+		if(!StringUtil.checkIsNULL(bulletin.getBulletinName())) {
+			criteria = criteria.and("bulletinName").regex(bulletin.getBulletinName());
 		}
 		
 		return getMongoTemplate().count(new Query(criteria), collection);
