@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.imzhitu.admin.op.mapper.OpMsgNearBulletinMapper">
+
+	<resultMap type="com.imzhitu.admin.op.pojo.NearBulletinDto" id="NearBulletinDtoMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="bulletinPath" column="path" jdbcType="VARCHAR"/>
+		<result property="bulletinType" column="type" jdbcType="INTEGER"/>
+		<result property="link" column="link" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
+		<result property="bulletinName" column="name" jdbcType="VARCHAR"/>
+		<result property="bulletinThumb" column="thumb" jdbcType="VARCHAR"/>
+		<result property="serial" column="serial" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap type="com.imzhitu.admin.common.pojo.OpMsgBulletin" id="OpMsgBulletinMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="bulletinPath" column="path" jdbcType="VARCHAR"/>
+		<result property="bulletinType" column="type" jdbcType="INTEGER"/>
+		<result property="link" column="link" jdbcType="VARCHAR"/>
+		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
+		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
+		<result property="bulletinName" column="name" jdbcType="VARCHAR"/>
+		<result property="bulletinThumb" column="thumb" jdbcType="VARCHAR"/>
+		<result property="serial" column="serial" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<insert id="save">
+		insert into hts_admin.op_msg_near_bulletin
+			(id,path,type,link,name,thumb,serial)
+		values
+			(#{id},#{bulletinPath},#{bulletinType},#{link},#{bulletinName},#{bulletinThumb},#{serial})
+	</insert>
+	
+	<delete id="delById">
+		delete from hts_admin.op_msg_near_bulletin
+		where id=#{id}
+	</delete>
+	
+	<update id="update">
+		update hts_admin.op_msg_near_bulletin
+		<set>
+			<if test="bulletinPath != null">path = #{bulletinPath},</if>
+			<if test="bulletinType != null">type = #{bulletinType},</if>
+			<if test="link != null">link = #{link},</if>
+			<if test="bulletinName !=null">name = #{bulletinName},</if>
+			<if test="bulletinThumb != null"> thumb = #{bulletinThumb},</if>
+			<if test="serial != null"> serial = #{serial}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="queryList" resultMap="NearBulletinDtoMap">
+		select *
+		from hts_admin.op_msg_near_bulletin
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="bulletinType != null">
+				and type = #{bulletinType}
+			</if>
+			<if test="bulletinName != null">
+				and name like CONCAT('%',#{bulletinName},'%')
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and serial <= #{maxId}]]>
+			</if>
+		</where>
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<select id="queryCount" resultType="long">
+		select count(*)
+		from hts_admin.op_msg_near_bulletin
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="bulletinType != null">
+				and type = #{bulletinType}
+			</if>
+			<if test="bulletinName != null">
+				and name like CONCAT('%',#{bulletinName},'%')
+			</if>
+			<if test="maxId != null and maxId != 0">
+				<![CDATA[and serial <= #{maxId}]]>
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" resultMap="NearBulletinDtoMap">
+		select 
+			* 
+		from 
+			hts_admin.op_msg_near_bulletin 
+		where id = #{id} 
+	</select>
+	
+</mapper>

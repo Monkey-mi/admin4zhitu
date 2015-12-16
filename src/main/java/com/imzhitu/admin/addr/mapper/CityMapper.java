@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.hts.web.common.pojo.AddrCity;
 import com.imzhitu.admin.addr.pojo.City;
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 
@@ -47,6 +46,15 @@ public interface CityMapper {
 	 */
 	@DataSource("slave")
 	public City queryCityById(Integer id);
+	
+	/**
+	 * 根据ids查询城市列表
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<City> queryCityByIds(@Param("ids")Integer[] ids);
 	
 	/**
 	 * 查询城市列表

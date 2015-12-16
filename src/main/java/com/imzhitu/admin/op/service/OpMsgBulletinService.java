@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
 import com.imzhitu.admin.common.pojo.OpMsgBulletin;
+import com.imzhitu.admin.op.pojo.NearBulletinDto;
 
 public interface OpMsgBulletinService extends BaseService{
 	
@@ -82,4 +83,52 @@ public interface OpMsgBulletinService extends BaseService{
 	 * @throws Exception
 	 */
 	public void updateMsgBulletinCache(String idsStr,Integer operator)throws Exception;
+	
+
+	/**
+	 * 保存附近公告
+	 * 
+	 * @param bulletin
+	 * @throws Exception
+	 * @author lynch 2015-12-15
+	 */
+	public void saveNearBulletin(NearBulletinDto bulletin) throws Exception;
+	
+	/**
+	 * 更新附近公告
+	 * 
+	 * @param bulletin
+	 * @throws Exception
+	 * @author lynch 2015-12-15
+	 */
+	public void updateNearBulletin(NearBulletinDto bulletin) throws Exception;
+	
+	/**
+	 * 根据id批量删除附近公告
+	 * 
+	 * @param ids
+	 * @throws Exception
+	 * @author lynch 2015-12-15
+	 */
+	public void delCityBulletinByIds(Integer[] ids) throws Exception;
+	
+	/**
+	 * 查询附近
+	 * @param bulletin
+	 * @param start
+	 * @param limit
+	 * @param jsonMap
+	 * @throws Exception
+	 */
+	public void buildNearBulletin(NearBulletinDto bulletin, 
+			int start, int limit, Map<String, Object> jsonMap) throws Exception;
+	
+	/**
+	 * 根据id删除附近公告
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	public void delNearBulletinById(Integer id) throws Exception;
+	
 }
