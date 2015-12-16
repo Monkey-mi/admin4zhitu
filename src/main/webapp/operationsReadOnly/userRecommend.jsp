@@ -381,7 +381,7 @@ var maxId = 0,
 function initAddWindow(json) {
 	var addForm = $('#add_form');
 	formSubmitOnce = true;
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#userRecommend_add").focus();  //光标定位
 	$.formValidator.initConfig({
 		formid : addForm.attr("id"),
@@ -398,7 +398,7 @@ function initAddWindow(json) {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							maxId = 0;
 							myQueryParams.maxId = maxId;
 							loadPageData(1); //重新装载第1页数据
@@ -767,7 +767,7 @@ function loadUserRecommendValidate(index) {
 						$('#htm_recommend .loading').hide();
 						if(result['result'] == 0) {
 							$('#htm_recommend').window('close');  //关闭添加窗口
-							clearFormData($form);  //清空表单数据
+							commonTools.clearFormData($form);  //清空表单数据
 							var g = $('#verifyId_recommend').combogrid('grid');
 							var r = g.datagrid('getSelected');
 							updateValues(index, ['verifyId', 'verifyName', 'verifyIcon'], [r.verifyId, r.verifyName, r.verifyIcon]);

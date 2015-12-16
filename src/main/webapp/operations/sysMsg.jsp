@@ -159,16 +159,6 @@ var maxId = 0,
 			collapsible : false,
 			iconCls : 'icon-add',
 			resizable : false
-			/*
-			onClose : function() {
-				clearFormData($("#appmsg_form"));
-				$(".notice_appmsg").attr('checked', 'checked');
-				$("#tr_link_appmsg").hide();
-				$("#objType_appmsg").combobox('setValue',4);
-				$('#htm_appmsg .opt_btn').show();
-				$('#htm_appmsg .loading').hide();
-			}
-		*/
 		});
 		
 		removePageLoading();

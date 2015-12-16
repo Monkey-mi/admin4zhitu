@@ -71,7 +71,7 @@ function initAddWindow() {
 	$('#htm_add .opt_btn').show();
 	$('#htm_add .loading').hide();
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$('#userLevelId_userLevel').combobox('clear');
 }
 
@@ -95,7 +95,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							maxId = 0;
 							myQueryParams.maxId = maxId;
 							loadPageData(1); //重新装载第1页数据

@@ -179,7 +179,7 @@ var maxId = 0,
 			iconCls : 'icon-add',
 			resizable : false,
 			onClose : function() {
-				clearFormData($("#msg_form"));
+				commonTools.clearFormData($("#msg_form"));
 				$('#htm_msg .opt_btn').show();
 				$('#htm_msg .loading').hide();
 			}
@@ -268,7 +268,7 @@ function loadUserRecommendValidate(index) {
 						if(result['result'] == 0) {
 							$('#htm_recommend').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData($form);  //清空表单数据
+							commonTools.clearFormData($form);  //清空表单数据
 							$("#htm_table").datagrid('reload');
 						} else {
 							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
@@ -304,7 +304,7 @@ function removeUserRecommend(userId, index) {
 //初始化添加窗口
 function initAddWindow() {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#userName_add").focus();  //光标定位
 	
 }
@@ -326,7 +326,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							myQueryParams.maxId = 0;
 							myLoadDataPage(1); //重新装载第1页数据
 						} else {

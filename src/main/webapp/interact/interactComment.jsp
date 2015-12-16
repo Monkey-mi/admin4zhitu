@@ -103,7 +103,7 @@ function initAddWindow() {
 	var addForm = $('#add_form');
 	$('#htm_add .opt_btn').show();
 	$('#htm_add .loading').hide();
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	
 	$("#labelId_add").combotree('setValue', 1);
 	
@@ -137,7 +137,7 @@ function loadAddFormValidate() {
 							myQueryParams.labelId = labelId;
 							myQueryParams.comment = "";
 							loadPageData(1); //重新装载第1页数据
-							clearFormData(addForm);  //清空表单数据
+							commonTools.clearFormData(addForm);  //清空表单数据
 						} else {
 							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
 						}

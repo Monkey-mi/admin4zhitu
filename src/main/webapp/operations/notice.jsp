@@ -69,7 +69,7 @@ var maxSerial = 0,
  */
 function initAddWindow(phoneCode, index, isUpdate) {
 	var $form = $("#add_form");
-	clearFormData($form);
+	commonTools.clearFormData($form);
 	$("#phoneCode_add").combobox('setValue', 0);
 	$("#pathImg_add").attr("src", "./base/images/bg_empty.png");
 	loadaddFormValidate(index, isUpdate);

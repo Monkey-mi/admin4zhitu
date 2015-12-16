@@ -143,7 +143,7 @@ var refreshTitleInterval = 3*24*60*60*1000,
 			resizable : false,
 			onClose : function() {
 				var $form = $('#refresh_form');
-				clearFormData($form);
+				commonTools.clearFormData($form);
 			}
 		});
 		
@@ -181,7 +181,7 @@ var refreshTitleInterval = 3*24*60*60*1000,
 			resizable : false,
 			onClose : function() {
 				var $form = $('#edit_form');
-				clearFormData($form);
+				commonTools.clearFormData($form);
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
 				$("#topId_edit").combobox('setValue', 1);

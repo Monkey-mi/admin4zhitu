@@ -119,7 +119,7 @@ function initAddWindow() {
 	var addForm = $('#add_form');
 	$('#htm_add .opt_btn').show();
 	$('#htm_add .loading').hide();
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	var labelId = $("#ss_groupId").combobox('getValue');
 	$("#groupId_add").combobox('setValue',labelId);
 	

@@ -63,7 +63,7 @@ var htmTableTitle = "系统角色信息维护", //表格标题
 //初始化添加窗口
 function initAddWindow() {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#roleName_add").focus();  //光标定位
 	$('#groupIds_add').combobox('clear');
 }
@@ -84,7 +84,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							//$("#htm_edit_table div").each(function(){$(this).html('');});  //清除form验证缓存	
 							loadPageData(1); //重新装载第1页数据
 						} else {
@@ -125,7 +125,7 @@ function loadAddFormValidate() {
 //初始化更新窗口
 function initUpdateWindow(json) {
 	var updateForm = $('#update_form');
-	clearFormData(updateForm);
+	commonTools.clearFormData(updateForm);
 	$("#id_update").val(json['id']);
 	$("#roleName_update").val(json['roleName']);
 	$("#roleDesc_update").val(json['roleDesc']);
@@ -152,7 +152,7 @@ function loadUpdateFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_update').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(updateForm);  //清空表单数据	
+							commonTools.clearFormData(updateForm);  //清空表单数据	
 							//$("#htm_update_table div").each(function(){$(this).html('');});  //清除form验证缓存	
 							$("#htm_table").datagrid("reload");
 						} else {

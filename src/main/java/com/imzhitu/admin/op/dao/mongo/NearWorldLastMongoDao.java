@@ -16,6 +16,14 @@ public interface NearWorldLastMongoDao extends BaseMongoDao{
 	public List<OpNearWorldDto> queryNear(int maxId,Integer cityId,int start,int limit);
 	
 	/**
+	 * 根据id查询附近织图
+	 * @param id
+	 * @return
+	 * @author zxx 2015-12-15 20:26:20
+	 */
+	public OpNearWorldDto queryNearWorldLastById(Integer id);
+	
+	/**
 	 * 查询附近织图总数
 	 * @param cityId
 	 * @return

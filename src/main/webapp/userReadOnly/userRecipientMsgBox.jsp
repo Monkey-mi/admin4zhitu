@@ -215,7 +215,7 @@ var maxId = 0,
 			iconCls : 'icon-add',
 			resizable : false,
 			onClose : function() {
-				clearFormData($("#appmsg_form"));
+				commonTools.clearFormData($("#appmsg_form"));
 				$(".phoneType_appmsg").attr('checked', 'checked');
 				$("#property_sys_appmsg").attr('checked', 'checked');
 				$('#activityName_appmsg').combogrid('clear');

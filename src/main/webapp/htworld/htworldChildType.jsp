@@ -263,7 +263,7 @@ function initAddWindow(id, index, isUpdate) {
 	var addForm = $('#add_form');
 	$("#htm_add .opt_btn").show();
 	$("#htm_add .loading").hide();
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#labelName_add").combogrid('clear');
 	$("#typeImg_add").attr("src", "./base/images/bg_empty.png");
 	$("#typeImg1_add").attr("src", "./base/images/bg_empty.png");

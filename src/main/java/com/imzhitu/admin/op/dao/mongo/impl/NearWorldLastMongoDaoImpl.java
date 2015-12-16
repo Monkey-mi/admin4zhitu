@@ -75,4 +75,9 @@ public class NearWorldLastMongoDaoImpl extends BaseMongoDaoImpl implements NearW
 		getMongoTemplate().remove(new Query(Criteria.where("_id").is(id)), collection);
 	}
 
+	@Override
+	public OpNearWorldDto queryNearWorldLastById(Integer id) {
+		return getMongoTemplate().findOne(new Query(Criteria.where("_id").is(id)), OpNearWorldDto.class,collection);
+	}
+
 }

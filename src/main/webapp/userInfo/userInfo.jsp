@@ -94,7 +94,7 @@ var maxId = 0,
 //初始化添加窗口
 function initAddWindow() {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#valid_add").val('1');
 	$('#htm_add .opt_btn').show();
 	$('#htm_add .loading').hide();
@@ -125,7 +125,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							loadPageData(1); //重新装载第1页数据
 						} else {
 							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
@@ -183,7 +183,7 @@ function loadAddFormValidate() {
 //初始化更新窗口
 function initUpdateWindow(json) {
 	var updateForm = $('#update_form');
-	clearFormData(updateForm);
+	commonTools.clearFormData(updateForm);
 	$("#valid_update").combobox('clear');
 	$('#htm_update .opt_btn').show();
 	$('#htm_update .loading').hide();
@@ -218,7 +218,7 @@ function loadUpdateFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_update').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(updateForm);  //清空表单数据	
+							commonTools.clearFormData(updateForm);  //清空表单数据	
 							//loadPageData(1); //重新装载第1页数据
 							$("#htm_table").datagrid("reload");
 						} else {

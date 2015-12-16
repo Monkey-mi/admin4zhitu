@@ -176,7 +176,7 @@ var htmTableTitle = "马甲用户维护", //表格标题
 //初始化添加窗口
 function initAddWindow(json) {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#userName_add").focus();  //光标定位
 	$("#htm_add").window('open');
 	loadAddFormValidate();
@@ -201,7 +201,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							myQueryParams.maxId = 0;
 							loadPageData(1); //重新装载第1页数据
 						} else {
@@ -276,7 +276,7 @@ function cheEmail(e){
 //初始化添加窗口
 function initAddIdWindow() {
 	var addForm = $('#add_id_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#ids_add").focus();  //光标定位
 	$("#add_id").window('open');
 	loadAddIdFormValidate();
@@ -301,7 +301,7 @@ function loadAddIdFormValidate() {
 						if(result['result'] == 0) {
 							$('#add_id').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							myQueryParams.maxId = 0;
 							loadPageData(1); //重新装载第1页数据
 						} else {

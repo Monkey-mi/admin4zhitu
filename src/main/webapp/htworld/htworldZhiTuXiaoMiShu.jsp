@@ -115,7 +115,7 @@
 	        	
 	function initEditDesc(worldId,desc){
 		var editDescForm = $("#edit_desc_form");
-		clearFormData(editDescForm);
+		commonTools.clearFormData(editDescForm);
 		$("#edit_desc").window('open');
 		$("#edit_desc_worldId").val(worldId);
 		$("#desc").val(desc);
@@ -125,7 +125,7 @@
 	
 	function initEditLabel(worldId,worldLabel){
 		var editLabelForm = $("#edit_label_form");
-		clearFormData(editLabelForm);
+		commonTools.clearFormData(editLabelForm);
 		$("#edit_label").window('open');
 		$("#worldLabel").val(worldLabel);
 		$("#edit_label_worldId").val(worldId);
@@ -139,7 +139,7 @@
 		var addForm = $('#add_form');
 		$('#htm_add .opt_btn').show();
 		$('#htm_add .loading').hide();
-		clearFormData(addForm);
+		commonTools.clearFormData(addForm);
 	}
 	
 		function loadAddFormValidate() {
@@ -160,7 +160,7 @@
 							if(result['result'] == 0) {
 								$('#htm_add').window('close');  //关闭添加窗口
 								$.messager.alert('提示',result['msg']);  //提示添加信息成功
-								clearFormData(addForm);  //清空表单数据							
+								commonTools.clearFormData(addForm);  //清空表单数据							
 								maxId = 0;
 								myQueryParams.maxId = maxId;
 								loadPageData(1); //重新装载第1页数据
@@ -181,7 +181,7 @@
 				if(result['result'] == 0){
 					$('#edit_label').window('close');  //关闭添加窗口
 					$.messager.alert('提示',result['msg']);  //提示添加信息成功
-					clearFormData(editLabelForm);  //清空表单数据							
+					commonTools.clearFormData(editLabelForm);  //清空表单数据							
 					maxId = 0;
 					myQueryParams.maxId = maxId;
 					loadPageData(1); //重新装载第1页数据
@@ -199,7 +199,7 @@
 				if(result['result'] == 0){
 					$('#edit_desc').window('close');  //关闭添加窗口
 					$.messager.alert('提示',result['msg']);  //提示添加信息成功
-					clearFormData(descForm);  //清空表单数据							
+					commonTools.clearFormData(descForm);  //清空表单数据							
 					maxId = 0;
 					myQueryParams.maxId = maxId;
 					loadPageData(1); //重新装载第1页数据

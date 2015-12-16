@@ -9,6 +9,7 @@
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
 <script type="text/javascript" src="${webRootPath }/base/js/jquery/uploadify/jquery.uploadify.js"></script>
 <link rel="stylesheet" type="text/css" href="${webRootPath }/base/js/jquery/uploadify/uploadify.css">
+<script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#cc_privilegesGroup').combobox({  
@@ -82,7 +83,7 @@ var htmTableTitle = "权限维护", //表格标题
 //初始化添加窗口
 function initAddWindow() {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#icon_add").val('icon-nav');
 	$("#appName_add").focus();  //光标定位
 	

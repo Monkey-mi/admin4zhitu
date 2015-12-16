@@ -130,7 +130,7 @@ var maxId = 0,
 			resizable : false,
 			onClose : function() {
 				var $form = $('#edit_form');
-				clearFormData($form);
+				commonTools.clearFormData($form);
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
 				$("#edit_form").hide();

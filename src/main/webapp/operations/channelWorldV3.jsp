@@ -86,7 +86,7 @@ var maxId = 0,
 			resizable : false,
 			onClose : function() {
 				var $form = $('#refresh_form');
-				clearFormData($form);
+				commonTools.clearFormData($form);
 			}
 		});
 		
