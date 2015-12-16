@@ -102,6 +102,7 @@ public interface ZTWorldMapper {
 	
 	/**
 	 * 根据最大id查询织图
+	 * TODO 这个方法在优化后要删除
 	 * 
 	 * @param maxId 最大id
 	 * @param startDateStr 起始时间
@@ -118,6 +119,7 @@ public interface ZTWorldMapper {
 	
 	/**
 	 * 根据最大id查询织图总数
+	 * TODO 这个方法在优化后要删除
 	 * 
 	 * @param maxId
 	 * @param startDateStr
@@ -161,8 +163,8 @@ public interface ZTWorldMapper {
 	
 	/**
 	 * 查询马甲织图
-	 * @param firstRow
-	 * @param limite
+	 * @param firstRow		分页起始行，传值为null，则查询全部
+	 * @param rows			查询每页的数量，传值为null，则查询全部
 	 * @param maxId
 	 * @param startTime 起始时间
 	 * @param endTime 	截止时间，用于查询设定的截止时间
@@ -183,7 +185,7 @@ public interface ZTWorldMapper {
 	 * @return
 	 * @author zhangbo	2015年11月30日
 	 */
-	Integer queryZombieWorldTotal(@Param("firstRow")Integer firstRow,@Param("limit")Integer limit,@Param("maxId")Integer maxId,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
+	long queryZombieWorldTotal(@Param("maxId")Integer maxId,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 	
 	/**
 	 * 查询最大id
@@ -271,8 +273,8 @@ public interface ZTWorldMapper {
 	 * @param startTime	查询起始时间
 	 * @param endTime	查询结束时间
 	 * @param phoneCode	客户端代号，0：IOS，1：android
-	 * @param firstRow	分页起始行
-	 * @param rows		查询每页的数量
+	 * @param firstRow		分页起始行，传值为null，则查询全部
+	 * @param rows			查询每页的数量，传值为null，则查询全部
 	 * 
 	 * @return List<ZTWorld>	织图对象集合
 	 * 
@@ -287,14 +289,12 @@ public interface ZTWorldMapper {
 	 * @param startTime	查询起始时间
 	 * @param endTime	查询结束时间
 	 * @param phoneCode	客户端代号，0：IOS，1：android
-	 * @param firstRow	分页起始行
-	 * @param rows		查询每页的数量
 	 * 
 	 * @return total	在此时间段下有效织图总数
 	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
-	Integer getWorldListValidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
+	long getWorldListValidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
 
 	/**
 	 * 根据时间段查询无效织图集合
@@ -304,8 +304,8 @@ public interface ZTWorldMapper {
 	 * @param startTime	查询起始时间
 	 * @param endTime	查询结束时间
 	 * @param phoneCode	客户端代号，0：IOS，1：android
-	 * @param firstRow	分页起始行
-	 * @param rows		查询每页的数量
+	 * @param firstRow		分页起始行，传值为null，则查询全部
+	 * @param rows			查询每页的数量，传值为null，则查询全部
 	 * 
 	 * @return List<ZTWorld>	织图对象集合
 	 * 
@@ -321,14 +321,12 @@ public interface ZTWorldMapper {
 	 * @param startTime	查询起始时间
 	 * @param endTime	查询结束时间
 	 * @param phoneCode	客户端代号，0：IOS，1：android
-	 * @param firstRow	分页起始行
-	 * @param rows		查询每页的数量
 	 * 
 	 * @return total	在此时间段下无效织图总数
 	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
-	Integer getWorldListInvalidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
+	long getWorldListInvalidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
 	
 	/**
 	 * 根据织图id集合查询织图
@@ -340,5 +338,67 @@ public interface ZTWorldMapper {
 	 * @author zhangbo	2015年12月3日
 	 */
 	List<ZTWorld> getWorldListByIds(@Param("ids")Integer[] ids);
+
+	/**
+	 * 根据时间段与用户等级查询有效织图集合
+	 * 
+	 * @param userLevelId	用户等级id
+	 * @param maxId			织图查询最大id，用于分页显示的
+	 * @param startTime		查询起始时间
+	 * @param endTime		查询结束时间
+	 * @param firstRow		分页起始行，传值为null，则查询全部
+	 * @param rows			查询每页的数量，传值为null，则查询全部
+	 * 
+	 * @return List<ZTWorld>	织图对象集合
+	 * 
+	 * @author zhangbo	2015年12月16日
+	 */
+	List<ZTWorld> queryWorldByUserLevelValid(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
+
+	/**
+	 * 根据时间段与用户等级查询有效织图总数
+	 * 
+	 * @param userLevelId	用户等级id
+	 * @param maxId			织图查询最大id，用于分页显示的
+	 * @param startTime		查询起始时间
+	 * @param endTime		查询结束时间
+	 * 
+	 * @return total	在此时间段下有效织图总数
+	 * 
+	 * @author zhangbo	2015年12月16日
+	 */
+	long queryWorldByUserLevelValidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
+
+	/**
+	 * 根据时间段与用户等级查询无效织图集合
+	 * TODO 此处在以后织图表结构分拆后，可以删除，因为删除表肯定是另外一张，就不在这里进行操作
+	 * 
+	 * @param userLevelId	用户等级id
+	 * @param maxId			织图查询最大id，用于分页显示的
+	 * @param startTime		查询起始时间
+	 * @param endTime		查询结束时间
+	 * @param firstRow		分页起始行
+	 * @param rows			查询每页的数量
+	 * 
+	 * @return List<ZTWorld>	织图对象集合
+	 * 
+	 * @author zhangbo	2015年12月16日
+	 */
+	List<ZTWorld> queryWorldByUserLevelInvalid(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
+
+	/**
+	 * 根据时间段与用户等级查询无效织图总数
+	 * TODO 此处在以后织图表结构分拆后，可以删除，因为删除表肯定是另外一张，就不在这里进行操作
+	 * 
+	 * @param userLevelId	用户等级id
+	 * @param maxId			织图查询最大id，用于分页显示的
+	 * @param startTime		查询起始时间
+	 * @param endTime		查询结束时间
+	 * 
+	 * @return total	在此时间段下无效织图总数
+	 * 
+	 * @author zhangbo	2015年12月16日
+	 */
+	long queryWorldByUserLevelInvalidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
 
 }

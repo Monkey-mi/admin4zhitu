@@ -13,6 +13,11 @@
 	text-decoration: none;
 }
 
+.deleteInfo {
+	color: red;
+	text-decoration: none;
+}
+
 .passInfo {
 	color: #228b22;
 	text-decoration: none;

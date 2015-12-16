@@ -32,4 +32,9 @@ public class AddrServiceTest extends BaseTest{
 	public void updateCityCacheTest() throws Exception {
 		service.updateCityCache();
 	}
+	
+	@Test
+	public void queryCityByIdsTest() throws Exception {
+		service.queryCityByIds(new Integer[]{1,2});
+	}
 }

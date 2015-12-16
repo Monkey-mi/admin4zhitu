@@ -354,7 +354,7 @@
 	</select>
 	
 	<!-- 查询马甲织图总数 -->
-	<select id="queryZombieWorldTotal" resultMap="ZTWorldPojo">
+	<select id="queryZombieWorldTotal" resultType="long" >
 		select 
 			count(*)
 		from
@@ -379,7 +379,6 @@
 		 	hts_admin.zombie_world zw
 		 where 
 		 	zw.id = zwss.zombie_world_id
-		 order by zw.id desc
 	</select>
 	
 	<!-- 分页查询总数 -->
@@ -517,7 +516,7 @@
 	</select>
 	
 	<!-- 根据时间段查询有效织图总数 -->
-	<select id="getWorldListValidTotal" resultType="INTEGER" >
+	<select id="getWorldListValidTotal" resultType="long" >
 		select 
 			count(*)
 		from
@@ -565,7 +564,7 @@
 	</select>
 	
 	<!-- 根据时间段查询有效织图总数 此处在以后织图表结构分拆后，可以删除，因为删除表肯定是另外一张，就不在这里进行操作 -->
-	<select id="getWorldListInvalidTotal" resultType="INTEGER" >
+	<select id="getWorldListInvalidTotal" resultType="long" >
 		select 
 			count(*)
 		from
@@ -600,6 +599,102 @@
 			</foreach>		 	
 	 	</where>
 	 	order by h.id desc
+	</select>
+	
+	<!-- 根据时间段与用户等级查询有效织图集合-->
+	<select id="queryWorldByUserLevelValid" resultMap="ZTWorldPojo" >
+		select 
+			*
+		from
+		 	hts.htworld_htworld h,
+		 	hts_admin.interact_user_level_list iull 
+	 	<where> 
+		 	h.valid = 1
+		 	and h.author_id = iull.user_id
+	 		<if test="startTime != null">
+	 			<![CDATA[and h.date_modified>=#{startTime}]]>
+	 		</if>
+	 		<if test="endTime != null">
+	 			<![CDATA[and h.date_modified<=#{endTime}]]>
+	 		</if> 
+		 	<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ and h.id<=#{maxId}]]>
+		 	</if>
+		 	and iull.user_level_id = #{userLevelId} 	
+	 	</where>
+	 	order by h.id desc
+	 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 根据时间段与用户等级查询有效织图总数-->
+	<select id="queryWorldByUserLevelValidTotal" resultType="long" >
+		select 
+			count(*)
+		from
+		 	hts.htworld_htworld h,
+		 	hts_admin.interact_user_level_list iull 
+	 	<where> 
+		 	h.valid = 1
+		 	and h.author_id = iull.user_id
+	 		<if test="startTime != null">
+	 			<![CDATA[and h.date_modified>=#{startTime}]]>
+	 		</if>
+	 		<if test="endTime != null">
+	 			<![CDATA[and h.date_modified<=#{endTime}]]>
+	 		</if> 
+		 	<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ and h.id<=#{maxId}]]>
+		 	</if>
+		 	and iull.user_level_id = #{userLevelId} 	
+	 	</where>
+	</select>
+	
+	<!-- 根据时间段与用户等级查询无效织图集合 此处在以后织图表结构分拆后，可以删除，因为删除表肯定是另外一张，就不在这里进行操作-->
+	<select id="queryWorldByUserLevelInvalid" resultMap="ZTWorldPojo" >
+		select 
+			*
+		from
+		 	hts.htworld_htworld h,
+		 	hts_admin.interact_user_level_list iull 
+	 	<where> 
+		 	h.valid = 0
+		 	and h.author_id = iull.user_id
+	 		<if test="startTime != null">
+	 			<![CDATA[and h.date_modified>=#{startTime}]]>
+	 		</if>
+	 		<if test="endTime != null">
+	 			<![CDATA[and h.date_modified<=#{endTime}]]>
+	 		</if> 
+		 	<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ and h.id<=#{maxId}]]>
+		 	</if>
+		 	and iull.user_level_id = #{userLevelId} 	
+	 	</where>
+	 	order by h.id desc
+	 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 根据时间段与用户等级查询无效织图总数 此处在以后织图表结构分拆后，可以删除，因为删除表肯定是另外一张，就不在这里进行操作 -->
+	<select id="queryWorldByUserLevelInvalidTotal" resultType="long" >
+		select 
+			count(*)
+		from
+		 	hts.htworld_htworld h,
+		 	hts_admin.interact_user_level_list iull 
+	 	<where> 
+		 	h.valid = 0
+		 	and h.author_id = iull.user_id
+	 		<if test="startTime != null">
+	 			<![CDATA[and h.date_modified>=#{startTime}]]>
+	 		</if>
+	 		<if test="endTime != null">
+	 			<![CDATA[and h.date_modified<=#{endTime}]]>
+	 		</if> 
+		 	<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ and h.id<=#{maxId}]]>
+		 	</if>
+		 	and iull.user_level_id = #{userLevelId} 	
+	 	</where>
 	</select>
 	
 </mapper>

@@ -9,8 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hts.web.common.pojo.AbstractNumberDto;
-import com.hts.web.common.pojo.AddrCity;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.addr.dao.redis.CityCacheDao;
 import com.imzhitu.admin.addr.mapper.CityMapper;
@@ -162,6 +160,11 @@ public class AddrServiceImpl extends BaseServiceImpl implements AddrService {
 				return cMapper.queryCityCount(dto);
 			}
 		});
+	}
+
+	@Override
+	public List<City> queryCityByIds(Integer[] ids) {
+		return cMapper.queryCityByIds(ids);
 	}
 	
 }

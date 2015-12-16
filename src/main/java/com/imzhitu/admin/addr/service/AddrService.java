@@ -93,6 +93,14 @@ public interface AddrService {
 	public City queryCityById(Integer id);
 	
 	/**
+	 * 根据id列表查询城市列表
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	public List<City> queryCityByIds(Integer[] ids);
+	
+	/**
 	 * 查询城市列表
 	 * 
 	 * @param city

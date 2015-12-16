@@ -227,6 +227,22 @@ public class Admin {
 	 */
 	public static final Integer KEYGEN_ZT_TYPEWORLD_SERIAL	= 14;
 	
+	
+	/**
+	 * 频道公告ID
+	 */
+	public static final Integer KEYGEN_OP_MSG_BULLETIN_ID = 15;
+	
+	/**
+	 * 附近公告序号
+	 */
+	public static final Integer KEYGEN_OP_MSG_NEAR_BULLETIN_SERIAL = 16;
+	
+	/**
+	 * 附近公告ID
+	 */
+	public static final Integer KEYGEN_OP_MSG_NEAR_BULLETIN_ID = 17;
+	
 	/**
 	 * admin系统与daemon守护系统共同操作redis的key值
 	 * @author zhangbo	2015年7月17日
