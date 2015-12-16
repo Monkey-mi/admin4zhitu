@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.hts.web.base.constant.OptResult;
 import com.hts.web.base.database.RowCallback;
 import com.hts.web.common.pojo.HTWorld;
+import com.hts.web.common.pojo.HTWorldCount;
 import com.hts.web.common.pojo.OpNearWorldDto;
 import com.hts.web.common.pojo.UserInfoDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
@@ -391,8 +392,12 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		if( total > 0 ){
 			final List<OpNearWorldDto> list = nearWorldMongoDao.queryNear(maxId, cityId, start, limit);
 			if(list != null && !(list.isEmpty())){
+				Integer[] ids = new Integer[list.size()];
 				final Map<Integer,List<Integer>> indexMap = new HashMap<Integer, List<Integer>>();
+				final Map<Integer, Integer> idIndexMap = new HashMap<Integer, Integer>();
 				for (int i = 0; i < list.size(); i++) {
+					ids[i] = list.get(i).getId();
+					idIndexMap.put(list.get(i).getId(), i);
 					Integer auid = list.get(i).getAuthorId();
 					if(indexMap.containsKey(auid)) {
 						indexMap.get(auid).add(i);
@@ -413,6 +418,16 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 						for(Integer i : indexMap.get(uid)) {
 							list.get(i).setUserInfo(t);
 						}
+					}
+				});
+				
+				worldDao.queryCount(ids, new RowCallback<HTWorldCount>() {
+					@Override
+					public void callback(HTWorldCount t) {
+						Integer idx = idIndexMap.get(t.getId());
+						list.get(idx).setClickCount(t.getClickCount());
+						list.get(idx).setLikeCount(t.getLikeCount());
+						list.get(idx).setCommentCount(t.getCommentCount());
 					}
 				});
 				
@@ -438,8 +453,12 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		if( total > 0 ){
 			final List<OpNearWorldDto> list = nearWorldLastMongoDao.queryNear(maxId, cityId, start, limit);
 			if(list != null && !(list.isEmpty())){
+				Integer[] ids = new Integer[list.size()];
 				final Map<Integer,List<Integer>> indexMap = new HashMap<Integer, List<Integer>>();
+				final Map<Integer, Integer> idIndexMap = new HashMap<Integer, Integer>();
 				for (int i = 0; i < list.size(); i++) {
+					ids[i] = list.get(i).getId();
+					idIndexMap.put(list.get(i).getId(), i);
 					Integer auid = list.get(i).getAuthorId();
 					if(indexMap.containsKey(auid)) {
 						indexMap.get(auid).add(i);
@@ -460,6 +479,16 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 						for(Integer i : indexMap.get(uid)) {
 							list.get(i).setUserInfo(t);
 						}
+					}
+				});
+				
+				worldDao.queryCount(ids, new RowCallback<HTWorldCount>() {
+					@Override
+					public void callback(HTWorldCount t) {
+						Integer idx = idIndexMap.get(t.getId());
+						list.get(idx).setClickCount(t.getClickCount());
+						list.get(idx).setLikeCount(t.getLikeCount());
+						list.get(idx).setCommentCount(t.getCommentCount());
 					}
 				});
 				
