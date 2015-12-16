@@ -16,5 +16,5 @@
 
 <script language="javascript" src="${webRootPath }/base/js/baseTools.js" type="text/javascript"></script>
 <script language="javascript" src="${webRootPath }/base/js/json2.js" type="text/javascript"></script>
-
+<script language="javascript" type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 

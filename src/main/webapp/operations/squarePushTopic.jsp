@@ -35,7 +35,7 @@ var htmTableTitle = "广场话题维护", //表格标题
 //初始化添加窗口
 function initAddWindow(json) {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#squarePush_add").focus();  //光标定位
 	$.formValidator.initConfig({
 		formid : addForm.attr("id"),			
@@ -51,7 +51,7 @@ function initAddWindow(json) {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							//$("#htm_edit_table div").each(function(){$(this).html('');});  //清除form验证缓存	
 							loadPageData(1); //重新装载第1页数据
 						} else {

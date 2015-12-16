@@ -197,7 +197,7 @@ function loadHotFormValidate() {
  */
 function initAddWindow(id, index, isUpdate) {
 	var $form = $("#add_form");
-	clearFormData($form);
+	commonTools.clearFormData($form);
 	$("#verifyName_add").focus();  //光标定位
 	loadaddFormValidate(index, isUpdate);
 	if(isUpdate) {

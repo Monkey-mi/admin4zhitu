@@ -132,7 +132,7 @@ var maxSerial = 0,
 			resizable : false,
 			onClose : function() {
 				var $form = $('#actlabel_form');
-				clearFormData($form);
+				commonTools.clearFormData($form);
 				$("#actlabel_form .opt_btn").show();
 				$("#actlabel_form .loading").hide();
 				$("#titleImg_actlabel").attr("src", "./base/images/bg_empty.png");
@@ -333,7 +333,7 @@ function searchLabel() {
 //初始化添加窗口
 function initAddWindow() {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	$("#add_form .opt_btn").show();
 	$("#add_form .loading").hide();
 	$("#labelName_add").focus();  //光标定位

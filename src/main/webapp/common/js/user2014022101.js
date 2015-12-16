@@ -197,7 +197,7 @@ function interactUser(userId, index) {
 			$addForm.show();
 			$("#htm_uinteract loading").hide();
 			$("#htm_uinteract opt_btn").show();
-			clearFormData($addForm);
+			commonTools.clearFormData($addForm);
 			$("#userId_uinteract").val(userId);
 			$("#duration_uinteract").val('24');
 		} else {
@@ -228,7 +228,7 @@ function loadUInteractFormValidate(userId, index) {
 						if(result['result'] == 0) {
 							$('#htm_uinteract').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							updateValue(index, 'interacted', 1);
 							$("#htm_table").datagrid('refreshRow', index);
 						} else {

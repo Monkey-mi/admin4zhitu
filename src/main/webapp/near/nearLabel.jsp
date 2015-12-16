@@ -125,7 +125,7 @@
 			resizable : false,
 			onClose : function() {
 				var $form = $('#edit_form');
-				clearFormData($form);
+				commonTools.clearFormData($form);
 				$("#edit_form .opt_btn").show();
 				$("#edit_form .loading").hide();
 				$("#bannerImg_edit").attr("src", "./base/images/bg_empty.png");
@@ -350,7 +350,7 @@ function updateSortingCount(count) {
 
 function clearSortingCount() {
 	$("#sorting-count").text(0);
-	clearFormData($('#serial_form'));
+	commonTools.clearFormData($('#serial_form'));
 }
 
 /**

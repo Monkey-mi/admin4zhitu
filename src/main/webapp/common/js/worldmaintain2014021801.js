@@ -126,7 +126,7 @@ function initInteractWindow(worldId) {
 			$addForm.show();
 			$('#htm_interact .opt_btn').show();
 			$('#htm_interact .loading').hide();
-			clearFormData($addForm);
+			commonTools.clearFormData($addForm);
 			$("#worldId_interact").val(worldId);
 			$("#comments_interact").combogrid('clear');
 			$("#comments_interact").combogrid('grid').datagrid('unselectAll');
@@ -165,7 +165,7 @@ function showUserInfo(uri){
  */
  function initUserLevelAddWindow(userId,index){
 	 var userleveladdform = $("#userLevel_form");
-	 clearFormData(userleveladdform);
+	 commonTools.clearFormData(userleveladdform);
 	 $("#userLevelId_userLevel").combobox('clear');
 	$("#userId_userLevel").val(userId);
 	$("#htm_userLevel").window('open');
@@ -274,7 +274,7 @@ function loadInteractFormValidate(worldId, index) {
 						if(result['result'] == 0) {
 							$('#htm_interact').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							$('#comments_interact').combogrid('clear');
 							updateValue(index, "interacted", 1);
 						} else {

@@ -137,7 +137,7 @@ var maxId = 0,
 			resizable : false,
 			onClose : function() {
 				var $form = $('#refresh_form');
-				clearFormData($form);
+				commonTools.clearFormData($form);
 			}
 		});
 		
@@ -209,7 +209,7 @@ var maxId = 0,
 //初始化添加窗口
 function initAddWindow() {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	var channelName = $('#ss-channel').combogrid('getText');
 	var channelId = $('#ss-channel').combogrid('getValue');
 	$("#channelName_add").text(channelName);
@@ -242,7 +242,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							maxId = 0;
 							myQueryParams['world.maxId'] = maxId;
 							myQueryParams['world.channelId'] = channelId;

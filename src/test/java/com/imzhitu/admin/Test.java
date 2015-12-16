@@ -57,7 +57,7 @@ public class Test extends BaseTest{
 	@org.junit.Test
 	public void test() throws FileNotFoundException, ScriptException {
 		
-		List<ShopBAK> shopBakList = bakMapper.queryShopBakListByLimit(0, 5000);
+		List<ShopBAK> shopBakList = bakMapper.queryShopBakListByLimit(0, 1000);
 		
 		for (ShopBAK shopBAK : shopBakList) {
 			Shop shop = new Shop();

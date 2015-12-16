@@ -143,7 +143,7 @@ function initAddWindow() {
 	var addForm = $('#add_form');
 	$('#htm_add .opt_btn').show();
 	$('#htm_add .loading').hide();
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 	var pcode = $("#phoneCode").combobox('getValue');
 	if(pcode == "" || pcode=='undefined') pcode = 0;
 	$("#phoneCode_add").combobox('setValue',pcode);
@@ -172,7 +172,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							maxSerial = 0;
 							var pcode = $("#phoneCode_add").combobox('getValue');
 							$("#phoneCode").combobox('setValue',pcode);

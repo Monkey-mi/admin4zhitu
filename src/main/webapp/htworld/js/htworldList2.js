@@ -1441,7 +1441,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 				$addForm.show();
 				$('#htm_type_interact .opt_btn').show();
 				$('#htm_type_interact .loading').hide();
-				clearFormData($addForm);
+				commonTools.clearFormData($addForm);
 				$("#worldId_type_interact").val(worldId);
 				$("#comments_type_interact").combogrid('clear');
 				$("#comments_type_interact").combogrid('grid').datagrid('unselectAll');
@@ -1479,7 +1479,7 @@ var htmTableTitle = "分享列表维护", //表格标题
 							if(result['result'] == 0) {
 								$('#htm_type_interact').window('close');  //关闭添加窗口
 								$.messager.alert('提示',result['msg']);  //提示添加信息成功
-								clearFormData(addForm);  //清空表单数据	
+								commonTools.clearFormData(addForm);  //清空表单数据	
 								$('#comments_type_interact').combogrid('clear');
 								$('html_table').datagrid("reload");
 							} else {

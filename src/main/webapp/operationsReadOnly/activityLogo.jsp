@@ -169,7 +169,7 @@ var maxSerial = 0,
 //初始化添加窗口
 function initAddWindow() {
 	var addForm = $('#add_form');
-	clearFormData(addForm);
+	commonTools.clearFormData(addForm);
 }
 
 //提交表单，以后补充装载验证信息
@@ -189,7 +189,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据	
+							commonTools.clearFormData(addForm);  //清空表单数据	
 							myQueryParams.maxSerial = 0;
 							loadPageData(1); //重新装载第1页数据
 						} else {

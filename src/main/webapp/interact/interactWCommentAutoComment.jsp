@@ -339,7 +339,7 @@ body {
 	function addComment() {
 		var addForm=$("add_form");
 		initWorldAddWindow();
-		clearFormData(addForm);
+		commonTools.clearFormData(addForm);
 		// 打开添加窗口
 		$("#htm_add").window('open');
 	}
@@ -626,29 +626,6 @@ body {
 			return false;
 		}
 	}
-	
-	/**
-	 * 清空表单数据
-	 * @param form
-	 */
-	function clearFormData(form) {
-		$(form).find(':input').each(function() {
-			switch (this.type) {
-			case 'passsword':
-			case 'select-multiple':
-			case 'select-one':
-			case 'text':
-			case 'file':
-			case 'textarea':
-				$(this).val('');
-				break;
-			case 'checkbox':
-			case 'radio':
-				this.checked = false;
-			}
-		});
-	}
-
 	
 	/**
 	 * 页面初始化成功后载入表格

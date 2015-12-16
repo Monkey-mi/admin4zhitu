@@ -253,7 +253,7 @@ function initFileWindow() {
 	var $form = $('#file_form');
 	$('#htm_file .opt_btn').show();
 	$('#htm_file .loading').hide();
-	clearFormData($form);
+	commonTools.clearFormData($form);
 	loadFileFormValidate();
 	$('#htm_file').window('open');
 }

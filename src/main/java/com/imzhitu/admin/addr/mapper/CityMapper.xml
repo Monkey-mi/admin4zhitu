@@ -36,7 +36,7 @@
 		hts.addr_city
 	where
 		<if test="cityName!=null">
-			name like CONCAT('%',#{cityName},'%')
+			short_name =#{cityName}
 		</if>
 	</select>
 	

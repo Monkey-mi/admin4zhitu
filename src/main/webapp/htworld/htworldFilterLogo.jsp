@@ -48,7 +48,7 @@ var htmTableTitle = "滤镜logo", //表格标题
  */
 function initAddWindow() {
 	var $form = $("#add_form");
-	clearFormData($form);
+	commonTools.clearFormData($form);
 	$("#valid_add").combobox('setValue', 0);
 	$("#ver_add").focus();  //光标定位
 	$.post(queryLogoByIdURL,{
@@ -92,7 +92,7 @@ function loadAddFormValidate() {
 						if(result['result'] == 0) {
 							$('#htm_add').window('close');  //关闭添加窗口
 							$.messager.alert('提示',result['msg']);  //提示添加信息成功
-							clearFormData(addForm);  //清空表单数据
+							commonTools.clearFormData(addForm);  //清空表单数据
 							loadPageData(1); //重新装载第1页数据
 						} else {
 							$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
