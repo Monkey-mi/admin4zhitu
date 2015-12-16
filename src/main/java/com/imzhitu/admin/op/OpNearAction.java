@@ -397,15 +397,6 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
-	public String insertNearWorld(){
-		try{
-			nearService.insertNearWorld(worldId);
-			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
-		}catch(Exception e){
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
 	
 	public String batchDeleteNearWorld(){
 		try{
@@ -447,6 +438,15 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	public String batchInsertNearWorldFromLast(){
+		try{
+			nearService.batchInsertNearWorldFromLast(idsStr);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
 	
 	
 	public Integer getId() {

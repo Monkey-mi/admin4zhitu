@@ -424,15 +424,6 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	}
 
 	@Override
-	public void insertNearWorld(Integer worldId) throws Exception {
-		if(worldId == null){
-			throw new NullPointerException("worldId is null");
-		}
-		HTWorld world = worldDao.queryWorldById(worldId);
-		nearService.saveNearWorld(world);
-	}
-
-	@Override
 	public void batchDeleteNearWorld(String idsStr) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		for(Integer id:ids){
@@ -485,15 +476,25 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			throw new NullPointerException("worldId is null");
 		}
 		HTWorld world = worldDao.queryWorldById(worldId);
-		nearService.saveNearWorld(world);//TO-DO
+		nearService.saveNearWorld(world);
 	}
 
 	@Override
 	public void batchDeleteNearWorldLast(String idsStr) throws Exception {
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		for(Integer id:ids){
-			nearService.deleteNearWorld(id);//TO-DO
+			nearWorldLastMongoDao.deleteNearWorldLast(id);
 		}
+	}
+
+	@Override
+	public void batchInsertNearWorldFromLast(String idsStr) throws Exception {
+		Integer[] ids = StringUtil.convertStringToIds(idsStr);
+		for(Integer id:ids){
+			OpNearWorldDto dto = nearWorldLastMongoDao.queryNearWorldLastById(id);
+			nearWorldMongoDao.saveWorld(dto);
+		}
+		
 	}
 	
 }
