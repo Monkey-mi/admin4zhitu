@@ -40,12 +40,14 @@
 	</update>
 	
 	<!-- 查询上上次回复内容 -->
-	<select id="queryPreComment" resultType="string">
+	<select id="queryPreComment" resultType="String">
 		SELECT hc.content 
 		FROM
 			hts.htworld_comment hc
 		WHERE
-			hc.id = #{id}
+			hc.re_author_id = #{reAuthor} and hc.world_id = #{worldId} 
+			order by comment_date desc
+			limit 1
 	</select>
 	
 	<!-- 分页查询未回复的回复 -->

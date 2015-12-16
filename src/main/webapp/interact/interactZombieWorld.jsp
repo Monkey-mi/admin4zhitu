@@ -268,6 +268,23 @@
 			resizable : false,
 		});
 		
+		$("#addLocation").window({
+			title : '批量 添加位置信息',
+			modal : true,
+			width : 420,
+			height : 180,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-add',
+			resizable : false,
+			onClose : function(){
+				$('#zombieWorldIds').val('');
+			}
+		});
+		
 		$("#place_search_win").window({
 			title : '地理位置搜索',
 			modal : true,
@@ -616,6 +633,39 @@
 		});
 	}
 	
+	function initBatchAddLocation(){
+		var rows = $('#htm_table').datagrid('getSelections');	
+		if(isSelected(rows)){
+			var ids = [];
+			for(var i=0;i<rows.length;i+=1){		
+				ids[i] = rows[i]['id'];	
+			}
+			$('#zombieWorldIds').val(ids.toString());	
+			$('#addLocation').window('open');
+		}else{
+			$.messager.alert('提示',"请勾选要添加地理位置信息的记录");
+		}
+	}
+	
+	function submitBatchAddLaction(){
+		var updateZombieWorldLocationForm = $('#updateZombieWorldLocationForm');
+		updateZombieWorldLocationForm.ajaxSubmit({
+			success:function(result){
+			if (result['result'] == 0) {
+				$("#htm_table").datagrid("clearSelections");
+				$.messager.alert('提示',result['msg']);
+				$('#addLocation').window('close');
+				$("#htm_table").datagrid("reload");
+			} else {
+				$.messager.alert('提示',result['msg']);
+			}
+			},
+			url : updateZombieWorldLocationForm.attr('action'),
+			type : 'post',
+			dataType : 'json'
+		});
+	}
+	
 </script>
 
 </head>
@@ -625,6 +675,7 @@
 		<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="批量删除" plain="true" iconCls="icon-cut" id="delBtn">批量删除</a>
 		<a href="javascript:void(0);" onclick="javascript:batchSaveZombieWorldToHTWorld();" class="easyui-linkbutton" title="批量发图" plain="true" iconCls="icon-add" id="batchSaveBtn">批量发图</a>
 		<a href="javascript:void(0);" onclick="javascript:initBatchUpdateLabel();" class="easyui-linkbutton" title="批量修改标签" plain="true" iconCls="icon-add" id="batchSaveBtn">批量修改标签</a>
+		<a href="javascript:void(0);" onclick="javascript:initBatchAddLocation();" class="easyui-linkbutton" title="添加位置信息" plain="true" iconCls="icon-add" id="batchUpdateLocationBtn">添加位置信息</a>
 		<select id="ss-complete" class="easyui-combobox" data-options="onSelect:function(rec){queryZombieWorldByComplete(rec.value);}" style="width:100px;" >
 		        <option value="">所有完成状态</option>
 		        <option value="0">未完成</option>
@@ -735,6 +786,32 @@
 		</tr>
 		</tbody>
 		</table>
+		</form>
+	</div>
+	
+	<!-- 添加位置信息 -->
+	<div id='addLocation'>
+		<form id='updateZombieWorldLocationForm' action="./admin_interact/interactZombieWorld_updateZombieWorldLocation" method='post'>
+			<table class="htm_edit_table" width="340">
+				<tbody>
+					<tr>
+						<td>选中的Id：</td>
+						<td><input id='zombieWorldIds'  name='ids' readonly="readonly" ></td>
+					</tr>
+					<tr>
+						<td>位置信息文件：</td>
+						<td style='height:100' >
+							<input id='locationFile' type="file" name='locationFile' >
+						</td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 20px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitBatchAddLaction();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#addLocation').window('close');">取消</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</form>
 	</div>
 	

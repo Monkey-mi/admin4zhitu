@@ -40,4 +40,9 @@ public class NearWorldMongoDaoImpl extends BaseMongoDaoImpl implements NearWorld
 		Criteria criteria = Criteria.where("cityId").is(cityId).and("id").gt(2971557);
 		return getMongoTemplate().count(new Query(criteria), OpNearWorldDto.class,collection);
 	}
+	
+	@Override
+	public void saveWorld(OpNearWorldDto world) {
+		getMongoTemplate().insert(world, collection);
+	}
 }

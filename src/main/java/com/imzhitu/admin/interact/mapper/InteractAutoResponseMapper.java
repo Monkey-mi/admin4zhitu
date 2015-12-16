@@ -91,7 +91,7 @@ public interface InteractAutoResponseMapper {
 	 * @return
 	 */
 	@DataSource("slave")
-	public String queryPreComment(Integer id);
+	public String queryPreComment(InteractAutoResponseDto dto);
 	
 	/**
 	 * 查询自动回复 by id

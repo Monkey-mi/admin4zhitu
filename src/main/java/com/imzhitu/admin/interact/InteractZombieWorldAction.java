@@ -39,6 +39,7 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
 	private Integer zombieWorldId;
 
 	private File commentsFile;
+	private File locationFile;
 
 	private String ids;// 批量发织图
 	private Date begin;// 开始执行计划的时间
@@ -192,6 +193,24 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
 		try {
 			service.addCommentsFile(commentsFile, zombieWorldId);
 			JSONUtil.optSuccess(OptResult.ADD_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 更新马甲织图的位置信息
+	 * note：文件里面的内容格式是：纬度,经度,城市
+	 *                    纬度,经度,城市
+	 * @param idsStr
+	 * @param locationFile
+	 * @author zxx 2015-12-15 10:43:48
+	 */
+	public String updateZombieWorldLocation(){
+		try {
+			service.updateZombieWorldLocation(ids, locationFile);
+			JSONUtil.optSuccess(OptResult.UPDATE_SUCCESS, jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}
@@ -416,5 +435,13 @@ public class InteractZombieWorldAction extends BaseCRUDAction {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public File getLocationFile() {
+		return locationFile;
+	}
+
+	public void setLocationFile(File locationFile) {
+		this.locationFile = locationFile;
 	}
 }

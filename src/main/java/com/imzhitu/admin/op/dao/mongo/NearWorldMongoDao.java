@@ -22,4 +22,11 @@ public interface NearWorldMongoDao extends BaseMongoDao {
 	 * @author zxx 2015-12-8 19:33:48
 	 */
 	public long queryNearTotalCount(int cityId);
+	
+	/**
+	 * 插入附近织图
+	 * @param world
+	 * @author zxx 2015-12-8 19:33:48
+	 */
+	public void saveWorld(OpNearWorldDto world);
 }
