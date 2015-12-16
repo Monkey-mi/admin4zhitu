@@ -279,13 +279,14 @@ function batchInsertNearWorldFromLast(){
 			'idsStr': ids.toString()
 		},function(result){
 			if(result['result'] == 0){
+				$('#htm_table').datagrid('clearSelections');	
 				$.messager.alert('提示',"成功添加"+ids.length+"条数据");
 			}else{
 				$.messager.alert('提示',result['msg']);
 			}
 		},"json");
 	}else{
-		$.messager.alert('提示',"请勾选要添加地理位置信息的记录");
+		$.messager.alert('提示',"请勾选要添加的记录");
 	}
 }
 
@@ -298,7 +299,7 @@ function batchInsertNearWorldFromLast(){
 		<div>
 			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加关系" plain="true" iconCls="icon-add" id="addBtn">添加到备选</a>
 			<a href="javascript:void(0);" onclick="javascript:deleteNearWorld();" class="easyui-linkbutton" title="批量删除织图" plain="true" iconCls="icon-cut" id="cutBtn">批量删除</a>
-			<a href="javascript:void(0);" onclick="javascript:batchInsertNearWorldFromLast();" class="easyui-linkbutton" title="批量添加织图" plain="true" iconCls="icon-convert" id="convertBtn">批量添加到附近</a>
+			<a href="javascript:void(0);" onclick="javascript:batchInsertNearWorldFromLast();" class="easyui-linkbutton" title="批量添加织图" plain="true" iconCls="icon-add" id="convertBtn">批量添加到附近</a>
 			<input type="text" id="cityId_edit" name="nearLabel.cityId"  onchange="validateSubmitOnce=true;"/>
 			<a href="javascript:void(0);" onclick="javascript:searchNearWorldByCityId();" plain="true" class="easyui-linkbutton" iconCls="icon-search" id="search_btn">查询</a>
    		</div>
