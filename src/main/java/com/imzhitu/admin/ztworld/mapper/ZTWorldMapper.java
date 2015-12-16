@@ -102,6 +102,7 @@ public interface ZTWorldMapper {
 	
 	/**
 	 * 根据最大id查询织图
+	 * TODO 这个方法在优化后要删除
 	 * 
 	 * @param maxId 最大id
 	 * @param startDateStr 起始时间
@@ -118,6 +119,7 @@ public interface ZTWorldMapper {
 	
 	/**
 	 * 根据最大id查询织图总数
+	 * TODO 这个方法在优化后要删除
 	 * 
 	 * @param maxId
 	 * @param startDateStr
@@ -183,7 +185,7 @@ public interface ZTWorldMapper {
 	 * @return
 	 * @author zhangbo	2015年11月30日
 	 */
-	Integer queryZombieWorldTotal(@Param("maxId")Integer maxId,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
+	long queryZombieWorldTotal(@Param("maxId")Integer maxId,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 	
 	/**
 	 * 查询最大id
@@ -292,7 +294,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
-	Integer getWorldListValidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
+	long getWorldListValidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
 
 	/**
 	 * 根据时间段查询无效织图集合
@@ -324,7 +326,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
-	Integer getWorldListInvalidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
+	long getWorldListInvalidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
 	
 	/**
 	 * 根据织图id集合查询织图
@@ -365,7 +367,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年12月16日
 	 */
-	Integer queryWorldByUserLevelValidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
+	long queryWorldByUserLevelValidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
 
 	/**
 	 * 根据时间段与用户等级查询无效织图集合
@@ -397,6 +399,6 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年12月16日
 	 */
-	Integer queryWorldByUserLevelInvalidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
+	long queryWorldByUserLevelInvalidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
 
 }

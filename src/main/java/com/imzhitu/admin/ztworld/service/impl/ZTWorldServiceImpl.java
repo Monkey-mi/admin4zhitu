@@ -608,7 +608,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		List<ZTWorld> worldList = new ArrayList<ZTWorld>();
 		
 		// 定义返回的条件查询织图总数
-		Integer totalCount = 0;
+		long totalCount = 0;
 		
 		// 分页起始行
 		Integer firstRow = (page - 1) * rows;
@@ -720,7 +720,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		List<ZTWorld> worldList = new ArrayList<ZTWorld>();
 		
 		// 定义返回的条件查询织图总数
-		Integer totalCount = 0;
+		long totalCount = 0;
 		
 		// 分页起始行
 		Integer firstRow = (page - 1) * rows;
@@ -756,7 +756,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		List<ZTWorld> worldList = new ArrayList<ZTWorld>();
 		
 		// 定义返回的条件查询织图总数
-		Integer totalCount = 0;
+		long totalCount = 0;
 		
 		// 分页起始行
 		Integer firstRow = (page - 1) * rows;
