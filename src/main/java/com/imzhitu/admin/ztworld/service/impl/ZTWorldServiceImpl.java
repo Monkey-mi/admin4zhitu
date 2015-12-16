@@ -261,7 +261,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 				maxId = dtoList.get(0).getWorldId();
 			}
 			
-		} 
+		}
 		extractInteractInfo(dtoList);
 		extractActivityInfo(dtoList);
 		webUserInfoService.extractVerify(dtoList);
@@ -474,7 +474,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		worldCacheDao.deleteOverFlowLatestCache(cacheLatestSize);
 	}
 	
-	public void extractActivityInfo(final List<ZTWorldDto> worldList) {
+	private void extractActivityInfo(final List<ZTWorldDto> worldList) {
 		int len = worldList.size();
 		if(len > 0) {
 			final Map<Integer, Integer> indexMap = new HashMap<Integer, Integer>();
@@ -620,10 +620,10 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		// 设置查询条件
 		if ( valid == null || valid == 1 ) {
 			worldList = ztWorldMapper.getWorldListValid(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
-			totalCount = ztWorldMapper.getWorldListValidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
+			totalCount = ztWorldMapper.getWorldListValidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode);
 		} else {
 			worldList = ztWorldMapper.getWorldListInvalid(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
-			totalCount = ztWorldMapper.getWorldListInvalidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
+			totalCount = ztWorldMapper.getWorldListInvalidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode);
 		}
 		
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
@@ -660,6 +660,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			
 			// 由织图对象转换成为展示用的织图DTO对象
 			dto.setId(world.getId());
+			dto.setWorldId(world.getId());
 			dto.setWorldDesc(world.getDescription());
 			dto.setChannelId(world.getChannelIds());
 			dto.setChannelName(world.getChannelNames());
@@ -715,16 +716,43 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	}
 	
 	@Override
-	public void buildWorldMasonryByUserLevel(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Integer user_level_id, Integer valid, Map<String, Object> jsonMap) {
-		// TODO Auto-generated method stub
-//		dtoList = ztWorldMapper.queryHTWorldByAttrMap(maxId, startTime, endTime, user_level_id, valid, phoneCode, page, rows);
-//		dtoList = ztWorldMapper.queryHTWorldByUserLevel(maxId, startTime, endTime, user_level_id, valid, phoneCode, page, rows);
-//		totalCount = ztWorldMapper.queryHTWorldCountByAttrMap(dto);
+	public void buildWorldMasonryByUserLevel(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer user_level_id, Integer valid, Map<String, Object> jsonMap) throws Exception {
+		List<ZTWorld> worldList = new ArrayList<ZTWorld>();
+		
+		// 定义返回的条件查询织图总数
+		Integer totalCount = 0;
+		
+		// 分页起始行
+		Integer firstRow = (page - 1) * rows;
+		
+		// 定义日期格式
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		// 数据来源就应该是从真实用户所发织图
+		// 设置查询条件
+		if ( valid == null || valid == 1 ) {
+			worldList = ztWorldMapper.queryWorldByUserLevelValid(user_level_id, maxId, date.parse(startTime), date.parse(endTime), firstRow, rows);
+			totalCount = ztWorldMapper.queryWorldByUserLevelValidTotal(user_level_id, maxId, date.parse(startTime), date.parse(endTime));
+		} else {
+			worldList = ztWorldMapper.queryWorldByUserLevelInvalid(user_level_id, maxId, date.parse(startTime), date.parse(endTime), firstRow, rows);
+			totalCount = ztWorldMapper.queryWorldByUserLevelInvalidTotal(user_level_id, maxId, date.parse(startTime), date.parse(endTime));
+		}
+		
+		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
+		
+		extractInteractInfo(rtnList);
+		extractActivityInfo(rtnList);
+		webUserInfoService.extractVerify(rtnList);
+		
+		// 若传递的maxId为0，则取当前列表第一个织图的id作为maxId返回前台
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
+		jsonMap.put(OptResult.TOTAL, totalCount);
 		
 	}
 
 	@Override
-	public void buildWorldMasonryByZombie(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Integer phoneCode, Map<String, Object> jsonMap) throws Exception {
+	public void buildWorldMasonryByZombie(Integer maxId, Integer page, Integer rows, String startTime, String endTime, Map<String, Object> jsonMap) throws Exception {
 		List<ZTWorld> worldList = new ArrayList<ZTWorld>();
 		
 		// 定义返回的条件查询织图总数
@@ -739,7 +767,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		// 数据来源就应该是从真实用户所发织图
 		// 设置查询条件
 		worldList = ztWorldMapper.queryZombieWorld(firstRow, rows, maxId, date.parse(startTime),  date.parse(endTime));
-		totalCount = ztWorldMapper.queryZombieWorldTotal(firstRow, rows, maxId, date.parse(startTime),  date.parse(endTime));
+		totalCount = ztWorldMapper.queryZombieWorldTotal(maxId, date.parse(startTime),  date.parse(endTime));
 		
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		

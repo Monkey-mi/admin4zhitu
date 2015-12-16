@@ -11,7 +11,6 @@ import com.hts.web.common.util.StringUtil;
 import com.hts.web.ztworld.service.impl.ZTWorldServiceImpl;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.ztworld.service.ZTWorldService;
-import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 import net.sf.json.JSONObject;
 
@@ -88,13 +87,11 @@ public class ZTWorldAction extends BaseCRUDAction {
 		try {
 			// 若存在织图等级，则根据织图等级查询织图瀑布流数据
 			if ( user_level_id != null ) {
-				// TODO 根据用户查询现在还有待商榷，先用原来的老接口
-				worldService.buildWorld(maxId, page, rows, startTime, endTime, shortLink, 
-						phoneCode, worldLabel, authorName, valid, shield,worldDesc, worldLocation,user_level_id, sort, order,isZombie, jsonMap);
+				worldService.buildWorldMasonryByUserLevel(maxId, page, rows, startTime, endTime, user_level_id, valid, jsonMap);
 			}
 			// 若马甲条件为1，则查询马甲织图
 			else if ( isZombie != null && isZombie == 1 ) {
-				worldService.buildWorldMasonryByZombie(maxId, page, rows, startTime, endTime, phoneCode, jsonMap);
+				worldService.buildWorldMasonryByZombie(maxId, page, rows, startTime, endTime, jsonMap);
 			}
 			// 若存在织图描述，则为按照织图描述查询
 			else if ( worldDesc != null && !worldDesc.trim().equals("") ) {
