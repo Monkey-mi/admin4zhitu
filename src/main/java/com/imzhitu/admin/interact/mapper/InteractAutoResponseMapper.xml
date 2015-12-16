@@ -45,7 +45,7 @@
 		FROM
 			hts.htworld_comment hc
 		WHERE
-			hc.re_author_id = #{reAuthor} and hc.world_id = #{worldId} 
+			hc.author_id = #{author} and hc.world_id = #{worldId} 
 			order by comment_date desc
 			limit 1
 	</select>
