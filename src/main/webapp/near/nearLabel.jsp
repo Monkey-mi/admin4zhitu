@@ -16,6 +16,8 @@
 		loadPageData(initPage);
 	},
 	hideIdColumn = false,
+	isNowrap = false,
+	mySortName = '',
 	htmTableTitle = "附近标签列表", //表格标题
 	loadDataURL = "./admin_op/near_queryNearLabel",
 	deleteURI = "./admin_op/near_batchDeleteNearLabel?idsStr=", //删除请求地址
@@ -69,14 +71,14 @@
         {field: "longitude",title: "经度",align: "center"},
         {field: "latitude",title: "纬度",align: "center"},
         */
-        {field: "description",title: "标签描述",align: "center"},
+        {field: "description",title: "标签描述",align: "center",width:300},
         {field: "bannerUrl",title: "图标",align: "center",
            	formatter: function(value,row,index) {
 	  				return "<img title='无效' width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
 	  		}
 	 	},
         {field: "serial",title: "序列号",align: "center"},
-        {field : 'opt',title : '操作',align : 'center',rowspan : 1,
+        {field : 'opt',title : '操作',align : 'center',width:40,
 			formatter : function(value, row, index ) {
 				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:initEditWindow(\""+ row.id + "\",\"" + index + "\"," + true + ")'>【修改】</a>";
 			}
