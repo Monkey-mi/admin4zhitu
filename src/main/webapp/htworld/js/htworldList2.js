@@ -1176,52 +1176,17 @@ var htmTableTitle = "分享列表维护", //表格标题
 		loadData(1, rows);
 	}
 
+	/**
+	 * 根据用户id或用户名查询织图集合
+	 * @author zhangbo	2015-12-17
+	 */
 	function searchByAuthorName() {
-		// TODO 临时方法，还要整改
 		maxId = 0;
-		var authorName = $('#ss_authorName').searchbox('getValue');
-		if(authorName == "") {
-			search();
-			return
-		}
 		var rows = myQueryParams.rows;
 		myQueryParams = {
-			'authorName' : authorName
+			'authorNameOrId' : $('#ss_authorName').searchbox('getValue')
 		};
-		scroll(0,0);
-		$("#page-loading").show();
-		myQueryParams['page'] = 1;
-		myQueryParams['rows'] = 30;
-		myQueryParams['valid'] = $("#valid").combobox('getValue');
-		
-		$.post("./admin_ztworld/ztworld_queryHTWorldList", myQueryParams, function(result){
-			if(result['result'] == 0) {
-				if(result.maxId > maxId) {
-					maxId = result.maxId;
-					myQueryParams.maxId = maxId;
-				}
-				if(result.activityId != 'undefined') {
-					activityId = result.activityId;
-				} else {
-					activityId = 0;
-				}
-				dataList = [];
-				$(".world-opt-wrap").remove();
-				refreshPagination(result['total'], 1, 100);
-				var worlds = result['rows'];
-				var $worldBox = $('#world-box');
-				for(var i = 0; i < worlds.length; i++) {
-					var world = worlds[i];
-					dataList.push(world);
-					var $worldOpt = $('<div class="world-opt-wrap"></div>');
-					drawWorldOpt($worldOpt, world, i);
-					$worldBox.append($worldOpt);
-				}
-				$("#page-loading").hide();
-			} else {
-				$.messager.alert('失败提示',result['msg']);
-			}
-		}, "json");
+		loadData(1, rows);
 	}
 	
 	/**
@@ -1230,16 +1195,11 @@ var htmTableTitle = "分享列表维护", //表格标题
 	 */
 	function searchByWorldDesc() {
 		maxId = 0;
-		var worldDesc = $('#ss_worldDesc').searchbox('getValue');
-		if(worldDesc.trim() == "") {
-			search();
-			return
-		}
 		// 获取当前查询页数
 		var rows = myQueryParams.rows;
 		// 重置查询条件
 		myQueryParams = {
-			'worldDesc' : worldDesc
+			'worldDesc' : $('#ss_worldDesc').searchbox('getValue')
 		};
 		loadData(1, rows);
 	}
@@ -1250,15 +1210,11 @@ var htmTableTitle = "分享列表维护", //表格标题
 	 */
 	function searchByWorldLocation() {
 		maxId = 0;
-		var worldLocation = $('#ss_worldLocation').searchbox('getValue');
-		if(worldLocation.trim() == "") {
-			return
-		}
 		// 获取当前查询页数
 		var rows = myQueryParams.rows;
 		// 重置查询条件
 		myQueryParams = {
-			'worldLocation' : worldLocation
+			'worldLocation' : $('#ss_worldLocation').searchbox('getValue')
 		};
 		loadData(1, rows);
 	}

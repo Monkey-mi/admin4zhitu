@@ -90,4 +90,14 @@ public interface UserInfoMapper {
 	@DataSource("slave")
 	UserInfo getUserInfo(@Param("id")Integer userId);
 
+	/**
+	 * 根据用户名称得到用户id集合，名称为模糊匹配
+	 * 
+	 * @param userName	用户名
+	 * @return
+	 * @author zhangbo	2015年12月17日
+	 */
+	@DataSource("slave")
+	List<Integer> getUserIdsByName(@Param("userName")String userName);
+
 }

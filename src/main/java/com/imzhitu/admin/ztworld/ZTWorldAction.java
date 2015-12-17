@@ -36,8 +36,15 @@ public class ZTWorldAction extends BaseCRUDAction {
 	private String endTime;
 	private String worldLabel;
 	private Integer phoneCode;
-	private String authorName;
+	
+	private String authorName;// TODO 优化完成后，调用authorNameOrId属性，接收前台参数
 
+	/**
+	 * 前台传值，用户名或id
+	 * @author zhangbo	2015年12月17日
+	 */
+	private String authorNameOrId;	
+	
 	private String worldJSON;
 
 	private Integer valid;
@@ -101,8 +108,13 @@ public class ZTWorldAction extends BaseCRUDAction {
 			else if ( worldLocation != null && !worldLocation.trim().equals("") ) {
 				worldService.buildWorldMasonryByWorldLocation(maxId, page, rows, worldLocation, jsonMap);
 			}
-			else if ( worldId != null  ) {
+			// 根据织图id查询
+			else if ( worldId != null ) {
 				worldService.buildWorldMasonryByWorldId(maxId, page, rows, worldId, jsonMap);
+			}
+			// 若存在用户名或用户id，则按照用户名或id查询
+			else if ( authorNameOrId != null && authorNameOrId.trim() != "" ) {
+				worldService.buildWorldMasonryByAuthorNameOrId(maxId, page, rows, authorNameOrId, jsonMap);
 			}
 			// 默认查询瀑布流织图信息
 			else {
@@ -355,6 +367,10 @@ public class ZTWorldAction extends BaseCRUDAction {
 
 	public void setAuthorName(String authorName) {
 		this.authorName = authorName;
+	}
+
+	public void setAuthorNameOrId(String authorNameOrId) {
+		this.authorNameOrId = authorNameOrId;
 	}
 
 	public void setWorldJSON(String worldJSON) {

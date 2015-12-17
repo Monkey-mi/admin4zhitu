@@ -737,5 +737,15 @@
 		where 
 			id = #{id}
 	</select>
+	
+	<!-- 根据用户名称得到用户id集合，名称为模糊匹配 -->
+	<select id="getUserIdsByName" resultType="INTEGER">
+		select 
+			id 
+		from 
+			hts.user_info 
+		where 
+			user_name like CONCAT('%',#{userName},'%')
+	</select>
 	  
 </mapper>

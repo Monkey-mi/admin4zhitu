@@ -30,6 +30,7 @@ import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserMsgAtWorldDto;
 import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
+import com.imzhitu.admin.common.util.AdminUtil;
 import com.imzhitu.admin.interact.dao.InteractWorldDao;
 import com.imzhitu.admin.interact.service.InteractTypeOptionWorldService;
 import com.imzhitu.admin.interact.service.InteractWorldlevelListService;
@@ -176,6 +177,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		
 		// 装载用户信息查询条件
 		if(!StringUtil.checkIsNULL(authorName)) {
+			// TODO 这里判断是否为数字不建议使用捕获异常方式，因为会消耗性能	zhangbo 2015-12-17 19:44
 			try {
 				Integer uid = Integer.parseInt(authorName);
 				dto.setAuthorId(uid);
@@ -625,17 +627,13 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		// 设置查询条件
 		if ( valid == null || valid == 1 ) {
 			worldList = ztWorldMapper.getWorldListValid(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
-			totalCount = ztWorldMapper.getWorldListValidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode);
+			totalCount = ztWorldMapper.getWorldValidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode);
 		} else {
 			worldList = ztWorldMapper.getWorldListInvalid(maxId, date.parse(startTime), date.parse(endTime), phoneCode, firstRow, rows);
-			totalCount = ztWorldMapper.getWorldListInvalidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode);
+			totalCount = ztWorldMapper.getWorldInvalidTotal(maxId, date.parse(startTime), date.parse(endTime), phoneCode);
 		}
 		
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
-		
-		extractInteractInfo(rtnList);
-		extractActivityInfo(rtnList);
-		webUserInfoService.extractVerify(rtnList);
 		
 		// 若传递的maxId为0，则取当前列表第一个织图的id作为maxId返回前台
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
@@ -723,6 +721,11 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			
 			rtnList.add(dto);
 		}
+		
+		extractInteractInfo(rtnList);
+		extractActivityInfo(rtnList);
+		webUserInfoService.extractVerify(rtnList);
+		
 		return rtnList;
 	}
 	
@@ -743,17 +746,13 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		// 设置查询条件
 		if ( valid == null || valid == 1 ) {
 			worldList = ztWorldMapper.queryWorldByUserLevelValid(user_level_id, maxId, date.parse(startTime), date.parse(endTime), firstRow, rows);
-			totalCount = ztWorldMapper.queryWorldByUserLevelValidTotal(user_level_id, maxId, date.parse(startTime), date.parse(endTime));
+			totalCount = ztWorldMapper.getWorldByUserLevelValidTotal(user_level_id, maxId, date.parse(startTime), date.parse(endTime));
 		} else {
 			worldList = ztWorldMapper.queryWorldByUserLevelInvalid(user_level_id, maxId, date.parse(startTime), date.parse(endTime), firstRow, rows);
-			totalCount = ztWorldMapper.queryWorldByUserLevelInvalidTotal(user_level_id, maxId, date.parse(startTime), date.parse(endTime));
+			totalCount = ztWorldMapper.getWorldByUserLevelInvalidTotal(user_level_id, maxId, date.parse(startTime), date.parse(endTime));
 		}
 		
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
-		
-		extractInteractInfo(rtnList);
-		extractActivityInfo(rtnList);
-		webUserInfoService.extractVerify(rtnList);
 		
 		// 若传递的maxId为0，则取当前列表第一个织图的id作为maxId返回前台
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
@@ -850,6 +849,33 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
 		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
 		jsonMap.put(OptResult.TOTAL, worldList.size());
+	}
+
+	@Override
+	public void buildWorldMasonryByAuthorNameOrId(Integer maxId, Integer page, Integer rows, String authorNameOrId, Map<String, Object> jsonMap) throws Exception {
+		
+		// 定义查询条件：用户id集合
+		Integer[] authorIds = new  Integer[1];
+		
+		// 分页起始行
+		Integer firstRow = (page - 1) * rows;
+		
+		// 若为数字型，直接转换成用户id直接使用，否则根据用户名模糊匹配相关的人员，然后查询用户id集合
+		if ( AdminUtil.isNumeric(authorNameOrId) ) {
+			authorIds[0] = Integer.parseInt(authorNameOrId);
+		} else {
+			
+			List<Integer> userIdList = userInfoService.getUserIdsByName(authorNameOrId);
+			authorIds = userIdList.toArray(authorIds);
+		}
+		List<ZTWorld> worldList = ztWorldMapper.getWorldListByAuthorId(maxId, authorIds, firstRow, rows);
+		long totalCount = ztWorldMapper.getWorldTotalByAuthorId(maxId, authorIds);
+		
+		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
+		
+		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, rtnList);
+		jsonMap.put(OptResult.TOTAL, totalCount);
 	}
 	
 }

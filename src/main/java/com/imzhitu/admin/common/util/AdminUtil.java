@@ -1,5 +1,8 @@
 package com.imzhitu.admin.common.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * 运营系统公共方法类，存放一些工具方法
  * 
@@ -30,4 +33,21 @@ public class AdminUtil {
 		l = mi+l;
 		return new Integer(l);
 	}
+	
+	/**
+	 * 判断字符串是否为数字类型
+	 * 
+	 * @param str	要判断的字符串
+	 * @return
+	 * @author zhangbo	2015年12月17日
+	 */
+	public static boolean isNumeric(String str){ 
+	   Pattern pattern = Pattern.compile("[0-9]*"); 
+	   Matcher isNum = pattern.matcher(str);
+	   if( isNum.matches() ){
+	       return true; 
+	   }
+	   return false; 
+	}
+	
 }

@@ -105,6 +105,18 @@ public interface UserInfoService extends BaseService {
 	 * @author zhangbo	2015年11月26日
 	 */
 	UserInfo getUserInfo(Integer userId) throws Exception;
+	
+	/**
+	 * 根据用户名称得到用户id集合，名称为模糊匹配
+	 * 
+	 * @param userName	用户名
+	 * 
+	 * @return List<Integer>	用户id集合
+	 * 
+	 * @throws Exception
+	 * @author zhangbo	2015年12月17日
+	 */
+	List<Integer> getUserIdsByName(String userName) throws Exception;
 
 }
 

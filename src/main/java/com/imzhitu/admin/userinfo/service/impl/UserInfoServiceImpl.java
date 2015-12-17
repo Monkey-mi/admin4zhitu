@@ -290,5 +290,10 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	public UserInfo getUserInfo(Integer userId) throws Exception {
 		return userInfoMapper.getUserInfo(userId);
 	}
+
+	@Override
+	public List<Integer> getUserIdsByName(String userName) throws Exception {
+		return userInfoMapper.getUserIdsByName(userName);
+	}
 	
 }

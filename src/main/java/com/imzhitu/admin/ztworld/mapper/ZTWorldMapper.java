@@ -280,6 +280,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年11月27日
 	 */
+	@DataSource("slave")
 	List<ZTWorld> getWorldListValid(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
 	
 	/**
@@ -294,7 +295,8 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
-	long getWorldListValidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
+	@DataSource("slave")
+	long getWorldValidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
 
 	/**
 	 * 根据时间段查询无效织图集合
@@ -311,6 +313,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年11月27日
 	 */
+	@DataSource("slave")
 	List<ZTWorld> getWorldListInvalid(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
 	
 	/**
@@ -326,7 +329,8 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年11月30日
 	 */
-	long getWorldListInvalidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
+	@DataSource("slave")
+	long getWorldInvalidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
 	
 	/**
 	 * 根据织图id集合查询织图
@@ -337,6 +341,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年12月3日
 	 */
+	@DataSource("slave")
 	List<ZTWorld> getWorldListByIds(@Param("ids")Integer[] ids);
 
 	/**
@@ -353,6 +358,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年12月16日
 	 */
+	@DataSource("slave")
 	List<ZTWorld> queryWorldByUserLevelValid(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
 
 	/**
@@ -367,7 +373,8 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年12月16日
 	 */
-	long queryWorldByUserLevelValidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
+	@DataSource("slave")
+	long getWorldByUserLevelValidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
 
 	/**
 	 * 根据时间段与用户等级查询无效织图集合
@@ -384,6 +391,7 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年12月16日
 	 */
+	@DataSource("slave")
 	List<ZTWorld> queryWorldByUserLevelInvalid(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
 
 	/**
@@ -399,6 +407,34 @@ public interface ZTWorldMapper {
 	 * 
 	 * @author zhangbo	2015年12月16日
 	 */
-	long queryWorldByUserLevelInvalidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
+	@DataSource("slave")
+	long getWorldByUserLevelInvalidTotal(@Param("userLevelId")Integer userLevelId, @Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
+
+	/**
+	 * 根据用户id集合分页查询织图集合
+	 * 
+	 * @param maxId			织图查询最大id，用于分页显示的
+	 * @param authorIds	用户id集合
+	 * @param firstRow		分页起始行
+	 * @param rows			查询每页的数量
+	 * 
+	 * @return List<ZTWorld>	织图对象集合
+	 * 
+	 * @author zhangbo	2015年12月17日
+	 */
+	@DataSource("slave")
+	List<ZTWorld> getWorldListByAuthorId(@Param("maxId")Integer maxId, @Param("authorIds")Integer[] authorIds, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
+
+	/**
+	 * 根据用户id集合查询织图总数
+	 * 
+	 * @param maxId			织图查询最大id，用于分页显示的
+	 * @param authorIds	用户id集合
+	 * 
+	 * @return total	用户id对应的用户所发图总数
+	 * 
+	 * @author zhangbo	2015年12月17日
+	 */
+	long getWorldTotalByAuthorId(@Param("maxId")Integer maxId, @Param("authorIds")Integer[] authorIds);
 
 }
