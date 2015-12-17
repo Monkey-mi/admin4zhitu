@@ -2,10 +2,12 @@ package com.imzhitu.admin.op.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,16 @@ import com.hts.web.base.constant.Tag;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.hts.web.operations.dao.BulletinCacheDao;
+import com.imzhitu.admin.addr.pojo.City;
+import com.imzhitu.admin.addr.service.AddrService;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.OpMsgBulletin;
 import com.imzhitu.admin.common.service.KeyGenService;
+import com.imzhitu.admin.op.dao.mongo.NearBulletinMongoDao;
 import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
+import com.imzhitu.admin.op.mapper.OpMsgNearBulletinMapper;
+import com.imzhitu.admin.op.pojo.NearBulletinCityDto;
+import com.imzhitu.admin.op.pojo.NearBulletinDto;
 import com.imzhitu.admin.op.service.OpMsgBulletinService;
 
 @Service
@@ -31,6 +39,15 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 	
 	@Autowired
 	private KeyGenService keyGenService;
+	
+	@Autowired
+	private NearBulletinMongoDao nearBulletinMongoDao;
+	
+	@Autowired
+	private OpMsgNearBulletinMapper nearBulletinMapper;
+	
+	@Autowired
+	private AddrService addrService;
 	
 	private Logger log = Logger.getLogger(OpMsgBulletinServiceImpl.class);
 
@@ -262,6 +279,196 @@ public class OpMsgBulletinServiceImpl extends BaseServiceImpl implements OpMsgBu
 			}
 		}catch(Exception e){
 			log.warn(e.getMessage());
+		}
+	}
+
+	@Override
+	public void saveNearBulletin(NearBulletinDto dto) throws Exception {
+		Integer bulletinId = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_ID);
+
+		// 向选中的城市插入公告信息
+		List<Integer> cityIds = dto.getCityIds();
+		if(cityIds != null && !cityIds.isEmpty()) {
+			NearBulletinDto cityBulletin = new NearBulletinDto();
+			BeanUtils.copyProperties(dto, cityBulletin);
+			cityBulletin.setBulletinId(bulletinId);
+			for(int i = cityIds.size() - 1; i >= 0; i--) {
+				cityBulletin.setCityId(cityIds.get(i));
+				saveCityBulletin(cityBulletin);
+			}
+		}
+
+		// 保存公告信息到数据库
+		Integer serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_BULLETIN_SERIAL);
+		dto.setSerial(serial);
+		dto.setId(bulletinId);
+		
+		nearBulletinMapper.save(dto);
+	}
+	
+	/**
+	 * 向指定城市保存公告
+	 * 
+	 * @param bulletin
+	 */
+	private void saveCityBulletin(NearBulletinDto bulletin) {
+		Integer serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_NEAR_BULLETIN_SERIAL);
+		Integer id = keyGenService.generateId(Admin.KEYGEN_OP_MSG_NEAR_BULLETIN_ID);
+		City city = addrService.queryCityById(bulletin.getCityId());
+		
+		bulletin.setSerial(serial);
+		bulletin.setId(id);
+		bulletin.setLoc(new Double[]{city.getLongitude(), city.getLatitude()});
+		
+		nearBulletinMongoDao.save(bulletin);
+	}
+	
+	@Override
+	public void updateNearBulletin(NearBulletinDto dto) throws Exception {
+		
+		List<Integer> cityIds = dto.getCityIds();
+		
+		if(dto.getCityIds() != null && !cityIds.isEmpty()) {
+			nearBulletinMongoDao.delByBulletinId(dto.getId());
+			NearBulletinDto cityBulletin = new NearBulletinDto();
+			BeanUtils.copyProperties(dto, cityBulletin);
+			cityBulletin.setBulletinId(dto.getId());
+			for(int i = cityIds.size() - 1; i >= 0; i--) {
+				cityBulletin.setCityId(cityIds.get(i));
+				saveCityBulletin(cityBulletin);
+			}
+		}
+		
+		nearBulletinMapper.update(dto);
+	}
+
+	@Override
+	public void delCityBulletinByIds(Integer[] ids) throws Exception {
+		nearBulletinMongoDao.delByIds(ids);
+	}
+
+	@Override
+	public void buildNearBulletin(NearBulletinDto bulletin, 
+			int start, int limit, Map<String, Object> jsonMap) throws Exception {
+		
+		buildNumberDtos("getSerial", bulletin, start, limit, jsonMap, new NumberDtoListAdapter<NearBulletinDto>() {
+
+			@Override
+			public List<NearBulletinDto> queryList(NearBulletinDto dto) {
+				List<NearBulletinDto> list = null;
+				
+				if(dto.getCityId() != null && !dto.getCityId().equals(0))
+					list = nearBulletinMongoDao.queryBulletin(dto);
+				else {
+					list = nearBulletinMapper.queryList(dto);
+					extractCity(list);
+				}
+				return list;
+			}
+
+			@Override
+			public long queryTotal(NearBulletinDto dto) {
+				long total = 0l;
+				
+				if(dto.getCityId() != null && !dto.getCityId().equals(0))
+					total = nearBulletinMongoDao.queryCount(dto);
+				else
+					total = nearBulletinMapper.queryCount(dto);
+				
+				return total;
+			}
+			
+		});
+	}
+	
+	/**
+	 * 获取城市信息
+	 * 
+	 * @param dtoList
+	 * @author lynch 2015-12-15
+	 */
+	private void extractCity(List<NearBulletinDto> dtoList) {
+		Integer[] bulletinIds = new Integer[dtoList.size()];
+		final Map<Integer, Integer> idxMap = new HashMap<Integer, Integer>();
+		
+		for(int i = 0; i < dtoList.size(); i++) {
+			bulletinIds[i] = dtoList.get(i).getId();
+			idxMap.put(dtoList.get(i).getId(), i);
+			
+		}
+		List<NearBulletinCityDto> cityList = nearBulletinMongoDao.queryCityByBulletinIds(bulletinIds);
+		if(!cityList.isEmpty()) {
+			extractCityName(cityList);
+			
+			for(NearBulletinCityDto city : cityList) {
+				Integer bulletinId = city.getBulletinId();
+				Integer idx = idxMap.get(bulletinId);
+				dtoList.get(idx).getCityIds().add(city.getCityId());
+				dtoList.get(idx).getCities().add(city.getCityName());
+			}
+		}
+		
+	}
+	
+	/**
+	 * 获取城市名称
+	 * 
+	 * @param cityList
+	 * @author lynch 2015-12-15
+	 */
+	private void extractCityName(List<NearBulletinCityDto> cityList) {
+		Map<Integer, List<Integer>> cityIdxMap = new HashMap<Integer, List<Integer>>();
+		for(int i = 0; i < cityList.size(); i++) {
+			Integer cityId = cityList.get(i).getCityId();
+			if(cityIdxMap.containsKey(cityId))
+				cityIdxMap.get(cityId).add(i);
+			else {
+				List<Integer> l = new ArrayList<Integer>();
+				l.add(i);
+				cityIdxMap.put(cityId, l);
+			}
+		}
+		Integer[] ids = new Integer[cityIdxMap.size()];
+		cityIdxMap.keySet().toArray(ids);
+		List<City> list = addrService.queryCityByIds(ids);
+		for(City city : list) {
+			for(Integer idx : cityIdxMap.get(city.getId())) {
+				cityList.get(idx).setCityName(city.getName());
+			}
+		}
+	}
+
+	@Override
+	public void delNearBulletinById(Integer id) throws Exception {
+		nearBulletinMapper.delById(id);
+		nearBulletinMongoDao.delByBulletinId(id);
+	}
+
+	@Override
+	public NearBulletinDto queryNearBulletinById(Integer id) throws Exception {
+		NearBulletinDto dto = nearBulletinMapper.queryById(id);
+		
+		List<NearBulletinCityDto> cityList = nearBulletinMongoDao.queryCityByBulletinIds(new Integer[]{id});
+		if(!cityList.isEmpty()) {
+			extractCityName(cityList);
+			
+			for(NearBulletinCityDto city : cityList) {
+				dto.getCities().add(city.getCityName());
+				dto.getCityIds().add(city.getCityId());
+			}
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public void updateCityBulletinSerial(String[] idStrs) throws Exception {
+		Integer serial;
+		for(int i = idStrs.length-1; i >= 0; i--) {
+			if(!StringUtil.checkIsNULL(idStrs[i])) {
+				serial = keyGenService.generateId(Admin.KEYGEN_OP_MSG_NEAR_BULLETIN_SERIAL);
+				nearBulletinMongoDao.updateSerial(Integer.parseInt(idStrs[i]), serial);
+			}
 		}
 	}
 

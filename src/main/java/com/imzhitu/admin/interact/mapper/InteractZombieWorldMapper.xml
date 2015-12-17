@@ -31,10 +31,10 @@
 	<insert id="insertZombieWorld">
 		insert into hts_admin.zombie_world 
 		(id,world_name,world_desc,world_label,world_label_ids,author_id,cover_path,title_path,
-		 title_thumb_path,longitude,latitude,location_addr,size,complete,date_add,date_modify,channel_id,city)
+		 title_thumb_path,longitude,latitude,location_addr,location_desc,size,complete,date_add,date_modify,channel_id,city)
 		 values
 		 (#{id},#{worldName},#{worldDesc},#{worldLabel},#{worldLabelIds},#{authorId},#{coverPath},#{titlePath},
-		  #{thumbTitlePath},#{longitude},#{latitude},#{locationAddr},#{size},#{complete},#{addDate},#{modifyDate},#{channelId},#{city})
+		  #{thumbTitlePath},#{longitude},#{latitude},#{locationAddr},#{locationDesc},#{size},#{complete},#{addDate},#{modifyDate},#{channelId},#{city})
 	</insert>
 	
 	<!-- 更新马甲织图 -->

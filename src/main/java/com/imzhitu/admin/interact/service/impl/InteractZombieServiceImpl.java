@@ -153,6 +153,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		zombieWorld.setAddDate(now);
 		zombieWorld.setModifyDate(now);
 		zombieWorld.setCity(city);
+		zombieWorld.setLocationDesc(city);
 		
 		if (channelId == null) {
 			zombieWorld.setChannelId(0);
@@ -892,7 +893,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			
 			for(int j=0; j<ids.length; j++){
 				int t = j % city.size();
-				updateZombieWorldAddressinfo(ids[j],null,null,longitudeList.get(t),latitudeList.get(t),null,city.get(t));
+				updateZombieWorldAddressinfo(ids[j],city.get(t),city.get(t),longitudeList.get(t),latitudeList.get(t),null,city.get(t));
 			}
 		}catch(Exception e){
 			throw e;
