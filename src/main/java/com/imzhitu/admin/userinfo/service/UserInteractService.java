@@ -3,6 +3,7 @@ package com.imzhitu.admin.userinfo.service;
 import java.util.Map;
 
 import com.hts.web.common.service.BaseService;
+import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserReportDto;
 
 /**
@@ -69,5 +70,13 @@ public interface UserInteractService extends BaseService {
 	 */
 	public void updateReportFollowed(String idsStr) throws Exception;
 	
+	/**
+	 * 根据用户id，获取用户等级对象
+	 * 
+	 * @param uid	用户id
+	 * @throws Exception
+	 * @author zhangbo	2015年12月17日
+	 */
+	public UserLevelDto getUserLevel(Integer uid) throws Exception;
 	
 }

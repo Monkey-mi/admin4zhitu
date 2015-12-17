@@ -15,9 +15,11 @@ import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.util.NumberUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.UserConcern;
+import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserReportDto;
 import com.imzhitu.admin.op.dao.UserZombieDao;
 import com.imzhitu.admin.userinfo.dao.UserConcernDao;
+import com.imzhitu.admin.userinfo.mapper.UserAndLevelRelationMapper;
 import com.imzhitu.admin.userinfo.mapper.UserReportMapper;
 import com.imzhitu.admin.userinfo.service.UserInteractService;
 
@@ -39,6 +41,9 @@ public class UserInteractServiceImpl extends BaseServiceImpl implements
 	
 	@Autowired
 	private UserReportMapper userReportMapper;
+	
+	@Autowired
+	private UserAndLevelRelationMapper userAndLevelRelationMapper;
 	
 	@Value("${admin.interact.minConcernCount}")
 	private Integer minConcernCount;
@@ -167,6 +172,11 @@ public class UserInteractServiceImpl extends BaseServiceImpl implements
 		if(ids != null && ids.length > 0) {
 			userReportMapper.updateValidByIds(ids);;
 		}
+	}
+
+	@Override
+	public UserLevelDto getUserLevel(Integer uid) throws Exception {
+		return userAndLevelRelationMapper.getUserLevel(uid);
 	}
 
 }

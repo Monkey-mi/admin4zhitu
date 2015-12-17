@@ -207,10 +207,10 @@ function drawWorldOpt($worldOpt, world, index) {
 			+ authorAvatarColumn.formatter(world['authorAvatar'],world,index) 
 			+ "</span>"
 			+ "<span class='world-author-name'>" 
-			+ getAuthorName(world['authorName'],world,index) 
+			+ getAuthorName(world.authorName,world,index) 
 			+ "</span>"
 			+ "<span>" 
-			+ phoneCodeColumn.formatter(world['phoneCode'],world,index) 
+			+ getPhone(world.phoneCode,world,index) 
 			+ "</span>"
 			+ "<hr class='divider'></hr>"
 			+ "<div>织图ID:" 
@@ -220,16 +220,16 @@ function drawWorldOpt($worldOpt, world, index) {
 			+ "</span>"
 			+ "</div>"
 			+ "<div>用户ID:" 
-			+ authorIdColumn.formatter(world['authorId'],world,index) 
-			+ "(" + userLevelColumn.formatter(world['level_description'],world,index) + ")"
+			+ world.authorId
+			+ "(" + world.level_description + ")"
 			+ "</div>"
 			+ "</div>");
 	var $worldInfo = $("<div class='world-info'>"
 		+ "<div class='world-label'>#"
-		+ world['worldLabel'] 
+		+ world.worldLabel 
 		+ "</div>"
 		+ "<div class='world-desc'>" 
-		+ getWorldDesc(world['worldDesc'],world,index) 
+		+ getWorldDesc(world.worldDesc,world,index) 
 		+ "</div>"
 		+ "<div class='world-count-wrap'>"
 		+ "<span class='glyphicon glyphicon-heart' aria-hidden='false'>"
@@ -244,7 +244,7 @@ function drawWorldOpt($worldOpt, world, index) {
 		+ "</span>"
 		+ "<span class='glyphicon glyphicon-eye-open' aria-hidden='false'>"
 		+ "<span class='world-count'>"
-		+ world['clickCount']
+		+ world.clickCount
 		+ "</span>" 
 		+ "</span>"
 		+ "</div>"
@@ -256,6 +256,7 @@ function drawWorldOpt($worldOpt, world, index) {
 	$worldOpt.append($authorInfo);
 	$worldOpt.append($world);
 	$worldOpt.append($worldInfo);
+	// 绘制操作区域
 	drawOptArea($worldOpt, world, index);
 	$world.appendtour({
 		'width':250,
@@ -397,7 +398,23 @@ function getAuthorName(authorName, world, index) {
 	} else if(baseTools.isNULL(authorName)) {
 		return "织图用户";
 	}
-}
+};
+
+/**
+ * 获取用户名称返回格式，为可点击链接
+ * 
+ * @param authorName	用户名称
+ * @param world			每个织图信息
+ * @param index			织图所在集合的脚标
+ * @author zhangbo	2015-12-01
+ */
+function getPhone(phoneCode, world, index) {
+	var phone = "IOS";
+	if(phoneCode == 1) {
+		phone = '安卓';
+	}
+	return "<span class='updateInfo' title='版本号:"+world.appVer+" || 系统:"+world.phoneSys+" v"+world.phoneVer+"'>" + phone + "</span>";
+};
 
 /**
  * 获取织图id返回格式，为可点击链接，点击触发打开织图互动页面
@@ -819,48 +836,9 @@ var htmTableTitle = "分享列表维护", //表格标题
 			}
 		}
 	},
-	onBeforeInit = function() {
-		showPageLoading();
-	},
 	onAfterInit = function() {
 		
 		initWorldBoxWidth();
-		
-		$("#labelId_interact").combotree({
-			url:'./admin_interact/comment_queryLabelTree?hasTotal=true',
-			onSelect:function(rec) {
-				loadComment(rec.id,rec.labelName);
-				$("#labelId_interact").combotree('clear');
-			}
-		});
-		
-		$('#ss_searchLabel').combobox({
-			valueField:'id',
-			textField:'labelName',
-			selectOnNavigation:false,
-			url:'./admin_interact/comment_queryAllLabel',
-			onSelect:function(record){
-				loadComment(record.id,record.labelName);
-				$('#ss_searchLabel').combobox('clear');
-			}
-		});
-		$('#ss_type_searchLabel').combobox({
-			valueField:'id',
-			textField:'labelName',
-			selectOnNavigation:false,
-			url:'./admin_interact/comment_queryAllLabel',
-			onSelect:function(record){
-				loadTypeComment(record.id,record.labelName);
-				$('#ss_type_searchLabel').combobox('clear');
-			}
-		});
-		$("#labelId_type_interact").combotree({
-			url:'./admin_interact/comment_queryLabelTree?hasTotal=true',
-			onSelect:function(rec) {
-				loadTypeComment(rec.id,rec.labelName);
-				$("#labelId_type_interact").combotree('clear');
-			}
-		});
 		
 		/*
 		 * 管理员时间跨度下拉选择，
@@ -994,175 +972,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 		    menu: '#mm'  
 		});
 		
-		$('#htm_interact').window({
-			modal : true,
-			width : 500,
-			height : 270,
-			title : '添加互动信息',
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-add',
-			resizable : false,
-			onClose : function() {
-				$('#labelId').combotree('clear');
-				$('#levelId').combobox('clear');
-				$('#labelId_interact').combotree('clear');
-				$('#ss_searchLabel').combobox('clear');
-				$('#comments_interact').combogrid('clear');
-			}
-		});
-		
-		$('#htm_type_interact').window({
-			modal : true,
-			width : 500,
-			height : 270,
-			title : '添加分类 互动信息',
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-add',
-			resizable : false,
-			onClose : function() {
-				$('#type_labelId').combotree('clear');
-				$('#type_levelId').combobox('clear');
-				$('#labelId_type_interact').combotree('clear');
-				$('#ss_type_searchLabel').combobox('clear');
-				$('#comments_type_interact').combogrid('clear');
-			}
-		});
-		
-		$('#comments_interact').combogrid({
-			panelWidth:600,
-		    panelHeight:350,
-		    loadMsg:'加载中，请稍后...',
-			pageList: [10,20],
-			editable: false,
-		    multiple: true,
-		   	toolbar:"#comment_tb",
-		   	url:'./admin_interact/comment_queryCommentListByLabel',
-		    idField:'id',
-		    textField:'id',
-		    pagination:true,
-		    onClickCell: function(rowIndex, field, value){
-		    	if(field == 'opt') 
-		    		eee(field); // 强制报错停止脚本运行
-		    },
-		    columns:[[
-				{field : 'ck',checkbox : true },
-		        {field:'id',title:'ID',width:60},
-		        {field:'content',title:'内容',width:400},
-		        {field:'opt', title:'操作', align:'center', width:60,
-		        	formatter: function(value,row,index){
-		    			return "<a title='点击更新评论' class='updateInfo' href='javascript:addComment(\""+ row['id'] + "\",\"" + index + "\")'>" + '更新'+ "</a>";
-		    		}	
-		        }
-		    ]],
-		    queryParams:commentQueryParams,
-		    onLoadSuccess:function(data) {
-		    	if(data.result == 0) {
-					if(data.maxId > commentMaxId) {
-						commentMaxId = data.maxId;
-						commentQueryParams.maxId = commentMaxId;
-					}
-				}
-		    },
-		    onChange:function(record) {
-		    	var len = $('#comments_interact').combogrid('getValues').length,
-		   			$selectCount = $("#selected_comment_count");
-		    	$selectCount.text(len);
-		    }
-		});
-		var p = $('#comments_interact').combogrid('grid').datagrid('getPager');
-		p.pagination({
-			onBeforeRefresh : function(pageNumber, pageSize) {
-				if(pageNumber <= 1) {
-					commentMaxId = 0;
-					commentQueryParams.maxId = commentMaxId;
-				}
-			}
-		});
-		
-		$('#comments_type_interact').combogrid({
-			panelWidth:600,
-		    panelHeight:350,
-		    loadMsg:'加载中，请稍后...',
-			pageList: [10,20],
-			editable: false,
-		    multiple: true,
-		   	toolbar:"#comment_tb2",
-		   	url:'./admin_interact/comment_queryCommentListByLabel',
-		    idField:'id',
-		    textField:'id',
-		    pagination:true,
-		    onClickCell: function(rowIndex, field, value){
-		    	if(field == 'opt') 
-		    		eee(field); // 强制报错停止脚本运行
-		    },
-		    columns:[[
-				{field : 'ck',checkbox : true },
-		        {field:'id',title:'ID',width:60},
-		        {field:'content',title:'内容',width:400},
-		        {field:'opt', title:'操作', align:'center', width:60,
-		        	formatter: function(value,row,index){
-		    			return "<a title='点击更新评论' class='updateInfo' href='javascript:addComment(\""+ row['id'] + "\",\"" + index + "\")'>" + '更新'+ "</a>";
-		    		}	
-		        }
-		    ]],
-		    queryParams:commentQueryParams,
-		    onLoadSuccess:function(data) {
-		    	if(data.result == 0) {
-					if(data.maxId > commentMaxId) {
-						commentMaxId = data.maxId;
-						commentQueryParams.maxId = commentMaxId;
-					}
-				}
-		    },
-		    onChange:function(record) {
-		    	var len = $('#comments_type_interact').combogrid('getValues').length,
-		   			$selectCount = $("#selected_comment_count");
-		    	$selectCount.text(len);
-		    }
-		});
-		
-		var q = $('#comments_type_interact').combogrid('grid').datagrid('getPager');
-		q.pagination({
-			onBeforeRefresh : function(pageNumber, pageSize) {
-				if(pageNumber <= 1) {
-					commentMaxId = 0;
-					commentQueryParams.maxId = commentMaxId;
-				}
-			}
-		});
-		
-		$('#htm_userLevel').window({
-			modal : true,
-			width : 500,
-			height : 170,
-			title : '添加等级用户',
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-add',
-			resizable : false,
-			onClose : function() {
-				$('#userLevelId_userLevel').combobox("clear");
-			}
-		});
-		
-		$('#typeId_type').combobox({
-			valueField:'id',
-			textField:'labelName',
-			selectOnNavigation:false,
-			url:'./admin_ztworld/label_queryLabelForCombobox'
-		});
-		
 		
 		$('#htm_activity').window({
 			modal : true,
@@ -1185,135 +994,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 			}
 		});
 		
-		$('#htm_type').window({
-			modal : true,
-			width : 530,
-			height : 170,
-			title : '添加到精选',
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-add',
-			resizable : false,
-			onClose : function() {
-				$("#type_form").hide();
-				$("#type_loading").show();
-				$("#htm_type .opt_btn").show();
-				$("#htm_type .loading").hide();
-				$("#typeId_type").combobox('clear');
-				$("#labelIds_type").combogrid('clear');
-				$("#userId_type").val('');
-				$("#channelId").combobox('clear');
-			}
-		});
-		
-		$('#labelId').combotree({
-			editable:true,
-			multiple:true,
-			url:'./admin_interact/comment_queryAllLabelTree'
-		});
-		
-		$('#type_labelId').combotree({
-			editable:true,
-			multiple:true,
-			url:'./admin_interact/comment_queryAllLabelTree'
-		});
-		
-		$('#labelIdSearch').combobox({
-			valueField:'id',
-			textField:'labelName',
-			selectOnNavigation:false,
-			url:'./admin_interact/comment_queryAllLabel'
-		});
-		
-		$('#type_labelIdSearch').combobox({
-			valueField:'id',
-			textField:'labelName',
-			selectOnNavigation:false,
-			url:'./admin_interact/comment_queryAllLabel'
-		});
-		
-		//不绑定keyup， 相当于重载回车
-		$($('#labelIdSearch').combobox('textbox')).unbind("keyup").bind("keyup", function (e) {
-	        if (e.keyCode == 13) {
-	        	var boxLabelId = $("#labelIdSearch").combobox('getValue');
-				var treeLabelId = $("#labelId").combotree('getValues');
-				var boxLabelText = $("#labelIdSearch").combobox('getText');
-				if(boxLabelId=="" || boxLabelText == boxLabelId){
-					//若combobox里输入的text与value一致，表明所输入的text在combobox列表中不存在，则清空输入，不在combotree上增加
-					$("#labelIdSearch").combobox('clear');
-					return;
-				}
-				for(var i=0;i<treeLabelId.length;i++){
-					//判断重复
-					if(treeLabelId[i]==boxLabelId){
-						$("#labelIdSearch").combobox('clear');
-						return;
-					}
-				}
-				if(treeLabelId!=""){
-					//若原来的combotree上存在值，则使用setValues
-					treeLabelId.push(boxLabelId);
-					$("#labelId").combotree('setValues',treeLabelId);
-				}else{
-					//若原来的combotree上不存在值，则使用setValue
-					$("#labelId").combotree('setValue',boxLabelId);
-				}
-				$("#labelIdSearch").combobox('clear');
-	        }
-	    });
-		$($('#type_labelIdSearch').combobox('textbox')).unbind("keyup").bind("keyup", function (e) {
-	        if (e.keyCode == 13) {
-	        	var boxLabelId = $("#type_labelIdSearch").combobox('getValue');
-				var treeLabelId = $("#type_labelId").combotree('getValues');
-				var boxLabelText = $("#type_labelIdSearch").combobox('getText');
-				if(boxLabelId=="" || boxLabelText == boxLabelId){
-					//若combobox里输入的text与value一致，表明所输入的text在combobox列表中不存在，则清空输入，不在combotree上增加
-					$("#type_labelIdSearch").combobox('clear');
-					return;
-				}
-				for(var i=0;i<treeLabelId.length;i++){
-					//判断重复
-					if(treeLabelId[i]==boxLabelId){
-						$("#type_labelIdSearch").combobox('clear');
-						return;
-					}
-				}
-				if(treeLabelId!=""){
-					//若原来的combotree上存在值，则使用setValues
-					treeLabelId.push(boxLabelId);
-					$("#type_labelId").combotree('setValues',treeLabelId);
-				}else{
-					//若原来的combotree上不存在值，则使用setValue
-					$("#type_labelId").combotree('setValue',boxLabelId);
-				}
-				$("#type_labelIdSearch").combobox('clear');
-	        }
-	    });
-		
-		$($('#ss_searchLabel').combobox('textbox')).unbind("keyup").bind("keyup", function (e) {
-			if(e.keyCode == 13){
-				var boxLabelId = $('#ss_searchLabel').combobox('getValue');
-				var boxLabelName = $('#ss_searchLabel').combobox('getText');
-				if(boxLabelId && boxLabelName && boxLabelId!="" && boxLabelName!=""){
-					loadComment(boxLabelId,boxLabelName);
-					$('#ss_searchLabel').combobox('clear');
-				}
-			}
-		});
-		
-		$($('#ss_type_searchLabel').combobox('textbox')).unbind("keyup").bind("keyup", function (e) {
-			if(e.keyCode == 13){
-				var boxLabelId = $('#ss_type_searchLabel').combobox('getValue');
-				var boxLabelName = $('#ss_type_searchLabel').combobox('getText');
-				if(boxLabelId && boxLabelName && boxLabelId!="" && boxLabelName!=""){
-					loadTypeComment(boxLabelId,boxLabelName);
-					$('#ss_type_searchLabel').combobox('clear');
-				}
-			}
-		});
 		
 		$('#activityIds_activity').combogrid({
 			panelWidth : 650,
@@ -1365,7 +1045,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 			}
 		});
 		
-		removePageLoading();
 		$("#main").show();
 	};
 	
@@ -1413,108 +1092,6 @@ var htmTableTitle = "分享列表维护", //表格标题
 		});
 	}
 	
-	function typeInteract(worldId, index){
-		$("#type_labelId").combotree('clear');
-		$("#type_levelId").combobox('clear');
-		$.post("./admin_interact/worldlevelList_queryWorldUNInteractCount",{
-			'world_id':worldId
-			},function(data){
-				if(data["result"] == 0){
-				$("#unValid_clickSum_type_interact").text(data["clickCount"]);
-				$("#unValid_likedSum_type_interact").text(data["likedCount"]);
-				$("#unValid_commentSum_type_interact").text(data["commentCount"]);
-				}else{
-					$.messager.alert('错误提示',data['msg']);  //提示添加信息失败
-				}
-		},"json");
-		
-		$.post("./admin_interact/interact_queryInteractSum",{
-			'worldId':worldId
-		},function(result){
-			if(result['result'] == 0) {
-				$("#clickSum_type_interact").text(result["clickCount"]);
-				$("#likedSum_type_interact").text(result["likedCount"]);
-				$("#commentSum_type_interact").text(result["commentCount"]);
-
-				$("#type_interact_loading").hide();
-				var $addForm = $('#type_interact_form');
-				$addForm.show();
-				$('#htm_type_interact .opt_btn').show();
-				$('#htm_type_interact .loading').hide();
-				commonTools.clearFormData($addForm);
-				$("#worldId_type_interact").val(worldId);
-				$("#comments_type_interact").combogrid('clear');
-				$("#comments_type_interact").combogrid('grid').datagrid('unselectAll');
-				
-				$("#ss_type_comment").searchbox('setValue', "");
-				$("#duration_type_interact").val('24');
-			} else {
-				$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-			}
-		},"json");
-		
-		$("#htm_type_interact form").hide();
-		$("#type_interact_loading").show();
-		$("#htm_type_interact").window('open');
-		loadTypeInteractFormValidate(worldId, index);
-	}
-	
-	function loadTypeInteractFormValidate(worldId, index) {
-		var addForm = $('#type_interact_form');
-		$.formValidator.initConfig({
-			formid : addForm.attr("id"),			
-			onsuccess : function() {
-				if(formSubmitOnce==true){
-					//第一次提交表单前formSubmitOnnce设为false，避免重复提交表单
-					formSubmitOnce = false;
-					//验证成功后以异步方式提交表单
-					$('#htm_type_interact .opt_btn').hide();
-					$('#htm_type_interact .loading').show();
-					//验证成功后以异步方式提交表单
-					$.post(addForm.attr("action"),addForm.serialize(),
-						function(result){
-							formSubmitOnce = true;
-			            	$('#htm_type_interact .opt_btn').show();
-							$('#htm_type_interact .loading').hide();
-							if(result['result'] == 0) {
-								$('#htm_type_interact').window('close');  //关闭添加窗口
-								$.messager.alert('提示',result['msg']);  //提示添加信息成功
-								commonTools.clearFormData(addForm);  //清空表单数据	
-								$('#comments_type_interact').combogrid('clear');
-								$('html_table').datagrid("reload");
-							} else {
-								$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
-							}
-						},"json");	
-					return false;
-				}
-			}
-		});
-	}
-	
-	/**
-	*加载评论
-	*/
-	function loadTypeComment(labelId,labelName) {
-		commentMaxId = 0;
-		commentQueryParams.maxId = commentMaxId;
-		commentQueryParams.labelId = labelId;
-		commentQueryParams.comment = "";
-		$("#comments_type_interact").combogrid('grid').datagrid('load',commentQueryParams);
-	}
-	
-	/**
-	 * 查找type评论
-	 */
-	function searchTypeComment() {
-		var comment = $("#ss_type_comment").searchbox("getValue");
-		commentMaxId = 0;
-		commentQueryParams.maxId = commentMaxId;
-		commentQueryParams.comment = comment;
-		var tmp = $("#comments_type_interact").combogrid('getValues');
-		$("#comments_type_interact").combogrid('grid').datagrid('load',commentQueryParams);
-		$("#comments_type_interact").combogrid('setValues',tmp);
-	}
 	
 	/**
 	 * worldId显示界面初始化

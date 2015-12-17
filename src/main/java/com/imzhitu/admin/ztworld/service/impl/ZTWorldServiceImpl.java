@@ -26,6 +26,7 @@ import com.imzhitu.admin.common.pojo.OpActivityWorldValidDto;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
 import com.imzhitu.admin.common.pojo.OpNearLabelWorldDto;
 import com.imzhitu.admin.common.pojo.UserInfo;
+import com.imzhitu.admin.common.pojo.UserLevelDto;
 import com.imzhitu.admin.common.pojo.UserMsgAtWorldDto;
 import com.imzhitu.admin.common.pojo.UserTrust;
 import com.imzhitu.admin.common.pojo.ZTWorldDto;
@@ -36,6 +37,7 @@ import com.imzhitu.admin.op.mapper.ChannelWorldMapper;
 import com.imzhitu.admin.op.mapper.OpNearLabelWorldMapper;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
+import com.imzhitu.admin.userinfo.service.UserInteractService;
 import com.imzhitu.admin.ztworld.dao.HTWorldCacheDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldChildWorldDao;
 import com.imzhitu.admin.ztworld.dao.HTWorldFilterLogoCacheDao;
@@ -109,6 +111,9 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	
 	@Autowired
 	private UserInfoService userInfoService;
+	
+	@Autowired
+	private UserInteractService userInteractService;
 	
 	@Autowired
 	private InteractTypeOptionWorldService worldSuperReserveService;
@@ -689,6 +694,12 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setPhoneCode(userInfo.getPhoneCode());			// 手机辨别代号
 			dto.setPhoneSys(userInfo.getPhoneSys());			// 手机系统
 			dto.setPhoneVer(String.valueOf(userInfo.getVer()));	// 手机版本
+			
+			// 获取用户等级信息，丰富展示织图DTO对象
+			UserLevelDto userLevel = userInteractService.getUserLevel(world.getAuthorId());
+			if ( userLevel != null ) {
+				dto.setLevel_description(userLevel.getLevel_description());
+			}
 			
 			// 根据织图id，查询是否为精选备选，然后拼装织图DTO信息
 			boolean exist = worldSuperReserveService.isExist(world.getId());
