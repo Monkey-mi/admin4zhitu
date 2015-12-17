@@ -6,6 +6,7 @@
 <title>商品管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <jsp:include page="../common/CRUDHeader.jsp"></jsp:include>
+<jsp:include page="/item/showItemWindowAndreOrder.jsp"></jsp:include>
 <script type="text/javascript" src="${webRootPath }/common/js/commonTools.js"></script>
 <script type="text/javascript">
 	var maxId = 0,
