@@ -521,7 +521,12 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		Integer[] ids = StringUtil.convertStringToIds(idsStr);
 		for(Integer id:ids){
 			OpNearWorldDto dto = nearWorldLastMongoDao.queryNearWorldLastById(id);
-			nearWorldMongoDao.saveWorld(dto);
+			Integer valid = worldDao.queryValid(id);
+			if(valid.equals(0)){
+				
+			}else{
+				nearWorldMongoDao.saveWorld(dto);
+			}
 			nearWorldLastMongoDao.deleteNearWorldLast(id);
 		}
 		

@@ -110,4 +110,12 @@ public interface InteractZombieService {
 	 * @author zhangbo	2015年9月23日
 	 */
 	public void updateZombieWorldAddressinfo(Integer id, String locationDesc, String locationAddr, Double longitude, Double latitude, String province, String city) throws Exception;
+	
+	/**
+	 * 根据经纬度从百度地图获取位置信息
+	 * @param longitude
+	 * @param latitude
+	 * @return
+	 */
+	public String getFormatAddress(Double longitude,Double latitude);
 }

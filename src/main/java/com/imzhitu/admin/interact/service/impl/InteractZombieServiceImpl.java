@@ -15,7 +15,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +42,6 @@ import com.hts.web.ztworld.dao.HTWorldDao;
 import com.hts.web.ztworld.dao.HTWorldLabelDao;
 import com.hts.web.ztworld.dao.HTWorldLabelWorldDao;
 import com.hts.web.ztworld.dao.HTWorldWeekDao;
-import com.hts.web.ztworld.service.ZTWorldService;
 import com.imzhitu.admin.common.database.Admin;
 import com.imzhitu.admin.common.pojo.InteractComment;
 import com.imzhitu.admin.common.pojo.OpChannelWorld;
@@ -153,7 +155,8 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 		zombieWorld.setAddDate(now);
 		zombieWorld.setModifyDate(now);
 		zombieWorld.setCity(city);
-		zombieWorld.setLocationDesc(city);
+		String formatAddress = getFormatAddress(longitude, latitude);
+		zombieWorld.setLocationDesc(formatAddress);
 		
 		if (channelId == null) {
 			zombieWorld.setChannelId(0);
@@ -872,14 +875,19 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			List<Double> latitudeList = new ArrayList<Double>(); 
 			List<Double> longitudeList = new ArrayList<Double>(); 
 			List<String> city = new ArrayList<String>(); 
+			List<String> fomatAddressList = new ArrayList<String>(); 
 			while((line = reader.readLine()) != null) {
 				try{
 					String locationStr = line.trim();
 					String[] splitStr = locationStr.split(",");
 					if(splitStr.length == 3){
-						latitudeList.add(i, Double.parseDouble(splitStr[0]));
-						longitudeList.add(i, Double.parseDouble(splitStr[1]));
+						Double longitude = Double.parseDouble(splitStr[1]);
+						Double latitude = Double.parseDouble(splitStr[0]);
+						String formatAddress = getFormatAddress(longitude, latitude);
+						latitudeList.add(i, latitude);
+						longitudeList.add(i, longitude);
 						city.add(i,splitStr[2].trim());
+						fomatAddressList.add(i, formatAddress);
 						i++;
 					}
 				}catch(Exception e){
@@ -893,7 +901,7 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			
 			for(int j=0; j<ids.length; j++){
 				int t = j % city.size();
-				updateZombieWorldAddressinfo(ids[j],city.get(t),city.get(t),longitudeList.get(t),latitudeList.get(t),null,city.get(t));
+				updateZombieWorldAddressinfo(ids[j],fomatAddressList.get(t),fomatAddressList.get(t),longitudeList.get(t),latitudeList.get(t),null,city.get(t));
 			}
 		}catch(Exception e){
 			throw e;
@@ -901,4 +909,29 @@ public class InteractZombieServiceImpl extends BaseServiceImpl implements Intera
 			reader.close();
 		}
 	}
+	
+	public String getFormatAddress(Double longitude,Double latitude){
+		if(longitude == null || latitude == null){
+			return null;
+		}
+		String requestUrl = "http://api.map.baidu.com/geocoder/v2/?ak=197327dc84e4c39e1200e667408f7954&output=json&location="+latitude+","+longitude;
+		String rstr = null;
+		try{
+			HttpGet request = new HttpGet(requestUrl);
+			HttpResponse response = HttpClients.createDefault().execute(request);
+			if(response.getStatusLine().getStatusCode() == 200){
+				String result = EntityUtils.toString(response.getEntity());
+				JSONObject obj = JSONObject.fromObject(result);
+				if(obj.getInt("status") == 0){
+					JSONObject rjson = obj.getJSONObject("result");
+					rstr = rjson.getString("formatted_address");
+				}
+			}
+		}catch(Exception e){
+			log.warn(e.getMessage());
+			return null;
+		}
+		return rstr;
+	}
+	
 }

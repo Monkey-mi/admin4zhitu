@@ -66,4 +66,9 @@ public class InteractZombieWorldServiceTest extends BaseTest{
 	public void batchUpdateZombieWorldLabelTest()throws Exception{
 		service.batchUpdateZombieWorldLabel("299,300,301,302", "japan,abc,fuck,nothing,right,不行,随便测");
 	}
+	
+	@Test
+	public void getFormatAddressTest()throws Exception{
+		log.info(service.getFormatAddress(114.057795, 22.54423));
+	}
 }
