@@ -168,7 +168,7 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 		search.addIndex(worldLocationAppName);
 		
 		//指定搜索的关键词，如果没有输入索引名称，则使用default
-		search.setQueryString("worldDesc:'" + worldDesc + "'");
+		search.setQueryString("world_desc:'" + worldDesc + "'");
 		
 		//指定搜索返回的格式
 		search.setFormat("json");
