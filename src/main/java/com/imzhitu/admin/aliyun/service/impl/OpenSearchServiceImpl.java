@@ -203,37 +203,4 @@ public class OpenSearchServiceImpl implements OpenSearchService{
 		return resultObj;
 	}
 
-	public String getAliyunAccessKeyId() {
-		return aliyunAccessKeyId;
-	}
-
-	public void setAliyunAccessKeyId(String aliyunAccessKeyId) {
-		this.aliyunAccessKeyId = aliyunAccessKeyId;
-	}
-
-	public String getAliyunAccessKeySecret() {
-		return aliyunAccessKeySecret;
-	}
-
-	public void setAliyunAccessKeySecret(String aliyunAccessKeySecret) {
-		this.aliyunAccessKeySecret = aliyunAccessKeySecret;
-	}
-
-
-	public String getChannelLabelAppName() {
-		return channelLabelAppName;
-	}
-
-	public void setChannelLabelAppName(String channelLabelAppName) {
-		this.channelLabelAppName = channelLabelAppName;
-	}
-
-	public String getAliyunHanZouHost() {
-		return aliyunHanZouHost;
-	}
-
-	public void setAliyunHanZouHost(String aliyunHanZouHost) {
-		this.aliyunHanZouHost = aliyunHanZouHost;
-	}
-
 }
