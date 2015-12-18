@@ -28,7 +28,7 @@ public class AddrServiceTest extends BaseTest{
 		logger.info("----------------山西省id--------：---------"+id+"----------------------------------");
 	}
 	
-	@Test
+//	@Test
 	public void updateCityCacheTest() throws Exception {
 		service.updateCityCache();
 	}

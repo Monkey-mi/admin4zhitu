@@ -75,7 +75,7 @@
 			title : '添加标签',
 			modal : true,
 			width : 620,
-			height : 530,
+			height : 560,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -186,29 +186,35 @@ function loadEditFormValidate(index, isUpdate) {
 	});
 	
 	$("#imgPath_edit")
-	.formValidator({empty:false, onshow:"请选图片（必填）",onfocus:"请选图片",oncorrect:"正确！"})
+	.formValidator({empty:true, onshow:"可自定义,上传大图后生成",onfocus:"请输入图片链接",oncorrect:"正确！"})
 	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
 	
 	$("#name_edit")
-	.formValidator({empty:true, onshow:"输入商品名,方便搜索哦",onfocus:"请输入商品名",oncorrect:"正确！"});
+	.formValidator({empty:true, onshow:"输入商品名,方便搜索哦",onfocus:"请输入商品名",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	$("#price_edit")
-	.formValidator({empty:false, onshow:"请输入价格（必填）",onfocus:"请输入价格",oncorrect:"正确！"});
+	.formValidator({empty:false, onshow:"请输入价格（必填）",onfocus:"请输入价格",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	$("#link_edit")
-	.formValidator({empty:false, onshow:"请输入商品链接（必填）",onfocus:"请输入链接",oncorrect:"正确！"});
+	.formValidator({empty:false, onshow:"请输入商品链接（必填）",onfocus:"请输入链接",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	$("#taobaoType_edit")
 	.formValidator({empty:false, onshow:"请选择淘宝类型（必填）",onfocus:"请选择淘宝类型",oncorrect:"正确！"});
 	
 	$("#taobaoId_edit")
-	.formValidator({empty:false, onshow:"请输入淘宝ID（必填）",onfocus:"请输入淘宝ID",oncorrect:"正确！"});
+	.formValidator({empty:false, onshow:"请输入淘宝ID（必填）",onfocus:"请输入淘宝ID",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	$("#worldId_edit")
-	.formValidator({empty:true, onshow:"以织图形式展示（可选）",onfocus:"请输入织图ID",oncorrect:"正确！"});
+	.formValidator({empty:true, onshow:"以织图形式展示（可选）",onfocus:"请输入织图ID",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	$("#likeNum_edit")
-	.formValidator({empty:true, onshow:"请输入点赞数量（可选）",onfocus:"请选输入点赞数",oncorrect:"正确！"});
+	.formValidator({empty:true, onshow:"请输入点赞数量（可选）",onfocus:"请选输入点赞数",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	
 }
@@ -241,9 +247,8 @@ function searchItemByName() {
 			<form id="edit_form" action="./admin_op/near_insertNearLabel" method="post">
 				<table class="htm_edit_table" width="580px" >
 					<tr>
-						<td  class="leftTd" style="width:50px">图片：</td>
+						<td  class="leftTd">上传图片：</td>
 						<td>
-							<input id="imgPath_edit" name="item.imgPath" class="none" readonly="readonly" />
 							<a id="imgPath_edit_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 							<img id="img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
 							<div id="imgPath_edit_upload_status" class="update_status none" style="width: 205px; text-align: center;">
@@ -251,9 +256,20 @@ function searchItemByName() {
 							</div>
 						</td>
 						<td class="rightTd">
+							规格1024x1024,大小200KB左右
+						</td>
+					</tr>
+					
+					<tr>
+						<td  class="leftTd">图片链接：</td>
+						<td>
+							<input id="imgPath_edit" name="item.imgPath" style="width:280px;"/>
+						</td>
+						<td class="rightTd">
 							<div id="imgPath_editTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
+					
 					<tr>
 						<td class="leftTd">名称：</td>
 						<td>

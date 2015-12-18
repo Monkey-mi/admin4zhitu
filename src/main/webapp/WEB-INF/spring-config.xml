@@ -56,7 +56,7 @@
 	<bean id="manyDataSourceAspect" class="com.imzhitu.admin.common.dataSourceMasterSlave.DataSourceAspect"/>
 	<aop:config>
 		<aop:aspect id="dataSourceCut" ref="manyDataSourceAspect">
-			<aop:pointcut expression="execution(* com.imzhitu.admin.*.mapper.*.*(..))" id="dataSourceCutPoint"/>
+			<aop:pointcut expression="execution(* com.imzhitu.admin..*.mapper.*.*(..))" id="dataSourceCutPoint"/>
 			<aop:before pointcut-ref="dataSourceCutPoint" method="before"/>
 		</aop:aspect>
 	</aop:config>

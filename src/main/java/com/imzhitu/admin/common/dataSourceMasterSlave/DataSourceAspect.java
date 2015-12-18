@@ -23,7 +23,6 @@ public class DataSourceAspect {
 			if ( m != null && m.isAnnotationPresent(DataSource.class)) {
 				DataSource data = m.getAnnotation(DataSource.class);
 				DynamicDataSourceHolder.putDataSource(data.value());
-				//System.out.println("DataSourceAspect:======================="+data.value());
 				if(log.isDebugEnabled()){
 					log.debug("DataSourceAspect:======================="+data.value());
 				}
