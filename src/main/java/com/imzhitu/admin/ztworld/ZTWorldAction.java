@@ -102,19 +102,19 @@ public class ZTWorldAction extends BaseCRUDAction {
 			}
 			// 若存在织图描述，则为按照织图描述查询
 			else if ( worldDesc != null && !worldDesc.trim().equals("") ) {
-				worldService.buildWorldMasonryByWorldDesc(maxId, page, rows, worldDesc, jsonMap);
+				worldService.buildWorldMasonryByWorldDesc(maxId, page, rows, worldDesc,valid, jsonMap);
 			}
 			// 若存在织图地理位置信息，则为按照织图地理位置信息查询
 			else if ( worldLocation != null && !worldLocation.trim().equals("") ) {
-				worldService.buildWorldMasonryByWorldLocation(maxId, page, rows, worldLocation, jsonMap);
+				worldService.buildWorldMasonryByWorldLocation(maxId, page, rows, worldLocation, valid,jsonMap);
 			}
 			// 根据织图id查询
 			else if ( worldId != null ) {
-				worldService.buildWorldMasonryByWorldId(maxId, page, rows, worldId, jsonMap);
+				worldService.buildWorldMasonryByWorldId(maxId, page, rows, worldId,valid, jsonMap);
 			}
 			// 若存在用户名或用户id，则按照用户名或id查询
 			else if ( authorNameOrId != null && authorNameOrId.trim() != "" ) {
-				worldService.buildWorldMasonryByAuthorNameOrId(maxId, page, rows, authorNameOrId, jsonMap);
+				worldService.buildWorldMasonryByAuthorNameOrId(maxId, page, rows, authorNameOrId, valid,jsonMap);
 			}
 			// 默认查询瀑布流织图信息
 			else {

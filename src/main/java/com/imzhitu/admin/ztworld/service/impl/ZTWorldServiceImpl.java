@@ -198,6 +198,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			dto.setPhoneCode(phoneCode);
 		}
 		
+		//织图按有效性查找
 		if(valid != null) {
 			dto.setValid(valid);
 		}
@@ -213,13 +214,6 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		}
 		
 		//是否为马甲织图
-		//mishengliang
-		if (isZombie != null) {
-			dto.setIsZombie(isZombie);
-		}
-		
-		//是否为马甲织图
-		//mishengliang
 		if (isZombie != null) {
 			dto.setIsZombie(isZombie);
 		}
@@ -245,7 +239,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		}
 		
 		List<ZTWorldDto> dtoList = null;
-		long totalCount = 0l;
+		long totalCount = 0;
 		dto.setMaxId(maxId);
 		// 根据用户等级查询织图
 		if(dto.getUser_level_id() != null || dto.getAuthorName() != null){
@@ -789,7 +783,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	}
 
 	@Override
-	public void buildWorldMasonryByWorldDesc(Integer maxId, Integer page, Integer rows, String worldDesc, Map<String, Object> jsonMap) throws Exception {
+	public void buildWorldMasonryByWorldDesc(Integer maxId, Integer page, Integer rows, String worldDesc,Integer valid, Map<String, Object> jsonMap) throws Exception {
 		// 根据织图描述（关键字）查询匹配的织图集合
 		JSONObject resultJson = openSearchService.queryWolrdDescInfo(worldDesc, (page - 1) * rows, rows);
 		
@@ -803,7 +797,12 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			worldIds[i] = jObject.getInt("id");
 		}
 		
-		List<ZTWorld> worldList = ztWorldMapper.getWorldListByIds(worldIds);
+		List<ZTWorld> worldList =	null;
+		if (valid == 1) {
+			 worldList = ztWorldMapper.getWorldListByIdsForValid(worldIds);
+		} else {
+			 worldList = ztWorldMapper.getWorldListByIdsForInvalid(worldIds);
+		}
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
@@ -812,7 +811,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	}
 
 	@Override
-	public void buildWorldMasonryByWorldLocation(Integer maxId, Integer page, Integer rows, String worldLocation, Map<String, Object> jsonMap) throws Exception {
+	public void buildWorldMasonryByWorldLocation(Integer maxId, Integer page, Integer rows, String worldLocation,Integer valid, Map<String, Object> jsonMap) throws Exception {
 		// 根据织图地理位置信息（关键字）查询匹配的织图集合
 		JSONObject resultJson = openSearchService.queryHTWolrdLocationInfo(worldLocation, (page - 1) * rows, rows);
 		
@@ -830,7 +829,12 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 			worldIds[i] = jObject.getInt("id");
 		}
 		
-		List<ZTWorld> worldList = ztWorldMapper.getWorldListByIds(worldIds);
+		List<ZTWorld> worldList =	null;
+		if (valid == 1) {
+			 worldList = ztWorldMapper.getWorldListByIdsForValid(worldIds);
+		} else {
+			 worldList = ztWorldMapper.getWorldListByIdsForInvalid(worldIds);
+		}
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
@@ -840,10 +844,14 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 
 	
 	@Override
-	public void buildWorldMasonryByWorldId(Integer maxId, Integer page, Integer rows, Integer worldId, Map<String, Object> jsonMap) throws Exception{
+	public void buildWorldMasonryByWorldId(Integer maxId, Integer page, Integer rows, Integer worldId,Integer valid, Map<String, Object> jsonMap) throws Exception{
 		Integer[] worldIds = new Integer[]{worldId};
-		
-		List<ZTWorld> worldList = ztWorldMapper.getWorldListByIds(worldIds);
+		List<ZTWorld> worldList =	null;
+		if (valid == 1) {
+			 worldList = ztWorldMapper.getWorldListByIdsForValid(worldIds);
+		} else {
+			 worldList = ztWorldMapper.getWorldListByIdsForInvalid(worldIds);
+		}
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		
 		jsonMap.put(OptResult.JSON_KEY_MAX_ID, maxId == 0 && rtnList.size() != 0 ? rtnList.get(0).getId() : maxId);
@@ -852,7 +860,7 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 	}
 
 	@Override
-	public void buildWorldMasonryByAuthorNameOrId(Integer maxId, Integer page, Integer rows, String authorNameOrId, Map<String, Object> jsonMap) throws Exception {
+	public void buildWorldMasonryByAuthorNameOrId(Integer maxId, Integer page, Integer rows, String authorNameOrId,Integer valid, Map<String, Object> jsonMap) throws Exception {
 		
 		// 定义查询条件：用户id集合
 		Integer[] authorIds = new  Integer[1];
@@ -864,12 +872,21 @@ public class ZTWorldServiceImpl extends BaseServiceImpl implements ZTWorldServic
 		if ( AdminUtil.isNumeric(authorNameOrId) ) {
 			authorIds[0] = Integer.parseInt(authorNameOrId);
 		} else {
-			
 			List<Integer> userIdList = userInfoService.getUserIdsByName(authorNameOrId);
 			authorIds = userIdList.toArray(authorIds);
 		}
-		List<ZTWorld> worldList = ztWorldMapper.getWorldListByAuthorId(maxId, authorIds, firstRow, rows);
-		long totalCount = ztWorldMapper.getWorldTotalByAuthorId(maxId, authorIds);
+		
+		//根据有效性区分查找
+		List<ZTWorld> worldList = null;
+		long totalCount = 0;
+		if(valid == 1){
+			 worldList = ztWorldMapper.getWorldListByAuthorIdForValid(maxId, authorIds, firstRow, rows);
+			 totalCount = ztWorldMapper.getWorldTotalByAuthorIdForValid(maxId, authorIds);
+		}else{
+			 worldList = ztWorldMapper.getWorldListByAuthorIdForInValid(maxId, authorIds, firstRow, rows);
+			 totalCount = ztWorldMapper.getWorldTotalByAuthorIdForInValid(maxId, authorIds);
+		}
+		
 		
 		List<ZTWorldDto> rtnList = worldListToWorldDTOList(worldList);
 		

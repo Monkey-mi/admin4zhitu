@@ -1158,12 +1158,14 @@ var htmTableTitle = "分享列表维护", //表格标题
 	function removeWorldOptArea($worldOpt) {
 		$worldOpt.children('.world-opt-area:eq(0)').remove();
 	};
-	
+		
 	/**
 	 * 通过织图ID查询
 	 */
+	//mishengliang
 	function searchByWorldId() {
 		maxId = 0;
+		var	valid = $("#valid").combobox('getValue');
 		var worldId = $('#ss_worldId').searchbox('getValue');
 		if(worldId == "") {
 			search();
@@ -1171,7 +1173,8 @@ var htmTableTitle = "分享列表维护", //表格标题
 		}
 		var rows = myQueryParams.rows;
 		myQueryParams = {
-			'worldId' : worldId
+			'worldId' : worldId,
+			'valid':valid
 		};
 		loadData(1, rows);
 	}
@@ -1182,9 +1185,11 @@ var htmTableTitle = "分享列表维护", //表格标题
 	 */
 	function searchByAuthorName() {
 		maxId = 0;
+		var	valid = $("#valid").combobox('getValue');
 		var rows = myQueryParams.rows;
 		myQueryParams = {
-			'authorNameOrId' : $('#ss_authorName').searchbox('getValue')
+			'authorNameOrId' : $('#ss_authorName').searchbox('getValue'),
+			'valid':valid
 		};
 		loadData(1, rows);
 	}
@@ -1195,11 +1200,13 @@ var htmTableTitle = "分享列表维护", //表格标题
 	 */
 	function searchByWorldDesc() {
 		maxId = 0;
+		var valid = $("#valid").combobox('getValue');
 		// 获取当前查询页数
 		var rows = myQueryParams.rows;
 		// 重置查询条件
 		myQueryParams = {
-			'worldDesc' : $('#ss_worldDesc').searchbox('getValue')
+			'worldDesc' : $('#ss_worldDesc').searchbox('getValue'),
+			'valid':valid
 		};
 		loadData(1, rows);
 	}
@@ -1210,11 +1217,13 @@ var htmTableTitle = "分享列表维护", //表格标题
 	 */
 	function searchByWorldLocation() {
 		maxId = 0;
+		var valid =  $("#valid").combobox('getValue');
 		// 获取当前查询页数
 		var rows = myQueryParams.rows;
 		// 重置查询条件
 		myQueryParams = {
-			'worldLocation' : $('#ss_worldLocation').searchbox('getValue')
+			'worldLocation' : $('#ss_worldLocation').searchbox('getValue'),
+			'valid':valid
 		};
 		loadData(1, rows);
 	}

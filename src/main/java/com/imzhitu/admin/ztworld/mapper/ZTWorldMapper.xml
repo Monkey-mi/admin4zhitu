@@ -586,7 +586,7 @@
 	 	</where>
 	</select>
 	
-	<!-- 根据织图id集合查询织图 -->
+		<!-- 根据织图id集合查询织图 -->
 	<select id="getWorldListByIds" resultMap="ZTWorldPojo" >
 		select 
 			*
@@ -596,7 +596,41 @@
 		 	h.id in
 	 		<foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
 				#{item}
-			</foreach>		 	
+			</foreach>	
+	 	</where>
+	 	order by h.id desc
+	</select>
+	
+	<!-- 根据织图id集合查询织图 -->
+	<select id="getWorldListByIdsForValid" resultMap="ZTWorldPojo" >
+		select 
+			*
+		from
+		 	hts.htworld_htworld h 
+	 	<where> 
+	 		valid = 1
+	 		and
+		 	h.id in
+	 		<foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>	
+	 	</where>
+	 	order by h.id desc
+	</select>
+	
+		<!-- 根据织图id集合查询织图 -->
+	<select id="getWorldListByIdsForInvalid" resultMap="ZTWorldPojo" >
+		select 
+			*
+		from
+		 	hts.htworld_htworld h 
+	 	<where> 
+	 		valid = 0
+	 		and
+		 	h.id in
+	 		<foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>	
 	 	</where>
 	 	order by h.id desc
 	</select>
@@ -716,6 +750,48 @@
 	 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
+		<!-- 根据用户id集合查询织图集合 -->
+	<select id="getWorldListByAuthorIdForValid" resultMap="ZTWorldPojo" >
+		select 
+			*
+		from
+		 	hts.htworld_htworld h 
+	 	<where> 
+	 		valid = 1
+	 		and
+		 	h.author_id in
+	 		<foreach collection="authorIds" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+			<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ and h.id<=#{maxId}]]>
+		 	</if>	 	
+	 	</where>
+	 	order by h.id desc
+	 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	<!-- 根据用户id集合查询织图集合 -->
+	<select id="getWorldListByAuthorIdForInValid" resultMap="ZTWorldPojo" >
+		select 
+			*
+		from
+		 	hts.htworld_htworld h 
+	 	<where> 
+	 		valid = 0
+	 		and
+		 	h.author_id in
+	 		<foreach collection="authorIds" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+			<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ and h.id<=#{maxId}]]>
+		 	</if>	 	
+	 	</where>
+	 	order by h.id desc
+	 	<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
 	<!-- 根据用户id集合查询织图 -->
 	<select id="getWorldTotalByAuthorId" resultType="long" >
 		select 
@@ -723,6 +799,44 @@
 		from
 		 	hts.htworld_htworld h 
 	 	<where> 
+		 	h.author_id in
+	 		<foreach collection="authorIds" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+			<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ and h.id<=#{maxId}]]>
+		 	</if>	 	
+	 	</where>
+	</select>
+	
+		<!-- 根据用户id集合查询织图 -->
+	<select id="getWorldTotalByAuthorIdForValid" resultType="long" >
+		select 
+			count(*)
+		from
+		 	hts.htworld_htworld h 
+	 	<where> 
+	 		valid = 1
+	 		and
+		 	h.author_id in
+	 		<foreach collection="authorIds" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+			<if test="maxId != null and maxId != 0">
+		 		<![CDATA[ and h.id<=#{maxId}]]>
+		 	</if>	 	
+	 	</where>
+	</select>
+	
+			<!-- 根据用户id集合查询织图 -->
+	<select id="getWorldTotalByAuthorIdForInValid" resultType="long" >
+		select 
+			count(*)
+		from
+		 	hts.htworld_htworld h 
+	 	<where> 
+	 		valid = 0
+	 		and
 		 	h.author_id in
 	 		<foreach collection="authorIds" item="item" index="index" open="(" close=")" separator=",">
 				#{item}
