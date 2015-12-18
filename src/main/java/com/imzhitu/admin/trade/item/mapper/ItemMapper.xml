@@ -22,7 +22,7 @@
 		<result column="link" property="link" javaType="java.lang.String"/>
 	</resultMap>
 	
-	<insert id="insert">
+	<insert id="saveItem">
 		insert into 
 			hts.item 
 			(id, name, summary, description, world_id, img_path, img_thumb, price, sale,
@@ -33,7 +33,7 @@
 	 		#{categoryId}, #{brandId}, #{likeNum},#{link})
 	</insert>
 	
-	<update id="update">
+	<update id="updateItem">
 		update 
 			hts.item 
 		<set>

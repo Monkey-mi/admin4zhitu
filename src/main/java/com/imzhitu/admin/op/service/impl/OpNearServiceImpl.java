@@ -268,15 +268,14 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 	@Override
 	public void insertNearLabelWorld(Integer worldId, Integer worldAuthorId,
 			Integer nearLabelId) throws Exception {
+		nearService.deleteNearLabelWorldUserByWorldIdAndLabelId(worldId, nearLabelId);
+		
 		OpNearLabelWorldDto dto = new OpNearLabelWorldDto();
+		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_LABEL_WORLD_SERIAL);
+		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_LABEL_WORLD_ID);
 		dto.setNearLabelId(nearLabelId);
-		long total = nearLabelWorldMapper.queryNearLabelWorldTotalCount(dto);
-		if(total > 0){
-			Integer maxSerial = nearLabelWorldMapper.queryNearLabelWorldMaxSerialByNearLabelId(nearLabelId);
-			dto.setSerial(maxSerial + 1);
-		}else{
-			dto.setSerial(1);
-		}
+		dto.setId(id);
+		dto.setSerial(serial);
 		dto.setWorldId(worldId);
 		dto.setAuthorId(worldAuthorId);
 		nearLabelWorldMapper.insertNearLabelWorld(dto);
@@ -338,7 +337,7 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			if (StringUtil.checkIsNULL(idStrs[i]))
 				continue;
 			int id = Integer.parseInt(idStrs[i]);
-			Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.LABEL_WORLD_SERIAL);
+			Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.OP_NEAR_LABEL_WORLD_SERIAL);
 			OpNearLabelWorldDto dto = new OpNearLabelWorldDto();
 			dto.setId(id);
 			dto.setSerial(serial);

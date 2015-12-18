@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
-import com.imzhitu.admin.trade.item.mapper.ItemSetRelationMapper;
+import com.imzhitu.admin.common.pojo.ZTWorldDto;
 import com.imzhitu.admin.trade.item.mapper.ItemMapper;
+import com.imzhitu.admin.trade.item.mapper.ItemSetRelationMapper;
 import com.imzhitu.admin.trade.item.pojo.Item;
 import com.imzhitu.admin.trade.item.service.ItemService;
+import com.imzhitu.admin.ztworld.mapper.ZTWorldMapper;
 
 
 @Service
@@ -28,6 +30,9 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
 	
+	@Autowired
+	private ZTWorldMapper worldMapper;
+	
 	@Override
 	public Integer saveItem(Item item) {
 		if(item.getName() == null) {
@@ -35,13 +40,23 @@ public class ItemServiceImpl extends BaseServiceImpl implements ItemService {
 		}
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_ID);
 		item.setId(id);
-		itemMapper.insert(item);
+		
+		// 根据织图id设置封面图
+		if(item.getWorldId() != null && item.getWorldId() != 0) {
+			ZTWorldDto dto = worldMapper.getZTWorldByWorldId(item.getWorldId());
+			if(dto != null) {
+				item.setImgPath(dto.getTitlePath());
+				item.setImgThumb(dto.getTitleThumbPath());
+			}
+		}
+		
+		itemMapper.saveItem(item);
 		return id;
 	}
 
 	@Override
 	public void updateItem(Item item) {
-		itemMapper.update(item);
+		itemMapper.updateItem(item);
 	}
 	
 	@Override
