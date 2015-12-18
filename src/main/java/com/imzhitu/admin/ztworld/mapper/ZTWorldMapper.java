@@ -412,9 +412,12 @@ public interface ZTWorldMapper {
 
 	/**
 	 * 根据用户id集合分页查询织图集合
+	 * 注：
+	 * 1、author_id列是建立索引的，若集合中只有一个元素，经测试是与使用=号的链接查询性能一样
+	 * 2、经判断网上给出信息得知，是否走索引是由sql优化器决定，后续若出现性能问题，则整改此方法。
 	 * 
 	 * @param maxId			织图查询最大id，用于分页显示的
-	 * @param authorIds	用户id集合
+	 * @param authorIds		用户id集合
 	 * @param firstRow		分页起始行
 	 * @param rows			查询每页的数量
 	 * 
