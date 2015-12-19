@@ -32,12 +32,12 @@ public class OpMsgBulletinServiceTest extends BaseTest{
 	
 	@Test
 	public void updateMsgBulletinTest()throws Exception{
-		service.updateMsgBulletin(1, "http://static.imzhitu.com/ios/image/2015/06/15/15/6e59030b0b4a2c977203581e0ca5015d_20991@2x.jpg", 1, "http://www.imzhitu.com", 1, 14,null,null);
+//		service.updateMsgBulletin(1, "http://static.imzhitu.com/ios/image/2015/06/15/15/6e59030b0b4a2c977203581e0ca5015d_20991@2x.jpg", 1, "http://www.imzhitu.com", 1, 14,null,null);
 	}
 	
 	@Test
 	public void batchUpdateMsgBulletinValid()throws Exception{
-		service.batchUpdateMsgBulletinValid("1,2,3,4",Tag.TRUE,14);
+//		service.batchUpdateMsgBulletinValid("1,2,3,4",Tag.TRUE,14);
 	}
 	
 	@Test
@@ -48,14 +48,8 @@ public class OpMsgBulletinServiceTest extends BaseTest{
 	}
 	
 	@Test
-	public void queryMsgBulletinTotalCount()throws Exception{
-		long total = service.queryMsgBulletinTotalCount(null, null, null, null);
-		log.info("===========total count:"+total);
-	}
-	
-	@Test
 	public void updateMsgBulletinCacheTest()throws Exception{
-		service.updateMsgBulletinCache("32,33,34,35,36,37,38,39,40", 0);
+//		service.updateMsgBulletinCache("32,33,34,35,36,37,38,39,40", 0);
 	}
 	
 	@Test

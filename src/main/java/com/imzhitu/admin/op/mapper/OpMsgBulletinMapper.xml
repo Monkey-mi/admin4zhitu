@@ -3,6 +3,7 @@
 <mapper namespace="com.imzhitu.admin.op.mapper.OpMsgBulletinMapper">
 	<resultMap type="com.imzhitu.admin.common.pojo.OpMsgBulletin" id="OpMsgBulletinMap">
 		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="category" column="category" jdbcType="INTEGER"/>
 		<result property="bulletinPath" column="path" jdbcType="VARCHAR"/>
 		<result property="bulletinType" column="type" jdbcType="INTEGER"/>
 		<result property="link" column="link" jdbcType="VARCHAR"/>
@@ -10,7 +11,6 @@
 		<result property="operatorName" column="operatorName" jdbcType="VARCHAR"/>
 		<result property="addDate" column="date_add" jdbcType="TIMESTAMP"/>
 		<result property="modifyDate" column="date_modify" jdbcType="TIMESTAMP"/>
-		<result property="valid" column="valid" jdbcType="INTEGER"/>
 		<result property="bulletinName" column="name" jdbcType="VARCHAR"/>
 		<result property="bulletinThumb" column="thumb" jdbcType="VARCHAR"/>
 		<result property="serial" column="serial" jdbcType="INTEGER"/>
@@ -19,10 +19,10 @@
 	<!-- INSERT -->
 	<insert id="insertMsgBulletin">
 		insert into hts_admin.op_msg_bulletin
-			(path,type,link,operator,date_add,date_modify,valid,name,thumb,serial)
+			(category,path,type,link,operator,date_add,date_modify,name,thumb,serial)
 		values
-			(#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},
-			#{modifyDate,jdbcType=TIMESTAMP},#{valid},#{bulletinName},#{bulletinThumb},#{serial})
+			(#{category},#{bulletinPath},#{bulletinType},#{link},#{operator},#{addDate,jdbcType=TIMESTAMP},
+			#{modifyDate,jdbcType=TIMESTAMP},#{bulletinName},#{bulletinThumb},#{serial})
 	</insert>
 	
 	<!-- BATCHDELETE -->
@@ -38,10 +38,10 @@
 	<update id="updateMsgBulletin">
 		update hts_admin.op_msg_bulletin
 		<set>
+			<if test="category != null">category = #{category},</if>
 			<if test="bulletinPath != null">path = #{bulletinPath},</if>
 			<if test="bulletinType != null">type = #{bulletinType},</if>
 			<if test="link != null">link = #{link},</if>
-			<if test="valid != null">valid = #{valid},</if>
 			<if test="bulletinName !=null">name = #{bulletinName},</if>
 			<if test="bulletinThumb != null"> thumb = #{bulletinThumb},</if>
 			<if test="serial != null"> serial = #{serial},</if>
@@ -51,33 +51,17 @@
 		where id = #{id}
 	</update>
 	
-	<!-- BATCH UPDATE VALID -->
-	<update id="batchUpdateMsgBulletinValid">
-		update 	hts_admin.op_msg_bulletin
-		set valid=#{valid},operator=#{operator},date_modify=NOW()
-		where id in 
-		<foreach collection="ids" open="(" close=")" separator="," index="index" item="item">
-			#{item}
-		</foreach>
-	</update>
-	
 	<!-- SELECT -->
 	<select id="queryMsgBulletin" resultMap="OpMsgBulletinMap">
-		select omb.*,aui.user_name as operatorName
-		from hts_admin.op_msg_bulletin omb
-		left join hts_admin.admin_user_info aui on omb.operator=aui.id
+		select 
+			omb.*, 
+			aui.user_name as operatorName
+		from 
+			hts_admin.op_msg_bulletin omb
+			left join hts_admin.admin_user_info aui on omb.operator=aui.id
 		<where>
-			<if test="id != null">
-				omb.id = #{id}
-			</if>
-			<if test="valid != null">
-				and omb.valid = #{valid}
-			</if>
-			<if test="bulletinType != null">
-				and omb.type = #{bulletinType}
-			</if>
-			<if test="maxId != null and maxId != 0">
-				<![CDATA[and omb.id <= #{maxId}]]>
+			<if test="category != null">
+				omb.category = #{category}
 			</if>
 		</where>
 		order by omb.serial desc
@@ -86,20 +70,13 @@
 	
 	<!-- SELECT TOTAL COUNT -->
 	<select id="queryMsgBulletinTotalCount" resultType="long">
-		select count(*)
-		from hts_admin.op_msg_bulletin omb
+		select 
+			count(*)
+		from 
+			hts_admin.op_msg_bulletin omb
 		<where>
-			<if test="id != null">
-				omb.id = #{id}
-			</if>
-			<if test="valid != null">
-				and omb.valid = #{valid}
-			</if>
-			<if test="bulletinType != null">
-				and omb.type = #{bulletinType}
-			</if>
-			<if test="maxId != null and maxId != 0">
-				<![CDATA[and omb.id <= #{maxId}]]>
+			<if test="category != null">
+				and omb.category = #{category}
 			</if>
 		</where>
 	</select>
@@ -121,6 +98,23 @@
 		from 
 			hts_admin.op_msg_bulletin 
 		where id = #{id} 
+	</select>
+	
+	<!-- SELECT -->
+	<select id="queryMsgBulletinByType" resultMap="OpMsgBulletinMap">
+		select 
+			omb.*, 
+			aui.user_name as operatorName
+		from 
+			hts_admin.op_msg_bulletin omb
+			left join hts_admin.admin_user_info aui on omb.operator=aui.id
+		<where>
+			<if test="bulletinType != null">
+				omb.type = #{type}
+			</if>
+		</where>
+		order by omb.serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
 </mapper>

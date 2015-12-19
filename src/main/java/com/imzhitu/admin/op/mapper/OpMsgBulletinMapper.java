@@ -19,52 +19,50 @@ public interface OpMsgBulletinMapper {
 	 */
 	@DataSource("master")
 	public void insertMsgBulletin(OpMsgBulletin dto);
-	
+
 	/**
 	 * 批量删除
 	 * @param ids
 	 */
 	@DataSource("master")
 	public void batchDeleteMsgBulletin(Integer[] ids);
-	
+
 	/**
 	 * 更新
 	 * @param dto
 	 */
 	@DataSource("master")
 	public void updateMsgBulletin(OpMsgBulletin dto);
-	
+
 	/**
-	 * 批量更新有效性
-	 * @param ids
+	 * 根据分类进行分页查询
+	 * 
+	 * @param category	公告分类，为null时，查询全部分类的公告
+	 * @param firstRow	分页起始位置，为null时，不进行分页查询
+	 * @param limit		分页数量，为null时，不进行分页查询
+	 * @return
+	 * @modify zhangbo	2015年12月19日
 	 */
-	@DataSource("master")
-	public void batchUpdateMsgBulletinValid(@Param("ids")Integer[] ids,@Param("valid")Integer valid,@Param("operator")Integer operator);
-	
+	@DataSource("slave")
+	public List<OpMsgBulletin> queryMsgBulletin(@Param("category") Integer category, @Param("firstRow") Integer firstRow, @Param("limit") Integer limit);
+
 	/**
-	 * 分页查询
-	 * @param dto
+	 * 根据公告分类查询总数
+	 * 
+	 * @param category	公告分类，为null时为查询全部总数
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<OpMsgBulletin> queryMsgBulletin(OpMsgBulletin dto);
-	
-	/**
-	 * 分页查询总数
-	 * @param dto
-	 * @return
-	 */
-	@DataSource("slave")
-	public long queryMsgBulletinTotalCount(OpMsgBulletin dto);
-	
+	public long queryMsgBulletinTotalCount(@Param("category") Integer category);
+
 	/**
 	 * 根据ids 来查询
 	 * @param ids
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<OpMsgBulletin> queryMsgBulletinByIds(@Param("ids")Integer[] ids);
-	
+	public List<OpMsgBulletin> queryMsgBulletinByIds(@Param("ids") Integer[] ids);
+
 	/**
 	 * 根据id，得到公告对象
 	 * 
@@ -72,5 +70,13 @@ public interface OpMsgBulletinMapper {
 	 * @return
 	 * @author zhangbo	2015年12月14日
 	 */
-	OpMsgBulletin getMsgBulletinById(@Param("id")Integer id);
+	OpMsgBulletin getMsgBulletinById(@Param("id") Integer id);
+	
+	/**
+	 * 旧方法移植，用于老的缓存功能刷新
+	 * 
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<OpMsgBulletin> queryMsgBulletinByType(OpMsgBulletin dto);
 }

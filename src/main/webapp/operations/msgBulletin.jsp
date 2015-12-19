@@ -4,147 +4,124 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>频道banner管理</title>
+<title>公告banner管理</title>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="${webRootPath }/common/css/htmCRUD20131111.css"></link>
 <script type="text/javascript">
-	var maxId=0,
-	loadDateUrl="./admin_op/msgBulletin_queryMsgBulletin",
-	delUrl="./admin_op/msgBulletin_batchDeleteMsgBulletin?idsStr=",
-	addUrl="./admin_op/msgBulletin_insertMsgBulletin",
-	updateUrl = "./admin_op/msgBulletin_updateMsgBulletin?id=",
-	batchUpdateValidUrl = "./admin_op/msgBulletin_batchUpdateMsgBulletinValid",
-	updateCacheUrl = "./admin_op/msgBulletin_updateMsgBulletinCache?idsStr=",
-	tableQueryParams = {},
-	tableInit = function() {
-		tableLoadDate(1);
-	};
-	myOnBeforeRefresh = function(pageNumber, pageSize) {
-		if(pageNumber <= 1) {
-			maxId = 0;
-			tableQueryParams.maxId = maxId;
-		}
-	},
-	myOnLoadSuccess = function(data) {
-		if(data.result == 0) {
-			if(data.maxId > maxId) {
-				maxId = data.maxId;
-				tableQueryParams.maxId = maxId;
+	// 请求参数
+	var queryParams = {};
+	
+	// 行是否被勾选
+	var IsCheckFlag = true;
+	
+	// 定义展示列
+	var columnsFields = [
+		{field: "ck", checkbox: true},
+		{field: "id", title: "ID", align: "center", width:80},
+		{field: "category", title: "分类", align: "center", width: 100,
+			formatter:function(value,row,index){
+				switch(value){
+					case 1:
+						return "有奖活动";
+					case 2:
+						return "无奖活动";
+					case 3:
+						return "达人专题";
+					case 4:
+						return "内容专题";
+					default:
+						return ""; 
+				}
+			}
+		},
+		{field: "bulletinPath", title: "公告图片", align: "center", width: 180,
+			formatter: function(value,row,index) {
+  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+  			}
+		},
+		{field: "bulletinType", title: "链接类型", align: "center", width: 100,
+			formatter:function(value,row,index){
+				switch(value){
+					case 0:
+						return "无需跳转";
+					case 1:
+						return "网页连接";
+					case 2:
+						return "频道id";
+					case 3:
+						return "用户id";
+					case 4:
+						return "活动标签";
+					default:
+						return ""; 
+				}
+			}
+		},
+		{field: "link", title: "链接内容", align: "center", width: 130},
+		{field: "bulletinName", title: "名字", align: "center", width: 130},
+		{field: "bulletinThumb", title: "缩略图", align: "center", width: 130,
+			formatter: function(value,row,index) {
+  				return "<img width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
+	  		}
+	  	},
+	  	{field: "modifyDate", title: "最后修改时间", align: "center", width: 130,
+	  		formatter:function(value,row,index){
+	  			return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+	  		}
+	  	},
+		{field: "addDate", title: "创建时间", align: "center", width: 130,
+			formatter:function(value,row,index){
+				return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
+			}
+		},
+		{field: "operatorName", title: "最后操作者", align: "center", width: 80},
+		{field: "opt", title: "操作", align: "center", rowspan : 1, width: 120, 
+			formatter : function(value, row, index ) {
+				return "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit("+ row.id + ")'>【修改】</a>";
 			}
 		}
-	};
+	];
 	
-	function tableLoadDate(pageNum){
+	// 初始化页面
+	$(function(){
+		
 		$("#htm_table").datagrid({
-			title  :"频道banner管理",
-			width  :1300,
-			pageList : [5,10,30,50],
-			pageSize : 5,
-			loadMsg:"加载中....",
-			url	   :	loadDateUrl,
-			queryParams : tableQueryParams,
+			title: "公告banner管理",
+			width: $(document.body).width(),
+			loadMsg: "加载中....",
+			url: "./admin_op/msgBulletin_queryMsgBulletin",
+			queryParams: queryParams,
 			remoteSort: true,
 			pagination: true,
-			idField   :'id',
-			pageNumber: pageNum,
-			toolbar:'#tb',
-			columns: [[
-				{field :'ck',checkbox:true},
-				{field :'id',title:'ID',align:'center',width:80},
-				{field : 'bulletinPath',title: '链接图片路径',align : 'center',width : 180,
-					formatter: function(value,row,index) {
-		  				return "<img title='无效' width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
-		  			}
-				},
-				{field : 'bulletinType',title:'链接类型',align:'center',width : 100,
-					formatter:function(value,row,index){
-						switch(value){
-							case 0:
-								return "无需跳转";
-							case 1:
-								return "网页连接";
-							case 2:
-								return "频道id";
-							case 3:
-								return "用户id";
-							case 4:
-								return "活动标签";
-							default:
-								return ""; 
-						}
-					}
-				},
-				{field : 'link',title: '链接',align : 'center',width : 130},
-				{field : 'bulletinName',title: '名字',align : 'center',width : 130},
-				{field : 'bulletinThumb',title: '缩略图',align : 'center',width : 130,
-					formatter: function(value,row,index) {
-			  				return "<img title='无效' width='174px' height='90px' class='htm_column_img' src='" + value + "'/>";
-			  			}
-			  	},
-				/*
-				{field : 'valid',title : '有效性',align : 'center', width: 45,
-		  			formatter: function(value,row,index) {
-		  				if(value == 1) {
-		  					img = "./common/images/ok.png";
-		  					return "<img title='有效' class='htm_column_img'  src='" + img + "'/>";
-		  				}else if(value == 0){
-			  				img = "./common/images/tip.png";
-			  				return "<img title='无效' class='htm_column_img' src='" + img + "'/>";
-		  				}
-		  				return "";
-		  			}
-		  		},*/
-				{field : 'addDate', title:'创建时间',align : 'center' ,width : 130,
-					formatter:function(value,row,index){
-						if(value){
-							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-						}else{
-							return "";
-						}
-					}
-				},
-				{field : 'modifyDate', title:'最后修改时间',align : 'center' ,width : 130,
-					formatter:function(value,row,index){
-						if(value){
-							return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-						}else{
-							return "";
-						}
-					}
-				},
-				{field : 'operatorName',title: '最后操作者',align : 'center',width : 80},
-				{field : 'opt',title : '操作',width : 120,align : 'center',rowspan : 1,
-					formatter : function(value, row, index ) {
-						var retStr="";
-						if(row.valid == 0 || row.valid == 1){
-							retStr = "<a title='修改信息' class='updateInfo' href='javascript:void(0);' onclick='javascript:updateInit(\""+ row.id + "\",\"" + row.bulletinPath + "\",\"" + row.bulletinType + "\",\"" + row.link
-							+ "\",\"" + row.bulletinName + "\",\"" + row.bulletinThumb + "\")'>【修改】</a>";
-						}
-						return retStr;
-					}
-				},
-				
-			]],
-			onLoadSuccess:myOnLoadSuccess,
-			onBeforeRefresh : myOnBeforeRefresh
-		});
-		var p = $("#htm_table").datagrid("getPager");
-		p.pagination({
-		});
-	}
-	
-	
-	$(function(){
-	
-		$("#ss_isCache").combobox({
-			onSelect:function(rec){
-				tableQueryParams.isCache = rec.value;
-				$('#htm_table').datagrid('load',tableQueryParams);
+			idField: "id",
+			pageNumber: 1,
+			pageSize: 5,
+			pageList: [5,10,30,50],
+			toolbar: "#tb",
+			columns: [columnsFields],
+			onClickCell: function(rowIndex, field, value) {
+				IsCheckFlag = false;
+			},
+			onSelect: function(rowIndex, rowData) {
+				// 选择操作时刷新展示重新排序所选择的数量
+				$("#reorderCount").text($(this).datagrid("getSelections").length);
+				if ( !IsCheckFlag ) {
+					IsCheckFlag = true;
+					$(this).datagrid("unselectRow", rowIndex);
+				}
+			},
+			onUnselect: function(rowIndex, rowData) {
+				// 选择操作时刷新展示重新排序所选择的数量
+				$("#reorderCount").text($(this).datagrid("getSelections").length);
+				if ( !IsCheckFlag ) {
+					IsCheckFlag = true;
+					$(this).datagrid("selectRow", rowIndex);
+				}
 			}
 		});
-		
+	
 		$('#htm_add').window({
-			title : '添加频道精选推荐',
+			title : '添加公告banner',
 			modal : true,
 			width : 490,
 			height : 390,
@@ -156,148 +133,135 @@
 			iconCls : 'icon-edit',
 			resizable : false,
 			onClose : function(){
-				$("#i-path").val('');
-				$("#bulletin_img_edit").attr("src", "./base/images/bg_empty.png");
-				$("#s-type").combobox('setValue',0);
-				$("#i-link").val('');
-				$("#i-id").val('');	
-				$("#i-name").val('');	
-				$("#i-thumb").val('');
-				$("#bulletin_thumb_img_edit").attr("src", "./base/images/bg_empty.png");
+				commonTools.clearFormData($("#htm_add"));
 			}
 		});
 		
-		tableInit();
 		$("#main").show();
 	});
-	
-	/**
-	 * 显示载入提示
-	 */
-	function showPageLoading() {
-		var $loading = $("<div></div>");
-		$loading.text('载入中...').addClass('page_loading_tip');
-		$("body").append($loading);
-	}
 
-	/**
-	 * 移除载入提示
-	 */
-	function removePageLoading() {
-		$(".page_loading_tip").remove();
-	}
-	
 	/**
 	* 批量删除
 	*/
 	function del(){
-		$.messager.confirm('更新缓存','确定要将选中的内容删除?',function(r){
-			if(r){
-				update(delUrl);
-			}
-		});
+		var rows = $("#htm_table").datagrid("getSelections");
+		if(rows.length > 0){
+			$.messager.confirm("温馨提示",'确定要将选中的内容删除?',function(r){
+				if(r){
+					var ids = [];
+					for(var i=0;i<rows.length;i+=1){
+						ids.push(rows[i]['id']);	
+					}
+					$("#htm_table").datagrid("clearSelections"); //清除所有已选择的记录，避免重复提交id值	
+					$("#htm_table").datagrid("loading");
+					$.post("./admin_op/msgBulletin_batchDeleteMsgBulletin?idsStr=" + ids, function(result){
+						$('#htm_table').datagrid('loaded');
+						if(result['result'] == 0) {
+							$.messager.alert('提示',result['msg']);
+							$("#htm_table").datagrid("reload");
+						} else {
+							$.messager.alert('提示',result['msg']);
+						}
+					});	
+				}
+			});
+		}else{
+			$.messager.alert("温馨提示", "请先选择记录，再执行操作!");
+		}
 	}
 	
 	/**
-	* 批量更新有效性
-	*/
-	function batchUpdateValid(valid){
-		var url = batchUpdateValidUrl+"?valid="+valid+"&idsStr=";
-		update(url);
-	}
-	
-	/**
-	* 更新缓存
+	* TODO 目前是老版本使用的更新缓存，先保留，待几个版本后要废弃，目前点击此方法，还能刷新老版本数据
+	* @modify zhangbo	2015-12-18
 	*/
 	function updateCache(){
-		$.messager.confirm('更新缓存','确定要将选中的内容更新到缓存?',function(r){
-			if(r){
-				update(updateCacheUrl);
-			}
-		});
-	}
-	
-	function update(url){
-		var rows = $('#htm_table').datagrid('getSelections');	
-		var ids = [];
-		for(var i=0;i<rows.length;i+=1){		
-			ids.push(rows[i]['id']);	
-		}	
-		$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
-		$('#htm_table').datagrid('loading');
-		$.post(url+ids,function(result){
-			$('#htm_table').datagrid('loaded');
-			if(result['result'] == 0) {
-				$.messager.alert('提示',result['msg']);
-				$("#htm_table").datagrid("reload");
-			} else {
-				$.messager.alert('提示',result['msg']);
-			}
-			
-		});	
+		var rows = $("#htm_table").datagrid("getSelections");
+		if(rows.length > 0){
+			$.messager.confirm("温馨提示","确定要将选中的内容更新到缓存?",function(r){
+				if(r){
+					var ids = [];
+					for(var i=0;i<rows.length;i+=1){
+						ids.push(rows[i]['id']);	
+					}
+					$("#htm_table").datagrid("clearSelections"); //清除所有已选择的记录，避免重复提交id值	
+					$("#htm_table").datagrid("loading");
+					$.post("./admin_op/msgBulletin_updateMsgBulletinCache?idsStr=" + ids, function(result){
+						$('#htm_table').datagrid('loaded');
+						if(result['result'] == 0) {
+							$.messager.alert('提示',result['msg']);
+							$("#htm_table").datagrid("reload");
+						} else {
+							$.messager.alert('提示',result['msg']);
+						}
+					});	
+				}
+			});
+		}else{
+			$.messager.alert("温馨提示", "请先选择记录，再执行操作!");
+		}
 	}
 	
 	/**
-	 * 判断是否选中要删除的记录
+	 * 点击修改时，打开窗口，并设值
+	 * @modify zhangbo	2015-12-19
 	 */
-	function isSelected(rows) {
-		if(rows.length > 0){
-			return true;
-		}else{
-			$.messager.alert('操作失败','请先选择记录，再执行操作!','error');
-			return false;
-		}
-	}
-	
-	
-	function addInit(){
+	function updateInit(id){
+		
+		$("#htm_table").datagrid("selectRecord", id);
+		var row = $("#htm_table").datagrid("getSelected");
+		
+		$("#i-path").val(row.bulletinPath);	// 为path设值
+		$("#i-name").val(row.bulletinName);
+		$("#i-thumb").val(row.bulletinThumb);	// 为thumb设值
+		$("#bulletin_img_edit").attr('src', row.bulletinPath);	// 展示商品集合图片
+		$("#bulletin_thumb_img_edit").attr('src', row.bulletinThumb);	// 展示商品集合缩略图
+		$("#s-type").combobox('setValue', row.bulletinType);
+		$("#i-link").val(row.link);
+		$("#i-id").val(row.id);
+		
 		$('#htm_add').window('open');
+		
+		$("#htm_table").datagrid("clearSelections");
+		$("#htm_table").datagrid("clearChecked");
 	}
 	
-	function updateInit(id,path,type,link,name,thumb){
-		$("#i-path").val(path);
-		$("#i-name").val(name);
-		$("#i-thumb").val(thumb);
-		$("#bulletin_img_edit").attr('src',path);
-		$("#bulletin_thumb_img_edit").attr('src',thumb);
-		$("#s-type").combobox('setValue',type);
-		$("#i-link").val(link);
-		$("#i-id").val(id);
-		$('#htm_add').window('open');
-	}
-	
+	/**
+	 * 添加窗口提交方法
+	 * @author zhangbo	2015-12-18
+	 */
 	function addSubmit(){
-		var path = $("#i-path").val();
-		var type = $("#s-type").combobox('getValue');
-		var link = $("#i-link").val();
-		var id = $("#i-id").val();
-		var bulletinName = $("#i-name").val();
-		var bulletinThumb = $("#i-thumb").val();
-		var url="";
-		if(id){
-			url = updateUrl+id;
-		}else{
-			url = addUrl;
+		$('#add_form .opt_btn').hide();
+		$('#add_form .loading').show();
+		
+		if( $('#add_form').form('validate') ) {
+			$('#add_form').form('submit', {
+				url: "./admin_op/msgBulletin_saveMsgBulletin",
+				success: function(data){
+					var result = $.parseJSON(data);
+					if(result['result'] == 0) {
+						$('#add_form .opt_btn').show();
+						$('#add_form .loading').hide();
+						$('#htm_add').window('close');  // 关闭添加窗口
+						$("#htm_table").datagrid("reload");
+					} else {
+						$.messager.alert("温馨提示",result['msg']);  // 提示添加信息失败
+					}
+				}
+			});
+		} else {
+			$.messager.alert("温馨提示","请补全需要填写的字段");
 		}
-		$('#htm_add .opt_btn').hide();
-		$('#htm_add .loading').show();
-		$.post(url,{
-			'path':path,
-			'type':type,
-			'link':link,
-			'bulletinName':bulletinName,
-			'bulletinThumb':bulletinThumb
-		},function(result){
-			$('#htm_add .opt_btn').show();
-			$('#htm_add .loading').hide();
-			if(result['result'] == 0) {
-				tableQueryParams.maxId=0;
-				$("#htm_table").datagrid("reload");
-				$('#htm_add').window('close');
-			} else {
-				$.messager.alert('提示',result['msg']);
-			}
-		},"json");
+	};
+	
+	/**
+	 * 查询结果集
+	 * @author zhangbo	2015-12-18
+	 */
+	function searchBulletin() {
+		// 为查询条件赋值
+		queryParams.isCache = $("#ss_isCache").combobox("getValue");
+		queryParams.category = $("#ss_Category").combobox("getValue");
+		$('#htm_table').datagrid('load',queryParams);
 	};
 	
 	/**
@@ -321,35 +285,82 @@
 		});
 	};
 	
+	/**
+	 * 重新排序
+	 * @author zhangbo	2015-12-19
+	 */
+	function reorder() {
+		var rows = $('#htm_table').datagrid('getSelections');	
+		var ids = [];
+		for(var i=0;i<rows.length;i+=1){
+			ids.push(rows[i].id);
+		}
+		$('#htm_table').datagrid('clearSelections'); //清除所有已选择的记录，避免重复提交id值	
+		$('#htm_table').datagrid('loading');
+		var param = {
+			idsStr: ids.toString()
+		};
+		$.post("./admin_op/msgBulletin_reorderBulletin", param, function(result){
+			$('#htm_table').datagrid('loaded');
+			$.messager.alert("温馨提示",result.msg);
+		});
+	}
+	
+	/**
+	 * 刷新缓存
+	 * 
+	 * @param refreshFlag	刷新缓存的标记位，1：刷新活动专题，2：刷新达人专题，3：刷新内容专题
+	 * @author zhangbo	2015-12-19
+	 */
+	function refreshCache(refreshFlag) {
+		$('#htm_table').datagrid('loading');
+		var param = {
+			refreshFlag: refreshFlag
+		};
+		$.post("./admin_op/msgBulletin_refreshBulletinCache", param, function(result){
+			$('#htm_table').datagrid('loaded');
+			$.messager.alert("温馨提示",result.msg);
+		});
+	}
 	
 </script>
 </head>
 <body>
 	<div id="main" class="none">
 		<div id="tb">
-			<a href="javascript:void(0);" onclick="javascript:addInit();" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
-			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" title="删除" plain="true" iconCls="icon-cut" id="delBtn">删除</a>
-			<!-- 暂时注释掉有效性
-			<a href="javascript:void(0);" onclick="javascript:batchUpdateValid(1);" class="easyui-linkbutton" title="批量生效" plain="true" iconCls="icon-ok" id="updateTrueBtn">批量生效</a>
-			<a href="javascript:void(0);" onclick="javascript:batchUpdateValid(0);" class="easyui-linkbutton" title="批量失效" plain="true" iconCls="icon-tip" id="updateFalseBtn">批量失效</a>
-			 -->
+			<a href="javascript:void(0);" onclick="javascript:$('#htm_add').window('open');" class="easyui-linkbutton" title="添加" plain="true" iconCls="icon-add" id="addBtn">添加</a>
+			<a href="javascript:void(0);" onclick="javascript:del();" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
+			<a href="javascript:void(0);" onclick="javascript:reorder();" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序<span id="reorderCount" type="text" style="font-weight:bold;">0</span></a>
 			<a href="javascript:void(0);" onclick="javascript:updateCache();" class="easyui-linkbutton" title="更新缓存" plain="true" iconCls="icon-converter" id="updateCacheBtn">更新缓存</a>
 			<select id="ss_isCache" class="easyui-combobox"  style="width:100px;">
 		        <option value="" selected="selected">全部</option>
 		        <option value="0">正在展示</option>
 	   		</select>
+	   		<select id="ss_Category" class="easyui-combobox"  style="width:100px;">
+		   		<option value="" selected="selected">全部</option>
+		   		<option value="1">有奖活动</option>
+		   		<option value="2">无奖活动</option>
+		   		<option value="3">达人专题</option>
+		   		<option value="4">内容专题</option>
+	   		</select>
+	   		<a href="javascript:void(0);" onclick="javascript:searchBulletin();" class="easyui-linkbutton" plain="true" iconCls="icon-search">查询</a>
 	   		<a href="javascript:void(0);" onclick="javascript:addToAwardActivity();" class="easyui-linkbutton" title="勾选当前公告，添加到活动下有奖活动分组" plain="true" iconCls="icon-add">添加到有奖活动</a>
+	   		<a href="javascript:void(0);" onclick="javascript:refreshCache(1);" class="easyui-linkbutton" title="勾选当前公告，点击刷新活动专题缓存" plain="true" iconCls="icon-converter">刷新活动缓存</a>
+	   		<a href="javascript:void(0);" onclick="javascript:refreshCache(2);" class="easyui-linkbutton" title="勾选当前公告，点击刷新达人专题缓存" plain="true" iconCls="icon-converter">刷新达人缓存</a>
+	   		<a href="javascript:void(0);" onclick="javascript:refreshCache(3);" class="easyui-linkbutton" title="勾选当前公告，点击刷新内容专题缓存" plain="true" iconCls="icon-converter">刷新内容缓存</a>
 		</div>
+		
 		<table id="htm_table"></table>
+		
 		<!-- 添加记录 -->
 		<div id="htm_add">
-			<form id="add_form"  method="post">
+			<form id="add_form" method="post">
 				<table class="htm_edit_table" width="480">
 					<tbody>
 						<tr>
 							<td class="leftTd">链接图片路径：</td>
 							<td>
-								<input id="i-path" class="none" readonly="readonly" >
+								<input id="i-path" name="path" class="none" readonly="readonly" >
 								<a id="bulletin_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 								<img id="bulletin_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
 								<div id="bulletin_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
@@ -360,7 +371,7 @@
 						<tr>
 							<td class="leftTd">链接缩略图路径：</td>
 							<td>
-								<input id="i-thumb" class="none" readonly="readonly" >
+								<input id="i-thumb" name="thumb" class="none" readonly="readonly" >
 								<a id="bulletin_thumb_upload_btn" style="position: absolute; margin:30px 0 0 200px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
 								<img id="bulletin_thumb_img_edit"  alt="" src="${webRootPath }/base/images/bg_empty.png" width="174px" height="90px">
 								<div id="bulletin_thumb_img_upload_status" class="update_status none" style="width: 205px; text-align: center;">
@@ -369,9 +380,20 @@
 							</td>
 						</tr>
 						<tr>
+						<td class="leftTd">分类：</td>
+							<td>
+								<select id="s_category" name="category" class="easyui-combobox" style="width:223px;">
+									<option value="1" selected="selected">有奖活动</option>
+									<option value="2">无奖活动</option>
+									<option value="3">达人专题</option>
+									<option value="4">内容专题</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<td class="leftTd">链接类型：</td>
 							<td>
-								<select id="s-type" class="easyui-combobox" style="width:223px;" >
+								<select id="s-type" name="type" class="easyui-combobox" style="width:223px;" >
 									<option value="0" selected="selected">无需跳转</option>
 		        					<option value="1">网页连接</option>
 		        					<option value="2">频道id</option>
@@ -382,14 +404,14 @@
 						</tr>
 						<tr>
 							<td class="leftTd">链接：</td>
-							<td><input id="i-link" style="width:220px;" ></td>
+							<td><input id="i-link" name="link" style="width:220px;" ></td>
 						</tr>
 						<tr>
 							<td class="leftTd">名字：</td>
-							<td><input id="i-name" style="width:220px;" ></td>
+							<td><input id="i-name" name="bulletinName" style="width:220px;" ></td>
 						</tr>
 						<tr>
-							<td class="none"><input id="i-id"></td>
+							<td class="none"><input id="i-id" name="id"></td>
 						</tr>
 						<tr>
 							<td colspan="2" style="text-align: center;padding-top: 10px;">
