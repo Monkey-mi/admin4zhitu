@@ -227,7 +227,7 @@ public interface ZTWorldService extends BaseService {
 	 * 
 	 * @author zhangbo	2015年12月2日
 	 */
-	void buildWorldMasonryByWorldDesc(Integer maxId, Integer page, Integer rows, String worldDesc, Map<String, Object> jsonMap) throws Exception;
+	void buildWorldMasonryByWorldDesc(Integer maxId, Integer page, Integer rows, String worldDesc, Integer valid,Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 构建瀑布流织图信息，通过织图地理位置信息查询
@@ -242,7 +242,7 @@ public interface ZTWorldService extends BaseService {
 	 * 
 	 * @author zhangbo	2015年12月2日
 	 */
-	void buildWorldMasonryByWorldLocation(Integer maxId, Integer page, Integer rows, String worldLocation, Map<String, Object> jsonMap) throws Exception;
+	void buildWorldMasonryByWorldLocation(Integer maxId, Integer page, Integer rows, String worldLocation, Integer valid,Map<String, Object> jsonMap) throws Exception;
 	
 	
 	
@@ -258,7 +258,7 @@ public interface ZTWorldService extends BaseService {
 		*	2015年12月7日
 		*	mishengliang
 	 */
-	void buildWorldMasonryByWorldId(Integer maxId, Integer page, Integer rows, Integer worldId, Map<String, Object> jsonMap) throws Exception;
+	void buildWorldMasonryByWorldId(Integer maxId, Integer page, Integer rows, Integer worldId, Integer valid,Map<String, Object> jsonMap) throws Exception;
 
 	/**
 	 * 构建瀑布流织图信息，通过用户名或id查询
@@ -273,5 +273,5 @@ public interface ZTWorldService extends BaseService {
 	 * 
 	 * @author zhangbo	2015年12月17日
 	 */
-	void buildWorldMasonryByAuthorNameOrId(Integer maxId, Integer page, Integer rows, String authorNameOrId, Map<String, Object> jsonMap) throws Exception;
+	void buildWorldMasonryByAuthorNameOrId(Integer maxId, Integer page, Integer rows, String authorNameOrId, Integer valid,Map<String, Object> jsonMap) throws Exception;
 }

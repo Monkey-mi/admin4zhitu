@@ -22,7 +22,7 @@ public interface ItemMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("master")
-	public void insert(Item item);
+	public void saveItem(Item item);
 	
 	/**
 	 * 根据id更新商品，可以更新商品对象的所有属性
@@ -31,7 +31,7 @@ public interface ItemMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("master")
-	public void update(Item item);
+	public void updateItem(Item item);
 	
 	/**
 	 * 根据id删除商品

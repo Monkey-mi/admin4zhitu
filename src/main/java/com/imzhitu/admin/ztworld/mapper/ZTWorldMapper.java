@@ -332,6 +332,7 @@ public interface ZTWorldMapper {
 	@DataSource("slave")
 	long getWorldInvalidTotal(@Param("maxId")Integer maxId, @Param("startTime")Date startTime, @Param("endTime")Date endTime, @Param("phoneCode")Integer phoneCode);
 	
+	
 	/**
 	 * 根据织图id集合查询织图
 	 * 
@@ -343,7 +344,33 @@ public interface ZTWorldMapper {
 	 */
 	@DataSource("slave")
 	List<ZTWorld> getWorldListByIds(@Param("ids")Integer[] ids);
-
+	
+	
+	/**
+	 * 根据织图id集合查询织图
+	 * 
+	 * @param ids	织图id集合
+	 * 
+	 * @return List<ZTWorld>	织图对象集合
+	 * 
+	 * @author zhangbo	2015年12月3日
+	 */
+	@DataSource("slave")
+	List<ZTWorld> getWorldListByIdsForValid(@Param("ids")Integer[] ids);
+	
+	/**
+	 * 根据织图id集合查询织图
+	 * 
+	 * @param ids	织图id集合
+	 * 
+	 * @return List<ZTWorld>	织图对象集合
+	 * 
+	 * @author zhangbo	2015年12月3日
+	 */
+	@DataSource("slave")
+	List<ZTWorld> getWorldListByIdsForInvalid(@Param("ids")Integer[] ids);
+	
+	
 	/**
 	 * 根据时间段与用户等级查询有效织图集合
 	 * 
@@ -428,6 +455,12 @@ public interface ZTWorldMapper {
 	@DataSource("slave")
 	List<ZTWorld> getWorldListByAuthorId(@Param("maxId")Integer maxId, @Param("authorIds")Integer[] authorIds, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
 
+	@DataSource("slave")
+	List<ZTWorld> getWorldListByAuthorIdForValid(@Param("maxId")Integer maxId, @Param("authorIds")Integer[] authorIds, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
+	
+	@DataSource("slave")
+	List<ZTWorld> getWorldListByAuthorIdForInValid(@Param("maxId")Integer maxId, @Param("authorIds")Integer[] authorIds, @Param("firstRow")Integer firstRow, @Param("limit")Integer rows);
+	
 	/**
 	 * 根据用户id集合查询织图总数
 	 * 
@@ -439,5 +472,9 @@ public interface ZTWorldMapper {
 	 * @author zhangbo	2015年12月17日
 	 */
 	long getWorldTotalByAuthorId(@Param("maxId")Integer maxId, @Param("authorIds")Integer[] authorIds);
+	
+	long getWorldTotalByAuthorIdForValid(@Param("maxId")Integer maxId, @Param("authorIds")Integer[] authorIds);
+	
+	long getWorldTotalByAuthorIdForInValid(@Param("maxId")Integer maxId, @Param("authorIds")Integer[] authorIds);
 
 }

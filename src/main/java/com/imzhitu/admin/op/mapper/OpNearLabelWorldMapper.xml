@@ -51,8 +51,8 @@
 	
 	<!-- insert -->
 	<insert id="insertNearLabelWorld">
-		insert into hts.operations_near_label_world(world_id,world_author_id,near_label_id,serial)
-		values (#{worldId},#{authorId},#{nearLabelId},#{serial})
+		insert into hts.operations_near_label_world(id,world_id,world_author_id,near_label_id,serial)
+		values (#{id},#{worldId},#{authorId},#{nearLabelId},#{serial})
 	</insert>
 	
 	<!-- batchDelete -->

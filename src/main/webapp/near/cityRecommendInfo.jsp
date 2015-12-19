@@ -248,7 +248,7 @@
 		$('#html_viewDataInCache .opt_btn').hide();
 		$('#html_viewDataInCache .loading').show();
 		$('#html_viewDataInCache').window('open');
-		$.post("./admin_op/near_updateNearRecommendCitySerial",{},function(result){
+		$.post("./admin_op/near_queryNearRecommendCityCache",{},function(result){
 			if(result['result']== 0){
 				var date = result['msg'];
 				
