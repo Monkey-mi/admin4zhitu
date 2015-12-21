@@ -7,6 +7,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hts.web.base.StrutsKey;
+import com.hts.web.base.constant.OptResult;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.BaseCRUDAction;
@@ -74,6 +75,12 @@ public class ItemSetAction extends BaseCRUDAction {
 	 * @author zhangbo	2015年12月11日
 	 */
 	private String deadline;
+	
+	/**
+	 * 模糊查询时使用的接收参数，有可能为根据id查询，有可能根据名称
+	 * @author zhangbo	2015年12月21日
+	 */
+	private String idOrName;
 	
 	@Autowired
 	private ItemSetService itemSetService;
@@ -218,6 +225,22 @@ public class ItemSetAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 根据商品集合id或商品集合标题查询商品集合展示列表
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月21日
+	 */
+	public String buildItemSetListByIdOrName() {
+		try {
+			itemSetService.buildItemSetListByIdOrName(idOrName, page, rows, jsonMap);
+			JSONUtil.optSuccess(OptResult.QUERY_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -252,6 +275,10 @@ public class ItemSetAction extends BaseCRUDAction {
 
 	public void setDeadline(String deadline) {
 		this.deadline = deadline;
+	}
+
+	public void setIdOrName(String idOrName) {
+		this.idOrName = idOrName;
 	}
 	
 }

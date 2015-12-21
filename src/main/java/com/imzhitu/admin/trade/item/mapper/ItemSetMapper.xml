@@ -98,4 +98,16 @@
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
+	<!-- 分页查询商品集合列表，根据标题查询 -->
+	<select id="queryItemSetListByTitle" resultMap="ItemSetMap">
+		select 
+			*
+		from 
+			hts.item_set
+		where
+			title like CONCAT('%',#{title},'%') 
+		order by serial desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
 </mapper>

@@ -98,6 +98,17 @@ public interface ItemSetService {
 	 * @param ids	商家集合ids
 	 * @author zhangbo	2015年12月12日
 	 */
-	void reorder(String ids);
+	void reorder(String ids) throws Exception;
+
+	/**
+	 * 根据商品集合id或商品集合标题查询商品集合展示列表
+	 * 
+	 * @param idOrName
+	 * @param page
+	 * @param rows
+	 * @param jsonMap
+	 * @author zhangbo	2015年12月21日
+	 */
+	void buildItemSetListByIdOrName(String idOrName, Integer page, Integer rows, Map<String, Object> jsonMap) throws Exception;
 
 }

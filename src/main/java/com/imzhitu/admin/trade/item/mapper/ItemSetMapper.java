@@ -112,5 +112,15 @@ public interface ItemSetMapper {
 	 * @author zhangbo	2015年12月12日
 	 */
 	List<ItemSet> queryItemSetListNotInIds(@Param("ids")Integer[] ids, @Param("firstRow")Integer firstRow, @Param("limit")Integer limit);
+
+	/**
+	 * 分页查询商品集合列表，根据标题查询
+	 * 
+	 * @param fristRow
+	 * @param limit
+	 * @return
+	 * @author zhangbo	2015年12月21日
+	 */
+	List<ItemSet> queryItemSetListByTitle(@Param("title")String idOrName, @Param("firstRow")Integer fristRow, @Param("limit")Integer limit);
 	
 }

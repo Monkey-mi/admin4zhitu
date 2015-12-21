@@ -15,6 +15,7 @@ import com.hts.web.common.service.impl.KeyGenServiceImpl;
 import com.hts.web.common.util.StringUtil;
 import com.imzhitu.admin.common.pojo.OpMsgBulletin;
 import com.imzhitu.admin.common.util.AdminLoginUtil;
+import com.imzhitu.admin.common.util.AdminUtil;
 import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
 import com.imzhitu.admin.privileges.service.AdminService;
 import com.imzhitu.admin.trade.item.dao.ItemCache;
@@ -398,7 +399,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 
 	@Override
-	public void reorder(String ids) {
+	public void reorder(String ids) throws Exception {
 		// 重新排序，勾选的倒序设置serial，这样查询后，按照serial查询就与勾选顺序相同
 		Integer[] idArray = StringUtil.convertStringToIds(ids);
 		for (int i = idArray.length -1; i >= 0; i--) {
@@ -412,5 +413,53 @@ public class ItemSetServiceImpl implements ItemSetService {
 			itemSetMapper.updateSerial(seckillTempIds[i], webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
 		}
 	}
+
+	@Override
+	public void buildItemSetListByIdOrName(String idOrName, Integer page, Integer rows, Map<String, Object> jsonMap) throws Exception {
+		// 定义商品集合列表
+		List<ItemSet> list = new ArrayList<ItemSet>();
+		// 定义商品集合总数
+		Integer total = 0;
+		
+		if ( AdminUtil.isNumeric(idOrName) ) {
+			ItemSet itemSet = itemSetMapper.getItemSetById(Integer.valueOf(idOrName));
+			if ( itemSet != null ) {
+				list.add(itemSet);
+				total = 1;
+			}
+		} else {
+			Integer fristRow = (page-1) * rows;
+			Integer limit = rows;
+			list = itemSetMapper.queryItemSetListByTitle(idOrName, fristRow, limit);
+			total = itemSetMapper.queryItemSetTotal();
+		}
+		
+		jsonMap.put(OptResult.JSON_KEY_ROWS, itemSetToItemSetDTO(list));
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
+	}
 	
+	private List<ItemSetDTO> itemSetToItemSetDTO(List<ItemSet> list) throws Exception {
+		// 定义返回值
+		List<ItemSetDTO> rtnList = new ArrayList<ItemSetDTO>();
+		if ( list != null && list.size() != 0) {
+			for (ItemSet itemSet : list) {
+				ItemSetDTO dto = new ItemSetDTO();
+				dto.setId(itemSet.getId());
+				dto.setTitle(itemSet.getTitle());
+				dto.setDescription(itemSet.getDescription());
+				dto.setPath(itemSet.getPath());
+				dto.setThumb(itemSet.getThumb());
+				dto.setType(itemSet.getType());
+				dto.setLink(itemSet.getLink());
+				dto.setOperator(adminService.getAdminUserNameById(itemSet.getOperator()));
+				dto.setCreateTime(itemSet.getCreateTime());
+				dto.setModifyTime(itemSet.getModifyTime());
+				dto.setDeadline(itemSetCache.getSeckillTemp().get(itemSet.getId()));
+				rtnList.add(dto);
+			}
+		}
+		
+		return rtnList;
+	}
 }
+
