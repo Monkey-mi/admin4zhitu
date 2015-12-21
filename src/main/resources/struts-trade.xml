@@ -29,5 +29,11 @@
 			</result>
 		</action>
 		
+		<action name="itemShow_*" class="com.imzhitu.admin.trade.item.ItemShowAction" method="{1}">
+			<result name="json" type="json">
+				<param name="root">jsonMap</param>
+			</result>
+		</action>
+		
 	</package>
 </struts>

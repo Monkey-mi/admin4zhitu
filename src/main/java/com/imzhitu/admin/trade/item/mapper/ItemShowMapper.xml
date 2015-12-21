@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.trade.item.mapper.ItemShowMapper">
+
+	<resultMap type="com.imzhitu.admin.trade.item.pojo.ItemShow" id="itemShowMapper">
+		<result column="id" property="id" javaType="java.lang.Integer"/>
+		<result column="item_set_id" property="itemSetId" javaType="java.lang.Integer"/>
+		<result column="world_id" property="worldId" javaType="java.lang.Integer"/>
+		<result column="serial" property="serial" javaType="java.lang.Integer"/>
+	</resultMap>
+
+	<select id="queryItemShow" 	resultMap="itemShowMapper" >
+		select 
+			* 
+		from 
+			hts.item_show
+		<where>
+			<if test="itemSetId != null and itemSetId != 0">
+					item_set_id = #{itemSetId}
+			</if>
+			<if test="worldId != null and worldId != 0">
+					world_id = #{worldId}
+			</if>
+		</where>	
+		order by serial desc
+	</select>
+	
+	<insert id="insertItemShow">
+		insert into 
+			hts.item_show(world_id,item_set_id,serial)
+		values
+			(#{worldId},#{itemSetId},#{serial})
+	</insert>
+	
+	<delete id="deleteItemShowById">
+		delete from 
+			hts.item_show
+		where 
+			id = #{id}
+	</delete>
+	
+	<update id="updateSerial">
+		update 
+			hts.item_show
+		set
+			serial = #{serial}
+		where
+			world_id = #{worldId}
+		and
+			item_set_id = #{itemSetId}
+					
+	</update>
+	
+</mapper>

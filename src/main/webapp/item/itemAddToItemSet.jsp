@@ -15,7 +15,6 @@
 	
 	myQueryParams = {
 		"item.itemSetId":itemSetId
-		
 	};
 	addToItemSetURL = "./admin_trade/item_saveSetItem";
 	
