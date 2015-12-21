@@ -420,20 +420,27 @@ public class ItemSetServiceImpl implements ItemSetService {
 		List<ItemSet> list = new ArrayList<ItemSet>();
 		// 定义商品集合总数
 		Integer total = 0;
-		
-		if ( AdminUtil.isNumeric(idOrName) ) {
-			ItemSet itemSet = itemSetMapper.getItemSetById(Integer.valueOf(idOrName));
-			if ( itemSet != null ) {
-				list.add(itemSet);
-				total = 1;
+		if (idOrName != null) {
+			if ( AdminUtil.isNumeric(idOrName) ) {
+				ItemSet itemSet = itemSetMapper.getItemSetById(Integer.valueOf(idOrName));
+				if ( itemSet != null ) {
+					list.add(itemSet);
+					total = 1;
+				}
+			} else {
+				Integer fristRow = (page-1) * rows;
+				Integer limit = rows;
+				list = itemSetMapper.queryItemSetListByTitle(idOrName, fristRow, limit);
+				total = itemSetMapper.queryItemSetTotal();
 			}
 		} else {
 			Integer fristRow = (page-1) * rows;
 			Integer limit = rows;
+			idOrName = "";
 			list = itemSetMapper.queryItemSetListByTitle(idOrName, fristRow, limit);
 			total = itemSetMapper.queryItemSetTotal();
 		}
-		
+
 		jsonMap.put(OptResult.JSON_KEY_ROWS, itemSetToItemSetDTO(list));
 		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 	}

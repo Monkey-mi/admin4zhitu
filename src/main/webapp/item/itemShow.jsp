@@ -16,52 +16,17 @@
 
 	// 行是否被勾选
 	var IsCheckFlag = true;
+	var myQueryParams = {};
+	var addItemShowURL =  "./admin_trade/itemShow_addItemShowList";
+	var buildItemSetListByIdOrNameURL = "./admin_trade/itemSet_buildItemSetListByIdOrName";
+	
 	
 	var columnsFields = [
-			{field: "ck", checkbox:true},
-			{field: "id", title: "ID", align: "center", width: 30},
-			{field: "title", title: "标题", align: "center", width: 80},
-			{field: "description", title: "描述", align: "center", width: 100},
-			{field: "path", title: "商品集合图片", align: "center", width: 80,
-				formatter: function(value,row,index) {
-	  				return "<img width='200px' height='90px' class='htm_column_img' src='" + value + "'/>";
-	  			}
-			},
-			{field: "opt", title: "操作", align: "center", width: 70,
-				formatter : function(value, row, index ) {
-					var rtn = "<span>";
-					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='javascript:updateItemSet("+ row.id + ")'>【修改】</a>";
-					rtn += "<a class='updateInfo' href='javascript:void(0);' onclick='openAddItemToItemSet("+ row.id + ")'>【添加商品】</a>";
-					rtn += "</span>";
-					return rtn;
-				}
-			},
-			{field: "isSeckill", title: "是否秒杀", align: "center",
-				formatter : function(value, row, index ) {
-	  				// 若已经为秒杀商品集合，则点击会取消秒杀商品
-	  				if ( value == 1 ) {
-	  					return "<img title='已为秒杀,点击取消秒杀' class='htm_column_img pointer' onclick='cancelSeckill("+ row.id +")' src='./common/images/ok.png'/>";
-	  				} else {
-	  					return "<img title='点击成为秒杀商品集合' class='htm_column_img pointer' onclick='openSeckillCacheWin("+ row.id +")' src='./common/images/edit_add.png'/>";
-	  				}
-				}
-			},
-			{field: "deadline", title: "截止时间", align: "center",
-				formatter:function(value,row,index){
-					// 若不为秒杀商品集合，则返回空
-					if ( row.isSeckill == 0 ) {
-						return "";
-					} else {
-						return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-					}
-				}
-			},
-			{field: "operator", title: "最后修改者", align: "center"},
-			{field: "modifyTime", title: "最后修改时间", align: "center",
-				formatter:function(value,row,index){
-					return baseTools.parseDate(value).format("yyyy/MM/dd hh:mm:ss");
-				}
-			}
+	        {field: "ck", checkbox:true},  
+	        {field:"id",title:"ID",align:"center",width:50},
+			{field: "worldId", title: "织图ID", align: "center", width: 80},
+			{field: "itemSetId", title: "集合ID", align: "center", width: 100},
+			{field: "serial", title: "serial", align: "center", width: 80}
 		];
 	
 	$(function(){
@@ -69,9 +34,10 @@
 		$("#htm_table").datagrid({
 			title: "商品集合公告列表",
 			width: $(document.body).width(),
-			url: "./admin_trade/itemSet_buildItemSetList",
+			url: "./admin_trade/itemShow_bulidItemShowList",
 			toolbar: "#tb",
 			idField: "id",
+			queryParams:myQueryParams,
 			rownumbers: true,
 			columns: [columnsFields],
 			fitColumns: true, 
@@ -83,58 +49,20 @@
 			pageSize: 5,
 			pageList: [5,10,20],
 			onClickCell: function(rowIndex, field, value) {
-				IsCheckFlag = false;
 			},
 			onSelect: function(rowIndex, rowData) {
-				// 选择操作时刷新展示重新排序所选择的数量
-				$("#reSerialCount").text($(this).datagrid("getSelections").length);
-				if ( !IsCheckFlag ) {
-					IsCheckFlag = true;
-					$(this).datagrid("unselectRow", rowIndex);
-				}
 			},
 			onUnselect: function(rowIndex, rowData) {
-				// 选择操作时刷新展示重新排序所选择的数量
-				$("#reSerialCount").text($(this).datagrid("getSelections").length);
-				if ( !IsCheckFlag ) {
-					IsCheckFlag = true;
-					$(this).datagrid("selectRow", rowIndex);
-				}
 			},
 			onLoadSuccess: function(data) {
-				// 数据加载成功，loading动画隐藏
-				$("#page-loading").hide();
 			}
-		});
-		
-		$("#ss_isCache").combobox({
-		    data: [{
-			        "id": "",
-			        "text": "全部",
-			        "selected": true
-		    	},{
-			        "id": 1,
-			        "text": "限时秒杀正在展示"
-			    },
-			    {
-			        "id":2,
-			        "text": "推荐商品正在展示"
-			    }],
-		    valueField: "id",
-		    textField: "text",
-		    onSelect: function(rec){
-		    	var param = {
-	    			cacheFlag: rec.id
-		    	};
-		    	$("#htm_table").datagrid("load",param);
-	        }
 		});
 		
 		$("#add_itemSet_window").window({
 			title : '添加商品专题',
 			modal : true,
-			width : 650,
-			height : 530,
+			width : 400,
+			height : 150,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -144,28 +72,84 @@
 			resizable : false
 		});
 		
-		$("#refresh_seckill_window").window({
-			title : '刷新秒杀商品集合',
-			modal : true,
-			width : 650,
-			height : 300,
-			shadow : false,
-			closed : true,
-			minimizable : false,
-			maximizable : false,
-			collapsible : false,
-			iconCls : 'icon-converter',
-			resizable : false
+		$('#item_set_searcher').combogrid({
+		    panelWidth : 330,
+		    panelHeight : 330,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [10,20],
+			toolbar:"#search-itemSet-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'title',
+		    url : './admin_trade/itemSet_buildItemSetListByIdOrName',
+		    pagination : true,
+		    columns:[[
+		  			{field: "id", title: "ID", align: "center", width: 30},
+					{field: "title", title: "标题", align: "center", width: 80},
+					{field: "description", title: "描述", align: "center", width: 100},
+					{field: "path", title: "商品集合图片", align: "center", width: 80,
+						formatter: function(value,row,index) {
+			  				return "<img width='80px' height='35px' class='htm_column_img' src='" + value + "'/>";
+			  			}
+					},
+		    ]],
+		    onSelect : function(row){
+		    	var itemSetId = $('#item_set_searcher').combogrid("getValue");
+		    	myQueryParams = {
+		    			'itemSetId':itemSetId
+		    	};
+		    	$("#htm_table").datagrid("reload",myQueryParams);
+		    }
+		});
+		
+		$('#item_set').combogrid({
+		    panelWidth : 330,
+		    panelHeight : 330,
+		    loadMsg : '加载中，请稍后...',
+			pageList : [10,20],
+			toolbar:"#itemSet-tb",
+		    multiple : false,
+		    required : false,
+		   	idField : 'id',
+		    textField : 'title',
+		    url : './admin_trade/itemSet_buildItemSetListByIdOrName',
+		    pagination : true,
+		    columns:[[
+		  			{field: "id", title: "ID", align: "center", width: 30},
+					{field: "title", title: "标题", align: "center", width: 80},
+					{field: "description", title: "描述", align: "center", width: 100},
+					{field: "path", title: "商品集合图片", align: "center", width: 80,
+						formatter: function(value,row,index) {
+			  				return "<img width='80px' height='35px' class='htm_column_img' src='" + value + "'/>";
+			  			}
+					},
+		    ]]
 		});
 		
 		// 展示界面
 		$("#main").show();
 		
-		$.formValidator.initConfig({
-			formid : $('#add_itemSet_form').attr("id")	
-		});
+ 		//排序窗口初始化
+		$('#htm_superb_set').window({
+			title : '重新排序',
+			modal : true,
+			width : 600,
+			height : 145,
+			shadow : false,
+			closed : true,
+			minimizable : false,
+			maximizable : false,
+			collapsible : false,
+			iconCls : 'icon-tip',
+			resizable : false
+		}).show(); 
 		
-		$("#itemSet_path")
+/* 		$.formValidator.initConfig({
+			formid : $('#add_itemSet_form').attr("id")	
+		}); */
+		
+/* 		$("#itemSet_path")
 		.formValidator({empty:false, onshow:"请选图片（必填）",onfocus:"请选图片",oncorrect:"正确！"})
 		.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
 		
@@ -177,76 +161,34 @@
 		.formValidator({empty:false, onshow:"请输入标题（必填）",onfocus:"请输入标题",oncorrect:"正确！"});
 		
 		$("#itemSet_desc")
-		.formValidator({empty:true, onshow:"请输入描述（可选）",onfocus:"请输入描述",oncorrect:"正确！"});
+		.formValidator({empty:true, onshow:"请输入描述（可选）",onfocus:"请输入描述",oncorrect:"正确！"}); */
 	});
 	
-	/**
-	 * 更新商品集合
-	 * @author zhangbo	2015-12-08
-	 */
-	function updateItemSet(itemSetId) {
-		$("#htm_table").datagrid("selectRecord", itemSetId);
-		var row = $("#htm_table").datagrid("getSelected");
-		
-		$("#itemSet_id").val(row.id);
-		$("#itemSet_title").val(row.title);
-		$("#itemSet_desc").val(row.description);
-		$("#itemSet_path").val(row.path);	// 为path设值
-		$("#itemSet_path_edit").attr("src", row.path);	// 展示商品集合图片
-		$("#itemSet_thumb").val(row.thumb);	// 为thumb设值
-		$("#itemSet_thumb_edit").attr("src", row.thumb);	// 展示商品集合缩略图
-		$("#itemSet_type").combobox("select", row.type);
-		$("#itemSet_link").val(row.link);
-		
-		$("#add_itemSet_window").window("open");
-		$("#htm_table").datagrid("clearSelections");
-		$("#htm_table").datagrid("clearChecked");
-	};
 	
-	/**
-	 * 添加商品到商品集合
-	 * @author zhangbo	2015-12-10
-	 */
-	function openAddItemToItemSet(itemSetId) {
-		var url = "./page_item_itemAddToItemSet";
-		url += "?itemSetId=" + itemSetId;
-		$.fancybox({
-			href: url,
-			width: "98%",
-			height: "98%",
-			autoScale: true,
-			type: "iframe",
-			transitionIn: "none",	// 打开无动画
-			transitionOut: "elastic"	// 关闭动画：伸缩
-		});
-	}
-	
-	/**
-	 * 提交商品集合
-	 * @author zhangbo	2015-12-08
-	 */
+/**
+ * 提交商品秀信息
+ * mishengliang
+ */
 	function formSubmit() {
-		if( $('#add_itemSet_form').form('validate') ) {
-			$('#add_itemSet_form').form('submit', {
-				url: "./admin_trade/itemSet_saveItemSet",
-				success: function(data){
-					var result = $.parseJSON(data);
-					if(result['result'] == 0) {
-						$('#add_itemSet_window').window('close');  // 关闭添加窗口
-						$("#htm_table").datagrid("reload");
-					} else {
-						$.messager.alert("温馨提示",result['msg']);  // 提示添加信息失败
-					}
-				}
-			});
-		} else {
-			$.messager.alert("温馨提示","请补全需要填写的字段");
-		}
+		var worldId = $("#world_id").val();
+		var itemSetId = $("#item_set").combogrid("getValue");
+		$.post(addItemShowURL,{
+			'worldId':worldId,
+			'itemSetId':itemSetId
+		},function(data){
+			if(data.result == 0){
+				$("#add_itemSet_window").window("close");
+				$.messager.alert("温馨提示","添加记录成功。");
+				$("#htm_table").datagrid("reload");
+			}else{
+				$.messager.alert("错误提示","！");
+			}
+		});
 	};
 	
 	/**
 	 * 批量删除商品集合banner
-	 * @author zhangbo 2015-12-08
+	 * @author mishengliang 2015-12-21
 	 */
 	function batchDelete(){
 		var rows = $("#htm_table").datagrid("getSelections");
@@ -258,9 +200,9 @@
 						ids[i] = rows[i].id;
 					}
 					var params = {
-							ids: ids.toString()
+							'ids': ids.toString()
 						};
-					$.post("./admin_trade/itemSet_batchDelete", params, function(result){
+					$.post("./admin_trade/itemShow_batchDelete", params, function(result){
 						$.messager.alert("温馨提示","删除" + rows.length + "条记录");
 						// 清除所有已选择的记录，避免重复提交id值
 						$("#htm_table").datagrid("clearSelections");
@@ -279,80 +221,80 @@
 	
 	/**
 	 * 重新排序
-	 * @author zhangbo 2015-12-11
+	 *mishengliang
 	 */
-	function reorder() {
-		var rows = $("#htm_table").datagrid("getSelections");
-		if(rows.length > 0){
-			var ids = [];
-			for(var i=0;i<rows.length;i++){
-				ids[i] = rows[i].id;
-			}
-			var params = {
-					ids: ids.toString()
-				};
-			$.post("./admin_trade/itemSet_reorder", params, function(result){
-				$.messager.alert("温馨提示","排序" + rows.length + "条记录");
-				// 清除所有已选择的记录，避免重复提交id值
-				$("#htm_table").datagrid("clearSelections");
-				$("#htm_table").datagrid("clearChecked");
-				// 批量删除刷新当前页
-				$("#htm_table").datagrid("reload");
-				$("#reSerialCount").text(0);
-			});
-		}else{
-			$.messager.alert("温馨提示","请先选择，再执行重新排序!");
+     function reorder() {
+    	var itemSetId = $("#item_set_searcher").combogrid("getValue");
+    	
+    	if(itemSetId != "" && itemSetId != null){
+         	$("#superb_form_set").find('input[name="reIndexId"]').val('');
+         	$('#htm_superb .opt_btn').show();
+         	$('#htm_superb .loading').hide();
+         	$('#itemSetId').val(itemSetId);
+         	var rows = $("#htm_table").datagrid('getSelections');
+         	$('#superb_form_set .reindex_column').each(function(i){
+         		if(i<rows.length)
+         			$(this).val(rows[i]['worldId']);
+         	});
+         	// 打开添加窗口
+         	$("#htm_superb_set").window('open');
+    	}else{
+    		$.messager.alert("温馨提示","请选择商品集合!");
+    	}
+
+     }
+	
+	//重新排序
+     function submitReSuperbFormForSet() {
+		var itemSetId = $("#item_set_searcher").combogrid("getValue");
+     	var $form = $('#superb_form_set');
+     	if($form.form('validate')) {
+     		$('#htm_superb_set .opt_btn').hide();
+     		$('#htm_superb_set .loading').show();
+     		$('#superb_form_set').form('submit', {
+     			url: $form.attr('action'),
+     			data:{},
+     			success: function(data){
+     				var result = $.parseJSON(data);
+     				$('#htm_superb_set .opt_btn').show();
+     				$('#htm_superb_set .loading').hide();
+     				if(result['result'] == 0) { 
+     					$('#htm_table').datagrid('clearSelections');
+     					$('#htm_table').datagrid('reload');
+     					$('#htm_superb_set').window('close');  //关闭添加窗口
+     				} else {
+     					$.messager.alert('错误提示',result['msg']);  //提示添加信息失败
+     				}
+     			}
+     		});
+     	} 
+     	
+     } 
+	
+	function searchShowByWorldId(){
+		var worldId = $("#world_id_searcher").searchbox("getValue");
+		myQueryParams = {
+				'worldId':worldId	
+		};
+		$("#htm_table").datagrid("reload",myQueryParams);
+	}
+
+	function searchItemSet() {
+		var itemSetId = $("#item_set_name").searchbox("getValue");
+		var combogridParams = {
+			'idOrName' : itemSetId
 		}
-	};
-	
-	/**
-	 * 打开设置秒杀window
-	 * @author zhangbo 2015-12-10
-	 */
-	function openSeckillCacheWin(itemSetId) {
-		$("#refresh_seckill_window").window("open");
-		$("#seckill_itemSetId").val(itemSetId);
-	};
-	
-	/**
-	 * 提交限时秒杀缓存
-	 * @author zhangbo	2015-12-11
-	 */
-	function seckillSetCacheSubmit() {
-		if( $('#refresh_seckill_form').form('validate') ) {
-			$('#refresh_seckill_form').form('submit', {
-				url: "./admin_trade/itemSet_addSeckill",
-				success: function(data){
-					var result = $.parseJSON(data);
-					if(result['result'] == 0) {
-						$('#refresh_seckill_window').window('close');  // 关闭添加窗口
-						$("#htm_table").datagrid("reload");
-					} else {
-						$.messager.alert("温馨提示",result['msg']);  // 提示添加信息失败
-					}
-				}
-			});
+		$("#item_set_searcher").combogrid('grid').datagrid("load",
+				combogridParams);
+	}
+
+	function searchItemSetForAdd() {
+		var itemSetId = $("#itemSet_name").searchbox("getValue");
+		var combogridParams = {
+			'idOrName' : itemSetId
 		}
-	};
-	
-	/**
-	 * 取消秒杀
-	 * @param itemSetId	商品集合id
-	 * @author zhangbo	2015-12-12
-	 */
-	function cancelSeckill(itemSetId) {
-		var params = {
-				id: itemSetId
-			};
-		$.post("./admin_trade/itemSet_cancelSeckill", params, function(result){
-			if(result.result == 0) {
-				$("#htm_table").datagrid("reload");
-			} else {
-				$.messager.alert('错误提示',result['msg']);  // 提示添加信息失败
-			}
-		});
-	};
-	
+		$("#item_set").combogrid('grid').datagrid("load", combogridParams);
+	}
 </script>
 </head>
 <body>
@@ -365,60 +307,24 @@
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
 				<a href="javascript:void(0);" onclick="javascript:$('#add_itemSet_window').window('open');commonTools.clearFormData($('#add_itemSet_form'));" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
-				<a href="javascript:void(0);" onclick="reorder()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序<span id="reSerialCount" type="text" style="font-weight:bold;">0</span></a>
+				<a href="javascript:void(0);" onclick="reorder()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">重新排序</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
-		   		<input id="ss_isCache" class="easyui-combobox">
-		   		<a href="javascript:void(0);" onclick="refreshItemSetCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新缓存</a>
+				<input id = "item_set_searcher" name="item_set_searcher" class="easyui-combogrid">
+				<input id = "world_id_searcher" name="world_id_searcher"  searcher = "searchShowByWorldId" class="easyui-searchbox" prompt="输入织图ID搜索">
 			</span>
 		</div>
 		
 		<!-- 添加商品集合 -->
 		<div id="add_itemSet_window">
 			<form id="add_itemSet_form" method="post">
-				<table class="htm_edit_table" width="580">
+				<table class="htm_edit_table" width="400">
 					<tr>
-						<td class="leftTd">图片路径：</td>
-						<td  style="width:130">
-							<input id="itemSet_path" name="path" class="none" type="text" readonly="readonly" required="true"/>
-							<a id="itemSet_path_upload_btn" style="position: absolute; margin:30px 0 0 60px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="itemSet_path_edit" src="${webRootPath }/base/images/bg_empty.png" width="220px" height="90px">
-							<div id="itemSet_path_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
-							</div>
-						</td>
-						<td class="rightTd">
-							<div id="itemSet_pathTip" style="display: inline-block;" class="tipDIV"></div>
-						</td>
+						<td>织图ID：</td>
+						<td><input id= "world_id" name="world_id"></td>
 					</tr>
 					<tr>
-						<td class="leftTd">缩略图路径：</td>
-						<td >
-							<input id="itemSet_thumb" name="thumb" class="none" type="text" readonly="readonly" required="true"/>
-							<a id="itemSet_thumb_upload_btn" style="position: absolute; margin:30px 0 0 100px" class="easyui-linkbutton" iconCls="icon-add">上传图片</a> 
-							<img id="itemSet_thumb_edit" src="${webRootPath }/base/images/bg_empty.png" width="90px" height="90px">
-							<div id="itemSet_thumb_edit_upload_status" class="update_status none" style="width: 90px; text-align: center;">上传中...<span class="upload_progress"></span><span>%</span>
-							</div>
-						</td>
-						<td class="rightTd">
-							<div id="itemSet_thumbTip" style="display: inline-block;" class="tipDIV"></div>
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">标题：</td>
-						<td>
-							<textarea id="itemSet_title" name="title" style="width:260px;" rows="5"></textarea>
-						</td>
-						<td class="rightTd">
-							<div id="itemSet_titleTip" style="display: inline-block;" class="tipDIV"></div>
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">描述：</td>
-						<td colspan="2">
-							<textarea id="itemSet_desc" name="description" style="width:450px;height:120px;" rows="20"></textarea>
-						</td>
-					</tr>
-					<tr>
-						<td class="none"><input id="itemSet_id" name="id"></td>
+						<td>商品集合：</td>
+						<td><input id = "item_set" name= "item_set" class="easyui-combogrid"></td>
 					</tr>
 					<tr>
 						<td colspan="3" style="text-align: center;padding-top: 10px;">
@@ -429,31 +335,63 @@
 			</form>
 		</div>
 		
-		<!-- 设置秒杀商品集合到redis缓存 -->
-		<div id="refresh_seckill_window">
-			<form id="refresh_seckill_form" method="post">
-				<table class="htm_edit_table" width="480">
-					<tr>
-						<td class="leftTd">商品集合ID：</td>
-						<td>
-							<input id="seckill_itemSetId" name="id" style="width:220px;" >
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">截止日期：</td>
-						<td>
-							<input name="deadline" class="easyui-datetimebox" required="true">
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="seckillSetCacheSubmit();">确定</a>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
+	</div>
+
+	<div id="search-itemSet-tb" style="padding: 5px; height: auto" class="none">
+		<input id="item_set_name" searcher="searchItemSet" class="easyui-searchbox" prompt="集合名搜索" style="width: 200px;" />
+	</div>
+
+	<div id="itemSet-tb" style="padding: 5px; height: auto" class="none">
+		<input id="itemSet_name" searcher="searchItemSetForAdd" class="easyui-searchbox" prompt="集合名搜索" style="width: 200px;" />
+	</div>
 	
+	<!-- 集合重排模块 -->
+	<div id="htm_superb_set" hidden=true>
+		<form id="superb_form_set" action="./admin_trade/itemShow_updateSetItemSerial" method="post">
+			<table class="htm_edit_table" width="580">
+				<tbody>
+					<tr>
+						<td class="leftTd">买家秀ID：</td>
+						<td>
+							<input name="reIndexId" class="easyui-validatebox reindex_column" required="true"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<br />
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+							<input name="reIndexId" class="reindex_column"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="opt_btn" colspan="2" style="text-align: center;padding-top: 10px;">
+							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitReSuperbFormForSet();">确定</a>
+							<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_superb_set').window('close');">取消</a>
+						</td>
+					</tr>
+					<tr class="loading none">
+						<td colspan="2" style="text-align: center; padding-top: 10px; vertical-align:middle;">
+							<img alt="" src="./common/images/loading.gif" style="vertical-align:middle;">
+							<span style="vertical-align:middle;">排序中...</span>
+						</td>
+					</tr>
+					<tr hidden=true>
+						<td><input id="itemSetId"  name="itemSetId" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
 	</div>
 	
 </body>
