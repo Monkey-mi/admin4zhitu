@@ -18,8 +18,9 @@ import com.imzhitu.admin.common.util.AdminLoginUtil;
 import com.imzhitu.admin.common.util.AdminUtil;
 import com.imzhitu.admin.op.mapper.OpMsgBulletinMapper;
 import com.imzhitu.admin.privileges.service.AdminService;
-import com.imzhitu.admin.trade.item.dao.ItemCache;
-import com.imzhitu.admin.trade.item.dao.ItemSetCache;
+import com.imzhitu.admin.trade.item.dao.ItemCacheDao;
+import com.imzhitu.admin.trade.item.dao.ItemSetCacheDao;
+import com.imzhitu.admin.trade.item.dao.SeckillItemSetCacheDao;
 import com.imzhitu.admin.trade.item.mapper.ItemMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemSetMapper;
 import com.imzhitu.admin.trade.item.mapper.ItemSetRelationMapper;
@@ -59,7 +60,10 @@ public class ItemSetServiceImpl implements ItemSetService {
 	private OpMsgBulletinMapper msgBulletinMapper;
 	
 	@Autowired
-	private ItemSetCache itemSetCache;
+	private ItemSetCacheDao itemSetCache;
+	
+	@Autowired
+	private SeckillItemSetCacheDao seckillItemSetCacheDao;
 
 	@Autowired
 	private com.hts.web.common.service.KeyGenService webKeyGenService;
@@ -68,7 +72,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	private ItemSetRelationMapper itemAndSetRelationMapper;
 	
 	@Autowired
-	private ItemCache itemCache;
+	private ItemCacheDao itemCache;
 	
 	@Autowired
 	private AdminService adminService;
@@ -166,7 +170,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setOperator(adminService.getAdminUserNameById(itemSet.getOperator()));
 				dto.setCreateTime(itemSet.getCreateTime());
 				dto.setModifyTime(itemSet.getModifyTime());
-				dto.setDeadline(itemSetCache.getSeckillTemp().get(itemSet.getId()));
+				dto.setDeadline(seckillItemSetCacheDao.getSeckillTemp().get(itemSet.getId()));
 				rtnList.add(dto);
 			}
 			total = itemSetMapper.queryItemSetTotal();
@@ -212,20 +216,20 @@ public class ItemSetServiceImpl implements ItemSetService {
 	public void batchDelete(Integer[] idArray) throws Exception {
 		for (Integer id : idArray) {
 			itemSetMapper.deleteById(id);
-			itemSetCache.deleteFromSeckillTempById(id);
+			seckillItemSetCacheDao.deleteFromSeckillTempById(id);
 		}
 	}
 	
 	@Override
 	public void addSeckillToTemp(Integer id, Date deadline) throws Exception {
-		itemSetCache.addSeckillTemp(id, deadline);
+		seckillItemSetCacheDao.addSeckillTemp(id, deadline);
 		// 当添加到秒杀商品集合时，刷新序号，使其排到最顶层
 		itemSetMapper.updateSerial(id, webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL));
 	}
 	
 	@Override
 	public void cancelSeckillFromTemp(Integer id) throws Exception {
-		itemSetCache.deleteFromSeckillTempById(id);
+		seckillItemSetCacheDao.deleteFromSeckillTempById(id);
 	}
 
 	@Override
@@ -250,7 +254,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 		List<com.hts.web.operations.pojo.ItemSetBulletin> seckillList = new ArrayList<com.hts.web.operations.pojo.ItemSetBulletin>();
 		
 		// 得到秒杀临时存储中的itemSetId与截止时间Map
-		Map<Integer, Date> seckillTemp = itemSetCache.getSeckillTemp();
+		Map<Integer, Date> seckillTemp = seckillItemSetCacheDao.getSeckillTemp();
 		if ( seckillTemp != null ) {
 			// 循环处理商品集合id
 			for (Integer ItemSetId : seckillTemp.keySet()) {
@@ -393,7 +397,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	 */
 	private Integer[] getSeckillTempIds() {
 		// 获取秒杀商品集合临时存储中的id 
-		Set<Integer> seckillKeySet = itemSetCache.getSeckillTemp().keySet();
+		Set<Integer> seckillKeySet = seckillItemSetCacheDao.getSeckillTemp().keySet();
 		Integer[] ids = new Integer[seckillKeySet.size()];
 		return seckillKeySet.toArray(ids);
 	}
@@ -420,20 +424,27 @@ public class ItemSetServiceImpl implements ItemSetService {
 		List<ItemSet> list = new ArrayList<ItemSet>();
 		// 定义商品集合总数
 		Integer total = 0;
-		
-		if ( AdminUtil.isNumeric(idOrName) ) {
-			ItemSet itemSet = itemSetMapper.getItemSetById(Integer.valueOf(idOrName));
-			if ( itemSet != null ) {
-				list.add(itemSet);
-				total = 1;
+		if (idOrName != null) {
+			if ( AdminUtil.isNumeric(idOrName) ) {
+				ItemSet itemSet = itemSetMapper.getItemSetById(Integer.valueOf(idOrName));
+				if ( itemSet != null ) {
+					list.add(itemSet);
+					total = 1;
+				}
+			} else {
+				Integer fristRow = (page-1) * rows;
+				Integer limit = rows;
+				list = itemSetMapper.queryItemSetListByTitle(idOrName, fristRow, limit);
+				total = itemSetMapper.queryItemSetTotal();
 			}
 		} else {
 			Integer fristRow = (page-1) * rows;
 			Integer limit = rows;
+			idOrName = "";
 			list = itemSetMapper.queryItemSetListByTitle(idOrName, fristRow, limit);
 			total = itemSetMapper.queryItemSetTotal();
 		}
-		
+
 		jsonMap.put(OptResult.JSON_KEY_ROWS, itemSetToItemSetDTO(list));
 		jsonMap.put(OptResult.JSON_KEY_TOTAL, total);
 	}
@@ -454,7 +465,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 				dto.setOperator(adminService.getAdminUserNameById(itemSet.getOperator()));
 				dto.setCreateTime(itemSet.getCreateTime());
 				dto.setModifyTime(itemSet.getModifyTime());
-				dto.setDeadline(itemSetCache.getSeckillTemp().get(itemSet.getId()));
+				dto.setDeadline(seckillItemSetCacheDao.getSeckillTemp().get(itemSet.getId()));
 				rtnList.add(dto);
 			}
 		}
