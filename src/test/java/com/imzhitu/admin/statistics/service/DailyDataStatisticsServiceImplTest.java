@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.imzhitu.admin.statistics.service.impl;
+package com.imzhitu.admin.statistics.service;
 
 import java.text.ParseException;
 
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.imzhitu.admin.base.BaseTest;
 import com.imzhitu.admin.statistics.service.DailyDataStatisticsService;
+import com.imzhitu.admin.statistics.service.impl.DailyDataStatisticsServiceImpl;
 
 /**
  *
