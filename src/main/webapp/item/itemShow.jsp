@@ -25,8 +25,27 @@
 	        {field: "ck", checkbox:true},  
 	        {field:"id",title:"ID",align:"center",width:50},
 			{field: "worldId", title: "织图ID", align: "center", width: 80},
-			{field: "itemSetId", title: "集合ID", align: "center", width: 100},
-			{field: "serial", title: "serial", align: "center", width: 80}
+			{
+	  			field: "titleThumbPath",
+	  			title: "预览",
+	  			align: "center",
+	  			formatter: function(value,row,index){
+	  				return "<a title='播放织图' class='updateInfo' href='javascript:commonTools.showWorld(\"" + row.shortLink + "\")'><img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' /></a>";
+	 			}
+	  		},
+	  		{field: "itemSetId", title: "用户ID", align: "center", width: 100},
+	  		{
+	  			field: "authorAvatar", 
+	  			title: "用户头像", 
+	  			align: "center",
+	  			width: 100,
+	  			formatter:function(value,row,index){
+	  				return "<img style='width:60px;height:60px' alt='' src='" + value + "'>"
+	  			}
+	  		},
+	  		{field : 'authorName',title : '作者',align : 'center'},
+			{field: "itemSetId", title: "集合ID", align: "center", width: 100}
+			/* {field: "itemSetTitle", title: "集合标题", align: "center", width: 100} */
 		];
 	
 	$(function(){
@@ -40,7 +59,7 @@
 			queryParams:myQueryParams,
 			rownumbers: true,
 			columns: [columnsFields],
-			fitColumns: true, 
+			/* fitColumns: true,  */
 			autoRowHeight: true,
 			checkOnSelect: false,
 			selectOnCheck: true,
