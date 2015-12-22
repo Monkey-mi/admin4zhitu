@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.statistics.mapper.PvMapper">
+
+	<resultMap id="PvDtoMap" type="com.imzhitu.admin.statistics.pojo.StatPvDto">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="pvkey" property="pvkey" jdbcType="INTEGER"/>
+		<result column="subkey" property="subkey" jdbcType="INTEGER"/>
+		<result column="pv" property="pv" jdbcType="BIGINT"/>
+		<result column="pvtime" property="pvtime" jdbcType="BIGINT"/>
+		<result column="begintime" property="begintime" jdbcType="BIGINT"/>
+		<result column="endtime" property="endtime" jdbcType="BIGINT"/>
+	</resultMap>
+
+	<insert id="savePvs">
+		insert into hts_admin.stat_pv
+		(pvkey,subkey,pv,pvtime)
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.pvkey},#{item.subkey},#{item.pv},#{item.pvtime})
+		</foreach>
+	</insert>
+	
+	<insert id="savePv">
+		insert into hts_admin.stat_pv
+		(pvkey,subkey,pv,pvtime)
+		values 
+			(#{pvkey},#{subkey},#{pv},#{pvtime})
+	</insert>
+	
+	<select id="queryList" resultMap="PvDtoMap">
+		select id,pvkey,subkey,pv,pvtime 
+		from 
+			hts_admin.stat_pv
+		<where>
+			<if test="pvkey != null">
+				and pvkey = #{pvkey}
+			</if>
+			<if test="subkey != null">
+				and subkey = #{subkey}
+			</if>
+			
+			<if test="begintime != null">
+				and pvtime >= #{begintime}
+			</if>
+			
+			<if test="endtime != null">
+				<![CDATA[ and pvtime <= #{endtime}]]>
+				
+			</if>
+		</where>
+		order by id desc
+		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
+	</select>
+	
+	
+	<select id="queryTotal" resultType="long">
+		select count(*)
+		from 
+			hts_admin.stat_pv
+		<where>
+			<if test="pvkey != null">
+				and pvkey = #{pvkey}
+			</if>
+			<if test="subkey != null">
+				and subkey = #{subkey}
+			</if>
+			
+			<if test="begintime != null">
+				and pvtime >= #{begintime}
+			</if>
+			
+			<if test="endtime != null">
+				<![CDATA[ and pvtime <= #{endtime}]]>
+				
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryPvId" resultType="int">
+		select id from hts_admin.stat_pv
+		where pvkey=#{pvkey} and subkey=#{subkey} and pvtime = #{pvtime} limit 1
+	</select>
+	
+	<update id="addPvById">
+		update hts_admin.stat_pv set pv=pv+#{pv} where id=#{id}
+	</update>
+	
+</mapper>

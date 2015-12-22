@@ -20,6 +20,33 @@
 	<bean id="opUserRecommendCacheService" class="com.imzhitu.admin.op.service.impl.OpUserRecommendCacheServiceImpl"/>
 	<bean id="interactLikeFollowRecordService" class="com.imzhitu.admin.interact.service.impl.InteractLikeFollowRecordServiceImpl"/>
 	<bean id="commentBroadcastScheduler" class="com.imzhitu.admin.scheduler.CommentBroadcastScheduler" />
+	<bean id="statScheduler" class="com.imzhitu.admin.scheduler.StatScheduler" />
+	
+	
+	<!-- pv统计更新任务 -->
+    <bean id="refreshPvJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="statScheduler"/>
+        </property>
+        <property name="targetMethod">
+            <value>refreshPv</value>
+        </property>
+        <property name="concurrent"> 
+			<value>false</value>
+		</property> 
+    </bean>
+
+	<!-- pv统计更新定时器 -->
+    <bean id="refreshPvJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="refreshPvJobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>0 0/10 * * * ?</value><!-- 每隔10分钟 -->
+        </property>
+    </bean>
+	
 
 	<!-- 广播评论队列 -->
     <bean id="broadcastCommentQueueJobDetail"

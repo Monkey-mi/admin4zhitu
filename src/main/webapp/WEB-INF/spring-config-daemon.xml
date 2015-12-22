@@ -12,7 +12,7 @@
                 <ref bean="osPushJobTrigger" />
                 -->
                 <ref bean="broadcastCommentQueueJobTrigger" />
-                 
+                <ref bean="refreshPvJobTrigger" />
             </list>
         </property>
     </bean>

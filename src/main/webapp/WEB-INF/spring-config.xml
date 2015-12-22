@@ -130,6 +130,28 @@
 	    p:connection-factory-ref="jedisConnFactory" >
 	</bean>
 	
+	<bean id="statJedisConnFactory"
+	    class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" 
+	    p:host-name="${redis.ip}" 
+	    p:port="${redis.port}"
+	    p:password="${redis.password}"
+	    p:use-pool="true"
+	    p:poolConfig-ref="jedisPoolConfig"
+	    p:database="2" />
+	
+	<bean id="statRedisTemplate" 
+	    class="org.springframework.data.redis.core.RedisTemplate" 
+	    p:connection-factory-ref="statJedisConnFactory">
+	    
+	    <property name="keySerializer" >
+        	<bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <property name="valueSerializer" >
+        	<bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+    	</property>
+	    
+	</bean>
+	
 	<mongo:mongo host="${mongo.host}" port="${mongo.port}">
 		<mongo:options 
 			connections-per-host="8"
