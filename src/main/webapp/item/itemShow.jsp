@@ -61,20 +61,10 @@
 			columns: [columnsFields],
 			 fitColumns: true,  
 			autoRowHeight: true,
-			checkOnSelect: false,
-			selectOnCheck: true,
 			pagination: true,
 			pageNumber: 1, //指定当前页面为1
 			pageSize: 5,
 			pageList: [5,10,20],
-			onClickCell: function(rowIndex, field, value) {
-			},
-			onSelect: function(rowIndex, rowData) {
-			},
-			onUnselect: function(rowIndex, rowData) {
-			},
-			onLoadSuccess: function(data) {
-			}
 		});
 		
 		$("#add_itemSet_window").window({
@@ -114,6 +104,7 @@
 					},
 		    ]],
 		    onSelect : function(row){
+		    	$("#htm_table").datagrid("clearSelections");
 		    	var itemSetId = $('#item_set_searcher').combogrid("getValue");
 		    	myQueryParams = {
 		    			'itemSetId':itemSetId
@@ -199,6 +190,7 @@
 				$("#add_itemSet_window").window("close");
 				$.messager.alert("温馨提示","添加记录成功。");
 				$("#htm_table").datagrid("reload");
+				$("#htm_table").datagrid("clearSelections");
 			}else{
 				$.messager.alert("错误提示","！");
 			}
