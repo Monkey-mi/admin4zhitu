@@ -349,6 +349,10 @@ public class OpMsgBulletinAction extends BaseCRUDAction {
 	public void setIsCache(Integer isCache) {
 		this.isCache = isCache;
 	}
+	
+	public NearBulletinDto getNearBulletin() {
+		return nearBulletin;
+	}
 
 	public void setNearBulletin(NearBulletinDto nearBulletin) {
 		this.nearBulletin = nearBulletin;
@@ -356,6 +360,54 @@ public class OpMsgBulletinAction extends BaseCRUDAction {
 
 	public void setRefreshFlag(Integer refreshFlag) {
 		this.refreshFlag = refreshFlag;
+	}
+
+	public OpMsgBulletinService getMsgBulletinService() {
+		return msgBulletinService;
+	}
+
+	public void setMsgBulletinService(OpMsgBulletinService msgBulletinService) {
+		this.msgBulletinService = msgBulletinService;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public String getBulletinName() {
+		return bulletinName;
+	}
+
+	public Integer getCategory() {
+		return category;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public String getThumb() {
+		return thumb;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public String getIdsStr() {
+		return idsStr;
+	}
+
+	public Integer getRefreshFlag() {
+		return refreshFlag;
+	}
+
+	public Integer getIsCache() {
+		return isCache;
 	}
 
 }

@@ -354,16 +354,20 @@ function loadEditFormValidate(index, isUpdate) {
 	.regexValidator({regexp:"url", datatype:"enum", onerror:"链接格式不正确"});
 	
 	$("#bulletinName_edit")
-	.formValidator({empty:true, onshow:"输入专题名,方便搜索哦",onfocus:"请输入专题名",oncorrect:"正确！"});
+	.formValidator({empty:true, onshow:"输入专题名,方便搜索哦",onfocus:"请输入专题名",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	$("#link_edit")
-	.formValidator({empty:false, onshow:"url|用户id|活动标签（必填）",onfocus:"请输入跳转链接",oncorrect:"正确！"});
+	.formValidator({empty:false, onshow:"url|用户id|活动标签（必填）",onfocus:"请输入跳转链接",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	$("#bulletinType_edit")
-	.formValidator({empty:true, onshow:"请选择跳转类型（必选）",onfocus:"请选择跳转类型",oncorrect:"正确！"});
+	.formValidator({empty:true, onshow:"请选择跳转类型（必选）",onfocus:"请选择跳转类型",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 	$("#cityIds_edit")
-	.formValidator({empty:true, onshow:"请选择城市（可多选）",onfocus:"可多选",oncorrect:"正确！"});
+	.formValidator({empty:true, onshow:"选择城市（可多选）",onfocus:"可多选",oncorrect:"正确！"})
+	.inputValidator({min:1});
 	
 }
 
