@@ -33,7 +33,7 @@
 	  				return "<a title='播放织图' class='updateInfo' href='javascript:commonTools.showWorld(\"" + row.shortLink + "\")'><img width='60px' height='60px' src='" + baseTools.imgPathFilter(value,'../base/images/bg_empty.png') + "' /></a>";
 	 			}
 	  		},
-	  		{field: "itemSetId", title: "用户ID", align: "center", width: 100},
+	  		{field: "userId", title: "用户ID", align: "center", width: 100},
 	  		{
 	  			field: "authorAvatar", 
 	  			title: "用户头像", 
@@ -59,7 +59,7 @@
 			queryParams:myQueryParams,
 			rownumbers: true,
 			columns: [columnsFields],
-			/* fitColumns: true,  */
+			 fitColumns: true,  
 			autoRowHeight: true,
 			checkOnSelect: false,
 			selectOnCheck: true,

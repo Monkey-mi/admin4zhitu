@@ -23,6 +23,10 @@ public class ItemShowDTO implements Serializable {
 	 */
 	private String titleThumbPath;
 	/**
+	 * 用户ID
+	 */
+	private Integer userId;
+	/**
 	 * 用户头像
 	 */
 	private String authorAvatar;
@@ -66,6 +70,12 @@ public class ItemShowDTO implements Serializable {
 	}
 	public void setTitleThumbPath(String titleThumbPath) {
 		this.titleThumbPath = titleThumbPath;
+	}
+	public Integer getUserId() {
+		return userId;
+	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 	public String getAuthorAvatar() {
 		return authorAvatar;

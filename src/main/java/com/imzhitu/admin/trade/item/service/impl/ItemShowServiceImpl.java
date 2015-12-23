@@ -63,11 +63,16 @@ public class ItemShowServiceImpl extends BaseServiceImpl implements ItemShowServ
 				itemShowDTO.setId(itemShow.getId());
 				itemShowDTO.setItemSetId(itemShow.getItemSetId());
 				itemShowDTO.setWorldId(itemShow.getWorldId());
-				/*itemShowDTO.setTitleThumbPath(zTWorldDto.getTitleThumbPath());*/
 				itemShowDTO.setSerial(itemShow.getSerial());
-				itemShowDTO.setAuthorName(userInfo.getUserName());
-				itemShowDTO.setAuthorAvatar(userInfo.getUserAvatar());
-				itemShowDTO.setShortLink(zTWorldDto.getShortLink());
+				if(userInfo != null){
+					itemShowDTO.setUserId(zTWorldDto.getAuthorId());
+					itemShowDTO.setAuthorName(userInfo.getUserName());
+					itemShowDTO.setAuthorAvatar(userInfo.getUserAvatar());
+				}
+				if(zTWorldDto != null){
+					itemShowDTO.setTitleThumbPath(zTWorldDto.getTitleThumbPath());
+					itemShowDTO.setShortLink(zTWorldDto.getShortLink());
+				}
 				
 				dto.add(itemShowDTO);
 			}
