@@ -41,10 +41,11 @@ public interface ItemSetService {
 	 * @param description	商品集合描述
 	 * @param path			商品集合图片路径
 	 * @param thumb			商品集合缩略图路径
+	 * @param link			商品集合点击链接地址
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
-	void addItemSet(String title, String description, String path, String thumb) throws Exception;
+	void addItemSet(String title, String description, String path, String thumb, String link) throws Exception;
 	
 	/**
 	 * 更新商品集合
@@ -53,11 +54,11 @@ public interface ItemSetService {
 	 * @param title			商品集合标题
 	 * @param description	商品集合描述
 	 * @param path			商品集合图片路径
-	 * @param thumb			商品集合缩略图路径
+	 * @param thumb			商品集合点击链接地址
 	 * 
 	 * @author zhangbo	2015年12月9日
 	 */
-	void updateItemSet(Integer id, String title, String description, String path, String thumb) throws Exception;
+	void updateItemSet(Integer id, String title, String description, String path, String thumb, String link) throws Exception;
 	
 	/**
 	 * 批量删除商家集合banner

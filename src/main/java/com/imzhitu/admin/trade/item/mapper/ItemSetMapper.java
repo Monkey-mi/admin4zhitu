@@ -50,7 +50,7 @@ public interface ItemSetMapper {
 	 * @author zhangbo	2015年12月9日
 	 */
 	@DataSource("master")
-	void update(@Param("id")Integer id, @Param("title")String title, @Param("description")String description, @Param("path")String path, @Param("thumb")String thumb, @Param("operator")Integer operator);
+	void update(@Param("id")Integer id, @Param("title")String title, @Param("description")String description, @Param("path")String path, @Param("thumb")String thumb, @Param("link")String link, @Param("operator")Integer operator);
 
 	/**
 	 * 根据id删除商品集合

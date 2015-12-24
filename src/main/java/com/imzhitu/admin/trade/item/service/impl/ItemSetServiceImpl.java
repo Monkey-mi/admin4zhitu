@@ -182,7 +182,7 @@ public class ItemSetServiceImpl implements ItemSetService {
 	}
 	
 	@Override
-	public void addItemSet(String title, String description, String path, String thumb) throws Exception {
+	public void addItemSet(String title, String description, String path, String thumb, String link) throws Exception {
 		// 根据流水得到id
 		Integer id = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_ID);
 		
@@ -192,12 +192,13 @@ public class ItemSetServiceImpl implements ItemSetService {
 		// 根据流水得到serial
 		Integer serial = webKeyGenService.generateId(KeyGenServiceImpl.ITEM_SET_SERIAL);
 		
-		itemSetMapper.insert(id, title, description, path, thumb, type, handleLink(id), AdminLoginUtil.getCurrentLoginId(), serial);
+		link = (link == null || link.trim().equals("")) ? handleLink(id) : link;
+		itemSetMapper.insert(id, title, description, path, thumb, type, link, AdminLoginUtil.getCurrentLoginId(), serial);
 	}
 	
 	@Override
-	public void updateItemSet(Integer id, String title, String description, String path, String thumb) throws Exception {
-		itemSetMapper.update(id, title, description, path, thumb, AdminLoginUtil.getCurrentLoginId());
+	public void updateItemSet(Integer id, String title, String description, String path, String thumb, String link) throws Exception {
+		itemSetMapper.update(id, title, description, path, thumb, link, AdminLoginUtil.getCurrentLoginId());
 	}
 	
 	/**

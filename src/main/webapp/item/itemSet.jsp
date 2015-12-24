@@ -178,6 +178,9 @@
 		$("#itemSet_title")
 		.formValidator({empty:false, onshow:"请输入标题（必填）",onfocus:"请输入标题",oncorrect:"正确！"});
 		
+		$("#itemSet_link")
+		.formValidator({empty:true, onshow:"若输入链接为空，则使用默认链接（可选）",onfocus:"请输入链接",oncorrect:"正确！"});
+		
 		$("#itemSet_desc")
 		.formValidator({empty:true, onshow:"请输入描述（可选）",onfocus:"请输入描述",oncorrect:"正确！"});
 	});
@@ -425,6 +428,15 @@
 						</td>
 						<td class="rightTd">
 							<div id="itemSet_titleTip" style="display: inline-block;" class="tipDIV"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="leftTd">链接地址：</td>
+						<td>
+							<input id="itemSet_link" name="link" style="width:260px;"></input>
+						</td>
+						<td class="rightTd">
+							<div id="itemSet_linkTip" style="display: inline-block;" class="tipDIV"></div>
 						</td>
 					</tr>
 					<tr>

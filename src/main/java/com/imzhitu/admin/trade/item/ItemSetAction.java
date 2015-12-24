@@ -53,6 +53,12 @@ public class ItemSetAction extends BaseCRUDAction {
 	private String thumb;
 	
 	/**
+	 * 商品集合点击链接地址
+	 * @author zhangbo	2015年12月24日
+	 */
+	private String link;
+	
+	/**
 	 * 商品集合id集合，以逗号分隔
 	 * @author zhangbo	2015年12月8日
 	 */
@@ -127,9 +133,9 @@ public class ItemSetAction extends BaseCRUDAction {
 		try {
 			// 若id不存在，则为新增，否则为更新
 			if ( id == null ) {
-				itemSetService.addItemSet(title, description, path, thumb);
+				itemSetService.addItemSet(title, description, path, thumb, link);
 			} else {
-				itemSetService.updateItemSet(id, title, description, path, thumb);
+				itemSetService.updateItemSet(id, title, description, path, thumb, link);
 			}
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
@@ -279,6 +285,10 @@ public class ItemSetAction extends BaseCRUDAction {
 
 	public void setIdOrName(String idOrName) {
 		this.idOrName = idOrName;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 	
 }

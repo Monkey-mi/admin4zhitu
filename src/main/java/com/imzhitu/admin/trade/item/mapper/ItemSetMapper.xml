@@ -34,6 +34,7 @@
 	      <if test="description != null">description = #{description},</if>
 	      <if test="path != null">path = #{path},</if>
 	      <if test="thumb != null">thumb = #{thumb},</if>
+	      <if test="link != null">link = #{link},</if>
 	      <if test="operator != null">operator = #{operator}</if>
 	    </set>
 	  	where 
