@@ -13,7 +13,7 @@
 		select 
 			* 
 		from 
-			hts.item_show
+			hts.item_show_selected
 		<where>
 			<if test="itemSetId != null and itemSetId != 0">
 					item_set_id = #{itemSetId}
@@ -27,21 +27,21 @@
 	
 	<insert id="insertItemShow">
 		insert into 
-			hts.item_show(world_id,item_set_id,serial)
+			hts.item_show_selected(world_id,item_set_id,serial)
 		values
 			(#{worldId},#{itemSetId},#{serial})
 	</insert>
 	
 	<delete id="deleteItemShowById">
 		delete from 
-			hts.item_show
+			hts.item_show_selected
 		where 
 			id = #{id}
 	</delete>
 	
 	<update id="updateSerial">
 		update 
-			hts.item_show
+			hts.item_show_selected
 		set
 			serial = #{serial}
 		where

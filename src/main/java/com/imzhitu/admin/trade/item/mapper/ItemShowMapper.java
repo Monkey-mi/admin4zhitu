@@ -8,7 +8,7 @@ import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
 import com.imzhitu.admin.trade.item.pojo.ItemShow;
 
 /**
- * 商品秀展示操作
+ * 对挑选出来的买家秀操作
  * @author mishengliang
  *
  */
