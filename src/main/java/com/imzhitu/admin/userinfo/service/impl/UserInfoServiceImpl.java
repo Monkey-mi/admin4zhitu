@@ -25,10 +25,13 @@ import com.imzhitu.admin.common.pojo.UserInfo;
 import com.imzhitu.admin.common.pojo.UserInfoDto;
 import com.imzhitu.admin.interact.dao.InteractUserDao;
 import com.imzhitu.admin.op.dao.UserZombieDao;
+import com.imzhitu.admin.userinfo.dao.UserDefaultBackgroundCacheDao;
 import com.imzhitu.admin.userinfo.dao.UserTrustDao;
+import com.imzhitu.admin.userinfo.mapper.UserDefaultBackgroundMapper;
 import com.imzhitu.admin.userinfo.mapper.UserInfoMapper;
 import com.imzhitu.admin.userinfo.mapper.UserLoginPersistentMapper;
 import com.imzhitu.admin.userinfo.mapper.UserSocialAccountMapper;
+import com.imzhitu.admin.userinfo.pojo.DefaultBackground;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
 import com.imzhitu.admin.ztworld.mapper.ZTWorldTypeWorldMapper;
 
@@ -81,6 +84,12 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	
 	@Autowired
 	private OsUserInfoDao osUserInfoDao;
+	
+	@Autowired
+	private UserDefaultBackgroundMapper userDefaultBackgroundMapper;
+	
+	@Autowired
+	private UserDefaultBackgroundCacheDao userDefaultBackgroundCacheDao;
 
 	public Integer getCustomerServiceId() {
 		return customerServiceId;
@@ -294,6 +303,28 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	@Override
 	public List<Integer> getUserIdsByName(String userName) throws Exception {
 		return userInfoMapper.getUserIdsByName(userName);
+	}
+
+	@Override
+	public void queryDefaultBackground(Map<String, Object> jsonMap) {
+		List<DefaultBackground> list = userDefaultBackgroundMapper.queryDefaultBackground();
+		jsonMap.put(OptResult.JSON_KEY_ROWS, list);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, list.size());
+	}
+
+	@Override
+	public void batchDeleteDefaultBackground(Integer[] ids) {
+		userDefaultBackgroundMapper.deleteByIds(ids);
+	}
+
+	@Override
+	public void refreshDefaultBackgroundCache() {
+		userDefaultBackgroundCacheDao.updateDefaultBackgroundPath();
+	}
+
+	@Override
+	public void saveDefaultBackground(String background) {
+		userDefaultBackgroundMapper.insert(background);
 	}
 	
 }

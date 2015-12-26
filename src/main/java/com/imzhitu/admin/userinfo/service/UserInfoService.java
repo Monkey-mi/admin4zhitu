@@ -118,6 +118,34 @@ public interface UserInfoService extends BaseService {
 	 */
 	List<Integer> getUserIdsByName(String userName) throws Exception;
 
+	/**
+	 * 查询默认用户背景图片
+	 * 
+	 * @param jsonMap
+	 * @author zhangbo	2015年12月25日
+	 */
+	void queryDefaultBackground(Map<String, Object> jsonMap);
+	
+	/**
+	 * 批量删除默认用户背景图片
+	 * 
+	 * @author zhangbo	2015年12月25日
+	 */
+	void batchDeleteDefaultBackground(Integer[] ids);
+
+	/**
+	 * 刷新默认背景图片缓存
+	 * 
+	 * @author zhangbo	2015年12月25日
+	 */
+	void refreshDefaultBackgroundCache();
+
+	/**
+	 * @param background
+	 * @author zhangbo	2015年12月25日
+	 */
+	void saveDefaultBackground(String background);
+
 }
 
 

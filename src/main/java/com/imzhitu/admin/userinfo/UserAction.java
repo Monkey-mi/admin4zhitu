@@ -9,7 +9,6 @@ import com.hts.web.base.constant.PlatFormCode;
 import com.hts.web.base.constant.Tag;
 import com.hts.web.common.util.JSONUtil;
 import com.hts.web.common.util.StringUtil;
-import com.hts.web.userinfo.service.impl.UserInfoServiceImpl;
 import com.imzhitu.admin.common.BaseCRUDAction;
 import com.imzhitu.admin.common.pojo.AdminUserDetails;
 import com.imzhitu.admin.userinfo.service.UserInfoService;
@@ -41,6 +40,10 @@ public class UserAction extends BaseCRUDAction {
 	private String userInfoJSON;
 	private Integer platformVerify;
 	private Integer sex;
+	
+	private String background;
+	
+	private String ids;
 	
 	
 	@Autowired
@@ -271,6 +274,70 @@ public class UserAction extends BaseCRUDAction {
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 查询默认用户背景图片
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月25日
+	 */
+	public String saveDefaultBackground() {
+		try {
+			userInfoService.saveDefaultBackground(background);
+			JSONUtil.optSuccess(OptResult.QUERY_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 查询默认用户背景图片
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月25日
+	 */
+	public String queryDefaultBackground() {
+		try {
+			userInfoService.queryDefaultBackground(jsonMap);
+			JSONUtil.optSuccess(OptResult.QUERY_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 批量删除默认用户背景图片
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月25日
+	 */
+	public String batchDeleteDefaultBackground() {
+		try {
+			userInfoService.batchDeleteDefaultBackground(StringUtil.convertStringToIds(ids));
+			JSONUtil.optSuccess(OptResult.DELETE_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 刷新默认背景图片缓存
+	 * 
+	 * @return
+	 * @author zhangbo	2015年12月25日
+	 */
+	public String refreshDefaultBackgroundCache() {
+		try {
+			userInfoService.refreshDefaultBackgroundCache();
+			JSONUtil.optSuccess(OptResult.QUERY_SUCCESS, jsonMap);
+		} catch (Exception e) {
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
 	public Integer getUserId() {
 		return userId;
 	}
@@ -359,6 +426,34 @@ public class UserAction extends BaseCRUDAction {
 
 	public void setSex(Integer sex) {
 		this.sex = sex;
+	}
+
+	/**
+	 * @return the ids
+	 */
+	public String getIds() {
+		return ids;
+	}
+
+	/**
+	 * @param ids the ids to set
+	 */
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+
+	/**
+	 * @return the background
+	 */
+	public String getBackground() {
+		return background;
+	}
+
+	/**
+	 * @param background the background to set
+	 */
+	public void setBackground(String background) {
+		this.background = background;
 	}
 	
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imzhitu.admin.userinfo.mapper.UserDefaultBackgroundMapper">
+
+	<resultMap id="DefaultBackgroundMap" type="com.imzhitu.admin.userinfo.pojo.DefaultBackground">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="platform_code" property="platformCode" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="queryDefaultBackground" resultMap="DefaultBackgroundMap">
+		select
+			* 
+		from 
+			hts.user_default_background 
+		order by id desc
+	</select>
+	
+	<delete id="deleteByIds">
+		delete from hts.user_default_background where id in
+		<foreach collection="ids" open="(" close=")" separator="," index="index" item="item">
+				#{item}
+		</foreach>
+	</delete>
+	
+	<insert id="insert">
+		insert into 
+			hts.user_default_background 
+			(background)
+	 	values 
+	 		(#{background})
+	</insert>
+	
+</mapper>
