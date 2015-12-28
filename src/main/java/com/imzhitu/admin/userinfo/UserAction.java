@@ -331,7 +331,7 @@ public class UserAction extends BaseCRUDAction {
 	public String refreshDefaultBackgroundCache() {
 		try {
 			userInfoService.refreshDefaultBackgroundCache();
-			JSONUtil.optSuccess(OptResult.QUERY_SUCCESS, jsonMap);
+			JSONUtil.optSuccess("刷新成功", jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
 		}

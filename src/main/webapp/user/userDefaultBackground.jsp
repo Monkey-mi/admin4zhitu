@@ -127,6 +127,16 @@
 		}
 	};
 	
+	/**
+	 * 刷新缓存
+	 * @author zhangbo	2015-12-28
+	 */
+	function refreshCache() {
+		$.post("./admin_user/user_refreshDefaultBackgroundCache", function(result){
+			$.messager.alert("温馨提示",result['msg']);
+		});
+	};
+	
 </script>
 </head>
 <body>
@@ -140,6 +150,7 @@
 			<span>
 				<a href="javascript:void(0);" onclick="javascript:$('#add_background_window').window('open');commonTools.clearFormData($('#add_background_form'));" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
+				<a href="javascript:void(0);" onclick="refreshCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新缓存</a>
 			</span>
 		</div>
 		
