@@ -9,6 +9,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hts.web.base.constant.OptResult;
+import com.hts.web.common.pojo.AddrDistrictDto;
 import com.hts.web.common.service.impl.BaseServiceImpl;
 import com.imzhitu.admin.addr.dao.redis.CityCacheDao;
 import com.imzhitu.admin.addr.mapper.CityMapper;
@@ -43,6 +45,9 @@ public class AddrServiceImpl extends BaseServiceImpl implements AddrService {
 	
 	@Autowired
 	private CityCacheDao cityCacheDao;
+	
+	@Autowired
+	private com.hts.web.operations.dao.mongo.NearDistrictMongoDao nearDistrictMongoDao;
 
 	@Override
 	public List<Map<String,Serializable>> queryProvinces() {
@@ -166,5 +171,52 @@ public class AddrServiceImpl extends BaseServiceImpl implements AddrService {
 	public List<City> queryCityByIds(Integer[] ids) {
 		return cMapper.queryCityByIds(ids);
 	}
+
+	@Override
+	public void queryCityDistict(Integer cityId, Map<String, Object> jsonMap) {
+		List<com.hts.web.common.pojo.AddrDistrictDto> districtList = nearDistrictMongoDao.queryDistrict(cityId);
+		jsonMap.put(OptResult.JSON_KEY_ROWS, districtList);
+		jsonMap.put(OptResult.JSON_KEY_TOTAL, districtList.size());
+	}
+
+	@Override
+	public void batchDeleteCityDistict(Integer[] distictIds) {
+		for (Integer id : distictIds) {
+			nearDistrictMongoDao.deleteDistrict(id);
+		}
+	}
+	
+	@Override
+	public List<Map<String,Serializable>> queryDistrictsByCityId(Integer cityId) {
+		List<Map<String,Serializable>> rtnList = new ArrayList<Map<String,Serializable>>();
+		for (District d : dMapper.queryDistrictByCityId(cityId)) {
+			Map<String,Serializable> map = new HashMap<String, Serializable>();
+			map.put("id", d.getId());
+			map.put("name", d.getName());
+			rtnList.add(map);
+		}
+		
+		return rtnList;
+	}
+
+	@Override
+	public void addCityDistict(Integer cityId, Integer[] distictIds) {
+		List<District> queryDistrictByIds = dMapper.queryDistrictByIds(distictIds);
+		for (District district : queryDistrictByIds) {
+			if ( !nearDistrictMongoDao.isDistrictExist(district.getId()) ) {
+				AddrDistrictDto dto = new AddrDistrictDto();
+				dto.setId(district.getId());
+				dto.setCityId(cityId);
+				dto.setCityName(cMapper.queryCityById(cityId).getName());
+				dto.setDistictName(district.getName());
+				dto.setGbtId(district.getGbtId());
+				dto.setLongitude(district.getLongitudeCenter());
+				dto.setLatitude(district.getLatitudeCenter());
+				
+				nearDistrictMongoDao.insertDistrict(dto);
+			}
+		}
+	}
+	
 	
 }

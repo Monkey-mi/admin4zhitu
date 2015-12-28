@@ -29,34 +29,29 @@ public class District implements Serializable {
 	private String name;
 	
 	/**
+	 * 国标id
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Integer gbtId;
+	
+	/**
 	 * 城市id
 	 * @author zhangbo	2015年11月19日
 	 */
 	private Integer cityId;
 	
 	/**
-	 * 最小经度
+	 * 中心经度
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Long longitudeMin;
+	private Double longitudeCenter;
 	
 	/**
-	 * 最大经度
+	 * 中心纬度
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Long longitudeMax;
+	private Double latitudeCenter;
 	
-	/**
-	 * 最小纬度
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Long latitudeMin;
-	
-	/**
-	 * 最大纬度
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Long latitudeMax;
 
 	/**
 	 * @return the id
@@ -101,59 +96,45 @@ public class District implements Serializable {
 	}
 
 	/**
-	 * @return the longitudeMin
+	 * @return the gbtId
 	 */
-	public Long getLongitudeMin() {
-		return longitudeMin;
+	public Integer getGbtId() {
+		return gbtId;
 	}
 
 	/**
-	 * @param longitudeMin the longitudeMin to set
+	 * @param gbtId the gbtId to set
 	 */
-	public void setLongitudeMin(Long longitudeMin) {
-		this.longitudeMin = longitudeMin;
+	public void setGbtId(Integer gbtId) {
+		this.gbtId = gbtId;
 	}
 
 	/**
-	 * @return the longitudeMax
+	 * @return the longitudeCenter
 	 */
-	public Long getLongitudeMax() {
-		return longitudeMax;
+	public Double getLongitudeCenter() {
+		return longitudeCenter;
 	}
 
 	/**
-	 * @param longitudeMax the longitudeMax to set
+	 * @param longitudeCenter the longitudeCenter to set
 	 */
-	public void setLongitudeMax(Long longitudeMax) {
-		this.longitudeMax = longitudeMax;
+	public void setLongitudeCenter(Double longitudeCenter) {
+		this.longitudeCenter = longitudeCenter;
 	}
 
 	/**
-	 * @return the latitudeMin
+	 * @return the latitudeCenter
 	 */
-	public Long getLatitudeMin() {
-		return latitudeMin;
+	public Double getLatitudeCenter() {
+		return latitudeCenter;
 	}
 
 	/**
-	 * @param latitudeMin the latitudeMin to set
+	 * @param latitudeCenter the latitudeCenter to set
 	 */
-	public void setLatitudeMin(Long latitudeMin) {
-		this.latitudeMin = latitudeMin;
-	}
-
-	/**
-	 * @return the latitudeMax
-	 */
-	public Long getLatitudeMax() {
-		return latitudeMax;
-	}
-
-	/**
-	 * @param latitudeMax the latitudeMax to set
-	 */
-	public void setLatitudeMax(Long latitudeMax) {
-		this.latitudeMax = latitudeMax;
+	public void setLatitudeCenter(Double latitudeCenter) {
+		this.latitudeCenter = latitudeCenter;
 	}
 
 }

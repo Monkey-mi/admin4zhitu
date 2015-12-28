@@ -111,6 +111,37 @@ public interface AddrService {
 	 */
 	public void queryCity(City city, int start, int limit, 
 			Map<String, Object> jsonMap) throws Exception;
+
+	/**
+	 * 查询城市行政区
+	 * 
+	 * @param cityId
+	 * @param jsonMap
+	 * @author zhangbo	2015年12月28日
+	 */
+	void queryCityDistict(Integer cityId, Map<String, Object> jsonMap);
+
+	/**
+	 * 批量城市列表
+	 * 
+	 * @param distictIds
+	 * @author zhangbo	2015年12月28日
+	 */
+	void batchDeleteCityDistict(Integer[] distictIds);
+
+	/**
+	 * @param id
+	 * @return
+	 * @author zhangbo	2015年12月28日
+	 */
+	List<Map<String, Serializable>> queryDistrictsByCityId(Integer cityId);
+
+	/**
+	 * @param id
+	 * @param distictIds
+	 * @author zhangbo	2015年12月28日
+	 */
+	void addCityDistict(Integer cityId, Integer[] distictIds);
 }
 
 

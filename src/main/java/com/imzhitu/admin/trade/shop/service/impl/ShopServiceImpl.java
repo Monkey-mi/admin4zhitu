@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hts.web.base.constant.OptResult;
-import com.imzhitu.admin.addr.AddrUtil;
 import com.imzhitu.admin.trade.shop.mapper.ShopMapper;
 import com.imzhitu.admin.trade.shop.pojo.Shop;
 import com.imzhitu.admin.trade.shop.pojo.ShopDTO;
@@ -83,7 +82,7 @@ public class ShopServiceImpl implements ShopService {
 			dto.setTasteAvg(shop.getTasteAvg());
 			dto.setViewAvg(shop.getViewAvg());
 			dto.setServiceAvg(shop.getServiceAvg());
-			dto.setPCD(AddrUtil.getProvince(shop.getProvinceId()), AddrUtil.getCity(shop.getCityId()), AddrUtil.getDistrict(shop.getDistrictId()));
+			dto.setPCD(null, null, null);
 			
 			rtnlist.add(dto);
 		}

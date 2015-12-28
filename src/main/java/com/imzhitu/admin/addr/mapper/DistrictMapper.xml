@@ -5,14 +5,40 @@
 	<resultMap id="DistrictMap" type="com.imzhitu.admin.addr.pojo.District">
 		<id column="id" property="id" javaType="java.lang.Integer"/>
 		<result column="name" property="name" javaType="java.lang.String"/>
+		<result column="gbt_id" property="gbtId" javaType="java.lang.Integer"/>
+		<result column="city_id" property="cityId" javaType="java.lang.Integer"/>
+		<result column="longitude_center" property="longitudeCenter" javaType="java.lang.Double"/>
+		<result column="latitude_center" property="latitudeCenter" javaType="java.lang.Double"/>
 	</resultMap>
 
 	<!-- 查询所有区域 -->
 	<select id="queryAllDistrict" resultMap="DistrictMap">
 		select 
-			id,name 
+			* 
 		from 
 			hts.addr_district
+	</select>
+	
+	<select id="queryDistrictByCityId" resultMap="DistrictMap">
+		select 
+			* 
+		from 
+			hts.addr_district
+		where
+			city_id = #{cityId}
+	</select>
+	
+	<select id="queryDistrictByIds" resultMap="DistrictMap">
+		select 
+			* 
+		from 
+			hts.addr_district
+		where
+			id in 
+		<foreach item="item" index="index" collection="ids"
+	    	open="(" separator="," close=")">
+	       		#{item}
+	 	</foreach>
 	</select>
 	
 	<select id="getDistrictId" resultType="INTEGER">
