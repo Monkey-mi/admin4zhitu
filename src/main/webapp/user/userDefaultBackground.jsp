@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>推荐默认背景图片管理</title>
 <jsp:include page="/common/header.jsp"></jsp:include>
+<link rel="stylesheet" type="text/css" href="${webRootPath }/common/css/htmCRUD20131111.css?ver=${webVer}"></link>
 <script type="text/javascript">
 
 	// 行是否被勾选
@@ -15,7 +16,7 @@
 			{field: "id", title: "ID", align: "center"},
 			{field: "background", title: "标题", align: "center",
 				formatter : function(value, row, index ) {
-  					return "<img class='htm_column_img pointer' src='" + value + "'/>";
+  					return "<img width='250px' height='100px' class='htm_column_img pointer' src='" + value + "'/>";
 				}
 			}
 		];
@@ -64,7 +65,7 @@
 			title : '添加商品专题',
 			modal : true,
 			width : 650,
-			height : 530,
+			height : 300,
 			shadow : false,
 			closed : true,
 			minimizable : false,
@@ -126,20 +127,6 @@
 		}
 	};
 	
-	/**
-	 * 刷新redis缓存
-	 * @author zhangbo 2015-12-25
-	 */
-	function refreshCache() {
-		$.messager.confirm("温馨提示", "您确定要更新默认背景吗？确定后，将会在客户端生效", function(r){
-			if(r){
-				$.post("./admin_user/user_refreshDefaultBackgroundCache", function(result){
-					$.messager.alert("温馨提示",result.msg);
-				});
-			}
-		});
-	};
-	
 </script>
 </head>
 <body>
@@ -153,8 +140,6 @@
 			<span>
 				<a href="javascript:void(0);" onclick="javascript:$('#add_background_window').window('open');commonTools.clearFormData($('#add_background_form'));" class="easyui-linkbutton" plain="true" iconCls="icon-add">添加</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
-		   		<input id="ss_isCache" class="easyui-combobox">
-		   		<a href="javascript:void(0);" onclick="refreshCache()" class="easyui-linkbutton" plain="true" iconCls="icon-converter">刷新缓存</a>
 			</span>
 		</div>
 		
@@ -181,31 +166,6 @@
 			</form>
 		</div>
 		
-		<!-- 设置秒杀商品集合到redis缓存 -->
-		<div id="refresh_seckill_window">
-			<form id="refresh_seckill_form" method="post">
-				<table class="htm_edit_table" width="480">
-					<tr>
-						<td class="leftTd">商品集合ID：</td>
-						<td>
-							<input id="seckill_itemSetId" name="id" style="width:220px;" >
-						</td>
-					</tr>
-					<tr>
-						<td class="leftTd">截止日期：</td>
-						<td>
-							<input name="deadline" class="easyui-datetimebox" required="true">
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" style="text-align: center;padding-top: 10px;">
-							<a class="easyui-linkbutton" iconCls="icon-ok" onclick="seckillSetCacheSubmit();">确定</a>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
-	
 	</div>
 	
 	<script type="text/javascript" src="${webRootPath }/base/js/jquery/qiniu/js/plupload/plupload.full.min.js"></script>
@@ -263,56 +223,6 @@
         }
     });
   
-	  // 此为展示图片上传组件 02
-	Qiniu.uploader({
-        runtimes: 'html5,flash,html4',
-        browse_button: 'itemSet_thumb_upload_btn',
-        max_file_size: '100mb',
-        flash_swf_url: 'js/plupload/Moxie.swf',
-        chunk_size: '4mb',
-        uptoken_url: './admin_qiniu/uptoken',
-        domain: 'http://static.imzhitu.com/',
-        unique_names: false,
-        save_key: false,
-        auto_start: true,
-        init: {
-            'FilesAdded': function(up, files) {
-            	$("#itemSet_thumb_upload_btn").hide();
-            	$("#itemSet_thumb_edit").hide();
-            	var $status = $("#itemSet_thumb_edit_upload_status");
-            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
-            	$status.find('.upload_progress:eq(0)').text(0);
-            	$status.show();
-            },
-            'BeforeUpload': function(up, file) {
-            },
-            'UploadProgress': function(up, file) {
-            	var $status = $("#itemSet_thumb_upload_btn");
-            	// 按照页面布局顺序，icon，sub_icon，banner都配置了upload_progress样式，icon获取第一个
-            	$status.find('.upload_progress:eq(0)').text(file.percent);
-            },
-            'UploadComplete': function() {
-            	$("#itemSet_thumb_upload_btn").show();
-            	$("#itemSet_thumb_edit").show();
-            	$("#itemSet_thumb_edit_upload_status").hide();
-            },
-            'FileUploaded': function(up, file, info) {
-            	var url = 'http://static.imzhitu.com/' + $.parseJSON(info).key;
-            	$("#itemSet_thumb_edit").attr('src', url);
-            	$("#itemSet_thumb").val(url);
-            },
-            'Error': function(up, err, errTip) {
-                $.messager.alert('上传失败',errTip);
-             },
-            'Key': function(up, file) {
-            	var timestamp = Date.parse(new Date());
-            	var suffix = /\.[^\.]+/.exec(file.name);
-                var key = "trade/item/" + timestamp+suffix;
-                return key;
-            }
-        }
-    });
-    
 	</script>
 	
 </body>
