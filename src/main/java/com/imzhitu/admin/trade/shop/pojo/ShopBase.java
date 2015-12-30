@@ -9,7 +9,7 @@ import java.util.Date;
  * @author zhangbo	2015年11月19日
  *
  */
-public class Shop implements Serializable {
+public class ShopBase implements Serializable {
 
 	/**
 	 * 序列号
@@ -78,6 +78,24 @@ public class Shop implements Serializable {
 	private String address;
 	
 	/**
+	 * 邮箱
+	 * @author zhangbo	2015年11月19日
+	 */
+	private String email;
+	
+	/**
+	 * 邮编
+	 * @author zhangbo	2015年11月19日
+	 */
+	private String zipcode;
+	
+	/**
+	 * 网站
+	 * @author zhangbo	2015年11月19日
+	 */
+	private String website;
+	
+	/**
 	 * 国家手机号代码
 	 * 注：默认中国，代码86
 	 * @author zhangbo	2015年11月19日
@@ -103,22 +121,64 @@ public class Shop implements Serializable {
 	private Integer tel;
 	
 	/**
+	 * QQ号码
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Integer qq;
+	
+	/**
 	 * 创建时间
 	 * @author zhangbo	2015年11月19日
 	 */
 	private Date createTime;
 	
 	/**
-	 * 平均消费
+	 * 商家类型，存储的为类型id，以逗号分隔
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Long consumptionAvg;
+	private String type;
 	
 	/**
-	 * 用户织图总数
+	 * 商家标签，存储的为标签id，以逗号分隔
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Integer customWorldCount;
+	private String label;
+	
+	/**
+	 * 平均评星
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Long starAvg;
+	
+	/**
+	 * 口味平均分
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Long tasteAvg;
+	
+	/**
+	 * 环境平均分
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Long viewAvg;
+	
+	/**
+	 * 服务平均分
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Long serviceAvg;
+	
+	/**
+	 * 评论总数
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Integer commentCount;
+	
+	/**
+	 * 图片总数
+	 * @author zhangbo	2015年11月19日
+	 */
+	private Integer picCount;
 
 	/**
 	 * @return the id
@@ -261,6 +321,48 @@ public class Shop implements Serializable {
 	}
 
 	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the zipcode
+	 */
+	public String getZipcode() {
+		return zipcode;
+	}
+
+	/**
+	 * @param zipcode the zipcode to set
+	 */
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+	/**
+	 * @return the website
+	 */
+	public String getWebsite() {
+		return website;
+	}
+
+	/**
+	 * @param website the website to set
+	 */
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+	/**
 	 * @return the phoneCode
 	 */
 	public Integer getPhoneCode() {
@@ -317,6 +419,20 @@ public class Shop implements Serializable {
 	}
 
 	/**
+	 * @return the qq
+	 */
+	public Integer getQq() {
+		return qq;
+	}
+
+	/**
+	 * @param qq the qq to set
+	 */
+	public void setQq(Integer qq) {
+		this.qq = qq;
+	}
+
+	/**
 	 * @return the createTime
 	 */
 	public Date getCreateTime() {
@@ -331,31 +447,115 @@ public class Shop implements Serializable {
 	}
 
 	/**
-	 * @return the consumptionAvg
+	 * @return the type
 	 */
-	public Long getConsumptionAvg() {
-		return consumptionAvg;
+	public String getType() {
+		return type;
 	}
 
 	/**
-	 * @param consumptionAvg the consumptionAvg to set
+	 * @param type the type to set
 	 */
-	public void setConsumptionAvg(Long consumptionAvg) {
-		this.consumptionAvg = consumptionAvg;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**
-	 * @return the customWorldCount
+	 * @return the label
 	 */
-	public Integer getCustomWorldCount() {
-		return customWorldCount;
+	public String getLabel() {
+		return label;
 	}
 
 	/**
-	 * @param customWorldCount the customWorldCount to set
+	 * @param label the label to set
 	 */
-	public void setCustomWorldCount(Integer customWorldCount) {
-		this.customWorldCount = customWorldCount;
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	/**
+	 * @return the starAvg
+	 */
+	public Long getStarAvg() {
+		return starAvg;
+	}
+
+	/**
+	 * @param starAvg the starAvg to set
+	 */
+	public void setStarAvg(Long starAvg) {
+		this.starAvg = starAvg;
+	}
+
+	/**
+	 * @return the tasteAvg
+	 */
+	public Long getTasteAvg() {
+		return tasteAvg;
+	}
+
+	/**
+	 * @param tasteAvg the tasteAvg to set
+	 */
+	public void setTasteAvg(Long tasteAvg) {
+		this.tasteAvg = tasteAvg;
+	}
+
+	/**
+	 * @return the viewAvg
+	 */
+	public Long getViewAvg() {
+		return viewAvg;
+	}
+
+	/**
+	 * @param viewAvg the viewAvg to set
+	 */
+	public void setViewAvg(Long viewAvg) {
+		this.viewAvg = viewAvg;
+	}
+
+	/**
+	 * @return the serviceAvg
+	 */
+	public Long getServiceAvg() {
+		return serviceAvg;
+	}
+
+	/**
+	 * @param serviceAvg the serviceAvg to set
+	 */
+	public void setServiceAvg(Long serviceAvg) {
+		this.serviceAvg = serviceAvg;
+	}
+
+	/**
+	 * @return the commentCount
+	 */
+	public Integer getCommentCount() {
+		return commentCount;
+	}
+
+	/**
+	 * @param commentCount the commentCount to set
+	 */
+	public void setCommentCount(Integer commentCount) {
+		this.commentCount = commentCount;
+	}
+
+	/**
+	 * @return the picCount
+	 */
+	public Integer getPicCount() {
+		return picCount;
+	}
+
+	/**
+	 * @param picCount the picCount to set
+	 */
+	public void setPicCount(Integer picCount) {
+		this.picCount = picCount;
 	}
 	
 }

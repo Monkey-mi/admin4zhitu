@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.imzhitu.admin.common.dataSourceMasterSlave.DataSource;
-import com.imzhitu.admin.trade.shop.pojo.Shop;
+import com.imzhitu.admin.trade.shop.pojo.ShopBase;
 
 /**
  * 商家数据操作类
@@ -13,7 +13,7 @@ import com.imzhitu.admin.trade.shop.pojo.Shop;
  * @author zhangbo	2015年11月19日
  *
  */
-public interface ShopMapper {
+public interface ShopBaseMapper {
 	
 	/**
 	 * 新增商家
@@ -22,7 +22,10 @@ public interface ShopMapper {
 	 * @author zhangbo	2015年11月20日
 	 */
 	@DataSource("master")
-	void insertShop(Shop shop);
+	void insertShop(ShopBase shop);
+	
+	@DataSource("master")
+	void insertShopLinshi(ShopBase shop);
 	
 	/**
 	 * @param start
@@ -31,7 +34,7 @@ public interface ShopMapper {
 	 * @author zhangbo	2015年11月19日
 	 */
 	@DataSource("slave")
-	List<Shop> queryShopListByLimit(@Param("firstRow")Integer start, @Param("limit")Integer limit);
+	List<ShopBase> queryShopListByLimit(@Param("cityId")Integer cityId, @Param("firstRow")Integer start, @Param("limit")Integer limit);
 	
 	/**
 	 * 获取商家总数
@@ -54,6 +57,6 @@ public interface ShopMapper {
 	 * @param sids
 	 * @author zhangbo	2015年12月30日
 	 */
-	List<Shop> queryShopByIds(Integer[] sids);
+	List<ShopBase> queryShopByIds(Integer[] sids);
 
 }

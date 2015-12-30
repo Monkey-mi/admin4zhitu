@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.imzhitu.admin.trade.shop.mapper.ShopMapper">
+<mapper namespace="com.imzhitu.admin.trade.shop.mapper.ShopBaseMapper">
 
-	<resultMap id="ShopMap" type="com.imzhitu.admin.trade.shop.pojo.Shop">
+	<resultMap id="ShopMap" type="com.imzhitu.admin.trade.shop.pojo.ShopBase">
 		<id column="id" property="id" javaType="java.lang.Integer"/>
 		<result column="name" property="name" javaType="java.lang.String"/>
 		<result column="description" property="description" javaType="java.lang.String"/>
@@ -35,19 +35,33 @@
 	<!-- 新增商家 -->
 	<insert id="insertShop">
 		insert into 
-			hts.shop 
-			(name, description, longitude, latitude, address, country_id, province_id, city_id, district_id, phone, tel_code, tel)
+			hts_trade.shop_base 
+			(name, description, longitude, latitude, address, country_id, province_id, city_id, district_id, 
+			email, zipcode, website, phone_code, phone, tel_code, tel, qq, type, label)
 	 	values 
 	 		(#{name}, #{description}, #{longitude}, #{latitude}, #{address}, #{countryId}, #{provinceId}, #{cityId}, #{districtId}, 
-	 		 #{phone}, #{telCode}, #{tel})
+	 		#{email}, #{zipcode}, #{website}, #{phoneCode}, #{phone}, #{telCode}, #{tel}, #{qq}, #{type}, #{label})
 	</insert>
 	
+	<insert id="insertShopLinshi">
+		insert into 
+			hts_trade.shop_base 
+			(id,name, description, longitude, latitude, address, country_id, province_id, city_id, district_id, 
+			email, zipcode, website, phone_code, phone, tel_code, tel, qq, type, label)
+	 	values 
+	 		(#{id},#{name}, #{description}, #{longitude}, #{latitude}, #{address}, #{countryId}, #{provinceId}, #{cityId}, #{districtId}, 
+	 		#{email}, #{zipcode}, #{website}, #{phoneCode}, #{phone}, #{telCode}, #{tel}, #{qq}, #{type}, #{label})
+	</insert>
+
 	<!-- 获取商家总数 -->
 	<select id="queryShopListByLimit" resultMap="ShopMap">
 		select 
 			* 
 		from 
-			hts.shop
+			hts_trade.shop_base
+		<where>
+			<if test="cityId != null">city_id=#{cityId}</if>
+		</where>
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	
@@ -56,12 +70,12 @@
 		select 
 			count(*) 
 		from 
-			hts.shop
+			hts_trade.shop_base
 	</select>
 
 	<!-- 根据id删除商家 -->
 	<delete id="delete">
-		delete from hts.shop where id = #{id}
+		delete from hts_trade.shop_base where id = #{id}
 	</delete>
 	
 </mapper>
