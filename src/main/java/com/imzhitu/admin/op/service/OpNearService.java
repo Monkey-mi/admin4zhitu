@@ -262,6 +262,14 @@ public interface OpNearService extends BaseService{
 	public void insertNearWorldLast(Integer worldId)throws Exception;
 	
 	/**
+	 * 插入附近织图 全国的数据
+	 * @param worldId
+	 * @throws Exception
+	 * @author zxx 2015-12-8 20:48:22
+	 */
+	public void insertCommonNearWorld(Integer worldId)throws Exception;
+	
+	/**
 	 * 批量删除附近织图
 	 * @param idsStr
 	 * @throws Exception

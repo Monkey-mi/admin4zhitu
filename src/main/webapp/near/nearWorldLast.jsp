@@ -24,7 +24,7 @@ var	htmTablePageList = [10,20],
 	mySortName = '',
 	loadDataURL = "./admin_op/near_queryNearWorldLast",
 	deleteURI = "./admin_op/near_batchDeleteNearWorldLast", //删除请求地址
-	saveURL = "./admin_op/near_insertNearWorldLast", // 保存贴纸地址
+	saveURL = "./admin_op/near_insertCommonNearWorld", // 保存贴纸地址
 	batchInsertNearWorldFromLastURL = "./admin_op/near_batchInsertNearWorldFromLast",
 	init = function() {
 		toolbarComponent = '#tb';
@@ -203,7 +203,7 @@ function openAddWindow(){
 }
 
 //增加标签织图
-function addNearWorldLast(){
+function addCommonNearWorld(){
 	var worldId = $('#worldId').val();
 	$.post(saveURL,{
 		'worldId':worldId
@@ -297,7 +297,7 @@ function batchInsertNearWorldFromLast(){
 		<table id="htm_table"></table>
 		<div id="tb" style="padding:5px;height:auto" class="none">
 		<div>
-			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加关系" plain="true" iconCls="icon-add" id="addBtn">添加到备选</a>
+			<a href="javascript:void(0);" onclick="javascript:openAddWindow();" class="easyui-linkbutton" title="添加关系" plain="true" iconCls="icon-add" id="addBtn">添加到全国数据</a>
 			<a href="javascript:void(0);" onclick="javascript:deleteNearWorld();" class="easyui-linkbutton" title="批量删除织图" plain="true" iconCls="icon-cut" id="cutBtn">批量删除</a>
 			<a href="javascript:void(0);" onclick="javascript:batchInsertNearWorldFromLast();" class="easyui-linkbutton" title="批量添加织图" plain="true" iconCls="icon-add" id="convertBtn">批量添加到附近</a>
 			<input type="text" id="cityId_edit" name="nearLabel.cityId"  onchange="validateSubmitOnce=true;"/>
@@ -315,7 +315,7 @@ function batchInsertNearWorldFromLast(){
 						</tr>
 						<tr>
 							<td align="center">
-								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addNearWorldLast();">确定</a>
+								<a class="easyui-linkbutton" iconCls="icon-ok" onclick="addCommonNearWorld();">确定</a>
 								<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#htm_edit').window('close');">取消</a>
 							</td>
 						</tr>

@@ -106,4 +106,9 @@ public class OpNearServiceTest extends BaseTest{
 		nearService.queryNearWorld(21760, 0, 1, 10, jsonMap);
 		log.info(jsonMap);
 	}
+	
+	@Test
+	public void updateNearRecommendCityCacheTest()throws Exception{
+		nearService.updateNearRecommendCityCache();
+	}
 }

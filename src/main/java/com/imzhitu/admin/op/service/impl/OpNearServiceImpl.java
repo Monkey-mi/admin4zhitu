@@ -504,7 +504,19 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 			throw new NullPointerException("worldId is null");
 		}
 		HTWorld world = worldDao.queryWorldById(worldId);
+		nearService.saveNearWorldLast(world);
+	}
+	
+	@Override
+	public void insertCommonNearWorld(Integer worldId) throws Exception {
+		if(worldId == null){
+			throw new NullPointerException("worldId is null");
+		}
+		HTWorld world = worldDao.queryWorldById(worldId);
+		world.setLongitude(1.0);
+		world.setLatitude(90.0);
 		nearService.saveNearWorld(world);
+		nearWorldLastMongoDao.deleteNearWorldLast(world.getId());
 	}
 
 	@Override

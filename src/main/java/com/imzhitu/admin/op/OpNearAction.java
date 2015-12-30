@@ -418,6 +418,24 @@ public class OpNearAction extends BaseCRUDAction{
 		return StrutsKey.JSON;
 	}
 	
+	/**
+	 * 添加到附近，全国的数据
+	 * @return
+	 */
+	public String insertCommonNearWorld(){
+		try{
+			nearService.insertCommonNearWorld(worldId);
+			JSONUtil.optSuccess(OptResult.ADD_SUCCESS,jsonMap);
+		}catch(Exception e){
+			JSONUtil.optFailed(e.getMessage(), jsonMap);
+		}
+		return StrutsKey.JSON;
+	}
+	
+	/**
+	 * 添加到附近备选
+	 * @return
+	 */
 	public String insertNearWorldLast(){
 		try{
 			nearService.insertNearWorldLast(worldId);
@@ -562,5 +580,5 @@ public class OpNearAction extends BaseCRUDAction{
 	public void setNearLabel(OpNearLabelDto nearLabel) {
 		this.nearLabel = nearLabel;
 	}
-	
+
 }
