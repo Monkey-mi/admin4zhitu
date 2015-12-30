@@ -515,6 +515,7 @@ public class OpNearServiceImpl extends BaseServiceImpl implements OpNearService{
 		HTWorld world = worldDao.queryWorldById(worldId);
 		world.setLongitude(1.0);
 		world.setLatitude(90.0);
+		world.setCity("通用");
 		nearService.saveNearWorld(world);
 		nearWorldLastMongoDao.deleteNearWorldLast(world.getId());
 	}
