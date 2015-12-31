@@ -100,6 +100,7 @@ public interface ItemSetMapper {
 	 * @param serial	序号
 	 * @author zhangbo	2015年12月12日
 	 */
+	@DataSource("master")
 	void updateSerial(@Param("id")Integer id, @Param("serial")Integer serial);
 
 	/**
@@ -111,6 +112,7 @@ public interface ItemSetMapper {
 	 * @return
 	 * @author zhangbo	2015年12月12日
 	 */
+	@DataSource("slave")
 	List<ItemSet> queryItemSetListNotInIds(@Param("ids")Integer[] ids, @Param("firstRow")Integer firstRow, @Param("limit")Integer limit);
 
 	/**
@@ -121,6 +123,7 @@ public interface ItemSetMapper {
 	 * @return
 	 * @author zhangbo	2015年12月21日
 	 */
+	@DataSource("slave")
 	List<ItemSet> queryItemSetListByTitle(@Param("title")String idOrName, @Param("firstRow")Integer fristRow, @Param("limit")Integer limit);
 	
 }
