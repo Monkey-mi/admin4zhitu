@@ -112,13 +112,17 @@ public class Shop implements Serializable {
 	 * 平均消费
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Long consumptionAvg;
+	private Integer consumptionAvg;
 	
 	/**
 	 * 用户织图总数
 	 * @author zhangbo	2015年11月19日
 	 */
 	private Integer customWorldCount;
+	
+	private String banner;
+	
+	private String businessHours;
 
 	/**
 	 * @return the id
@@ -333,14 +337,14 @@ public class Shop implements Serializable {
 	/**
 	 * @return the consumptionAvg
 	 */
-	public Long getConsumptionAvg() {
+	public Integer getConsumptionAvg() {
 		return consumptionAvg;
 	}
 
 	/**
 	 * @param consumptionAvg the consumptionAvg to set
 	 */
-	public void setConsumptionAvg(Long consumptionAvg) {
+	public void setConsumptionAvg(Integer consumptionAvg) {
 		this.consumptionAvg = consumptionAvg;
 	}
 
@@ -356,6 +360,34 @@ public class Shop implements Serializable {
 	 */
 	public void setCustomWorldCount(Integer customWorldCount) {
 		this.customWorldCount = customWorldCount;
+	}
+
+	/**
+	 * @return the banner
+	 */
+	public String getBanner() {
+		return banner;
+	}
+
+	/**
+	 * @param banner the banner to set
+	 */
+	public void setBanner(String banner) {
+		this.banner = banner;
+	}
+
+	/**
+	 * @return the businessHours
+	 */
+	public String getBusinessHours() {
+		return businessHours;
+	}
+
+	/**
+	 * @param businessHours the businessHours to set
+	 */
+	public void setBusinessHours(String businessHours) {
+		this.businessHours = businessHours;
 	}
 	
 }

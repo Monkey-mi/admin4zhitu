@@ -41,28 +41,20 @@ public class ShopDTO implements Serializable {
 	private String PCD;
 	
 	/**
-	 * 平均评星
+	 * 平均消费
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Long starAvg;
+	private Integer consumptionAvg;
 	
 	/**
-	 * 口味平均分
+	 * 用户织图总数
 	 * @author zhangbo	2015年11月19日
 	 */
-	private Long tasteAvg;
+	private Integer customWorldCount;
 	
-	/**
-	 * 环境平均分
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Long viewAvg;
+	private String banner;
 	
-	/**
-	 * 服务平均分
-	 * @author zhangbo	2015年11月19日
-	 */
-	private Long serviceAvg;
+	private String businessHours;
 
 	/**
 	 * @return the id
@@ -114,72 +106,67 @@ public class ShopDTO implements Serializable {
 	}
 
 	/**
-	 * 设置省/市/区
-	 * @param province	省份
-	 * @param city		城市
-	 * @param district	行政区
-	 * @author zhangbo	2015年11月19日
+	 * @param pCD the pCD to set
 	 */
-	public void setPCD(String province, String city, String district) {
-		PCD = province + "/" + city + "/" + district;
+	public void setPCD(String pCD) {
+		PCD = pCD;
 	}
 
 	/**
-	 * @return the starAvg
+	 * @return the consumptionAvg
 	 */
-	public Long getStarAvg() {
-		return starAvg;
+	public Integer getConsumptionAvg() {
+		return consumptionAvg;
 	}
 
 	/**
-	 * @param starAvg the starAvg to set
+	 * @param consumptionAvg the consumptionAvg to set
 	 */
-	public void setStarAvg(Long starAvg) {
-		this.starAvg = starAvg;
+	public void setConsumptionAvg(Integer consumptionAvg) {
+		this.consumptionAvg = consumptionAvg;
 	}
 
 	/**
-	 * @return the tasteAvg
+	 * @return the customWorldCount
 	 */
-	public Long getTasteAvg() {
-		return tasteAvg;
+	public Integer getCustomWorldCount() {
+		return customWorldCount;
 	}
 
 	/**
-	 * @param tasteAvg the tasteAvg to set
+	 * @param customWorldCount the customWorldCount to set
 	 */
-	public void setTasteAvg(Long tasteAvg) {
-		this.tasteAvg = tasteAvg;
+	public void setCustomWorldCount(Integer customWorldCount) {
+		this.customWorldCount = customWorldCount;
 	}
 
 	/**
-	 * @return the viewAvg
+	 * @return the banner
 	 */
-	public Long getViewAvg() {
-		return viewAvg;
+	public String getBanner() {
+		return banner;
 	}
 
 	/**
-	 * @param viewAvg the viewAvg to set
+	 * @param banner the banner to set
 	 */
-	public void setViewAvg(Long viewAvg) {
-		this.viewAvg = viewAvg;
+	public void setBanner(String banner) {
+		this.banner = banner;
 	}
 
 	/**
-	 * @return the serviceAvg
+	 * @return the businessHours
 	 */
-	public Long getServiceAvg() {
-		return serviceAvg;
+	public String getBusinessHours() {
+		return businessHours;
 	}
 
 	/**
-	 * @param serviceAvg the serviceAvg to set
+	 * @param businessHours the businessHours to set
 	 */
-	public void setServiceAvg(Long serviceAvg) {
-		this.serviceAvg = serviceAvg;
+	public void setBusinessHours(String businessHours) {
+		this.businessHours = businessHours;
 	}
-	
 	
 	
 }

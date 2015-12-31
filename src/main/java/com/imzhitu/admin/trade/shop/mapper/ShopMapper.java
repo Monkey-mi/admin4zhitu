@@ -31,7 +31,7 @@ public interface ShopMapper {
 	 * @author zhangbo	2015年11月19日
 	 */
 	@DataSource("slave")
-	List<Shop> queryShopListByLimit(@Param("firstRow")Integer start, @Param("limit")Integer limit);
+	List<Shop> queryShopListByLimit(@Param("cityId")Integer cityId, @Param("firstRow")Integer start, @Param("limit")Integer limit);
 	
 	/**
 	 * 获取商家总数

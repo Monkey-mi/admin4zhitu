@@ -48,6 +48,9 @@
 			* 
 		from 
 			hts.shop
+		<where>
+			<if test="cityId != null">city_id=#{cityId}</if>
+		</where>
 		<include refid="com.imzhitu.admin.common.mapper.NumberMapper.Pagination_Clause"/>
 	</select>
 	

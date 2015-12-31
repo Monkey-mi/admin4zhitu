@@ -15,6 +15,8 @@
 	// 行是否被勾选
 	var IsCheckFlag = false;
 	
+	var myQueryParams = {};
+	
 	var columnsFields = [
              {field: "ck",checkbox: true },
              {field: "id",title: "商家id",align: "center"},
@@ -35,6 +37,7 @@
 			title: "商家信息列表",
 			width: $(document.body).width(),
 			url: "./admin_trade/shop_buildShopList",
+			queryParams:myQueryParams,
 			toolbar: "#tb",
 			idField: "id",
 			rownumbers: true,
@@ -68,26 +71,19 @@
 			}
 		});
 		
+		$("#ss_city").combobox({
+        	url: "./admin_op/addr_getCityMap",
+         	valueField: "id",
+        	textField: "name", 
+        	onSelect:function(rec){
+        		myQueryParams.cityId = rec.id;
+        		$("#htm_table").datagrid("load",myQueryParams);
+        	}
+        });
+		
 		// 展示界面
 		$("#main").show();
 	});
-	
-	/**
-	 * 从基础数据中选择商铺
-	 * @author zhangbo	2015-12-30
-	 */
-	function addShop(){
-		var url = "./page_shop_shopBaseInfo";
-		$.fancybox({
-			href: url,
-			width: "98%",
-			height: "98%",
-			autoScale: true,
-			type: "iframe",
-			transitionIn: "none",	// 打开无动画
-			transitionOut: "elastic"	// 关闭动画：伸缩
-		});
-	};
 	
 	/**
 	 * 批量删除商家
@@ -131,8 +127,9 @@
 		
 		<div id="tb" style="padding:5px;height:auto" class="none">
 			<span>
-				<a href="javascript:void(0);" onclick="addShop()" class="easyui-linkbutton" plain="true" iconCls="icon-add">选择数据</a>
+				<a href="javascript:void(0);" onclick="batchAdd()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">文件上传添加商铺</a>
 				<a href="javascript:void(0);" onclick="batchDelete()" class="easyui-linkbutton" plain="true" iconCls="icon-cut">批量删除</a>
+				<input id="ss_city" style="width:120px" />
 			</span>
 		</div>
 		

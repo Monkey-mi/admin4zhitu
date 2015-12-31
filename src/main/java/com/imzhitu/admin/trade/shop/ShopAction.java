@@ -125,10 +125,10 @@ public class ShopAction extends BaseCRUDAction {
 	 * 构建商家信息列表，用于前台展示
 	 * @return
 	 */
-	public String buildBaseShopList() {
+	public String buildShopList() {
 		try {
 
-			shopService.buildBaseShopList(cityId, page, rows, jsonMap);
+			shopService.buildShopList(cityId, page, rows, jsonMap);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);
@@ -166,24 +166,6 @@ public class ShopAction extends BaseCRUDAction {
 			for (Integer id : sids) {
 				shopService.deleteShop(id);
 			}
-			JSONUtil.optSuccess(jsonMap);
-		} catch (Exception e) {
-			JSONUtil.optFailed(e.getMessage(), jsonMap);
-		}
-		return StrutsKey.JSON;
-	}
-	
-	/**
-	 * 从商铺基本数据库中选择的商铺添加到展示商铺中
-	 * 
-	 * @param shopids	商家主键id集合
-	 * @return
-	 * @author zhangbo	2015年12月30日
-	 */
-	public String addShopByBase() {
-		try {
-			Integer[] sids = StringUtil.convertStringToIds(shopids);
-			shopService.addShopByBase(sids);
 			JSONUtil.optSuccess(jsonMap);
 		} catch (Exception e) {
 			JSONUtil.optFailed(e.getMessage(), jsonMap);

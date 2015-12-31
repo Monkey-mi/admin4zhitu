@@ -32,18 +32,6 @@ public interface ShopService {
 	void addShop(String shopName, String description, Integer countryId, Integer provinceId, Integer cityId, Integer districtId, String address, String email, String zipcode, String website, String phone, String telephone, Integer qq, String typeIds);
 	
 	/**
-	 * 构建商家基本数据列表，用于前台展示
-	 * 
-	 * @param page
-	 * @param rows
-	 * @param jsonMap
-	 * @throws Exception
-	 * @author zhangbo	2015年11月19日
-	 */
-	void buildBaseShopList(Integer cityId, int page, int rows, Map<String, Object> jsonMap) throws Exception;
-	
-
-	/**
 	 * 构建商家信息列表，用于前台展示
 	 * 
 	 * @param page
@@ -52,7 +40,7 @@ public interface ShopService {
 	 * @throws Exception
 	 * @author zhangbo	2015年11月19日
 	 */
-	void buildShopList(int page, int rows, Map<String, Object> jsonMap) throws Exception;
+	void buildShopList(Integer cityId, int page, int rows, Map<String, Object> jsonMap) throws Exception;
 	
 	/**
 	 * 删除商家，通过主键id
@@ -61,12 +49,5 @@ public interface ShopService {
 	 * @author zhangbo	2015年11月19日
 	 */
 	void deleteShop(Integer id);
-
-	/**
-	 * 从商铺基本数据库中选择的商铺添加到展示商铺中
-	 * @param sids
-	 * @author zhangbo	2015年12月30日
-	 */
-	void addShopByBase(Integer[] sids);
 
 }
